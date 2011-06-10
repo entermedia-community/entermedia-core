@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+	<template/>
+	<property name="editable">false</property>
+	<property name="showToolbar">true</property>
+    <property name="title">Company Name</property>		
+	<generator name="velocity"/>
+</page>

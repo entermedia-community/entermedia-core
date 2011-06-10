@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+	<contentfile>bookeditor/toc.xml</contentfile>
+	<generator name="pdf">
+		<generator name="xslt">
+			<stylesheet>docbook/fo/docbook.xsl</stylesheet>
+			<generator name="xslt">
+				<stylesheet>book1/xml2xml.xsl</stylesheet>
+			</generator>	
+		</generator>	
+	</generator>	
+</page>

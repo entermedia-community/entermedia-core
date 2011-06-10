@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+
+<box fill="yes" xmlns="http://www.einnovation.com/xmlns/WSP/openedit/Content"
+    xmlns:html="http://www.w3.org/1999/xhtml"> 
+    <panel name="treeform">
+     <buttons>
+		<button icon="$home/openedit/filemanager/images/upload16.gif" 
+				title="Upload image" 
+				onclick="imagePickerController.gotoFileUpload()" />
+
+		<button icon="$home/openedit/filemanager/images/refresh.gif" 
+				title="Refresh tree" 
+				onclick="imagePickerController.refreshTree()" />
+
+	  </buttons>
+	  <content>
+	  	<box>
+   <!-- this still works but requires 2 levels of stylesheets
+          $imagePickerController.getImagePickerTree().render().getRootElement().asXML() 
+          -->
+        <html:div class="tree">
+          <html:script type="text/javascript" lang="JavaScript" src="/openedit/javascript/tree.js"></html:script>
+          <html:script type="text/javascript" lang="JavaScript" src="controller.js"></html:script>
+	      <html:script type="text/javascript">
+	      $imagePickerController.getTreeJavascript()
+	      <!-- this should be set automatically by the controller I think -->
+	        tree.setViewerUrl( '$imagePickerController.getViewerUrl()' );
+	        tree.draw();
+	        
+	        <!-- Construct and configure the javascript imagePickerController -->
+	        var imagePickerController = new Controller();
+	        imagePickerController.location = '$imagePickerController.getLocation()';
+	        imagePickerController.homeForm = document.treeform;
+	      </html:script>
+	    </html:div> 
+	    </box> 
+	  </content>  
+	</panel> 
+</box>

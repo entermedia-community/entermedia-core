@@ -1,0 +1,149 @@
+<?xml version="1.0"?>
+
+<page xmlns="http://www.einnovation.com/xmlns/WSP/openedit/Content" xmlns:html="http://www.w3.org/1999/xhtml" onload="window.focus()">
+  <title>Change XML Settings</title>
+      <script type="text/javascript">
+      	var usingIE = navigator.appVersion.indexOf("MSIE") > 0? true : false;
+
+		function changeState( inDivId )
+		{
+			if ( usingIE )
+			{
+				var act = document.getElementById(inDivId); 
+				if ( act.getAttribute('className') == 'hide' ) 
+				{ 
+					act.setAttribute('className','basic');
+				} else { 
+				 	act.setAttribute('className','hide');
+				}						
+			}
+			else
+			{
+				var act = document.getElementById(inDivId); 
+				if ( act.getAttribute('class') == 'hide' ) 
+				{ 
+					act.setAttribute('class','basic');
+				} else { 
+				 	act.setAttribute('class','hide');
+				}						
+			}
+		}
+      </script>
+<content>
+ 
+   <wizard>
+      <content>
+            
+      	#set( $newpage = $request.getParameter( "path" ) )
+
+        #foreach ( $parameterName in $request.parameterNames )
+            <html:input type="hidden" name="$parameterName" value="$request.getParameter( $parameterName )"/>
+        #end
+        <box fill="yes">
+           <detail>
+       			<table>
+       			<tr>
+       			<td valign="top">     
+       				<border fill="yes">
+		            	<div align="left">
+		            		<p><b>Page Settings:</b></p>
+		            	</div>
+		            	<div align="right">
+		            	 Title: <input type="text" name="property.title" size="30" value="Welcome"  /><br/>
+		            	 Group: <input type="text" name="property.title" size="30" value="intro"  /><br/>
+		            	</div>
+		            	 <border fill="yes">
+		            		Template:
+		            		<div align="right">
+			            	 	Enabled: <input type="checkbox" name="usetemplate" value="on"  /><br/>
+			            	 	Path: <input type="text" name="property.template" size="30" value="/defaulttemplate.html"  />
+			            	</div>
+						 </border>
+						 <border fill="yes">
+		            	 	Override Content:
+		            	 	<div align="right">
+		            	 	Enabled: <input type="checkbox" name="cache" size="30" value="off"  /><br/>
+		            	 	Path: <input type="text" name="property.content" size="30" value=""  />
+		            	 	</div>
+						</border>
+		            	 <!-- for each attribute add a name value pair -->
+		            	 <border fill="yes">
+		            	 	Programming:
+		            	 	<div align="right">
+			            	 Run Script: <input type="text" name="property.template" size="30" value=""  /><br/>
+			            	 Velocity: <input type="radio" name="generator" value="on"  /><br/>
+			            	 JSP: <input type="radio" name="generator" size="30" value="off"  /><br/>
+		    	        	 Cache Results: <input type="checkbox" name="cache" size="30" value="off"  /><br/>
+		            	 	</div>
+		    	       	 </border>
+		    	      </border>
+				</td>
+				<td valign="top">            	
+	            	<div align="right">
+	            	 <!-- for each attribute add a name value pair -->
+	            	 <!-- for each attribute add a name value pair -->
+	            	 <border fill="yes">
+	            	
+	            	<p><b><a href="javascript:changeState( 'dir' )" >+</a> Directory Settings:</b></p>
+					<div id="dir" class="hide">
+	            	<div align="right">
+	            	 Title: <input type="text" name="property.title" size="30" value="Welcome"  /><br/>
+	            	 Group: <input type="text" name="property.title" size="30" value="intro"  />
+	            	 </div>
+	            	 <border fill="yes">
+	            		Template:
+	            		<div align="right">
+		            	 	Enabled: <input type="checkbox" name="usetemplate" value="on"  /><br/>
+		            	 	Path: <input type="text" name="property.template" size="30" value="/defaulttemplate.html"  />
+		            	</div>
+					 </border>
+					 <border fill="yes">
+	            	 	Override Content:
+	            	 	<div align="right">
+	            	 	Enabled: <input type="checkbox" name="cache" size="30" value="off"  /><br/>
+	            	 	Path: <input type="text" name="property.content" size="30" value=""  />
+	            	 	</div>
+					</border>
+	            	 <!-- for each attribute add a name value pair -->
+	            	 <border fill="yes">
+	            	 	Programming:
+	            	 	<div align="right">
+		            	 Velocity: <input type="radio" name="generator" value="on"  /><br/>
+		            	 JSP: <input type="radio" name="generator" size="30" value="off"  /><br/>
+	    	        	 Cache Results: <input type="checkbox" name="cache" size="30" value="off"  /><br/>
+	            	 	</div>
+	    	       	 </border>
+	            	</div>
+	    	       	 </border>
+	            	 <border fill="yes">
+	            	 	<p><b> <a href="javascript:changeState('actions')" >+</a> Advanced Programming:</b></p>
+		            	 <!--we should put this into an advanced dialog or wizard -->
+		            	 <div id="actions" class="hide">
+		            	 
+		            	 #foreach( $module in $site.getModules() )
+		            	 	$module.getDescription()
+		            	 	<div style="margin-left: 15px; ">		            	 			    	        	 
+				            	 #foreach( $action in $module.getDefinedActions() )
+									<input type="checkbox" name="cache" size="30" value="off"  />$action.getDescription()<br/>
+								 #end
+							</div>
+						 #end
+						</div>
+	    	       	 </border>
+	            	 </div>
+	            </td>
+	            </tr>
+	            </table>
+            </detail>          
+        </box >
+
+
+      </content>
+      <buttons>
+        <button name="Ok" href="config.html"/>
+         <button name="Cancel" onclick="window.back()"/>
+         <button name="Help" target="help" href="/openedit/editors/confighelp.html"/>
+      </buttons>
+    </wizard>
+  </content>
+</page>

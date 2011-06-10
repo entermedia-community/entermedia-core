@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<page>
+  <property name="productName">Open Edit</property>
+  <page-action name="PageValue.loadPageVariable"  bean="uptime" />
+  <path-action name="PageValue.loadPageVariable"  bean="date2" class="java.util.Date"/>
+ 
+  <generator name="velocity"/>
+</page>

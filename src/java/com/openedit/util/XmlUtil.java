@@ -1,0 +1,232 @@
+/*
+ * Created on May 19, 2005
+ */
+package com.openedit.util;
+
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.Reader;
+import java.io.Writer;
+import java.util.Iterator;
+
+import org.dom4j.Document;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
+import org.dom4j.io.SAXReader;
+import org.dom4j.io.XMLWriter;
+import org.dom4j.util.PerThreadSingleton;
+
+import com.openedit.OpenEditException;
+import com.openedit.OpenEditRuntimeException;
+import com.openedit.config.XMLConfiguration;
+
+/**
+ * @author cburkey
+ *
+ */
+public class XmlUtil
+{
+	protected PerThreadSingleton fieldReaderPool;
+	protected XmlWriterPool fieldWriterPool;
+
+	public Element getXml(File inFile, String inEncode )
+	{
+		try
+		{
+			return getXml(new FileReader(inFile), inEncode);
+		}
+		catch (Exception ex)
+		{
+			throw new RuntimeException(inFile.toString(), ex);
+		}
+	}
+	
+	public Element getXml(InputStream inXmlReader, String inEncoding)
+	{
+		try
+		{
+			if( inEncoding == null)
+			{
+				inEncoding = "UTF-8";
+			}
+			return getXml(new InputStreamReader(inXmlReader,inEncoding), inEncoding );
+		}
+		catch (Exception ex)
+		{
+			throw new RuntimeException(ex);
+		}
+	}
+	public Element getXml(Reader inXmlReader, String inEncode)
+	{
+		SAXReader reader = getReader();
+		try
+		{
+			reader.setEncoding(inEncode);
+			Document document = reader.read(inXmlReader);
+			Element root = document.getRootElement();
+			return root;
+		}
+		catch ( Exception ex)
+		{
+			throw new OpenEditRuntimeException(ex.getMessage(), ex);
+		}
+		finally
+		{
+			FileUtils.safeClose(inXmlReader);
+		}
+	}
+	public void saveXml(Element inRoot, Writer inWriter, String inEncoding)
+	{
+		if( inRoot.getDocument() != null)
+		{
+			saveXml(inRoot.getDocument(), inWriter, inEncoding);
+			return;
+		}
+		try
+		{
+			XMLWriter writer = getWriter(inEncoding);
+			writer.setWriter(inWriter);
+			writer.write(inRoot);
+		}
+		catch ( Exception ex)
+		{
+			throw new RuntimeException(ex.getMessage(), ex);
+		}
+		finally
+		{
+			FileUtils.safeClose(inWriter);
+		}
+	}
+	
+	public void saveXml(Document inRoot, Writer inWriter, String inEncoding)
+	{
+		try
+		{
+			XMLWriter writer = getWriter(inEncoding);
+			writer.setWriter(inWriter);
+			writer.write(inRoot);
+		}
+		catch ( Exception ex)
+		{
+			throw new RuntimeException(ex.getMessage(), ex);
+		}
+		finally
+		{
+			FileUtils.safeClose(inWriter);
+		}
+	}
+	
+	public void saveXmlConfiguration(XMLConfiguration inConfig, File inFile)
+	{
+		Document doc = DocumentHelper.createDocument();
+		Element root = doc.addElement(inConfig.getName());
+		inConfig.appendXml(inConfig,root);
+		saveXml( doc,inFile);
+	}
+	
+	/**
+	 * @param inStockQuoteDocument
+	 * @param inFile
+	 */
+	public void saveXml(Document inStockQuoteDocument, File inFile)
+	{
+		try
+		{
+			saveXml(inStockQuoteDocument, new FileWriter(inFile), "UTF-8");
+		}
+		catch ( Exception ex )
+		{
+			throw new RuntimeException(ex);
+		}
+	}
+	public String xmlEscape(String inCode)
+	{
+		return URLUtilities.xmlEscape(inCode);
+	}
+
+	public SAXReader getReader()
+	{
+		return (SAXReader)getReaderPool().instance();
+	}
+	public XMLWriter  getWriter(String inEncoding)
+	{
+		return getWriterPool().instance(inEncoding);
+	}
+
+	public PerThreadSingleton getReaderPool()
+	{
+		if (fieldReaderPool == null)
+		{
+			fieldReaderPool = new PerThreadSingleton();
+			fieldReaderPool.setSingletonClassName(SAXReader.class.getName());
+		}
+		return fieldReaderPool;
+	}
+
+	public XmlWriterPool getWriterPool()
+	{
+		if (fieldWriterPool == null)
+		{
+			fieldWriterPool = new XmlWriterPool();
+		}
+		return fieldWriterPool;
+	}
+
+	public void saveXml(XMLConfiguration inConfig, Writer inOut, String inCharacterEncoding)
+	{
+		Document doc = DocumentHelper.createDocument();
+		Element root = doc.addElement(inConfig.getName());
+		inConfig.appendXml(inConfig,root);
+		saveXml(root, inOut, inCharacterEncoding);
+		
+	}
+
+	public void saveXml(Element inRoot, OutputStream inOutputStream, String inCharacterEncoding)
+	{
+		try
+		{
+			XMLWriter writer = getWriter(inCharacterEncoding);
+			writer.setOutputStream(inOutputStream);
+			if( inRoot.getDocument() != null )
+			{
+				writer.write(inRoot.getDocument());
+			}
+			else
+			{
+				writer.write(inRoot);
+			}
+		}
+		catch ( Exception ex)
+		{
+			throw new OpenEditException(ex.getMessage(), ex);
+		}
+		finally
+		{
+			FileUtils.safeClose(inOutputStream);
+		}
+		
+	}
+
+	public Element getElementById(Element inElement, String inId)
+	{
+		if(inElement == null || inId == null)
+		{
+			return null;
+		}
+		
+		for(Iterator i = inElement.elementIterator(); i.hasNext();)
+		{
+			Element e = (Element) i.next();
+			if(inId.equals(e.attributeValue("id")))
+			{
+				return e;
+			}
+		}
+		
+		return null;
+	}
+}

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <property name="title">Pick Image</property>
+	<generator name="velocity">
+	    <generator name="xslt">
+	    	<stylesheet>../../stylesheets/normal.html.xsl</stylesheet>
+		</generator>
+	</generator>
+	<property name="editable">false</property>
+
+</page>

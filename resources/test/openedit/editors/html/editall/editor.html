@@ -1,0 +1,364 @@
+<html><head>
+#set ( $editPath = $request.getParameter( "editPath" ) )
+#set ( $origURL = $request.getParameter( "origURL" ) )
+<title>WSP HTML Editor $version, $editPath</title>
+<link rel="stylesheet" type="text/css" href="/openedit/admin.css"/>
+<style type="text/css">
+.imagebutton, .imageButtonClick {height: 20; width: 21; border: outset 1px #CCCCF9; background-color: #CCCCF9}
+.imagebuttonHover {height: 20; width: 21; border: outset 1px; background-color: #EEEEEE}
+.imagebuttonDown {height: 20; width: 21; border: inset 1px; background-color: #CCCCF9}
+.imagebuttonDownHover {height: 20; width: 21; border: inset 1px; background-color: #EEEEEE}
+.image {position: relative; left: 0; top: 0; height:20; width:21; border:none;}
+.toolbar {height: 30; background-color: #CCCCF9;}
+
+.imagetab, .imageButtonClick, .imagetabHover {height: 20; width: 60; border-left: outset 1px #CCCCF9; border-bottom: outset 2px #CCCCF9; border-right: outset 2px #CCCCF9; background-color: #FFFFFF; padding: 3px; }
+.imagetabDown {height: 20; width: 60; border: inset 1px; background-color: #CCCCF9; padding: 3px; }
+.imagetabDownHover {height: 20; width: 60; border: inset 1px; background-color: #EEEEEE; padding: 3px; }
+
+
+</style>
+
+<!-- Velocity commands
+#set ( $parentPage = $request.getParameter( "parentPage" ) )
+#set ( $origURL = $request.getParameter( "origURL" ) )
+#set ( $editableContent = $site.getEditableContentForPath( $editPath ) )
+-->
+
+<script language="JavaScript" src="code.js"></script>
+<script language="JavaScript" src="browser.js"></script>
+<script language="JavaScript" src="$home/fonts.js"></script> <!-- FIXME: Do this properly. -->
+<script language="JavaScript">
+
+var fieldOriginalUrl = "$origURL";
+var originalHtml;
+
+function showImagePicker()
+{
+  		var picker = window.open( '$home/openedit/editors/imagepicker/index.html', 'picker','alwaysRaised=yes,menubar=no,scrollbars=yes,width=600,height=550,resizable=yes');
+  		// Raise the window to the top if it isn't still at the top.
+  		picker.focus();
+}
+function ImagePicked(newImage)
+{
+	//alert( newImage );
+	getEditDocument().execCommand("InsertImage",false,newImage);
+}
+
+function InitToolbarButtons() {
+  var kids = document.getElementsByTagName('DIV');
+
+  for (var i=0; i < kids.length; i++) {
+    if (kids[i].className == "imagebutton" || kids[i].className == "imagetab") {
+      kids[i].onmouseover = tbmouseover;
+      kids[i].onmouseout = tbmouseout;
+      kids[i].onmousedown = tbmousedown;
+      kids[i].onmouseup = tbmouseup;
+      kids[i].onclick = tbclick;
+    } else if (kids[i].className == "imagebuttonClick") {
+      togglebuttons[kids[i].id] = false;
+      kids[i].onmouseover = tbmouseover;
+      kids[i].onmouseout = tbmouseout;
+      kids[i].onmousedown = tbmousedown;
+      kids[i].onmouseup = tbmouseup;
+      kids[i].onclick = tbclick;
+    }
+  }
+}
+function load(useHeader)
+{
+	getEditDocument().open();
+		
+	var html = document.getElementById( 'source' ).value;
+	if ( useHeader )
+	{
+		getEditDocument().write( html );	
+	}
+	else
+	{
+	    //using a link tag breaks gecko
+		getEditDocument().write( "<html><head><base href='$url_util.buildStandard( $editPath )'>");
+		getEditDocument().write("<style type='text/css'>");
+		getEditDocument().write( document.getElementById("csstext").value );
+		getEditDocument().write( document.getElementById("highlightcsstext").value );
+		getEditDocument().write("</style>");
+		
+		getEditDocument().write("</head><body>");
+		getEditDocument().write( html   );
+		getEditDocument().write( "</body></html>" );
+	}
+	getEditDocument().close();
+	
+}
+function Start() {
+
+
+    InitToolbarButtons();
+	if ( !gecko )
+	{
+		//IE will give permission denied on getText() unless this is here
+	   getEditDocument().designMode = "on";
+	}
+	
+	var html = document.getElementById( 'source' ).value;
+	originalHtml = html;
+	var template;
+	if ( html.indexOf("</html>") > -1 )
+	{
+		template = true;
+	}
+	
+	localBrowser = new Browser( document, getEditDocument(),template );
+	
+	load(template);	
+	
+	addEvent(getEditDocument(),"mousedown", function() { getEditWindow().focus(); }, true);	
+	
+	if ( gecko )
+	{
+		//Mozilla will not edit unless you do this last
+		getEditDocument().designMode = "on";
+		getEditDocument().execCommand("useCSS", false, false);
+	}
+
+    getEditDocument().bgColor = "white";
+	getEditWindow().focus();
+    setTimeout("UpdateTimer()", 100);
+    
+    populateClassDropdown();
+    
+    changeState( false, document.getElementById("viewedit") );
+  	changeState( true, document.getElementById("viewsource") );
+  	changeState( true, document.getElementById("viewsaved") );
+
+}
+
+function saveTemp()
+{
+	document.contentForm.content.value = getEditDocument().body.innerHTML;
+	document.contentForm.action.value = '$origURL?tempsave=true';
+	document.contentForm.submit();
+	
+	// Open the text editor window overtop of this one.
+	window.open('$home/openedit/editors/text/editor.html?editPath=$editPath&origURL=$origURL&parentPage=editor&tempsave=true', 'editor','alwaysRaised=yes,menubar=no,resizable=yes,x=100,y=100,width=800,height=600' );
+	return false;
+}
+
+function releaseLock()
+{
+	document.releaseForm.submit();
+}
+
+
+</script>
+
+</head>
+
+<body class="wspblue_bg" onload="Start()" onUnload="checkSave()" leftmargin="0" topmargin="0" leftmargin="0"  marginwidth="0" marginheight="0" >
+
+
+
+<table  width="100%" id="toolbar1" border="0" cellpadding="4" cellspacing="0"  style="visibility: visible;">
+<tbody><tr>
+<td>
+<!-- <div class="imagebutton" id="new"><img class="image" src="newedit_files/new20.gif" alt="New" title="New" style="left: 1px; top: 1px;"></div> -->
+
+</td>
+
+<td>
+<div class="imagebutton" id="save"><img class="image" src="newedit_files/saveas.gif" alt="Save" title="Save" style="left: 1px; top: 1px;"></div>
+</td>
+
+<td>
+</td>
+
+<td>
+<div class="imagebutton" id="cut"><img class="image" src="newedit_files/cut.gif" alt="Cut" title="Cut"></div>
+</td>
+<td>
+<div class="imagebutton" id="copy"><img class="image" src="newedit_files/copy.gif" alt="Copy" title="Copy"></div>
+</td>
+<td>
+<div class="imagebutton" id="paste"><img class="image" src="newedit_files/paste.gif" alt="Paste" title="Paste"></div>
+</td>
+<td>
+</td>
+<td>
+<div class="imagebutton" id="undo"><img class="image" src="newedit_files/undo.gif" alt="Undo" title="Undo" style="left: 1px; top: 1px;"></div>
+</td>
+<td>
+<div class="imagebutton" id="redo"><img class="image" src="newedit_files/redo.gif" alt="Redo" title="Redo"></div>
+</td>
+<td>
+</td>
+<td>
+<div class="imagebutton" id="showImagePicker"><img class="image" src="newedit_files/insertimage.gif" alt="Insert Image" title="Insert Image"></div>
+</td>
+<td>
+<div class="imagebutton" id="createlink"><img class="image" src="newedit_files/link.gif" alt="Insert Link" title="Insert Link" style="left: 1px; top: 1px;"></div>
+</td>
+<td>
+<div class="imagebutton" id="unlink"><img class="image" src="newedit_files/removelink.gif" alt="Remove Link" title="Remove Link" style="left: 1px; top: 1px;"></div>
+</td>
+
+<td>
+<div class="imagebutton" id="createtable"><img class="image" src="newedit_files/table.gif" alt="Insert Table" title="Insert Table" style="left: 1px; top: 1px;"></div>
+</td>
+
+<td>
+<div class="imagebutton" id="removeformat"><img class="image" src="newedit_files/clearformat.gif" alt="Clear Format" title="Clear Format" style="left: 1px; top: 1px;"></div>
+</td>
+
+
+<!--
+<td>
+<div class="imagebutton" id="forecolor"><img class="image" src="newedit_files/forecolor.gif" alt="Text Color" title="Text Color" style="left: 1px; top: 1px;"></div>
+</td>
+<td>
+<div class="imagebutton" id="backcolor"><img class="image" src="newedit_files/backcolor.gif" alt="Background Color" title="Background Color" style="left: 1px; top: 1px;"></div>
+</td>
+-->
+<td>
+</td>
+<td>
+<div class="imagebutton" id="insertorderedlist"><img class="image" src="newedit_files/orderedlist.gif" alt="Ordered List" title="Ordered List"></div>
+</td>
+<td>
+<div class="imagebutton" id="insertunorderedlist"><img class="image" src="newedit_files/unorderedlist.gif" alt="Unordered List" title="Unordered List"></div>
+</td>
+<td>
+</td>
+<td>
+<div class="imagebutton" id="outdent"><img class="image" src="newedit_files/outdent.gif" alt="Outdent" title="Outdent"></div>
+</td>
+
+<td width="100%" align="left">
+<div class="imagebutton" id="indent"><img class="image" src="newedit_files/indent.gif" alt="Indent" title="Indent"></div>
+</td> 
+<td width="90%" align="right">
+<img border="0"  src="/openedit/images/wsp-banner.gif"/>
+</td>
+</tr>
+</table>
+<!-- shadow stepping start-->
+<table class="standard-table" cellpadding="0" cellspacing="0">
+<tr><td width="100%" height="12" background="$home/openedit/images/b-shadow.gif"><img border="0" src="$home/openedit/images/b-shadow.gif"/></td></tr>
+</table>
+<!-- shadow stepping end -->
+<table   id="toolbar1" border="0" cellpadding="4" cellspacing="0" >
+<tbody><tr>
+<td>
+<!-- This works in Mozilla, not in IE, even though it's standard HTML 4.01.
+<select id="classname" onchange="Select(this.id);">
+	<option value="(none)">(none)</option>
+	<optgroup label="Paragraph Styles">
+		<option value="class-a">Class A</option>
+		<option value="class-b">Class B</option>
+	</optgroup>
+	<optgroup label="Character Styles">
+		<option value="class-c">Class C</option>
+	</optgroup>
+</select>
+-->
+<!-- And similarly, the disabled attribute works in Mozilla but not IE. -->
+<select   id="classname" onblur="focusPause(false);" onfocus="focusPause(true)" onchange="Select(this.id);">
+</select>
+</td>
+<td>
+<!--
+<select style="display: none;" id="formatblock" onblur="focusPause(false)" onfocus="focusPause(true)"  onchange="Select(this.id);"><option value="Paragraph">Paragraph</option><option value="Normal">Normal</option><option value="Heading 1">Heading 1 </option><option value="Heading 2">Heading 2 </option><option value="Heading 3">Heading 3 </option><option value="Heading 4">Heading 4 </option><option value="Heading 5">Heading 5 </option><option value="Heading 6">Heading 6 </option><option value="Address">Address </option><option value="Formatted">Formatted </option></select>
+-->
+</td>
+<td>
+<select  id="fontname" onchange="Select(this.id);"><option value="Font">Font</option><option value="Arial">Arial</option><option value="Courier">Courier</option><option value="Times New Roman">Times New Roman</option></select>
+</td>
+<td>
+<select  id="fontsize" onchange="Select(this.id);"><option value="Size">Size</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option></select>
+</td>
+<td>
+<div class="imagebutton" id="bold"><img class="image" src="newedit_files/bold.gif" alt="Bold" title="Bold" style="left: 1px; top: 1px;"></div>
+</td>
+<td>
+<div class="imagebutton" id="italic"><img class="image" src="newedit_files/italic.gif" alt="Italic" title="Italic"></div>
+</td>
+<td>
+<div class="imagebutton" id="underline"><img class="image" src="newedit_files/underline.gif" alt="Underline" title="Underline"></div>
+</td>
+<td>
+</td>
+<td>
+<div class="imagebutton" id="justifyleft"><img class="image" src="newedit_files/justifyleft.gif" alt="Align Left" title="Align Left"></div>
+</td>
+<td>
+<div class="imagebutton" id="justifycenter"><img class="image" src="newedit_files/justifycenter.gif" alt="Center" title="Center"></div>
+</td>
+<td>
+<div class="imagebutton" id="justifyright"><img class="image" src="newedit_files/justifyright.gif" alt="Align Right" title="Align Right"></div>
+</td>
+<td>
+</td>
+</tr>
+</tbody>
+</table>
+<!-- shadow stepping start-->
+<table class="standard-table" cellpadding="0" cellspacing="0" >
+<tr><td width="100%" height="12" background="$home/openedit/images/b-shadow.gif"><img border="0" src="$home/openedit/images/b-shadow.gif"/></td></tr>
+</table>
+<!-- shadow stepping end -->
+
+<table height="87%" width="100%" border="0"  cellpadding="4" cellspacing="0" > 
+<tr>
+<td>
+
+<table height="100%" width="100%" border="0"  cellpadding="0" cellspacing="0">
+<tr height="100%">
+<td colspan="5">
+<iframe  id="editbox" name="editbox" style="border: 0; border-right: thin solid black;" width="100%" height="100%" ></iframe>
+</td>
+</tr>
+<tr>
+<!-- three buttons along the bottom -->
+<td style="border-top: thin solid black;">&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td align="top"><div class="imagetab" id="viewedit"><span class="image"><img src="newedit_files/wysiwyg.gif"/></span></div></td>
+<td align="top"><div class="imagetab" id="viewsource"><span class="image"><img src="newedit_files/source.gif"/></span></div></td>
+<td align="top"> 
+<!-- <div class="imagetab" id="viewsaved"><span class="image">&nbsp;Save</span></div> --> </td>
+<td width="100%" style="border-top: thin solid black;">&nbsp;</td>
+</tr>
+</table>
+
+</td>
+</tr>
+
+<tr>
+<td>
+</td>
+</td>
+</table>
+
+<!-- we dont have a color picker right now
+<iframe width="250" height="190" id="colorpalette" src="newedit_files/colors.html" style="position: absolute; top: 91px; left: 413px; visibility: hidden;"></iframe>
+
+-->
+
+
+<form name="contentForm" target="$parentPage" method="post" action="$origURL">
+	#foreach( $entry in $editableContent.requiredParameters.entrySet )
+		<input type="hidden" name="$entry.key" value="$entry.value" />
+	#end
+	##this is content
+	<input type="hidden" name="$editableContent.contentParameter"  />
+</form>
+
+<form name="releaseForm" target="$parentPage" method="post" action="$origURL">
+	<input type="hidden" name="wsp-action" value="Edit.releaseEditLock" />
+	<input type="hidden" name="editPath" value="$editPath"  />
+</form>
+
+
+<textarea id="source" cols="1" rows="1" style="display: none;">$url_util.xmlEscape( $editableContent.content )</textarea>
+<textarea id="csstext" cols="1" rows="1" style="display: none;">$content.getRepository().get( "$home/fonts.css" )</textarea>
+<textarea id="highlightcsstext" cols="1" rows="1" style="display: none;">$content.getRepository().get( "$home/openedit/editors/html/editall/editor.css" )</textarea>
+
+
+
+</body></html>

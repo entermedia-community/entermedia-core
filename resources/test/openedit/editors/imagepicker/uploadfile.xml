@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+
+<page xmlns="http://www.einnovation.com/xmlns/WSP/openedit/Content"
+	  xmlns:html="http://www.w3.org/1999/xhtml">
+  <content>
+	## Strip the filename off the path.  We don't seem to have access to PathUtilities in here.
+	#set ( $basePath = $request.getParameter( 'editingPath' ) )
+	#set ( $slashPos = $editingPath.lastIndexOf( '/' ) )
+	#if ( $slashPos > 0 )
+		#set( $basePath = $editingPath.substring( 0, $slashPos ) )
+		#set( $prefix = $basePath )
+	#else
+		#set( $basePath = "/" )
+		#set( $prefix = "" )
+	#end
+	
+
+      ## Show the normal (non-FTP-based) upload screen.
+      <dialog enctype="multipart/form-data">
+      	<title>UPLOAD FILE</title>
+        <content>
+          <divided-box>
+            <item>
+              <title>File</title>
+              <description>File to upload:</description>
+              <detail><html:input type="file" size="30" name="file"/></detail>
+            </item>
+            <item>
+              <title>Path</title>
+              <description>Destination file or directory:</description>
+              <detail><html:input type="text" name="path" size="40" value="/newfile.html" /></detail>
+            </item>
+          </divided-box>
+        </content>
+        <buttons>
+          <html:input name="basePath" type="hidden" value="/" />
+          <button name="FINISH" onclick="imagePickerController.uploadFile( document.wizard )"/>
+        </buttons>
+      </dialog>
+    
+  </content>
+</page>

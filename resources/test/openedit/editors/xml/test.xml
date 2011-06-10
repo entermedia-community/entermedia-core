@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+	<template>yourtemplate</template>
+    <property name="title">Welcome</property>
+
+	<generator name="velocity" />
+</page>

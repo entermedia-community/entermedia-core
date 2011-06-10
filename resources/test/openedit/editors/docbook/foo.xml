@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Created by cnelson on July 25, 2002, 2:01 PM -->
+
+<chapter>
+	<title>sample_title_of_chapter</title>
+	<section>
+		<title>sample_chapter_title</title>
+		<project>
+			<date>month/day/year</date>
+			<author>enter_author_name</author>
+			<project-name>enter_project_here</project-name>
+		</project>
+	</section>
+	<section>
+		<title>sample_section_title</title>
+		<para>insert_some_text_here</para>
+		<subsection>
+			<para>insert_some_text_here</para>
+			<link type="URL">enter_URL_here</link>
+		</subsection>
+		<database>
+			<db-name>name_of_database</db-name>
+			<type>database_usage</type>
+			<server-name>give_me_a_bean_name</server-name>
+			<name>joedet</name>
+			<db-table>
+				<name>name_of_database_table</name>
+				<description>description_of_database_table</description>
+			</db-table>
+		</database>
+	</section>
+	<section>
+	<title>sample_section_title</title>
+	<program>
+		<name>program_name</name>
+		<description>desccription_of_program</description>
+	</program>
+	</section>
+</chapter>
+

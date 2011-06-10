@@ -1,0 +1,13 @@
+#set ( $editPath = $url_util.encode( $editPage.path ) )
+#set ( $origURL=$url_util.encode( $request.requestURI ) )
+
+
+<a href="#"
+onclick="if(!window.name)window.name='editor_parent';window.open( '$home/openedit/editors/revisions/index.html?path=$editPath&origURL=$origURL&parentPage='+window.name, 'editor','alwaysRaised=yes,menubar=no' );return false;">
+<img src="$home/openedit/editors/images/history_view.gif" border="0" width="16" height="16" title="View revisions" /></a>
+
+<div style="border: thin dashed #BCBCBC">
+#if ( $request.getAttribute("inFileManager") == "true" ) 
+<img src="
+#end
+

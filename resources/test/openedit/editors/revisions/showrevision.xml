@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<page xmlns="http://www.einnovation.com/xmlns/WSP/openedit/Content"
+    xmlns:html="http://www.w3.org/1999/xhtml">
+  <title>Show Revision</title>
+  <content>
+    #set ( $path = $request.getParameter( "path" ) )
+    #set ( $revisedPage = $site.pageManager.getPage( $path ) )
+    #set ( $revision = $session.getAttribute( "revision" ) )
+    #set ( $revisionContent = $session.getAttribute( "revisionContent" ) )
+    <dialog fill="yes">
+      <title>Show Revision</title>
+      <content>
+        <divided-box>
+          <item>
+            <header>Path:</header>
+            <detail>$path</detail>
+          </item>
+          <item>
+            <header>Author:</header>
+            <detail>$revision.author</detail>
+          </item>
+          <item>
+            <header>Message:</header>
+            <detail>$revision.message</detail>
+          </item>
+          <item>
+            <header>Revision number:</header>
+            <detail>$revision.number</detail>
+          </item>
+          <item>
+            <header>Content:</header>
+            <detail>
+              #if ( $revisionContent )
+                  #set ( $mimeType = $site.mimeTypeMap.getPathMimeType( $revisedPage.contentPath ) )
+                  #if ( $mimeType == "text/html" )
+                      <box>
+                        $revisionContent
+                      </box>
+                  #else
+                      <html:textarea wrap="virtual" rows="20" cols="60"><![CDATA[$revisionContent]]></html:textarea>
+                  #end
+              #else
+                  (Could not retrieve this revision)
+              #end
+            </detail>
+          </item>
+        </divided-box>
+      </content>
+      <buttons>
+        <submit-button name="Use This Revision" href="replacerevision.html?path=$path"/>
+        <button name="View Revisions" href="index.html?path=$path"/>
+      </buttons>
+    </dialog>
+  </content>
+</page>

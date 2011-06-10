@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<page>
+  <property name="productName">Open Edit</property>
+  <property name="productUrl">http://www.openedit.org</property>
+
+  <property name="encoding">UTF-8</property>
+  <generator name="velocity" mimetypes="text/html"/>
+  <generator name="file" />
+
+  <layout>/layout.html</layout>     
+  <property name="title">Example Site</property>
+  
+</page>

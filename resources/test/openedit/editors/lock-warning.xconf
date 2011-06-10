@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <property name="title">Lock Warning</property>
+	<property name="group">welcome</property>
+	<property name="editable">false</property>
+	<template/>
+    <generator name="xslt">
+    	<stylesheet>../stylesheets/normal.html.xsl</stylesheet>
+		<generator name="velocity"/>
+	</generator>
+	<contentfile>/openedit/editors/lock-warning.xml</contentfile>
+</page>

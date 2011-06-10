@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<page>
+  <layout>/defaulttemplate.html</layout>
+  <contentfile>/contenttest/actualpage.html</contentfile>
+</page>

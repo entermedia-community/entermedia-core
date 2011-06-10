@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+
+<page xmlns="http://www.einnovation.com/xmlns/WSP/openedit/Content">
+  <content>
+    <dialog fill="yes">
+      <title>Upload Failed</title>
+      <content>
+      	<box>
+      		$imagePickerController.getFailureMessage()
+      	</box>
+      </content>
+    </dialog>
+  </content>
+</page>

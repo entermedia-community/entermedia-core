@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<page>
+  <!--
+  	  We require, for viewing and editing, that:
+  	      - there is a user;
+  	      - the user is in group foo or has permission bar; and
+  	      - the username is not baz.
+  -->
+  <view-requirements>
+    <and>
+      <user/>
+      <or>
+        <group name="foo"/>
+        <permission name="bar"/>
+      </or>
+      <not>
+        <user name="baz"/>
+      </not>
+    </and>
+  </view-requirements>
+  <edit-requirements>
+    <and>
+      <user/>
+      <or>
+        <group name="foo"/>
+        <permission name="bar"/>
+      </or>
+      <not>
+        <user name="baz"/>
+      </not>
+    </and>
+  </edit-requirements>
+</page>

@@ -1,0 +1,24 @@
+<page>
+
+<property name='text.one'>
+    <value>1</value>
+	<value locale="es">Uno</value>
+</property>
+<property name='text.four'>
+    <value>4</value>
+	<value locale="es">Cuatro</value>
+</property>
+<property name='text.five'>
+    <value>5</value>
+	<value locale="es">Cinco</value>
+</property>
+<property name='text.seven'>
+    <value>7</value>
+	<value locale="es">Seiz</value>
+</property>
+<property name='text.nine'>
+    <value>9</value>
+	<value locale="es">Siete</value>
+</property>
+
+</page>

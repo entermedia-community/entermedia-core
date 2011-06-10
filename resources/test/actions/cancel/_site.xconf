@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<page>
+ <property name="fallbackdirectory">/fallbackfiles</property>
+ <path-action name="PageValue.loadPageVariable"  bean="date3" class="java.sql.Date"/>
+</page>

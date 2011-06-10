@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <property name="title">Replace Revision</property>
+	<property name="group">welcome</property>
+	<page-action name="Edit.writeRevisionContent" />
+	<contentfile>/openedit/editors/revisions/replacerevision.xml</contentfile>
+</page>

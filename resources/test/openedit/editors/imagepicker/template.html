@@ -1,0 +1,14 @@
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="/openedit/admin.css"/>
+  <title>$content.title $version</title>
+  <script type="text/javascript" lang="JavaScript" src="/openedit/javascript/editorfunctions.js"></script>
+  <script type="text/javascript" lang="JavaScript" src="/openedit/javascript/gotopage.js"></script>
+</head>
+  
+<body class="wspblue_bg" onload="window.focus(); if ( document.wizard && document.wizard.path ) { document.wizard.path.value= tree.getSelectedPath() };" >
+
+  $pages.get( $content.path )
+
+</body>
+</html>

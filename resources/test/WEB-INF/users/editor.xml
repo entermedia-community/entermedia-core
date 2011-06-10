@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<user><user-name>editor</user-name><password>foobar</password>
+
+<properties><property name="firstName" value="Mr. Editor"/>
+<property name="email" value="cburkey@wspublisher.com"/>
+</properties>
+<group id="editors" />
+</user>

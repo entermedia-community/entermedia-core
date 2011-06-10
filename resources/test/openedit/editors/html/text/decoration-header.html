@@ -1,0 +1,19 @@
+#set ( $editPath = $url_util.encode( $editPage.path ) )
+#set ( $origURL=$url_util.encode( $request.requestURI ) )
+
+<a href="#"
+onclick="if(!window.name)window.name='editor_parent';window.open('/openedit/editors/text/editor.html?editPath=$editPath&origURL=$origURL&parentPage='+window.name, 'editor','alwaysRaised=yes,menubar=no,resizable=yes,width=780,height=550' );return false;">
+<img src="/openedit/editors/images/edit.gif" border="0" title="Edit Web module" /></a>
+
+<a href="/openedit/editors/spell/HtmlSpellCheck.html?path=$editPath&origURL=$origURL;return false;">
+<img src="/openedit/editors/images/icon_spell.gif" border="0" width="15" height="15" title="Spell check Web module" /></a>
+
+<a href="#"
+onclick="if(!window.name)window.name='editor_parent';window.open( '/openedit/editors/settings/config.html?editPath=$editPath&origURL=$origURL&parentPage='+window.name, 'editor','alwaysRaised=yes,menubar=no,scrollbars=yes,width=780,height=550,resizable=yes' );return false;">
+<img src="/openedit/editors/images/config.gif" border="0" width="16" height="16" title="Edit settings" /></a>
+
+<a href="#"
+onclick="if(!window.name)window.name='editor_parent';window.open( '/openedit/editors/revisions/index.html?path=$editPath&origURL=$origURL&parentPage='+window.name, 'editor','alwaysRaised=yes,menubar=no,scrollbars=yes,width=780,height=550,resizable=yes' );return false;">
+<img src="/openedit/editors/images/history_view.gif" border="0" width="16" height="16" title="View revisions" /></a>
+
+<div style="border: thin dashed #BCBCBC">

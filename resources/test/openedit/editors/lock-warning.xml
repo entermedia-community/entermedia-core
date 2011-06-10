@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+
+<page xmlns="http://www.einnovation.com/xmlns/WSP/openedit/Content"
+    xmlns:html="http://www.w3.org/1999/xhtml">
+  <title>Lock Warning</title>
+  <content>
+    <dialog fill="yes">
+      <title>Lock Warning</title>
+      <content>
+        #set( $oldUsername = $request.getParameter( 'oldUsername' ) )
+        #if ( ! $oldUsername )
+            #set ( $oldUsername = 'someone else' )
+        #end
+        <border>
+          The page <html:b>$request.getParameter( 'editPath' )</html:b> is already locked by
+          <html:b>${oldUsername}</html:b>.  Do you wish to reclaim this lock?
+          (Warning: This could overwrite ${oldUsername}'s changes.)
+        </border>
+        <html:input type="hidden" name="doNotCheckLock" value="true"/>
+        <html:input type="hidden" name="wsp-action" value="Edit.forciblyClaimEditLock"/>
+      </content>
+      <buttons>
+        <submit-button name="Overwrite" href="$url_util.encode( $request.getParameter( 'origURL' ) )"/>
+        <button name="Cancel" onclick="window.close()"/>
+      </buttons>
+    </dialog>
+  </content>
+</page>

@@ -1,0 +1,13 @@
+#set ( $editPath = $url_util.encode( $editPage.path ) )
+#set ( $origURL=$url_util.encode( $request.requestURI ) )
+<A href="#" onclick="if(!window.name)window.name='editor_parent';window.open( '$home/openedit/editors/xml/xmleditor.html?editPath=$editPath&amp;origURL=$origURL&amp;parentPage='+window.name,'editor','alwaysRaised=yes,menubar=no,width=600,height=500,resizable=yes,scrollbars=yes' );return false;">
+<IMG src="$home/openedit/editors/xml/images/xml.gif" border="0" width="16" height="16" title="Edit XML document"/></A>
+<A href="$home/openedit/editors/spell/XmlSpellCheck.html?path=$editPath&amp;origURL=$origURL">
+<IMG src="$home/openedit/editors/images/icon_spell.gif" border="0" width="16" height="16" title="Spell check Web module"/></A>
+<A href="#" onclick="if(!window.name)window.name='editor_parent';window.open( '$home/openedit/editors/settings/config.html?editPath=$editPath&amp;origURL=$origURL&amp;parentPage='+window.name, 'editor','alwaysRaised=yes,menubar=no,width=750,height=550,resizable=yes,scrollbars=yes' );return false;">
+<IMG src="$home/openedit/editors/images/config.gif" border="0" width="16" height="16" title="Edit settings"/></A>
+<A href="#" onclick="if(!window.name)window.name='editor_parent';window.open( '$home/openedit/editors/revisions/index.html?path=$editPath&amp;origURL=$origURL&amp;parentPage='+window.name, 'editor','alwaysRaised=yes,menubar=no,width=600,height=400,resizable=yes,scrollbars=yes' );return false;">
+<IMG src="$home/openedit/editors/images/history_view.gif" border="0" width="16" height="16" title="View revisions"/></A>
+<DIV style="border: thin dashed rgb(188, 188, 188);">
+#if ( $request.getAttribute("inFileManager") == "true" ) 
+<PRE>#end</PRE></DIV>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<commandmaps>
+	<commandmap os="LINUX">
+		<commandbase>./exec</commandbase>
+		<lame>/echo.sh</lame>
+		<ffmpeg>/echo.sh</ffmpeg>
+		<imagemagick>/echo.sh</imagemagick>
+		<ghostscript>/echo.sh</ghostscript>
+		<exiftool>/echo.sh</exiftool>
+	</commandmap>
+	<commandmap os="WINDOWS">
+		<commandbase></commandbase>
+		<lame>/bin/lame.exe</lame>
+		<ffmpeg>/bin/ffmpeg.exe</ffmpeg>
+		<imagemagick>/bin/imagemagick/imagemagick.exe</imagemagick>
+		<ghostscript>/bin/ghostscript/bin/gswin32.exe</ghostscript>
+		<exiftool>/bin/exiftool.exe</exiftool>
+	</commandmap>
+</commandmaps>

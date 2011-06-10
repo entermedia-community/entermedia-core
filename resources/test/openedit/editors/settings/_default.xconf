@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+
+<page>
+	<property name="title">WSP Configuration Editor</property>
+	<generator name="velocity">
+	<generator name="xslt">
+		<stylesheet>../../stylesheets/normal.html.xsl</stylesheet>
+	</generator>
+	</generator>
+	<property name="editable">false</property>
+	<template>/openedit/editors/template.html</template>
+</page>

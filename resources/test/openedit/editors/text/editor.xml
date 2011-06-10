@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+
+#set ( $parentPage = $request.getParameter( "parentPage" ) )
+#set ( $origURL = $request.getParameter( "origURL" ) )
+#set ( $editPath = $request.getParameter( "editPath" ) )
+#set ( $editableContent = $site.getEditableContentForPath( $editPath ) )
+
+<page xmlns="http://www.einnovation.com/xmlns/WSP/openedit/Content"
+    xmlns:html="http://www.w3.org/1999/xhtml">
+  <content>
+    <dialog>
+      <title>EDITING SOURCE FOR PATH :: <font class="module-select">$editPath</font></title>
+      <content>
+	    <box>
+          #foreach( $entry in $editableContent.requiredParameters.entrySet() )
+              <html:input type="hidden" name="$entry.key" value="$entry.value" />
+          #end
+          <html:div align="center">
+            <html:textarea name="$editableContent.contentParameter" onkeydown="Check4Tab(this)" id="escapedContent"
+                cols="80" rows="25" style="
+	font-family: Verdana, Arial, Helvetica, sans-serif; 
+	font-size: 8pt; 
+	font-style: normal; 
+	text-align: left;"><![CDATA[$editableContent.content]]></html:textarea>
+          </html:div>
+        </box>
+      </content>
+      <buttons>
+      	<button name="CANCEL" onclick="window.close()"/>
+      	<button name="SAVE" onclick="saveAndClose()"/>
+      </buttons>
+    </dialog>
+  </content>
+  <!--
+  <html:input type="checkbox" onclick="saveTempSource()" checked="true"/>
+  <html:font color="#FFFFFF" style="font-size: 8pt;">HTML Source</html:font>
+  -->
+</page>

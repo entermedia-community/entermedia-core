@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+  #set ( $frontContentItem = $site.getEditableContentForPath( $content.tocXML ) )
+  #set ( $params = $frontContentItem.requiredParameters )
+  #set ( $pathDir = $frontContentItem.path.substring(0, $frontContentItem.path.lastIndexOf("/")))          
+<page xmlns="http://www.einnovation.com/xmlns/WSP/openedit/Content"
+    xmlns:html="http://www.w3.org/1999/xhtml" onload="processTOC();">
+  <title>Book Editor</title>
+  <content>
+    <html:script type="text/javascript">
+    
+    function createBook()
+    {
+        var name = prompt("Chapter Name: ");
+        var attributes = new Array();
+        var id = findMaxId(editor.xmlDoc.docNode);
+        id++;
+        attributes["id"] = id + "";
+        editor.insertXML("chapter", name, attributes);
+        document.bookForm.path.value = document.bookForm.pathDir.value + id + ".xml";
+        document.bookForm.submit();
+    }
+    
+    function createLabelCell(cell, element)
+    {
+        var href = document.createElement("A");
+        var url = "/openedit/edit.html?repository=cvs_repository&amp;path=${pathDir}/" + element.getAttribute( "id" ) + ".xml";
+        href.setAttribute("href", url);
+        href.setAttribute("target", "edit");
+        var text = document.createTextNode(element.getName() + ": ");
+        href.appendChild(text);
+        cell.appendChild(href);
+    }
+    
+    function findMaxId(element)
+    {
+        var id=0;
+        for(var i=0;  i &lt; element.children.length; i++)
+        {
+            var child = element.children[i];
+            if (child.getAttribute("id") != null)
+            {
+                if (child.getAttribute("id") > id)
+                {
+                    id = child.getAttribute("id");
+                }
+            }
+        }
+        return id;
+    }
+    
+	function Check4Tab(el)
+	{
+	  // Run only in IE
+	  // and if tab key is pressed
+	  // and if the control key is pressed
+	  if ((document.all) &amp;&amp; (9==event.keyCode))
+	  {
+	      // Cache the selection
+	      el.selection=document.selection.createRange();
+	      el.selection.text=String.fromCharCode(9)
+	      event.returnValue=false
+	  }          
+	}
+    </html:script>
+    
+    <dialog fill="yes">
+      <content>
+        <box>
+        	Table of Contents
+        </box>
+
+        <box>
+
+          #foreach( $paramName in $params.keySet() )
+              <html:input type="hidden" name="$paramName" value="$params.get( $paramName )" />
+          #end
+          <html:textarea name="$frontContentItem.contentParameter" id="MyTab"  class="hide" cols="60" rows="10"><![CDATA[$frontContentItem.content]]></html:textarea>
+          $pages.get( "/openedit/xml/xmleditor.xml" )
+          <html:script>
+			function processTOC()
+			{
+				if ( editor == null )
+				{
+					editor = new XMLEditor( "xml-render-area" );
+				}
+				editor.fillLabelCell = createLabelCell;
+				editor.insertNew = createBook;
+				
+				var src = document.getElementById('MyTab').value;  //document.edit.elements['in'].value;
+				editor.displayXML( src );
+				//this is for debug
+				//var area = document.getElementById( "xml-render-area");
+				//document.getElementById('MyTab').value =  area.innerHTML;
+			}
+          </html:script>
+        </box>
+      </content>
+          <buttons>
+        
+            <html:input type="hidden" name="view" value="false" />
+                <submit-button name="Save" onclick="saveOff()" href="$request.requestURI" />
+                <submit-button name="PDF" target="edit" href="viewbookpdf.pdf" />
+                <submit-button name="HTML" target="edit" href="viewbookonline.html" />
+	            <!-- <submit-button name="View" onclick="saveOff()"  href="$postURL" /> -->
+          </buttons>
+    </dialog>
+  <html:form name="bookForm" action="/openedit/edit.html" target="edit">
+  <html:input type="hidden" name="wsp-action" value="Edit.copyPage" />
+  <html:input type="hidden" name="pathDir" value="${pathDir}/" />
+  <html:input type="hidden" name="path" value="" />
+  <html:input type="hidden" name="repository" value="cvs_repository" />
+  <html:input type="hidden" name="pageToCopy" value="bookeditor/foo.xml" />
+
+  </html:form>    
+  </content>
+</page>

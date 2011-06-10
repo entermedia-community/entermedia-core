@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+
+<page xmlns="http://www.einnovation.com/xmlns/WSP/openedit/Content">
+  <content>
+    <dialog fill="yes">
+      <title>Upload Successful</title>
+      <content>
+      	<box>
+      		Your file was uploaded successfully.
+      	</box>
+      </content>
+    </dialog>
+  </content>
+</page>

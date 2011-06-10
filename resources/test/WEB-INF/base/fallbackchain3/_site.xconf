@@ -1,0 +1,3 @@
+<page>
+	<property name="fallbackdirectory">/WEB-INF/base/fallbackchain4</property>
+</page>

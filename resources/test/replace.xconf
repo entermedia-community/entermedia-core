@@ -1,0 +1,4 @@
+<page>
+	
+	<property name="title">New + ${test_property}</property>
+</page>

@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+
+<page>
+	<page-action name="Edit.checkSpelling"/>
+	<property name="editable">false</property>
+    <generator name="velocity"/>
+	
+	
+</page>

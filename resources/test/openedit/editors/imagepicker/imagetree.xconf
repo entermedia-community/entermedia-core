@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+
+<page>
+	<generator name="velocity">
+		<generator name="xslt">
+			<stylesheet>../../stylesheets/normal.html.xsl</stylesheet>
+		</generator>
+	</generator>
+	<property name="editable">false</property>
+
+	<page-action name="WebTree.getTree" >	
+		<property name="treeName">imagePicker</property>	
+		<property name="treeRoot">/</property>	
+		<property name="treeNodeLinkPrefix">/openedit/editors/imagepicker/index.html?</property>
+		
+		<!-- put something in about what files to hide in the tree-->
+	</page-action>
+
+</page>

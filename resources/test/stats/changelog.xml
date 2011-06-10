@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<changes:ChangeLog xmlns:changes="http://www.einnovation.com/xmlns/WSP/openedit/Changes">
+  <changes:Change type="added">
+    <changes:Date type="xsd:date">2003-06-24 01:29:23</changes:Date>
+    <changes:Author>admin</changes:Author>
+    <changes:Url>/subdir/withcontentpath-copy.html</changes:Url>
+  </changes:Change>
+  <changes:Change type="removed">
+    <changes:Date type="xsd:date">2003-06-24 01:29:23</changes:Date>
+    <changes:Author>admin</changes:Author>
+    <changes:Url>withcontentpath.html</changes:Url>
+  </changes:Change>
+  <changes:Change type="added">
+    <changes:Date type="xsd:date">2003-06-24 01:29:23</changes:Date>
+    <changes:Author>admin</changes:Author>
+    <changes:Url>withcontentpath-copy.html</changes:Url>
+  </changes:Change>
+  <changes:Change type="added">
+    <changes:Date type="xsd:date">2003-06-24 18:03:13</changes:Date>
+    <changes:Author>admin</changes:Author>
+    <changes:Url>/subdir/withcontentpath-copy.html</changes:Url>
+  </changes:Change>
+  <changes:Change type="removed">
+    <changes:Date type="xsd:date">2003-06-24 18:03:38</changes:Date>
+    <changes:Author>admin</changes:Author>
+    <changes:Url>withcontentpath.html</changes:Url>
+  </changes:Change>
+  <changes:Change type="added">
+    <changes:Date type="xsd:date">2003-06-24 18:03:38</changes:Date>
+    <changes:Author>admin</changes:Author>
+    <changes:Url>withcontentpath-copy.html</changes:Url>
+  </changes:Change>
+  <changes:Change type="added">
+    <changes:Date type="xsd:date">2003-06-24 22:13:04</changes:Date>
+    <changes:Author>admin</changes:Author>
+    <changes:Url>/subdir/withcontentpath-copy.html</changes:Url>
+  </changes:Change>
+  <changes:Change type="removed">
+    <changes:Date type="xsd:date">2003-06-24 22:13:05</changes:Date>
+    <changes:Author>admin</changes:Author>
+    <changes:Url>withcontentpath.html</changes:Url>
+  </changes:Change>
+  <changes:Change type="added">
+    <changes:Date type="xsd:date">2003-06-24 22:13:05</changes:Date>
+    <changes:Author>admin</changes:Author>
+    <changes:Url>withcontentpath-copy.html</changes:Url>
+  </changes:Change>
+  <changes:Change type="removed">
+    <changes:Date type="xsd:date">2003-06-24 22:13:05</changes:Date>
+    <changes:Author>admin</changes:Author>
+    <changes:Url>withcontentpath-copy.html</changes:Url>
+  </changes:Change>
+  <changes:Change type="added">
+    <changes:Date type="xsd:date">2003-06-24 22:13:05</changes:Date>
+    <changes:Author>admin</changes:Author>
+    <changes:Url>withcontentpath.html</changes:Url>
+  </changes:Change>
+  <changes:Change type="added">
+    <changes:Date type="xsd:date">2003-06-24 23:23:23</changes:Date>
+    <changes:Author>admin</changes:Author>
+    <changes:Url>/subdir/withcontentpath-copy.html</changes:Url>
+  </changes:Change>
+  <changes:Change type="removed">
+    <changes:Date type="xsd:date">2003-06-24 23:23:24</changes:Date>
+    <changes:Author>admin</changes:Author>
+    <changes:Url>withcontentpath.html</changes:Url>
+  </changes:Change>
+  <changes:Change type="added">
+    <changes:Date type="xsd:date">2003-06-24 23:23:24</changes:Date>
+    <changes:Author>admin</changes:Author>
+    <changes:Url>withcontentpath-copy.html</changes:Url>
+  </changes:Change>
+  <changes:Change type="removed">
+    <changes:Date type="xsd:date">2003-06-24 23:23:24</changes:Date>
+    <changes:Author>admin</changes:Author>
+    <changes:Url>withcontentpath-copy.html</changes:Url>
+  </changes:Change>
+  <changes:Change type="added">
+    <changes:Date type="xsd:date">2003-06-24 23:23:24</changes:Date>
+    <changes:Author>admin</changes:Author>
+    <changes:Url>withcontentpath.html</changes:Url>
+  </changes:Change>
+  <changes:Change type="added">
+    <changes:Date type="xsd:date">2003-06-29 22:38:33</changes:Date>
+    <changes:Author>admin</changes:Author>
+    <changes:Url>/subdir/withcontentpath-copy.html</changes:Url>
+  </changes:Change>
+  <changes:Change type="removed">
+    <changes:Date type="xsd:date">2003-06-29 22:38:34</changes:Date>
+    <changes:Author>admin</changes:Author>
+    <changes:Url>withcontentpath.html</changes:Url>
+  </changes:Change>
+  <changes:Change type="added">
+    <changes:Date type="xsd:date">2003-06-29 22:38:34</changes:Date>
+    <changes:Author>admin</changes:Author>
+    <changes:Url>withcontentpath-copy.html</changes:Url>
+  </changes:Change>
+  <changes:Change type="removed">
+    <changes:Date type="xsd:date">2003-06-29 22:38:34</changes:Date>
+    <changes:Author>admin</changes:Author>
+    <changes:Url>withcontentpath-copy.html</changes:Url>
+  </changes:Change>
+  <changes:Change type="added">
+    <changes:Date type="xsd:date">2003-06-29 22:38:34</changes:Date>
+    <changes:Author>admin</changes:Author>
+    <changes:Url>withcontentpath.html</changes:Url>
+  </changes:Change>
+  <changes:Change type="added">
+    <changes:Date type="xsd:date">2003-06-29 22:43:15</changes:Date>
+    <changes:Author>admin</changes:Author>
+    <changes:Url>/subdir/withcontentpath-copy.html</changes:Url>
+  </changes:Change>
+  <changes:Change type="removed">
+    <changes:Date type="xsd:date">2003-06-29 22:43:15</changes:Date>
+    <changes:Author>admin</changes:Author>
+    <changes:Url>withcontentpath.html</changes:Url>
+  </changes:Change>
+  <changes:Change type="added">
+    <changes:Date type="xsd:date">2003-06-29 22:43:15</changes:Date>
+    <changes:Author>admin</changes:Author>
+    <changes:Url>withcontentpath-copy.html</changes:Url>
+  </changes:Change>
+  <changes:Change type="removed">
+    <changes:Date type="xsd:date">2003-06-29 22:43:15</changes:Date>
+    <changes:Author>admin</changes:Author>
+    <changes:Url>withcontentpath-copy.html</changes:Url>
+  </changes:Change>
+  <changes:Change type="added">
+    <changes:Date type="xsd:date">2003-06-29 22:43:15</changes:Date>
+    <changes:Author>admin</changes:Author>
+    <changes:Url>withcontentpath.html</changes:Url>
+  </changes:Change>
+  <changes:Change type="added">
+    <changes:Date type="xsd:date">2003-06-29 23:15:19</changes:Date>
+    <changes:Author>admin</changes:Author>
+    <changes:Url>/subdir/withcontentpath-copy.html</changes:Url>
+  </changes:Change>
+  <changes:Change type="removed">
+    <changes:Date type="xsd:date">2003-06-29 23:15:19</changes:Date>
+    <changes:Author>admin</changes:Author>
+    <changes:Url>withcontentpath.html</changes:Url>
+  </changes:Change>
+  <changes:Change type="added">
+    <changes:Date type="xsd:date">2003-06-29 23:15:19</changes:Date>
+    <changes:Author>admin</changes:Author>
+    <changes:Url>withcontentpath-copy.html</changes:Url>
+  </changes:Change>
+  <changes:Change type="removed">
+    <changes:Date type="xsd:date">2003-06-29 23:15:19</changes:Date>
+    <changes:Author>admin</changes:Author>
+    <changes:Url>withcontentpath-copy.html</changes:Url>
+  </changes:Change>
+  <changes:Change type="added">
+    <changes:Date type="xsd:date">2003-06-29 23:15:19</changes:Date>
+    <changes:Author>admin</changes:Author>
+    <changes:Url>withcontentpath.html</changes:Url>
+  </changes:Change>
+  <changes:Change type="removed">
+    <changes:Date type="xsd:date">2003-07-29 17:23:18</changes:Date>
+    <changes:Author>admin</changes:Author>
+    <changes:Url>withcontentpath.html</changes:Url>
+  </changes:Change>
+  <changes:Change type="added">
+    <changes:Date type="xsd:date">2003-07-29 17:23:18</changes:Date>
+    <changes:Author>admin</changes:Author>
+    <changes:Url>withcontentpath-copy.html</changes:Url>
+  </changes:Change>
+  <changes:Change type="removed">
+    <changes:Date type="xsd:date">2003-07-29 17:23:18</changes:Date>
+    <changes:Author>admin</changes:Author>
+    <changes:Url>withcontentpath-copy.html</changes:Url>
+  </changes:Change>
+  <changes:Change type="added">
+    <changes:Date type="xsd:date">2003-07-29 17:23:18</changes:Date>
+    <changes:Author>admin</changes:Author>
+    <changes:Url>withcontentpath.html</changes:Url>
+  </changes:Change>
+  <changes:Change type="added">
+    <changes:Date type="xsd:date">2003-07-29 17:32:07</changes:Date>
+    <changes:Author>admin</changes:Author>
+    <changes:Url>/subdir/withcontentpath-copy.html</changes:Url>
+  </changes:Change>
+  <changes:Change type="removed">
+    <changes:Date type="xsd:date">2003-07-29 17:32:07</changes:Date>
+    <changes:Author>admin</changes:Author>
+    <changes:Url>withcontentpath.html</changes:Url>
+  </changes:Change>
+  <changes:Change type="added">
+    <changes:Date type="xsd:date">2003-07-29 17:32:07</changes:Date>
+    <changes:Author>admin</changes:Author>
+    <changes:Url>withcontentpath-copy.html</changes:Url>
+  </changes:Change>
+  <changes:Change type="removed">
+    <changes:Date type="xsd:date">2003-07-29 17:32:07</changes:Date>
+    <changes:Author>admin</changes:Author>
+    <changes:Url>withcontentpath-copy.html</changes:Url>
+  </changes:Change>
+  <changes:Change type="added">
+    <changes:Date type="xsd:date">2003-07-29 17:32:07</changes:Date>
+    <changes:Author>admin</changes:Author>
+    <changes:Url>withcontentpath.html</changes:Url>
+  </changes:Change>
+  <changes:Change type="added">
+    <changes:Date type="xsd:date">2003-12-17 11:28:56</changes:Date>
+    <changes:Author>admin</changes:Author>
+    <changes:Url>/subdir/withcontentpath-copy.html</changes:Url>
+  </changes:Change>
+  <changes:Change type="removed">
+    <changes:Date type="xsd:date">2003-12-17 11:28:56</changes:Date>
+    <changes:Author>admin</changes:Author>
+    <changes:Url>withcontentpath.html</changes:Url>
+  </changes:Change>
+  <changes:Change type="added">
+    <changes:Date type="xsd:date">2003-12-17 11:28:56</changes:Date>
+    <changes:Author>admin</changes:Author>
+    <changes:Url>withcontentpath-copy.html</changes:Url>
+  </changes:Change>
+  <changes:Change type="removed">
+    <changes:Date type="xsd:date">2003-12-17 11:28:56</changes:Date>
+    <changes:Author>admin</changes:Author>
+    <changes:Url>withcontentpath-copy.html</changes:Url>
+  </changes:Change>
+  <changes:Change type="added">
+    <changes:Date type="xsd:date">2003-12-17 11:28:56</changes:Date>
+    <changes:Author>admin</changes:Author>
+    <changes:Url>withcontentpath.html</changes:Url>
+  </changes:Change>
+</changes:ChangeLog>

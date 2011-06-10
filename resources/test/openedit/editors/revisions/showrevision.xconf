@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <property name="title">Show Revision</property>
+	<property name="group">welcome</property>
+	<generator name="velocity">
+		<generator name="xslt">
+			<stylesheet>../../stylesheets/normal.html.xsl</stylesheet>
+		</generator>
+	</generator>
+	<page-action name="Edit.getRevisionContent" />
+	<contentfile>/openedit/editors/revisions/showrevision.xml</contentfile>
+</page>

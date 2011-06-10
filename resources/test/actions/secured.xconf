@@ -1,0 +1,4 @@
+<page>
+	<page-action name="SecuredTestModule.test" />
+	<page-action name="SecuredTestModule.testRestricted" />
+</page>

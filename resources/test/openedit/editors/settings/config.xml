@@ -1,0 +1,225 @@
+<?xml version="1.0"?>
+
+<page xmlns="http://www.einnovation.com/xmlns/WSP/openedit/Content" xmlns:html="http://www.w3.org/1999/xhtml">
+      <script type="text/javascript">
+      	var usingIE = navigator.appVersion.indexOf("MSIE") > 0? true : false;
+	    #set ( $parentPage = $request.getParameter( "parentPage" ) )
+	    #set ( $origURL = $request.getParameter( "origURL" ) )
+	    #set ( $editPath = $request.getParameter( "editPath" ) )
+    	#set( $editPage = $site.getPageManager().getPage( $editPath ) )
+		
+		function openTab( inDivId, inCheckbox )
+		{
+		  var classKey = 'class';
+		  if ( usingIE )
+		  {
+		    classKey = 'className';
+		  }
+		  
+		  var tab = document.getElementById(inDivId); 
+		  if ( inCheckbox.checked )
+		  { 
+			tab.setAttribute( classKey,'standard-table');
+		  } 
+		  else 
+		  { 
+		 	tab.setAttribute( classKey,'hide');
+		  }						
+		}
+		
+      </script>
+<content>
+ 
+	   <dialog>
+	      <title>SETTINGS FOR :: <font class="module-select">$!origURL</font></title>
+	      <content>          		
+        #foreach ( $parameterName in $request.parameterNames )
+            <html:input type="hidden" name="$parameterName" value="$request.getParameter( $parameterName )"/>
+        #end
+        <table class="standard-table" bgcolor="#666666">
+          <tr><td>
+	      <buttons>
+	        <checkbox group="frame" name="Page" onclick="openTab( 'page', this )" checked="true"/>
+	        <checkbox group="frame" name="Directory" onclick="openTab( 'directory', this )"/>
+	        <checkbox group="frame" name="Programming" onclick="openTab( 'programming', this )"/>
+	      </buttons>
+	      </td></tr>
+        </table>
+        
+             <tab id="page" class="standard-table">
+       	      <title>:: PAGE SETTINGS ::</title>
+	          <detail-box title="Properties">
+	            	<table class="white-divider">
+	            	  <tr>
+	            	    <td>Property Name</td>
+	            	    <td>Value</td>
+	            	  </tr>
+	            	 #foreach( $pproperty in $pageconfig.getAllProperties() )
+	            	 <tr>
+	            	 	<td><input type="text" name="page.property.${pproperty}.name" size="18" value="$pproperty"  /></td>
+	            	 	<td><input type="text" name="page.property.${pproperty}.value" size="25" value="$!pageconfig.property($pproperty)"  /></td>
+	            	 </tr>
+	            	 #end
+	            	 ##now add two empty blocks
+	            	 <tr>
+	            	 	<td><input type="text" name="page.newproperty1.name" size="18" /></td>
+	            	 	<td><input type="text" name="page.newproperty1.value" size="25" /></td>
+	            	 </tr>
+	            	 <tr>
+	            	 	<td><input type="text" name="page.newproperty2.name" size="18" /></td>
+	            	 	<td><input type="text" name="page.newproperty2.value" size="25" /></td>
+	            	 </tr>
+	            	 </table>
+		       </detail-box>
+		        
+		       <detail-box title="Template">
+		       		
+		            		<div align="right" class="white-divider">
+			            	 	Path: <input type="text" name="page.template" size="30" value="$!pageconfig.template"  /><br/>
+			            	 #if ( $pageconfig.isEmpty( "template" ) )	            	 
+			            		No Template: <input type="checkbox" name="page.template.none" size="30" checked="true"/><br/>
+							#else
+			            		No Template: <input type="checkbox" name="page.template.none" size="30"/><br/>		
+							#end				            	
+			            	</div>
+			        
+				</detail-box>
+				<detail-box title="Programming">
+		            	 <!-- for each attribute add a name value pair -->
+		            	 
+		            	 	<div align="right" class="white-divider">
+				       		 JSP: 
+			            	 #if ( $pageconfig.checkedAttrib('generator','jsp') )	            	 
+			            	  <input type="checkbox" name="page.generator.1" size="30" value="jsp" checked="true	" />
+		    	        	 #else
+		    	        	 <input type="checkbox" name="page.generator.1" size="30" value="jsp"  />
+		    	        	 #end
+		    	        	 <br/>
+							 Velocity: 
+			            	 #if ( $pageconfig.checkedAttrib('generator','velocity') )
+				            	 <input type="checkbox" name="page.generator.2" value="velocity" checked="true" />
+				             #else
+				             	 <input type="checkbox" name="page.generator.2" value="velocity" />
+				             #end
+				       		 <br/> 
+				       		 XSLT: 
+			            	 #if ( $pageconfig.checkedAttrib('generator','xslt') )
+				            	 <input type="checkbox" name="page.generator.1" value="xslt" checked="true" />
+				             #else
+				             	 <input type="checkbox" name="page.generator.1" value="xslt" />
+				             #end
+				       		 <br/> 
+					         XSLT Stylesheet: <input type="text" name="page.generator.1.xslt" size="30" value="$!pageconfig.getGeneratorChildValue('stylesheet')"  />
+		            	 	</div>
+		    	       	 
+		    	 </detail-box>
+		    	 </tab>
+		    	<tab id="directory" class="hide">
+		    	 <title>:: DIRECTORY SETTINGS ::</title>
+		         <detail-box title="Properties">	
+			          <table class="white-divider">
+	            	  <tr>
+	            	    <td>Property Name</td>
+	            	    <td>Value</td>
+	            	  </tr>
+			            	 #foreach( $dproperty in $dirconfig.getAllProperties() )
+			            	 <tr>
+			            	 	<td><input type="text" name="dir.property.${dproperty}.name" size="18" value="$dproperty"  /></td>
+			            	 	<td><input type="text" name="dir.property.${dproperty}.value" size="25" value="$!dirconfig.property($dproperty)"  /></td>
+			            	 </tr>
+			            	 #end
+			            	 ##now add two empty blocks
+			            	 <tr>
+			            	 	<td><input type="text" name="dir.newproperty1.name" size="18" /></td>
+			            	 	<td><input type="text" name="dir.newproperty1.value" size="25" /></td>
+			            	 </tr>
+			            	 <tr>
+			            	 	<td><input type="text" name="dir.newproperty2.name" size="18" /></td>
+			            	 	<td><input type="text" name="dir.newproperty2.value" size="25" /></td>
+			            	 </tr>
+			            	 </table>
+			      </detail-box>
+			      <detail-box title="Template">
+			      		<div align="right" class="white-divider">
+		            	 	Path: <input type="text" name="dir.template" size="30" value="$!dirconfig.template"  /><br/>
+			            	 #if ( $dirconfig.isEmpty( "template" ) )	            	 
+			            		No Template: <input type="checkbox" name="dir.template.none" size="30" checked="true"/><br/>
+							#else
+			            		No Template: <input type="checkbox" name="dir.template.none" size="30"/><br/>		
+							#end
+						</div>				            	
+		          </detail-box>
+	            	 <!-- for each attribute add a name value pair -->
+	              <detail-box title="Programming">
+	            	 	<div align="right" class="white-divider">							 
+				       		 JSP: 
+			            	 #if ( $dirconfig.checkedAttrib('generator','jsp') )	            	 
+			            	  <input type="checkbox" name="dir.generator.1" size="30" value="jsp" checked="true	" />
+		    	        	 #else
+		    	        	 <input type="checkbox" name="dir.generator.1" size="30" value="jsp"  />
+		    	        	 #end
+				       		 <br/> 
+				       		 Velocity: 
+			            	 #if ( $dirconfig.checkedAttrib('generator','velocity') )
+				            	 <input type="checkbox" name="dir.generator.2" value="velocity" checked="true" />
+				             #else
+				             	 <input type="checkbox" name="dir.generator.2" value="velocity" />
+				             #end
+				       		 <br/> 
+				       		 XSLT: 
+			            	 #if ( $pageconfig.checkedAttrib('generator','xslt') )
+				            	 <input type="checkbox" name="page.generator.1" value="xslt" checked="true" />
+				             #else
+				             	 <input type="checkbox" name="page.generator.1" value="xslt" />
+				             #end
+				       		 <br/> 
+					         XSLT Stylesheet: <input type="text" name="page.generator.1.xslt" size="30" value="$!pageconfig.getGeneratorChildValue('stylesheet')"  />
+	            	 	</div>
+	    	       </detail-box>
+	    	       </tab>
+	    	       <tab id="programming" class="hide">
+	                 <title>:: ADVANCED PROGRAMMING ::</title>
+	    	       	 <detail-box title="Actions">
+	            	   <div class="white-divider">	
+		            	 	#foreach( $textaction in $!pageconfig.getTextActions() )
+			            	 	Text Action: <input type="text" name="page.page-action" size="30" value="$textaction"  /><br/>		            	 
+		            	 	#end
+			            	New Action: <input type="text" name="page.page-action" size="30" value=""  /><br/>
+			           </div>
+			         </detail-box>
+			         <detail-box title="Modules">
+			             <div class="white-divider">	
+		            	 #foreach( $module in $site.getModules() )
+		            	 
+		            	 	<font class="wspgreen">$module.getDescription()</font>
+		            	 	<div/>
+		            	 		            	 			    	        	 
+				            	 #foreach( $action in $module.getDefinedActions() )
+				            	    #if ( $pageconfig.checkedContent( 'page-action',$action.getDescription() ) )
+										<input type="checkbox" name="page.page-action" size="30" value="$action.getDescription()" checked="true" />
+				            	    #else
+										<input type="checkbox" name="page.page-action" size="30" value="$action.getDescription()"  />
+				            	    #end
+				            	    $action.getDescription()<br/>
+								 #end
+							<div class="white-divider"/>	
+						 #end
+				         </div>
+	    	       	  </detail-box>
+	    	       	 </tab>
+	            	
+       
+
+		<input type="hidden" name="wsp-action" value="Edit.writeConfig" />
+
+      </content>
+      <buttons>
+        <button name="Cancel" onclick="window.close()"/>
+       <button name="Ok" onclick="gotoPage( '$origURL', '$parentPage', document.wizard ); window.close();" />
+         <!-- this does not work because of the XSLT expecting frames
+         <button name="Help" target="help" href="/openedit/editors/confighelp.html"/>
+         -->
+      </buttons>
+    </dialog>
+  </content>
+</page>

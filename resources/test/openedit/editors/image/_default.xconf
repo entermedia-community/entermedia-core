@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <property name="title">WSP Source Editor</property>
+	<generator name="xslt">
+    	<stylesheet>../../stylesheets/normal.html.xsl</stylesheet>
+	    <generator name="velocity"/>
+	</generator>
+	<property name="editable">false</property>
+	<page-action name="claimEditLock" />
+	<template>/openedit/editors/template.html</template>
+</page>

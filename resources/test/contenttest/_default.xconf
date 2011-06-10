@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<page>
+  <property name="productName">Open Edit</property>
+  <generator name="velocity"/>
+  <contentfile>/bogus.html</contentfile>
+</page>

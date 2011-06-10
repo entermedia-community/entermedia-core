@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<group><group-name>administrators</group-name>
+<permissions><permission>oe.administration</permission></permissions></group>

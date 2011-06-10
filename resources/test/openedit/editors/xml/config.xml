@@ -1,0 +1,224 @@
+<?xml version="1.0"?>
+
+<page xmlns="http://www.einnovation.com/xmlns/WSP/openedit/Content" xmlns:html="http://www.w3.org/1999/xhtml" onload="window.focus()">
+  <title>Change XML Settings</title>
+      <script type="text/javascript">
+      	var usingIE = navigator.appVersion.indexOf("MSIE") > 0? true : false;
+	    #set ( $parentPage = $request.getParameter( "parentPage" ) )
+	    #set ( $origURL = $request.getParameter( "origURL" ) )
+	    #set ( $editPath = $request.getParameter( "editPath" ) )
+    	#set( $editPage = $site.getPageManager().getPage( $editPath ) )
+	
+		function changeState( inDivId )
+		{
+			if ( usingIE )
+			{
+				var act = document.getElementById(inDivId); 
+				if ( act.getAttribute('className') == 'hide' ) 
+				{ 
+					act.setAttribute('className','basic');
+				} else { 
+				 	act.setAttribute('className','hide');
+				}						
+			}
+			else
+			{
+				var act = document.getElementById(inDivId); 
+				if ( act.getAttribute('class') == 'hide' ) 
+				{ 
+					act.setAttribute('class','basic');
+				} else { 
+				 	act.setAttribute('class','hide');
+				}						
+			}
+		}
+        function saveAndClose()
+        {
+            document.wizard.action = "$origURL";
+            document.wizard.target = "$parentPage";
+            document.wizard.submit();
+            window.close();
+        }
+      </script>
+<content>
+ 
+   <wizard>
+      <content>
+         #foreach ( $parameterName in $request.parameterNames )
+            <html:input type="hidden" name="$parameterName" value="$request.getParameter( $parameterName )"/>
+        #end
+        <border fill="yes">
+             <table>
+	            <tr><td><b>Title:</b></td><td>  $!editPage.title</td></tr>
+                <tr><td><b>Address:</b></td><td>  $!origURL</td></tr>                
+             </table>
+        </border>
+        <box fill="yes">
+           <detail>
+       			<table>
+       			<tr>
+       			<td valign="top">     
+       				<border fill="yes">
+		            	<div align="left">
+		            		<p><b>Page Settings:</b></p>
+		            	</div>
+		            	 <border fill="yes">
+		            		Properties:
+		            		<div align="right">
+		            	
+				            	<table><tr><td>Property Name</td><td>Value</td></tr>
+				            	 #foreach( $pproperty in $pageconfig.getAllProperties() )
+				            	 <tr>
+				            	 	<td><input type="text" name="page.property.${pproperty}.name" size="18" value="$pproperty"  /></td>
+				            	 	<td><input type="text" name="page.property.${pproperty}.value" size="25" value="$!pageconfig.property($pproperty)"  /></td>
+				            	 </tr>
+				            	 #end
+				            	 ##now add two empty blocks
+				            	 <tr>
+				            	 	<td><input type="text" name="page.newproperty1.name" size="18" /></td>
+				            	 	<td><input type="text" name="page.newproperty1.value" size="25" /></td>
+				            	 </tr>
+				            	 <tr>
+				            	 	<td><input type="text" name="page.newproperty2.name" size="18" /></td>
+				            	 	<td><input type="text" name="page.newproperty2.value" size="25" /></td>
+				            	 </tr>
+				            	 </table>
+				            </div>
+			            </border>
+		            	
+		            	 <border fill="yes">
+		            		Template:
+		            		<div align="right">
+			            	 	Path: <input type="text" name="page.template" size="30" value="$!pageconfig.template"  /><br/>
+			            	 #if ( $pageconfig.isEmpty( "template" ) )	            	 
+			            		No Template: <input type="checkbox" name="page.template.none" size="30" checked="true"/><br/>
+							#else
+			            		No Template: <input type="checkbox" name="page.template.none" size="30"/><br/>		
+							#end				            	
+			            	</div>
+						 </border>
+		            	 <!-- for each attribute add a name value pair -->
+		            	 <border fill="yes">
+		            	 	Programming:
+		            	 	<div align="right">
+							 Velocity: 
+			            	 #if ( $pageconfig.checkedAttrib('generator','velocity') )
+				            	 <input type="checkbox" name="page.generator.2" value="velocity" checked="true" />
+				             #else
+				             	 <input type="checkbox" name="page.generator.2" value="velocity" />
+				             #end
+				       		 <br/> 
+							 XSLT: 
+			            	 #if ( $pageconfig.checkedAttrib('generator','xslt') )
+				            	 <input type="checkbox" name="page.generator.1" value="xslt" checked="true" />
+				             #else
+				             	 <input type="checkbox" name="page.generator.1" value="xslt" />
+				             #end
+				       		 <br/> 
+					             XSLT Stylesheet: <input type="text" name="page.generator.1.xslt" size="30" value="$!pageconfig.getGeneratorChildValue('stylesheet')"  /><br/>				             
+		            	 	</div>
+		    	       	 </border>
+		    	      </border>
+				</td>
+				<td valign="top">            	
+	            	<div align="right">
+	            	 <border fill="yes">
+	            	
+	            	<p><b><a href="javascript:changeState( 'dir' )" >+</a> Directory Settings:</b></p>
+					<div id="dir" class="hide">
+		            	 <border fill="yes">
+		            		Properties:
+		            	
+			            	<table><tr><td>Property Name</td><td>Value</td></tr>
+			            	 #foreach( $dproperty in $dirconfig.getAllProperties() )
+			            	 <tr>
+			            	 	<td><input type="text" name="dir.property.${dproperty}.name" size="18" value="$dproperty"  /></td>
+			            	 	<td><input type="text" name="dir.property.${dproperty}.value" size="25" value="$!dirconfig.property($dproperty)"  /></td>
+			            	 </tr>
+			            	 #end
+			            	 ##now add two empty blocks
+			            	 <tr>
+			            	 	<td><input type="text" name="dir.newproperty1.name" size="18" /></td>
+			            	 	<td><input type="text" name="dir.newproperty1.value" size="25" /></td>
+			            	 </tr>
+			            	 <tr>
+			            	 	<td><input type="text" name="dir.newproperty2.name" size="18" /></td>
+			            	 	<td><input type="text" name="dir.newproperty2.value" size="25" /></td>
+			            	 </tr>
+			            	 </table>
+			            </border>
+	            	 <border fill="yes">
+	            		Template:
+	            		<div align="right">
+		            	 	Path: <input type="text" name="dir.template" size="30" value="$!dirconfig.template"  /><br/>
+			            	 #if ( $dirconfig.isEmpty( "template" ) )	            	 
+			            		No Template: <input type="checkbox" name="dir.template.none" size="30" checked="true"/><br/>
+							#else
+			            		No Template: <input type="checkbox" name="dir.template.none" size="30"/><br/>		
+							#end				            	
+		            	</div>
+					 </border>
+	            	 <!-- for each attribute add a name value pair -->
+	            	 <border fill="yes">
+	            	 	Programming:
+	            	 	<div align="right">
+						 Velocity: 
+		            	 #if ( $dirconfig.checkedAttrib('generator','velocity') )
+			            	 <input type="checkbox" name="dir.generator.2" value="velocity" checked="true" />
+			             #else
+			             	 <input type="checkbox" name="dir.generator.2" value="velocity" />
+			             #end
+			       		 <br/> 
+						 XSLT: 
+		            	 #if ( $dirconfig.checkedAttrib('generator','xslt') )
+			            	 <input type="checkbox" name="dir.generator.1" value="xslt" checked="true" />
+			             #else
+			             	 <input type="checkbox" name="dir.generator.1" value="xslt" />
+			             #end
+			       		 <br/> 
+			             XSLT Stylesheet: <input type="text" name="dir.generator.1.xslt" size="30" value="$!dirconfig.getGeneratorChildValue('stylesheet')"  /><br/>				             
+	            	 	</div>
+	    	       	 </border>
+	            	</div>
+	    	       	 </border>
+	            	 <border fill="yes">
+	            	 	<p><b> <a href="javascript:changeState('actions')" >+</a> Advanced Programming:</b></p>
+		            	 <!--we should put this into an advanced dialog or wizard -->
+		            	 <div id="actions" class="hide">
+		            	 	#foreach( $textaction in $!pageconfig.getTextActions() )
+			            	 	Text Action: <input type="text" name="page.page-action" size="30" value="$textaction"  /><br/>		            	 
+		            	 	#end
+			            	New Action: <input type="text" name="page.page-action" size="30" value=""  /><br/>
+		            	 #foreach( $module in $site.getModules() )
+		            	 	$module.getDescription()
+		            	 	<div style="margin-left: 15px; ">		            	 			    	        	 
+				            	 #foreach( $action in $module.getDefinedActions() )
+				            	    #if ( $pageconfig.checkedContent( 'page-action',$action.getDescription() ) )
+										<input type="checkbox" name="page.page-action" size="30" value="$action.getDescription()" checked="true" />
+				            	    #else
+										<input type="checkbox" name="page.page-action" size="30" value="$action.getDescription()"  />
+				            	    #end
+				            	    $action.getDescription()<br/>
+								 #end
+							</div>
+						 #end
+						</div>
+	    	       	 </border>
+	            	 </div>
+	            </td>
+	            </tr>
+	            </table>
+            </detail>          
+        </box >
+
+		<input type="hidden" name="wsp-action" value="Edit.writeConfig" />
+
+      </content>
+      <buttons>
+        <button name="Ok" onclick="saveAndClose()"/>
+         <button name="Cancel" onclick="window.back()"/>
+         <button name="Help" target="help" href="/openedit/editors/confighelp.html"/>
+      </buttons>
+    </wizard>
+  </content>
+</page>

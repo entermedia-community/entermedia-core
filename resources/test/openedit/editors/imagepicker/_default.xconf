@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+
+<page>
+	<property name="title">WSP Image Picker</property>
+	<property name="editable">false</property>
+	<template>/openedit/editors/imagepicker/template.html</template>
+	<generator name="velocity">
+		<generator name="xslt">
+			<stylesheet>../../stylesheets/normal.html.xsl</stylesheet>
+		</generator>
+	</generator>
+		
+</page>

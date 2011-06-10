@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<page xmlns="http://www.einnovation.com/xmlns/WSP/openedit/Content"
+    xmlns:html="http://www.w3.org/1999/xhtml">
+  <title>Replace Revision</title>
+  <content>
+  	<dialog fill="yes">
+  	  <content>
+        <box>
+          #set( $path = $request.getParameter( "path" ) )
+          #set( $revision = $session.getAttribute( "revision" ) )
+          The content of revision $revision.number of $path has been written to the
+          repository as a new revision.
+        </box>
+      </content>
+      <buttons>
+        <button name="View Revisions" href="index.html?path=$url_util.encode( $path )" />
+      </buttons>
+  	</dialog>
+  </content>
+</page>

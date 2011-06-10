@@ -1,0 +1,212 @@
+<?xml version="1.0"?>
+
+<page xmlns="http://www.einnovation.com/xmlns/WSP/openedit/Content"
+    xmlns:html="http://www.w3.org/1999/xhtml" >
+  <title>Online XML Editor $version</title>
+  <content>
+    <html:script type="text/javascript" lang="JavaScript" src="browserEditor.js" />
+    <html:script type="text/javascript" lang="JavaScript" src="browserDOM.js" />
+  
+    <html:script type="text/javascript">
+		var usingIE = navigator.appVersion.indexOf("MSIE") > 0? true : false;
+    	var savedOk = false;        
+        var editor;
+
+        function checkSave()
+        {
+        	if( !savedOk &amp;&amp; editor.xmlDoc.rootElement.isModified() )
+        	{
+        		var save = confirm("Click OK to save your changes.");
+        		if ( save )
+        		{
+        			saveAndClose();
+        		}
+        	}
+        }
+        function processText()
+        {
+        	window.focus();
+            if ( editor == null )
+            {
+                editor = new XMLEditor( "xml-render-area" );
+            }
+            var src = document.getElementById('content').value;  //document.edit.elements['in'].value;
+            editor.displayXML( src );
+            //this is for debug
+            //var area = document.getElementById( "xml-render-area");
+            //document.getElementById('MyTab').value =  area.innerHTML;
+        }
+        
+        function saveAndClose()
+        {
+            editor.saveText();
+            
+            document.getElementById('content').value = editor.xmlDoc.asXML();
+            document.wizard.action = "$origURL";
+            document.wizard.target = "$parentPage";
+            document.wizard.submit();
+            savedOk = true;
+            window.close();
+            
+
+        }
+
+		if ( usingIE )
+		{
+			document.body.onload = function() { processText(); };
+			document.body.onunload = function() { checkSave(); };
+		}
+		else
+		{
+			window.onload = function() { processText(); };
+			window.onunload = function() { checkSave(); };
+		}
+
+    </html:script>
+
+    #set ( $parentPage = $request.getParameter( "parentPage" ) )
+    #set ( $origURL = $request.getParameter( "origURL" ) )
+    #set ( $editPath = $request.getParameter( "editPath" ) )
+    #set ( $editableContent = $site.getEditableContentForPath( $editPath ) )
+    <dialog fill="true">
+      <content> 
+        <divided-box>
+          <item>
+            <header />
+            <detail>
+                          <!-- FIXME: This should be moved into a stylesheet. -->
+              <html:div class="toolbar" id="toolbar">
+                <html:a href="javascript:saveAndClose()"><html:img src="images/save.gif" height="16" width="16" title="Save" border="0" alt="Save" /></html:a>
+                <html:hr width="17"/>
+                <html:a href="javascript:editor.insertNew()"><html:img src="images/insert.gif" height="16" width="16" title="Add New" border="0" alt="Add New" /></html:a>
+                <html:a href="javascript:editor.editAttributes()"><html:img src="images/attributes.gif" height="16" width="16" title="Attributes" border="0" alt="Attributes" /></html:a>
+                <html:hr width="17"/>
+                <html:a href="javascript:editor.deleteSelection()"><html:img src="images/delete.gif" height="16" width="16" title="Delete" border="0" alt="Delete" /></html:a>
+                <html:hr width="17"/>	
+                <html:a href="javascript:editor.cut()"><html:img src="images/cut.gif" height="16" width="16" title="Cut" border="0" alt="Cut" /></html:a>
+                <html:a href="javascript:editor.copy()"><html:img src="images/copy.gif" height="16" width="16" title="Copy" border="0" alt="Copy" /></html:a>
+                <html:a href="javascript:editor.pasteInto()"><html:img src="images/paste.gif" height="16" width="16" title="Paste Into" border="0" alt="Paste Into" /></html:a>
+                <html:hr width="17"/>
+                <html:a href="javascript:editor.goUp()"><html:img src="images/up.gif" height="16" width="16" title="Up" border="0" alt="Up" /></html:a>
+                <html:a href="javascript:editor.goDown()"><html:img src="images/down.gif" height="16" width="16" title="Down" border="0" alt="Down" /></html:a>
+                <html:a href="javascript:editor.goLeft()"><html:img src="images/left.gif" height="16" width="16" title="Left" border="0" alt="Left" /></html:a>
+                <html:a href="javascript:editor.goRight()"><html:img src="images/right.gif" height="16" width="16" title="Right" border="0" alt="Right" /></html:a>
+              </html:div>
+              &#160;
+			</detail>
+			</item>
+			<item>
+		    <detail>
+              <!-- FIXME: This should all be moved into a stylesheet. -->
+              <html:div id="addpopup" class="hide" >
+                <html:table cellspacing="0" width="350">
+                  <html:tr height="15">
+                    <html:td valign="center" align="left" bgcolor="#333399">
+                      <html:font size="-1" color="white"><html:b>Insert New</html:b></html:font>
+                    </html:td>
+                    <html:td valign="center" align="right"  bgcolor="#333399">
+                      <html:input type="button" name="x" onclick="javascript:editor.hideNew()" value=" X "/>
+                    </html:td>
+                  </html:tr>
+                  <html:tr>
+                    <html:td valign="center" align="center" colspan="2">
+                      <html:p>Please enter a name, any text and then click the ok button to add.</html:p>
+                    </html:td>
+                  </html:tr>
+                  <html:tr>
+                    <html:td valign="top"  align="right">
+                      Element:
+                    </html:td>
+                    <html:td valign="top" align="left">
+                      <html:input type="text" id="new-elementName" name="elementName" width="40" />
+                    </html:td>
+                  </html:tr>
+                  <html:tr>
+                    <html:td valign="top"  align="right">
+                      Text:
+                    </html:td>
+                    <html:td valign="top" align="left">
+                      <html:textarea id="elementXML" name="elementText" cols="20" rows="5" />
+                    </html:td>
+                  </html:tr>
+                  
+                  <html:tr>
+                    <html:td valign="top"  align="right">
+                      <submit-button name="Ok" onclick="javascript:editor.insertNewOk()" />
+                    </html:td>
+                    <html:td valign="top"  align="center">
+                      <submit-button name="Cancel" onclick="javascript:editor.hideNew()"  />
+                    </html:td>
+                  </html:tr>
+                </html:table>
+              </html:div>
+              
+ 		                      <html:div id="attribpopup" class="hide" >
+								<html:table cellspacing="0" width="350">
+		                        <html:tr height="15">
+		      					  <html:td valign="center" align="left" bgcolor="#333399">
+		      					  	<html:font size="-1" color="white"><html:b>Edit Attributes</html:b></html:font>
+		      					  </html:td>
+		      					  <html:td valign="center" align="right"  bgcolor="#333399">
+		      					  	<html:input type="button" name="x" onclick="javascript:editor.hideAttrib()" value=" X "/>
+		      					  </html:td>
+		      					</html:tr>		      
+		                        <html:tr>
+		      					  <html:td valign="center" align="center" colspan="2"  >		      					    
+		      					    <html:p>Please edit the name and any attributes then click ok:</html:p>
+		      					  </html:td>
+		      					</html:tr>		      
+		      					<html:tr>
+		      					  <html:td valign="top"  align="right" >
+ 				                      <html:b>Element:</html:b>
+		      					  </html:td>
+		      					  <html:td valign="top" align="left" >
+		      					  	<html:input id="attrib-elementName" type="text" name="elementName" width="40" />
+		      					  </html:td>
+		      					</html:tr>		      
+		      					<html:tr>
+		      					  <html:td colSpan="2" valign="top" align="left" >
+		      					  	<html:hr />
+		      					  </html:td>
+		      					</html:tr>		      
+		                        <html:tr>
+		      					  <html:td valign="top"  align="center" width="100" >
+ 				                      <html:b>NAME</html:b>
+		      					  </html:td>
+		      					  <html:td valign="top" align="center" width="100">
+		      					      <html:b>VALUE</html:b>		      					  
+		      					  </html:td>
+		      					</html:tr>		      
+
+								</html:table>		      
+								
+								<html:div id="attriblist" />
+		                  		<html:center>
+		                  		 <html:textarea id="elementAttribText" name="elementAttribText" cols="40" rows="6" />
+								</html:center>
+								<html:table cellspacing="0" width="350">
+		                        <html:tr>
+		      					  <html:td valign="top"  align="right" >
+		      					  	<submit-button name="Ok" onclick="javascript:editor.editAttributesOk()" />
+		      					  </html:td>
+		      					  <html:td valign="top"  align="center" >
+		      					  <submit-button name="Cancel" onclick="javascript:editor.hideAttrib()"  />
+		      					  </html:td>
+		      					</html:tr>		      
+
+								</html:table>		      
+		 		                      
+ 		                      </html:div>
+
+              <html:span width="100%" name="xml-render-area" id="xml-render-area">Loading...</html:span> 
+              #foreach( $entry in $editableContent.requiredParameters.entrySet() )
+                  <html:input type="hidden" name="$entry.key" value="$entry.value" />
+              #end
+              <html:textarea name="$editableContent.contentParameter" id="content" class="hide" cols="60" rows="10"><![CDATA[$url_util.xmlEscape($editableContent.content)]]></html:textarea>
+            </detail>
+          </item>
+        </divided-box>
+      </content>
+    </dialog>
+  </content>
+</page>

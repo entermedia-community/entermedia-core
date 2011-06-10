@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+
+<page xmlns="http://www.einnovation.com/xmlns/WSP/openedit/Content"
+    xmlns:html="http://www.w3.org/1999/xhtml" >
+  <content>
+
+    #set ( $path = $request.getParameter( "path" ) )          
+    #set( $editPage = $site.getPageManager().getPage( $path ) )
+
+    <dialog form="false">
+      <title>PICK AN IMAGE</title>
+      <content>
+      	<table width="90%" height="90%"><tr><td valign="top">
+
+      		$pages.get( "$imagePickerController.getLocation()/imagetree.html" )
+      		      		
+
+      		<!-- <iframe src="imagetree.html" width="100%" height="100%" /> -->
+		</td>
+		<td valign="top">
+      	<box>
+      	  #if ( $imagePickerController.isEmpty() )
+      	  No images available.  Upload an image or choose a new image path by clicking
+      	  on one of the icons above the tree to the left.
+      	  #else
+			#if ( $imagePickerController.isImageSelected() )
+             <table >
+             	<tr><td><b>Path:</b></td><td>$imagePickerController.getPath()</td></tr>
+             	<tr><td><b>Last Edited:</b></td><td>  $imagePickerController.getPage().getLastModified() </td></tr>
+             </table>
+             #else
+             <b>Pick an Image</b><br />
+             <ul>
+             <li>use the file tree on left or</li>
+             <li>upload a new image by clicking "upload" button.</li>
+             </ul>
+             #end
+          #end
+        </box>
+        
+        #if ( $imagePickerController.isImageSelected() )
+		<box>			
+		<!-- the following should be handled automatically by the default page wrapper -->
+			<html:img src='$imagePickerController.getPath()' />
+        </box>
+        #else
+        #if ( $imagePickerController.getPath() )
+        <box>
+        	$!pages.stream( $imagePickerController.getPath() )
+        </box>
+        #end
+        #end
+         </td></tr></table>    
+         </content> 
+        <buttons>
+        	<button name="OK" onclick="window.opener.ImagePicked( '$imagePickerController.getPath()' );window.close();" />
+        	<button name="CANCEL" onclick="window.close()"/>
+        </buttons>
+      
+    </dialog>
+  </content>
+</page>

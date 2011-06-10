@@ -1,0 +1,5 @@
+<page>
+	<property name="level1">level1</property>
+
+	<property name="fallbackdirectory">/fallbackchain2</property>
+</page>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<page xmlns="http://www.einnovation.com/xmlns/WSP/openedit/Content"
+    xmlns:html="http://www.w3.org/1999/xhtml" onload="processText();">
+  <content>
+    
+    <dialog fill="yes">
+          #set ( $path = $request.getParameter( "path" ) )
+          #set ( $origURL = $request.getParameter( "origURL" ) )
+          #set ( $revisions = $session.getAttribute( "revisions" ) )
+      <title>REVISIONS FOR:: <font class="module-select">$origURL</font></title>
+      <content>
+        <box>
+
+          #if ( $origURL )
+              #set ( $postURL = $origURL )
+          #else
+              #set ( $postURL = $url_util.requestPath() )
+          #end
+          
+          #if ( $revisions )
+              <html:table>
+                <html:tr>
+                  <html:th>Revision Number</html:th>
+                  <html:th>Author</html:th>
+                  <html:th>Message</html:th>
+                </html:tr>
+                #set ( $index = 0 )
+                #foreach ( $revision in $revisions )
+                    <html:tr>
+                      <html:td>
+                        #if ( $index == 0 )
+                            $revision.number (current version)
+                        #else
+                            <html:a href="showrevision.html?path=${url_util.encode( $path )}&amp;revisionNumber=$revision.number">$revision.number</html:a>
+                        #end
+                      </html:td>
+                      <html:td>
+                      	$revision.author
+                      </html:td>
+                      <html:td>
+                      	$revision.message
+                      </html:td>
+                    </html:tr>
+                    #set( $index = $index + 1 )
+                #end
+              </html:table>
+          #else
+              (No revisions)
+          #end
+        </box>
+      </content>
+    </dialog>
+  </content>
+</page>

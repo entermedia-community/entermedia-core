@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<page>
+	<layout/>
+	<generator name="velocity"/>
+	 <property name="editable">false</property>
+	 <property name="showToolbar">true</property>
+
+</page>

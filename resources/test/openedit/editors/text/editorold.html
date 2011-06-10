@@ -1,0 +1,31 @@
+<html>
+	<head>
+		<title>Edit Text</title>
+		<script language="JavaScript">
+			window.focus();
+			function saveAndClose()
+			{
+				document.contentForm.submit();
+				window.close();
+			}
+		</script>
+	</head>
+	
+	<body leftMargin="0" topMargin="0">
+			#set ( $parentPage = $request.getParameter( "parentPage" ) )
+			#set ( $editPath = $request.getParameter( "editPath" ) )
+			#set ( $editableContent = $site.getEditableContentForPath( $editPath ) )
+			#set ( $params = $editableContent.requiredParameters )
+						
+		<form name="contentForm" target="$parentPage" method="post" action="$editPath">
+			#foreach( $paramName in $editableContent.requiredParameters.keySet() )
+			<input type="hidden" name="$paramName" value="$params.get( $paramName )" />
+			#end
+			<input type="hidden" name="wsp-action" value="Edit.save" />
+			<textarea name="$editableContent.contentParameter" id="escapedContent"
+				cols="80" rows="30">$editableContent.content</textarea>
+				<a href="javascript:saveAndClose()">Save</a>
+		</form>
+		
+	</body>
+</html>

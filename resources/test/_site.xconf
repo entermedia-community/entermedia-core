@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<page>
+  <property name="productName">Open Edit</property>
+  <generator name="velocity"/>
+  <layout />
+  
+  <property name="encoding">ISO-8859-1</property>
+  	<property name="test_property">default</property>
+  
+</page>

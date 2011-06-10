@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<page>
+	<layout>/fallbackfiles/layout1junk.html</layout>
+		<property name="browserTitle">ACME</property>
+	  <path-action name="PageValue.loadPageVariable"  bean="date2" class="java.util.GregorianCalendar"/>
+	
+</page>

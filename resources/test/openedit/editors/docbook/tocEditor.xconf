@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <property name="tocXML">docbookeditor/toc.xml</property>
+    <property name="editable">false</property>
+    <contentfile>docbookeditor/tocEditor.xml</contentfile>
+   <generator name="xslt">
+    	<stylesheet>openedit/normal.html.xsl</stylesheet>
+		<generator name="velocity"/>
+	</generator>
+</page>

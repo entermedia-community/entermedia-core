@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter>
+	<chapterinfo>
+		<author>
+			<surname>author_surname</surname>
+			<firstname>author_firstname</firstname>
+		</author>
+		<copyright>
+			<year>year1</year>
+			<year>year2</year>
+			<year>etc.</year>
+			<holder>copyright_holder_name</holder>
+		</copyright>
+	</chapterinfo>
+	<title>sample_title_of_chapter</title>
+	<sect1>
+		<title>sample_section_title</title>
+		<para>
+			Here is a term definition list:
+			<variablelist>
+				<varlistentry>
+					<term>term1</term>
+					<listitem>
+						<para>description1</para>
+					</listitem>
+				</varlistentry>
+				<varlistentry>
+					<term>term2</term>
+					<listitem>
+						<para>description2</para>
+					</listitem>
+				</varlistentry>
+			</variablelist>
+			And here is a bulleted list:
+			<itemizedlist>
+				<listitem>
+					<para>bulleted_item1</para>
+				</listitem>
+				<listitem>
+					<para>bulleted_item2</para>
+				</listitem>
+			</itemizedlist>
+		</para>
+		<note>
+			<para>This is a note.  A very <emphasis>important</emphasis> one.</para>
+		</note>
+		<example>
+			<title>An example</title>
+			<screen>cd <replaceable>installationDirectory</replaceable>
+runme</screen>
+		</example>
+		<para>
+			The following is a program listing
+			(<literal>&lt;programlisting&gt;</literal>) of
+			<filename>myprogram.txt</filename> which may be found at
+			<ulink url="http://www.einnovation.com">eInnovation</ulink>:
+		</para>
+		<programlisting>Program line 1
+Program line 2</programlisting>
+	</sect1>
+	<sect1>
+		<title>sample_section_title</title>
+		<para>insert_some_text_here</para>
+		<sect2>
+			<title>sample_subsection_title</title>
+			<para>insert_some_text_here</para>
+		</sect2>
+	</sect1>
+</chapter>

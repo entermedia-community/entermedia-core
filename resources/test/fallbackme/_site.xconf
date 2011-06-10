@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<page>
+	<property name="fallbackdirectory">/fallbackfiles</property>
+	<layout>./layout1.html</layout>
+	<property name="browserTitle">Community</property>
+</page>

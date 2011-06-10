@@ -1,0 +1,66 @@
+<html>
+<head>
+	<title>XML Spell Checker</title>
+	<style type="text/css" media="all">@import "speller.css";</style>
+</head>
+
+<body>
+	
+	
+	#macro( renderXmlElement $node  )
+		
+		#if ( $node == $spellCheck.currentChanges.getFailedCharacterData() )
+	<a name="dialog" />
+		<br/><br/><div class="spellDialog" >
+		
+	 <table cellspacing="0" width="100%">
+	                    <tr height="15">
+	                      <td valign="center" align="left" bgcolor="#333399">
+	<font FACE="Dialog, Arial, Helvetica" SIZE="+1" color="white"><b>Spell Check $!node.name</b></font>
+	                      </td>
+	                      <td valign="center" align="right" bgcolor="#333399">
+							<input type="button" onclick="document.spellChecker.nextaction.value='cancel';document.spellChecker.submit();" value=" x "/>
+	                      </td>
+	
+	                    </tr>
+	                    <tr><td colspan="2" bgcolor="#c6d3de">
+	
+			<form name='spellChecker' action='./XmlSpellCheck.html#dialog'>
+			<input type="hidden" value="go-next" name="nextaction"/>
+			<div class="edit-area">$spellCheck.currentChanges.highlight($browser )</div>
+					
+			<div width="75%" align="center">
+				<input type="button" onclick="document.spellChecker.submit();" value=" Next "/> 
+				<input type="button" onclick="document.spellChecker.nextaction.value='ignore'; document.spellChecker.submit();" value=" Ignore "/> 
+				<input type="button"  onclick="document.spellChecker.nextaction.value='finish';document.spellChecker.submit();" value="Finish"/>
+				<input type="button" name="Cancel" onclick="document.spellChecker.nextaction.value='cancel';document.spellChecker.submit();" value="Cancel"/>
+				<br/>
+			</div>
+			</form>
+			</td>
+			</tr>
+			</table>	
+		</div>
+		#else	
+		    #if( $spellCheck.isElement( $node ) )		    	
+				
+			#else
+				$node.text
+			#end
+		#end
+		#if( $spellCheck.isElement( $node ) )
+			<div class="move-over" >
+			<b>$node.name:</b>
+			#foreach( $child2 in $node.nodeIterator() )
+					#renderXmlElement( $child2 )
+			#end
+			</div>
+		#end
+	
+	#end
+	<div class="backgroundtext">#renderXmlElement( $spellCheck.rootElement )
+	</div>
+
+</body>
+</html>
+	

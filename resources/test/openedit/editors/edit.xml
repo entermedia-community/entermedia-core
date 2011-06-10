@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<page xmlns="http://www.einnovation.com/xmlns/WSP/openedit/Content"
+    xmlns:html="http://www.w3.org/1999/xhtml" >
+
+  <title>Edit Page #set( $path = $request.getParameter( "path" ) )</title>
+    
+   <html:base href="$url_util.buildStandard($path)" />
+
+  <content>
+    <html:script type="text/javascript">
+
+	function Check4Tab(el)
+	{
+	  // Run only in IE
+	  // and if tab key is pressed
+	  // and if the control key is pressed
+	  if ((document.all) &amp;&amp; (9==event.keyCode))
+	  {
+	      // Cache the selection
+	      el.selection=document.selection.createRange();
+	      el.selection.text=String.fromCharCode(9)
+	      event.returnValue=false
+	  }          
+	}
+	
+	// This is needed for when we're not using the fancy editors, but just plain
+	// old text areas.
+	
+	function saveOff()
+	{
+	}
+    #set( $editPage = $site.getPageManager().getPage( $path ) )
+    $request.setAttribute("inFileManager","true")
+    </html:script>
+
+    <dialog fill="yes">
+      <content>
+      	<border fill="yes">
+             <table>
+             	<tr><td><b>Full Path:</b></td><td>$!editPage.getContentFile().getAbsolutePath() </td></tr>
+             	<tr><td><b>Last Edited:</b></td><td>  $!editPage.getLastModified() </td></tr>
+                <tr><td><b>Title:</b></td><td>  $!editPage.title </td></tr>
+                <tr><td><b>Link:</b></td><td><a href="$home$!path">$!path</a></td></tr>
+                </table>
+        </border>
+		<box fill="yes">
+			
+				#if( $editPage.getMimeType() == "image/gif" || $editPage.getMimeType() == "image/jpeg" || $editPage.getMimeType() == "image/png")
+					<html:img src='$path' />
+				#elseif ( $editPage.getMimeType() == "text/css" )
+						$!pages.get( $path,false  )					
+				#else
+					$!pages.get( $path, false  )
+				#end
+        </box>
+              
+        
+      </content>
+    </dialog>
+  </content>
+</page>
