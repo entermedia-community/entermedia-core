@@ -70,7 +70,6 @@ public class SearcherManager
 			{
 				log.debug("Created New Searcher: Catalog = " + searcher.getCatalogId() + "SearchType = " + searcher.getSearchType() + "Searcher = " + searcher.getClass() );
 			}
-			searcher.setSearcherManager(this); 
 			getCache().put(id, searcher);
 		}
 		//log.debug("return " + id + " " + searcher);
