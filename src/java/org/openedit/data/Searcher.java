@@ -1,6 +1,7 @@
 package org.openedit.data;
 
 import java.text.DateFormat;
+import java.util.Collection;
 import java.util.List;
 
 import org.openedit.Data;
@@ -121,7 +122,7 @@ public interface Searcher
 
 	public abstract void delete(Data inData, User inUser);
 
-	public abstract void saveAllData(List<Data> inAll, User inUser);
+	public abstract void saveAllData(Collection<Data> inAll, User inUser);
 	
 	public PropertyDetail getDetail(String inId);
 	

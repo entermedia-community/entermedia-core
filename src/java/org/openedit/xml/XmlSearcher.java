@@ -2,6 +2,7 @@ package org.openedit.xml;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -445,7 +446,7 @@ public class XmlSearcher extends BaseSearcher
 		
 	}
 	
-	public void saveAllData(List inAll, User inUser)
+	public void saveAllData(Collection inAll, User inUser)
 	{
 		XmlFile settings = loadXml();
 		for (Iterator iterator = inAll.iterator(); iterator.hasNext();)

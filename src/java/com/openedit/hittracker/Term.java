@@ -13,6 +13,18 @@ abstract public class Term {
 	protected PropertyDetail fieldDetail;
 	protected String fieldOperation;
 	protected String fieldValue;
+	protected Object[] fieldValues;
+	
+	public Object[] getValues()
+	{
+		return fieldValues;
+	}
+
+	public void setValues(Object[] inValues)
+	{
+		fieldValues = inValues;
+	}
+
 	protected Map fieldParameters;
 
 	public Map getParameters()

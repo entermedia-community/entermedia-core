@@ -74,7 +74,7 @@ public class IntCounter
 		String count = fieldCustomerIdCounter.getProperty( getLabelName() );
 		if ( count == null )
 		{
-			throw new IllegalStateException( "Could not find valid ID counter " + getCounterFile() );
+			throw new IllegalStateException( "Could not find valid ID counter " + getCounterFile() + " with label " + getLabelName() );
 		}
 	
 		int i = Integer.parseInt( count );
