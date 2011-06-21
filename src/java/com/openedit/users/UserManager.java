@@ -12,6 +12,7 @@ See the GNU Lesser General Public License for more details.
 
 package com.openedit.users;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.openedit.event.WebEventHandler;
@@ -204,7 +205,9 @@ public interface UserManager
 	public String getScreenName(String userName);
 	void flush();
 
-	public List listUserNames();
+	public Collection listUserNames();
+
+	public Collection listGroupIds();
 
 
 }

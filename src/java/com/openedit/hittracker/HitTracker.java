@@ -714,6 +714,10 @@ public abstract class HitTracker implements Serializable, Collection
 
 	public int indexOf(String inCatalogId, String inId)
 	{
+		if( inCatalogId == null)
+		{
+			inCatalogId = getCatalogId();
+		}
 		for(int i = 0; i < size(); i++)
 		{
 			Data hit = get(i);

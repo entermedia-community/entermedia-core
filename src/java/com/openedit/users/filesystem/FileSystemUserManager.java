@@ -210,7 +210,7 @@ public class FileSystemUserManager implements UserManager
 	 */
 	public HitTracker getGroups()
 	{
-		List ids = listGroupIds();
+		Collection ids = listGroupIds();
 		TreeSet treeSet = new java.util.TreeSet( new GroupComparator() );
 		for (Iterator iterator = ids.iterator(); iterator.hasNext();)
 		{
@@ -600,15 +600,8 @@ public class FileSystemUserManager implements UserManager
 	{
 		getUserNameToUserMap().clear();
 	}
-	/**
-	 * 
-	 * @return a list of group Ids
-	 * @deprecated this is actually reading groups Ids instead of names.
-	 */
-	protected List listGroupNames() {
-		return listGroupIds();
-	}
-	protected List listGroupIds()
+	
+	public Collection listGroupIds()
 	{
 		List ids = new ArrayList();
 		ContentItem item = getPageManager().getRepository().get(getGroupDirectory() );

@@ -216,7 +216,23 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			String pagenumber = inPageRequest.getRequestParameter("page");
 			if (pagenumber != null)
 			{
-				tracker.setPage(Integer.parseInt(pagenumber));
+				if ("next".equals(pagenumber))
+				{
+					int page = tracker.getPage();
+					page++;
+					tracker.setPage(page);
+				}
+				else if ("previous".equals(pagenumber))
+				{
+					int page = tracker.getPage();
+					page--;
+					tracker.setPage(page);
+				}
+
+				else
+				{
+					tracker.setPage(Integer.parseInt(pagenumber));
+				}
 			}
 			if (tracker.getHitsName() == null)
 			{
@@ -1045,48 +1061,61 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		return search;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.openedit.data.Searcher#loadPageOfSearch(com.openedit.WebPageRequest)
-	 */
 	public HitTracker loadPageOfSearch(WebPageRequest inPageRequest) throws OpenEditException
 	{
 		String page = inPageRequest.getRequestParameter("page");
 		HitTracker tracker = loadHits(inPageRequest);
-
-		//This is where we handle changing the number of hits per page
+		if( tracker == null)
+		{
+			return null;
+		}
+		// This is where we handle changing the number of hits per page
 		String hitsperpage = inPageRequest.getRequestParameter("hitsperpage");
-		if (tracker != null && hitsperpage != null )
+		if (tracker != null && hitsperpage != null)
 		{
 			int numhitsperpage = Integer.parseInt(hitsperpage);
 			tracker.setHitsPerPage(numhitsperpage);
 		}
 
+		int totalPages = tracker.getTotalPages();
 		if (page != null)
 		{
-			if (tracker != null)
+			int jumpToPage = Integer.parseInt(page);
+			if (jumpToPage <= totalPages && jumpToPage > 0)
 			{
-				int jumpToPage = Integer.parseInt(page);
-				if (jumpToPage <= tracker.getTotalPages() && jumpToPage > 0)
-				{
-					tracker.setPage(jumpToPage);
-				}
-				else
-				{
-					tracker.setPage(1);
-				}
-				return tracker;
+				tracker.setPage(jumpToPage);
 			}
 			else
 			{
-				log.error("No search found to turn page on " + inPageRequest.getPathUrl());
+				tracker.setPage(1);
+			}
+			return tracker;
+		}
+
+		String nav = inPageRequest.getRequestParameter("nav");
+		if (nav != null)
+		{
+			if ("next".equals(nav))
+			{
+				int jumpToPage = tracker.getPage();
+				jumpToPage++;
+				if (jumpToPage <= totalPages && jumpToPage > 0)
+				{
+					tracker.setPage(jumpToPage);
+				}
+			}
+			else if ("previous".equals(nav))
+			{
+				int jumpToPage = tracker.getPage();
+				jumpToPage--;
+				if (jumpToPage <= totalPages && jumpToPage > 0)
+				{
+					tracker.setPage(jumpToPage);
+				}
 			}
 		}
 		return tracker;
 	}
-
 	/**
 	 * @deprecated use changeSort which checks hitssessionid
 	 * @param inReq
