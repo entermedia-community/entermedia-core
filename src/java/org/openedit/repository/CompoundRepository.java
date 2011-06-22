@@ -11,7 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.openedit.repository.filesystem.XmlVersionRepository;
+import org.openedit.repository.filesystem.FileRepository;
 
 import com.openedit.util.PathUtilities;
 
@@ -128,7 +128,7 @@ public class CompoundRepository implements Repository
 	{
 		if (fieldDefaultRepository == null)
 		{
-			Repository repo = new XmlVersionRepository();
+			Repository repo = new FileRepository();
 			repo.setPath("/");
 			repo.setExternalPath(getRoot().getAbsolutePath());
 			fieldDefaultRepository =repo;
