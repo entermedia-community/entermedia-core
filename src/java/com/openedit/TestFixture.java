@@ -105,7 +105,7 @@ public class TestFixture
 		WebPageRequest context = (WebPageRequest) createPageRequest();
 
 		String[] parts = inPath.split("[?]");
-		if( parts.length > 0)
+		if( parts.length > 1)
 		{
 			Map args = PathUtilities.extractArguments(parts[1]);
 			context.putAllRequestParameters(args);
