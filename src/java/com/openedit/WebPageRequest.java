@@ -254,4 +254,6 @@ public interface WebPageRequest
 	public String getUserProfileValue(String inKey);
 	
 	public UserProfile getUserProfile();
+
+	void putAllRequestParameters(Map inArgs);
 }

@@ -1181,5 +1181,12 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 		return val;
 	}
 
+	@Override
+	public void putAllRequestParameters(Map inArgs)
+	{
+		getLocalParameters().putAll(inArgs);
+		
+	}
+
 
 }

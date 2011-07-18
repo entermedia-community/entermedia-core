@@ -59,6 +59,8 @@ See the GNU Lesser General Public License for more details.
 package com.openedit.util;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -602,5 +604,41 @@ public final class PathUtilities
 		result = result.replace('ú', 'u');
 */
 		return result;
+	}
+
+	public static Map extractArguments(String inArgs)
+	{
+		String[] args = inArgs.split("&");
+		Map arguments = new HashMap(args.length);
+		
+		for (int i = 0; i < args.length; i++)
+		{
+			String[] pairs = args[i].split("=");						
+			if( pairs.length > 0)
+			{
+				String[] values = (String[])arguments.get(pairs[0]);
+				if( values == null)
+				{
+					values = new String[1];
+				}
+				else
+				{
+					String[] newvalues = new String[values.length + 1];
+					System.arraycopy(values,0, newvalues,0, values.length);
+					values = newvalues;
+				}
+				if( pairs.length > 1)
+				{
+					values[values.length -1] = pairs[1];
+				}
+				else
+				{
+					values[values.length -1] = null;
+				}
+				arguments.put(pairs[0], values);
+			}
+		}
+
+		return arguments;
 	}
 }

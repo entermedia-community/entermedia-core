@@ -15,6 +15,8 @@ package com.openedit;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.StringWriter;
+import java.util.Iterator;
+import java.util.Map;
 
 import com.openedit.page.Page;
 import com.openedit.page.PageRequestKeys;
@@ -22,6 +24,7 @@ import com.openedit.page.manage.PageManager;
 import com.openedit.servlet.OpenEditEngine;
 import com.openedit.users.User;
 import com.openedit.users.UserManager;
+import com.openedit.util.PathUtilities;
 import com.openedit.web.Browser;
 
 
@@ -100,6 +103,13 @@ public class TestFixture
 		throws OpenEditException
 	{
 		WebPageRequest context = (WebPageRequest) createPageRequest();
+
+		String[] parts = inPath.split("[?]");
+		if( parts.length > 0)
+		{
+			Map args = PathUtilities.extractArguments(parts[1]);
+			context.putAllRequestParameters(args);
+		}
 		context.putPageValue("path", inPath);
 
 		Page dynamicpage = getPageManager().getPage(inPath);
