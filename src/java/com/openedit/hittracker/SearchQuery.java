@@ -243,10 +243,16 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 				String[] notwords = getValue().split("\\s");
 				if (notwords.length > 0)
 				{
-					for (int i = 0; i < notwords.length; i++)
+					orString.append("(");
+					for (int i = 0; i < notwords.length - 1; i++)
 					{
-						orString.append(" NOT " + notwords[i]);
+						if(notwords[i].length() > 0)
+						{
+							orString.append(" NOT " + notwords[i]);
+						}
 					}
+					orString.append(notwords[notwords.length - 1]);
+					orString.append(")");
 				}
 				return orString.toString();
 			}
@@ -257,10 +263,17 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		getTerms().add(term);
 		return term;
 	}
+	
+	public Term addNots(String inId, String inNots)
+	{
+		PropertyDetail detail = new PropertyDetail();
+		detail.setId(inId);
+		return addNots(detail, inNots);
+	}
 
 	public Term addNot(String inNot)
 	{
-		return addNots(null, inNot);
+		return addNots((PropertyDetail)null, inNot);
 	}
 
 	public String toString()
