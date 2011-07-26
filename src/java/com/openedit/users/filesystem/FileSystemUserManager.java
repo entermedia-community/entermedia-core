@@ -408,7 +408,10 @@ public class FileSystemUserManager implements UserManager
 	{
 		return createGroup(inGroupId, inGroupId);
 	}
-
+	public Group createGroup() throws UserManagerException
+	{
+		return new FileSystemGroup();
+	}
 	
 	/**
 	 * @see com.openedit.users.UserManager#createUser(String, String)

@@ -105,6 +105,7 @@ public interface UserManager
 	 * @throws DuplicateGroupException If there is already a group with the given Id
 	 * @throws UserManagerException If the group could not be created for some reason
 	 */
+	Group createGroup() throws UserManagerException;
 	Group createGroup(String inGroupId) throws UserManagerException;
 	Group createGroup(String inGroupId, String inGroupName) throws UserManagerException;
 
