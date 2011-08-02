@@ -2,38 +2,60 @@ package org.entermedia.locks;
 
 import java.util.Date;
 
-public class Lock
-{
-	protected String fieldOwnerId;
-	protected String fieldPath;
-	protected Date fieldDate;
+import org.openedit.data.BaseData;
+import org.openedit.util.DateStorageUtil;
 
+public class Lock extends BaseData
+{
 	public String getOwnerId()
 	{
-		return fieldOwnerId;
+		return get("ownerid");
 	}
 	public void setOwnerId(String inOwnerId)
 	{
-		fieldOwnerId = inOwnerId;
+		setProperty("ownerid", inOwnerId);
 	}
 	public String getPath()
 	{
-		return fieldPath;
+		return get("path");
 	}
 	public void setPath(String inPath)
 	{
-		fieldPath = inPath;
+		setProperty("path", inPath);
 	}
 	public Date getDate()
 	{
-		return fieldDate;
+		String date = get("date");
+		Date thedate = DateStorageUtil.getStorageUtil().parseFromStorage(date);
+		return thedate;
 	}
 	public void setDate(Date inDate)
 	{
-		fieldDate = inDate;
+		String date = DateStorageUtil.getStorageUtil().formatForStorage(inDate);
+		setProperty("date", date);
 	}
-	public boolean isOwner(String inOwnerId)
+	public boolean isOwner(String inNodeId, String inOwnerId)
 	{
-		return inOwnerId.equals(getOwnerId());
+		boolean owner = inOwnerId.equals(getOwnerId());
+		if(owner)
+		{
+			if( inNodeId.equals(getNodeId()) )
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	public String getName()
+	{
+		return getPath();
+	}
+	public void setNodeId(String inId)
+	{
+		setProperty("nodeid", inId);
+	}
+	public String getNodeId()
+	{
+		return get("nodeid");
 	}
 }

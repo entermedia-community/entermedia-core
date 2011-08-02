@@ -420,7 +420,7 @@ public class XmlSearcher extends BaseSearcher
 		return query;
 	}
 
-	public void saveData(Object inData, User inUser)
+	public void saveData(Data inData, User inUser)
 	{
 		//If this element is manipulated then the instance is the same
 		//No need to read it ElementData data = (ElementData)inData;

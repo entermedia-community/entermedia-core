@@ -114,7 +114,7 @@ public interface Searcher
 
 	public abstract void setCatalogId(String inCatalogId);
 
-	public abstract void saveData(Object inData, User inUser);
+	public abstract void saveData(Data inData, User inUser);
 
 	public abstract Data createNewData();
 
