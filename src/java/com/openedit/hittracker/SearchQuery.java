@@ -44,7 +44,7 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	protected List fieldChildren;
 	protected String fieldHitsName;
 	protected String fieldResultType; //This might be things like assets, albums, selection or search. Used by resulttype
-	protected boolean fieldFireSearchEvent = true;
+	protected boolean fieldFireSearchEvent = false;
 	
 	public String getResultType()
 	{
