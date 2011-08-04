@@ -6,6 +6,7 @@ import java.util.Map;
 import org.openedit.data.Searcher;
 import org.openedit.data.SearcherManager;
 
+import com.openedit.OpenEditException;
 import com.openedit.WebPageRequest;
 
 public class UserProfileManager
@@ -77,6 +78,10 @@ public class UserProfileManager
 	public void saveUserProfile(UserProfile inUserProfile)
 	{
 		Searcher searcher = getSearcherManager().getSearcher(inUserProfile.getCatalogId(), "userprofile");
+		if( inUserProfile.getSourcePath() == null )
+		{
+			throw new OpenEditException("user profile source path is null");
+		}
 		searcher.saveData(inUserProfile, null);
 	}
 }

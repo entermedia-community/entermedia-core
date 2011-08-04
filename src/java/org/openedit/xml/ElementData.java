@@ -51,6 +51,10 @@ public class ElementData implements Data, Comparable
 				return getElement().attributeValue(inId);
 			}
 		}
+		else if( inId.equals("sourcepath"))
+		{
+			return getSourcePath();
+		}
 		return getElement().attributeValue(inId);
 	}
 	

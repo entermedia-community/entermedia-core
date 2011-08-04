@@ -32,6 +32,7 @@ import com.openedit.page.Page;
 public class BaseTestCase extends TestCase
 {
 	protected  TestFixture fieldFixture;
+	protected  static TestFixture fieldStaticFixture;
 
 	/**
 	 * 
@@ -64,11 +65,6 @@ public class BaseTestCase extends TestCase
 		fieldFixture = inFixture;
 	}
 
-	/**
-	 * DOCUMENT ME!
-	 *
-	 * @return
-	 */
 	public TestFixture getFixture()
 	{
 		if (fieldFixture == null)
@@ -77,6 +73,15 @@ public class BaseTestCase extends TestCase
 		}
 		return fieldFixture;
 	}
+	public TestFixture getStaticFixture()
+	{
+		if (fieldStaticFixture == null)
+		{
+			fieldStaticFixture = new TestFixture();
+		}
+		return fieldStaticFixture;
+	}
+	
 	protected void tearDown() throws Exception
 	{
 		super.tearDown();
