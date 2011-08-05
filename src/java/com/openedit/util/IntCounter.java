@@ -14,7 +14,7 @@ import com.openedit.OpenEditRuntimeException;
 public class IntCounter
 {
 	protected File fieldCounterFile;
-	protected String fieldLabelName = "currentCount";
+	protected String fieldLabelName = "idCount";
 	
 	public synchronized int incrementCount() 
 	{
