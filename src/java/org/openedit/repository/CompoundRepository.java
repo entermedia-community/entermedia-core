@@ -74,14 +74,17 @@ public class CompoundRepository implements Repository
      */
     public Repository resolveRepository(String inPath)
 	{
-		for ( Iterator iter = getRepositories().iterator(); iter.hasNext(); )
-		{
-			Repository config = (Repository) iter.next();
-			if ( config.matches(inPath) )
+    	if( fieldRepositories != null && fieldRepositories.size() > 0)
+    	{
+			for ( Iterator iter = getRepositories().iterator(); iter.hasNext(); )
 			{
-				return config;
+				Repository config = (Repository) iter.next();
+				if ( config.matches(inPath) )
+				{
+					return config;
+				}
 			}
-		}
+    	}
 		return getDefaultRepository();
 	}
 	

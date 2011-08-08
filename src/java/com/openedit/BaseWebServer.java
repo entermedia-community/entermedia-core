@@ -571,6 +571,7 @@ public class BaseWebServer implements WebServer
 		else
 		{
 			//Defaults
+			/*
 			Repository repos = new XmlVersionRepository(); 
 			repos.setPath("/WEB-INF/data");
 			repos.setRepositoryType("versionRepository");
@@ -582,12 +583,14 @@ public class BaseWebServer implements WebServer
 			repos.setRepositoryType("fileRepository");
 			repos.setExternalPath(getCleanRootPath(repos.getPath()));
 			getPageManager().getRepository().addRepository(repos);
-
+		
 			repos = new XmlVersionRepository(); 
 			repos.setPath("/");
 			repos.setRepositoryType("fileRepository");
 			repos.setExternalPath(getCleanRootPath(repos.getPath()));
 			getPageManager().getRepository().addRepository(repos);
+			*/
+			
 		}
 		getPageManager().clearCache();
 		getPageManager().getRepository().sort();
