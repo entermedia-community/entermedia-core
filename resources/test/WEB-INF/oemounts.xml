@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mounts>
+  <mount path="/"  repositorytype="versionRepository"/>
+  <mount path="/WEB-INF" repositorytype="fileRepository"/>
+  <mount path="/WEB-INF/data" repositorytype="versionRepository"/>
+</mounts>
