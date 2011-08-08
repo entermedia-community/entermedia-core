@@ -253,7 +253,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		return tracker;
 	}
 
-	protected boolean hasChanged(HitTracker inTracker)
+	public boolean hasChanged(HitTracker inTracker)
 	{
 		String id1 = getIndexId();
 		String id2 = inTracker.getIndexId();
