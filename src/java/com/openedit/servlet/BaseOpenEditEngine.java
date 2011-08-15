@@ -6,8 +6,10 @@ package com.openedit.servlet;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Writer;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -296,7 +298,9 @@ public class BaseOpenEditEngine implements OpenEditEngine
      */
 	public void shutdown()
 	{
-		for (Iterator iter = getModuleManager().getLoadedBeans().iterator(); iter.hasNext();)
+		Set loadedBeansCopy = new HashSet(getModuleManager().getLoadedBeans());
+		
+		for (Iterator iter = loadedBeansCopy.iterator(); iter.hasNext();)
 		{
 			Object module = (Object) iter.next();
 			if( module instanceof Shutdownable)
