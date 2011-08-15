@@ -58,6 +58,16 @@ public class ElementData implements Data, Comparable
 		return getElement().attributeValue(inId);
 	}
 	
+	public float getFloat(String inId)
+	{
+		String val = get(inId);
+		if( val != null)
+		{
+			return Float.parseFloat(val);
+		}
+		return 0;
+	}
+	
 	public String getId()
 	{
 		return getElement().attributeValue("id");
@@ -114,7 +124,12 @@ public class ElementData implements Data, Comparable
 	}
 	public String toString()
 	{
-		return get("name");
+		String name =  get("name");
+		if( name == null)
+		{
+			name = getId();
+		}
+		return name;
 	}
 	
 }

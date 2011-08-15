@@ -45,7 +45,15 @@ public class BaseData implements Data, Comparable {
 		}
 		return String.valueOf(object);
 	}
-
+	public float getFloat(String inId)
+	{
+		String val = get(inId);
+		if( val != null)
+		{
+			return Float.parseFloat(val);
+		}
+		return 0;
+	}
 	public String getId() {
 		return fieldId;
 	}
