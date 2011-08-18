@@ -37,6 +37,7 @@ import com.openedit.util.URLUtilities;
  */
 public class BaseEditorModule extends BaseModule
 {
+	private static final String ERROR404_HTML = "/error404.html";
 	private static Log log = LogFactory.getLog(BaseEditorModule.class);
 	protected List fieldWelcomeFiles;
 	public List getWelcomeFiles()
@@ -163,16 +164,7 @@ public class BaseEditorModule extends BaseModule
 				streamer.getWebPageRequest().putPageValue("forcedDestinationPath", utils.requestPathWithArgumentsNoContext() );
 			}
 		}
-		if ( inReq.getPage().isHtml() &&  inReq.isEditable() )
-		{
-			Page wizard = pageManager.getPage("/system/nopagefound.html");
-			if ( wizard.exists() )
-			{
-				inReq.getPageStreamer().include( wizard);
-				inReq.setHasRedirected(true);
-				return;
-			}
-		}
+		
 		if ( !inReq.getPage().isHtml() )
 		{
 			HttpServletResponse response = inReq.getResponse();
@@ -186,8 +178,20 @@ public class BaseEditorModule extends BaseModule
 		
 		if ( inReq.getContentPage().getPath().equals( inReq.getPath()))
 		{
+//			if ( inReq.getPage().isHtml() &&  inReq.isEditable() )
+//			{
+//				Page wizard = pageManager.getPage("/system/nopagefound.html");
+//				if ( wizard.exists() )
+//				{
+//					inReq.getPageStreamer().include( wizard);
+//					inReq.setHasRedirected(true);
+//					return;
+//				}
+//			}
 			//log.info( "Could not use  add page wizard. 404 error on: " + inReq.getPath() );
-			Page p404 = pageManager.getPage("/error404.html");
+			String errorpage = inReq.getContentPage().getProperty("error404"); //"/error404.html";
+			errorpage = errorpage !=null ? errorpage : ERROR404_HTML;
+			Page p404 = pageManager.getPage(errorpage);
 			if ( p404.exists() )
 			{
 				HttpServletResponse response = inReq.getResponse();

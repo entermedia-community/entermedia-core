@@ -67,14 +67,18 @@ public class HtmlErrorHandler implements ErrorHandler
 					}
 				}
 				error.printStackTrace();
-				if( exception.getPathWithError() == null)
+				String pathWithError = exception.getPathWithError();
+				if( pathWithError == null)
 				{
 					exception.setPathWithError(context.getPage().getPath());
 				}
 				context.putPageValue("editPath", exception.getPathWithError());
 				context.putPageValue("oe-exception", exception); //must be a top level thing since we create a new context
 				PageStreamer pages = (PageStreamer)context.getPageValue(PageRequestKeys.PAGES);
-				Page errorPage = pages.getPage("/openedit/errorpage.html");
+				
+				Page content = pages.getPage(pathWithError);
+				String errorpagepath = content.getProperty("errorpage");
+				Page errorPage = pages.getPage(errorpagepath);
 				if( !errorPage.exists() )
 				{
 					errorPage = pages.getPage("/system/errorpage.html");
