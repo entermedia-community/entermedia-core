@@ -124,6 +124,16 @@ public class FileGenerator extends BaseGenerator implements Generator
 					res.setStatus(HttpServletResponse.SC_PARTIAL_CONTENT);
 				}
 			}
+			if( start == -1)
+			{
+				//Only used for flash flv files never used for mp4
+//				String startbytes = inContext.getRequestParameter("start");
+//				if( startbytes != null)
+//				{
+//					start = Long.parseLong(startbytes);
+//				}
+			}
+			
 			long length = -1;
 			if ( res != null && !contentpage.isHtml() && inContext.getContentPage() == contentpage  )
 			{	//we can set the length unless there is a decorator on it somehow
