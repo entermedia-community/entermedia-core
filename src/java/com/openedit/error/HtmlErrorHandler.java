@@ -70,13 +70,15 @@ public class HtmlErrorHandler implements ErrorHandler
 				String pathWithError = exception.getPathWithError();
 				if( pathWithError == null)
 				{
-					exception.setPathWithError(context.getPage().getPath());
+					pathWithError = context.getPage().getPath();
+					exception.setPathWithError(pathWithError);
+					
 				}
 				context.putPageValue("editPath", exception.getPathWithError());
 				context.putPageValue("oe-exception", exception); //must be a top level thing since we create a new context
 				PageStreamer pages = (PageStreamer)context.getPageValue(PageRequestKeys.PAGES);
 				
-				Page content = pages.getPage(pathWithError);
+				Page content = pages.getPage(exception.getPathWithError());
 				String errorpagepath = content.getProperty("errorpage");
 				
 				Page errorPage = pages.getPage(errorpagepath);
