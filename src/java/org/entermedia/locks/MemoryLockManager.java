@@ -31,17 +31,16 @@ public class MemoryLockManager implements LockManager
 
 	public Lock lock(String inCatId, String inPath, String inOwnerId)
 	{
-		Lock lockrequest = addLock(inPath, inOwnerId);
+		Lock lock = addLock(inPath, inOwnerId);
 
-		Lock lock = loadLock(inCatId,inPath);
 		int tries = 0;
-		while( !isOwner(lock, inOwnerId))
+		while( !isOwner(inCatId,lock))
 		{
 			tries++;
 			log.info("Could not lock trying again  " + tries);
 			if( tries > 9)
 			{
-				release(inCatId,lockrequest);
+				release(inCatId,lock);
 				throw new OpenEditException("Could not lock file " + inPath + " locked by " + lock.getOwnerId() );
 			}
 			try
@@ -53,8 +52,6 @@ public class MemoryLockManager implements LockManager
 				//does not happen
 				log.info(ex);
 			}
-			
-			lock = loadLock(inCatId,inPath);
 		}
 		return lock;
 
@@ -87,15 +84,13 @@ public class MemoryLockManager implements LockManager
 	@Override
 	public Lock lockIfPossible(String inCatId, String inPath, String inOwnerId)
 	{
+		Lock lock = addLock(inPath, inOwnerId);
 
-		Lock lockrequest = addLock(inPath, inOwnerId);
-
-		Lock lock = loadLock(inCatId,inPath);
-		if( isOwner(lock,inOwnerId))
+		if( isOwner(inCatId	,lock))
 		{
-			return lockrequest;
+			return lock;
 		}
-		release(inCatId, lockrequest);
+		release(inCatId, lock);
 		return null;
 	}
 
@@ -112,13 +107,25 @@ public class MemoryLockManager implements LockManager
 		getLocks().clear();
 	}
 
-	@Override
-	public boolean isOwner(Lock inLock, String inOwnerId)
+	public boolean isOwner(String inCatId, Lock lock)
 	{
-		boolean is = inLock.isOwner("inmemory", inOwnerId);
-		return is;
+		if( lock.getId() == null)
+		{
+			throw new OpenEditException("lock id is currently null");
+		}
+		
+		if( lock == null)
+		{
+			throw new OpenEditException("Lock should not be null");
+		}
+		Lock owner = loadLock(inCatId, lock.getPath());
+		if( owner == null)
+		{
+			throw new OpenEditException("Owner lock is currently null");
+		}
+		return lock.getId().equals(owner.getId());
 	}
-
+	
 	protected Lock addLock(String inPath, String inOwnerId)
 	{
 		Lock lockrequest = new Lock();
