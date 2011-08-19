@@ -17,6 +17,6 @@ public interface LockManager
 
 	public abstract void releaseAll(String inCatalogId, String inPath);
 
-	public boolean isOwner(Lock lock, String inOwnerId);
+	public boolean isOwner(String inCatalogId, Lock lock);
 
 }
