@@ -28,7 +28,7 @@ import com.openedit.users.filesystem.FileSystemObject;
  * @author avery To change this generated comment edit the template variable "typecomment":
  * 		   Window>Preferences>Java>Templates.
  */
-public class BaseGroup extends FileSystemObject implements Group, Serializable
+public class BaseGroup extends FileSystemObject implements Group, Serializable, Comparable
 {	
 	protected long fieldLastModified;
 	
@@ -193,5 +193,12 @@ public class BaseGroup extends FileSystemObject implements Group, Serializable
 			return getName();
 		}
 		return super.get(inPropertyName);
+	}
+
+	@Override
+	public int compareTo(Object g1) {
+		Group group = (Group) g1;
+		//compare by name
+		return this.getName().compareToIgnoreCase(group.getName());
 	}
 }

@@ -14,11 +14,13 @@ package com.openedit.users;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.openedit.OpenEditRuntimeException;
 import com.openedit.users.filesystem.FileSystemObject;
@@ -464,5 +466,11 @@ public class BaseUser extends FileSystemObject implements User, Comparable
 			all.putAll(getProperties() );
 		}
 		return all;
+	}
+
+	public Collection<Group> getOrderedGroups() {
+		List groups = new ArrayList(getGroups());
+		Collections.sort(groups);
+		return groups;
 	}
 }

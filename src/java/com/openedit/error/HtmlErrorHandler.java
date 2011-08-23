@@ -81,14 +81,14 @@ public class HtmlErrorHandler implements ErrorHandler
 				Page content = pages.getPage(exception.getPathWithError());
 				String errorpagepath = content.getProperty("errorpage");
 				
-				Page errorPage = pages.getPage(errorpagepath);
-				if( errorpagepath==null||!errorPage.exists() )
+				Page errorPage = null;
+				if (errorpagepath!=null)
+				{
+					errorPage = pages.getPage(errorpagepath);
+				}
+				if( errorPage==null||!errorPage.exists() )
 				{
 					errorPage = pages.getPage("/system/errorpage.html");
-				}
-				if ( !errorPage.exists() )
-				{
-					//do nothing
 					log.error("No error page found" + errorPage.getPath());
 					return false;
 				}
