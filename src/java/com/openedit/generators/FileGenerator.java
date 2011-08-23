@@ -127,11 +127,12 @@ public class FileGenerator extends BaseGenerator implements Generator
 			if( start == -1)
 			{
 				//Only used for flash flv files never used for mp4
-//				String startbytes = inContext.getRequestParameter("start");
-//				if( startbytes != null)
-//				{
+				String startbytes = inContext.getRequestParameter("start");
+				if( startbytes != null)
+				{
 //					start = Long.parseLong(startbytes);
-//				}
+					log.info("start" + startbytes);
+				}
 			}
 			
 			long length = -1;

@@ -60,6 +60,12 @@ public abstract class HitTracker implements Serializable, Collection
 		return page;
 	}
 	*/
+	
+	/** 
+	 * This is the absolute position of a result 
+	 * @param count
+	 * @return
+	 */
 	public int indexOf(int count)
 	{
 
@@ -165,6 +171,7 @@ public abstract class HitTracker implements Serializable, Collection
 			int inHitsPerPage = getHitsPerPage();
 			List page = new ArrayList();
 			int count = (getPage() - 1) * inHitsPerPage; // pick up from here
+			fieldCurrentPage = page;
 			int total = size();
 			for (int i = 0; i < inHitsPerPage; i++)
 			{
@@ -178,7 +185,6 @@ public abstract class HitTracker implements Serializable, Collection
 					break;
 				}
 			}
-			fieldCurrentPage = page;
 		}
 	}
 	public int getMaxPageListing()
