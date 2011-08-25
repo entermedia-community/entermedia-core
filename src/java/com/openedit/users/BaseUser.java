@@ -468,9 +468,24 @@ public class BaseUser extends FileSystemObject implements User, Comparable
 		return all;
 	}
 
-	public Collection<Group> getOrderedGroups() {
+	public Collection<Group> getOrderedGroups()
+	{
 		List groups = new ArrayList(getGroups());
 		Collections.sort(groups);
 		return groups;
+	}
+	
+	public Collection<Group> getEnabledOrderedGroups()
+	{
+		Collection<Group> groups = getOrderedGroups();
+		ArrayList<Group> enabledgroups = new ArrayList<Group>();
+		for (Iterator iterator = groups.iterator(); iterator.hasNext();) {
+			Group group = (Group) iterator.next();
+			if(Boolean.parseBoolean(group.get("enabled")))
+			{
+				enabledgroups.add(group);
+			}
+		}
+		return enabledgroups;
 	}
 }
