@@ -298,15 +298,16 @@ public class BaseOpenEditEngine implements OpenEditEngine
      */
 	public void shutdown()
 	{
-		Set loadedBeansCopy = new HashSet(getModuleManager().getLoadedBeans());
-		
-		for (Iterator iter = loadedBeansCopy.iterator(); iter.hasNext();)
+		Object[] beans = getModuleManager().getLoadedBeans().toArray();
+
+		for (int i = 0; i < beans.length; i++)
 		{
-			Object module = (Object) iter.next();
+			Object module = (Object) beans[i];
 			if( module instanceof Shutdownable)
 			{
 				((Shutdownable)module).shutdown();
 			}
+			
 		}
 	}
 
