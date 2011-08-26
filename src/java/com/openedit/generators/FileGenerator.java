@@ -17,6 +17,7 @@ See the GNU Lesser General Public License for more details.
 package com.openedit.generators;
 
 import java.io.BufferedInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -124,16 +125,7 @@ public class FileGenerator extends BaseGenerator implements Generator
 					res.setStatus(HttpServletResponse.SC_PARTIAL_CONTENT);
 				}
 			}
-			if( start == -1)
-			{
-				//Only used for flash flv files never used for mp4
-				String startbytes = inContext.getRequestParameter("start");
-				if( startbytes != null)
-				{
-//					start = Long.parseLong(startbytes);
-					log.info("start" + startbytes);
-				}
-			}
+			
 			
 			long length = -1;
 			if ( res != null && !contentpage.isHtml() && inContext.getContentPage() == contentpage  )
@@ -159,26 +151,7 @@ public class FileGenerator extends BaseGenerator implements Generator
 
 			if ( contentpage.isBinary() )
 			{
-				OutputStream outs = inOut.getStream();
-				if( start > -1)
-				{
-					BufferedInputStream buffer = new BufferedInputStream(in);
-					long did = buffer.skip(start);
-					if( did != start)
-					{
-						throw new OpenEditException("Could not seek to start " + contentpage.getPath());
-					}
-					in = buffer;
-				}
-				if( end != -1)
-				{
-					getOutputFiller().fill(in, outs, length);
-				}
-				else
-				{					
-					getOutputFiller().fill(in, outs);
-				}
-				
+				in = streamBinary(inContext, contentpage, in, start, end, length, inOut);
 			}
 			else
 			{
@@ -215,6 +188,31 @@ public class FileGenerator extends BaseGenerator implements Generator
 		}
 		
 	}
+	
+	protected InputStream streamBinary(WebPageRequest inReq, Page inPage, InputStream in, long start, long end, long length, Output inOut) throws IOException
+	{
+		OutputStream outs = inOut.getStream();
+		if( start > -1)
+		{
+			BufferedInputStream buffer = new BufferedInputStream(in);
+			long did = buffer.skip(start);
+			if( did != start)
+			{
+				throw new OpenEditException("Could not seek to start");
+			}
+			in = buffer;
+		}
+		if( end != -1)
+		{
+			getOutputFiller().fill(in, outs, length);
+		}
+		else
+		{					
+			getOutputFiller().fill(in, outs);
+		}
+		return in;
+	}
+	
 	protected boolean checkCache(WebPageRequest inContext, Page contentpage, HttpServletRequest req, HttpServletResponse res)
 	{
 		long now = System.currentTimeMillis();			
