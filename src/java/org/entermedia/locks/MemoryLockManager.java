@@ -159,4 +159,5 @@ public class MemoryLockManager implements LockManager
 		}
 		return locks;
 	}
+
 }

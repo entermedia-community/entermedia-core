@@ -21,6 +21,4 @@ public interface LockManager
 
 	public boolean isOwner(String inCatalogId, Lock lock);
 
-	public abstract Searcher getLockSearcher(String inCatid);
-
 }
