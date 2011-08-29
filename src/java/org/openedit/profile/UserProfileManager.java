@@ -32,7 +32,7 @@ public class UserProfileManager
 
 	public UserProfile loadUserProfile(WebPageRequest inReq, String inCatalogId, String inUserName)
 	{
-		if( inUserName == null || "null".equals( inUserName) )
+		if( inUserName == null )
 		{
 			return null;
 		}

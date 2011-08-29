@@ -950,7 +950,9 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 	{
 		fieldHasForwarded = inB;
 	}
-
+	/**
+	 * WARNING! does not return null
+	 */
 	public String getUserName()
 	{
 		User user = getUser();
