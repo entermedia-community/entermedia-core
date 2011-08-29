@@ -2,6 +2,8 @@ package org.entermedia.locks;
 
 import java.util.Collection;
 
+import org.openedit.data.Searcher;
+
 public interface LockManager
 {
 
@@ -18,5 +20,7 @@ public interface LockManager
 	public abstract void releaseAll(String inCatalogId, String inPath);
 
 	public boolean isOwner(String inCatalogId, Lock lock);
+
+	public abstract Searcher getLockSearcher(String inCatid);
 
 }

@@ -58,4 +58,20 @@ public class Lock extends BaseData
 	{
 		return get("nodeid");
 	}
+	
+	public String getVersion()
+	{
+		return get("version");
+	}
+
+	public boolean isLocked()
+	{
+		return Boolean.parseBoolean(get("locked"));
+	}
+
+	public void setLocked(boolean isLocked)
+	{
+		setProperty("locked", String.valueOf(isLocked));
+	}
+	
 }

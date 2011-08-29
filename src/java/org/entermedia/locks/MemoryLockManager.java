@@ -109,21 +109,26 @@ public class MemoryLockManager implements LockManager
 
 	public boolean isOwner(String inCatId, Lock lock)
 	{
-		if( lock.getId() == null)
-		{
-			throw new OpenEditException("lock id is currently null");
-		}
-		
 		if( lock == null)
 		{
 			throw new OpenEditException("Lock should not be null");
 		}
+		if( lock.getId() == null)
+		{
+			throw new OpenEditException("lock id is currently null");
+		}
+
 		Lock owner = loadLock(inCatId, lock.getPath());
 		if( owner == null)
 		{
 			throw new OpenEditException("Owner lock is currently null");
 		}
-		return lock.getId().equals(owner.getId());
+		if( lock.getOwnerId() == null)
+		{
+			return false;
+		}
+		boolean sameowner = lock.getOwnerId().equals(owner.getOwnerId());
+		return sameowner;
 	}
 	
 	protected Lock addLock(String inPath, String inOwnerId)
