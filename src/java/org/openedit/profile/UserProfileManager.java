@@ -32,6 +32,10 @@ public class UserProfileManager
 
 	public UserProfile loadUserProfile(WebPageRequest inReq, String inCatalogId, String inUserName)
 	{
+		if( inUserName == null || "null".equals( inUserName) )
+		{
+			return null;
+		}
 		UserProfile userprofile = (UserProfile)inReq.getPageValue("userprofile");
 		if( userprofile != null)
 		{
