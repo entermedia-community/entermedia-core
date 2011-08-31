@@ -65,6 +65,9 @@ public class UserProfileManager
 			{
 				userprofile.setProperty("settingsgroup","administrator");
 			}
+			userprofile.setSourcePath(inUserName);
+			userprofile.setCatalogId(inCatalogId);
+			searcher.saveData(userprofile, inReq.getUser());
 		}
 		userprofile.setSourcePath(inUserName);
 		userprofile.setCatalogId(inCatalogId);
