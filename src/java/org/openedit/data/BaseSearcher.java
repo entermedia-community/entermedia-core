@@ -1796,4 +1796,20 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		}
 		return null;
 	}
+
+	/**
+	 * @deprecated
+	 * @param inData
+	 * @param inUser
+	 */
+	public void saveData(Object inData, User inUser)
+	{
+		saveData((Data) inData, inUser);
+	}
+
+
+	public void saveData(Data inData, User inUser)
+	{
+		throw new OpenEditException("Save not implemented for " + getSearchType());
+	}
 }
