@@ -1,6 +1,7 @@
 package org.entermedia.locks;
 
 import java.util.Collection;
+import java.util.ConcurrentModificationException;
 import java.util.Date;
 import java.util.Map;
 import java.util.Stack;
@@ -17,31 +18,28 @@ public class MemoryLockManager implements LockManager
 {
 	private static final Log log = LogFactory.getLog(MemoryLockManager.class);
 
-	protected Map<String,Stack> fieldLocks;
+	protected Map<String,Lock> fieldLocks;
 	protected long fieldLockId = 0;
 	
-	protected Map<String,Stack> getLocks()
+	protected Map<String,Lock> getLocks()
 	{
 		if (fieldLocks == null)
 		{
-			fieldLocks = new ConcurrentHashMap<String,Stack>();
+			fieldLocks = new ConcurrentHashMap<String,Lock>();
 		}
 		return fieldLocks;
 	}
 
 	public Lock lock(String inCatId, String inPath, String inOwnerId)
 	{
-		Lock lock = addLock(inPath, inOwnerId);
-
+		Lock lock = loadLock(inCatId, inPath);
 		int tries = 0;
-		while( !isOwner(inCatId,lock))
+		while( !grabLock(inCatId, inOwnerId, lock))
 		{
 			tries++;
-			log.info("Could not lock trying again  " + tries);
 			if( tries > 9)
 			{
-				release(inCatId,lock);
-				throw new OpenEditException("Could not lock file " + inPath + " locked by " + lock.getOwnerId() );
+				throw new OpenEditException("Could not lock file " + inPath + " locked by " + lock.getNodeId() + " " + lock.getOwnerId() );
 			}
 			try
 			{
@@ -52,59 +50,11 @@ public class MemoryLockManager implements LockManager
 				//does not happen
 				log.info(ex);
 			}
+			log.info("Could not lock " + inPath + " trying again  " + tries);
+			lock = loadLock(inCatId, inPath);
 		}
 		return lock;
 
-	}
-
-	protected long nextId()
-	{
-		return fieldLockId++;
-	}
-	@Override
-	public Lock loadLock(String inCatId, String inPath)
-	{
-		
-		Stack stack = getStack(inPath);
-		if( stack.empty())
-		{
-			return null;
-		}
-		Lock lock = (Lock)stack.firstElement();
-		return lock;
-	}
-
-	@Override
-	public Collection getLocksByDate(String inCatId, String inPath)
-	{
-		Stack stack = getStack(inPath);
-		return stack;
-	}
-
-	@Override
-	public Lock lockIfPossible(String inCatId, String inPath, String inOwnerId)
-	{
-		Lock lock = addLock(inPath, inOwnerId);
-
-		if( isOwner(inCatId	,lock))
-		{
-			return lock;
-		}
-		release(inCatId, lock);
-		return null;
-	}
-
-	@Override
-	public boolean release(String inCatId, Lock inLock)
-	{
-		Stack<Lock> locks = getStack(inLock.getPath());
-		return locks.remove(inLock);
-	}
-
-	@Override
-	public void releaseAll(String inCatalogId, String inPath)
-	{
-		getLocks().clear();
 	}
 
 	public boolean isOwner(String inCatId, Lock lock)
@@ -130,34 +80,105 @@ public class MemoryLockManager implements LockManager
 		boolean sameowner = lock.getOwnerId().equals(owner.getOwnerId());
 		return sameowner;
 	}
+
+	protected long nextId()
+	{
+		return fieldLockId++;
+	}
+	@Override
+	public Lock loadLock(String inCatId, String inPath)
+	{
+		Lock lock = getLocks().get(inPath);
+		if( lock == null)
+		{
+			synchronized (getLocks())
+			{
+				lock = getLocks().get(inPath);
+				if( lock == null)
+				{
+					lock = addLock(inPath, null);
+					getLocks().put(inPath,lock);
+				}
+			}
+		}
+		return lock;
+	}
+
+	@Override
+	public Collection getLocksByDate(String inCatId, String inPath)
+	{
+		throw new OpenEditException("Not implemented");
+	}
+
+	@Override
+	public boolean release(String inCatId, Lock inLock)
+	{
+		inLock.setLocked(false);
+		return true;
+		
+	}
+
+	@Override
+	public void releaseAll(String inCatalogId, String inPath)
+	{
+		getLocks().clear();
+	}
+
+	
 	
 	protected Lock addLock(String inPath, String inOwnerId)
 	{
 		Lock lockrequest = new Lock();
+		lockrequest.setId(String.valueOf( nextId() ) );
 		lockrequest.setPath(inPath);
 		lockrequest.setOwnerId(inOwnerId);
 		lockrequest.setDate(new Date());
 		lockrequest.setNodeId("inmemory");
 		lockrequest.setProperty("date", DateStorageUtil.getStorageUtil().formatForStorage(new Date()));
-		push(lockrequest);
 		return lockrequest;
 	}
 
-	protected void push(Lock inLockrequest)
+	public boolean grabLock(String inCatId, String inOwner, Lock lock)
 	{
-		Stack locks = getStack(inLockrequest.getPath());
-		locks.push(inLockrequest);
+		if( lock == null)
+		{
+			throw new OpenEditException("Lock should not be null");
+		}
+
+		if( lock.isLocked())
+		{
+			return false;
+		}
+		//set owner
+		try
+		{
+			lock.setOwnerId(inOwner);
+			lock.setDate(new Date());
+			lock.setLocked(true);
+			saveLock(lock);
+		}
+		catch( ConcurrentModificationException ex)
+		{
+			return false;
+		}
+		return true;
+			
 	}
 
-	protected Stack getStack(String inPath)
+	public Lock lockIfPossible(String inCatId, String inPath, String inOwnerId)
 	{
-		Stack locks = getLocks().get(inPath);
-		if( locks == null)
+		Lock lock = loadLock(inCatId, inPath);
+		
+		if( grabLock(inCatId, inOwnerId, lock) )
 		{
-			locks = new Stack<Lock>();
-			getLocks().put(inPath,locks);
+			return lock;
 		}
-		return locks;
+		return null;
+	}
+	
+	private void saveLock(Lock inLock)
+	{
+		//TODO: Throw error if someone else saved this lock
 	}
 
 }
