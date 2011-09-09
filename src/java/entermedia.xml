@@ -180,11 +180,10 @@
 		<property name="pageManager"><ref bean="pageManager"/></property>
 		<property name="xmlUtil"><ref bean="xmlUtil"/></property>
 	</bean>
-<!-- 
+
 	<bean id="generatedResourceLoader" class="com.openedit.generators.GeneratedResourceLoader" >
 		<property name="generatorLoader"><ref bean="pageSettingsManager"/></property>
 	</bean>
-	 -->
 	<!-- ********************************
 	     Stuff recently moved from editor
 	     ******************************** -->
