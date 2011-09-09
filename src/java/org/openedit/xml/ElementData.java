@@ -94,7 +94,7 @@ public class ElementData implements Data, Comparable
 		}
 		else
 		{
-			if( inValue == null || inValue.length() > 0)
+			if( inValue == null || inValue.length() == 0)
 			{
 				Attribute attr = getElement().attribute(inId);
 				if( attr != null)
