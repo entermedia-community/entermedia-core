@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.dom4j.Attribute;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.openedit.Data;
@@ -93,7 +94,18 @@ public class ElementData implements Data, Comparable
 		}
 		else
 		{
-			getElement().addAttribute(inId,inValue);					
+			if( inValue == null || inValue.length() == 0)
+			{
+				Attribute attr = getElement().attribute(inId);
+				if( attr != null)
+				{
+					getElement().remove(attr);
+				}
+			}
+			else
+			{
+				getElement().addAttribute(inId,inValue);
+			}
 		}
 	}
 	public String getSourcePath()
