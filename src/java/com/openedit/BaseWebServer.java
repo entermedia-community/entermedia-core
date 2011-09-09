@@ -151,6 +151,12 @@ public class BaseWebServer implements WebServer
 
         reloadMounts();
         
+        
+        
+        
+       
+        
+        
 		Page page = getPageManager().getPage("/WEB-INF/startup.html");
 		BaseWebPageRequest request = new BaseWebPageRequest();
 		request.setContentPage(page);
@@ -163,7 +169,7 @@ public class BaseWebServer implements WebServer
 		{
 			getModuleManager().execute("Scheduler.init", request);
 		}
-
+		getBeanFactory().preInstantiateSingletons();
         
 	}
 	public List getAllPlugIns() 
@@ -353,12 +359,19 @@ public class BaseWebServer implements WebServer
 				BeanDefinition def = factory.getBeanDefinition(names[i]);
 				String[] aliases = factory.getAliases(names[i]);
 				fieldBeanFactory.registerBeanDefinition(names[i],def);	
+				
 				for (int j = 0; j < aliases.length; j++)
 				{
-					fieldBeanFactory.registerAlias(names[i], aliases[j]);	
+					fieldBeanFactory.registerAlias(names[i], aliases[j]);
+					
 				}
 				
 			}
+			
+			
+			
+			
+			
 		}
 		catch ( Exception ex)
 		{
