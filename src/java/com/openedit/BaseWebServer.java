@@ -151,9 +151,7 @@ public class BaseWebServer implements WebServer
 
         reloadMounts();
         
-        
-        
-        
+           
        
         
         
@@ -169,7 +167,7 @@ public class BaseWebServer implements WebServer
 		{
 			getModuleManager().execute("Scheduler.init", request);
 		}
-		getBeanFactory().preInstantiateSingletons();
+		//getBeanFactory().preInstantiateSingletons();
         
 	}
 	public List getAllPlugIns() 
