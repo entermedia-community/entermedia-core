@@ -1217,4 +1217,14 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		
 		return super.getId().compareTo(q1.getId());
 	}
+	
+	public String get(String inId)
+	{
+		Term term = getTermByDetailId(inId);
+		if( term != null)
+		{
+			return term.getValue();
+		}
+		return null;
+	}
 }

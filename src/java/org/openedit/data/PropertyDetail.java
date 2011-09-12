@@ -5,6 +5,7 @@ package org.openedit.data;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,7 +14,7 @@ import org.openedit.Data;
 import com.openedit.WebPageRequest;
 import com.openedit.page.manage.TextLabelManager;
 
-public class PropertyDetail implements Data, ViewItem
+public class PropertyDetail implements Data, ViewItem, Comparable
 {
 	protected String fieldId;
 	protected String fieldExternalId;
@@ -536,5 +537,15 @@ public class PropertyDetail implements Data, ViewItem
 	{
 		// TODO Auto-generated method stub
 		
+	}
+
+	public int compareTo(Object inO)
+	{
+		PropertyDetail detail = (PropertyDetail)inO;
+		if( getName() == null)
+		{
+			return 1;
+		}
+		return getName().compareTo(detail.getName());
 	}
 }
