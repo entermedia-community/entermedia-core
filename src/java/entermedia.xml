@@ -184,7 +184,6 @@
 	<bean id="generatedResourceLoader" class="com.openedit.generators.GeneratedResourceLoader" >
 		<property name="generatorLoader"><ref bean="pageSettingsManager"/></property>
 	</bean>
-	
 	<!-- ********************************
 	     Stuff recently moved from editor
 	     ******************************** -->
