@@ -533,7 +533,11 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 				return vals[0];
 			}
 		}
-		Term term = getTerm(inKey);
+		Term term = getTermByDetailId(inKey);
+		if( term == null)
+		{
+			term = getTerm(inKey);
+		}
 		if( term != null)
 		{
 			return term.getValue();
@@ -1218,13 +1222,4 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		return super.getId().compareTo(q1.getId());
 	}
 	
-	public String get(String inId)
-	{
-		Term term = getTermByDetailId(inId);
-		if( term != null)
-		{
-			return term.getValue();
-		}
-		return null;
-	}
 }
