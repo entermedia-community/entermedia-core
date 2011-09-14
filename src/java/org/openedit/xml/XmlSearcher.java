@@ -13,6 +13,7 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.openedit.Data;
 import org.openedit.data.BaseSearcher;
@@ -502,7 +503,7 @@ public class XmlSearcher extends BaseSearcher
 	{
 		XmlFile settings = loadXml();
 
-		Element newone = settings.addNewElement();
+		Element newone = DocumentHelper.createElement(settings.getElementName());
 		ElementData data = new ElementData(newone);		
 		return data;
 	}
