@@ -1605,8 +1605,11 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				int oldNum = tracker.getPage();
 				SearchQuery newQuery = tracker.getSearchQuery().copy();
 				HitTracker tracker2 = cachedSearch(inReq, newQuery);
-				tracker2.setPage(oldNum);
-				tracker2.setHitsPerPage(tracker.getHitsPerPage());
+				if( tracker2 != null)
+				{
+					tracker2.setPage(oldNum);
+					tracker2.setHitsPerPage(tracker.getHitsPerPage());
+				}
 				return tracker2;
 			}
 		}
