@@ -1,17 +1,24 @@
 package org.openedit.profile;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.openedit.Data;
 import org.openedit.data.Searcher;
 import org.openedit.data.SearcherManager;
 
 import com.openedit.OpenEditException;
 import com.openedit.WebPageRequest;
+import com.openedit.hittracker.ListHitTracker;
 
 public class UserProfileManager
 {
 	protected SearcherManager fieldSearcherManager;
+	private static final Log log = LogFactory.getLog(UserProfileManager.class);
 
 	public UserProfile getDefaultProfile(String inCatId)
 	{
@@ -72,6 +79,38 @@ public class UserProfileManager
 		userprofile.setSourcePath(inUserName);
 		userprofile.setCatalogId(inCatalogId);
 		
+		
+		List ok = new ArrayList();
+		List okUpload = new ArrayList();
+		
+		//check the parent first, then the appid
+		String appid = inReq.findValue("parentapplicationid");
+		if( appid == null)
+		{
+			appid = inReq.findValue("applicationid");
+		}
+		
+		Collection catalogs = getSearcherManager().getSearcher(appid, "catalogs").getAllHits();
+		
+		for (Iterator iterator = catalogs.iterator(); iterator.hasNext();)
+		{
+			Data cat = (Data) iterator.next();
+			//MediaArchive archive = getMediaArchive(cat.getId());
+			WebPageRequest catcheck = inReq.getPageStreamer().canDoPermissions("/" + cat.getId());
+			Boolean canview = (Boolean)catcheck.getPageValue("canview");
+			if( canview != null && canview)
+			{
+				ok.add(cat);
+			}
+			Boolean canupload = (Boolean)catcheck.getPageValue("canupload");
+			if(canupload != null && canupload)
+			{
+				okUpload.add(cat);
+			}
+		}
+		userprofile.setCatalogs(new ListHitTracker(ok));
+		userprofile.setUploadCatalogs(new ListHitTracker(okUpload));
+
 		
 		if (inReq.getUserName().equals(userprofile.getUserId()))
 		{

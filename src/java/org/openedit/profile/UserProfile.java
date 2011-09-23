@@ -4,12 +4,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Map;
 
+import org.dom4j.Element;
 import org.openedit.Data;
+import org.openedit.data.PropertyDetail;
 import org.openedit.data.Searcher;
 import org.openedit.data.SearcherManager;
 import org.openedit.xml.ElementData;
+import org.openedit.xml.XmlArchive;
+import org.openedit.xml.XmlFile;
 
+import com.openedit.hittracker.HitTracker;
 import com.openedit.users.User;
 
 public class UserProfile extends ElementData
@@ -17,6 +23,12 @@ public class UserProfile extends ElementData
 	protected String fieldCatalogId;
 	protected SearcherManager fieldSearcherManager;
 	protected Data fieldSettingsGroup;
+	protected Map fieldResultViews;
+	protected XmlArchive fieldXmlArchive;
+	protected User fieldUser;
+	protected HitTracker fieldCatalogs;
+	protected HitTracker fieldUploadCatalogs;
+	
 
 	public String getCatalogId()
 	{
@@ -141,6 +153,20 @@ public class UserProfile extends ElementData
 		Searcher searcher = getSearcherManager().getSearcher(getCatalogId(), "userprofile");
 		searcher.saveData(this, inUser);
 	}
+	public void setValuesFromDetails(String inKey, Collection<PropertyDetail> inValues)
+	{
+		StringBuffer values = new StringBuffer();
+		for (Iterator iterator = inValues.iterator(); iterator.hasNext();)
+		{
+			PropertyDetail detail = (PropertyDetail) iterator.next();
+			values.append(detail.getId());
+			if( iterator.hasNext())
+			{
+				values.append(" ");
+			}
+		}
+		setProperty(inKey,values.toString());
+	}
 	public void setValues(String inKey, Collection<String> inValues)
 	{
 		StringBuffer values = new StringBuffer();
@@ -175,14 +201,148 @@ public class UserProfile extends ElementData
 	
 	public void removeValue(String inKey, String string)
 	{
-		
-		Collection keys = new ArrayList(getValues(inKey));
-		keys.remove(string);
-		setValues(inKey, keys); 
+		Collection collection = getValues(inKey);
+		if( collection != null)
+		{
+			Collection keys = new ArrayList(collection);
+			keys.remove(string);
+			setValues(inKey, keys);
+		}
 	}
 	
 	public String toString()
 	{
 		return "User Profile";
 	}
+	
+	
+	public HitTracker getCatalogs()
+	{
+		return fieldCatalogs;
+	}
+
+	public void setCatalogs(HitTracker inCatalogs)
+	{
+		fieldCatalogs = inCatalogs;
+	}
+
+	public XmlArchive getXmlArchive()
+	{
+		return fieldXmlArchive;
+	}
+
+	public void setXmlArchive(XmlArchive inXmlArchive)
+	{
+		fieldXmlArchive = inXmlArchive;
+	}
+
+	public User getUser()
+	{
+		return fieldUser;
+	}
+
+	public void setUser(User inUser)
+	{
+		fieldUser = inUser;
+	}
+
+	public Map getResultViews()
+	{
+		return fieldResultViews;
+	}
+
+	public void setResultViews(Map inResultViews)
+	{
+		fieldResultViews = inResultViews;
+	}
+	//should not call this method
+//	protected String getResultViewPreference(String inView)
+//	{
+//		Element id = getUserData().getElementById(inView);
+//		if(id != null)
+//		{
+//			return(id.attributeValue("view"));
+//			
+//		}
+//		return null;
+//	}
+
+	public void setResultViewPreference(String inView, String inPreference)
+	{
+		setProperty(inView, inPreference);
+	}
+	
+	public int getHitsPerPageForSearchType(String inResultsView) throws Exception
+	{
+		String view = inResultsView + "hitsperpage";
+		String value = getValue(view);
+		if( value == null)
+		{
+			return 20;
+		}
+		return Integer.parseInt( value );
+	}
+	public void setHitsPerPageForSearchType(String inResultsView, int inHits)
+	{
+		setProperty(inResultsView + "hitsperpage", String.valueOf(inHits));
+	}
+	public void setSortForSearchType(String inResultsView, String inSort) 
+	{
+		setProperty(inResultsView + "sort", inSort);
+	}
+	public String getSortForSearchType(String inResultsType)
+	{
+		String value = getValue(inResultsType + "sort");
+		return value;
+	}
+	public String getViewForResultType(String inCustomView, String inResultsView)
+	{
+		if( inCustomView != null)
+		{
+			return inCustomView;
+		}
+		String view = getViewForResultType(inResultsView);
+		if( view == null)
+		{
+			view = "default";
+		}
+		return view;
+	}	
+	public String getViewForResultType(String inResultsView)
+	{
+		String view = getValue(inResultsView);
+		return view;
+	}
+
+	
+	public Data getLastCatalog()
+	{
+		String catid = get("lastcatalog");
+		for (Iterator iterator = getCatalogs().iterator(); iterator.hasNext();)
+		{
+			Data cat = (Data) iterator.next();
+			if( catid == null || cat.getId().equals(catid))
+			{
+				return cat;
+			}
+		}
+		if( getCatalogs().size() > 0)
+		{
+			return (Data)getCatalogs().iterator().next();
+		}
+		return null;
+	}
+
+	public HitTracker getUploadCatalogs()
+	{
+		return fieldUploadCatalogs;
+	}
+
+	public void setUploadCatalogs(HitTracker inUploadCatalogs)
+	{
+		fieldUploadCatalogs = inUploadCatalogs;
+	}
+
+
+	
 }

@@ -146,7 +146,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			{
 				try
 				{
-					UserPreferences usersettings = (UserPreferences) inPageRequest.getPageValue("usersettings");
+					UserProfile usersettings = (UserProfile) inPageRequest.getUserProfile();
 					if (usersettings != null && inQuery.getSortBy() == null)
 					{
 						String sort = usersettings.getSortForSearchType(inQuery.getResultType());
@@ -1151,7 +1151,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				group.setSortBy(sort);
 				hits.setIndexId(hits.getIndexId() + sort); // Causes the hits to be														// reloaded
 				cachedSearch(inReq, group);
-				UserPreferences pref = (UserPreferences) inReq.getPageValue("usersettings");
+				UserProfile pref = (UserProfile) inReq.getUserProfile();
 				if (pref != null)
 				{
 					pref.setSortForSearchType(hits.getSearchQuery().getResultType(), sort);
