@@ -546,6 +546,10 @@ public class PropertyDetail implements Data, ViewItem, Comparable
 		{
 			return 1;
 		}
+		if( detail.getName() == null)
+		{
+			return -1;
+		}
 		return getName().compareTo(detail.getName());
 	}
 }
