@@ -345,7 +345,7 @@ public class XConfToPageSettingsConverter
 		}
 		catch (Exception e )
 		{
-			throw new OpenEditException(e + "path: " + inUrlPath,inUrlPath);
+			throw new OpenEditException(e + "path: " + inUrlPath,e,inUrlPath);
 		}
 		config.populate(root);
 		inPageSettings.getProperties().putAll( loadProperties( config.getProperties()));

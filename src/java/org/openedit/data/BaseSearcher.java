@@ -199,7 +199,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					inPageRequest.putPageValue("error", "Invalid search input. " + URLUtilities.xmlEscape(fullq));
 					log.error(ex + " on " + fullq);
 					ex.printStackTrace();
-					inQuery.putInput("error", "Invalid search " + URLUtilities.xmlEscape(fullq));
+					inQuery.setProperty("error", "Invalid search " + URLUtilities.xmlEscape(fullq));
 				}
 			}
 		}
@@ -405,7 +405,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		{
 			boolean andall = Boolean.parseBoolean(defaultjoin);
 			search.setAndTogether(andall);
-			search.putInput("defaultjoin", defaultjoin);
+			search.setProperty("defaultjoin", defaultjoin);
 		}
 		String sort = inPageRequest.getRequestParameter("sortby");
 		if (sort != null)
@@ -575,6 +575,10 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 
 	public void addUserProfileSearchFilters(WebPageRequest inReq, SearchQuery search) 
 	{
+		if( inReq.getUserProfile() == null)
+		{
+			return;
+		}
 		Collection filters = inReq.getUserProfile().getValues("profilesearchfilters");
 		//hideassettype
 		//String profileid = inReq.findValue("profilevalues");
@@ -701,7 +705,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			if (t != null)
 			{
 				t.addParameter("op", op);
-				search.putInput(t.getId(), val);
+				search.setProperty(t.getId(), val);
 			}
 		}
 		return t;
@@ -738,7 +742,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		if ("is".equals(inOp))
 		{
 			t = inQuery.addMatches(inDetail, inVal);
-			inQuery.putInput(t.getId(), inVal);
+			inQuery.setProperty(t.getId(), inVal);
 			String tmp = inReq.getRequestParameters(inDetail.getId() + ".additionals")[inIndex];
 			String[] additionals = tmp.split(",");
 			for (int i = 0; i < additionals.length; i++)
@@ -746,7 +750,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				String paramid = inDetail.getId() + "." + additionals[i];
 				String inputid = t.getId() + "." + additionals[i];
 				String val = inReq.getRequestParameters(paramid)[inIndex];
-				inQuery.putInput(inputid, val);
+				inQuery.setProperty(inputid, val);
 			}
 		}
 		return t;
@@ -772,7 +776,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			}
 			if (t != null)
 			{
-				search.putInput(t.getId(), val);
+				search.setProperty(t.getId(), val);
 				t.addParameter("op", op);
 			}
 		}
@@ -833,7 +837,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				{
 					String val = (String) remaining.get(j);
 					t = search.addNot(field, val);
-					search.putInput(t.getId(), val);
+					search.setProperty(t.getId(), val);
 				}
 				// search.addCategoryFilter(remaining, friendly);
 			}
@@ -850,10 +854,10 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				for (int j = 0; j < select.length; j++)
 				{
 					t = or.addMatches(field, select[j]);
-					search.putInput(t.getId(), select[j]);
+					search.setProperty(t.getId(), select[j]);
 				}
 				search.addQuery(field, or.toQuery());
-				search.putInput("picker." + param, select);
+				search.setProperty("picker." + param, select);
 			}
 		}
 		return t;
@@ -885,16 +889,16 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				}
 				if (t != null)
 				{
-					search.putInput(t.getId(), val);
-					search.putInput("datedirection" + field, op);
+					search.setProperty(t.getId(), val);
+					search.setProperty("datedirection" + field, op);
 				}
 			}
 			else if ("after".equals(op) && val != null && !"".equals(val))
 			{
 				Date d = formater.parse(val);
 				t = search.addAfter(field, d);
-				search.putInput("datedirection" + field, "after");
-				search.putInput(t.getId(), val);
+				search.setProperty("datedirection" + field, "after");
+				search.setProperty(t.getId(), val);
 			}
 			else if ("equals".equals(op) && val != null && !"".equals(val))
 			{
@@ -909,7 +913,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				c2.add(Calendar.DAY_OF_YEAR, 1);
 
 				t = search.addBetween(field, c.getTime(), c2.getTime());
-				search.putInput(t.getId(), val);
+				search.setProperty(t.getId(), val);
 			}
 			else if ("betweendates".equals(op))
 			{
@@ -936,21 +940,21 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				{
 					Date after = formater.parse(afterString);
 					t = search.addAfter(field, after);
-					search.putInput(t.getId() + ".after", beforeString);
+					search.setProperty(t.getId() + ".after", beforeString);
 				}
 				else if (afterString == null)
 				{
 					Date before = formater.parse(beforeString);
 					t = search.addBefore(field, before);
-					search.putInput(t.getId() + ".before", beforeString);
+					search.setProperty(t.getId() + ".before", beforeString);
 				}
 				else
 				{
 					Date before = formater.parse(beforeString);
 					Date after = formater.parse(afterString);
 					t = search.addBetween(field, after, before);
-					search.putInput(t.getId() + ".before", beforeString);
-					search.putInput(t.getId() + ".after", afterString);
+					search.setProperty(t.getId() + ".before", beforeString);
+					search.setProperty(t.getId() + ".after", afterString);
 				}
 			}
 			else if ("betweenages".equals(op))
@@ -969,7 +973,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					rightNow.add(Calendar.YEAR, (-1 * before));
 					Date after = rightNow.getTime();
 					t = search.addBefore(field, after);
-					search.putInput(t.getId() + ".after", afterString);
+					search.setProperty(t.getId() + ".after", afterString);
 
 				}
 				else if (afterString == null)
@@ -979,7 +983,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					rightNow.add(Calendar.YEAR, (-1 * after));
 					Date before = rightNow.getTime();
 					t = search.addAfter(field, before);
-					search.putInput(t.getId() + ".before", beforeString);
+					search.setProperty(t.getId() + ".before", beforeString);
 				}
 				else
 				{
@@ -995,8 +999,8 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					Date after = rightNow.getTime();
 					// add search term
 					t = search.addBetween(field, after, before);
-					search.putInput(t.getId() + ".after", afterString);
-					search.putInput(t.getId() + ".before", beforeString);
+					search.setProperty(t.getId() + ".after", afterString);
+					search.setProperty(t.getId() + ".before", beforeString);
 				}
 			}
 		}
@@ -1034,7 +1038,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				detail.setCatalogId(getCatalogId());
 				detail.setId(fieldName);
 				search.addMatches(detail, value);
-				search.putInput(fieldName, value); // The last one wins, only
+				search.setProperty(fieldName, value); // The last one wins, only
 													// for matches
 			}
 		}
@@ -1214,7 +1218,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				for (int i = 0; i < querystrings.length; i++)
 				{
 					SearchQuery child = createSearchQuery(querystrings[i], inReq);
-					if (child != null && child.getInputs().size() > 0)
+					if (child != null && child.getProperties().size() > 0)
 					{
 						group.addChildQuery(child);
 					}	

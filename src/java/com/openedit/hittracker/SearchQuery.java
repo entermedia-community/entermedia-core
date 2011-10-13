@@ -31,7 +31,6 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	protected transient List fieldTerms = new ArrayList();
 
 	protected boolean fieldAndTogether = true;
-	protected Map fieldInputs;
 	protected List fieldSorts;
 	protected Map fieldSuggestedSearches;
 
@@ -505,22 +504,13 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		return term;
 	}
 
-	public void putInput(String inKey, String inValue)
-	{
-		getInputs().put(inKey, new String[] { inValue });
-	}
-
-	public void putInput(String inKey, String[] inValues)
-	{
-		getInputs().put(inKey, inValues);
-	}
 	
 	/**
 	 * This is the user input (!= term.value)
 	 */
 	public String getInput(String inKey)
 	{
-		Object input = getInputs().get(inKey);
+		Object input = get(inKey);
 		if (input != null)
 		{
 			if (input instanceof String)
@@ -547,7 +537,7 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 
 	public String[] getInputs(String inKey)
 	{
-		Object input = getInputs().get(inKey);
+		Object input = get(inKey);
 		if (input != null)
 		{
 			if (input instanceof String)
@@ -563,20 +553,6 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		}
 
 		return null;
-	}
-
-	public Map getInputs()
-	{
-		if (fieldInputs == null)
-		{
-			fieldInputs = new HashMap();
-		}
-		return fieldInputs;
-	}
-	
-	protected void setInputs(Map inInputs)
-	{
-		fieldInputs = inInputs;
 	}
 
 	public String getSortBy()

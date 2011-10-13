@@ -139,7 +139,11 @@ public class PropertyDetailsArchive
 		}
 		return getDetails(propdetails, inView, inProfile);
 	}
-	
+	public boolean viewExists(String inView)
+	{
+		XmlFile file = getViewXml(inView, null);
+		return file.isExist();
+	}
 	protected XmlFile getViewXml(String inView, String inLevel)
 	{
 		XmlFile types = null;
