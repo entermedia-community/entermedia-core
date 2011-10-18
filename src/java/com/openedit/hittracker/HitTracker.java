@@ -867,4 +867,22 @@ public abstract class HitTracker implements Serializable, Collection
 	public boolean isAllSelected(){
 		return getSelectedHits().size() == getTotal();
 	}
+	
+	public Data findRow(String inField, String inValue)
+	{
+		if(inValue == null || inField == null)
+		{
+			return null;
+		}
+		
+		for (int i = 0; i < size(); i++)
+		{
+			Data hit = get(i);
+			if(inValue.equals(hit.get(inField)))
+			{
+				return hit;
+			}
+		}
+		return null;
+	}
 }
