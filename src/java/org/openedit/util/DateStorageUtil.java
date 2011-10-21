@@ -156,7 +156,7 @@ public class DateStorageUtil
 	{
 		Date date = parseFromStorage(inDate);
 		DateFormat formater = getDateFormat(inFormat);
-		return formater.format(date);
+		return date != null ? formater.format(date):null;
 	}
 	
 	
