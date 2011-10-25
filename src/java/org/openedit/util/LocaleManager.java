@@ -190,7 +190,7 @@ public class LocaleManager
 		}
 
 		Locale loc = getLocale(inLocale);
-		DateFormat format = SimpleDateFormat.getDateInstance(SimpleDateFormat.SHORT,loc);
+		DateFormat format = new SimpleDateFormat("MM/dd/yyyy", loc);
 		String formated = format.format(inDate);
 		return formated;
 	}
