@@ -228,9 +228,11 @@ public class XmlSearcher extends BaseSearcher
 	{
 		XmlFile settings = loadXml();
 		checkCache(settings.getLastModified());
+
 		HitTracker hits = (HitTracker) getCache().get(inQuery.toQuery() + inQuery.getSortBy());
 		if(hits != null)
 		{
+			log.info("Cached search " + getSearchType() + " " + inQuery.toQuery() + " (sorted by " + inQuery.getSortBy() + ") found " + hits.size() + " in " + getCatalogId());
 			return hits;
 		}
 		
@@ -253,22 +255,22 @@ public class XmlSearcher extends BaseSearcher
 					throw new OpenEditRuntimeException(e);
 				}
 			}
-			log.debug("Search " + getSearchType() + " " + inQuery.toQuery() + " (sorted by " + inQuery.getSortBy() + ") found " + results.size());
 		}
 		else
 		{
-			log.debug("Xml does not exist " + settings.getPath());
+			log.info("Xml does not exist " + settings.getPath());
 		}
 		
 		sortResults(inQuery, results);
 		
 		hits = new DataHitTracker();
 		hits.setSearchQuery(inQuery);
-		hits.setIndexId(getIndexId());
 		hits.setIndexId(getSearchType() + settings.getLastModified());
 		hits.addAll(results);
-		checkCache(settings.getLastModified());
+		//checkCache(settings.getLastModified());
 		getCache().put(inQuery.toQuery() + inQuery.getSortBy(), hits);
+		log.info("Search " + getSearchType() + " " + inQuery.toQuery() + " (sorted by " + inQuery.getSortBy() + ") found " + hits.size());
+
 		return hits;
 	}
 
@@ -288,95 +290,16 @@ public class XmlSearcher extends BaseSearcher
 
 	private void sortResults(SearchQuery inQuery, List results)
 	{
-		String sortby = inQuery.getSortBy();
-		if (sortby != null)
+		final List sorts = inQuery.getSorts();
+		if (!sorts.isEmpty() )
 		{
-			if (sortby.endsWith("Up"))
-			{
-				sortby = sortby.substring(0, sortby.length() - 2);
-				sortResultsUp(results, sortby);
-			}
-			else if (sortby.endsWith("Down"))
-			{
-				sortby = sortby.substring(0, sortby.length() - 4);
-				sortResultsDown(results, sortby);
-			}
-			else
-			{
-				sortResultsUp(results, sortby);
-			}
-			
+			ElementSorter sorter = new ElementSorter(sorts);
+			Collections.sort(results,sorter);
 			
 		}
 	}
 	
-	private void sortResultsUp(List results, final String inProperty)
-	{
-		Collections.sort(results, new Comparator() {
-			public int compare(Object o1, Object o2) 
-			{
-				ElementData ed1 = (ElementData) o1;
-				ElementData ed2 = (ElementData) o2;
-				
-				String s1, s2;
-				if ("text".equals(inProperty) || "name".equals(inProperty))
-				{
-					s1 = ed1.getName();
-					s2 = ed2.getName();	
-				}
-				else
-				{
-					s1 = ed1.get(inProperty);
-					s2 = ed2.get(inProperty);
-				}
-				if(s1 == null && s2 == null)
-				{
-					return 0;
-				}
-				if (s1 == null)
-				{
-					return -s2.compareTo(s1);
-				}
-				if (s2 == null)
-				{
-					return -s1.compareTo(s2);
-				}
-				return s1.toLowerCase().compareTo(s2.toLowerCase());
-			}
-		});	
-	}
 	
-	private void sortResultsDown(List results, final String inProperty)
-	{
-		Collections.sort(results, new Comparator() {
-			public int compare(Object o1, Object o2) 
-			{
-				ElementData ed2 = (ElementData) o1;
-				ElementData ed1 = (ElementData) o2;
-				
-				String s1, s2;
-				if ("text".equals(inProperty) || "name".equals(inProperty))
-				{
-					s1 = ed1.getName();
-					s2 = ed2.getName();	
-				}
-				else
-				{
-					s1 = ed1.get(inProperty);
-					s2 = ed2.get(inProperty);
-				}
-				if(s1 == null && s2 == null)
-				{
-					return 0;
-				}
-				if (s1 == null)
-				{
-					return -s2.compareTo(s1);
-				}
-				return s1.toLowerCase().compareTo(s2.toLowerCase());
-			}
-		});	
-	}
 
 	public HitTracker search(String inQuery, String inOrdering) 
 	{
