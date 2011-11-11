@@ -141,6 +141,10 @@ public class ElementData implements Data, Comparable
 		{
 			name = getId();
 		}
+		if( name == null)
+		{
+			name = super.toString();
+		}
 		return name;
 	}
 	
