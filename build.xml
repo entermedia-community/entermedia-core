@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project basedir="." default="default" name="entermedia">
 
-  <target name="default" depends="clean, source, compile, jar, junit, javadoc, war, deploy"/>
+  <target name="default" depends="clean, compile, jar"/>
 	<target name="dependency" depends="default"/>
   
     <property file="build.properties"/>

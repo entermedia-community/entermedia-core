@@ -18,6 +18,7 @@ import org.openedit.Data;
 import org.openedit.data.BaseSearcher;
 import org.openedit.data.PropertyDetail;
 import org.openedit.data.PropertyDetails;
+import org.openedit.util.DateStorageUtil;
 
 import com.openedit.OpenEditException;
 import com.openedit.OpenEditRuntimeException;
@@ -156,14 +157,30 @@ public class XmlSearcher extends BaseSearcher
 			}
 			else if("beforedate".equals(term.getOperation()))
 			{
-				Date before = inQuery.getDateFormat().parse(term.getParameter("lowDate"));
+				String low = term.getParameter("lowDate");
+				Date before = null;
+				if( low != null)
+				{
+					before = inQuery.getDateFormat().parse(low);					
+				}
+				else
+				{
+					Object[] values = term.getValues();
+					if( values != null && values.length > 0)
+					{
+						before = (Date)values[0];						
+					}
+				}
+				
+				
 				String id = term.getDetail().getId();//effectivedate
 				String date = inElement.attributeValue(id);
 				if(date == null)
 				{
 					return false;
 				}
-				Date target = getDefaultDateFormat().parse(date);
+				Date target = DateStorageUtil.getStorageUtil().parseFromStorage(date);
+				
 				if(!target.before(before))
 				{
 					return false;
