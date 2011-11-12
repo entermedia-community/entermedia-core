@@ -7,7 +7,6 @@ import org.apache.commons.logging.LogFactory;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.dom4j.io.XMLWriter;
-import org.openedit.util.ElementReader;
 
 import com.openedit.BaseTestCase;
 import com.openedit.page.Page;

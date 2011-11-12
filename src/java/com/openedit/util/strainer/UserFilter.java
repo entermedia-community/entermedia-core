@@ -14,6 +14,7 @@ package com.openedit.util.strainer;
 
 import com.openedit.WebPageRequest;
 import com.openedit.users.User;
+import com.openedit.util.Replacer;
 
 
 /**
@@ -79,7 +80,14 @@ public class UserFilter extends BaseFilter
 			{
 				return true;
 			}
-			
+			if( getUsername().startsWith("${"))
+			{
+				String username = new Replacer().replace(getUsername(), req.getPageMap());
+				 if( user.getUserName().equalsIgnoreCase(username) )
+				 {
+					 return true;
+				 }
+			}
 		}
 		return false;
 	}

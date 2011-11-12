@@ -1043,7 +1043,11 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 		String id = packageVariables();
 		return "varpackageid: '" + id + "'";
 	}
-	
+	public String ajaxid()
+	{
+		String id = packageVariables();
+		return id;
+	}
 	public String rewriteParams()
 	{
 		String id = packageVariables();

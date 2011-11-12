@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openedit.Data;
 import org.openedit.xml.XmlArchive;
 
 import com.openedit.ModuleManager;
@@ -115,7 +116,7 @@ public class SearcherManager
 		return getData(inDetail.getListCatalogId(), inDetail.getListId(), inValue);
 	}
 
-	public Object getData(String inCatalogId, String inSearchType, String inId)
+	public Data getData(String inCatalogId, String inSearchType, String inId)
 	{
 		if( inId == null)
 		{
@@ -123,7 +124,7 @@ public class SearcherManager
 		}
 		Searcher searcher = getSearcher(inCatalogId, inSearchType);
 		Object data = searcher.searchById(inId);
-		return data;
+		return (Data)data;
 	}
 
 	public HitTracker getList(PropertyDetail inDetail)

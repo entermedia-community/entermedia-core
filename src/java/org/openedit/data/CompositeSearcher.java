@@ -7,6 +7,7 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openedit.Data;
+import org.openedit.profile.UserProfile;
 import org.openedit.profile.UserProfileManager;
 
 import com.openedit.WebPageRequest;
@@ -123,7 +124,7 @@ public abstract class CompositeSearcher extends BaseSearcher
 
 		CompositeHitTracker allHits = new CompositeHitTracker();
 
-		UserPreferences pref = (UserPreferences)inReq.getPageValue("usersettings");
+		UserProfile pref = (UserProfile)inReq.getUserProfile();
 		List searchers = getSearchers(pref, catalogids);
 //		PageStreamer pages = inReq.getPageStreamer();
 		
@@ -166,13 +167,13 @@ public abstract class CompositeSearcher extends BaseSearcher
 		return allHits;
 	}
 
-	private List getSearchers(UserPreferences pref, String[] catalogids)
+	private List getSearchers(UserProfile pref, String[] catalogids)
 	{
 		if (catalogids != null && catalogids.length > 0)
 		{
 			return getSearchersByCatalogIds(catalogids);
 		}
-		else if ( pref != null)
+		else if ( pref != null && pref.getCatalogs() != null)
 		{
 			catalogids = new String[pref.getCatalogs().size()];
 			for (int i = 0; i < pref.getCatalogs().size(); i++)

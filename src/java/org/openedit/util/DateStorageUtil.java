@@ -3,6 +3,8 @@ package org.openedit.util;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.TimeZone;
 
 import org.apache.commons.logging.Log;
@@ -12,64 +14,46 @@ import org.apache.commons.logging.LogFactory;
 public class DateStorageUtil
 {
 	private static final Log log = LogFactory.getLog(DateStorageUtil.class);
-
-	protected DateFormat fieldStandardFormat;
-	protected DateFormat fieldExifFormat;
-	protected DateFormat fieldStandardLogFormat;
-	protected DateFormat fieldOldDashFormat;
-	protected DateFormat fieldOldColonFormat;
-	protected DateFormat fieldOldShortStandardFormat;
-	protected DateFormat fieldSlashedDateFormat;
+    protected Map<String, DateFormat> fieldDateFormats;
+    protected DateFormat fieldOldDashFormat;
 	
 	static final private ThreadLocal perThreadCache = new ThreadLocal();	
 	
+	public DateFormat getDateFormat(String inFormat)
+	{
+		if( fieldDateFormats == null)
+		{
+			fieldDateFormats = new HashMap<String,DateFormat>();
+		}
+		DateFormat format = fieldDateFormats.get(inFormat);
+		if( format == null)
+		{
+			format = new SimpleDateFormat(inFormat);
+			format.setLenient(true);
+			fieldDateFormats.put(inFormat, format);
+		}
+		return format;
+	}
 	protected DateFormat getStandardFormat()
 	{
-		if( fieldStandardFormat == null)
-		{
-			//2010-05-21 13:22:11 -0400
-			fieldStandardFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
-			fieldStandardFormat.setLenient(true);
-		}
-		return fieldStandardFormat;
+		return getDateFormat("yyyy-MM-dd HH:mm:ss Z");
 	}
 	protected DateFormat getExifFormat()
 	{
-		if( fieldExifFormat == null)
-		{
-			//2010:09:20 13:20:53-04:00
-			//2010:09:20 13:20:53-04:00
-			fieldExifFormat = new SimpleDateFormat("yyyy:MM:dd HH:mm:ssZ");
-			fieldExifFormat.setLenient(true);
-		}
-		return fieldExifFormat;
+		//2010:09:20 13:20:53-04:00
+		return getDateFormat("yyyy:MM:dd HH:mm:ssZ");
 	}
 	protected DateFormat getStandardLogFormat()
 	{
-		if( fieldStandardLogFormat == null)
-		{
-			//2010-05-21 13:22:11 -0400
-			fieldStandardLogFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-			fieldStandardLogFormat.setLenient(true);
-		}
-		return fieldStandardLogFormat;
+		return getDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 	}
 	protected DateFormat getOldColonFormat()
 	{
-		if( fieldOldColonFormat == null)
-		{
-			fieldOldColonFormat = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss");
-		}
-		return fieldOldColonFormat;
+		return getDateFormat("yyyy:MM:dd HH:mm:ss");
 	}
 	protected DateFormat getOldDashFormat()
 	{
-		if( fieldOldDashFormat == null)
-		{
-			fieldOldDashFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			fieldOldDashFormat.setLenient(true);
-		}
-		return fieldOldDashFormat;
+		return getDateFormat("yyyy-MM-dd HH:mm:ss");
 	}
 	protected DateFormat getLuceneFormat()
 	{
@@ -83,14 +67,8 @@ public class DateStorageUtil
 	}
 	protected DateFormat getOldShortStandardFormat()
 	{
-		if( fieldOldShortStandardFormat == null)
-		{
-			fieldOldShortStandardFormat = new SimpleDateFormat("MM/dd/yyyy");
-			fieldOldShortStandardFormat.setLenient(true);
-		}
-		return fieldOldShortStandardFormat;
+		return getDateFormat("MM/dd/yyyy");
 	}
-
 	
 	public static DateStorageUtil getStorageUtil()
 	{
@@ -163,26 +141,22 @@ public class DateStorageUtil
 		}
 		return null;
 	}
-
 	
 	public DateFormat getSlashedDateFormat()
 	{
-	if (fieldSlashedDateFormat == null)
-	{
-		fieldSlashedDateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm");
-		
+		return getDateFormat("dd/MM/yyyy hh:mm");
 	}
 
-	return fieldSlashedDateFormat;
-	}
-	public void setSlashedDateFormat(DateFormat inSlashedDateFormat)
-	{
-		fieldSlashedDateFormat = inSlashedDateFormat;
-	}
 	public String formatForStorage(Date inDate)
 	{
 		String storage = getStandardFormat().format(inDate);
 		return storage;
+	}
+	public String formatDate(String inDate,String inFormat)
+	{
+		Date date = parseFromStorage(inDate);
+		DateFormat formater = getDateFormat(inFormat);
+		return date != null ? formater.format(date):null;
 	}
 	
 	

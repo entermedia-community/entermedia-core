@@ -84,7 +84,7 @@ public class SearchQueryArchive
 		XmlFile file = getXmlArchive().getXml(path, "query");
 		Element root = inQuery.toXml();
 		Element inputs = root.addElement("inputs");
-		for (Iterator iterator = inQuery.getInputs().keySet().iterator(); iterator.hasNext();)
+		for (Iterator iterator = inQuery.getProperties().keySet().iterator(); iterator.hasNext();)
 		{
 			String key = (String) iterator.next();
 			String[] values = inQuery.getInputs(key);
@@ -197,7 +197,7 @@ public class SearchQueryArchive
 			}
 			
 			
-			query.putInput(field, val);
+			query.setProperty(field, val);
 			Term t = null;
 			if ("matches".equals(op)) {
 				t = query.addMatches(detail, val);
@@ -209,7 +209,7 @@ public class SearchQueryArchive
 				t = query.addNot(detail, val);
 			} else if ("afterdate".equals(op)) {
 				Date after = query.getDateFormat().parse(val);
-				query.putInput("datedirection" + field, "after");
+				query.setProperty("datedirection" + field, "after");
 				t = query.addAfter(detail, after);
 			} else if ("betweendates".equals(op)) {
 				String low = term.attributeValue("afterDate");
@@ -217,11 +217,11 @@ public class SearchQueryArchive
 				Date lowdate = query.getDateFormat().parse(low);
 				Date highdate = query.getDateFormat().parse(high);
 				t = query.addBetween(detail, lowdate, highdate);
-				query.putInput(field + ".before", low);
-				query.putInput(field + ".after", high);
+				query.setProperty(field + ".before", low);
+				query.setProperty(field + ".after", high);
 			} else if ("beforedate".equals(op)) {
 				Date before = query.getDateFormat().parse(val);
-				query.putInput("datedirection" + field, "before");
+				query.setProperty("datedirection" + field, "before");
 				t = query.addBefore(detail, before);
 			} else if ("orgroup".equals(op)) {
 				t = query.addOrsGroup(detail, val);
@@ -288,7 +288,7 @@ public class SearchQueryArchive
 			}
 			String[] values = new String[valueList.size()];
 			valueList.toArray(values);
-			inQuery.putInput(key, values);
+			inQuery.setProperty(key, values);
 		}
 	}
 	
