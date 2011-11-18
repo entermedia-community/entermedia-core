@@ -862,6 +862,15 @@ public class FileSystemUserManager implements UserManager
 	{
 		Document doc = DocumentFactory.getInstance().createDocument();
 		Element root = doc.addElement("group");
+		if(inGroup.getId() == null){
+			
+				int id = getUserIdCounter().incrementCount(); 
+				String inAccount = String.valueOf(id); 
+				inGroup.setId(inAccount);
+				
+			
+			
+		}
 		root.addAttribute("id", inGroup.getId());
 		Element groupNameElem = root.addElement("group-name"); 
 		groupNameElem.setText(inGroup.getName());
