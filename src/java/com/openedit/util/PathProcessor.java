@@ -172,11 +172,11 @@ public abstract class PathProcessor
 		}
 		if (getExcludeFilter() != null)
 		{
-			String ext = PathUtilities.extractPageType(path);
+			String name = PathUtilities.extractPageName(path);
 			for (Iterator iterator = getExcludeExtensions().iterator(); iterator.hasNext();)
 			{
 				String validExt = (String) iterator.next();
-				if (validExt.equalsIgnoreCase(ext))
+				if (validExt.equalsIgnoreCase(name))
 				{
 					return false;
 				}
@@ -282,6 +282,19 @@ public abstract class PathProcessor
 		return fieldExcludeFilter;
 	}
 
+	public void setIncludeFileFilter(String inIncludeFilter)
+	{
+		if (inIncludeFilter != null && inIncludeFilter.length() > 0)
+		{
+			fieldIncludeExtensions = new ArrayList();
+			String[] extns = inIncludeFilter.split(",");
+			for (int i = 0; i < extns.length; i++)
+			{
+				fieldIncludeExtensions.add(extns[i].trim());
+			}
+		}
+		
+	}
 	public void setExcludeFilter(String inExcludeFilter)
 	{
 		fieldExcludeFilter = inExcludeFilter;
