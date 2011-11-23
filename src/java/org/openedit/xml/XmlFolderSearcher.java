@@ -44,10 +44,11 @@ public class XmlFolderSearcher extends XmlSearcher
 				for(String child:children)
 				{
 					XmlFile settings = getXmlArchive().getXml(child,child,inName);
-					for (Element row: settings.getRoot().elements())
+					for (Object row: settings.getRoot().elements())
 					{
-						row.setParent(null);
-						root.add(row);
+						Element target = (Element) row;
+						target.setParent(null);
+						root.add(target);
 					}
 				}
 			}

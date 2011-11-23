@@ -148,7 +148,7 @@ public class BaseGroup extends FileSystemObject implements Group, Serializable, 
 
 	public String getId()
 	{
-		if( fieldId == null && fieldName != null )
+		if( fieldId == null && fieldName != null && fieldName.length() != 0)
 		{
 			return getName();
 		}
