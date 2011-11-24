@@ -65,7 +65,7 @@ public class BaseEditorModule extends BaseModule
 	public void writeContent( WebPageRequest inContext ) throws OpenEditException
 	{
 		String path = inContext.getRequiredParameter("editPath");
-		String content = inContext.getRequiredParameter( "content");
+		String content = inContext.getRequestParameter( "content");
 		User user = inContext.getUser();
 		if (user == null)
 		{

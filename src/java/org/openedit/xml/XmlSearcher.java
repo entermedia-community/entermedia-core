@@ -232,7 +232,10 @@ public class XmlSearcher extends BaseSearcher
 		HitTracker hits = (HitTracker) getCache().get(inQuery.toQuery() + inQuery.getSortBy());
 		if(hits != null)
 		{
-			log.info("Cached search " + getSearchType() + " " + inQuery.toQuery() + " (sorted by " + inQuery.getSortBy() + ") found " + hits.size() + " in " + getCatalogId());
+			if( log.isDebugEnabled() )
+			{
+				log.debug("Cached search " + getSearchType() + " " + inQuery.toQuery() + " (sorted by " + inQuery.getSortBy() + ") found " + hits.size() + " in " + getCatalogId());
+			}
 			return hits;
 		}
 		
@@ -269,7 +272,10 @@ public class XmlSearcher extends BaseSearcher
 		hits.addAll(results);
 		//checkCache(settings.getLastModified());
 		getCache().put(inQuery.toQuery() + inQuery.getSortBy(), hits);
-		log.info("Search " + getSearchType() + " " + inQuery.toQuery() + " (sorted by " + inQuery.getSortBy() + ") found " + hits.size());
+		if( log.isDebugEnabled() )
+		{
+			log.debug("Search " + getSearchType() + " " + inQuery.toQuery() + " (sorted by " + inQuery.getSortBy() + ") found " + hits.size());
+		}
 
 		return hits;
 	}
@@ -297,13 +303,6 @@ public class XmlSearcher extends BaseSearcher
 			Collections.sort(results,sorter);
 			
 		}
-	}
-	
-	
-
-	public HitTracker search(String inQuery, String inOrdering) 
-	{
-		return null;
 	}
 	
 	protected XmlFile loadXml()
