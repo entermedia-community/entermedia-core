@@ -812,14 +812,8 @@ public class FileSystemUserManager implements UserManager
 		userElem.addAttribute("enabled", Boolean.toString(user.isEnabled()));
 		if(user.getUserName() == null){
 			int id = getUserIdCounter().incrementCount(); 
-<<<<<<< HEAD
-			String newid = String.valueOf(id);
-			user.setId(newid);
-			
-=======
 			String newid = String.valueOf(id); 
 			user.setId(newid);
->>>>>>> 6bfa5ced35b6e176e8bd3cf2f712249e65e4c33a
 		}
 		Element userNameElem = userElem.addElement("user-name");
 		userNameElem.setText(user.getUserName());
