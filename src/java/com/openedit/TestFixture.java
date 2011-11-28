@@ -15,7 +15,6 @@ package com.openedit;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.StringWriter;
-import java.util.Iterator;
 import java.util.Map;
 
 import com.openedit.page.Page;

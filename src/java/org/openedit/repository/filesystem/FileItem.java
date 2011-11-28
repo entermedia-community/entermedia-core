@@ -174,6 +174,9 @@ public class FileItem extends ContentItem implements Data
 	{
 		throw new IllegalAccessError("Not implemented");
 	}
+	public void setProperties(Map<String, String> inProperties)
+	{
+	}
 	
 	public void setName(String inName)
 	{

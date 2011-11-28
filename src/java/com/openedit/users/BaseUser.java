@@ -20,7 +20,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import com.openedit.OpenEditRuntimeException;
 import com.openedit.users.filesystem.FileSystemObject;
@@ -412,6 +411,11 @@ public class BaseUser extends FileSystemObject implements User, Comparable
 	public void setId(String inNewid)
 	{
 		fieldId = inNewid;
+	}
+
+	public void setProperties(Map<String,String> inProperties)
+	{
+		getProperties().putAll(inProperties);
 	}
 
 	public void setProperty(String inId, String inValue)
