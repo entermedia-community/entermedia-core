@@ -798,6 +798,10 @@ public class Page implements Data, Comparable
 		getPageSettings().setProperty(inId, inValue);
 		
 	}
+	public void setProperties(Map<String, String> inProperties)
+	{
+		getPageSettings().setProperties(inProperties);
+	}
 	
 	public void setSourcePath(String inSourcepath) {
 		// TODO Auto-generated method stub
@@ -820,4 +824,5 @@ public class Page implements Data, Comparable
 		String text = getPageSettings().getTextLabels().getAutoText(this, inKey, inLocale);
 		return text;
 	}
+
 }

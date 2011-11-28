@@ -14,7 +14,6 @@ import com.openedit.WebPageRequest;
 import com.openedit.hittracker.CompositeHitTracker;
 import com.openedit.hittracker.HitTracker;
 import com.openedit.hittracker.SearchQuery;
-import com.openedit.users.UserPreferences;
 
 public abstract class CompositeSearcher extends BaseSearcher
 {

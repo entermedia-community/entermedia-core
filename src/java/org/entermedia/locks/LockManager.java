@@ -2,8 +2,6 @@ package org.entermedia.locks;
 
 import java.util.Collection;
 
-import org.openedit.data.Searcher;
-
 public interface LockManager
 {
 

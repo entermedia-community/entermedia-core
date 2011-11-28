@@ -414,6 +414,11 @@ public class BaseUser extends FileSystemObject implements User, Comparable
 		fieldId = inNewid;
 	}
 
+	public void setProperties(Map<String,String> inProperties)
+	{
+		getProperties().putAll(inProperties);
+	}
+
 	public void setProperty(String inId, String inValue)
 	{
 		if("password".equals(inId)){
