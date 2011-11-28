@@ -46,12 +46,15 @@ public class XmlFolderSearcher extends XmlSearcher
 				{
 					XmlFile settings = getXmlArchive().getXml(child,child,inName);
 					for (Iterator iterator = settings.getRoot().elements().iterator(); iterator
-							.hasNext();) 
-					{
+							.hasNext();) {
 						Element row = (Element) iterator.next();
 						row.setParent(null);
 						root.add(row);
+						
 					}
+					
+				
+					
 				}
 			}
 			return composite;
