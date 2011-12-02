@@ -1,5 +1,6 @@
 package org.openedit.xml;
 
+import java.util.Iterator;
 import java.util.List;
 
 import org.dom4j.DocumentHelper;
@@ -44,8 +45,9 @@ public class XmlFolderSearcher extends XmlSearcher
 				for(String child:children)
 				{
 					XmlFile settings = getXmlArchive().getXml(child,child,inName);
-					for (Element row: settings.getRoot().elements())
-					{
+					for (Iterator iterator = settings.getRoot().elementIterator(); iterator
+							.hasNext();) {
+						Element row = (Element) iterator.next();
 						row.setParent(null);
 						root.add(row);
 					}
