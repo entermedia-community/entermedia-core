@@ -178,5 +178,7 @@ public interface User extends PropertyContainer, Data
 
 	public String getScreenName();
 	Map listAllProperties();
+
+	Collection getValues(String inString);
 	
 }

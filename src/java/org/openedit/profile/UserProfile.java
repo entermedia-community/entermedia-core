@@ -6,14 +6,12 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.dom4j.Element;
 import org.openedit.Data;
 import org.openedit.data.PropertyDetail;
 import org.openedit.data.Searcher;
 import org.openedit.data.SearcherManager;
 import org.openedit.xml.ElementData;
 import org.openedit.xml.XmlArchive;
-import org.openedit.xml.XmlFile;
 
 import com.openedit.hittracker.HitTracker;
 import com.openedit.users.User;

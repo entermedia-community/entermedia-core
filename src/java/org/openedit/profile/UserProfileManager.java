@@ -43,15 +43,18 @@ public class UserProfileManager
 		{
 			return null;
 		}
+		boolean reload = Boolean.parseBoolean( inReq.getRequestParameter("reloadprofile") );
 		UserProfile userprofile = (UserProfile)inReq.getPageValue("userprofile");
-		if( userprofile != null)
+		if( !reload && userprofile != null)
 		{
 			return userprofile;
 		}
 		String id = inCatalogId + "userprofile" + inUserName;
-		
-		userprofile = (UserProfile)inReq.getSessionValue(id);
-		if( userprofile != null && inUserName.equals(userprofile.getUserId()) )
+		if( !reload )
+		{
+			userprofile = (UserProfile)inReq.getSessionValue(id);
+		}
+		if( !reload && userprofile != null && inUserName.equals(userprofile.getUserId()) )
 		{
 			//check searcher cache?
 			inReq.putPageValue("userprofile", userprofile); 

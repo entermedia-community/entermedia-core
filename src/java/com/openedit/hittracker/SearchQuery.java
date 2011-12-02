@@ -8,7 +8,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -1197,5 +1196,20 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		
 		return super.getId().compareTo(q1.getId());
 	}
-	
+
+	@Override
+	public String getName()
+	{
+		String name = super.getName();
+		if( name == null)
+		{
+			name = getInput("description");
+		}
+		if( name == null && getTerms().size() > 0)
+		{
+			Term term = (Term)getTerms().get(0);
+			name = getFriendlyValue(term.getValue(),term.getDetail());
+		}
+		return name;
+	}
 }

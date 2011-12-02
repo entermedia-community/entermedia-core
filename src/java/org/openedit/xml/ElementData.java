@@ -147,5 +147,14 @@ public class ElementData implements Data, Comparable
 		}
 		return name;
 	}
+	public void setProperties(Map<String,String> inProperties)
+	{
+		//getProperties().putAll(inProperties);
+		for (Iterator iterator = inProperties.keySet().iterator(); iterator.hasNext();)
+		{
+			String key = (String) iterator.next();
+			setProperty(key,inProperties.get(key));
+		}
+	}
 	
 }

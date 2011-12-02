@@ -5,7 +5,6 @@ package org.openedit.data;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -485,6 +484,11 @@ public class PropertyDetail implements Data, ViewItem, Comparable
 		}
 	}
 	
+	public void setProperties(Map<String,String> inProperties)
+	{
+		getProperties().putAll(inProperties);
+	}
+
 	public String getName()
 	{
 		return getText();

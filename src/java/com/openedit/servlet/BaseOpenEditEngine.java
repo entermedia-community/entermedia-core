@@ -6,10 +6,8 @@ package com.openedit.servlet;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Writer;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

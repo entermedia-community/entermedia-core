@@ -24,8 +24,6 @@ import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.openedit.PlugIn;
 import org.openedit.repository.Repository;
-import org.openedit.repository.filesystem.FileRepository;
-import org.openedit.repository.filesystem.XmlVersionRepository;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;

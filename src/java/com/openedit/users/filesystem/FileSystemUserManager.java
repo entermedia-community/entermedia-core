@@ -810,7 +810,11 @@ public class FileSystemUserManager implements UserManager
 		Document doc = factory.createDocument();
 		Element userElem = doc.addElement("user");
 		userElem.addAttribute("enabled", Boolean.toString(user.isEnabled()));
-		
+		if(user.getUserName() == null){
+			int id = getUserIdCounter().incrementCount(); 
+			String newid = String.valueOf(id); 
+			user.setId(newid);
+		}
 		Element userNameElem = userElem.addElement("user-name");
 		userNameElem.setText(user.getUserName());
 
@@ -858,6 +862,15 @@ public class FileSystemUserManager implements UserManager
 	{
 		Document doc = DocumentFactory.getInstance().createDocument();
 		Element root = doc.addElement("group");
+		if(inGroup.getId() == null){
+			
+				int id = getUserIdCounter().incrementCount(); 
+				String inAccount = String.valueOf(id); 
+				inGroup.setId(inAccount);
+				
+			
+			
+		}
 		root.addAttribute("id", inGroup.getId());
 		Element groupNameElem = root.addElement("group-name"); 
 		groupNameElem.setText(inGroup.getName());

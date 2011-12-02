@@ -28,7 +28,6 @@ import com.openedit.hittracker.HitTracker;
 import com.openedit.hittracker.SearchQuery;
 import com.openedit.hittracker.Term;
 import com.openedit.users.User;
-import com.openedit.users.UserPreferences;
 import com.openedit.util.URLUtilities;
 
 public abstract class BaseSearcher implements Searcher, DataFactory
