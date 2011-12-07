@@ -264,7 +264,7 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	
 	public Term addNots(String inId, String inNots)
 	{
-		PropertyDetail detail = new PropertyDetail();
+		PropertyDetail detail = createDetail(inId);
 		detail.setId(inId);
 		return addNots(detail, inNots);
 	}
@@ -359,12 +359,12 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	 */
 	public String getFriendlyValue(String inRawValue, PropertyDetail inDetail)
 	{
-		if (!inDetail.isViewType("list"))
+		if (!inDetail.isViewType("list") && !inDetail.isViewType("category"))
 		{
 			return inRawValue;
 		}
 
-		Searcher searcher = getSearcherManager().getSearcher(inDetail.getCatalogId(getCatalogId()), inDetail.getId());
+		Searcher searcher = getSearcherManager().getSearcher(inDetail.getCatalogId(getCatalogId()), inDetail.getListId());
 		if (searcher == null)
 		{
 			return inRawValue;
@@ -795,26 +795,21 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 
 	public Term addMatches(String inString, String value)
 	{
-		PropertyDetail detail = new PropertyDetail();
+		PropertyDetail detail = createDetail(inString);
 		detail.setId(inString);
 		return addMatches(detail, value);
 	}
 
 	public Term addAfter(String inString, Date inSearchDate)
 	{
-		PropertyDetail detail = new PropertyDetail();
+		PropertyDetail detail = createDetail(inString);
 		detail.setId(inString);
 		return addAfter(detail, inSearchDate);
 	}
 
 	public Term addExact(String inKey, String inValue)
 	{
-		PropertyDetail detail = getPropertyDetails().getDetail(inKey);
-		if(detail == null)
-		{
-			detail = new PropertyDetail();
-			detail.setId(inKey);
-		}
+		PropertyDetail detail = createDetail(inKey);
 		return addExact(detail, inValue);
 	}
 
@@ -826,34 +821,44 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 
 	public Term addStartsWith(String inString, String inQuery)
 	{
-		PropertyDetail detail = new PropertyDetail();
+		PropertyDetail detail = createDetail(inString);
 		detail.setId(inString);
 		return addStartsWith(detail, inQuery);
 	}
 
 	public Term addMatches(String inInQuery)
 	{
-		PropertyDetail detail = new PropertyDetail();
+		PropertyDetail detail = createDetail("description");
 		return addMatches(detail, inInQuery);
 	}
 
 	public Term addNot(String inId, String inQuery)
 	{
-		PropertyDetail detail = new PropertyDetail();
+		PropertyDetail detail = createDetail(inId);
 		detail.setId(inId);
 		return addNot(detail, inQuery);
 	}
 
 	public Term addOrsGroup(String inId, String inQuery)
 	{
-		PropertyDetail detail = new PropertyDetail();
-		detail.setId(inId);
+		PropertyDetail detail = createDetail(inId);
 		return addOrsGroup(detail, inQuery);
+	}
+
+	protected PropertyDetail createDetail(String inId)
+	{
+		PropertyDetail detail = getDetail(inId);
+		if( detail == null )
+		{
+			detail = new PropertyDetail();
+			detail.setId(inId);
+		}
+		return detail;
 	}
 
 	public Term addQuery(String inString, String inValue)
 	{
-		PropertyDetail detail = new PropertyDetail();
+		PropertyDetail detail = createDetail(inString);
 		detail.setId(inString);
 		return addQuery(detail, inValue);
 
@@ -907,13 +912,16 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 				return term;
 			}
 		}
-		for (Iterator iterator = getChildren().iterator(); iterator.hasNext();)
+		if( hasChildren())
 		{
-			SearchQuery child = (SearchQuery) iterator.next();
-			Term term = child.getTermByTermId(inTermId);
-			if( term != null)
+			for (Iterator iterator = getChildren().iterator(); iterator.hasNext();)
 			{
-				return term;
+				SearchQuery child = (SearchQuery) iterator.next();
+				Term term = child.getTermByTermId(inTermId);
+				if( term != null)
+				{
+					return term;
+				}
 			}
 		}
 		return null;
@@ -930,14 +938,20 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 			{
 				return term;
 			}
-			if( term.getId().equals(inTermId))
-			{
-				return term;
-			}
+//			if( term.getId().equals(inTermId))
+//			{
+//				return term;
+//			}
 		}
 		return null;
 	}
 
+	
+	/**
+	 * A better way to do this is to have "or" composite terms
+	 * Then flag the term as a composite for saving to the database
+	 * @param inTerm
+	 */
 	public void addTerm(Term inTerm)
 	{
 		if( !isAndTogether())
@@ -947,11 +961,11 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 			return;
 		}
 		
-		SearchQuery child = getChildQuery(inTerm.getDetail().getId());
 		List existing = getTerms(inTerm.getDetail().getId());
+		SearchQuery child = getChildQueryWithDetail(inTerm.getDetail().getId());
 		if( existing.size() == 0 && child == null )
 		{
-			inTerm.setId(inTerm.getDetail().getId() + "_0");
+			//inTerm.setId(inTerm.getDetail().getId() + "_0");
 			getTerms().add(inTerm);
 		}
 		else
@@ -961,23 +975,40 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 				try
 				{
 					child = (SearchQuery)getClass().newInstance();
-					child.setSearcherManager(getSearcherManager());
-					child.setId(inTerm.getDetail().getId());
-					child.setAndTogether(false);
-					addChildQuery(child);
 				}
 				catch (Exception e)
 				{
 					//should never happen
+					throw new OpenEditException(e);
 				}
+					child.setSearcherManager(getSearcherManager());
+					//child.setId(inTerm.getDetail().getId());
+					child.setAndTogether(false);
+					addChildQuery(child);
 			}
 			
 			//add the old and new one to the child
 			getTerms().removeAll(existing);
 			child.getTerms().addAll(existing);
-			inTerm.setId(inTerm.getDetail().getId() + "_" + child.getTerms().size());
+			//inTerm.setId(inTerm.getDetail().getId() + "_" + child.getTerms().size());
 			child.getTerms().add(inTerm);
 		}
+	}
+
+	protected SearchQuery getChildQueryWithDetail(String inId)
+	{
+		if( hasChildren() )
+		{
+			for (Iterator iterator = getChildren().iterator(); iterator.hasNext();)
+			{
+				SearchQuery query = (SearchQuery) iterator.next();
+				if( query.getTermByDetailId(inId) != null)
+				{
+					return query;
+				}
+			}
+		}
+		return null;
 	}
 
 	public void addChildQuery(SearchQuery inQuery)
@@ -990,14 +1021,21 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		for (Iterator iterator = getChildren().iterator(); iterator.hasNext();)
 		{
 			SearchQuery query = (SearchQuery) iterator.next();
-			if( inId.equals( query.getId()) )
+			if( inId.equals( query.getId() ) )
 			{
 				return query;
 			}
 		}
 		return null;
 	}
-	
+	public boolean hasChildren()
+	{
+		if( fieldChildren == null || fieldChildren.size() == 0)
+		{
+			return false;
+		}
+		return true;
+	}
 	public List getChildren()
 	{
 		if (fieldChildren == null)
@@ -1162,19 +1200,19 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 
 	public void addBetween(String inString, Date inNow, Date inNext)
 	{
-		PropertyDetail d = new PropertyDetail();
+		PropertyDetail d = createDetail(inString);
 		d.setId(inString);
 		addBetween(d, inNow, inNext);
 		
 	}
 
 	public void addBetween(String string, long longValue, long longValue2) {
-		PropertyDetail d = new PropertyDetail();
+		PropertyDetail d = createDetail(string);
 		d.setId(string);
 		addBetween(d, longValue, longValue2);
 	}
 	public void addBetween(String string, double longValue, double longValue2) {
-		PropertyDetail d = new PropertyDetail();
+		PropertyDetail d = createDetail(string);
 		d.setId(string);
 		addBetween(d, longValue, longValue2);
 	}
@@ -1186,7 +1224,7 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	}
 
 	public void addBefore(String inString, Date inDate) {
-		PropertyDetail detail = new PropertyDetail();
+		PropertyDetail detail = createDetail(inString);
 		detail.setId(inString);
 		addBefore(detail, inDate);		
 	}	
@@ -1208,7 +1246,14 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		if( name == null && getTerms().size() > 0)
 		{
 			Term term = (Term)getTerms().get(0);
-			name = getFriendlyValue(term.getValue(),term.getDetail());
+			if (!term.getDetail().isFilter())
+			{
+				name = getFriendlyValue(term.getValue(),term.getDetail());
+			}
+		}
+		if( name == null)
+		{
+			name = "All";
 		}
 		return name;
 	}

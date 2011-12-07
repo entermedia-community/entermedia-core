@@ -740,7 +740,12 @@ public abstract class HitTracker implements Serializable, Collection
 		}
 		return -1;
 	}
-	
+	public int getPageForIndexLocation(int inIndex)
+	{
+		int page =   inIndex / getHitsPerPage();
+		page++;
+		return page;
+	}
 	public Object previous(int inIndex)
 	{
 		if(inIndex == -1)

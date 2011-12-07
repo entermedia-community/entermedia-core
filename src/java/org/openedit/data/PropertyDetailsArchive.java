@@ -542,7 +542,7 @@ public class PropertyDetailsArchive
 
 	public Data getView(String inType, String inView)
 	{
-		return getViewXml(inType +"/" + inView,null);
+		return getViewXml(inView,null);
 	}
 	public String getViewLabel(String inView)
 	{
