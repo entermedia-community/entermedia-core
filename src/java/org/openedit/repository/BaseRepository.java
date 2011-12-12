@@ -11,6 +11,7 @@ public abstract class BaseRepository implements Repository
 	protected boolean fieldLoadOnStartup;
 	protected String fieldPath;			//This is saved
 	protected String fieldExternalPath; //this is saved
+	protected String fieldDefaultRemoteDir; //this is saved
  	protected String fieldMatchesPostFix;   //this is saved. Used to limit the matches for only *.xconf for example
 	protected String fieldRepositoryType;
 	protected String fieldFilterOut;
@@ -331,4 +332,17 @@ public abstract class BaseRepository implements Repository
 		return true;
 	}
 
+	@Override
+	public void setDefaultRemoteDirectory(String defaultRemoteDirectory) {
+		this.fieldDefaultRemoteDir = defaultRemoteDirectory;
+		
+	}
+
+	@Override
+	public String getDefaultRemoteDirectory() {
+		// TODO Auto-generated method stub
+		if(!this.fieldDefaultRemoteDir.endsWith("/"))
+			this.fieldDefaultRemoteDir= this.fieldDefaultRemoteDir + "/";
+		return this.fieldDefaultRemoteDir;
+	}
 }

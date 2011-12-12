@@ -301,6 +301,7 @@ public class URLUtilities
 		try
 		{
 			requestedPath = URLDecoder.decode(requestedPath, "UTF-8");
+			//getRequest().getQueryString()
 		}
 		catch (UnsupportedEncodingException ex)
 		{
