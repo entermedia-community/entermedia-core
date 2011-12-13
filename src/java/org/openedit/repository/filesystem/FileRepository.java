@@ -70,11 +70,9 @@ public class FileRepository extends  BaseRepository
 		{
 			log.debug("saving:" + inContent.getPath());
 		}
-		//Tuan modify this line here
-		String path = inContent.getAbsolutePath();
-		//String path = inContent.getPath();
-		File file = new File( path );
-		//File file = getFile( path );
+
+		String path = inContent.getPath();
+		File file = getFile( path );
 
 		if (path.endsWith("/") && !file.exists())
 		{
@@ -228,9 +226,7 @@ public class FileRepository extends  BaseRepository
 		{
 			//make an output stream and return it
 			OutputStreamItem osi = (OutputStreamItem)inContentItem;
-			//Tuan modify here
-			//File file = getFile( inContentItem.getPath() );
-			File file = getFile( inContentItem.getAbsolutePath());
+			File file = getFile( inContentItem.getPath() );
 			file.getParentFile().mkdirs();
 			try
 			{
@@ -271,10 +267,7 @@ public class FileRepository extends  BaseRepository
 		}
 		else //Use it to write from a stream to the file
 		{
-			//File file = getFile( inContentItem.getPath() );
-			//Tuan modify this line
-			File file =new File(inContentItem.getAbsolutePath());
-			//File file = getFile( inContentItem.getPath() );
+			File file = getFile( inContentItem.getPath() );
 			try
 			{
 				InputStream in = inContentItem.getInputStream();
@@ -389,5 +382,4 @@ public class FileRepository extends  BaseRepository
 		}
 		
 	}
-	
 }
