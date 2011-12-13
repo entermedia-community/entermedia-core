@@ -153,7 +153,10 @@ public class ElementData implements Data, Comparable
 		for (Iterator iterator = inProperties.keySet().iterator(); iterator.hasNext();)
 		{
 			String key = (String) iterator.next();
-			setProperty(key,inProperties.get(key));
+			if( key != null)
+			{
+				setProperty(key,inProperties.get(key));
+			}
 		}
 	}
 	
