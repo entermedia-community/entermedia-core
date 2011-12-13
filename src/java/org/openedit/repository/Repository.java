@@ -17,6 +17,8 @@ package org.openedit.repository;
 import java.util.List;
 import java.util.Map;
 
+import org.openedit.Data;
+
 
 
 /**
@@ -25,7 +27,7 @@ import java.util.Map;
  * 
  * @author Matt Avery, mavery@einnovation.com
  */
-public interface Repository
+public interface Repository 
 {
 	boolean matches(String inPath);
 	/*
@@ -63,14 +65,6 @@ public interface Repository
 	 */
 	void setExternalPath(String inRootAbsolutePath);
 	String getExternalPath();
-	/**
-	 * @purpose is used for FTP module
-	 * @author Tuan Nguyen
-	 * @param defaultRemoteDirectory
-	 * 
-	 */
-	void setDefaultRemoteDirectory(String defaultRemoteDirectory);
-	String getDefaultRemoteDirectory();
 	
 	
 	

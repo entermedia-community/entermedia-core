@@ -471,6 +471,16 @@ public class XmlSearcher extends BaseSearcher
 		return details.getDetails();
 	}
 
+	
+	public PropertyDetails getPropertyDetails() {
+		
+		PropertyDetails details = getPropertyDetailsArchive().getPropertyDetailsCached(getSearchType());
+		if( details == null || details.size() == 0)
+		{
+			return getDefaultDetails();
+		}
+		return details;
+	}
 	public PropertyDetails getDefaultDetails()
 	{
 		if( fieldDefaultDetails == null)

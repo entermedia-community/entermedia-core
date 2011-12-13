@@ -499,7 +499,8 @@ public class PropertyDetailsArchive
 	{
 		//lists, views, fields
 		List datapaths = getPageManager().getChildrenPaths("/WEB-INF/data/" + getCatalogId() +"/" + inFolderType );
-		List basepaths = getPageManager().getChildrenPaths("/" + getCatalogId() +"/data/" + inFolderType ,true);
+		String inPath = "/" + getCatalogId() +"/data/" + inFolderType +"/";
+		List basepaths = getPageManager().getChildrenPaths(inPath ,true);
 		Set set = new HashSet();
 		for (Iterator iterator = basepaths.iterator(); iterator.hasNext();)
 		{

@@ -343,15 +343,5 @@ public class CompoundRepository implements Repository
 		return null;
 	}
 
-	@Override
-	public void setDefaultRemoteDirectory(String defaultRemoteDirectory) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public String getDefaultRemoteDirectory() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
 }
