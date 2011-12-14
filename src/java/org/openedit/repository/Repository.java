@@ -72,7 +72,12 @@ public interface Repository
 	void setDefaultRemoteDirectory(String defaultRemoteDirectory);
 	String getDefaultRemoteDirectory();
 	
-	
+	/**
+	 * to retrieve real repository at runtime
+	 * @param inPath
+	 * @return
+	 */
+	public Repository getRealRepository(String inPath); 
 	
 	void setFilterIn(String inFilters);
 	void setFilterOut(String inFilters);

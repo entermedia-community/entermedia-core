@@ -87,7 +87,17 @@ public class CompoundRepository implements Repository
     	}
 		return getDefaultRepository();
 	}
-	
+    /**
+     * tuan add this function
+     * @param inPath
+     * @return
+     * @throws RepositoryException
+     */
+	public Repository getRealRepository( String inPath ) throws RepositoryException
+	{
+		return resolveRepository( inPath );
+	}
+    
 	public ContentItem get( String inPath ) throws RepositoryException
 	{
 		return resolveRepository( inPath ).get( inPath );

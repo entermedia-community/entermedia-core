@@ -345,4 +345,10 @@ public abstract class BaseRepository implements Repository
 			this.fieldDefaultRemoteDir= this.fieldDefaultRemoteDir + "/";
 		return this.fieldDefaultRemoteDir;
 	}
+	
+	@Override
+	public Repository getRealRepository(String inPath) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
