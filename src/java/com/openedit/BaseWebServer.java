@@ -562,8 +562,8 @@ public class BaseWebServer implements WebServer
 					config.setExternalPath(rootpath);
 				}
 				
-				String defaultRemoteHost = child.attributeValue("defaultRemoteHost");
-				config.setDefaultRemoteDirectory(defaultRemoteHost);
+				
+				
 				
 				
 				List properties = child.elements("property");
@@ -645,9 +645,7 @@ public class BaseWebServer implements WebServer
 			}
 			child.addAttribute("repositorytype", existing.getRepositoryType());
 			
-			String defaultRemoteHost = existing.getDefaultRemoteDirectory();
-			if(defaultRemoteHost != null)
-				child.addAttribute("defaultRemoteHost", defaultRemoteHost);
+			
 			
 			
 			Map properties = existing.getProperties();

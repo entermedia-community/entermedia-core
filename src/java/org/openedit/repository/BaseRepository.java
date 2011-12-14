@@ -331,21 +331,6 @@ public abstract class BaseRepository implements Repository
 		
 		return true;
 	}
-
-	@Override
-	public void setDefaultRemoteDirectory(String defaultRemoteDirectory) {
-		this.fieldDefaultRemoteDir = defaultRemoteDirectory;
-		
-	}
-
-	@Override
-	public String getDefaultRemoteDirectory() {
-		// TODO Auto-generated method stub
-		if(!this.fieldDefaultRemoteDir.endsWith("/"))
-			this.fieldDefaultRemoteDir= this.fieldDefaultRemoteDir + "/";
-		return this.fieldDefaultRemoteDir;
-	}
-	
 	@Override
 	public Repository getRealRepository(String inPath) {
 		// TODO Auto-generated method stub

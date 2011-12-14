@@ -433,7 +433,7 @@ public class XmlSearcher extends BaseSearcher
 	public List getIndexProperties()
 	{
 		PropertyDetails details = getPropertyDetailsArchive().getPropertyDetailsCached(getSearchType());
-		if( details == null)
+		if( details == null || details.size() == 0)
 		{
 			return getDefaultDetails().findIndexProperties();
 		}
@@ -442,7 +442,7 @@ public class XmlSearcher extends BaseSearcher
 	public List getStoredProperties()
 	{
 		PropertyDetails details = getPropertyDetailsArchive().getPropertyDetailsCached(getSearchType());
-		if( details == null)
+		if( details == null || details.size() == 0)
 		{
 			return getDefaultDetails().findStoredProperties();
 		}
@@ -471,6 +471,16 @@ public class XmlSearcher extends BaseSearcher
 		return details.getDetails();
 	}
 
+	
+	public PropertyDetails getPropertyDetails() {
+		
+		PropertyDetails details = getPropertyDetailsArchive().getPropertyDetailsCached(getSearchType());
+		if( details == null || details.size() == 0)
+		{
+			return getDefaultDetails();
+		}
+		return details;
+	}
 	public PropertyDetails getDefaultDetails()
 	{
 		if( fieldDefaultDetails == null)

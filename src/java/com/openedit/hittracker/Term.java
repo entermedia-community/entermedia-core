@@ -97,7 +97,7 @@ abstract public class Term {
 	public void setDetail(PropertyDetail inDetail)
 	{
 		fieldDetail = inDetail;
-		fieldId = inDetail.getId() + "_" + System.currentTimeMillis();
+		//fieldId = inDetail.getId() + "_" + System.currentTimeMillis();
 	}
 
 	public void setFieldParameters(Map fieldParameters)

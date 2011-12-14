@@ -134,6 +134,10 @@ public class SearcherManager
 
 	public HitTracker getList(String inCatalogId, String inFieldName)  
 	{
+		if( inFieldName == null)
+		{
+			return null;
+		}
 		//If this is not my searcher type then use the manager to get the  correct search
 		Searcher searcher = getSearcher(inCatalogId, inFieldName);
 		HitTracker found = searcher.getAllHits();
