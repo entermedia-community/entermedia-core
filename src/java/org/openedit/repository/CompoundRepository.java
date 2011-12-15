@@ -346,14 +346,10 @@ public class CompoundRepository implements Repository
 		return null;
 	}
 	
-	@Override
+	
 	public Map getProperties()
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
-<<<<<<< .mine
-	@Override
-=======
-	
->>>>>>> .theirs}
+}

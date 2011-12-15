@@ -65,14 +65,7 @@ public interface Repository
 	 */
 	void setExternalPath(String inRootAbsolutePath);
 	String getExternalPath();
-	/**
-	 * @purpose is used for FTP module
-	 * @author Tuan Nguyen
-	 * @param defaultRemoteDirectory
-	 * 
-	 */
-	void setDefaultRemoteDirectory(String defaultRemoteDirectory);
-	String getDefaultRemoteDirectory();
+	
 	
 	/**
 	 * to retrieve real repository at runtime

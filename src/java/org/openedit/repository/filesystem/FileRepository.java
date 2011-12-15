@@ -271,9 +271,9 @@ public class FileRepository extends  BaseRepository
 		}
 		else //Use it to write from a stream to the file
 		{
-			//File file = getFile( inContentItem.getPath() );
+			File file = getFile( inContentItem.getPath() );
 			//Tuan modify this line
-			File file =new File(inContentItem.getAbsolutePath());
+			//File file =new File(inContentItem.getAbsolutePath());
 			//File file = getFile( inContentItem.getPath() );
 			try
 			{
