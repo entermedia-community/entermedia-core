@@ -75,6 +75,10 @@ public class UserProfileManager
 			{
 				userprofile.setProperty("settingsgroup","administrator");
 			}
+			else
+			{
+				userprofile.setProperty("settingsgroup","guest");
+			}
 			userprofile.setSourcePath(inUserName);
 			userprofile.setCatalogId(inCatalogId);
 			searcher.saveData(userprofile, inReq.getUser());
