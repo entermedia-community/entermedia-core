@@ -178,16 +178,21 @@ public class BaseEditorModule extends BaseModule
 		
 		if ( inReq.getContentPage().getPath().equals( inReq.getPath()))
 		{
-//			if ( inReq.getPage().isHtml() &&  inReq.isEditable() )
-//			{
-//				Page wizard = pageManager.getPage("/system/nopagefound.html");
-//				if ( wizard.exists() )
-//				{
-//					inReq.getPageStreamer().include( wizard);
-//					inReq.setHasRedirected(true);
-//					return;
-//				}
-//			}
+			if ( inReq.getPage().isHtml() &&  inReq.isEditable() )
+			{
+				String path = inReq.findValue("404wizardpage");
+				if( path == null)
+				{
+					path = "/system/nopagefound.html";
+				}
+				Page wizard = pageManager.getPage(path);
+				if ( wizard.exists() )
+				{
+					inReq.getPageStreamer().include( wizard);
+					inReq.setHasRedirected(true);
+					return;
+				}
+			}
 			//log.info( "Could not use  add page wizard. 404 error on: " + inReq.getPath() );
 			String errorpage = inReq.getContentPage().getProperty("error404"); //"/error404.html";
 			errorpage = errorpage !=null ? errorpage : ERROR404_HTML;
