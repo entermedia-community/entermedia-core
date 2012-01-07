@@ -8,6 +8,7 @@ import javax.naming.Context;
 import javax.naming.NameAlreadyBoundException;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
+import javax.naming.PartialResultException;
 import javax.naming.SizeLimitExceededException;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.BasicAttribute;
@@ -84,7 +85,7 @@ public class LDAP
 		{
 			inServerName = "ldap://" + inServerName + "/";
 		}
-		env.put(Context.PROVIDER_URL, inServerName);
+		env.put(Context.PROVIDER_URL, inServerName);	
 		log.info("[LDAP] Connecting to " + inServerName);
 	}
 
@@ -100,7 +101,7 @@ public class LDAP
 		String post = (String) inUser.getProperty("ldap_postfix");
 		if (post != null)
 		{
-			dnbuffer.append(",");
+			//dnbuffer.append(",");
 			dnbuffer.append(post);
 		}
 		// String base = "ou=People,dc=example,dc=com";
@@ -221,7 +222,7 @@ public class LDAP
 		}
 
 		SearchControls ctrl = new SearchControls();
-		ctrl.setSearchScope(SearchControls.ONELEVEL_SCOPE);
+		ctrl.setSearchScope(SearchControls.SUBTREE_SCOPE);
 		ctrl.setCountLimit(maxresults);
 
 		NamingEnumeration enumeration;
@@ -243,12 +244,23 @@ public class LDAP
 					row.put(basic.getID(), value);
 				}
 				results.add(new BaseData(row));
+				if( results.size() == maxresults )
+				{
+					break;
+				}
 			}
 			log.info("[LDAP] Searched for " + query + " in domain " + domain  + " found " +  results.size());
 
-		} catch (SizeLimitExceededException e)
+		}
+		catch (SizeLimitExceededException e)
 		{
-		} catch (NamingException e)
+			
+		}
+		catch (PartialResultException e)
+		{
+			//more than 1
+		}
+		catch (NamingException e)
 		{
 			throw new OpenEditException(e);
 		}
