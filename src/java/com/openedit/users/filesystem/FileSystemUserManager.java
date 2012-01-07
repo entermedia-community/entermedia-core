@@ -33,6 +33,7 @@ import org.dom4j.Element;
 import org.openedit.event.WebEvent;
 import org.openedit.event.WebEventHandler;
 import org.openedit.repository.ContentItem;
+import org.openedit.util.DateStorageUtil;
 
 import com.openedit.OpenEditException;
 import com.openedit.OpenEditRuntimeException;
@@ -483,6 +484,12 @@ public class FileSystemUserManager implements UserManager
 		{
 			user.setPassword(passwordElem.getText());
 		}
+		
+		Element lastLoginElem = root.element("lastLogined-Time");
+		if( lastLoginElem != null)
+		{
+			user.setLastLoginTime(lastLoginElem.getText());
+		}
 
 		Element creationDateElem = root.element("creation-date");
 		if( creationDateElem != null)
@@ -837,6 +844,11 @@ public class FileSystemUserManager implements UserManager
 		{
 			creationDateElem.setText(String.valueOf(System.currentTimeMillis()));
 		}
+
+		//Tuan add property lastLogined-Time
+		Element lastLoginTime = userElem.addElement("lastLogined-Time");
+		lastLoginTime.setText(DateStorageUtil.getStorageUtil().formatForStorage(new Date()));
+		
 		
 		MapPropertyContainer map = (MapPropertyContainer)user.getPropertyContainer();
 		if( map != null)

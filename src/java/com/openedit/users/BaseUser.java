@@ -38,11 +38,21 @@ public class BaseUser extends FileSystemObject implements User, Comparable
 	protected String fieldId;
 	protected boolean fieldVirtual;
 	protected boolean fieldEnabled;
+	protected String fieldLastLoginTime;
 	
 	public BaseUser()
 	{
 		super();
 		fieldEnabled = true;
+	}
+	
+	public void setLastLoginTime(String lastLoginTime) {
+		fieldLastLoginTime = lastLoginTime;
+		
+	}
+
+	public String getLastLoginTime() {
+		return fieldLastLoginTime;
 	}
 	
 	public String getEmail()
