@@ -242,6 +242,14 @@ public class FileRepository extends  BaseRepository
 				}
 				else
 				{
+					System.out.println("FileRepository.writeContent Diagnostics");
+					System.out.println("File Exists: "+file.exists());
+					System.out.println("File canRead: "+file.canRead());
+					System.out.println("File canWrite: "+file.canWrite());
+					System.out.println("File isFile: "+file.isFile());
+					System.out.println("File canExecute(): "+file.canExecute());
+					System.out.println("File isDirectory: "+file.isDirectory());
+					
 					fos = new FileOutputStream(file);
 				}
 				inContentItem.setOutputStream(new BufferedOutputStream(fos));
