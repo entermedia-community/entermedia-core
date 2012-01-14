@@ -556,11 +556,25 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 
 	public String getSortBy()
 	{
-		if (getSorts().size() > 0)
+		if (getSorts().size() == 0)
 		{
-			return (String) getSorts().get(0);
+			return null;
 		}
-		return null;
+		if (getSorts().size() == 0)
+		{
+			return (String)getSorts().get(0);
+		}
+		StringBuffer sorts = new StringBuffer();
+		for (Iterator iterator = getSorts()	.iterator(); iterator.hasNext();)
+		{
+			String sort = (String) iterator.next();
+			sorts.append(sort);
+			if(iterator.hasNext() )
+			{
+				sorts.append(",");				
+			}
+		}
+		return sorts.toString();
 	}
 
 	public void setSortBy(String inSortBy)
