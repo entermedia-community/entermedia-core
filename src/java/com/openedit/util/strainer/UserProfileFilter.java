@@ -65,7 +65,7 @@ public class UserProfileFilter extends BaseFilter
 	}
 	public String toString()
 	{
-		return "UserProfile" + getPropertyName() + "="+ getValue();
+		return "Role." + getPropertyName() + "="+ getValue();
 	}
 	public String getPropertyName()
 	{
