@@ -133,7 +133,12 @@ public class FilterReader
 		}
 		else if (elemName.equals("userprofile"))
 		{
-			result = new UserProfileFilter(inConfig.getAttribute("name"),inConfig.getAttribute("value"));
+			String name = inConfig.getAttribute("name");
+			if( name == null)
+			{
+				name = inConfig.getAttribute("property");
+			}
+			result = new UserProfileFilter(name,inConfig.getAttribute("value"));
 		}
 		else if (elemName.equals("group"))
 		{
