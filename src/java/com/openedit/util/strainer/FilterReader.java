@@ -138,7 +138,12 @@ public class FilterReader
 			{
 				name = inConfig.getAttribute("property");
 			}
-			result = new UserProfileFilter(name,inConfig.getAttribute("value"));
+			String value = inConfig.getAttribute("value");
+			if( value == null)
+			{
+				value = inConfig.getAttribute("equals");
+			}
+			result = new UserProfileFilter(name,value);
 		}
 		else if (elemName.equals("group"))
 		{
