@@ -22,6 +22,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.openedit.util.DateStorageUtil;
+
 import com.openedit.OpenEditRuntimeException;
 import com.openedit.users.filesystem.FileSystemObject;
 
@@ -260,6 +262,9 @@ public class BaseUser extends FileSystemObject implements User, Comparable
 		else if( "screenname".equals(inPropertyName))
 		{
 			return getScreenName();
+		}
+		else if ("creationdate".equals(inPropertyName)){
+			return DateStorageUtil.getStorageUtil().formatForStorage(getCreationDate());
 		}
 		return (String)getProperty(inPropertyName);
 	}
