@@ -130,6 +130,14 @@ public interface User extends PropertyContainer, Data
 	 */
 	String getUserName();
 	
+	
+	/*
+	 * @author: tuan nguyen
+	 * @purpose : for validation/ devalidation
+	 */
+	void setLastLoginTime(String lastLoginTime);
+	String getLastLoginTime();
+	
 	/**
 	 * Determines whethwer or not this user is allowed to login.
 	 * @return
@@ -178,5 +186,7 @@ public interface User extends PropertyContainer, Data
 
 	public String getScreenName();
 	Map listAllProperties();
+
+	Collection getValues(String inString);
 	
 }

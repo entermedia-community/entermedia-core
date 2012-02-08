@@ -15,4 +15,7 @@ public interface Data
 	void setProperty(String inId, String inValue);
 	String get(String inId);
 	Map getProperties();
+	
+	void setProperties(Map<String,String> inProperties);
+
 }

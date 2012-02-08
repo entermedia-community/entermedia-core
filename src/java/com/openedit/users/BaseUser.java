@@ -13,6 +13,7 @@ See the GNU Lesser General Public License for more details.
 package com.openedit.users;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -20,7 +21,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+
+import org.openedit.util.DateStorageUtil;
 
 import com.openedit.OpenEditRuntimeException;
 import com.openedit.users.filesystem.FileSystemObject;
@@ -38,11 +40,21 @@ public class BaseUser extends FileSystemObject implements User, Comparable
 	protected String fieldId;
 	protected boolean fieldVirtual;
 	protected boolean fieldEnabled;
+	protected String fieldLastLoginTime;
 	
 	public BaseUser()
 	{
 		super();
 		fieldEnabled = true;
+	}
+	
+	public void setLastLoginTime(String lastLoginTime) {
+		fieldLastLoginTime = lastLoginTime;
+		
+	}
+
+	public String getLastLoginTime() {
+		return fieldLastLoginTime;
 	}
 	
 	public String getEmail()
@@ -251,6 +263,9 @@ public class BaseUser extends FileSystemObject implements User, Comparable
 		{
 			return getScreenName();
 		}
+		else if ("creationdate".equals(inPropertyName)){
+			return DateStorageUtil.getStorageUtil().formatForStorage(getCreationDate());
+		}
 		return (String)getProperty(inPropertyName);
 	}
 	
@@ -414,6 +429,11 @@ public class BaseUser extends FileSystemObject implements User, Comparable
 		fieldId = inNewid;
 	}
 
+	public void setProperties(Map<String,String> inProperties)
+	{
+		getProperties().putAll(inProperties);
+	}
+
 	public void setProperty(String inId, String inValue)
 	{
 		if("password".equals(inId)){
@@ -487,5 +507,33 @@ public class BaseUser extends FileSystemObject implements User, Comparable
 			}
 		}
 		return enabledgroups;
+	}
+	public Collection getValues(String inPreference)
+	{
+		String val = get(inPreference);
+		
+		if (val == null)
+			return null;
+		
+		String[] vals = val.split("\\s+");
+
+		Collection collection = Arrays.asList(vals);
+		//if null check parent
+		return collection;
+	}
+	
+	public void setValues(String inKey, Collection<String> inValues)
+	{
+		StringBuffer values = new StringBuffer();
+		for (Iterator iterator = inValues.iterator(); iterator.hasNext();)
+		{
+			String detail = (String) iterator.next();
+			values.append(detail);
+			if( iterator.hasNext())
+			{
+				values.append(" ");
+			}
+		}
+		setProperty(inKey,values.toString());
 	}
 }

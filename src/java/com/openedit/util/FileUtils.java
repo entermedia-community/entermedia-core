@@ -168,7 +168,7 @@ public class FileUtils
 					deleteAll( fileList[idx] );
 			}
 		}
-
+		
 		// Now delete ourselves, whether a file or a dir.
 		file.delete();
 	}

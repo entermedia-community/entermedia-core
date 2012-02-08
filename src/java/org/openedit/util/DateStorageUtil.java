@@ -16,7 +16,8 @@ public class DateStorageUtil
 	private static final Log log = LogFactory.getLog(DateStorageUtil.class);
     protected Map<String, DateFormat> fieldDateFormats;
     protected DateFormat fieldOldDashFormat;
-	
+    // 1 day = 24 hour x 60 minutes x 60 seconds x 1000 millisecond;
+	private static final long PERIOR_OF_DAY = 24 * 60 * 60 * 1000;  
 	static final private ThreadLocal perThreadCache = new ThreadLocal();	
 	
 	public DateFormat getDateFormat(String inFormat)
@@ -81,6 +82,21 @@ public class DateStorageUtil
 		return format;
 	}
 
+	/*
+	 * return the number of days between two day
+	 */
+	public static double compareStorateDateWithCurrentTime(String lastTime)
+	{
+		Date lastDateTime = DateStorageUtil.getStorageUtil().parseFromStorage(lastTime);
+		//String currentDate = DateStorageUtil.getStorageUtil().formatForStorage(new Date());
+		//Calendar cal = Calendar.getInstance();
+		//Need to add timezone here
+		Date current= new Date();
+		double duration = (double)(current.getTime() - lastDateTime.getTime())/ PERIOR_OF_DAY;
+		return duration;
+	}
+
+	
 	public Date parseFromStorage(String inStoredDate)
 	{
 		if( inStoredDate == null)

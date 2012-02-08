@@ -24,8 +24,6 @@ import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.openedit.PlugIn;
 import org.openedit.repository.Repository;
-import org.openedit.repository.filesystem.FileRepository;
-import org.openedit.repository.filesystem.XmlVersionRepository;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
@@ -564,6 +562,10 @@ public class BaseWebServer implements WebServer
 					config.setExternalPath(rootpath);
 				}
 				
+				
+				
+				
+				
 				List properties = child.elements("property");
 				for (Iterator iterator2 = properties.iterator(); iterator2
 						.hasNext();)
@@ -642,6 +644,9 @@ public class BaseWebServer implements WebServer
 				}
 			}
 			child.addAttribute("repositorytype", existing.getRepositoryType());
+			
+			
+			
 			
 			Map properties = existing.getProperties();
 			if (properties != null)

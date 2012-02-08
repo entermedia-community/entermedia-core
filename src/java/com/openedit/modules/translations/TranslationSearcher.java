@@ -1,15 +1,10 @@
 package com.openedit.modules.translations;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import org.openedit.Data;
 import org.openedit.data.PropertyDetail;
 import org.openedit.data.PropertyDetails;
 import org.openedit.xml.XmlSearcher;
 
-import com.openedit.WebPageRequest;
 import com.openedit.hittracker.HitTracker;
 
 public class TranslationSearcher extends XmlSearcher

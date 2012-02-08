@@ -27,7 +27,7 @@ import com.openedit.users.User;
  */
 public class EditModule extends BaseEditorModule
 {
-	protected static final String WARNING_PAGE_PATH = "/system/components/openedit/lock-warning.html";
+	protected static final String WARNING_PAGE_PATH = "/system/lock-warning.html";
 	private static Log log = LogFactory.getLog(EditModule.class);
 	protected EditLockRegistry fieldEditLockRegistry;
 	protected String fieldEditLockWarningPath = WARNING_PAGE_PATH;

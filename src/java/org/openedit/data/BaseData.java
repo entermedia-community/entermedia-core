@@ -86,13 +86,23 @@ public class BaseData implements Data, Comparable {
 			getMap().put(inId, inValue);
 		}
 	}
-
-	public void setProperty(String inId, Object inValue) {
-		if ("id".equals(inId)) {
-			setId(inValue.toString());
-			return;
+	/**
+	 * @deprecated This API should be String based for now
+	 * @param inId
+	 * @param inValue
+	 */
+	public void setProperty(String inId, String[] inValues) 
+	{
+		StringBuffer buffer = new StringBuffer();
+		for (int i = 0; i < inValues.length; i++)
+		{
+			if( i > 0)
+			{
+				buffer.append(' ');
+			}
+			buffer.append(inValues[i]);
 		}
-		getMap().put(inId, inValue);
+		setProperty(inId, buffer.toString());
 	}
 
 	public Map getMap() {
@@ -125,7 +135,10 @@ public class BaseData implements Data, Comparable {
 		}
 		return fieldMap;
 	}
-
+	public void setProperties(Map<String,String> inProperties)
+	{
+		getProperties().putAll(inProperties);
+	}
 	public int compareTo(Object inO) {
 		BaseData inData = (BaseData) inO;
 		if (getName() != null && inData.getName() != null) {

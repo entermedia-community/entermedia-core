@@ -28,7 +28,6 @@ import com.openedit.hittracker.HitTracker;
 import com.openedit.hittracker.SearchQuery;
 import com.openedit.hittracker.Term;
 import com.openedit.users.User;
-import com.openedit.users.UserPreferences;
 import com.openedit.util.URLUtilities;
 
 public abstract class BaseSearcher implements Searcher, DataFactory
@@ -425,22 +424,77 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	 */
 	public SearchQuery addStandardSearchTerms(WebPageRequest inPageRequest) throws OpenEditException
 	{
-		String[] fieldid = inPageRequest.getRequestParameters("field");
-
-		if (fieldid == null)
+		SearchQuery search = addFields(inPageRequest);
+		search = addOrGroups(search, inPageRequest);
+		if( search == null)
 		{
 			return null;
 		}
+		addShowOnly(inPageRequest, search);
+
+		String resultype = inPageRequest.getRequestParameter("resulttype");
+		if (resultype == null)
+		{
+			resultype = "search";
+		}
+		search.setResultType(resultype);
+
+		return search;
+	}
+	
+	protected SearchQuery addOrGroups(SearchQuery inSearch, WebPageRequest inPageRequest)
+	{
+		String[] orgroups = inPageRequest.getRequestParameters("orgroup");
+
+		if (orgroups == null)
+		{
+			return inSearch;
+		}
+		if( inSearch == null)
+		{
+			inSearch = createSearchQuery();
+		}
+
+
+		for (int i = 0; i < orgroups.length; i++)
+		{
+			String[] vals = inPageRequest.getRequestParameters(orgroups[i] + ".value");
+			if( vals != null)
+			{
+				StringBuffer buffer = new StringBuffer();
+				for (int j = 0; j < vals.length; j++)
+				{
+					buffer.append(vals[j]);
+					if( j < vals.length )
+					{
+						buffer.append(' ');
+					}
+				}
+				inSearch.addOrsGroup(orgroups[i], buffer.toString());
+			}
+		}
+		return inSearch;
+	}
+
+	protected SearchQuery addFields(WebPageRequest inPageRequest) throws OpenEditException
+	{
+		String[] fieldid = inPageRequest.getRequestParameters("field");
+
+		if (fieldid == null )
+		{
+			return null;
+		}
+		SearchQuery search = createSearchQuery();
+
 		String[] operations = inPageRequest.getRequestParameters("operation");
 		// String[] values = inPageRequest.getRequestParameters("value");
 		// check the new naming convention for values (fieldid.value)
-		if (operations == null)
+		if (operations == null )
 		{
 			return null;
 		}
 		inPageRequest.removeSessionValue("crumb");
 
-		SearchQuery search = createSearchQuery();
 
 		DateFormat formater = null;
 		String dateFormat = inPageRequest.getRequestParameter("dateformat");
@@ -519,15 +573,6 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 
 			}
 		}
-	//	addShowOnly(inPageRequest, search);
-		
-		String resultype = inPageRequest.getRequestParameter("resulttype");
-		if (resultype == null)
-		{
-			resultype = "search";
-		}
-		search.setResultType(resultype);
-
 		return search;
 	}
 
@@ -701,6 +746,10 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			else if ("not".equals(op))
 			{
 				t = search.addNot(detail, val);
+			}
+			else if ("orsgroup".equals(op))
+			{
+				t = search.addOrsGroup(detail, val);
 			}
 			if (t != null)
 			{

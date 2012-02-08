@@ -17,6 +17,8 @@ package org.openedit.repository;
 import java.util.List;
 import java.util.Map;
 
+import org.openedit.Data;
+
 
 
 /**
@@ -25,7 +27,7 @@ import java.util.Map;
  * 
  * @author Matt Avery, mavery@einnovation.com
  */
-public interface Repository
+public interface Repository 
 {
 	boolean matches(String inPath);
 	/*
@@ -63,6 +65,16 @@ public interface Repository
 	 */
 	void setExternalPath(String inRootAbsolutePath);
 	String getExternalPath();
+	
+	
+	/**
+	 * to retrieve real repository at runtime
+	 * @param inPath
+	 * @return
+	 */
+	public Repository getRealRepository(String inPath); 
+	
+	
 	
 	void setFilterIn(String inFilters);
 	void setFilterOut(String inFilters);

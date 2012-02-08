@@ -162,7 +162,7 @@ public class URLUtilities
 		}
 
 		StringBuffer ctx = fieldRequest.getRequestURL();
-		String servername = ctx.substring(0, ctx.indexOf("/", 7));
+		String servername = ctx.substring(0, ctx.indexOf("/", 8));
 
 		return servername + "/";
 	}
@@ -301,6 +301,7 @@ public class URLUtilities
 		try
 		{
 			requestedPath = URLDecoder.decode(requestedPath, "UTF-8");
+			//getRequest().getQueryString()
 		}
 		catch (UnsupportedEncodingException ex)
 		{

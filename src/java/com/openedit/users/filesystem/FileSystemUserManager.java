@@ -33,6 +33,7 @@ import org.dom4j.Element;
 import org.openedit.event.WebEvent;
 import org.openedit.event.WebEventHandler;
 import org.openedit.repository.ContentItem;
+import org.openedit.util.DateStorageUtil;
 
 import com.openedit.OpenEditException;
 import com.openedit.OpenEditRuntimeException;
@@ -483,6 +484,12 @@ public class FileSystemUserManager implements UserManager
 		{
 			user.setPassword(passwordElem.getText());
 		}
+		
+		Element lastLoginElem = root.element("lastLogined-Time");
+		if( lastLoginElem != null)
+		{
+			user.setLastLoginTime(lastLoginElem.getText());
+		}
 
 		Element creationDateElem = root.element("creation-date");
 		if( creationDateElem != null)
@@ -810,7 +817,11 @@ public class FileSystemUserManager implements UserManager
 		Document doc = factory.createDocument();
 		Element userElem = doc.addElement("user");
 		userElem.addAttribute("enabled", Boolean.toString(user.isEnabled()));
-		
+		if(user.getUserName() == null){
+			int id = getUserIdCounter().incrementCount(); 
+			String newid = String.valueOf(id); 
+			user.setId(newid);
+		}
 		Element userNameElem = userElem.addElement("user-name");
 		userNameElem.setText(user.getUserName());
 
@@ -833,6 +844,11 @@ public class FileSystemUserManager implements UserManager
 		{
 			creationDateElem.setText(String.valueOf(System.currentTimeMillis()));
 		}
+
+		//Tuan add property lastLogined-Time
+		Element lastLoginTime = userElem.addElement("lastLogined-Time");
+		lastLoginTime.setText(DateStorageUtil.getStorageUtil().formatForStorage(new Date()));
+		
 		
 		MapPropertyContainer map = (MapPropertyContainer)user.getPropertyContainer();
 		if( map != null)
@@ -858,6 +874,15 @@ public class FileSystemUserManager implements UserManager
 	{
 		Document doc = DocumentFactory.getInstance().createDocument();
 		Element root = doc.addElement("group");
+		if(inGroup.getId() == null){
+			
+				int id = getUserIdCounter().incrementCount(); 
+				String inAccount = String.valueOf(id); 
+				inGroup.setId(inAccount);
+				
+			
+			
+		}
 		root.addAttribute("id", inGroup.getId());
 		Element groupNameElem = root.addElement("group-name"); 
 		groupNameElem.setText(inGroup.getName());

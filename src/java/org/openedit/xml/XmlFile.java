@@ -249,4 +249,13 @@ public class XmlFile implements Data
 	{
 		setPath(inSourcepath);
 	}	
+	public void setProperties(Map<String,String> inProperties)
+	{
+		for (Iterator iterator = inProperties.entrySet().iterator(); iterator.hasNext();)
+		{
+			String key = (String) iterator.next();
+			setProperty(key, inProperties.get(key));
+		}
+	}
+
 }

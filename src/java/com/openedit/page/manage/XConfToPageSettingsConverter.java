@@ -329,7 +329,7 @@ public class XConfToPageSettingsConverter
 			loadFallBackDirectory( inPageSettings, inUrlPath, contentexists );
 			//	loadOverrideDirectory( inPageSettings, inUrlPath );		
 			loadAlternativeContent(inPageSettings, inUrlPath, contentexists);
-
+//
 			return;
 		}
 		if( log.isDebugEnabled())

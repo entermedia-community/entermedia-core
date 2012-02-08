@@ -16,6 +16,7 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -148,7 +149,7 @@ public class BaseGroup extends FileSystemObject implements Group, Serializable, 
 
 	public String getId()
 	{
-		if( fieldId == null && fieldName != null )
+		if( fieldId == null && fieldName != null && fieldName.length() != 0)
 		{
 			return getName();
 		}
@@ -158,6 +159,11 @@ public class BaseGroup extends FileSystemObject implements Group, Serializable, 
 	public void setId(String inId)
 	{
 		fieldId = inId;
+	}
+
+	public void setProperties(Map<String,String> inProperties)
+	{
+		getProperties().putAll(inProperties);
 	}
 
 	public void setProperty(String inId, String inValue)

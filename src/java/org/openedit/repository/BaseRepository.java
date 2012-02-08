@@ -11,6 +11,7 @@ public abstract class BaseRepository implements Repository
 	protected boolean fieldLoadOnStartup;
 	protected String fieldPath;			//This is saved
 	protected String fieldExternalPath; //this is saved
+	protected String fieldDefaultRemoteDir; //this is saved
  	protected String fieldMatchesPostFix;   //this is saved. Used to limit the matches for only *.xconf for example
 	protected String fieldRepositoryType;
 	protected String fieldFilterOut;
@@ -330,5 +331,9 @@ public abstract class BaseRepository implements Repository
 		
 		return true;
 	}
-
+	@Override
+	public Repository getRealRepository(String inPath) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
