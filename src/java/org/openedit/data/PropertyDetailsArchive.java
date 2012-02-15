@@ -458,6 +458,7 @@ public class PropertyDetailsArchive
 			String name = attr.getName();
 			String value = attr.getValue();
 			inDetail.setProperty(name, value);
+			//log.info("Read" + name + " " +  value);
 		}
 
 	}

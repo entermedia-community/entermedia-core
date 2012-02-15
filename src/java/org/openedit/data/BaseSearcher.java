@@ -1563,6 +1563,22 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		PropertyDetails details = getPropertyDetailsArchive().getPropertyDetailsCached(getSearchType());
 		return details;
 	}
+	
+	public Collection<PropertyDetail> getUserPropertyDetails()
+	{
+		PropertyDetails details = getPropertyDetails();
+		List<PropertyDetail> sublist = new ArrayList<PropertyDetail>(details.size());
+		for (Iterator iterator = details.iterator(); iterator.hasNext();)
+		{
+			PropertyDetail detail = (PropertyDetail) iterator.next();
+			String val = detail.get("internalfield");
+			if( val == null || val.equals("false") )
+			{
+				sublist.add(detail);				
+			}
+		}
+		return sublist;
+	}
 
 	public HitTracker getAllHits()
 	{
