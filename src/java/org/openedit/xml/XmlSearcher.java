@@ -181,7 +181,7 @@ public class XmlSearcher extends BaseSearcher
 				}
 				Date target = DateStorageUtil.getStorageUtil().parseFromStorage(date);
 				
-				if(!target.before(before))
+				if(before == null || !target.before(before))
 				{
 					return false;
 				}
