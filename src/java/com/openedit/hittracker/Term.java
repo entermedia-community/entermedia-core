@@ -43,6 +43,10 @@ abstract public class Term {
 
 	public String getId()
 	{
+		if( fieldId == null && getDetail() != null)
+		{
+			return getDetail().getId();
+		}
 		return fieldId;
 	}
 
