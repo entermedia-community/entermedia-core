@@ -289,7 +289,12 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			tracker = checkCurrent(inReq, tracker);
 			if (tracker != null)
 			{
-				inReq.putPageValue(tracker.getHitsName(), tracker);
+				String hitsname = inReq.findValue("hitsname");
+				if( hitsname == null)
+				{
+					hitsname = tracker.getHitsName();
+				}
+				inReq.putPageValue(hitsname, tracker);
 			}
 			return tracker;
 		}
