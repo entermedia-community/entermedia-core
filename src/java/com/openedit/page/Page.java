@@ -825,4 +825,9 @@ public class Page implements Data, Comparable
 		return text;
 	}
 
+	public String replaceProperty(String inValue){
+		return getPageSettings().replaceProperty(inValue);
+	}
+	
+	
 }

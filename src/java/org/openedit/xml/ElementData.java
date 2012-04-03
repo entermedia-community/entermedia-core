@@ -1,5 +1,7 @@
 package org.openedit.xml;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -158,6 +160,36 @@ public class ElementData implements Data, Comparable
 				setProperty(key,inProperties.get(key));
 			}
 		}
+	}
+	
+	
+	public Collection getValues(String inPreference)
+	{
+		String val = get(inPreference);
+		
+		if (val == null)
+			return null;
+		
+		String[] vals = val.split("\\s+");
+
+		Collection collection = Arrays.asList(vals);
+		//if null check parent
+		return collection;
+	}
+	
+	public void setValues(String inKey, Collection<String> inValues)
+	{
+		StringBuffer values = new StringBuffer();
+		for (Iterator iterator = inValues.iterator(); iterator.hasNext();)
+		{
+			String detail = (String) iterator.next();
+			values.append(detail);
+			if( iterator.hasNext())
+			{
+				values.append(" ");
+			}
+		}
+		setProperty(inKey,values.toString());
 	}
 	
 }

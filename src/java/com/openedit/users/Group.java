@@ -23,7 +23,7 @@ import org.openedit.Data;
  *
  * @author Eric Galluzzo
  */
-public interface Group extends PropertyContainer, Data
+public interface Group extends PropertyContainer, Data, Comparable
 {
 	
 	/**

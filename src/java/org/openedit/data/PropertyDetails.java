@@ -18,6 +18,10 @@ public class PropertyDetails extends AbstractCollection {
 	protected Map fieldDefaults;
 	protected XmlFile fieldInputFile;
 	
+	public PropertyDetails()
+	{
+		// TODO Auto-generated constructor stub
+	}
 	public XmlFile getInputFile()
 	{
 		return fieldInputFile;

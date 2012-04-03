@@ -150,6 +150,10 @@ public abstract class HitTracker implements Serializable, Collection
 			{
 				setPage(1);
 			}
+			else
+			{
+				setPage(getPage());
+			}
 		}
 	}
 
