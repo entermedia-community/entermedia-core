@@ -682,6 +682,7 @@ public abstract class HitTracker implements Serializable, Collection
 
 	public void selectCurrentPage() throws Exception
 	{
+		deselectAll();
 		List page = getPageOfHits();
 		int bottom = (getPage() - 1) * getHitsPerPage(); // this is the start of
 		
