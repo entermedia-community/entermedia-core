@@ -973,7 +973,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			{
 				String[] beforeStrings = inPageRequest.getRequestParameters(field + ".before");
 				String[] afterStrings = inPageRequest.getRequestParameters(field + ".after");
-
+				
 				String beforeString = null, afterString = null;
 				if (beforeStrings != null && beforeStrings.length > count)
 				{
@@ -985,7 +985,12 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					beforeString = inPageRequest.getRequestParameter(field + ".before");
 					afterString = inPageRequest.getRequestParameter(field + ".after");
 				}
-
+				if(beforeString.length() == 0){
+					beforeString = null;
+				}
+				if(afterString.length() == 0){
+					afterString = null;
+				}
 				if (beforeString == null && afterString == null)
 				{
 
