@@ -31,32 +31,47 @@ public class XmlFolderSearcher extends XmlSearcher
 		try
 		{
 			String inName = getSearchType();
-			String path = getPropertyDetailsArchive().getConfigurationPath("/lists"	+ "/" + inName + "/" );
-			
+			//getConfigurationPath
 			XmlFile composite = new XmlFile();
-			composite.setPath(path);
+			composite.setPath("/WEB-INF/data/" + getCatalogId() + "/lists/" + inName);
 			Element root = DocumentHelper.createElement(inName);
 			composite.setRoot(root);
 
-			List<String> children = getPageManager().getChildrenPaths(path,true);
+			List<String> children = getPageManager().getChildrenPaths(composite.getPath(),false);
 			if( children.size() > 0)
 			{
 				composite.setExist(true);
-				for(String child:children)
-				{
-					XmlFile settings = getXmlArchive().getXml(child,child,inName);
-					for (Iterator iterator = settings.getRoot().elementIterator(); iterator
-							.hasNext();) {
-						Element row = (Element) iterator.next();
-						row.setParent(null);
-						root.add(row);
-					}
-				}
+				loadChildren(inName, children, root, false);
+			}
+			List<String> children2 = getPageManager().getChildrenPaths("/" + getCatalogId() + "/data" + "/lists/" + inName,true);
+			if( children2.size() > 0)
+			{
+				composite.setExist(true);
+				boolean existing = children.size() > 0;
+				loadChildren(inName, children2, root, existing);
 			}
 			return composite;
 		} catch ( OpenEditException ex)
 		{
 			throw new OpenEditRuntimeException(ex);
+		}
+	}
+
+	protected void loadChildren(String inName, List<String> children, Element root, boolean noDups) 
+	{
+		for(String child:children)
+		{
+			XmlFile settings = getXmlArchive().getXml(child,child,inName);
+			for (Iterator iterator = settings.getRoot().elementIterator(); iterator
+					.hasNext();) 
+			{
+				Element row = (Element) iterator.next();
+				if( !noDups || settings.getElementById(row.attributeValue("id")) == null)
+				{
+					row.setParent(null);
+					root.add(row);
+				}
+			}
 		}
 	}
 	public HitTracker search(SearchQuery inQuery)

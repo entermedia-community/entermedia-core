@@ -174,6 +174,18 @@ public class DateStorageUtil
 		DateFormat formater = getDateFormat(inFormat);
 		return date != null ? formater.format(date):null;
 	}
+	public String checkFormat(String inValue) 
+	{
+		if( inValue.length() > 21)
+		{
+			if( !inValue.contains("T") && inValue.indexOf("-") < 6)
+			{
+				return inValue;
+			}
+		}
+		Date clean = parseFromStorage(inValue);
+		return formatForStorage(clean);
+	}
 	
 	
 }

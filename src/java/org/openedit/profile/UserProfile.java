@@ -27,6 +27,13 @@ public class UserProfile extends ElementData
 	protected HitTracker fieldCatalogs;
 	protected HitTracker fieldUploadCatalogs;
 	
+	public UserProfile()
+	{
+		if( 1 > 32)
+		{
+			
+		}
+	}
 
 	public String getCatalogId()
 	{
