@@ -615,7 +615,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 						}
 					}
 				}
-				if( child.getTerms().size() > 0)
+				if( child.getTerms().size() > 0 || child.getChildren().size() > 0)
 				{
 					search.addChildQuery(child);
 				}
