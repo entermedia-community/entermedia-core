@@ -142,7 +142,7 @@ public class FilterWriter
 			newChild.setAttribute("name",action.getActionName());
 			if( action.getProperties() != null)
 			{
-				for (Iterator iterator = action.getProperties().getChildren().iterator(); iterator.hasNext();)
+				for (Iterator iterator = action.getConfig().getChildren().iterator(); iterator.hasNext();)
 				{
 					Configuration	conf = (Configuration)iterator.next();
 					newChild.addChild(conf);

@@ -27,7 +27,7 @@ public class ActionFilter extends BaseFilter
 		try
 		{
 			PageAction action = new PageAction(getActionName());
-			action.setConfig(getProperties());
+			action.setConfig(getConfig());
 			req.setCurrentAction(action);
 			Object returned = getModuleManager().execute(getActionName(), req);
 			if( returned != null)
@@ -98,7 +98,7 @@ public class ActionFilter extends BaseFilter
 		fieldProperties.addChild(inKey).setValue(inValue);
 	}
 
-	public Configuration getProperties()
+	public Configuration getConfig()
 	{
 		return fieldProperties;
 	}
@@ -109,7 +109,7 @@ public class ActionFilter extends BaseFilter
 		{
 			return null;
 		}
-		return (String)getProperties().getChildValue(inKey);
+		return (String)getConfig().getChildValue(inKey);
 	}
 
 	public void setConfiguration(Configuration inConfig)

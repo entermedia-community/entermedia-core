@@ -22,16 +22,14 @@ import com.openedit.WebPageRequest;
  */
 
 public class UserProfileFilter extends BaseFilter
-{
-	protected String fieldPropertyName;
-	
+{	
 	public UserProfileFilter()
 	{
 		super();
 	}
 	public UserProfileFilter(String inPropertyName, String inValue)
 	{
-		setPropertyName(inPropertyName);
+		setProperty("name",inPropertyName);
 		setValue(inValue);
 	}
 
@@ -69,10 +67,6 @@ public class UserProfileFilter extends BaseFilter
 	}
 	public String getPropertyName()
 	{
-		return fieldPropertyName;
-	}
-	public void setPropertyName(String inPropertyName)
-	{
-		fieldPropertyName = inPropertyName;
+		return get("name");
 	}
 }

@@ -1,11 +1,15 @@
 package com.openedit.util.strainer;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.openedit.config.XMLConfiguration;
 
 public class BaseFilter implements Filter
 {
 	protected Filter[] fieldFilters;
 	protected String fieldValue;
+	protected Map<String,String> fieldProperties;
 	
 	public Filter[] getFilters()
 	{
@@ -95,8 +99,20 @@ public class BaseFilter implements Filter
 
 	public void setProperty(String inKey, String inValue)
 	{
-		// TODO Auto-generated method stub
-		
+		getProperties().put(inKey, inValue);
+	}
+	public Map<String,String> getProperties()
+	{
+		if (fieldProperties == null)
+		{
+			fieldProperties = new HashMap<String,String>(1);
+		}
+
+		return fieldProperties;
+	}
+	public String get(String inType)
+	{
+		return getProperties().get(inType);
 	}
 	public String toString()
 	{
