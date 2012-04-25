@@ -590,6 +590,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			if( child == null)
 			{
 				child = createSearchQuery(querystring, inPageRequest);
+				child.setFilter(true);
 				child.setId(querystring); //unique
 				//make sure we dont have a conflict of fields? i.e. already searching by a certain term
 				for (int i = 0; i < search.getTerms().size(); i++)

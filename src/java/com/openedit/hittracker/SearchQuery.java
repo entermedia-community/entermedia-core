@@ -43,6 +43,8 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	protected String fieldHitsName;
 	protected String fieldResultType; //This might be things like assets, albums, selection or search. Used by resulttype
 	protected boolean fieldFireSearchEvent = false;
+	protected boolean fieldFilter = false;
+	protected boolean fieldFindAll = false;
 	
 	public String getResultType()
 	{
@@ -1271,4 +1273,23 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		}
 		return name;
 	}
+
+	public boolean isFilter() 
+	{
+		return fieldFilter;
+	}
+	public void setFilter(boolean inVal)
+	{
+		fieldFilter = inVal;
+	}
+	public boolean isFindAll() 
+	{
+		return fieldFindAll;
+	}
+
+	public void setFindAll(boolean inFindAll) 
+	{
+		fieldFindAll = inFindAll;
+	}
+
 }
