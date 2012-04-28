@@ -147,6 +147,7 @@ public class BaseData implements Data, Comparable {
 		return 0;
 	}
 
+	//TODO: Add these methods to the Data interface
 	public Collection getValues(String inPreference)
 	{
 		String val = get(inPreference);
