@@ -107,7 +107,17 @@ public class PageSettings
 
 			}
 			parent = parent.getParent();
-		}			
+		}	
+		//For when the fall back tree is deeper than the url tree
+		while( fallbackparent != null)
+		{
+			if( fallbackparent.fieldGenerators != null)
+			{
+				finalList.addAll(fallbackparent.fieldGenerators);
+			}
+			fallbackparent = fallbackparent.getFallback();
+		}
+		
 		return finalList;
 	}
 	public void setGenerators( List generators )
@@ -540,7 +550,16 @@ public class PageSettings
 
 			}
 			parent = parent.getParent();
-		}			
+		}		
+		while( fallbackparent != null)
+		{
+			PageProperty val = fallbackparent.getFieldProperty(inKey);
+			if ( val != null)
+			{
+				return val;
+			}
+			fallbackparent = fallbackparent.getFallback();
+		}
 		return null;
 
 	}
