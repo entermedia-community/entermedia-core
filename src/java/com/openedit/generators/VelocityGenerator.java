@@ -97,7 +97,7 @@ public class VelocityGenerator extends BaseGenerator implements Generator
 				new OutputFiller().fill(in, inContext.getOutputStream());
 				return;
 			}
-			inContext.unpackageVariables();
+			inContext.unpackageVariables(); //TODO: Remove this silliness
 			VelocityContext context = new VelocityContext(inContext.getPageMap());
 			Writer writer = inOut.getWriter();
 			

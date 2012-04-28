@@ -1,19 +1,25 @@
 package org.openedit.xml;
 
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
+import org.openedit.Data;
 
 import com.openedit.OpenEditException;
 import com.openedit.OpenEditRuntimeException;
 import com.openedit.hittracker.HitTracker;
 import com.openedit.hittracker.SearchQuery;
 import com.openedit.page.manage.PageManager;
+import com.openedit.users.User;
 
 public class XmlFolderSearcher extends XmlSearcher
 {
+	private static final Log log = LogFactory.getLog(XmlFolderSearcher.class);
 	protected PageManager fieldPageManager;
 	
 	public PageManager getPageManager()
@@ -66,7 +72,7 @@ public class XmlFolderSearcher extends XmlSearcher
 					.hasNext();) 
 			{
 				Element row = (Element) iterator.next();
-				if( !noDups || settings.getElementById(row.attributeValue("id")) == null)
+				if( !noDups || getElementById(root,row.attributeValue("id")) == null)
 				{
 					row.setParent(null);
 					root.add(row);
@@ -74,6 +80,24 @@ public class XmlFolderSearcher extends XmlSearcher
 			}
 		}
 	}
+	protected Element getElementById(Element root, String inEid)
+	{
+		if( inEid == null)
+		{
+			return null;
+		}
+		for (Iterator iter = root.elementIterator(); iter.hasNext();)
+		{
+			Element element = (Element) iter.next();
+			String id = element.attributeValue("id");
+			if ( inEid.equals(id))
+			{
+				return element;
+			}
+		}
+		return null;
+	}
+	
 	public HitTracker search(SearchQuery inQuery)
 	{
 		HitTracker hits = (HitTracker) getCache().get(inQuery.toQuery() + inQuery.getSortBy());
@@ -84,4 +108,33 @@ public class XmlFolderSearcher extends XmlSearcher
 
 		return super.search(inQuery);
 	}
+	
+	public void saveData(Data inData, User inUser)
+	{
+		//If this element is manipulated then the instance is the same
+		//No need to read it ElementData data = (ElementData)inData;
+		String path = "/WEB-INF/data/" + getCatalogId() + "/lists"
+		+ "/" + getSearchType() + "/custom.xml";
+		XmlFile settings = getXmlArchive().getXml(path);
+		ElementData data = (ElementData)inData;
+		
+		Element alreadyhere = settings.getElementById(data.getId());
+		if( alreadyhere != null)
+		{
+			settings.getRoot().remove(alreadyhere);
+		}
+		data.getElement().setParent(null);
+		settings.getRoot().add(data.getElement());
+		
+		if( data.getId() == null)
+		{
+			//TODO: Use counter
+			data.setId( String.valueOf( new Date().getTime() ));
+		}
+		clearIndex();
+		log.info("Saved to "  + settings.getPath());
+		getXmlArchive().saveXml(settings, inUser);
+		
+	}
+	
 }
