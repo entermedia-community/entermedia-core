@@ -26,7 +26,7 @@ public class UserProfile extends ElementData
 	protected User fieldUser;
 	protected HitTracker fieldCatalogs;
 	protected HitTracker fieldUploadCatalogs;
-	
+	protected Collection fieldCombinedLibraries;
 	public UserProfile()
 	{
 		if( 1 > 32)
@@ -348,6 +348,14 @@ public class UserProfile extends ElementData
 		fieldUploadCatalogs = inUploadCatalogs;
 	}
 
+	public Collection getCombinedLibraries()
+	{
+		return fieldCombinedLibraries;
+	}
+	public void setCombinedLibraries(Collection inCombinedLibraries)
+	{
+		fieldCombinedLibraries = inCombinedLibraries;
+	}
 
 	
 }

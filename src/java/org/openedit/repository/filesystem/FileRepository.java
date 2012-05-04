@@ -389,11 +389,5 @@ public class FileRepository extends  BaseRepository
 		}
 		
 	}
-
-	@Override
-	public Repository getRealRepository(String inPath) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 	
 }

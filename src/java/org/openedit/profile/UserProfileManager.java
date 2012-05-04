@@ -2,8 +2,10 @@ package org.openedit.profile;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -14,6 +16,9 @@ import org.openedit.data.SearcherManager;
 import com.openedit.OpenEditException;
 import com.openedit.WebPageRequest;
 import com.openedit.hittracker.ListHitTracker;
+import com.openedit.hittracker.SearchQuery;
+import com.openedit.users.Group;
+import com.openedit.users.User;
 
 public class UserProfileManager
 {
@@ -118,6 +123,9 @@ public class UserProfileManager
 		userprofile.setCatalogs(new ListHitTracker(ok));
 		userprofile.setUploadCatalogs(new ListHitTracker(okUpload));
 
+		loadLibraries(userprofile, inCatalogId );
+
+
 		
 		if (inReq.getUserName().equals(userprofile.getUserId()))
 		{
@@ -126,6 +134,52 @@ public class UserProfileManager
 		
 		inReq.putPageValue("userprofile", userprofile); 
 		return userprofile;
+	}
+
+	protected void loadLibraries(UserProfile inUserprofile, String inCatalogId)
+	{
+		Set<String> all = new HashSet<String>();
+		Searcher searcher = getSearcherManager().getSearcher(inCatalogId, "libraryusers");
+		Collection found = searcher.fieldSearch("userid", inUserprofile.getUserId());
+		
+		for (Iterator iterator = found.iterator(); iterator.hasNext();)
+		{
+			Data data = (Data) iterator.next();
+			all.add(data.get("libraryid"));
+		}
+
+		searcher = getSearcherManager().getSearcher(inCatalogId, "librarygroups");
+		
+		SearchQuery query = searcher.createSearchQuery();
+		StringBuffer groups = new StringBuffer();
+		
+		for (Iterator iterator = inUserprofile.getUser().getGroups().iterator(); iterator.hasNext();)
+		{
+			Group group = (Group) iterator.next();
+			groups.append(group.getId());
+			if( iterator.hasNext() )
+			{
+				groups.append(" ");
+			}
+		}
+		query.addOrsGroup("groupid", groups.toString() );
+		
+		found = searcher.search(query);
+		for (Iterator iterator = found.iterator(); iterator.hasNext();)
+		{
+			Data data = (Data) iterator.next();
+			all.add(data.get("libraryid"));
+		}
+
+		searcher = getSearcherManager().getSearcher(inCatalogId, "libraryroles");
+		found = searcher.fieldSearch("userid", inUserprofile.getSettingsGroup().getId());
+		
+		for (Iterator iterator = found.iterator(); iterator.hasNext();)
+		{
+			Data data = (Data) iterator.next();
+			all.add(data.get("libraryid"));
+		}
+		inUserprofile.setCombinedLibraries(all);
 	}
 
 	public void saveUserProfile(UserProfile inUserProfile)
