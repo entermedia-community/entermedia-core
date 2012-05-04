@@ -67,12 +67,7 @@ public interface Repository
 	String getExternalPath();
 	
 	
-	/**
-	 * to retrieve real repository at runtime
-	 * @param inPath
-	 * @return
-	 */
-	public Repository getRealRepository(String inPath); 
+	
 	
 	
 	

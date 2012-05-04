@@ -331,9 +331,5 @@ public abstract class BaseRepository implements Repository
 		
 		return true;
 	}
-	@Override
-	public Repository getRealRepository(String inPath) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+ 
 }
