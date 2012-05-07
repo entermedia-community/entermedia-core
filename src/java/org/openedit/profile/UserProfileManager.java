@@ -122,11 +122,9 @@ public class UserProfileManager
 		}
 		userprofile.setCatalogs(new ListHitTracker(ok));
 		userprofile.setUploadCatalogs(new ListHitTracker(okUpload));
-
+		userprofile.setUser((User)getSearcherManager().getData("system", "user",userprofile.getUserId()));
 		loadLibraries(userprofile, inCatalogId );
 
-
-		
 		if (inReq.getUserName().equals(userprofile.getUserId()))
 		{
 			inReq.putSessionValue(id, userprofile);
@@ -172,12 +170,15 @@ public class UserProfileManager
 		}
 
 		searcher = getSearcherManager().getSearcher(inCatalogId, "libraryroles");
-		found = searcher.fieldSearch("userid", inUserprofile.getSettingsGroup().getId());
-		
-		for (Iterator iterator = found.iterator(); iterator.hasNext();)
+		if( inUserprofile.getSettingsGroup() != null )
 		{
-			Data data = (Data) iterator.next();
-			all.add(data.get("libraryid"));
+			found = searcher.fieldSearch("roleid", inUserprofile.getSettingsGroup().getId());
+			
+			for (Iterator iterator = found.iterator(); iterator.hasNext();)
+			{
+				Data data = (Data) iterator.next();
+				all.add(data.get("libraryid"));
+			}
 		}
 		inUserprofile.setCombinedLibraries(all);
 	}
