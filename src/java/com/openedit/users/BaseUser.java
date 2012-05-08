@@ -467,11 +467,7 @@ public class BaseUser extends FileSystemObject implements User, Comparable
 
 	public void setEnabled(boolean inEnabled) {
 		fieldEnabled = inEnabled;
-		if(inEnabled){
-		setProperty("enabled", "true");
-		}else{
-			setProperty("enabled", "false");
-		}
+		
 	}
 	
 	public Map listAllProperties()
