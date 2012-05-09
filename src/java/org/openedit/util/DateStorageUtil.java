@@ -146,7 +146,7 @@ public class DateStorageUtil
 			{
 				return getLuceneFormat().parse(inStoredDate);
 			}
-			if( inStoredDate.length() > 6)
+			if( inStoredDate.length() > 5)
 			{
 				return getOldShortStandardFormat().parse(inStoredDate);
 			}
@@ -184,6 +184,10 @@ public class DateStorageUtil
 			}
 		}
 		Date clean = parseFromStorage(inValue);
+		if( clean == null )
+		{
+			return inValue;
+		}
 		return formatForStorage(clean);
 	}
 	

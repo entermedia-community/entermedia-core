@@ -39,13 +39,11 @@ public class BaseUser extends FileSystemObject implements User, Comparable
 	protected String fieldPassword;
 	protected String fieldId;
 	protected boolean fieldVirtual;
-	protected boolean fieldEnabled;
 	protected String fieldLastLoginTime;
 	
 	public BaseUser()
 	{
 		super();
-		fieldEnabled = true;
 	}
 	
 	public void setLastLoginTime(String lastLoginTime) {
@@ -251,10 +249,6 @@ public class BaseUser extends FileSystemObject implements User, Comparable
 		{
 			return getPassword();
 		}
-		else if( "enabled".equals(inPropertyName))
-		{
-			return Boolean.toString(isEnabled());
-		}
 		else if( "name".equals(inPropertyName))
 		{
 			return getName();
@@ -441,11 +435,6 @@ public class BaseUser extends FileSystemObject implements User, Comparable
 			return;
 		}
 		
-		if ("enabled".equals(inId))
-		{
-			setEnabled(Boolean.parseBoolean(inValue));
-		}
-		
 		if(inValue == null){
 			getPropertyContainer().remove(inId);
 		}
@@ -461,12 +450,19 @@ public class BaseUser extends FileSystemObject implements User, Comparable
 		}
 	}
 
-	public boolean isEnabled() {
-		return fieldEnabled;
+	public boolean isEnabled() 
+	{
+		String enabled = get("enabled");
+		if( enabled == null )
+		{
+			return true;
+		}
+		return Boolean.parseBoolean(enabled);
 	}
 
-	public void setEnabled(boolean inEnabled) {
-		fieldEnabled = inEnabled;
+	public void setEnabled(boolean inEnabled)
+	{
+		setProperty("enabled", String.valueOf(inEnabled));
 	}
 	
 	public Map listAllProperties()

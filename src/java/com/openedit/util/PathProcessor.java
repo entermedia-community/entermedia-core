@@ -3,9 +3,11 @@ package com.openedit.util;
 import java.io.File;
 import java.io.FileFilter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openedit.repository.ContentItem;
@@ -18,11 +20,8 @@ public abstract class PathProcessor
 	protected String fieldRootPath;
 	protected PageManager fieldPageManager;
 	protected int fieldExecCount;
-	protected String fieldFilter; // "png,gif"
 	protected List fieldIncludeExtensions;
-	protected String fieldExcludeFilter;
-	protected List fieldExcludeExtensions;
-	
+	protected List fieldExcludeMatches;
 	protected boolean fieldRecursive = true;
 	
 	private static final Log log = LogFactory.getLog(PathProcessor.class);
@@ -47,16 +46,15 @@ public abstract class PathProcessor
 		fieldPageManager = inPageManager;
 	}
 	
-	public List getExcludeExtensions()
+	public List getExcludeMatches()
 	{
-		return fieldExcludeExtensions;
+		return fieldExcludeMatches;
 	}
 
-	public String getFilter()
-	{
-		return fieldFilter;
-	}
 
+	/**
+	 * List of extensions we will include
+	 * @param inFilter
 	public void setFilter(String inFilter)
 	{
 		fieldFilter = inFilter;
@@ -75,7 +73,7 @@ public abstract class PathProcessor
 			}
 		}
 	}
-
+	*/
 	public void process()
 	{
 		List paths = getPageManager().getChildrenPaths(
@@ -131,32 +129,35 @@ public abstract class PathProcessor
 
 	public boolean acceptFile(ContentItem inItem)
 	{
-		if (getFilter() != null)
+		if( inItem.getLength() == 0 )
 		{
-			String ext = PathUtilities.extractPageType(inItem.getPath());
-			
-			for (Iterator iterator = getIncludeExtensions().iterator(); iterator.hasNext();)
-			{
-				String validExt = (String) iterator.next();
-				if (validExt.equalsIgnoreCase(ext))
-				{
-					return true;
-				}
-			}
 			return false;
 		}
-		if (getExcludeFilter() != null)
+		if (getIncludeExtensions() != null)
 		{
 			String ext = PathUtilities.extractPageType(inItem.getPath());
 			if( ext != null)
 			{
-				for (Iterator iterator = getExcludeExtensions().iterator(); iterator.hasNext();)
+				for (Iterator iterator = getIncludeExtensions().iterator(); iterator.hasNext();)
 				{
 					String validExt = (String) iterator.next();
-					if (validExt.equalsIgnoreCase(ext))
+					if (validExt.equals(ext.toLowerCase()))
 					{
-						return false;
+						return true;
 					}
+				}
+			}
+			return false; //Include only specific files
+		}
+		if (fieldExcludeMatches != null)
+		{
+			String path =  inItem.getPath();
+			for (Iterator iterator = getExcludeMatches().iterator(); iterator.hasNext();)
+			{
+				String match = (String) iterator.next();
+				if (PathUtilities.match(path, match))
+				{
+					return false;
 				}
 			}
 		}
@@ -170,13 +171,12 @@ public abstract class PathProcessor
 		{
 			return false;
 		}
-		if (getExcludeFilter() != null)
+		if (fieldExcludeMatches != null)
 		{
-			String name = PathUtilities.extractPageName(path);
-			for (Iterator iterator = getExcludeExtensions().iterator(); iterator.hasNext();)
+			for (Iterator iterator = getExcludeMatches().iterator(); iterator.hasNext();)
 			{
-				String validExt = (String) iterator.next();
-				if (validExt.equalsIgnoreCase(name))
+				String match = (String) iterator.next();
+				if (PathUtilities.match(path, match))
 				{
 					return false;
 				}
@@ -230,7 +230,12 @@ public abstract class PathProcessor
 		};
 		return inParent.listFiles(filter);
 	}
-
+	/**
+	 * @deprecated Is this really needed? We use Page Managers now
+	 * @param inSearchDirectory
+	 * @param inAll
+	 * @param inFilter
+	 */
 	protected void findFiles(File inSearchDirectory, List inAll,
 			FileFilter inFilter)
 	{
@@ -277,37 +282,24 @@ public abstract class PathProcessor
 		fieldIncludeExtensions = inIncludeExtensions;
 	}
 
-	public String getExcludeFilter()
-	{
-		return fieldExcludeFilter;
-	}
-
-	public void setIncludeFileFilter(String inIncludeFilter)
+	public void setIncludeExtensions(String inIncludeFilter)
 	{
 		if (inIncludeFilter != null && inIncludeFilter.length() > 0)
 		{
-			fieldIncludeExtensions = new ArrayList();
-			String[] extns = inIncludeFilter.split(",");
-			for (int i = 0; i < extns.length; i++)
-			{
-				fieldIncludeExtensions.add(extns[i].trim());
-			}
+			fieldIncludeExtensions = EmStringUtils.split(inIncludeFilter);
 		}
 		
 	}
-	public void setExcludeFilter(String inExcludeFilter)
+	/**
+	 * Comma separated values
+	 * @param inExcludeFilter
+	 */
+	public void setExcludeMatches(String inExcludeFilter)
 	{
-		fieldExcludeFilter = inExcludeFilter;
 		if (inExcludeFilter != null && inExcludeFilter.length() > 0)
 		{
-			fieldExcludeExtensions = new ArrayList();
-			String[] extns = inExcludeFilter.split(",");
-			for (int i = 0; i < extns.length; i++)
-			{
-				fieldExcludeExtensions.add(extns[i].trim());
-			}
+			fieldExcludeMatches = EmStringUtils.split(inExcludeFilter);
 		}
-
 	}
 
 	

@@ -469,15 +469,15 @@ public class FileSystemUserManager implements UserManager
 		Element root = getXmlUtil().getXml(userFile, "UTF-8");
 		
 		user.setEnabled(true);
-		String enabled = root.attributeValue("enabled");
-		if (enabled != null && Boolean.parseBoolean(enabled) == false)
-		{
-			user.setEnabled(false);
-		}
-		else
-		{
-			user.setEnabled(true);
-		}
+//		String enabled = root.attributeValue("enabled");
+//		if (enabled != null && Boolean.parseBoolean(enabled) == false)
+//		{
+//			user.setEnabled(false);
+//		}
+//		else
+//		{
+//			user.setEnabled(true);
+//		}
 		
 		Element passwordElem = root.element("password");
 		if( passwordElem != null)
