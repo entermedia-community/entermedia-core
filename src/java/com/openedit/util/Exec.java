@@ -43,8 +43,8 @@ public class Exec
 	
 	public Executor getExecutor() {
 		if (fieldExecutor == null) {
-			fieldExecutor = Executors.newCachedThreadPool();
-			
+			//fieldExecutor = Executors.newCachedThreadPool();
+			fieldExecutor = Executors.newFixedThreadPool(8);
 		}
 
 		return fieldExecutor;
@@ -255,9 +255,9 @@ public class Exec
 				result.setReturnValue(ret);
 				
 				//This might cause a lock up if thread never started?
-				reader1.join();
-				errreader.join();
-				
+//				reader1.join();
+//				errreader.join();
+//				
 				String stdo = reader1.getText();
 				if (stdo != null && stdo.length() > 0)
 				{
@@ -311,7 +311,7 @@ public class Exec
 		}
 	}
 
-	class InputStreamHandler extends Thread {
+	class InputStreamHandler implements Runnable {
 
     	protected InputStream fieldStream;
     	protected String fieldText;
