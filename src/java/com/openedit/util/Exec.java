@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -35,7 +37,23 @@ public class Exec
 	protected File fieldRoot;
 	protected OutputFiller fieldFiller;
 	protected Boolean fieldOnWindows;
+	protected Executor fieldExecutor;
 	
+	
+	
+	public Executor getExecutor() {
+		if (fieldExecutor == null) {
+			fieldExecutor = Executors.newCachedThreadPool();
+			
+		}
+
+		return fieldExecutor;
+	}
+
+	public void setExecutor(Executor inExecutor) {
+		fieldExecutor = inExecutor;
+	}
+
 	public OutputFiller getFiller()
 	{
 		if (fieldFiller == null)
@@ -209,14 +227,14 @@ public class Exec
 			int ret = 0;
 			if (inSaveOutput || isOnWindows() ) //windows locks up sometimes unless this is done. Is this still true?
 			{
-				//run again to catch the error this time (keeps things fast due to thread starts)
 				InputStreamHandler reader1 = new InputStreamHandler();
 				reader1.setStream(proc.getInputStream());
-				reader1.start();
+				
+				getExecutor().execute(reader1);
 
 				InputStreamHandler errreader = new InputStreamHandler();
 				errreader.setStream(proc.getErrorStream());
-				errreader.start();
+				getExecutor().execute(errreader);
 				
 				if(inputStream != null)
 				{
