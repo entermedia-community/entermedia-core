@@ -277,11 +277,11 @@ public class Exec
 			{
 				InputStreamHandler reader1 = new InputStreamHandler();
 				reader1.setStream(proc.getInputStream());
-				reader1.start();
+				getExecutor().execute(reader1);
 
 				InputStreamHandler errreader = new InputStreamHandler();
 				errreader.setStream(proc.getErrorStream());
-				errreader.start();
+				getExecutor().execute(errreader);
 				if(inputStream != null)
 				{
 					OutputStream out = proc.getOutputStream();
