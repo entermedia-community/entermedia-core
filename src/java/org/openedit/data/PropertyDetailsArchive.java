@@ -284,13 +284,13 @@ public class PropertyDetailsArchive
 		try
 		{
 			String path = getConfigurationPath( "/fields/"+ inType + ".xml");
-			log.info("Loading " + getCatalogId() + " " +  inType);
 			
 			XmlFile settings = getXmlArchive().loadXmlFile(path); //checks time stamp. returns null if changed
 			if( details != null && details.getInputFile() == settings)
 			{
 				return details;
 			}
+			log.info("Loading " + getCatalogId() + " " +  inType);
 			settings = getXmlArchive().getXml(path);
 			if (!settings.isExist())
 			{
