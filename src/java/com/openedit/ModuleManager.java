@@ -270,18 +270,26 @@ public class ModuleManager implements BeanFactoryAware, ShutdownList
 		Object bean = getCatalogIdBeans().get(inCatalogId + "_" + inBeanName);
 		if( bean == null)
 		{
-			String beanName = resolveBean(inCatalogId, inBeanName);
-			bean = getBean(beanName);
-			try
+			synchronized (this)
 			{
-				Method catalogSetter = bean.getClass().getMethod("setCatalogId", new Class[] {String.class});
-				catalogSetter.invoke(bean, new Object[] {inCatalogId});
+				bean = getCatalogIdBeans().get(inCatalogId + "_" + inBeanName);
+				if( bean != null)
+				{
+					return bean;
+				}
+				String beanName = resolveBean(inCatalogId, inBeanName);
+				bean = getBean(beanName);
+				try
+				{
+					Method catalogSetter = bean.getClass().getMethod("setCatalogId", new Class[] {String.class});
+					catalogSetter.invoke(bean, new Object[] {inCatalogId});
+				}
+				catch (Exception e)
+				{
+					//Could not set catalogId
+				}
+				getCatalogIdBeans().put(inCatalogId + "_" + inBeanName, bean);
 			}
-			catch (Exception e)
-			{
-				//Could not set catalogId
-			}
-			getCatalogIdBeans().put(inCatalogId + "_" + inBeanName, bean);
 		}
 		return bean;
 	}

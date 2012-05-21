@@ -497,8 +497,9 @@ public class FileUtils
 			fieldInvalidChars.add(">");
 			fieldInvalidChars.add(":");
 			fieldInvalidChars.add("|");
-			fieldInvalidChars.add(" \\");
+			//fieldInvalidChars.add(" \\");
 			fieldInvalidChars.add(" /");
+			fieldInvalidChars.add("/ ");
 			fieldInvalidChars.add("#");
 			fieldInvalidChars.add("%");
 		}
