@@ -524,7 +524,7 @@ public class FileUtils
 		{
 			return false;
 		}
-		log.info(inPath);
+		//log.info(inPath);
 		return true;
 	}
 
