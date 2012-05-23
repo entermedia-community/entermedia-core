@@ -71,7 +71,7 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	
 	public String getSessionId()
 	{
-		return getHitsName() + getCatalogId();
+		return getHitsName() + getResultType() +  getCatalogId();
 	}
 
 	public SearcherManager getSearcherManager()
