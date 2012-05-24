@@ -357,6 +357,7 @@ public class XmlSearcher extends BaseSearcher
 		query.setPropertyDetails(getPropertyDetails());
 		query.setCatalogId(getCatalogId());
 		query.setSearcherManager(getSearcherManager());
+		query.setResultType(getSearchType());
 		return query;
 	}
 
