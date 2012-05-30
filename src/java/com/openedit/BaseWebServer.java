@@ -562,10 +562,6 @@ public class BaseWebServer implements WebServer
 					config.setExternalPath(rootpath);
 				}
 				
-				
-				
-				
-				
 				List properties = child.elements("property");
 				for (Iterator iterator2 = properties.iterator(); iterator2
 						.hasNext();)
@@ -576,9 +572,17 @@ public class BaseWebServer implements WebServer
 					config.setProperty(propName, value);
 				}
 				
-				
-				new File( getRootDirectory(), config.getPath() ).mkdirs();
 				getPageManager().getRepository().addRepository(config);
+				
+				//Might need to create the mount so we can find the virtual children
+				//TODO: Remove the need to create the folder
+				Page local = getPageManager().getPage(config.getPath() + "/");
+				if( !local.exists() )
+				{
+					getPageManager().putPage(local);
+				}
+
+				
 			}
 		}
 		else
@@ -630,6 +634,8 @@ public class BaseWebServer implements WebServer
 			Repository existing = (Repository) iterator.next();
 			Element child = root.addElement("mount");
 			child.addAttribute("path", existing.getPath());
+			
+			
 			child.addAttribute("filterin", existing.getFilterIn());
 			child.addAttribute("filterout", existing.getFilterOut());
 			child.addAttribute("matchpostfix",existing.getMatchesPostFix()); //*.PDF

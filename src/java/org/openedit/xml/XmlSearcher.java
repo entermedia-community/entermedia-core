@@ -209,7 +209,7 @@ public class XmlSearcher extends BaseSearcher
 					attribval = inElement.attributeValue(name);
 				}
 				
-				if (attribval !=null &&(value.equals("*") || PathUtilities.match(attribval.toLowerCase(), value)))
+				if (value != null && attribval != null && ("*".equals(value) || PathUtilities.match(attribval.toLowerCase(), value)))
 				{
 					if (!inQuery.isAndTogether())
 					{

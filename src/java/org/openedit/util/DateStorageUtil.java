@@ -137,6 +137,23 @@ public class DateStorageUtil
 				}
 			}
 			
+			
+			if(inStoredDate.length() > 16 )
+			{
+				//5/16/00, 11:01 AM  17chars
+				if( inStoredDate.contains(",") )
+				{
+					return getDateFormat("dd/MM/yyyy, hh:mm a").parse(inStoredDate);
+				}
+				//08.30.00 02:18 AM  
+				if (inStoredDate.contains(".") )
+				{
+					return getDateFormat("MM.dd.yyyy hh:mm a").parse(inStoredDate);					
+				}
+			}
+			
+			//TODO: Deal with military time?
+			
 			if(inStoredDate.length()> 13 && inStoredDate.contains("/"))
 			{
 				return getSlashedDateFormat().parse(inStoredDate);
