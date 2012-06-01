@@ -1128,7 +1128,6 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 
 	public HitTracker loadPageOfSearch(WebPageRequest inPageRequest) throws OpenEditException
 	{
-		String page = inPageRequest.getRequestParameter("page");
 		HitTracker tracker = loadHits(inPageRequest);
 		if( tracker == null)
 		{
@@ -1142,6 +1141,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			tracker.setHitsPerPage(numhitsperpage);
 		}
 
+		String page = inPageRequest.getRequestParameter("page");
 		int totalPages = tracker.getTotalPages();
 		if (page != null)
 		{
