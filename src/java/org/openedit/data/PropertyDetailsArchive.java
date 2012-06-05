@@ -394,7 +394,7 @@ public class PropertyDetailsArchive
 			
 			newdetails.add(d);
 		}
-		Collections.sort(newdetails);
+		//Collections.sort(newdetails);
 		details.setDetails(newdetails);
 	}
 
