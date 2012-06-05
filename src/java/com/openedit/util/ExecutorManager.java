@@ -15,7 +15,7 @@ public class ExecutorManager
 	private static final Log log = LogFactory.getLog(ExecutorManager.class);
 	
 	protected ExecutorService fieldSharedExecutor;
-	protected Integer fieldThreadCount = 8;
+	protected Integer fieldThreadCount;
 	
 	public Integer getThreadCount()
 	{
@@ -67,6 +67,6 @@ public class ExecutorManager
 		{
 			throw new OpenEditException(e);
 		}
-		log.info("Exec completed");
+		log.debug("Exec completed");
 	}
 }

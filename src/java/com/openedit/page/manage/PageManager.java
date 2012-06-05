@@ -510,8 +510,11 @@ public class PageManager
 	}
 	public void clearCache(String inPath)
 	{
-		getCache().remove(inPath);
-		getPageSettingsManager().clearCache(inPath);
+		if( inPath != null )
+		{
+			getCache().remove(inPath);
+			getPageSettingsManager().clearCache(inPath);
+		}
 	}
 	public void saveContent(Page inPage, User inUser, String inContent, String inMessage) throws OpenEditException
 	{

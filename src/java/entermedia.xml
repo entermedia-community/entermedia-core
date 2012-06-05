@@ -41,6 +41,7 @@
 		<property name="xmlArchive"><ref bean="xmlArchive"/></property>
 		<property name="xmlCommandsFilename"><value>/WEB-INF/bin/commandmap.xml</value></property>
 		<property name="root"><ref bean="root"/></property>
+		<property name="executorManager"><ref bean="executorManager"/></property>
 	</bean>
 	
 	<bean id="authenticator" class="com.openedit.users.authenticate.CompositeAuthenticator">
