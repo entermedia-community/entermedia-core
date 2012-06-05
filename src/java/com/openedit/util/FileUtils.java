@@ -25,8 +25,10 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -36,6 +38,8 @@ import org.apache.commons.logging.LogFactory;
  */
 public class FileUtils
 {
+	
+	protected Set fieldInvalidChars;
 	OutputFiller fieldFiller = new OutputFiller();
 	private static final Log log = LogFactory.getLog(FileUtils.class);
 	/**
@@ -481,6 +485,27 @@ public class FileUtils
 		
 	}
 	
+	protected Set getInvalidChars()
+	{
+		if (fieldInvalidChars == null)
+		{
+			fieldInvalidChars = new HashSet();
+			fieldInvalidChars.add("?");
+			fieldInvalidChars.add("*");
+			fieldInvalidChars.add("\n");
+			fieldInvalidChars.add("<");
+			fieldInvalidChars.add(">");
+			fieldInvalidChars.add(":");
+			fieldInvalidChars.add("|");
+			//fieldInvalidChars.add(" \\");
+			fieldInvalidChars.add(" /");
+			fieldInvalidChars.add("/ ");
+			fieldInvalidChars.add("#");
+			fieldInvalidChars.add("%");
+		}
+		return fieldInvalidChars;
+	}
+	
 	/**
 	 * Tests for illegal characters in the input path.
 	 * @param inPath = string to be tested for bad characters
@@ -488,20 +513,7 @@ public class FileUtils
 	 */
 	public boolean isLegalFilename(String inPath)
 	{
-		ArrayList badchars = new ArrayList();
-		badchars.add("?");
-		badchars.add("*");
-		badchars.add("\n");
-		badchars.add("<");
-		badchars.add(">");
-		badchars.add(":");
-		badchars.add("|");
-		badchars.add(" \\");
-		badchars.add(" /");
-		badchars.add("#");
-		badchars.add("%");
-		
-		for (Iterator iterator = badchars.iterator(); iterator.hasNext();) 
+		for (Iterator iterator = getInvalidChars().iterator(); iterator.hasNext();) 
 		{
 			String value=(String) iterator.next();
 			if(inPath.contains(value))
@@ -509,6 +521,11 @@ public class FileUtils
 				return false;
 			}
 		}
+		if( inPath.contains("/ ") )
+		{
+			return false;
+		}
+		//log.info(inPath);
 		return true;
 	}
 
