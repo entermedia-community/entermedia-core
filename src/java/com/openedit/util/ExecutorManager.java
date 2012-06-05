@@ -36,9 +36,9 @@ public class ExecutorManager
 	{
 			//fieldExecutor = Executors.newCachedThreadPool();
 			//fieldExecutor = Executors.newFixedThreadPool(8);
-			int minimum = 2;
+			int minimum = getThreadCount();
 			
-			return new ThreadPoolExecutor(minimum, getThreadCount(),
+			return new ThreadPoolExecutor(minimum, minimum,
                     10L, TimeUnit.MINUTES,
                     new LinkedBlockingQueue<Runnable>(),
                     new ThreadPoolExecutor.CallerRunsPolicy());
