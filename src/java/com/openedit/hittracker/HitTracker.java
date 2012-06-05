@@ -90,7 +90,7 @@ public abstract class HitTracker implements Serializable, Collection
 		//throw new OpenEditException("getById Not implemented");
 	}
 
-	public List getPageOfHits()
+	public List<Data> getPageOfHits()
 	{
 		if( fieldCurrentPage == null)
 		{

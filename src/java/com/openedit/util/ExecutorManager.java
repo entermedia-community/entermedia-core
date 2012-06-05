@@ -40,7 +40,8 @@ public class ExecutorManager
 			
 			return new ThreadPoolExecutor(minimum, getThreadCount(),
                     10L, TimeUnit.MINUTES,
-                    new LinkedBlockingQueue<Runnable>());
+                    new LinkedBlockingQueue<Runnable>(),
+                    new ThreadPoolExecutor.CallerRunsPolicy());
 	}
 	public ExecutorService getSharedExecutor()
 	{
