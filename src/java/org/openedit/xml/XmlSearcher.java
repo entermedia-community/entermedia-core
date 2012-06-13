@@ -194,6 +194,11 @@ public class XmlSearcher extends BaseSearcher
 				{
 					name = "id";
 				}
+				else if( name.equals("description") )
+				{
+					name = "name"; //This is temporary until we support isKeyword
+				}
+				
 				String value = term.getValue();
 				if( value != null)
 				{

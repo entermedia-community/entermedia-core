@@ -507,13 +507,19 @@ public class PropertyDetailsArchive
 		{
 			String path = (String) iterator.next();
 			path = PathUtilities.extractPageName(path);
-			set.add(path);
+			if( !path.startsWith("_") )
+			{
+				set.add(path);				
+			}
 		}
 		for (Iterator iterator = datapaths.iterator(); iterator.hasNext();)
 		{
 			String path = (String) iterator.next();
 			path = PathUtilities.extractPageName(path);
-			set.add(path);
+			if( !path.startsWith("_") )
+			{
+				set.add(path);				
+			}
 		}
 		List sorted = new ArrayList(set);
 		Collections.sort(sorted);
