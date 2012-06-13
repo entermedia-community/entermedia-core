@@ -98,16 +98,6 @@ public class XmlFolderSearcher extends XmlSearcher
 		return null;
 	}
 	
-	public HitTracker search(SearchQuery inQuery)
-	{
-		HitTracker hits = (HitTracker) getCache().get(inQuery.toQuery() + inQuery.getSortBy());
-		if(hits != null)
-		{
-			return hits;
-		}
-
-		return super.search(inQuery);
-	}
 	
 	public void saveData(Data inData, User inUser)
 	{

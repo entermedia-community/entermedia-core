@@ -65,11 +65,11 @@ public class ElementSorter implements Comparator
 				}
 				if (s1 == null)
 				{
-					return -s2.compareTo(s1);
+					return 1;//s2.compareTo(s1);
 				}
 				if (s2 == null)
 				{
-					return -s1.compareTo(s2);
+					return -1;//-s1.compareTo(s2);
 				}
 				return s1.toLowerCase().compareTo(s2.toLowerCase());
 			}
