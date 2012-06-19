@@ -563,7 +563,8 @@ public final class PathUtilities
 	public static String makeId(String inText)
 	{
 		String id = inText;
-		id = id.replace("\\/","_");		
+		id = id.replace("/","_");		
+		id = id.replace("\\","_");		
 		id = id.replace(".","_");		
 		id = id.replace(" ","_");		
 		if( id.charAt(0) == '_')

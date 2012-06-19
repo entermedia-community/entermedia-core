@@ -154,7 +154,10 @@ public class SearcherManager
 	{
 		fieldModuleManager = inModuleManager;
 	}
-
+	public void clear()
+	{
+		getCache().clear();
+	}
 	protected Map getCache()
 	{
 		if( fieldCache == null)
