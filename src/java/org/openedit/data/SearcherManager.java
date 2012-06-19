@@ -1,6 +1,7 @@
 package org.openedit.data;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
@@ -30,7 +31,7 @@ public class SearcherManager
 			throw new OpenEditRuntimeException("Catalog id is required");
 		}
 		//look in map for existing
-		String id = inCatalogId + inFieldName;
+		String id = inCatalogId + "|" + inFieldName;
 		
 		Searcher searcher = (Searcher)getCache().get(id);
 		if( searcher == null )
@@ -156,6 +157,13 @@ public class SearcherManager
 	}
 	public void clear()
 	{
+		for (Iterator iterator = getCache().keySet().iterator(); iterator.hasNext();)
+		{
+			String key = (String) iterator.next();
+			String[] vals = key.split("|");
+			getModuleManager().clearBean(vals[0], vals[1]);
+		}
+		
 		getCache().clear();
 	}
 	protected Map getCache()
@@ -182,7 +190,7 @@ public class SearcherManager
 	
 	public void removeFromCache(String inCatalogId, String inSearchType)
 	{
-		getCache().remove(inCatalogId + inSearchType);
+		getCache().remove(inCatalogId + "|" +  inSearchType);
 		getModuleManager().clearBean(inCatalogId, inSearchType);
 	}
 }
