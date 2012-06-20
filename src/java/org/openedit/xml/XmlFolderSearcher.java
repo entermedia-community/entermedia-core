@@ -12,8 +12,7 @@ import org.openedit.Data;
 
 import com.openedit.OpenEditException;
 import com.openedit.OpenEditRuntimeException;
-import com.openedit.hittracker.HitTracker;
-import com.openedit.hittracker.SearchQuery;
+import com.openedit.page.Page;
 import com.openedit.page.manage.PageManager;
 import com.openedit.users.User;
 
@@ -39,11 +38,14 @@ public class XmlFolderSearcher extends XmlSearcher
 			String inName = getSearchType();
 			//getConfigurationPath
 			XmlFile composite = new XmlFile();
-			composite.setPath("/WEB-INF/data/" + getCatalogId() + "/lists/" + inName);
+			
+			String rootpath = "/WEB-INF/data/" + getCatalogId() + "/lists/" + inName ;
+			composite.setPath(rootpath + "/custom.xml");
+			
 			Element root = DocumentHelper.createElement(inName);
 			composite.setRoot(root);
 
-			List<String> children = getPageManager().getChildrenPaths(composite.getPath(),false);
+			List<String> children = getPageManager().getChildrenPaths(rootpath,false);
 			if( children.size() > 0)
 			{
 				composite.setExist(true);
@@ -97,7 +99,30 @@ public class XmlFolderSearcher extends XmlSearcher
 		}
 		return null;
 	}
+
+	public void deleteAll(User inUser)
+	{
+		String path = "/WEB-INF/data/" + getCatalogId() + "/lists"
+				+ "/" + getSearchType() + "/custom.xml";
+		Page page = getPageManager().getPage(path);
+		getPageManager().removePage(page);
+				
+	}
 	
+	public void delete(Data inData, User inUser)
+	{
+		String path = "/WEB-INF/data/" + getCatalogId() + "/lists"
+		+ "/" + getSearchType() + "/custom.xml";
+		XmlFile settings = getXmlArchive().getXml(path);
+		Element record = settings.getElementById(inData.getId());
+		if( record != null)
+		{
+			settings.getRoot().remove(record);
+			getXmlArchive().saveXml(settings, inUser);
+		}
+		clearIndex();
+
+	}
 	
 	public void saveData(Data inData, User inUser)
 	{
