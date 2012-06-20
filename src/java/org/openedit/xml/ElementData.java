@@ -10,9 +10,9 @@ import java.util.Map;
 import org.dom4j.Attribute;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
-import org.openedit.Data;
+import org.openedit.MultiValued;
 
-public class ElementData implements Data, Comparable
+public class ElementData implements MultiValued, Comparable
 {
 	protected Element fieldElement;
 	protected String fieldSourcePath;
@@ -163,7 +163,7 @@ public class ElementData implements Data, Comparable
 	}
 	
 	
-	public Collection getValues(String inPreference)
+	public Collection<String> getValues(String inPreference)
 	{
 		String val = get(inPreference);
 		

@@ -395,6 +395,9 @@ public class XmlSearcher extends BaseSearcher
 	public void saveAllData(Collection inAll, User inUser)
 	{
 		XmlFile settings = loadXml();
+		String path = "/WEB-INF/data/" + getCatalogId() + "/lists"
+				+ "/" + getSearchType() + ".xml";
+		settings.setPath(path);
 		for (Iterator iterator = inAll.iterator(); iterator.hasNext();)
 		{
 			Data data = (Data) iterator.next();

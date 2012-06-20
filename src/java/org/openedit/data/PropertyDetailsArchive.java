@@ -335,6 +335,10 @@ public class PropertyDetailsArchive
 		String path = "/WEB-INF/data/" + getCatalogId() + "/fields/" + inType + ".xml";
 		file.setPath(path);
 		Element root = DocumentHelper.createElement("properties");
+		if( inDetails.getPrefix() != null)
+		{
+			root.addAttribute("prefix", inDetails.getPrefix() );
+		}
 		file.setRoot(root);
 		file.setElementName("property");
 

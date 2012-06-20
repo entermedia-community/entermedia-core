@@ -8,8 +8,9 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.openedit.Data;
+import org.openedit.MultiValued;
 
-public class BaseData implements Data, Comparable {
+public class BaseData implements MultiValued, Comparable {
 	protected Map fieldMap;
 	protected String fieldId;
 
