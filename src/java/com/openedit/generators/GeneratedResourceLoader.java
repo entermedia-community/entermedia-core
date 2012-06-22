@@ -90,7 +90,8 @@ public class GeneratedResourceLoader extends ResourceLoader
 			TextReaderFilter reader = new TranslationFilter(page,templateName);
 			return new ReaderInputStream(reader, page.getCharacterEncoding());
 		} 
-		if(filter.equals("xmltranslation")){
+		else if(filter.equals("xmltranslation")) //this seems slow
+		{
 			XmlTranslationFilter reader = new XmlTranslationFilter(page,templateName);
 			reader.setPageManager(getPageManager());
 			reader.setModuleManager(getModuleManager());
