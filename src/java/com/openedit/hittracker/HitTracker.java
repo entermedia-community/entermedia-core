@@ -814,7 +814,7 @@ public abstract class HitTracker implements Serializable, Collection
 	}
 
 	public Object nextById(String inId){
-		int current = indexOf(inId);
+		int current = indexOfId(inId);
 		if(current != -1){
 			if(current < size()-1){
 				return get(current +1);
@@ -823,7 +823,7 @@ public abstract class HitTracker implements Serializable, Collection
 		return null;
 	}
 	public Object previousById(String inId){
-		int current = indexOf(inId);
+		int current = indexOfId(inId);
 		if(current != -1){
 			if(current > 0){
 				return get(current -1);
@@ -832,9 +832,17 @@ public abstract class HitTracker implements Serializable, Collection
 		return null;
 	}
 	
-	private int indexOf(String inId)
+	public int indexOfId(String inId)
 	{
-			for (int i = 0; i < size(); i++)
+		if( inId == null)
+		{
+			return -1;
+		}
+			int size = size();
+			int start = Math.max(0, getPage()-5) * getHitsPerPage();
+			int end = (getPage()+5) * getHitsPerPage();
+			end = Math.min(size, end);
+			for (int i = start; i < end; i++)
 			{
 				Data hit = get(i);
 				String id = getValue(hit, "id");

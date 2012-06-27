@@ -471,16 +471,24 @@ public class XConfToPageSettingsConverter
 			}
 			//Find out the directory we are in. 
 			String thisdir = fallBackDir.getPath();
-			thisdir = PathUtilities.extractDirectoryPath(thisdir);
-			String filepart = inUrlPath.substring(thisdir.length(),inUrlPath.length());
-			alternativepath = fallBackValue + filepart; //end part might be a file name or _site.xconf
-			if( alternativepath.equals(inUrlPath))
-			{
-				//Now sure why this happens
-				log.debug(inUrlPath + " Cannot specify self as fallback directory");
-				return;
-			}
-			specified = true;
+			//There is a problem here, we seem to be mixing and matching paths and the substring
+//			if( !inUrlPath.startsWith(thisdir) )
+//			{
+//				inwebinfs = true;
+//			}
+//			else
+//			{
+				thisdir = PathUtilities.extractDirectoryPath(thisdir); //what level the path was defined
+				String filepart = inUrlPath.substring(thisdir.length(),inUrlPath.length());
+				alternativepath = fallBackValue + filepart; //end part might be a file name or _site.xconf
+				if( alternativepath.equals(inUrlPath))
+				{
+					//Now sure why this happens
+					log.debug(inUrlPath + " Cannot specify self as fallback directory");
+					return;
+				}
+				specified = true;
+//			}
 		}
 		else if(!inwebinfs)//Site wide default
 		{

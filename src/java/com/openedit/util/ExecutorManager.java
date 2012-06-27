@@ -15,7 +15,7 @@ public class ExecutorManager
 	private static final Log log = LogFactory.getLog(ExecutorManager.class);
 	
 	protected ExecutorService fieldSharedExecutor;
-	protected Integer fieldThreadCount = 8;
+	protected Integer fieldThreadCount;
 	
 	public Integer getThreadCount()
 	{
@@ -36,9 +36,9 @@ public class ExecutorManager
 	{
 			//fieldExecutor = Executors.newCachedThreadPool();
 			//fieldExecutor = Executors.newFixedThreadPool(8);
-			int minimum = 2;
+			int minimum = getThreadCount();
 			
-			return new ThreadPoolExecutor(minimum, getThreadCount(),
+			return new ThreadPoolExecutor(minimum, minimum,
                     10L, TimeUnit.MINUTES,
                     new LinkedBlockingQueue<Runnable>(),
                     new ThreadPoolExecutor.CallerRunsPolicy());
@@ -67,6 +67,6 @@ public class ExecutorManager
 		{
 			throw new OpenEditException(e);
 		}
-		log.info("Exec completed");
+		log.debug("Exec completed");
 	}
 }

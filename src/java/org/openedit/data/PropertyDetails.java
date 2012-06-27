@@ -17,6 +17,7 @@ public class PropertyDetails extends AbstractCollection {
 	protected Map fieldExternalIdCache;
 	protected Map fieldDefaults;
 	protected XmlFile fieldInputFile;
+	protected String fieldPrefix;
 	
 	public PropertyDetails()
 	{
@@ -210,7 +211,7 @@ public class PropertyDetails extends AbstractCollection {
 	}
 
 	public void setDetails(List inNewdetails) {
-		fieldDetails = inNewdetails;
+		fieldDetails = new ArrayList(inNewdetails);
 	}
 
 	public Map getExternalIdCache() {
@@ -220,4 +221,20 @@ public class PropertyDetails extends AbstractCollection {
 
 		return fieldExternalIdCache;
 	}
+	public String getPrefix() 
+	{
+		if( fieldPrefix == null)
+		{
+			if( getInputFile() != null && getInputFile().getRoot() != null)
+			{
+				fieldPrefix = getInputFile().getRoot().attributeValue("prefix");
+			}
+		}
+		return fieldPrefix;
+	}
+	public void setPrefix(String fieldPrefix) 
+	{
+		this.fieldPrefix = fieldPrefix;
+	}
+
 }

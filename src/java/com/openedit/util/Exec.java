@@ -37,21 +37,21 @@ public class Exec
 	protected File fieldRoot;
 	protected OutputFiller fieldFiller;
 	protected Boolean fieldOnWindows;
-	protected Executor fieldExecutor;
+	protected ExecutorManager fieldExecutorManager;
 	
 	
-	
-	public Executor getExecutor() {
-		if (fieldExecutor == null) {
-			//fieldExecutor = Executors.newCachedThreadPool();
-			fieldExecutor = Executors.newFixedThreadPool(8);
+	public ExecutorManager getExecutorManager()
+	{
+		if (fieldExecutorManager == null)
+		{
+			fieldExecutorManager = new ExecutorManager();
 		}
-
-		return fieldExecutor;
+		return fieldExecutorManager;
 	}
 
-	public void setExecutor(Executor inExecutor) {
-		fieldExecutor = inExecutor;
+	public void setExecutorManager(ExecutorManager inExecutorManager)
+	{
+		fieldExecutorManager = inExecutorManager;
 	}
 
 	public OutputFiller getFiller()
@@ -229,12 +229,11 @@ public class Exec
 			{
 				InputStreamHandler reader1 = new InputStreamHandler();
 				reader1.setStream(proc.getInputStream());
-				
-				getExecutor().execute(reader1);
+				getExecutorManager().execute(reader1);
 
 				InputStreamHandler errreader = new InputStreamHandler();
 				errreader.setStream(proc.getErrorStream());
-				getExecutor().execute(errreader);
+				getExecutorManager().execute(errreader);
 				
 				if(inputStream != null)
 				{
@@ -252,12 +251,7 @@ public class Exec
 				}
 				
 				ret = proc.waitFor();
-				result.setReturnValue(ret);
 				
-				//This might cause a lock up if thread never started?
-//				reader1.join();
-//				errreader.join();
-//				
 				String stdo = reader1.getText();
 				if (stdo != null && stdo.length() > 0)
 				{
@@ -275,13 +269,6 @@ public class Exec
 			}
 			else
 			{
-				InputStreamHandler reader1 = new InputStreamHandler();
-				reader1.setStream(proc.getInputStream());
-				getExecutor().execute(reader1);
-
-				InputStreamHandler errreader = new InputStreamHandler();
-				errreader.setStream(proc.getErrorStream());
-				getExecutor().execute(errreader);
 				if(inputStream != null)
 				{
 					OutputStream out = proc.getOutputStream();
@@ -295,13 +282,14 @@ public class Exec
 						getFiller().close(out);
 					}
 				}
-
 				ret = proc.waitFor();
+				
 			}
 			if( ret == 0 )
 			{
 				result.setRunOk(true);
 			}
+			result.setReturnValue(ret);
 			return result;
 
 		}

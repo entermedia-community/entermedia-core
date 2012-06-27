@@ -194,6 +194,11 @@ public class XmlSearcher extends BaseSearcher
 				{
 					name = "id";
 				}
+				else if( name.equals("description") )
+				{
+					name = "name"; //This is temporary until we support isKeyword
+				}
+				
 				String value = term.getValue();
 				if( value != null)
 				{
@@ -390,6 +395,9 @@ public class XmlSearcher extends BaseSearcher
 	public void saveAllData(Collection inAll, User inUser)
 	{
 		XmlFile settings = loadXml();
+		String path = "/WEB-INF/data/" + getCatalogId() + "/lists"
+				+ "/" + getSearchType() + ".xml";
+		settings.setPath(path);
 		for (Iterator iterator = inAll.iterator(); iterator.hasNext();)
 		{
 			Data data = (Data) iterator.next();

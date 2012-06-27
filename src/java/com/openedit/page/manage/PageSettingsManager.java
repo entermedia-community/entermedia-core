@@ -255,8 +255,11 @@ public class PageSettingsManager
 	public void clearCache(String inPath) 
 	{
 		getCache().remove(inPath);
-		String path = toXconfPath(inPath);
-		getCache().remove(path);
+		if( !inPath.endsWith(".xconf"))
+		{
+			String path = toXconfPath(inPath);
+			getCache().remove(path);
+		}
 	}
 	public TextLabelManager getTextLabelManager()
 	{

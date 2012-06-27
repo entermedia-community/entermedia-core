@@ -497,8 +497,11 @@ public class PageManager
 	}
 	public void clearCache()
 	{
-		getCache().clear();
-		getPageSettingsManager().clearCache();
+		synchronized( getCache() )
+		{
+			getCache().clear();
+			getPageSettingsManager().clearCache();
+		}
 	}
 
 	/**
@@ -510,8 +513,14 @@ public class PageManager
 	}
 	public void clearCache(String inPath)
 	{
-		getCache().remove(inPath);
-		getPageSettingsManager().clearCache(inPath);
+		if( inPath != null )
+		{
+			synchronized( getCache() )
+			{
+				getCache().remove(inPath);
+				getPageSettingsManager().clearCache(inPath);
+			}
+		}
 	}
 	public void saveContent(Page inPage, User inUser, String inContent, String inMessage) throws OpenEditException
 	{
