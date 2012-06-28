@@ -559,7 +559,11 @@ public final class PathUtilities
 		}
 		return inDraftPath;
 	}
-	
+	/**
+	 * @deprecated Use extract ID
+	 * @param inText
+	 * @return
+	 */
 	public static String makeId(String inText)
 	{
 		String id = inText;
@@ -572,6 +576,10 @@ public final class PathUtilities
 			id = id.substring(1,id.length());
 		}
 		return id;
+	}
+	public static String extractId( String inName)
+	{
+		return extractId(inName,true);
 	}
 	public static String extractId( String inName, boolean inAllowUnderstores)
 	{
