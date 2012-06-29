@@ -13,11 +13,13 @@ public class EmStringUtils
 		{
 			return null;
 		}
+		String text= inText.replace("\r", "");
+		text= text.replace(",", "\n");
 //		String value = inText.replace(',', '\n').replace('\r', '\n').replace('\n', ' ');
 //
 //		String[] paths = org.apache.commons.lang.StringUtils.split(value,'\n');
 //		return Arrays.asList(paths);
-		StrTokenizer str = new StrTokenizer(inText,'\n');
+		StrTokenizer str = new StrTokenizer(text,'\n');
 		return str.getTokenList();
 		
 	}

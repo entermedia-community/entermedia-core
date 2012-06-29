@@ -61,6 +61,7 @@ package com.openedit.util;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -80,6 +81,7 @@ public class URLUtilities
 	public static final String URL_PATH_SEPARATOR = "/";
 	private static Log log = LogFactory.getLog(URLUtilities.class);
 
+	protected static Pattern VALIDUTF8 = null;
 	/**
 	 * Construct a new URLUtilities class which can use the given request and response objects to
 	 * build URLs.
@@ -238,6 +240,17 @@ public class URLUtilities
 		return build(path, "http", port);
 	}
 
+	public static String escapeUtf8(String inCode)
+	{
+		if( VALIDUTF8 == null )
+		{
+			VALIDUTF8 = Pattern.compile("[^\\u0009\\u000a\\u000d\\u0020-\\uD7FF\\uE000-\\uFFFD]", Pattern.MULTILINE);
+		}
+		String clean = VALIDUTF8.matcher(inCode).replaceAll("");
+		return clean;
+		//s/.*?((?:[\t\n\r\x20-\x7E])+|(?:\xD0[\x90-\xBF])+|(?:\xD1[\x80-\x8F])+|(?:\xC3[\x80-\xBF])+|).*?/$1/sg;
+	}
+	
 	/**
 	 * Percent-encode the given String.  This method delegates to the URLEncoder.encode() method.
 	 *
@@ -475,6 +488,8 @@ public class URLUtilities
 			case '\"':
 				output.append("&quot;");
 				break;
+			case '\'':
+				output.append("&apos;");
 			default:
 				output.append(c);
 				break;
