@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.openedit.Data;
@@ -145,6 +146,11 @@ public class XmlArchive
 			try
 			{
 				root= getXmlUtil().getXml(in,"UTF-8");
+			}
+			catch( OpenEditException ex )
+			{
+				log.error("file problem: " + path,ex);
+				throw ex;
 			}
 			finally 
 			{

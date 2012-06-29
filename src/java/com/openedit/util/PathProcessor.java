@@ -308,6 +308,10 @@ public abstract class PathProcessor
 			fieldExcludeMatches = EmStringUtils.split(inExcludeFilter);
 		}
 	}
+	public void setExcludeMatches(List inExcludeFilter)
+	{
+		fieldExcludeMatches = inExcludeFilter;
+	}
 
 	
 }
