@@ -61,6 +61,7 @@ package com.openedit.util;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -604,7 +605,7 @@ public final class PathUtilities
 			}
 		}
 		String result = out.toString().toLowerCase();
-
+		result = URLUtilities.escapeUtf8(result);
 		//CVS fails to save this. Should use the HEX number
 		/*		result = result.replace('á', 'a');
 		result = result.replace('é', 'e');
@@ -650,4 +651,6 @@ public final class PathUtilities
 
 		return arguments;
 	}
+	
+
 }
