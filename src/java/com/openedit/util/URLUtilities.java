@@ -475,6 +475,8 @@ public class URLUtilities
 			case '\"':
 				output.append("&quot;");
 				break;
+			case '\'':
+				output.append("&apos;");
 			default:
 				output.append(c);
 				break;
