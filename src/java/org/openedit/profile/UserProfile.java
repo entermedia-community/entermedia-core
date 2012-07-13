@@ -357,5 +357,13 @@ public class UserProfile extends ElementData
 		fieldCombinedLibraries = inCombinedLibraries;
 	}
 
-	
+	public Data getDefaultViewForModule(String inModuleId)
+	{
+		Searcher viewSearcher = getSearcherManager().getSearcher(getCatalogId(), "view");
+		Data row = (Data) viewSearcher.searchByField("module", inModuleId);
+		if(row != null){
+			return row;
+		} 
+		return null;
+	}
 }
