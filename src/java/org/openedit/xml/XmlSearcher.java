@@ -200,6 +200,10 @@ public class XmlSearcher extends BaseSearcher
 				}
 				
 				String value = term.getValue();
+				if( value == null && term.getDetail().isBoolean() )
+				{
+					value = "false";
+				}
 				if( value != null)
 				{
 					value = value.toLowerCase();
@@ -213,17 +217,30 @@ public class XmlSearcher extends BaseSearcher
 				{
 					attribval = inElement.attributeValue(name);
 				}
-				
-				if (value != null && attribval != null && ("*".equals(value) || PathUtilities.match(attribval.toLowerCase(), value)))
+				if( attribval == null && term.getDetail().isBoolean() )
 				{
-					if (!inQuery.isAndTogether())
+					attribval = "false";
+				}				
+				if( "not".equals( term.getOperation() ) )
+				{
+					if (value != null && attribval != null && ("*".equals(value) || PathUtilities.match(attribval.toLowerCase(), value)))
 					{
-						return true;
+						return false;
 					}
 				}
-				else if (inQuery.isAndTogether())
+				else
 				{
-					return false;
+					if (value != null && attribval != null && ("*".equals(value) || PathUtilities.match(attribval.toLowerCase(), value)))
+					{
+						if (!inQuery.isAndTogether())
+						{
+							return true;
+						}
+					}
+					else if (inQuery.isAndTogether())
+					{
+						return false;
+					}
 				}
 			}
 		}
