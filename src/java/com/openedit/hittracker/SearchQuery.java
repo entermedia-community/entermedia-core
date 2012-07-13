@@ -470,6 +470,7 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 				return term;
 			}
 		};
+		term.setOperation("not");
 		term.setDetail(inField);
 		term.setValue(inVal);
 		getTerms().add(term);
