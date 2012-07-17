@@ -12,6 +12,7 @@ import org.openedit.Data;
 
 import com.openedit.OpenEditException;
 import com.openedit.OpenEditRuntimeException;
+import com.openedit.hittracker.HitTracker;
 import com.openedit.page.Page;
 import com.openedit.page.manage.PageManager;
 import com.openedit.users.User;
@@ -58,6 +59,27 @@ public class XmlFolderSearcher extends XmlSearcher
 				boolean existing = children.size() > 0;
 				loadChildren(inName, children2, root, existing);
 			}
+			
+			HitTracker hits = getSearcherManager().getList(
+					getCatalogId(), "dataextensions");
+			for (Iterator iterator = hits.iterator(); iterator
+					.hasNext();) {
+				Data hit = (Data) iterator.next();
+				String catalogid = hit.get("catalogid");
+
+				List<String> children3 = getPageManager().getChildrenPaths("/" + catalogid + "/data" + "/lists/" + inName + "/",true);
+				if( children3.size() > 0)
+				{
+					composite.setExist(true);
+					boolean existing = children2.size() > 0;
+					loadChildren(inName, children3, root, existing);
+				}
+				
+			}
+			
+			
+			
+			
 			return composite;
 		} catch ( OpenEditException ex)
 		{
