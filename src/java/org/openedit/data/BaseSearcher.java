@@ -183,7 +183,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					{
 						WebEvent event = new WebEvent();
 						event.setSource(this);
-						event.setOperation("search");
+						event.setOperation(getSearchType() + "/search");
 						event.setSearchType(getSearchType());
 						event.setUser(inPageRequest.getUser());
 						event.setCatalogId(getCatalogId());
@@ -445,6 +445,8 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		}
 		search.setResultType(resultype);
 
+		String fireevent = inPageRequest.findValue("fireevent");
+		search.setFireSearchEvent(Boolean.parseBoolean(fireevent));
 		return search;
 	}
 	
@@ -1783,7 +1785,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			//			event.setProperty("assetname", asset.getName());
 			//			event.setProperty("changes", changes.toString());
 
-			event.setOperation("edit");
+			event.setOperation(getSearchType() + "/edit");
 			event.setSourcePath(object.getSourcePath());
 			event.setProperty("id", object.getId());
 			//aka "changes"
