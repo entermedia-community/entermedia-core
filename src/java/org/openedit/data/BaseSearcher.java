@@ -938,6 +938,8 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 																		// start
 																		// date
 					t = search.addBetween(field, cal.getTime(), d);
+					t.setOperation(op);
+					
 				}
 				else if (val != null && !"".equals(val))
 				{
@@ -1494,6 +1496,9 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 
 	public Object searchById(String inId)
 	{
+		if(inId == null || inId.length() == 0){
+			return null;
+		}
 		return searchByField("id",inId);
 	}
 
