@@ -358,6 +358,31 @@ public class PropertyDetailsArchive {
 		getXmlArchive().saveXml(file, inUser);
 	}
 
+	
+	public void savePropertyDetails(PropertyDetails inDetails, String inType,
+			User inUser, String path) {
+		XmlFile file = new XmlFile();
+		
+		file.setPath(path);
+		Element root = DocumentHelper.createElement("properties");
+		if (inDetails.getPrefix() != null) {
+			root.addAttribute("prefix", inDetails.getPrefix());
+		}
+		file.setRoot(root);
+		file.setElementName("property");
+
+		for (Iterator iterator = inDetails.getDetails().iterator(); iterator
+				.hasNext();) {
+			PropertyDetail detail = (PropertyDetail) iterator.next();
+			Element element = file.addNewElement();
+			fillElement(inDetails.getDefaults(), element, detail);
+		}
+
+		getXmlArchive().saveXml(file, inUser);
+	}
+	
+	
+	
 	public String getCatalogId() {
 		return fieldCatalogId;
 	}

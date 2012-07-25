@@ -964,13 +964,16 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			else if ("equals".equals(op) && val != null && !"".equals(val))
 			{
 				Date d = formater.parse(val);
+				
 				Calendar c = new GregorianCalendar();
-				Calendar c2 = new GregorianCalendar();
 
 				c.setTime(d);
-				c2.setTime(d);
+				c.set(Calendar.HOUR_OF_DAY, 0);
+				c.set(Calendar.MILLISECOND, 0);
+				c.set(Calendar.MINUTE, 0);
 
-				c.add(Calendar.DAY_OF_YEAR, -1);
+				Calendar c2 = new GregorianCalendar();
+				c2.setTime(c.getTime());
 				c2.add(Calendar.DAY_OF_YEAR, 1);
 
 				t = search.addBetween(field, c.getTime(), c2.getTime());
@@ -1000,7 +1003,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				}
 				if (beforeString == null && afterString == null)
 				{
-
+						//?
 				}
 				else if (beforeString == null)
 				{
@@ -1076,7 +1079,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		}
 		if (t != null)
 		{
-			t.addParameter("op", op);
+			t.addParameter("op",op); //TODO make these match with standard operations?
 		}
 		return t;
 	}
@@ -1488,6 +1491,12 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		}
 		return details.findStoredProperties();
 	}
+	public Data searchByQuery(SearchQuery inQuery)
+	{
+		HitTracker hits = search(inQuery);
+		hits.setHitsPerPage(1);
+		return (Data)hits.first();
+	}		
 	public Object searchByField(String inField, String inValue)
 	{
 		SearchQuery query = createSearchQuery();
