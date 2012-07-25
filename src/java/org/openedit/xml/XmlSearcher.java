@@ -409,11 +409,16 @@ public class XmlSearcher extends BaseSearcher
 		
 	}
 	
-	public void saveAllData(Collection inAll, User inUser)
-	{
-		XmlFile settings = loadXml();
+	public void saveAllData(Collection inAll, User inUser){
 		String path = "/WEB-INF/data/" + getCatalogId() + "/lists"
 				+ "/" + getSearchType() + ".xml";
+		saveAllData(inAll, inUser, path);
+	}
+	
+	public void saveAllData(Collection inAll, User inUser, String path)
+	{
+		XmlFile settings = loadXml();
+		
 		settings.setPath(path);
 		for (Iterator iterator = inAll.iterator(); iterator.hasNext();)
 		{
