@@ -675,6 +675,12 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				newchild.setId(filter);
 				newchild.setFilter(true);
 				search.addChildQuery(newchild);
+			} else{
+				SearchQuery child = search.getChildQuery(filter);
+				if( child != null)
+				{
+					search.getChildren().remove(child);
+				}
 			}
 		}		
 	}
