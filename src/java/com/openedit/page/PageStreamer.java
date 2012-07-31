@@ -312,7 +312,14 @@ public class PageStreamer
 		String[] parts = inPath.split("[?]");
 		String fullPath = PathUtilities.resolveRelativePath(parts[0], getWebPageRequest().getContentPage()
 			.getPath());
-		Page page = getEngine().getPageManager().getPage(fullPath,getWebPageRequest().getUser() != null);
+		boolean canedit = false;
+		User user = getWebPageRequest().getUser();
+		if( user != null )
+		{
+			String prop = (String)user.get("showeditor");
+			canedit = Boolean.parseBoolean(prop);
+		}
+		Page page = getEngine().getPageManager().getPage(fullPath,canedit);
 
 		if (parts.length > 1)
 		{
