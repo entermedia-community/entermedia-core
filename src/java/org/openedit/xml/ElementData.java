@@ -12,6 +12,8 @@ import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.openedit.MultiValued;
 
+import com.openedit.OpenEditException;
+
 public class ElementData implements MultiValued, Comparable
 {
 	protected Element fieldElement;
@@ -191,5 +193,15 @@ public class ElementData implements MultiValued, Comparable
 		}
 		setProperty(inKey,values.toString());
 	}
-	
+	public Object clone()
+	{
+		try
+		{
+			return super.clone();
+		}
+		catch ( Exception ex )
+		{
+			throw new OpenEditException(ex);
+		}
+	}
 }
