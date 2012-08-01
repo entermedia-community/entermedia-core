@@ -37,18 +37,8 @@ public class XmlSearcher extends BaseSearcher
 	protected PropertyDetails fieldDefaultDetails;
 	protected Map fieldCache;
 	protected Map fieldIdcache;
-	protected long fieldLastModified = 0;
+	protected XmlFile fieldXmlFile;
 	
-	public long getLastModified()
-	{
-		return fieldLastModified;
-	}
-
-	public void setLastModified(long inLastModified)
-	{
-		fieldLastModified = inLastModified;
-	}
-
 	public Map getCache()
 	{
 		if (fieldCache == null)
@@ -253,7 +243,7 @@ public class XmlSearcher extends BaseSearcher
 	
 	public String getIndexId()
 	{
-		XmlFile settings = loadXml();
+		XmlFile settings = getXmlFile();
 		return getSearchType() + settings.getLastModified();
 	}
 	/**
@@ -262,8 +252,7 @@ public class XmlSearcher extends BaseSearcher
 	 */
 	public HitTracker search(SearchQuery inQuery) 
 	{
-		XmlFile settings = loadXml();
-		checkCache(settings.getLastModified());
+		XmlFile settings = getXmlFile();  //this is slow. Only reload if someone has called save on this searcher
 
 		HitTracker hits = (HitTracker) getCache().get(inQuery.toQuery() + inQuery.getSortBy());
 		if(hits != null)
@@ -307,6 +296,10 @@ public class XmlSearcher extends BaseSearcher
 		hits.setIndexId(getSearchType() + settings.getLastModified());
 		hits.addAll(results);
 		//checkCache(settings.getLastModified());
+		if( getCache().size() > 500)
+		{
+			clearIndex();
+		}
 		getCache().put(inQuery.toQuery() + inQuery.getSortBy(), hits);
 		if( log.isDebugEnabled() )
 		{
@@ -314,20 +307,6 @@ public class XmlSearcher extends BaseSearcher
 		}
 
 		return hits;
-	}
-
-	protected void checkCache(long fileModDate)
-	{
-		if(fileModDate > getLastModified() )
-		{
-			getCache().clear();
-			setLastModified(fileModDate);
-		} 
-		else if( getCache().size() > 1000)
-		{
-			getCache().clear();
-			setLastModified(fileModDate);
-		}
 	}
 
 	private void sortResults(SearchQuery inQuery, List results)
@@ -341,7 +320,22 @@ public class XmlSearcher extends BaseSearcher
 		}
 	}
 	
-	protected XmlFile loadXml()
+	protected XmlFile getXmlFile()
+	{
+		if( fieldXmlFile == null )
+		{
+			synchronized (this)
+			{
+				if( fieldXmlFile == null )
+				{
+					fieldXmlFile = loadXmlFile();
+				}
+			}
+		}
+		return fieldXmlFile;
+	}
+
+	protected XmlFile loadXmlFile()
 	{
 		try
 		{
@@ -387,7 +381,7 @@ public class XmlSearcher extends BaseSearcher
 	{
 		//If this element is manipulated then the instance is the same
 		//No need to read it ElementData data = (ElementData)inData;
-		XmlFile settings = loadXml();
+		XmlFile settings = getXmlFile();
 		String path = "/WEB-INF/data/" + getCatalogId() + "/lists"
 		+ "/" + getSearchType() + ".xml";
 
@@ -406,7 +400,6 @@ public class XmlSearcher extends BaseSearcher
 		clearIndex();
 		log.info("Saved to "  + settings.getPath());
 		getXmlArchive().saveXml(settings, inUser);
-		
 	}
 	
 	public void saveAllData(Collection inAll, User inUser){
@@ -417,7 +410,7 @@ public class XmlSearcher extends BaseSearcher
 	
 	public void saveAllData(Collection inAll, User inUser, String path)
 	{
-		XmlFile settings = loadXml();
+		XmlFile settings = getXmlFile();
 		
 		settings.setPath(path);
 		for (Iterator iterator = inAll.iterator(); iterator.hasNext();)
@@ -470,7 +463,7 @@ public class XmlSearcher extends BaseSearcher
 	
 	public Data createNewData()
 	{
-		XmlFile settings = loadXml();
+		XmlFile settings = getXmlFile();
 
 		Element newone = DocumentHelper.createElement(settings.getElementName());
 		ElementData data = new ElementData(newone);		
@@ -498,7 +491,7 @@ public class XmlSearcher extends BaseSearcher
 	
 	public List getSearchProperties(User inUser)
 	{
-		List details = getDetailsForView(getSearchType() + "/" + getSearchType() + "search", inUser);
+		List details = getDetailsForView(getSearchType() + "/" + getSearchType() + "search", inUser);getXmlFile
 		if (details == null || details.size() == 0)
 		{
 			return getDefaultDetails().findStoredProperties();
@@ -561,7 +554,7 @@ public class XmlSearcher extends BaseSearcher
 	public void deleteAll(User inUser)
 	{
 		HitTracker all = getAllHits();
-		XmlFile settings = loadXml();
+		XmlFile settings = getXmlFile();
 		for (Iterator iterator = all.iterator(); iterator.hasNext();)
 		{
 			Data object = (Data)iterator.next();
@@ -576,7 +569,7 @@ public class XmlSearcher extends BaseSearcher
 	}
 	public void delete(Data inData, User inUser)
 	{
-		XmlFile settings = loadXml();
+		XmlFile settings = getXmlFile();
 		Element record = settings.getElementById(inData.getId());
 		if( record != null)
 		{
@@ -597,8 +590,12 @@ public class XmlSearcher extends BaseSearcher
 	
 	public void clearIndex()
 	{
-		getCache().clear();
-		getIdCache().clear();
+		synchronized (this)
+		{
+			fieldXmlFile = null;
+			getCache().clear();
+			getIdCache().clear();
+		}
 	}
 	
 }
