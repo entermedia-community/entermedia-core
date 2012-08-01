@@ -491,7 +491,7 @@ public class XmlSearcher extends BaseSearcher
 	
 	public List getSearchProperties(User inUser)
 	{
-		List details = getDetailsForView(getSearchType() + "/" + getSearchType() + "search", inUser);getXmlFile
+		List details = getDetailsForView(getSearchType() + "/" + getSearchType() + "search", inUser);
 		if (details == null || details.size() == 0)
 		{
 			return getDefaultDetails().findStoredProperties();
