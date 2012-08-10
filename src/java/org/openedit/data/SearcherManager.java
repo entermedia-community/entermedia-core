@@ -36,6 +36,7 @@ public class SearcherManager
 		Searcher searcher = (Searcher)getCache().get(id);
 		if( searcher == null )
 		{
+			PropertyDetailsArchive newarchive = getPropertyDetailsArchive(inCatalogId);
 			if( inFieldName == null)
 			{
 				return null;
@@ -54,7 +55,10 @@ public class SearcherManager
 				}
 				else
 				{
-					beanName = "dynamicSearcher";  //typically an XmlSearcher or XmlFileSearcher
+					//Check the properites
+					//searchertype
+					PropertyDetails details = newarchive.getPropertyDetails(inFieldName);
+					beanName = details.getBeanName();
 				}
 				searcher = (Searcher)getModuleManager().getBean(beanName);
 				if(log.isDebugEnabled())
@@ -65,7 +69,6 @@ public class SearcherManager
 			searcher.setCatalogId(inCatalogId);
 			searcher.setSearchType(inFieldName); //This may be product or orderstatus
 			//set the data
-			PropertyDetailsArchive newarchive = getPropertyDetailsArchive(inCatalogId);
 			searcher.setPropertyDetailsArchive(newarchive);
 			searcher.setSearcherManager(this);
 			if(log.isDebugEnabled())
