@@ -13,6 +13,7 @@ import org.openedit.Data;
 import com.openedit.OpenEditException;
 import com.openedit.OpenEditRuntimeException;
 import com.openedit.hittracker.HitTracker;
+import com.openedit.hittracker.SearchQuery;
 import com.openedit.page.Page;
 import com.openedit.page.manage.PageManager;
 import com.openedit.users.User;
@@ -31,8 +32,8 @@ public class XmlFolderSearcher extends XmlSearcher
 	{
 		fieldPageManager = inPageManager;
 	}
-
-	protected XmlFile loadXml()
+	
+	protected XmlFile loadXmlFile()
 	{
 		try
 		{
@@ -76,10 +77,6 @@ public class XmlFolderSearcher extends XmlSearcher
 				}
 				
 			}
-			
-			
-			
-			
 			return composite;
 		} catch ( OpenEditException ex)
 		{

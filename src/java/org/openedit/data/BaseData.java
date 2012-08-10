@@ -10,7 +10,10 @@ import java.util.Map;
 import org.openedit.Data;
 import org.openedit.MultiValued;
 
-public class BaseData implements MultiValued, Comparable {
+import com.openedit.OpenEditException;
+
+public class BaseData implements MultiValued, Comparable, Cloneable
+{
 	protected Map fieldMap;
 	protected String fieldId;
 
@@ -106,6 +109,17 @@ public class BaseData implements MultiValued, Comparable {
 		setProperty(inId, buffer.toString());
 	}
 
+	public Object clone()
+	{
+		try
+		{
+			return super.clone();
+		}
+		catch (CloneNotSupportedException e)
+		{
+			throw new OpenEditException(e);
+		}
+	}
 	public Map getMap() {
 		return getProperties();
 	}

@@ -63,9 +63,28 @@ public class PageTest extends BaseTestCase
 //		
 //		assertEquals("/WEB-INF/base/simple/test.html",settings.getXConf().getActualPath());
 	}
-	
+
+/*
+	public void testFallBackRedirected() throws Exception
+	{
+		//a falls back to a_fallback
+		//b falls back to b_fallback
+		
+		Page page = getFixture().getPageManager().getPage("/fallbackredirect_modules/asset/editor/test.html");
+		String path = page.getPageSettings().getFallback().getPath();
+		//assertEquals("/fallbackredirect_modules/default/editor/test.xconf", path);
+		assertEquals("/WEB-INF/base/fallbackredirect_modules/asset/editor/test.xconf", path);
+		
+		
+		assertEquals("Correct!", page.getProperty("title"));
+	}
+*/
 	public void testFallBackChain() throws Exception
 	{
+		Page pagemissing = getPage( "/missingfile/sub/index.html" );
+		assertEquals("/WEB-INF/base/missingfile/sub/index.xconf",pagemissing.getPageSettings().getFallback().getPath());
+		
+		
 		Page page = getPage( "/fallbackchain1/sub/index.html" );
 		assertEquals("/fallbackchain1/sub/index.xconf",page.getPageSettings().getPath());
 		assertEquals("/fallbackchain2/sub/index.xconf",page.getPageSettings().getFallback().getPath());

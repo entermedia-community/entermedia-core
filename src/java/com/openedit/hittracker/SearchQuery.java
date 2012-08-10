@@ -1168,8 +1168,6 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	
 	public SearchQuery copy() 
 	{
-		try
-		{
 			SearchQuery query = (SearchQuery)clone();
 	//		query.setHitsName(getHitsName());
 	//		
@@ -1194,10 +1192,6 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 			query.setSecurityAttached(isSecurityAttached());
 */
 			return query;
-		} catch( CloneNotSupportedException ex)
-		{
-			throw new OpenEditException(ex);
-		}
 	}
 
 	public boolean isSecurityAttached()

@@ -111,11 +111,12 @@ abstract public class Term {
 
 	public String getParameter(String inKey)
 	{
-		if( "op".equals(inKey))
+		String val = (String) getParameters().get(inKey);
+		if( val == null && "op".equals(inKey))
 		{
-			return getOperation();
+			val = getOperation();
 		}
-		return (String) getParameters().get(inKey);
+		return val;
 	}
 
 	public void addParameter(String inKey, String value)

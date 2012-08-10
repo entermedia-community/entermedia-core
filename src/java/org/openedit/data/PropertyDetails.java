@@ -12,13 +12,34 @@ import java.util.Map;
 
 import org.openedit.xml.XmlFile;
 
-public class PropertyDetails extends AbstractCollection {
+public class PropertyDetails extends AbstractCollection 
+{
 	protected List fieldDetails;
 	protected Map fieldExternalIdCache;
 	protected Map fieldDefaults;
 	protected XmlFile fieldInputFile;
 	protected String fieldPrefix;
+	protected String fieldBeanName;
 	
+	public String getBeanName()
+	{
+		if( fieldBeanName == null)
+		{
+			if( getInputFile() != null && getInputFile().getRoot() != null)
+			{
+				fieldBeanName = getInputFile().getRoot().attributeValue("beanname");
+			}
+			if( fieldBeanName == null )
+			{
+				fieldBeanName = "dynamicSearcher";
+			}
+		}
+		return fieldBeanName;
+	}
+	public void setBeanName(String inBeanName)
+	{
+		fieldBeanName = inBeanName;
+	}
 	public PropertyDetails()
 	{
 		// TODO Auto-generated constructor stub

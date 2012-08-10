@@ -507,6 +507,12 @@ public class XConfToPageSettingsConverter
 				PageSettings otherxconf = getPageSettingsManager().getPageSettings(alternativepath);
 				//log.info("loading fallback for " + inUrlPath + " with " + alternativepath);
 				inPageSettings.setFallBack(otherxconf);
+//				if( specified )
+//				{
+//					followFallBack(inPageSettings, fallBackDir, alternativepath);
+//				}
+				
+				
 			}
 		} 
 		catch ( Exception ex )
@@ -519,6 +525,30 @@ public class XConfToPageSettingsConverter
 			throw new OpenEditException(ex);
 		}
 	}
+	/*
+	protected void followFallBack(PageSettings inPageSettings, PageProperty fallBackDir, String alternativepath)
+	{
+		PageSettings otherxconf;
+		PageProperty fallBackDirNew  = inPageSettings.getProperty("fallbackdirectory");
+		String oldval = fallBackDir == null?null:fallBackDir.getValue();
+		String newval = fallBackDirNew == null?null:fallBackDirNew.getValue();
+		
+		if( newval != null && !newval.equals( oldval ) )
+		{
+			//loadFallBackDirectory(inPageSettings,inUrlPath, contentexists);
+			//log.info(newval);
+			String defined = PathUtilities.extractDirectoryPath(fallBackDirNew.getPath()); //what level the path was defined
+
+			String extrapathinfo = alternativepath.substring(defined.length() );
+			newval = inPageSettings.replaceProperty(newval);
+			newval = inPageSettings.getParent().replaceProperty(newval);
+			newval = newval + extrapathinfo;
+			otherxconf = getPageSettingsManager().getPageSettings(newval);
+			inPageSettings.setFallBack(otherxconf);
+			followFallBack(inPageSettings,fallBackDirNew,alternativepath);
+		}
+	}
+	*/
 
 	public FilterReader getFilterReader()
 	{

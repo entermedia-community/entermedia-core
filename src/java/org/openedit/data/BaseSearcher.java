@@ -183,7 +183,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					{
 						WebEvent event = new WebEvent();
 						event.setSource(this);
-						event.setOperation("search");
+						event.setOperation(getSearchType() + "/search");
 						event.setSearchType(getSearchType());
 						event.setUser(inPageRequest.getUser());
 						event.setCatalogId(getCatalogId());
@@ -445,6 +445,8 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		}
 		search.setResultType(resultype);
 
+		String fireevent = inPageRequest.findValue("fireevent");
+		search.setFireSearchEvent(Boolean.parseBoolean(fireevent));
 		return search;
 	}
 	
@@ -673,6 +675,12 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				newchild.setId(filter);
 				newchild.setFilter(true);
 				search.addChildQuery(newchild);
+			} else{
+				SearchQuery child = search.getChildQuery(filter);
+				if( child != null)
+				{
+					search.getChildren().remove(child);
+				}
 			}
 		}		
 	}
@@ -938,6 +946,8 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 																		// start
 																		// date
 					t = search.addBetween(field, cal.getTime(), d);
+					t.setOperation(op);
+					
 				}
 				else if (val != null && !"".equals(val))
 				{
@@ -960,13 +970,16 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			else if ("equals".equals(op) && val != null && !"".equals(val))
 			{
 				Date d = formater.parse(val);
+				
 				Calendar c = new GregorianCalendar();
-				Calendar c2 = new GregorianCalendar();
 
 				c.setTime(d);
-				c2.setTime(d);
+				c.set(Calendar.HOUR_OF_DAY, 0);
+				c.set(Calendar.MILLISECOND, 0);
+				c.set(Calendar.MINUTE, 0);
 
-				c.add(Calendar.DAY_OF_YEAR, -1);
+				Calendar c2 = new GregorianCalendar();
+				c2.setTime(c.getTime());
 				c2.add(Calendar.DAY_OF_YEAR, 1);
 
 				t = search.addBetween(field, c.getTime(), c2.getTime());
@@ -996,7 +1009,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				}
 				if (beforeString == null && afterString == null)
 				{
-
+						//?
 				}
 				else if (beforeString == null)
 				{
@@ -1072,7 +1085,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		}
 		if (t != null)
 		{
-			t.addParameter("op", op);
+			t.addParameter("op",op); //TODO make these match with standard operations?
 		}
 		return t;
 	}
@@ -1484,6 +1497,12 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		}
 		return details.findStoredProperties();
 	}
+	public Data searchByQuery(SearchQuery inQuery)
+	{
+		HitTracker hits = search(inQuery);
+		hits.setHitsPerPage(1);
+		return (Data)hits.first();
+	}		
 	public Object searchByField(String inField, String inValue)
 	{
 		SearchQuery query = createSearchQuery();
@@ -1494,6 +1513,9 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 
 	public Object searchById(String inId)
 	{
+		if(inId == null || inId.length() == 0){
+			return null;
+		}
 		return searchByField("id",inId);
 	}
 
@@ -1783,7 +1805,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			//			event.setProperty("assetname", asset.getName());
 			//			event.setProperty("changes", changes.toString());
 
-			event.setOperation("edit");
+			event.setOperation(getSearchType() + "/edit");
 			event.setSourcePath(object.getSourcePath());
 			event.setProperty("id", object.getId());
 			//aka "changes"

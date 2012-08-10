@@ -64,6 +64,8 @@ public interface Searcher
 
 	public Object searchByField(String inField,String inValue);
 
+	public Data searchByQuery(SearchQuery inQuery);
+
 //	public abstract HitTracker search(String inQuery);
 
 	public abstract HitTracker search(SearchQuery inQuery);

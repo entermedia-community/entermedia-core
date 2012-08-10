@@ -14,6 +14,7 @@ import org.openedit.xml.ElementData;
 import org.openedit.xml.XmlArchive;
 
 import com.openedit.hittracker.HitTracker;
+import com.openedit.hittracker.SearchQuery;
 import com.openedit.users.User;
 
 public class UserProfile extends ElementData
@@ -357,5 +358,19 @@ public class UserProfile extends ElementData
 		fieldCombinedLibraries = inCombinedLibraries;
 	}
 
-	
+	public Data getDefaultViewForModule(String inModuleId)
+	{
+		Searcher viewSearcher = getSearcherManager().getSearcher(
+				getCatalogId(), "view");
+		SearchQuery q = viewSearcher.createSearchQuery();
+		q.addMatches("module", inModuleId);
+		q.addMatches("systemdefined", "false");
+		HitTracker row = (HitTracker) viewSearcher.search(q);
+		if (row.size() > 0) {
+			if (row != null) {
+				return row.get(0);
+			}
+		}
+		return null;
+	}
 }
