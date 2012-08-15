@@ -4,6 +4,14 @@ public class Script
 {
 	protected String fieldSrc;
 	protected String fieldId;
+	protected boolean fieldExternal;
+	
+	public boolean isExternal() {
+		return fieldExternal;
+	}
+	public void setExternal(boolean fieldExternal) {
+		this.fieldExternal = fieldExternal;
+	}
 	public String getSrc()
 	{
 		return fieldSrc;

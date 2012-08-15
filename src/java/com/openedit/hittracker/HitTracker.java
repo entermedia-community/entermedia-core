@@ -165,7 +165,19 @@ public abstract class HitTracker implements Serializable, Collection
 		}
 		return fieldPage;
 	}
-
+	public void setPageByIndex(int inIndex)
+	{
+		if( inIndex < getHitsPerPage() )
+		{
+			setPage(1);
+		}
+		else
+		{
+			int page = size() / inIndex;
+			setPage(page);
+		}
+	}
+	
 	public void setPage(int inPage)
 	{
 		if( fieldPage != inPage || fieldCurrentPage == null)

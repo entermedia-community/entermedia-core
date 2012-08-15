@@ -20,4 +20,12 @@ public class Style
 	{
 		fieldId = inId;
 	}
+	protected Boolean fieldExternal;
+	
+	public Boolean getExternal() {
+		return fieldExternal;
+	}
+	public void setExternal(Boolean fieldExternal) {
+		this.fieldExternal = fieldExternal;
+	}
 }

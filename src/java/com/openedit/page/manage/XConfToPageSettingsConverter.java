@@ -106,6 +106,8 @@ public class XConfToPageSettingsConverter
 		Script script = new Script();
 		script.setId(inConfigElement.get("id"));
 		script.setSrc(inConfigElement.get("src"));
+		String external = inConfigElement.get("external");
+		script.setExternal(Boolean.parseBoolean(external));
 		return script;
 	}
 	protected Style createStyle(PageSettings inSettings, Configuration inConfigElement)
@@ -113,6 +115,7 @@ public class XConfToPageSettingsConverter
 		Style style = new Style();
 		style.setId(inConfigElement.get("id"));
 		style.setHref(inConfigElement.get("href"));
+		style.setExternal(Boolean.parseBoolean(inConfigElement.get("external")));
 		return style;
 	}
 	private PageAction createAction(PageSettings inSettings, Configuration inPageActionElement)
