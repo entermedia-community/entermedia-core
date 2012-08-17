@@ -73,7 +73,7 @@ public class BaseTestCase extends TestCase
 		}
 		return fieldFixture;
 	}
-	public TestFixture getStaticFixture()
+	public static TestFixture getStaticFixture()
 	{
 		if (fieldStaticFixture == null)
 		{
