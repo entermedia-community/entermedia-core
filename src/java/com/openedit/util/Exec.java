@@ -89,15 +89,19 @@ public class Exec
 	}
 	public ExecResult runExec(String inCommandKey,List<String> inArgs, InputStream inPut)
 	{
-		return runExec(inCommandKey,  inArgs, false, inPut, null);
+		return runExec(inCommandKey,  inArgs, false, inPut, null, null);
 	}
 	public ExecResult runExec(String inCommandKey,List<String> inArgs)
 	{
-		return runExec(inCommandKey,  inArgs, false, null, null);
+		return runExec(inCommandKey,  inArgs, false, null, null, null);
+	}
+	public ExecResult runExec(String inCommandKey,List<String> inArgs, File inRootFolder)
+	{
+		return runExec(inCommandKey,  inArgs, false, null, null, inRootFolder);
 	}
 	public ExecResult runExec(String inCommandKey,List<String> inArgs, boolean inSaveOutput)
 	{
-		return runExec(inCommandKey,  inArgs, inSaveOutput, null, null);
+		return runExec(inCommandKey,  inArgs, inSaveOutput, null, null, null);
 	}
 	
 	/**
@@ -117,7 +121,7 @@ public class Exec
 		return runExec(inArgs, null,inSaveOutput, null);
 	}
 	
-	public ExecResult runExec(String inCommandKey, List<String> inArgs, boolean inSaveOutput, InputStream inPut, OutputFiller inOutputFiller)
+	public ExecResult runExec(String inCommandKey, List<String> inArgs, boolean inSaveOutput, InputStream inPut, OutputFiller inOutputFiller, File inRootFolder)
 	{
 		ArrayList<String> command = new ArrayList<String>();
 		
@@ -199,8 +203,14 @@ public class Exec
 		{
 			command.addAll(command.size(), inArgs);
 		}
-		
-		return runExec(command,cachedCommand.inStartDir,inSaveOutput, inPut);
+		if( inRootFolder == null )
+		{
+			return runExec(command,cachedCommand.inStartDir,inSaveOutput, inPut);
+		}
+		else
+		{
+			return runExec(command,inRootFolder,inSaveOutput, inPut);
+		}
 	}
 	class ExecCommand
 	{
