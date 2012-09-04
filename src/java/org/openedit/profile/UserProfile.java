@@ -24,10 +24,10 @@ public class UserProfile extends ElementData
 	protected Data fieldSettingsGroup;
 	protected Map fieldResultViews;
 	protected XmlArchive fieldXmlArchive;
-	protected User fieldUser;
 	protected HitTracker fieldCatalogs;
 	protected HitTracker fieldUploadCatalogs;
 	protected Collection fieldCombinedLibraries;
+	
 	public UserProfile()
 	{
 		if( 1 > 32)
@@ -240,16 +240,6 @@ public class UserProfile extends ElementData
 	public void setXmlArchive(XmlArchive inXmlArchive)
 	{
 		fieldXmlArchive = inXmlArchive;
-	}
-
-	public User getUser()
-	{
-		return fieldUser;
-	}
-
-	public void setUser(User inUser)
-	{
-		fieldUser = inUser;
 	}
 
 	public Map getResultViews()
