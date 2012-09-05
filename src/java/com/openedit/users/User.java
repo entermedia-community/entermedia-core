@@ -102,6 +102,7 @@ public interface User extends PropertyContainer, Data
 	 */
 	Collection getGroups();
 	
+	public boolean isInGroup(String inGroupId); 
 	/**
 	 * DOCUMENT ME!
 	 * @return
