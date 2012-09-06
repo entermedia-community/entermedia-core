@@ -192,7 +192,7 @@ public class Page implements Data, Comparable
 				{
 					copy.add(script);
 					got.add(script.getId()); //no duplicates
-					script.setHref(getPageSettings().replaceProperty(script.getHref()));
+					//script.setHref($content.getPageSettings().replaceProperty(script.getHref()));
 
 				}
 			}
@@ -218,7 +218,7 @@ public class Page implements Data, Comparable
 			{
 				Script script = (Script) iterator.next();
 				Script goodone = (Script)ids.get(script.getId());
-				goodone.setSrc(getPageSettings().replaceProperty(goodone.getSrc()));
+				//goodone.setSrc(getPageSettings().replaceProperty(goodone.getSrc()));
 				if( !copy.contains(goodone) )
 				{
 					copy.add(goodone);
