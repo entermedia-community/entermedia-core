@@ -225,7 +225,6 @@
 		</property>
 	</bean>
 	<bean id="EditModule" class="com.openedit.modules.edit.EditModule" />
-	<bean id="TranslationModule" class="com.openedit.modules.translations.TranslationModule" />
 	
 	<bean id="Config" class="com.openedit.modules.settings.ConfigModule"/>
 	<bean id="RevisionEditor" class="com.openedit.modules.revisions.RevisionEditorModule"/>
