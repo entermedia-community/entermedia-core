@@ -151,10 +151,13 @@ public class UserProfileManager
 				for (Iterator iterator = user.getGroups().iterator(); iterator.hasNext();)
 				{
 					Group group = (Group) iterator.next();
-					groups.append(group.getId());
-					if( iterator.hasNext() )
+					if( group != null )
 					{
-						groups.append(" ");
+						groups.append(group.getId());
+						if( iterator.hasNext() )
+						{
+							groups.append(" ");
+						}
 					}
 				}
 				query.addOrsGroup("groupid", groups.toString() );
