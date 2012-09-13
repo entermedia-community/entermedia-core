@@ -19,7 +19,7 @@ import com.openedit.OpenEditException;
 public abstract class HitTracker implements Serializable, Collection
 {
 	protected int fieldPage = 0;
-	protected int fieldHitsPerPage = 12;
+	protected int fieldHitsPerPage = 15;
 	protected int fieldCurrentHit;
 	protected Set fieldSelections;
 	protected SearchQuery fieldSearchQuery;

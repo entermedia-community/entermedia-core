@@ -274,7 +274,7 @@ public class UserProfile extends ElementData
 		String value = getValue(view);
 		if( value == null)
 		{
-			return 20;
+			return 15;
 		}
 		return Integer.parseInt( value );
 	}
