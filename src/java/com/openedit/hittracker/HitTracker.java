@@ -146,13 +146,9 @@ public abstract class HitTracker implements Serializable, Collection
 		{
 			fieldCurrentPage = null;
 			fieldHitsPerPage = inHitsPerPage;
-			if (getPage() * inHitsPerPage > getTotal())
+			if( fieldPage > 0)
 			{
 				setPage(1);
-			}
-			else
-			{
-				setPage(getPage());
 			}
 		}
 	}
