@@ -760,6 +760,10 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			{
 				t = search.addStartsWith(detail, val);
 			}
+			else if ("contains".equals(op))
+			{
+				t = search.addContains(detail, val);
+			}
 			else if ("not".equals(op))
 			{
 				t = search.addNot(detail, val);
