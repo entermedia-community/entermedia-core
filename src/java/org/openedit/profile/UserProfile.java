@@ -6,6 +6,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.openedit.Data;
 import org.openedit.data.PropertyDetail;
 import org.openedit.data.Searcher;
@@ -27,6 +29,9 @@ public class UserProfile extends ElementData
 	protected HitTracker fieldCatalogs;
 	protected HitTracker fieldUploadCatalogs;
 	protected Collection fieldCombinedLibraries;
+	
+	private static final Log log = LogFactory.getLog(UserProfile.class);
+
 	
 	public UserProfile()
 	{
@@ -144,6 +149,10 @@ public class UserProfile extends ElementData
 			}
 			Searcher settingsGroupSearcher = getSearcherManager().getSearcher(getCatalogId(), "settingsgroup");
 			fieldSettingsGroup = (Data)settingsGroupSearcher.searchById(groupid);
+			if( fieldSettingsGroup == null && log.isDebugEnabled() )
+			{
+				log.debug("No settings group defined" );
+			}
 		}
 		return fieldSettingsGroup;
 	}
