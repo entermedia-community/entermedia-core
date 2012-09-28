@@ -25,13 +25,6 @@ public class UserProfileManager
 	protected SearcherManager fieldSearcherManager;
 	private static final Log log = LogFactory.getLog(UserProfileManager.class);
 
-	public UserProfile getDefaultProfile(String inCatId)
-	{
-		Searcher searcher = getSearcherManager().getSearcher(inCatId, "userprofile");
-		UserProfile	baseProfile = (UserProfile)searcher.searchById("default");
-		return baseProfile;
-	}
-
 	public SearcherManager getSearcherManager()
 	{
 		return fieldSearcherManager;
@@ -46,7 +39,7 @@ public class UserProfileManager
 	{
 		if( inUserName == null )
 		{
-			return null;
+			inUserName = "anonymous";
 		}
 		boolean reload = Boolean.parseBoolean( inReq.getRequestParameter("reloadprofile") );
 		UserProfile userprofile = (UserProfile)inReq.getPageValue("userprofile");
@@ -122,7 +115,6 @@ public class UserProfileManager
 		}
 		userprofile.setCatalogs(new ListHitTracker(ok));
 		userprofile.setUploadCatalogs(new ListHitTracker(okUpload));
-		userprofile.setUser((User)getSearcherManager().getData("system", "user",userprofile.getUserId()));
 		loadLibraries(userprofile, inCatalogId );
 
 		if (inReq.getUserName().equals(userprofile.getUserId()))
@@ -146,28 +138,37 @@ public class UserProfileManager
 			all.add(data.get("libraryid"));
 		}
 
-		searcher = getSearcherManager().getSearcher(inCatalogId, "librarygroups");
-		
-		SearchQuery query = searcher.createSearchQuery();
-		StringBuffer groups = new StringBuffer();
-		
-		for (Iterator iterator = inUserprofile.getUser().getGroups().iterator(); iterator.hasNext();)
+		if( !"anonymous".equals( inUserprofile.getUserId() ) )
 		{
-			Group group = (Group) iterator.next();
-			groups.append(group.getId());
-			if( iterator.hasNext() )
+			searcher = getSearcherManager().getSearcher(inCatalogId, "librarygroups");
+			
+			SearchQuery query = searcher.createSearchQuery();
+			StringBuffer groups = new StringBuffer();
+			
+			User user = (User)getSearcherManager().getData("system", "user",inUserprofile.getUserId());
+			if( user != null )
 			{
-				groups.append(" ");
+				for (Iterator iterator = user.getGroups().iterator(); iterator.hasNext();)
+				{
+					Group group = (Group) iterator.next();
+					if( group != null )
+					{
+						groups.append(group.getId());
+						if( iterator.hasNext() )
+						{
+							groups.append(" ");
+						}
+					}
+				}
+				query.addOrsGroup("groupid", groups.toString() );
+				found = searcher.search(query);
+				for (Iterator iterator = found.iterator(); iterator.hasNext();)
+				{
+					Data data = (Data) iterator.next();
+					all.add(data.get("libraryid"));
+				}
 			}
-		}
-		query.addOrsGroup("groupid", groups.toString() );
-		
-		found = searcher.search(query);
-		for (Iterator iterator = found.iterator(); iterator.hasNext();)
-		{
-			Data data = (Data) iterator.next();
-			all.add(data.get("libraryid"));
-		}
+		}		
 
 		searcher = getSearcherManager().getSearcher(inCatalogId, "libraryroles");
 		if( inUserprofile.getSettingsGroup() != null )
@@ -185,6 +186,10 @@ public class UserProfileManager
 
 	public void saveUserProfile(UserProfile inUserProfile)
 	{
+		if( "anonymous".equals( inUserProfile.getUserId() ) )
+		{
+			return;
+		}
 		Searcher searcher = getSearcherManager().getSearcher(inUserProfile.getCatalogId(), "userprofile");
 		if( inUserProfile.getSourcePath() == null )
 		{

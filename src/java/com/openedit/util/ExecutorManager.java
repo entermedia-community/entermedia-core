@@ -25,6 +25,10 @@ public class ExecutorManager
 		if (fieldThreadCount == null)
 		{
 			fieldThreadCount = Runtime.getRuntime().availableProcessors();
+			if( fieldThreadCount > 2 )
+			{
+				fieldThreadCount--;
+			}
 		}
 
 		return fieldThreadCount;

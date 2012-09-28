@@ -6,6 +6,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.openedit.Data;
 import org.openedit.data.PropertyDetail;
 import org.openedit.data.Searcher;
@@ -24,10 +26,13 @@ public class UserProfile extends ElementData
 	protected Data fieldSettingsGroup;
 	protected Map fieldResultViews;
 	protected XmlArchive fieldXmlArchive;
-	protected User fieldUser;
 	protected HitTracker fieldCatalogs;
 	protected HitTracker fieldUploadCatalogs;
 	protected Collection fieldCombinedLibraries;
+	
+	private static final Log log = LogFactory.getLog(UserProfile.class);
+
+	
 	public UserProfile()
 	{
 		if( 1 > 32)
@@ -144,6 +149,10 @@ public class UserProfile extends ElementData
 			}
 			Searcher settingsGroupSearcher = getSearcherManager().getSearcher(getCatalogId(), "settingsgroup");
 			fieldSettingsGroup = (Data)settingsGroupSearcher.searchById(groupid);
+			if( fieldSettingsGroup == null && log.isDebugEnabled() )
+			{
+				log.debug("No settings group defined" );
+			}
 		}
 		return fieldSettingsGroup;
 	}
@@ -242,16 +251,6 @@ public class UserProfile extends ElementData
 		fieldXmlArchive = inXmlArchive;
 	}
 
-	public User getUser()
-	{
-		return fieldUser;
-	}
-
-	public void setUser(User inUser)
-	{
-		fieldUser = inUser;
-	}
-
 	public Map getResultViews()
 	{
 		return fieldResultViews;
@@ -284,7 +283,7 @@ public class UserProfile extends ElementData
 		String value = getValue(view);
 		if( value == null)
 		{
-			return 20;
+			return 15;
 		}
 		return Integer.parseInt( value );
 	}

@@ -19,7 +19,7 @@ import com.openedit.OpenEditException;
 public abstract class HitTracker implements Serializable, Collection
 {
 	protected int fieldPage = 0;
-	protected int fieldHitsPerPage = 12;
+	protected int fieldHitsPerPage = 15;
 	protected int fieldCurrentHit;
 	protected Set fieldSelections;
 	protected SearchQuery fieldSearchQuery;
@@ -146,13 +146,9 @@ public abstract class HitTracker implements Serializable, Collection
 		{
 			fieldCurrentPage = null;
 			fieldHitsPerPage = inHitsPerPage;
-			if (getPage() * inHitsPerPage > getTotal())
+			if( fieldPage > 0)
 			{
 				setPage(1);
-			}
-			else
-			{
-				setPage(getPage());
 			}
 		}
 	}
@@ -165,7 +161,19 @@ public abstract class HitTracker implements Serializable, Collection
 		}
 		return fieldPage;
 	}
-
+	public void setPageByIndex(int inIndex)
+	{
+		if( inIndex < getHitsPerPage() )
+		{
+			setPage(1);
+		}
+		else
+		{
+			int page = size() / inIndex;
+			setPage(page);
+		}
+	}
+	
 	public void setPage(int inPage)
 	{
 		if( fieldPage != inPage || fieldCurrentPage == null)
@@ -682,7 +690,7 @@ public abstract class HitTracker implements Serializable, Collection
 
 	public void selectCurrentPage() throws Exception
 	{
-		deselectAll();
+		//deselectAll();
 		List page = getPageOfHits();
 		int bottom = (getPage() - 1) * getHitsPerPage(); // this is the start of
 		

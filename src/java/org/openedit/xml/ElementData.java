@@ -141,10 +141,15 @@ public class ElementData implements MultiValued, Comparable
 	public String toString()
 	{
 		String name =  get("name");
+		if(name == null){
+			name = getElement().getText();
+		}
+		
 		if( name == null)
 		{
 			name = getId();
 		}
+		
 		if( name == null)
 		{
 			name = super.toString();

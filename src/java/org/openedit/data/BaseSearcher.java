@@ -274,6 +274,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	public HitTracker loadHits(WebPageRequest inReq, String hitsname) throws OpenEditException
 	{
 		HitTracker otracker = (HitTracker) inReq.getSessionValue(hitsname + getCatalogId());
+		
 		if (otracker != null)
 		{
 			inReq.putPageValue(hitsname, otracker);
@@ -758,6 +759,10 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			else if ("startswith".equals(op))
 			{
 				t = search.addStartsWith(detail, val);
+			}
+			else if ("contains".equals(op))
+			{
+				t = search.addContains(detail, val);
 			}
 			else if ("not".equals(op))
 			{
