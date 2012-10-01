@@ -124,9 +124,15 @@ public class UserProfileManager {
 		userprofile.setUploadCatalogs(new ListHitTracker(okUpload));
 		loadLibraries(userprofile, inCatalogId);
 
-		if (inReq.getUserName().equals(userprofile.getUserId())) {
+		//Why do we do this? Seems like we already check this when we load up the profile above
+//		if (inReq.getUserName().equals(userprofile.getUserId()))
+//		{
 			inReq.putSessionValue(id, userprofile);
-		}
+//		}
+		
+//		if (inReq.getUserName().equals(userprofile.getUserId())) {
+//			inReq.putSessionValue(id, userprofile);
+//		}
 		User user = getUserManager().getUser(inUserName);
 		userprofile.setUser(user);
 		inReq.putPageValue("userprofile", userprofile);
