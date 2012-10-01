@@ -39,10 +39,7 @@ public class UserProfile extends ElementData {
 		fieldUser = inUser;
 	}
 
-	public UserProfile() {
-		if (1 > 32) {
-
-
+	
 	
 	private static final Log log = LogFactory.getLog(UserProfile.class);
 
