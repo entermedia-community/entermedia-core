@@ -19,6 +19,8 @@
 	<property name="warname" value="oesite.war"/>
     <property name="webinf" value="${wardir}/WEB-INF"/>
 	<property name="javadocdir" location="${build}/javadoc"/>
+	<property name="majorversion" value="7" />
+
 	<property environment="env" />
 
 	<!-- 
@@ -30,7 +32,7 @@
 			- "deployDir" is set by anthill.publish.dir
 		========================================================================
 	--> 
-	<property name="version"  value="5.${env.BUILD_NUMBER}"/>
+	<property name="version"  value="${majorversion}.${env.BUILD_NUMBER}"/>
   	<property name="deployDir" location="deploy"/>
   	
   	<!-- A convenience variable for documentation output -->

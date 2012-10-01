@@ -444,6 +444,41 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		return term;
 	}
 
+	public Term addContains(PropertyDetail inDetail, String inVal)
+	{
+		Term term = new Term()
+		{
+			public String toQuery()
+			{
+				if (getDetail().getId() != null)
+				{
+					return getDetail().getId() + ":*" + getValue();
+				}
+				else
+				{
+					return getValue();
+				}
+			}
+
+			public Element toXml()
+			{
+				Element term = DocumentHelper.createElement("term");
+				term.addAttribute("id", getDetail().getId());
+				term.addAttribute("val", getValue());
+				term.addAttribute("op", "contains");
+				if (getParameter("op") != null)
+					term.addAttribute("realop", getParameter("op"));
+
+				return term;
+			}
+		};
+		term.setDetail(inDetail);
+		term.setValue(inVal);
+		addTerm(term);
+		return term;
+	}
+	
+	
 	public boolean isEmpty()
 	{
 		return fieldTerms.isEmpty();
