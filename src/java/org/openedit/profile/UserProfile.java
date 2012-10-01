@@ -19,8 +19,7 @@ import com.openedit.hittracker.HitTracker;
 import com.openedit.hittracker.SearchQuery;
 import com.openedit.users.User;
 
-public class UserProfile extends ElementData
-{
+public class UserProfile extends ElementData {
 	protected String fieldCatalogId;
 	protected SearcherManager fieldSearcherManager;
 	protected Data fieldSettingsGroup;
@@ -29,6 +28,18 @@ public class UserProfile extends ElementData
 	protected HitTracker fieldCatalogs;
 	protected HitTracker fieldUploadCatalogs;
 	protected Collection fieldCombinedLibraries;
+
+	protected User fieldUser;
+
+	public User getUser() {
+		return fieldUser;
+	}
+
+	public void setUser(User inUser) {
+		fieldUser = inUser;
+	}
+
+	
 	
 	private static final Log log = LogFactory.getLog(UserProfile.class);
 
@@ -38,113 +49,101 @@ public class UserProfile extends ElementData
 		if( 1 > 32)
 		{
 			
+
 		}
 	}
 
-	public String getCatalogId()
-	{
+	public String getCatalogId() {
 		return fieldCatalogId;
 	}
-	public void setCatalogId(String catalogId)
-	{
+
+	public void setCatalogId(String catalogId) {
 		fieldCatalogId = catalogId;
 	}
-	public SearcherManager getSearcherManager()
-	{
+
+	public SearcherManager getSearcherManager() {
 		return fieldSearcherManager;
 	}
-	public void setSearcherManager(SearcherManager searcherManager)
-	{
+
+	public void setSearcherManager(SearcherManager searcherManager) {
 		fieldSearcherManager = searcherManager;
 	}
-	public String getUserId()
-	{
+
+	public String getUserId() {
 		return get("userid");
 	}
 
-	public boolean isEnabled(String inPreference)
-	{
+	public boolean isEnabled(String inPreference) {
 		String val = getValue(inPreference);
 		return Boolean.parseBoolean(val);
 	}
-	
-	public String getValue(String inPreference)
-	{
-		if(inPreference == null){
+
+	public String getValue(String inPreference) {
+		if (inPreference == null) {
 			return null;
 		}
 		String val = get(inPreference);
-		if (val == null && getSettingsGroup() != null)
-		{
+
+		if (val == null && getUser() != null) {
+			val = getUser().get(inPreference);
+		}
+		if (val == null && getSettingsGroup() != null) {
 			return getSettingsGroup().get(inPreference);
 		}
 
 		return val;
 	}
-	public Collection getValues(String inPreference)
-	{
+
+	public Collection getValues(String inPreference) {
 		String val = getValue(inPreference);
-		
+
 		if (val == null)
 			return null;
-		
+
 		String[] vals = val.split("\\s+");
 
 		Collection collection = Arrays.asList(vals);
-		//if null check parent
+		// if null check parent
 		return collection;
 	}
 
-	public String replaceUserVariable(String inValue)
-	{
-		if( inValue == null)
-		{
+	public String replaceUserVariable(String inValue) {
+		if (inValue == null) {
 			return inValue;
 		}
 		String value = inValue;
 		int start = 0;
-		while( (start = value.indexOf("$[",start)) != -1)
-		{
-			int end = value.indexOf("]",start);
-			if( end != -1)
-			{
-				String key = value.substring(start+2,end);
-				String variable = getValue(key); //check for property
-				
-				if( variable != null)
-				{
-					value = value.substring(0,start) + variable + value.substring(end+1);
-					if(variable.length() <= end)
-					{
-						start = end-variable.length();
+		while ((start = value.indexOf("$[", start)) != -1) {
+			int end = value.indexOf("]", start);
+			if (end != -1) {
+				String key = value.substring(start + 2, end);
+				String variable = getValue(key); // check for property
+
+				if (variable != null) {
+					value = value.substring(0, start) + variable
+							+ value.substring(end + 1);
+					if (variable.length() <= end) {
+						start = end - variable.length();
+					} else {
+						start = variable.length();
 					}
-					else
-					{
-						start =  variable.length();
-					}
-				}
-				else
-				{
+				} else {
 					start = end;
 				}
 			}
 		}
-		if( start > 0 && inValue.equals(value))
-		{
+		if (start > 0 && inValue.equals(value)) {
 			value = value.replace('[', '{');
 			value = value.replace(']', ']');
 		}
-		
+
 		return value;
 	}
-	
-	public Data getSettingsGroup()
-	{
-		if (fieldSettingsGroup == null)
-		{
+
+	public Data getSettingsGroup() {
+		if (fieldSettingsGroup == null) {
 			String groupid = get("settingsgroup");
-			if( groupid == null)
-			{
+			if (groupid == null) {
 				groupid = "guest";
 			}
 			Searcher settingsGroupSearcher = getSearcherManager().getSearcher(getCatalogId(), "settingsgroup");
@@ -156,209 +155,178 @@ public class UserProfile extends ElementData
 		}
 		return fieldSettingsGroup;
 	}
-	
-	public void setSettingsGroup(String inSettingsGroupId)
-	{
+
+	public void setSettingsGroup(String inSettingsGroupId) {
 		setProperty("settingsgroupid", inSettingsGroupId);
 		fieldSettingsGroup = null;
 	}
-	
-	public void save(User inUser)
-	{
-		Searcher searcher = getSearcherManager().getSearcher(getCatalogId(), "userprofile");
+
+	public void save(User inUser) {
+		Searcher searcher = getSearcherManager().getSearcher(getCatalogId(),
+				"userprofile");
 		searcher.saveData(this, inUser);
 	}
-	public void setValuesFromDetails(String inKey, Collection<PropertyDetail> inValues)
-	{
+
+	public void setValuesFromDetails(String inKey,
+			Collection<PropertyDetail> inValues) {
 		StringBuffer values = new StringBuffer();
-		for (Iterator iterator = inValues.iterator(); iterator.hasNext();)
-		{
+		for (Iterator iterator = inValues.iterator(); iterator.hasNext();) {
 			PropertyDetail detail = (PropertyDetail) iterator.next();
 			values.append(detail.getId());
-			if( iterator.hasNext())
-			{
+			if (iterator.hasNext()) {
 				values.append(" ");
 			}
 		}
-		setProperty(inKey,values.toString());
+		setProperty(inKey, values.toString());
 	}
-	public void setValues(String inKey, Collection<String> inValues)
-	{
+
+	public void setValues(String inKey, Collection<String> inValues) {
 		StringBuffer values = new StringBuffer();
-		for (Iterator iterator = inValues.iterator(); iterator.hasNext();)
-		{
+		for (Iterator iterator = inValues.iterator(); iterator.hasNext();) {
 			String detail = (String) iterator.next();
 			values.append(detail);
-			if( iterator.hasNext())
-			{
+			if (iterator.hasNext()) {
 				values.append(" ");
 			}
 		}
-		setProperty(inKey,values.toString());
+		setProperty(inKey, values.toString());
 	}
-	
-	public void addValue(String inKey, String string)
-	{
+
+	public void addValue(String inKey, String string) {
 		String current = get(inKey);
-		if(string != null)
-		{
+		if (string != null) {
 			string = string.trim();
 		}
-		if (current == null || current.length() == 0)
-		{
+		if (current == null || current.length() == 0) {
 			setProperty(inKey, string);
-		}
-		else
-		{
+		} else {
 			setProperty(inKey, current + " " + string);
 		}
 	}
-	
-	public void removeValue(String inKey, String string)
-	{
+
+	public void removeValue(String inKey, String string) {
 		Collection collection = getValues(inKey);
-		if( collection != null)
-		{
+		if (collection != null) {
 			Collection keys = new ArrayList(collection);
 			keys.remove(string);
 			setValues(inKey, keys);
 		}
 	}
-	
-	public String toString()
-	{
+
+	public String toString() {
 		return "User Profile";
 	}
-	
-	
-	public HitTracker getCatalogs()
-	{
+
+	public HitTracker getCatalogs() {
 		return fieldCatalogs;
 	}
 
-	public void setCatalogs(HitTracker inCatalogs)
-	{
+	public void setCatalogs(HitTracker inCatalogs) {
 		fieldCatalogs = inCatalogs;
 	}
 
-	public XmlArchive getXmlArchive()
-	{
+	public XmlArchive getXmlArchive() {
 		return fieldXmlArchive;
 	}
 
-	public void setXmlArchive(XmlArchive inXmlArchive)
-	{
+	public void setXmlArchive(XmlArchive inXmlArchive) {
 		fieldXmlArchive = inXmlArchive;
 	}
 
-	public Map getResultViews()
-	{
+	public Map getResultViews() {
 		return fieldResultViews;
 	}
 
-	public void setResultViews(Map inResultViews)
-	{
+	public void setResultViews(Map inResultViews) {
 		fieldResultViews = inResultViews;
 	}
-	//should not call this method
-//	protected String getResultViewPreference(String inView)
-//	{
-//		Element id = getUserData().getElementById(inView);
-//		if(id != null)
-//		{
-//			return(id.attributeValue("view"));
-//			
-//		}
-//		return null;
-//	}
 
-	public void setResultViewPreference(String inView, String inPreference)
-	{
+	// should not call this method
+	// protected String getResultViewPreference(String inView)
+	// {
+	// Element id = getUserData().getElementById(inView);
+	// if(id != null)
+	// {
+	// return(id.attributeValue("view"));
+	//
+	// }
+	// return null;
+	// }
+
+	public void setResultViewPreference(String inView, String inPreference) {
 		setProperty(inView, inPreference);
 	}
-	
-	public int getHitsPerPageForSearchType(String inResultsView) throws Exception
-	{
+
+	public int getHitsPerPageForSearchType(String inResultsView)
+			throws Exception {
 		String view = inResultsView + "hitsperpage";
 		String value = getValue(view);
-		if( value == null)
-		{
+		if (value == null) {
 			return 15;
 		}
-		return Integer.parseInt( value );
+		return Integer.parseInt(value);
 	}
-	public void setHitsPerPageForSearchType(String inResultsView, int inHits)
-	{
+
+	public void setHitsPerPageForSearchType(String inResultsView, int inHits) {
 		setProperty(inResultsView + "hitsperpage", String.valueOf(inHits));
 	}
-	public void setSortForSearchType(String inResultsView, String inSort) 
-	{
+
+	public void setSortForSearchType(String inResultsView, String inSort) {
 		setProperty(inResultsView + "sort", inSort);
 	}
-	public String getSortForSearchType(String inResultsType)
-	{
+
+	public String getSortForSearchType(String inResultsType) {
 		String value = getValue(inResultsType + "sort");
 		return value;
 	}
-	public String getViewForResultType(String inCustomView, String inResultsView)
-	{
-		if( inCustomView != null)
-		{
+
+	public String getViewForResultType(String inCustomView, String inResultsView) {
+		if (inCustomView != null) {
 			return inCustomView;
 		}
 		String view = getViewForResultType(inResultsView);
-		if( view == null)
-		{
+		if (view == null) {
 			view = "default";
 		}
 		return view;
-	}	
-	public String getViewForResultType(String inResultsView)
-	{
+	}
+
+	public String getViewForResultType(String inResultsView) {
 		String view = getValue(inResultsView);
 		return view;
 	}
 
-	
-	public Data getLastCatalog()
-	{
+	public Data getLastCatalog() {
 		String catid = get("lastcatalog");
-		for (Iterator iterator = getCatalogs().iterator(); iterator.hasNext();)
-		{
+		for (Iterator iterator = getCatalogs().iterator(); iterator.hasNext();) {
 			Data cat = (Data) iterator.next();
-			if( catid == null || cat.getId().equals(catid))
-			{
+			if (catid == null || cat.getId().equals(catid)) {
 				return cat;
 			}
 		}
-		if( getCatalogs().size() > 0)
-		{
-			return (Data)getCatalogs().iterator().next();
+		if (getCatalogs().size() > 0) {
+			return (Data) getCatalogs().iterator().next();
 		}
 		return null;
 	}
 
-	public HitTracker getUploadCatalogs()
-	{
+	public HitTracker getUploadCatalogs() {
 		return fieldUploadCatalogs;
 	}
 
-	public void setUploadCatalogs(HitTracker inUploadCatalogs)
-	{
+	public void setUploadCatalogs(HitTracker inUploadCatalogs) {
 		fieldUploadCatalogs = inUploadCatalogs;
 	}
 
-	public Collection getCombinedLibraries()
-	{
+	public Collection getCombinedLibraries() {
 		return fieldCombinedLibraries;
 	}
-	public void setCombinedLibraries(Collection inCombinedLibraries)
-	{
+
+	public void setCombinedLibraries(Collection inCombinedLibraries) {
 		fieldCombinedLibraries = inCombinedLibraries;
 	}
 
-	public Data getDefaultViewForModule(String inModuleId)
-	{
+	public Data getDefaultViewForModule(String inModuleId) {
 		Searcher viewSearcher = getSearcherManager().getSearcher(
 				getCatalogId(), "view");
 		SearchQuery q = viewSearcher.createSearchQuery();
@@ -371,5 +339,41 @@ public class UserProfile extends ElementData
 			}
 		}
 		return null;
+	}
+
+	@Override
+	public String getSourcePath() {
+
+		if (fieldSourcePath == null) {
+			if (getUser() != null) {
+				return getUser().getId();
+			}
+			if (getUserId() != null) {
+				return getUserId();
+			}
+
+		} else {
+			return fieldSourcePath;
+		}
+		return super.getSourcePath();
+	}
+
+	public void setProperty(String inId, String inValue) {
+		if (getUser() != null) {
+			if ("firstname".equals(inId)) {
+				getUser().setFirstName(inValue);
+			}
+			if ("lastname".equals(inId)) {
+				getUser().setLastName(inValue);
+			}
+			if ("email".equals(inId)) {
+				getUser().setEmail(inValue);
+			}
+			if ("password".equals(inId)) {
+				getUser().setPassword(inValue);
+			}
+		}
+		// TODO Auto-generated method stub
+		super.setProperty(inId, inValue);
 	}
 }
