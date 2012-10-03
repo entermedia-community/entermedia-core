@@ -177,6 +177,15 @@ public class XmlSearcher extends BaseSearcher
 				}
 				 
 			}
+			else if("orgroup".equals(term.getOperation()))
+			{
+				String value = term.getValue();
+				String attribval = inElement.attributeValue(term.getDetail().getId());
+				if( !value.contains(attribval) )
+				{
+					return false;
+				}
+			}
 			else
 			{
 				String name = term.getDetail().getId();

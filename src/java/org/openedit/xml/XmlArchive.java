@@ -1,5 +1,6 @@
 package org.openedit.xml;
 
+import java.io.InputStream;
 import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
@@ -73,16 +74,28 @@ public class XmlArchive
 		{// This can be specified within the page action with a <property
 			// name="xmlfile">./data.xml</property>
 			XmlFile element = (XmlFile) getCache().get(inId);
-			Page input = getPageManager().getPage(path, true);
-			if (element == null || element.getLastModified() != input.lastModified())
+			if( path.startsWith("/WEB-INF/data") )
 			{
-				element = load(inId, path, inElementName, input);
+				ContentItem input = getPageManager().getRepository().get(path);
+				if (element == null || element.getLastModified() != input.lastModified().getTime() )
+				{
+					element = load(inId, path, inElementName, input);
+				}
+			}
+			else
+			{
+				Page input = getPageManager().getPage(path, true);
+				if (element == null || element.getLastModified() != input.lastModified())
+				{
+					element = load(inId, path, inElementName, input.getContentItem());
+				}
+
 			}
 			return element;
 		}
 		catch (Exception e)
 		{
-			String actual = getPageManager().getPage(path).getContentItem().getActualPath();
+			String actual = getPageManager().getPage(path).getContentItem().getAbsolutePath();
 			if (actual == null)
 			{
 				actual = path;
@@ -114,7 +127,7 @@ public class XmlArchive
 		return element;
 	}
 	
-	protected XmlFile load(String inId, String path, String inElementName, Page input) throws OpenEditException
+	protected XmlFile load(String inId, String path, String inElementName, ContentItem input) throws OpenEditException
 	{
 		//log.info("Loading " + path);
 		boolean found = false;
@@ -142,7 +155,7 @@ public class XmlArchive
 		else
 		{
 			found = true;
-			Reader in = input.getReader();
+			InputStream in = input.getInputStream();
 			try
 			{
 				root= getXmlUtil().getXml(in,"UTF-8");
@@ -162,7 +175,7 @@ public class XmlArchive
 		element.setExist(found);
 		element.setElementName(inElementName);
 		element.setPath(path);
-		element.setLastModified(input.lastModified());
+		element.setLastModified(input.lastModified().getTime());
 		element.setId(inId);
 
 		if( getCache().size() > 1000)
