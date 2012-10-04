@@ -29,6 +29,17 @@ public class UserProfile extends ElementData
 	protected HitTracker fieldCatalogs;
 	protected HitTracker fieldUploadCatalogs;
 	protected Collection fieldCombinedLibraries;
+	protected Collection<Data> fieldModules;
+	
+	public Collection<Data> getModules()
+	{
+		return fieldModules;
+	}
+
+	public void setModules(Collection<Data> inModules)
+	{
+		fieldModules = inModules;
+	}
 
 	protected User fieldUser;
 
