@@ -249,6 +249,8 @@
 
 	<bean id="userProfileManager" class="org.openedit.profile.UserProfileManager" >
 		<property name="searcherManager"><ref bean="searcherManager"/></property>
+		<property name="userManager"><ref bean="userManager"/></property>
+
 	</bean>
 
 	<bean id="userProfile" class="org.openedit.profile.UserProfile" singleton="false" >
@@ -262,6 +264,10 @@
 	</bean>
 
 	<bean id="executorManager" class="com.openedit.util.ExecutorManager" >
+	</bean>
+
+	<bean id="permissionManager" class="com.openedit.page.PermissionManager" singleton="true" >
+		<property name="searcherManager"><ref bean="searcherManager"/></property>
 	</bean>
 
 

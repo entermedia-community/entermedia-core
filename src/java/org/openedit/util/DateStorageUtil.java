@@ -105,6 +105,8 @@ public class DateStorageUtil
 		}
 		try
 		{
+			
+			
 			if( inStoredDate.length() > 21)
 			{
 				if( inStoredDate.contains("T") )
@@ -115,18 +117,22 @@ public class DateStorageUtil
 				{
 					return getStandardFormat().parse(inStoredDate);
 				}
-				else
+
+				if( inStoredDate.contains("+") )
 				{
-					if( inStoredDate.endsWith(":00"))
-					{
-						inStoredDate = inStoredDate.substring(0,inStoredDate.length() - 3) + "00";
-					}
-					return getExifFormat().parse(inStoredDate);
+					inStoredDate = inStoredDate.substring(0,inStoredDate.length() - 3) + inStoredDate.substring(inStoredDate.length() - 2); //remove the last :
+					return getAlmostStandardPlus().parse(inStoredDate );
 				}
+					
+				if( inStoredDate.endsWith(":00"))
+				{
+					inStoredDate = inStoredDate.substring(0,inStoredDate.length() - 3) + "00";
+				}
+				return getExifFormat().parse(inStoredDate);
 			}
 			
 			if( inStoredDate.length() > 18)
-			{	//2009:05:15 10:58:55 
+			{	
 				if( inStoredDate.contains("-"))
 				{
 					return getOldDashFormat().parse(inStoredDate);
@@ -175,6 +181,11 @@ public class DateStorageUtil
 		return null;
 	}
 	
+	private DateFormat getAlmostStandardPlus()
+	{
+		//		2008:04:09 07:47:24+06:00
+		return getDateFormat("yyyy:MM:dd HH:mm:ss+Z");
+	}
 	public DateFormat getSlashedDateFormat()
 	{
 		return getDateFormat("dd/MM/yyyy hh:mm");

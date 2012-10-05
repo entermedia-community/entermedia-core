@@ -490,6 +490,7 @@ public class URLUtilities
 				break;
 			case '\'':
 				output.append("&apos;");
+				break;
 			default:
 				output.append(c);
 				break;
