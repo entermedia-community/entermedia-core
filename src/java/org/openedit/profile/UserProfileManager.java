@@ -111,7 +111,6 @@ public class UserProfileManager
 		inReq.putPageValue("userprofile", userprofile);
 
 		List ok = new ArrayList();
-		List okUpload = new ArrayList();
 
 		// check the parent first, then the appid
 		String parentid = inReq.findValue("parentapplicationid");
@@ -120,21 +119,14 @@ public class UserProfileManager
 		for (Iterator iterator = catalogs.iterator(); iterator.hasNext();)
 		{
 			Data cat = (Data) iterator.next();
-			// MediaArchive archive = getMediaArchive(cat.getId());
-			WebPageRequest catcheck = inReq.getPageStreamer().canDoPermissions("/" + cat.getId());
-			Boolean canview = (Boolean) catcheck.getPageValue("canview");
+			Boolean canview = inReq.getPageStreamer().canView("/" + cat.getId());
 			if (canview != null && canview)
 			{
 				ok.add(cat);
 			}
-			Boolean canupload = (Boolean) catcheck.getPageValue("canupload");
-			if (canupload != null && canupload)
-			{
-				okUpload.add(cat);
-			}
 		}
 		userprofile.setCatalogs(new ListHitTracker(ok));
-		userprofile.setUploadCatalogs(new ListHitTracker(okUpload));
+		userprofile.setUploadCatalogs(new ListHitTracker(ok));
 
 		String appid = inReq.findValue("applicationid");
 
