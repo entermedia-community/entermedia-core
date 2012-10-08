@@ -60,7 +60,7 @@ public class UserProfileManager
 
 		if (inReq != null)
 		{
-			boolean reload = Boolean.parseBoolean(inReq.getRequestParameter("reloadprofile"));
+			boolean reload = Boolean.parseBoolean(inReq.findValue("reloadprofile"));
 			userprofile = (UserProfile) inReq.getPageValue("userprofile");
 			if (!reload && userprofile != null)
 			{
@@ -84,6 +84,7 @@ public class UserProfileManager
 		}
 		Searcher searcher = getSearcherManager().getSearcher(inCatalogId, "userprofile");
 		userprofile = (UserProfile) searcher.searchByField("userid", inUserName);
+		User user = getUserManager().getUser(inUserName);
 		if (userprofile == null)
 		{
 			userprofile = (UserProfile) searcher.createNewData();
@@ -99,14 +100,12 @@ public class UserProfileManager
 
 			userprofile.setSourcePath(inUserName);
 			userprofile.setCatalogId(inCatalogId);
-			searcher.saveData(userprofile, inReq.getUser());
+			saveUserProfile(userprofile);
 		}
+		userprofile.setUser(user);
 		userprofile.setSourcePath(inUserName);
 		userprofile.setCatalogId(inCatalogId);
 
-		
-		User user = getUserManager().getUser(inUserName);
-		userprofile.setUser(user);
 		inReq.putSessionValue(id, userprofile);
 		inReq.putPageValue("userprofile", userprofile);
 

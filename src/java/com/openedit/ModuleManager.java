@@ -238,12 +238,12 @@ public class ModuleManager implements BeanFactoryAware, ShutdownList
 			{
 				continue;
 			}
-			//This does not wowrk as expected. Since the child action is added first then the parent is excluded unless it has allowduplicated turned on
 			String allow = pageAction.getConfig().getAttribute("allowduplicates");
 			if( Boolean.parseBoolean(allow))
 			{
 				copy.add(pageAction);
-				copynames.add(pageAction.getActionName());
+				//This is so the child action is added first then the parent is excluded unless it has allowduplicated turned on
+				//copynames.add(pageAction.getActionName());
 			}
 			else
 			{
