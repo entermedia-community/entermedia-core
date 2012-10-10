@@ -345,6 +345,9 @@ public class PropertyDetailsArchive {
 		if (inDetails.getPrefix() != null) {
 			root.addAttribute("prefix", inDetails.getPrefix());
 		}
+		if(inDetails.getBeanName() !=  null){
+			root.addAttribute("beanname", inDetails.getBeanName());
+		}
 		file.setRoot(root);
 		file.setElementName("property");
 
