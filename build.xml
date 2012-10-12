@@ -20,7 +20,7 @@
     <property name="webinf" value="${wardir}/WEB-INF"/>
 	<property name="javadocdir" location="${build}/javadoc"/>
 	<property name="majorversion" value="7" />
-	<property name="branch" value="" />
+	<property name="branch" value="dev_" />
 
 	<property environment="env" />
 
@@ -79,7 +79,7 @@
 	-->	  
 	<target name="jar" depends="compile">
 		<mkdir dir="${deployDir}/builds/" />
-		<jar jarfile="${deployDir}/builds/${branch}${versionedApp}.jar" basedir="${build}" >
+		<jar jarfile="${deployDir}/builds/${versionedApp}.jar" basedir="${build}" >
 			<manifest>
 		    	<attribute name="Built-By" value="${user.name}"/>
 			    <attribute name="Implementation-Title" value="${appname}"/>
@@ -180,7 +180,7 @@
 		    <attribute name="Implementation-Vendor" value="${org}"/>
 	    </manifest>
     	<lib dir="${deployDir}/builds">
-	       <include name="${branch}${versionedApp}.jar"/>
+	       <include name="${versionedApp}.jar"/>
 	    </lib>
 		<lib dir="${lib}">
 			<include name="*.jar"/>
