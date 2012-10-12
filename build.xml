@@ -20,7 +20,7 @@
     <property name="webinf" value="${wardir}/WEB-INF"/>
 	<property name="javadocdir" location="${build}/javadoc"/>
 	<property name="majorversion" value="7" />
-	<property name="branch" value="dev_" />
+	<property name="branch" value="" />
 
 	<property environment="env" />
 
