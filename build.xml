@@ -180,7 +180,7 @@
 		    <attribute name="Implementation-Vendor" value="${org}"/>
 	    </manifest>
     	<lib dir="${deployDir}/builds">
-	       <include name="${versionedApp}.jar"/>
+	       <include name="${branch}${versionedApp}.jar"/>
 	    </lib>
 		<lib dir="${lib}">
 			<include name="*.jar"/>
