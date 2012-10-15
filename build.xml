@@ -20,6 +20,7 @@
     <property name="webinf" value="${wardir}/WEB-INF"/>
 	<property name="javadocdir" location="${build}/javadoc"/>
 	<property name="majorversion" value="7" />
+	<property name="branch" value="" />
 
 	<property environment="env" />
 
@@ -36,7 +37,7 @@
   	<property name="deployDir" location="deploy"/>
   	
   	<!-- A convenience variable for documentation output -->
-  	<property name="versionedApp" value="${appname}-${version}"/>
+  	<property name="versionedApp" value="${branch}${appname}-${version}"/>
   	
   	<!-- Edit this project dependency list for your project
 		========================================================================
@@ -50,7 +51,7 @@
 
   <target name="source"> 
 	<mkdir dir="${deployDir}/builds/" />	
-  	<zip destfile="${deployDir}/builds/${appname}-${version}-src.zip"  basedir="." excludes="deploy/**, build/**" />
+  	<zip destfile="${deployDir}/builds/${branch}${appname}-${version}-src.zip"  basedir="." excludes="deploy/**, build/**" />
   </target>
 
   <target name="compile">
