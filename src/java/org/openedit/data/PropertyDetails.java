@@ -15,6 +15,8 @@ import org.openedit.xml.XmlFile;
 public class PropertyDetails extends AbstractCollection 
 {
 	protected List fieldDetails;
+	protected Map fieldDetailsCached;
+	
 	protected Map fieldExternalIdCache;
 	protected Map fieldDefaults;
 	protected XmlFile fieldInputFile;
@@ -141,19 +143,28 @@ public class PropertyDetails extends AbstractCollection
 
 		return det != null;
 	}
+	
+	public Map<String,PropertyDetail> getDetailsCached()
+	{
+		if (fieldDetailsCached == null)
+		{
+			fieldDetailsCached = new HashMap(getDetails().size());
+			for (Iterator iter = getDetails().iterator(); iter.hasNext();) 
+			{
+				PropertyDetail detail = (PropertyDetail) iter.next();
+				fieldDetailsCached.put(detail.getId(),detail);
+			}
+		}
+		return fieldDetailsCached;
+	}
 
 	public PropertyDetail getDetail(String inId) {
 		if (inId == null) {
 			return null;
 		}
-		for (Iterator iter = getDetails().iterator(); iter.hasNext();) {
-			PropertyDetail detail = (PropertyDetail) iter.next();
-
-			if (inId.equals(detail.getId())) {
-				return detail;
-			}
-		}
-		return null;
+		PropertyDetail detail = getDetailsCached().get(inId);
+		
+		return detail;
 	}
 
 	public void removeDetail(String inId) {
