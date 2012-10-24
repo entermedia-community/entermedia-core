@@ -461,7 +461,7 @@ public class PropertyDetailsArchive
 		return fieldViewXmlCache;
 	}
 	
-	protected void clearCache()
+	public void clearCache()
 	{
 		getPropertyDetails().clear();
 		getViewCache().clear();
