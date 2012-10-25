@@ -26,6 +26,7 @@ public class PropertyDetail implements Data, ViewItem, Comparable
 	protected boolean fieldIsStored;
 	protected boolean fieldEditable = false;
 	protected boolean fieldFilter;  //This means export it to a list or something
+	protected boolean fieldSortable = false;
 	
 	protected boolean fieldKeyword; //this is added to the Keyword string
 	private String fieldDateFormatString;
@@ -135,7 +136,6 @@ public class PropertyDetail implements Data, ViewItem, Comparable
 	{
 		setProperty("listid", inListId);
 	}
-
 	public String getQuery() 
 	{
 		return get("query");
@@ -376,6 +376,10 @@ public class PropertyDetail implements Data, ViewItem, Comparable
 		{
 			return String.valueOf(isEditable());
 		}
+		else if ( inId.equals("sortable"))
+		{
+			return String.valueOf(isSortable());
+		}
 		else if ( inId.equals("filter"))
 		{
 			return String.valueOf(isFilter());
@@ -433,6 +437,10 @@ public class PropertyDetail implements Data, ViewItem, Comparable
 		else if ( inId.equals("editable"))
 		{
 			setEditable(Boolean.parseBoolean(inValue));
+		}
+		else if ( inId.equals("sortable"))
+		{
+			setSortable(Boolean.parseBoolean(inValue));
 		}
 		else if ( inId.equals("filter"))
 		{
@@ -515,6 +523,7 @@ public class PropertyDetail implements Data, ViewItem, Comparable
 		d.fieldKeyword = fieldKeyword;
 		d.fieldText = fieldText;
 		d.fieldDataType = fieldDataType;
+		d.fieldSortable = fieldSortable;
 		
 		d.getProperties().putAll(getProperties());
 
@@ -555,5 +564,27 @@ public class PropertyDetail implements Data, ViewItem, Comparable
 			return -1;
 		}
 		return getName().compareTo(detail.getName());
+	}
+	
+	public boolean isSortable()
+	{
+		if( fieldSortable || isDataType("date") || isDataType("boolean") )
+		{
+			return true;
+		}
+		return fieldSortable;
+	}
+	public void setSortable(boolean inSortable) 
+	{
+		fieldSortable = inSortable;
+	}
+	
+	public String getSortProperty()
+	{
+		if( !isSortable() || isDataType("date") || isDataType("boolean")  )
+		{
+			return getId();
+		}
+		return getId() + "_sorted";
 	}
 }

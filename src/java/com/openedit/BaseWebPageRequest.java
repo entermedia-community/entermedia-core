@@ -960,7 +960,7 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 		{
 			return user.getUserName();
 		}
-		return "none";
+		return "anonymous";
 	}
 	public String findValue(String inName)
 	{

@@ -41,31 +41,7 @@ public class SearcherManager
 			{
 				return null;
 			}
-			String beanName = null;
-			if( getModuleManager().contains(inCatalogId,inFieldName + "Searcher") )
-			{
-				beanName = inFieldName + "Searcher";
-				searcher = (Searcher)getModuleManager().getBean(inCatalogId,beanName);
-			}
-			else
-			{
-				if( inFieldName.endsWith("Log"))
-				{
-					beanName = "dynamicLogSearcher";					
-				}
-				else
-				{
-					//Check the properites
-					//searchertype
-					PropertyDetails details = newarchive.getPropertyDetails(inFieldName);
-					beanName = details.getBeanName();
-				}
-				searcher = (Searcher)getModuleManager().getBean(beanName);
-				if(log.isDebugEnabled())
-				{
-					log.debug("Searcher not found creating dynamic instance ");
-				}
-			}
+			searcher = loadSearcher(newarchive, inFieldName);
 			searcher.setCatalogId(inCatalogId);
 			searcher.setSearchType(inFieldName); //This may be product or orderstatus
 			//set the data
@@ -78,6 +54,37 @@ public class SearcherManager
 			getCache().put(id, searcher);
 		}
 		//log.debug("return " + id + " " + searcher);
+		return searcher;
+	}
+	protected Searcher loadSearcher(PropertyDetailsArchive newarchive, String inFieldName)
+	{
+		String inCatalogId = newarchive.getCatalogId();
+		Searcher searcher;
+		String beanName = null;
+		if( getModuleManager().contains(inCatalogId,inFieldName + "Searcher") )
+		{
+			beanName = inFieldName + "Searcher";
+			searcher = (Searcher)getModuleManager().getBean(inCatalogId,beanName);
+		}
+		else
+		{
+			if( inFieldName.endsWith("Log"))
+			{
+				beanName = "dynamicLogSearcher";					
+			}
+			else
+			{
+				//Check the properites
+				//searchertype
+				PropertyDetails details = newarchive.getPropertyDetails(inFieldName);
+				beanName = details.getBeanName();
+			}
+			searcher = (Searcher)getModuleManager().getBean(beanName);
+			if(log.isDebugEnabled())
+			{
+				log.debug("Searcher not found creating dynamic instance ");
+			}
+		}
 		return searcher;
 	}
 	public PropertyDetailsArchive getPropertyDetailsArchive(String inCatalogId)
@@ -191,9 +198,27 @@ public class SearcherManager
 		return new CompositeFilteredTracker();
 	}
 	
-	public void removeFromCache(String inCatalogId, String inSearchType)
+	public void removeFromCache(String inCatalogId, String inFieldName)
 	{
-		getCache().remove(inCatalogId + "|" +  inSearchType);
-		getModuleManager().clearBean(inCatalogId, inSearchType);
+		getCache().remove(inCatalogId + "|" +  inFieldName);
+		
+		String beanName = null;
+		if( getModuleManager().contains(inCatalogId,inFieldName + "Searcher") )
+		{
+			beanName = inFieldName + "Searcher";
+		}
+		else
+		{
+			if( inFieldName.endsWith("Log"))
+			{
+				beanName = "dynamicLogSearcher";					
+			}
+			else
+			{
+				PropertyDetails details = getPropertyDetailsArchive(inCatalogId).getPropertyDetails(inFieldName);
+				beanName = details.getBeanName();
+			}
+		}
+		getModuleManager().clearBean(inCatalogId, beanName);
 	}
 }

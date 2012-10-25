@@ -15,6 +15,8 @@ import org.openedit.xml.XmlFile;
 public class PropertyDetails extends AbstractCollection 
 {
 	protected List fieldDetails;
+	protected Map fieldDetailsCached;
+	
 	protected Map fieldExternalIdCache;
 	protected Map fieldDefaults;
 	protected XmlFile fieldInputFile;
@@ -141,19 +143,28 @@ public class PropertyDetails extends AbstractCollection
 
 		return det != null;
 	}
+	
+	public Map<String,PropertyDetail> getDetailsCached()
+	{
+		if (fieldDetailsCached == null)
+		{
+			fieldDetailsCached = new HashMap(getDetails().size());
+			for (Iterator iter = getDetails().iterator(); iter.hasNext();) 
+			{
+				PropertyDetail detail = (PropertyDetail) iter.next();
+				fieldDetailsCached.put(detail.getId(),detail);
+			}
+		}
+		return fieldDetailsCached;
+	}
 
 	public PropertyDetail getDetail(String inId) {
 		if (inId == null) {
 			return null;
 		}
-		for (Iterator iter = getDetails().iterator(); iter.hasNext();) {
-			PropertyDetail detail = (PropertyDetail) iter.next();
-
-			if (inId.equals(detail.getId())) {
-				return detail;
-			}
-		}
-		return null;
+		PropertyDetail detail = getDetailsCached().get(inId);
+		
+		return detail;
 	}
 
 	public void removeDetail(String inId) {
@@ -178,8 +189,17 @@ public class PropertyDetails extends AbstractCollection
 				String[] all = detail.getExternalIds();
 
 				if (all != null) {
-					for (int i = 0; i < all.length; i++) {
-						if (inName.equals(all[i])) {
+					for (int i = 0; i < all.length; i++) 
+					{
+						String id = all[i];
+						//strip off the : from XMP-dc:Title
+						int index = id.indexOf(':');
+						if( index > 0 )
+						{
+							id = id.substring(index + 1);
+						}
+						if (inName.equals(id) || inName.equals(id.replace(" ", ""))) 
+						{
 							found = detail;
 							getExternalIdCache().put(inName, found);
 							break;
