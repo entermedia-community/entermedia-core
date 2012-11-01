@@ -206,6 +206,12 @@ public class FilterReader
 			}
 			result = action;
 		}
+		else if (elemName.equals("referer"))
+		{
+			String target = inConfig.getAttribute("value");
+			RefererFilter filter = new RefererFilter(target);
+			result = filter;
+		}
 		else if (elemName.equals("dataproperty"))
 		{
 			result = new DataPropertyFilter(inConfig.getAttribute("name"), inConfig.getAttribute("value"));

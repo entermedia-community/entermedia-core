@@ -93,6 +93,11 @@ public class FilterWriter
 		{
 			newChild.setAttribute("name",((PathFilter)inFilter).getPath());
 		}
+		else if (elemName.equals("referer"))
+		{
+			RefererFilter filter = (RefererFilter)inFilter;
+			newChild.setAttribute("value",filter.getValue());
+		}
 		else if (elemName.equals("pageproperty"))
 		{
 			PagePropertyFilter filter = (PagePropertyFilter)inFilter;
@@ -139,8 +144,11 @@ public class FilterWriter
 		else if (elemName.equals("action"))
 		{
 			ActionFilter action = (ActionFilter)inFilter;
-			newChild.setAttribute("name",action.getActionName());
-			if( action.getProperties() != null)
+			if( action.getActionName() != null )
+			{
+				newChild.setAttribute("name",action.getActionName());
+			}
+			if( action.getConfig() != null)
 			{
 				for (Iterator iterator = action.getConfig().getChildren().iterator(); iterator.hasNext();)
 				{
