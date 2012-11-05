@@ -563,6 +563,8 @@ public class PropertyDetailsArchive
 			element.addAttribute("stored", "true");
 		if (inDetail.isEditable())
 			element.addAttribute("editable", "true");
+		if (inDetail.isSortable())
+			element.addAttribute("sortable", "true");
 
 		String type = inDetail.getDataType();
 		if (type != null)
