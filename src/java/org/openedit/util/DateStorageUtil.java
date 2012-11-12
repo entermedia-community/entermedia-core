@@ -176,7 +176,7 @@ public class DateStorageUtil
 		}
 		catch( Exception ex)
 		{
-			log.error("Could not parse date " + inStoredDate);
+			log.debug("Could not parse date " + inStoredDate);
 		}
 		return null;
 	}
