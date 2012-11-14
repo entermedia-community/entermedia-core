@@ -89,7 +89,16 @@ public abstract class HitTracker implements Serializable, Collection
 		return null;
 		//throw new OpenEditException("getById Not implemented");
 	}
-
+	public Collection<String> getSourcePaths()
+	{
+		List paths = new ArrayList();
+		for (Iterator iterator = iterator(); iterator.hasNext();)
+		{
+			Data	data = (Data) iterator.next();
+			paths.add(data.getSourcePath());
+		}
+		return paths;
+	}
 	public List<Data> getPageOfHits()
 	{
 		if( fieldCurrentPage == null)
