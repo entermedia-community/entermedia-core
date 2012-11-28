@@ -3,11 +3,37 @@ package com.openedit.util;
 import java.util.Map;
 
 import org.openedit.Data;
+import org.openedit.data.SearcherManager;
+
+import com.openedit.WebPageRequest;
 
 
 public class Replacer
 {
-	public String replace(String inCode, Map<String, String> inValues)
+	protected SearcherManager fieldSearcherManager;
+	public SearcherManager getSearcherManager()
+	{
+		return fieldSearcherManager;
+	}
+
+	public void setSearcherManager(SearcherManager inSearcherManager)
+	{
+		fieldSearcherManager = inSearcherManager;
+	}
+
+	public String getDefaultCatalogId()
+	{
+		return fieldDefaultCatalogId;
+	}
+
+	public void setDefaultCatalogId(String inDefaultCatalogId)
+	{
+		fieldDefaultCatalogId = inDefaultCatalogId;
+	}
+
+	protected String fieldDefaultCatalogId;
+	
+	public String replace(String inCode, Map<String, Object> inValues)
 	{
 		if( inCode == null)
 		{
@@ -28,8 +54,12 @@ public class Replacer
 					{
 						String objectname = key.substring(0,dot);
 						
-						Object object = inValues.get(objectname);
-						if( object instanceof Data)
+						Object object = inValues.get(objectname);  //123  {system.user.firstname}
+						if( object instanceof String )
+						{
+							object = getData(objectname,(String)object); //division
+						}
+						if(object instanceof Data)
 						{
 							Data data = (Data)object;
 							String method = key.substring(dot+1);
@@ -55,5 +85,14 @@ public class Replacer
 			
 		}
 		return inCode;
+	}
+
+	protected Data getData(String inType, String inId)
+	{
+		if( fieldSearcherManager == null )
+		{
+			return null;
+		}
+		return getSearcherManager().getData(getDefaultCatalogId(), inType, inId);
 	}
 }
