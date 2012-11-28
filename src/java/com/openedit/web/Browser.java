@@ -39,7 +39,7 @@ public class Browser
 
 	public static final int IE_EDIT_WIDTH = 83;		//	percentage width of edit iframe in IE
 	public static final int MOZILLA_EDIT_WIDTH = 100;	//	percentage width of edit iframe in Mozilla
-	protected String fieldMajorVersion = "";
+	protected int fieldMajorVersion = 0;
 	protected String fieldMinorVersion = "";
 	protected String fieldUserAgent;
 	protected String fieldVersion = "";
@@ -77,7 +77,7 @@ public class Browser
 	 *
 	 * @return
 	 */
-	public String getMajorVersion()
+	public int getMajorVersion()
 	{
 		return fieldMajorVersion;
 	}
@@ -105,6 +105,19 @@ public class Browser
 	public boolean isHtml5VideoOnly()
 	{
 		return (getBrowserType() == SAFARI_IPAD_BROWSER);
+	}
+
+	public boolean isHtml5Browser()
+	{
+		if ( isMSIE() )
+		{
+			int major = getMajorVersion();
+			if( major != 0 && major < 9)
+			{
+				return false;
+			}
+		}
+		return true;
 	}
 
 	/**
@@ -145,9 +158,23 @@ public class Browser
 		fieldBrowserType = inBrowserType;
 	}
 
-	protected void setMajorVersion(String inMajorVersion)
+	protected void setMajorVersion(int inMajorVersion)
 	{
 		fieldMajorVersion = inMajorVersion;
+	}
+	protected void setMajorVersion(String inMajorVersion)
+	{
+		if( inMajorVersion != null && inMajorVersion.length() > 0 )
+		{
+			try
+			{
+				fieldMajorVersion  = Integer.parseInt(inMajorVersion);
+			}
+			catch( NumberFormatException ex )
+			{
+				//Fail?
+			}
+		}
 	}
 
 	protected void setMinorVersion(String inMinorVersion)
@@ -233,13 +260,20 @@ public class Browser
 	protected String extractNumber(String inVersion)
 	{
 		StringBuffer out = new StringBuffer(inVersion.length());
+		boolean founddot = false;
 		for (int i = 0; i < inVersion.length(); i++)
 		{
 			char c = inVersion.charAt(i);
-			if( Character.isDigit(c) || c == '.' )
+			if( Character.isDigit(c) )
 			{
 					out.append(c);
 			}
+			else if( founddot == false && c == '.' )
+			{
+				founddot = true; //one dot only please
+				out.append(c);
+			}
+
 		}
 		String result = out.toString().toLowerCase();
 		return result;

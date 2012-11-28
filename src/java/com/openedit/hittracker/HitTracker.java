@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.collections.set.ListOrderedSet;
 import org.openedit.Data;
 import org.openedit.data.PropertyDetail;
 import org.openedit.util.DateStorageUtil;
@@ -606,7 +607,16 @@ public abstract class HitTracker implements Serializable, Collection
 		throw new OpenEditException("Search Query must be set");
 
 	}
-	
+
+	public HitTracker getSelectedHitracker()
+	{
+		ListHitTracker hits = new ListHitTracker(getSelectedHits());
+		hits.setHitsName("selected" + getHitsName());
+		hits.setSessionId("selected" + getSessionId() );
+		hits.selectAll();
+		return hits;
+	}
+
 	public List getSelectedHits(){
 		ArrayList hits = new ArrayList();
 		for (Iterator iterator = getSelections().iterator(); iterator.hasNext();)
@@ -617,13 +627,28 @@ public abstract class HitTracker implements Serializable, Collection
 		}
 		return hits;
 	}
+	public boolean hasMultipleSelections()
+	{
+		if( fieldSelections != null && fieldSelections.size() > 1 )
+		{
+			return true;
+		}
+		return false;
+	}
+	public boolean hasSelections()
+	{
+		if( fieldSelections != null && fieldSelections.size() > 0 )
+		{
+			return true;
+		}
+		return false;
+	}
 	
 	public Set getSelections()
 	{
 		if (fieldSelections == null)
 		{
-			fieldSelections = new HashSet();
-
+			fieldSelections = new ListOrderedSet();
 		}
 
 		return fieldSelections;
