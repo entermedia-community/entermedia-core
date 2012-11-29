@@ -11,6 +11,16 @@ import com.openedit.WebPageRequest;
 public class Replacer
 {
 	protected SearcherManager fieldSearcherManager;
+	protected boolean fieldAlwaysReplace;
+	
+	public boolean isAlwaysReplace() {
+		return fieldAlwaysReplace;
+	}
+
+	public void setAlwaysReplace(boolean inAlwaysReplace) {
+		fieldAlwaysReplace = inAlwaysReplace;
+	}
+
 	public SearcherManager getSearcherManager()
 	{
 		return fieldSearcherManager;
@@ -58,6 +68,9 @@ public class Replacer
 						if( object instanceof String )
 						{
 							object = getData(objectname,(String)object); //division
+							if(object == null){
+								
+							}
 						}
 						if(object instanceof Data)
 						{
@@ -67,6 +80,10 @@ public class Replacer
 						}
 					}
 				}
+				if(isAlwaysReplace() && variable == null){
+					variable=" ";
+				}
+				
 				if( variable != null)
 				{
 					String sub = variable.toString();
