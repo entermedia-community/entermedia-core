@@ -610,6 +610,10 @@ public abstract class HitTracker implements Serializable, Collection
 
 	public HitTracker getSelectedHitracker()
 	{
+		if( getSessionId().startsWith("selected") )
+		{
+			return this;
+		}
 		ListHitTracker hits = new ListHitTracker(getSelectedHits());
 		hits.setHitsName("selected" + getHitsName());
 		hits.setSessionId("selected" + getSessionId() );
