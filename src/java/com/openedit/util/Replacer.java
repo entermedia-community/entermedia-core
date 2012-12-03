@@ -53,53 +53,53 @@ public class Replacer
 		while( (start = inCode.indexOf("${",start)) != -1)
 		{
 			int end = inCode.indexOf("}",start);
-			if( end != -1)
+			if( end == -1)
 			{
-				String key = inCode.substring(start+2,end);
-				Object variable = inValues.get(key); //check for property
-				if( variable == null )
+				break;
+			}
+			String key = inCode.substring(start+2,end);
+			Object variable = inValues.get(key); //check for property
+			if( variable == null )
+			{
+				int dot = key.indexOf('.');
+				if( dot > 0)
 				{
-					int dot = key.indexOf('.');
-					if( dot > 0)
+					String objectname = key.substring(0,dot);
+					
+					Object object = inValues.get(objectname);  //123  {system.user.firstname}
+					if( object instanceof String )
 					{
-						String objectname = key.substring(0,dot);
-						
-						Object object = inValues.get(objectname);  //123  {system.user.firstname}
-						if( object instanceof String )
+						object = getData(objectname,(String)object); //division
+						if(isAlwaysReplace() && object == null)
 						{
-							object = getData(objectname,(String)object); //division
-							if(object == null){
-								
-							}
-						}
-						if(object instanceof Data)
-						{
-							Data data = (Data)object;
-							String method = key.substring(dot+1);
-							variable = data.get(method);
+							variable="";
 						}
 					}
-				}
-				if(isAlwaysReplace() && variable == null){
-					variable=" ";
-				}
-				
-				if( variable != null)
-				{
-					String sub = variable.toString();
-					sub = replace(sub,inValues);
-					inCode = inCode.substring(0,start) + sub + inCode.substring(end+1);
-					if(sub.length() <= end){
-						start = end-sub.length();
-					}else{
-						start =  sub.length();
+					if(object instanceof Data)
+					{
+						Data data = (Data)object;
+						String method = key.substring(dot+1);
+						variable = data.get(method);
 					}
-				}else{
-					start = end;
 				}
 			}
-		
+			if( isAlwaysReplace() && variable == null )
+			{
+				variable="";
+			}
 			
+			
+			if( variable != null)
+			{
+				String sub = variable.toString();
+				sub = replace(sub,inValues);
+				inCode = inCode.substring(0,start) + sub + inCode.substring(end+1);
+				start = start + sub.length() + 1;
+			}
+			else
+			{
+				start = end; //could not find a hit, go to the next one
+			}
 		}
 		return inCode;
 	}
