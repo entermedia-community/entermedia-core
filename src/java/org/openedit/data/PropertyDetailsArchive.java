@@ -546,7 +546,7 @@ public class PropertyDetailsArchive
 		element.addAttribute("id", inDetail.getId());
 		element.addAttribute("externalid", inDetail.getExternalId());
 		element.addAttribute("externaltype", inDetail.getExternalType());
-		if(!inDetail.getCatalogId().equals(getCatalogId())){
+		if(inDetail.getCatalogId() != null && !inDetail.getCatalogId().equals(getCatalogId())){
 			element.addAttribute("catalogid", inDetail.getCatalogId());
 		}
 		if (inDetail.getText() != null)
