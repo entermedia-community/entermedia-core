@@ -36,22 +36,29 @@ public class SearcherManager
 		Searcher searcher = (Searcher)getCache().get(id);
 		if( searcher == null )
 		{
-			PropertyDetailsArchive newarchive = getPropertyDetailsArchive(inCatalogId);
-			if( inFieldName == null)
+			synchronized (this)
 			{
-				return null;
+				searcher = (Searcher)getCache().get(id);
+				if( searcher == null )
+				{
+					PropertyDetailsArchive newarchive = getPropertyDetailsArchive(inCatalogId);
+					if( inFieldName == null)
+					{
+						return null;
+					}
+					searcher = loadSearcher(newarchive, inFieldName);
+					searcher.setCatalogId(inCatalogId);
+					searcher.setSearchType(inFieldName); //This may be product or orderstatus
+					//set the data
+					searcher.setPropertyDetailsArchive(newarchive);
+					searcher.setSearcherManager(this);
+					if(log.isDebugEnabled())
+					{
+						log.debug("Created New Searcher: Catalog = " + searcher.getCatalogId() + "SearchType = " + searcher.getSearchType() + "Searcher = " + searcher.getClass() );
+					}
+					getCache().put(id, searcher);
+				}
 			}
-			searcher = loadSearcher(newarchive, inFieldName);
-			searcher.setCatalogId(inCatalogId);
-			searcher.setSearchType(inFieldName); //This may be product or orderstatus
-			//set the data
-			searcher.setPropertyDetailsArchive(newarchive);
-			searcher.setSearcherManager(this);
-			if(log.isDebugEnabled())
-			{
-				log.debug("Created New Searcher: Catalog = " + searcher.getCatalogId() + "SearchType = " + searcher.getSearchType() + "Searcher = " + searcher.getClass() );
-			}
-			getCache().put(id, searcher);
 		}
 		//log.debug("return " + id + " " + searcher);
 		return searcher;
@@ -85,6 +92,7 @@ public class SearcherManager
 				log.debug("Searcher not found creating dynamic instance ");
 			}
 		}
+		log.info("Loaded " + inFieldName + " with " + beanName);
 		return searcher;
 	}
 	public PropertyDetailsArchive getPropertyDetailsArchive(String inCatalogId)

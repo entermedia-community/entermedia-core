@@ -221,9 +221,9 @@ public class ListHitTracker extends HitTracker
 		return super.getValue(inHit, inKey);
 	}
 	
-	public String getIndexId()
-	{
-		return null; //ListHitTrackers are always current
-	}
+//	public String getIndexId()
+//	{
+//		return null; //ListHitTrackers are always current
+//	}
 
 }

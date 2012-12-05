@@ -521,10 +521,6 @@ public class FileUtils
 				return false;
 			}
 		}
-		if( inPath.contains("/ ") )
-		{
-			return false;
-		}
 		//log.info(inPath);
 		return true;
 	}

@@ -28,7 +28,7 @@ public class PermissionSorter implements Comparator<Permission>
 			{
 				ordering = "0";
 			}
-			getSortOrder().put(data.getName(), Integer.valueOf( ordering ) );
+			getSortOrder().put(data.getId(), Integer.valueOf( ordering ) );
 		}
 	}
 
@@ -46,19 +46,16 @@ public class PermissionSorter implements Comparator<Permission>
 	{
 		Integer ordering1 = getSortOrder().get(inO1.getName());
 		Integer ordering2 = getSortOrder().get(inO2.getName());
-		if( ordering1 != null && ordering2 != null )
-		{
-			return ordering1.compareTo(ordering2);
-		}
+
 		if( ordering1 == null )
 		{
-			return 0; //null means it lame and can go first
+			ordering1 = 0;
 		}
 		if( ordering2 == null )
 		{
-			return 1; //null means can go last 
+			ordering2 = 0;
 		}
-		return 0;
+		return ordering1.compareTo(ordering2);
 	}
 
 }

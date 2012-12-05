@@ -294,12 +294,12 @@ public class FileRepository extends  BaseRepository
 
 		boolean exists = file.exists();
 
-		if ( !exists && inPath.endsWith(".html") )
-		{
-			String xmlPath = PathUtilities.extractPagePath( inPath )+ ".xml";
-			file = getFile( inPath );
-			exists = file.exists();
-		}
+//		if ( !exists && inPath.endsWith(".html") )
+//		{
+//			String xmlPath = PathUtilities.extractPagePath( inPath )+ ".xml";
+//			file = getFile( inPath );
+//			exists = file.exists();
+//		}
 		return exists;
 	}
 	

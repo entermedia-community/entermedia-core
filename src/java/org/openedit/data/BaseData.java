@@ -14,6 +14,8 @@ import com.openedit.OpenEditException;
 
 public class BaseData implements MultiValued, Comparable, Cloneable
 {
+	public static final Data NULL = new BaseData(); 
+	
 	protected Map fieldMap;
 	protected String fieldId;
 
