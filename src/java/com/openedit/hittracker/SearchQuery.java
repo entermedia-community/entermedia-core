@@ -438,6 +438,7 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 				return term;
 			}
 		};
+		term.setOperation("matches");
 		term.setDetail(inDetail);
 		term.setValue(inVal);
 		addTerm(term);
@@ -452,7 +453,7 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 			{
 				if (getDetail().getId() != null)
 				{
-					return getDetail().getId() + ":*" + getValue();
+					return getDetail().getId() + ":*" + getValue() + "*";
 				}
 				else
 				{
@@ -472,6 +473,7 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 				return term;
 			}
 		};
+		term.setOperation("contains");
 		term.setDetail(inDetail);
 		term.setValue(inVal);
 		addTerm(term);
@@ -516,7 +518,7 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	{
 		if (!inVal.endsWith("*"))
 		{
-			inVal = inVal + "*";
+			inVal = inVal + "*";  //TODO: Remove this
 		}
 
 		Term term = new Term()
@@ -540,6 +542,7 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 				return term;
 			}
 		};
+		term.setOperation("startswith");
 		term.setDetail(inField);
 		term.setValue(inVal);
 		addTerm(term);

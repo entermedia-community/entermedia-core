@@ -205,7 +205,11 @@ public class UserProfileManager
 		searcher = getSearcherManager().getSearcher(inCatalogId, "libraryroles");
 		if (inUserprofile.getSettingsGroup() != null)
 		{
-			found = searcher.fieldSearch("roleid", inUserprofile.getSettingsGroup().getId());
+			SearchQuery query = searcher.createSearchQuery();
+			query.addOrsGroup("roleid", "anonymous " + inUserprofile.getSettingsGroup().getId());
+			found = searcher.search(query);
+			
+			//= searcher.fieldSearch("roleid", inUserprofile.getSettingsGroup().getId());
 
 			for (Iterator iterator = found.iterator(); iterator.hasNext();)
 			{
@@ -213,6 +217,13 @@ public class UserProfileManager
 				all.add(data.get("libraryid"));
 			}
 		}
+
+		
+	
+
+		
+		
+		
 		inUserprofile.setCombinedLibraries(all);
 	}
 

@@ -88,6 +88,12 @@ public class XmlSearcher extends BaseSearcher
 		SearchQuery query = createSearchQuery();
 		query.addMatches("id","*");
 		query.setCatalogId(getCatalogId());
+		if( inReq != null )
+		{
+			String sort = inReq.findValue("sortby");
+			query.setSortBy(sort);
+		}
+		
 		HitTracker tracker = search(query);
 		if (inReq != null)
 		{
@@ -127,7 +133,6 @@ public class XmlSearcher extends BaseSearcher
 				{
 					return false;
 				}
-			
 			} 
 			else if("afterdate".equals(term.getOperation()))
 			{
@@ -143,7 +148,6 @@ public class XmlSearcher extends BaseSearcher
 				{
 					return false;
 				}
-				 
 			}
 			else if("beforedate".equals(term.getOperation()))
 			{
@@ -161,8 +165,6 @@ public class XmlSearcher extends BaseSearcher
 						before = (Date)values[0];						
 					}
 				}
-				
-				
 				String id = term.getDetail().getId();//effectivedate
 				String date = inElement.attributeValue(id);
 				if(date == null)
@@ -216,20 +218,25 @@ public class XmlSearcher extends BaseSearcher
 				{
 					attribval = inElement.attributeValue(name);
 				}
+				if( attribval != null )
+				{
+					attribval = attribval.toLowerCase();
+				}
+				
 				if( attribval == null && term.getDetail().isBoolean() )
 				{
 					attribval = "false";
 				}				
 				if( "not".equals( term.getOperation() ) )
 				{
-					if (value != null && attribval != null && ("*".equals(value) || PathUtilities.match(attribval.toLowerCase(), value)))
+					if (value != null && attribval != null && ("*".equals(value) || doesMatch(term.getOperation(),attribval,value) ) )
 					{
 						return false;
 					}
 				}
 				else
 				{
-					if (value != null && attribval != null && ("*".equals(value) || PathUtilities.match(attribval.toLowerCase(), value)))
+					if (value != null && attribval != null && ("*".equals(value) || doesMatch(term.getOperation(),attribval,value) ) )
 					{
 						if (!inQuery.isAndTogether())
 						{
@@ -250,6 +257,15 @@ public class XmlSearcher extends BaseSearcher
 		return false;
 	}
 	
+	protected boolean doesMatch(String inOperation, String inAttribval, String inValue)
+	{
+		if( "contains".equals(inOperation) )
+		{
+			return inAttribval.contains(inValue);
+		}
+		return	PathUtilities.match(inAttribval.toLowerCase(), inValue);
+	}
+
 	public String getIndexId()
 	{
 		XmlFile settings = getXmlFile();

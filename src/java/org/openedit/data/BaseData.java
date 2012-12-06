@@ -51,6 +51,17 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 		}
 		return String.valueOf(object);
 	}
+	public boolean getBoolean(String inId)
+	{
+		String val = get(inId);
+		if( val != null)
+		{
+			return Boolean.parseBoolean(val);
+		}
+		return false;
+		
+	}
+	
 	public float getFloat(String inId)
 	{
 		String val = get(inId);

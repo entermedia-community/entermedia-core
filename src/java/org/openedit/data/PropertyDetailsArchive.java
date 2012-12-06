@@ -107,34 +107,34 @@ public class PropertyDetailsArchive
 		if (!getPageManager().getRepository().doesExist(path))
 		{
 			path = "/" + getCatalogId() + "/data" + inPath;
-			if (!getPageManager().getPage(path).exists())
-			{
-
-				// now check the extensions
-				if (!(path.contains("dataextensions") || path.contains("translation")))
-				{
-					HitTracker hits = getSearcherManager().getList(getCatalogId(), "dataextensions");
-					for (Iterator iterator = hits.iterator(); iterator.hasNext();)
-					{
-						Data hit = (Data) iterator.next();
-						String catalogid = hit.get("catalogid");
-						String remotepath = "/" + catalogid + "/data/" + inPath;
-						if (getPageManager().getPage(remotepath).exists())
-						{
-							return remotepath;
-						}
-					}
-				}
-
-				// legacy support
-				if (inPath.startsWith("/fields/"))
-				{
-					inPath = inPath.replace(".xml", "properties.xml");
-					inPath = inPath.replace("/fields/", "/");
-				}
-				path = "/" + getCatalogId() + "/configuration" + inPath;
-
-			}
+//			if (!getPageManager().getPage(path).exists())
+//			{
+//				/*
+//				// now check the extensions
+//				if (!(path.contains("dataextensions") || path.contains("translation")))
+//				{
+//					HitTracker hits = getSearcherManager().getList(getCatalogId(), "dataextensions");
+//					for (Iterator iterator = hits.iterator(); iterator.hasNext();)
+//					{
+//						Data hit = (Data) iterator.next();
+//						String catalogid = hit.get("catalogid");
+//						String remotepath = "/" + catalogid + "/data/" + inPath;
+//						if (getPageManager().getPage(remotepath).exists())
+//						{
+//							return remotepath;
+//						}
+//					}
+//				}
+//				*/
+//				// legacy support
+//				if (inPath.startsWith("/fields/"))
+//				{
+//					inPath = inPath.replace(".xml", "properties.xml");
+//					inPath = inPath.replace("/fields/", "/");
+//				}
+//				path = "/" + getCatalogId() + "/configuration" + inPath;
+//
+//			}
 		}
 		return path;
 	}
@@ -546,7 +546,7 @@ public class PropertyDetailsArchive
 		element.addAttribute("id", inDetail.getId());
 		element.addAttribute("externalid", inDetail.getExternalId());
 		element.addAttribute("externaltype", inDetail.getExternalType());
-		if(!inDetail.getCatalogId().equals(getCatalogId())){
+		if(inDetail.getCatalogId() != null && !inDetail.getCatalogId().equals(getCatalogId())){
 			element.addAttribute("catalogid", inDetail.getCatalogId());
 		}
 		if (inDetail.getText() != null)

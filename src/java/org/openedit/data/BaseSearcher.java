@@ -1568,14 +1568,17 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	public PropertyDetail getDetailForView(String inView, String inFieldName, User inUser)
 	{
 		PropertyDetails details = getPropertyDetailsArchive().getPropertyDetailsCached(getSearchType());
-		PropertyDetail detail = getPropertyDetailsArchive().getDetail(details, inView, inFieldName, inUser);
 		if (details == null)
 		{
 			return null;
 		}
+		PropertyDetail detail = null;
+		if( inView != null )
+		{
+			detail = getPropertyDetailsArchive().getDetail(details, inView, inFieldName, inUser);
+		}
 		if (detail == null)
 		{
-			// throw new OpenEditRuntimeException("No detail found ");
 			detail = details.getDetail(inFieldName);
 		}
 		return detail;
