@@ -266,7 +266,7 @@
 	<bean id="executorManager" class="com.openedit.util.ExecutorManager" >
 	</bean>
 
-	<bean id="permissionManager" class="com.openedit.page.PermissionManager" singleton="true" >
+	<bean id="permissionManager" class="com.openedit.page.PermissionManager" singleton="false" >
 		<property name="searcherManager"><ref bean="searcherManager"/></property>
 	</bean>
 
