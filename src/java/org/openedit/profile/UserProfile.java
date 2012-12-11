@@ -45,7 +45,9 @@ public class UserProfile extends ElementData
 
 	public User getUser()
 	{
-		return fieldUser;
+	
+
+	return fieldUser;
 	}
 
 	public void setUser(User inUser)
@@ -90,17 +92,24 @@ public class UserProfile extends ElementData
 
 	public boolean isEnabled(String inPreference)
 	{
-		String val = getValue(inPreference);
+		String val = get(inPreference);
 		return Boolean.parseBoolean(val);
 	}
 
-	public String getValue(String inPreference)
+//	@Override
+//	public String get(String inId) {
+//		// TODO Auto-generated method stub
+//		return getValue(inId);
+//	}
+//	
+	
+	public String get(String inPreference)
 	{
 		if (inPreference == null)
 		{
 			return null;
 		}
-		String val = get(inPreference);
+		String val = super.get(inPreference);
 
 		if (val == null && getSettingsGroup() != null)
 		{
@@ -114,9 +123,11 @@ public class UserProfile extends ElementData
 		return val;
 	}
 
+	
+	
 	public Collection getValues(String inPreference)
 	{
-		String val = getValue(inPreference);
+		String val = get(inPreference);
 
 		if (val == null)
 			return null;
@@ -142,7 +153,7 @@ public class UserProfile extends ElementData
 			if (end != -1)
 			{
 				String key = value.substring(start + 2, end);
-				String variable = getValue(key); // check for property
+				String variable = get(key); // check for property
 
 				if (variable != null)
 				{
@@ -283,14 +294,14 @@ public class UserProfile extends ElementData
 	public String getShortDescription()
 	{
 		StringBuffer out = new StringBuffer();
-		if ( get("firstname") != null)
+		if ( get("firstName") != null)
 		{
-			out.append( get("firstname") );
+			out.append( get("firstName") );
 			out.append(" ");
 		}
-		if (  get("lastname") != null)
+		if (  get("lastName") != null)
 		{
-			out.append(get("lastname"));
+			out.append(get("lastName"));
 		}
 		if( out.length() == 0)
 		{
@@ -356,7 +367,7 @@ public class UserProfile extends ElementData
 	public int getHitsPerPageForSearchType(String inResultsView) throws Exception
 	{
 		String view = inResultsView + "hitsperpage";
-		String value = getValue(view);
+		String value = get(view);
 		if (value == null)
 		{
 			return 15;
@@ -376,7 +387,7 @@ public class UserProfile extends ElementData
 
 	public String getSortForSearchType(String inResultsType)
 	{
-		String value = getValue(inResultsType + "sort");
+		String value = get(inResultsType + "sort");
 		return value;
 	}
 
@@ -396,7 +407,7 @@ public class UserProfile extends ElementData
 
 	public String getViewForResultType(String inResultsView)
 	{
-		String view = getValue(inResultsView);
+		String view = get(inResultsView);
 		return view;
 	}
 
