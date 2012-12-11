@@ -111,9 +111,9 @@ public class UserProfile extends ElementData
 		}
 		String val = super.get(inPreference);
 
-		if (val == null && getSettingsGroup() != null)
+		if (val == null && fieldSettingsGroup != null)
 		{
-			val = getSettingsGroup().get(inPreference);
+			val = fieldSettingsGroup.get(inPreference);
 		}
 		if (val == null && getUser() != null)
 		{
@@ -500,6 +500,7 @@ public class UserProfile extends ElementData
 			if ("lastname".equalsIgnoreCase(inId))
 			{
 				getUser().setLastName(inValue);
+
 			}
 			if ("email".equalsIgnoreCase(inId))
 			{
@@ -509,6 +510,9 @@ public class UserProfile extends ElementData
 			{
 				getUser().setPassword(inValue);
 			}
+		}
+		if(inId.equals("settingsgroup")){
+			setSettingsGroup("settingsgroup");
 		}
 		// TODO Auto-generated method stub
 		super.setProperty(inId, inValue);
