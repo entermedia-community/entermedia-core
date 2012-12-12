@@ -111,9 +111,9 @@ public class UserProfile extends ElementData
 		}
 		String val = super.get(inPreference);
 
-		if (val == null && fieldSettingsGroup != null)
+		if (val == null && getSettingsGroup() != null)
 		{
-			val = fieldSettingsGroup.get(inPreference);
+			val = getSettingsGroup().get(inPreference);
 		}
 		if (val == null && getUser() != null)
 		{
@@ -186,7 +186,7 @@ public class UserProfile extends ElementData
 	{
 		if (fieldSettingsGroup == null)
 		{
-			String groupid = get("settingsgroup");
+			String groupid = super.get("settingsgroup");
 			if (groupid == null)
 			{
 				groupid = "guest";
