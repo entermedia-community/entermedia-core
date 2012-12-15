@@ -110,7 +110,7 @@ public class XmlSearcher extends BaseSearcher
 
 	public void reIndexAll() throws OpenEditException
 	{
-		
+		getCache().clear();
 	}
 	
 	public boolean passes(Element inElement, SearchQuery inQuery) throws ParseException
