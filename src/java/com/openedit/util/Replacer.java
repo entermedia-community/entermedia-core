@@ -94,7 +94,7 @@ public class Replacer
 				String sub = variable.toString();
 				sub = replace(sub,inValues);
 				inCode = inCode.substring(0,start) + sub + inCode.substring(end+1);
-				start = start + sub.length() + 1;
+				start = start + sub.length();
 			}
 			else
 			{
