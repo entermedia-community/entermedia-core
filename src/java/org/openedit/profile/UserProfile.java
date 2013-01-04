@@ -109,8 +109,17 @@ public class UserProfile extends ElementData
 		{
 			return null;
 		}
+		
 		String val = super.get(inPreference);
-
+		if(val == null  && inPreference.equals("firstname")){
+			val = super.get("firstName");
+		}
+		
+		if(val == null && inPreference.equals("lastname")){
+			val = super.get("lastName");
+		}
+		
+		
 		if (val == null && getSettingsGroup() != null)
 		{
 			val = getSettingsGroup().get(inPreference);
@@ -274,22 +283,13 @@ public class UserProfile extends ElementData
 	public String toString()
 	{
 
-		return getScreenName();
+		return getShortDescription();
 		
 		
 		
 
 	}
-	public String getScreenName()
-	{
-		String sn = (String)get("screenname");
-		
-		if (sn == null)
-		{
-			return getShortDescription();
-		}
-		return sn;
-	}
+	
 	
 	public String getShortDescription()
 	{
@@ -298,7 +298,7 @@ public class UserProfile extends ElementData
 		{
 			out.append( get("firstName") );
 			out.append(" ");
-		}
+		} 
 		if (  get("lastName") != null)
 		{
 			out.append(get("lastName"));
