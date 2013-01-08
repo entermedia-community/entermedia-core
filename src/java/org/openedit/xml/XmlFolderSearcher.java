@@ -1,5 +1,6 @@
 package org.openedit.xml;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -13,7 +14,6 @@ import org.openedit.Data;
 import com.openedit.OpenEditException;
 import com.openedit.OpenEditRuntimeException;
 import com.openedit.hittracker.HitTracker;
-import com.openedit.hittracker.SearchQuery;
 import com.openedit.page.Page;
 import com.openedit.page.manage.PageManager;
 import com.openedit.users.User;
@@ -77,6 +77,16 @@ public class XmlFolderSearcher extends XmlSearcher
 				}
 				
 			}
+			//remove deleted
+			for (Iterator iterator = new ArrayList(composite.getElements()).iterator(); iterator.hasNext();)
+			{
+				Element element = (Element) iterator.next();
+				if ( "deleted".equals( element.attributeValue("recordstatus") ) )
+				{
+					composite.getRoot().remove(element);
+				}
+			}
+			
 			return composite;
 		} catch ( OpenEditException ex)
 		{
@@ -93,7 +103,8 @@ public class XmlFolderSearcher extends XmlSearcher
 					.hasNext();) 
 			{
 				Element row = (Element) iterator.next();
-				if( !noDups || getElementById(root,row.attributeValue("id")) == null)
+				Element existing = getElementById(root,row.attributeValue("id"));
+				if( !noDups || existing == null )
 				{
 					row.setParent(null);
 					root.add(row);
@@ -125,26 +136,35 @@ public class XmlFolderSearcher extends XmlSearcher
 				+ "/" + getSearchType() + "/custom.xml";
 		Page page = getPageManager().getPage(path);
 		getPageManager().removePage(page);
-				
+		clearIndex();
+		HitTracker all = getAllHits();
+		for (Iterator iterator = all.iterator(); iterator.hasNext();)
+		{
+			Data data = (Data)iterator.next();
+			delete(data,inUser);
+		}
+
 	}
 	
 	public void delete(Data inData, User inUser)
 	{
-		String path = "/WEB-INF/data/" + getCatalogId() + "/lists"
-		+ "/" + getSearchType() + "/custom.xml";
-		XmlFile settings = getXmlArchive().getXml(path);
-		Element record = settings.getElementById(inData.getId());
-		if( record != null)
-		{
-			settings.getRoot().remove(record);
-			getXmlArchive().saveXml(settings, inUser);
-		}
-		clearIndex();
-
+		saveData(inData,inUser,true);
 	}
-	
 	public void saveData(Data inData, User inUser)
 	{
+		saveData(inData,inUser,false);
+	}	
+	public void saveData(Data inData, User inUser, boolean delete)
+	{
+		if( delete )
+		{
+			inData.setProperty("recordstatus", "deleted");
+		}
+		else
+		{
+			inData.setProperty("recordstatus", null);
+		}
+
 		//If this element is manipulated then the instance is the same
 		//No need to read it ElementData data = (ElementData)inData;
 		String path = "/WEB-INF/data/" + getCatalogId() + "/lists"
