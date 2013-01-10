@@ -3,6 +3,7 @@
  */
 package com.openedit.util;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,8 +14,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -129,11 +128,11 @@ public class Exec
 		ExecCommand cachedCommand = (ExecCommand)fieldCachedCommands.get(inCommandKey);
 		if(cachedCommand == null)
 		{
-			String os = System.getProperty("os.name").toUpperCase();
 			//we need to search the xml file
 			XmlFile file = fieldXmlArchive.getXml(fieldXmlCommandsFilename,"commandmaps");
 			if (file != null) 
 			{
+				String os = System.getProperty("os.name").toUpperCase();
 				Iterator<Element> iter = (Iterator) file.getElements("commandmap");
 				while (iter.hasNext()) {
 					// check for correct os
@@ -234,66 +233,45 @@ public class Exec
 			}
 			
 			Process proc = Runtime.getRuntime().exec(inCommand,env,inRunFrom);
-			int ret = 0;
-			if (inSaveOutput || isOnWindows() ) //windows locks up sometimes unless this is done. Is this still true?
-			{
-				InputStreamHandler reader1 = new InputStreamHandler();
-				reader1.setStream(proc.getInputStream());
-				getExecutorManager().execute(reader1);
 
-				InputStreamHandler errreader = new InputStreamHandler();
-				errreader.setStream(proc.getErrorStream());
-				getExecutorManager().execute(errreader);
-				
-				if(inputStream != null)
+			InputStreamHandler reader1 = new InputStreamHandler(inSaveOutput);
+			reader1.setStream(proc.getInputStream());
+			getExecutorManager().execute(reader1);
+
+			InputStreamHandler errreader = new InputStreamHandler(inSaveOutput);
+			errreader.setStream(proc.getErrorStream());
+			getExecutorManager().execute(errreader);
+			
+			if(inputStream != null)
+			{
+				OutputStream out = proc.getOutputStream();
+				try
 				{
-					OutputStream out = proc.getOutputStream();
-					try
-					{
-						getFiller().fill(inputStream,out);
-						
-					}
-					finally
-					{
-						getFiller().close(inputStream);
-						getFiller().close(out);
-					}
+					getFiller().fill(inputStream,out);
+					
 				}
-				
-				ret = proc.waitFor();
-				
-				String stdo = reader1.getText();
-				if (stdo != null && stdo.length() > 0)
+				finally
 				{
-					result.setStandardOut(stdo);
-				}
-				String stder = errreader.getText();
-				if (stder != null && stder.length() > 0)
-				{
-					result.setStandardError(stder);
-				}
-				if( ret != 0 )
-				{
-					log.error("Error: " + ret + " stderr: " + stder + " stdo:" + stdo + " when running " + com);
+					getFiller().close(inputStream);
+					getFiller().close(out);
 				}
 			}
-			else
+			
+			int ret = proc.waitFor();
+			
+			String stdo = reader1.getText();
+			if (stdo != null && stdo.length() > 0)
 			{
-				if(inputStream != null)
-				{
-					OutputStream out = proc.getOutputStream();
-					try
-					{
-						getFiller().fill(inputStream,out); //If the command line is bad this will also fail
-					}
-					finally
-					{
-						getFiller().close(inputStream);
-						getFiller().close(out);
-					}
-				}
-				ret = proc.waitFor();
-				
+				result.setStandardOut(stdo);
+			}
+			String stder = errreader.getText();
+			if (stder != null && stder.length() > 0)
+			{
+				result.setStandardError(stder);
+			}
+			if( ret != 0 )
+			{
+				log.error("Error: " + ret + " stderr: " + stder + " stdo:" + stdo + " when running " + com);
 			}
 			if( ret == 0 )
 			{
@@ -309,10 +287,17 @@ public class Exec
 		}
 	}
 
-	class InputStreamHandler implements Runnable {
+	class InputStreamHandler implements Runnable 
+	{
 
     	protected InputStream fieldStream;
     	protected String fieldText;
+    	protected boolean fieldSaveText;
+    	
+    	InputStreamHandler(boolean inSave)
+    	{
+    		fieldSaveText = inSave;
+    	}
     	
     	public String getText()
     	{
@@ -330,9 +315,27 @@ public class Exec
     	{
     		try
     		{
-    			StringWriter writer = new StringWriter();
-    			new OutputFiller().fill(new InputStreamReader(getStream()), writer);
-    			fieldText = writer.toString();
+    			BufferedReader reader = new BufferedReader(new InputStreamReader(getStream()));
+    			if( fieldSaveText )
+    			{
+	    			StringBuffer writer = new StringBuffer();
+	    			String line = null;
+			        while ((line = reader.readLine()) != null) 
+			        {
+			        	writer.append(line);
+			        	writer.append('\n');
+			    		if( writer.length() > 100000 ) //Dont let this buffer get more than 100k of memory
+			    		{
+			    			String cut = writer.substring(writer.length() - 70000, writer.length());
+			    			writer = new StringBuffer(cut);
+			    		}
+			        }
+	    			fieldText = writer.toString();
+    			}
+    			else
+    			{
+    				while ((reader.readLine()) != null) {}
+    			}
     		}
     		catch ( IOException ex)
     		{
