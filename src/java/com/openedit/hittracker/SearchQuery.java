@@ -409,6 +409,12 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		addMatches(inKey,inVal);
 		return this;
 	}
+	
+	public SearchQuery appendNot(String inKey, String inVal)
+	{
+		addNot(inKey,inVal);
+		return this;
+	}
 
 	public Term addMatches(PropertyDetail inDetail, String inVal)
 	{
