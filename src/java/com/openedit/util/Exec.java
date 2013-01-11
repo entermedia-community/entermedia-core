@@ -235,12 +235,9 @@ public class Exec
 			Process proc = Runtime.getRuntime().exec(inCommand,env,inRunFrom);
 
 			InputStreamHandler reader1 = new InputStreamHandler(inSaveOutput);
-			reader1.setStream(proc.getInputStream());
+			reader1.setStream("stdout",proc.getInputStream());
 			getExecutorManager().execute(reader1);
 
-			InputStreamHandler errreader = new InputStreamHandler(inSaveOutput);
-			errreader.setStream(proc.getErrorStream());
-			getExecutorManager().execute(errreader);
 			
 			if(inputStream != null)
 			{
@@ -256,6 +253,10 @@ public class Exec
 					getFiller().close(out);
 				}
 			}
+			InputStreamHandler errreader = new InputStreamHandler(inSaveOutput);
+			errreader.setStream("stderr",proc.getErrorStream());
+			//getExecutorManager().execute(errreader);
+			errreader.run();
 			
 			int ret = proc.waitFor();
 			
@@ -289,7 +290,7 @@ public class Exec
 
 	class InputStreamHandler implements Runnable 
 	{
-
+		protected String fieldType;
     	protected InputStream fieldStream;
     	protected String fieldText;
     	protected boolean fieldSaveText;
@@ -307,8 +308,9 @@ public class Exec
     	{
     		return fieldStream;
     	}
-    	public void setStream(InputStream inStream) 
+    	public void setStream(String inType, InputStream inStream) 
     	{
+    		fieldType = inType;
     		fieldStream = inStream;
     	}
     	public void run()
@@ -324,7 +326,7 @@ public class Exec
 			        {
 			        	if( log.isDebugEnabled() )
 			        	{
-			        		log.debug(line);
+			        		log.debug(fieldType + " " + line);
 			        	}
 			        	writer.append(line);
 			        	writer.append('\n');
@@ -343,7 +345,7 @@ public class Exec
 			        {    					
     					if( log.isDebugEnabled() )
 			        	{
-			        		log.debug(line);
+			        		log.debug(fieldType + " " + line);
 			        	}
     				}
     			}
