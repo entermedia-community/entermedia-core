@@ -338,7 +338,14 @@ public class Exec
     			}
     			else
     			{
-    				while ((reader.readLine()) != null) {}
+	    			String line = null;
+			        while ((line = reader.readLine()) != null) 
+			        {    					
+    					if( log.isDebugEnabled() )
+			        	{
+			        		log.debug(line);
+			        	}
+    				}
     			}
     		}
     		catch ( IOException ex)
