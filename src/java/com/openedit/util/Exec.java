@@ -322,6 +322,10 @@ public class Exec
 	    			String line = null;
 			        while ((line = reader.readLine()) != null) 
 			        {
+			        	if( log.isDebugEnabled() )
+			        	{
+			        		log.debug(line);
+			        	}
 			        	writer.append(line);
 			        	writer.append('\n');
 			    		if( writer.length() > 100000 ) //Dont let this buffer get more than 100k of memory
