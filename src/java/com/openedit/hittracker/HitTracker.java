@@ -648,7 +648,7 @@ public abstract class HitTracker implements Serializable, Collection
 		return false;
 	}
 	
-	public Set getSelections()
+	public Set<Integer> getSelections()
 	{
 		if (fieldSelections == null)
 		{
@@ -658,7 +658,7 @@ public abstract class HitTracker implements Serializable, Collection
 		return fieldSelections;
 	}
 
-	public void setSelections(Set inSelections)
+	public void setSelections(Set<Integer> inSelections)
 	{
 		fieldSelections = inSelections;
 	}

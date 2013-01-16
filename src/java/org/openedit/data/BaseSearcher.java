@@ -587,7 +587,13 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 
 	protected void addShowOnly(WebPageRequest inPageRequest, SearchQuery search)
 	{
-		String querystring = inPageRequest.findValue("showonly");
+		String querystring = inPageRequest.findValue(getSearchType() + "showonly");
+		if( querystring == null )
+		{
+			//Legacy check. Remove this line after Feb 15 2013
+			querystring = inPageRequest.findValue("showonly");
+		}
+		
 		if (querystring != null)
 		{
 			SearchQuery child = search.getChildQuery(querystring);
@@ -1729,7 +1735,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		return tracker;
 	}
 
-	protected void fireDataEditEvent(WebPageRequest inReq, Data object, Data composite)
+	protected void fireDataEditEvent(WebPageRequest inReq, Data object)
 	{
 
 		if (fieldWebEventListener == null)
@@ -1742,22 +1748,22 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		{
 			return;
 		}
-		if (composite != null)
-		{
-			changes.append("MutliEdit->");
-		}
+//		if (composite != null)
+//		{
+//			changes.append("MutliEdit->");
+//		}
 		for (int i = 0; i < fields.length; i++)
 		{
 			String field = fields[i];
 			String value = inReq.getRequestParameter(field + ".value");
-			if (composite != null)
-			{
-				String compositeVal = composite.get(field);
-				if (compositeVal == value)
-				{
-					continue;
-				}
-			}
+//			if (composite != null)
+//			{
+//				String compositeVal = composite.get(field);
+//				if (compositeVal == value)
+//				{
+//					continue;
+//				}
+//			}
 			String oldval = object.get(field);
 
 			if (oldval == null)
@@ -1832,28 +1838,30 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	 */
 	public void saveDetails(WebPageRequest inReq, String[] fields, Data data, String id)
 	{
-		// This might be a productid of multiple products. We need to create
-		// lots of data objects
-		if (id != null && id.startsWith("multiedit:"))
-		{
-			data = (Data) inReq.getSessionValue(id);
-		}
-
+//		// This might be a productid of multiple products. We need to create
+//		// lots of data objects
+//		if (id != null && id.startsWith("multiedit:"))
+//		{
+//			data = (Data) inReq.getSessionValue(id);
+//		}
+//
 		if (data instanceof CompositeData)
 		{
 			CompositeData target = (CompositeData) data;
 			for (Iterator iterator = target.iterator(); iterator.hasNext();)
 			{
 				Data real = (Data) iterator.next();
-				fireDataEditEvent(inReq, real, data);
+				fireDataEditEvent(inReq, real);
+				data = updateData(inReq, fields, real);
+				saveData(real, inReq.getUser());
 			}
 		}
 		else
 		{
-			fireDataEditEvent(inReq, data, null);
+			fireDataEditEvent(inReq, data);
+			data = updateData(inReq, fields, data);
+			saveData(data, inReq.getUser());
 		}
-		data = updateData(inReq, fields, data);
-		saveData(data, inReq.getUser());
 		inReq.putPageValue("message", data.getId() + " is saved");
 		inReq.putPageValue("data", data);
 	}
