@@ -359,7 +359,10 @@ public class XmlSearcher extends BaseSearcher
 		}
 		return fieldXmlFile;
 	}
-
+	public void setXmlFile(XmlFile inFile)
+	{
+		fieldXmlFile = inFile;
+	}
 	protected XmlFile loadXmlFile()
 	{
 		try

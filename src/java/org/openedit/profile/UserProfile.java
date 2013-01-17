@@ -316,12 +316,19 @@ public class UserProfile extends ElementData
 		}
 		return out.toString();
 	}
-
+	/**
+	 * @deprecated Not used any more. Track permissions on an app basis
+	 * @return
+	 */
 	public HitTracker getCatalogs()
 	{
 		return fieldCatalogs;
 	}
 
+	/**
+	 * @deprecated Not used any more. Track permissions on an app basis
+	 * @return
+	 */
 	public void setCatalogs(HitTracker inCatalogs)
 	{
 		fieldCatalogs = inCatalogs;
@@ -410,7 +417,10 @@ public class UserProfile extends ElementData
 		String view = get(inResultsView);
 		return view;
 	}
-
+	/**
+	 * @deprecated Not used any more. Track permissions on an app basis
+	 * @return
+	 */
 	public Data getLastCatalog()
 	{
 		String catid = get("lastcatalog");
@@ -428,12 +438,19 @@ public class UserProfile extends ElementData
 		}
 		return null;
 	}
-
+	/**
+	 * @deprecated Not used any more. Track permissions on an app basis
+	 * @return
+	 */
 	public HitTracker getUploadCatalogs()
 	{
 		return fieldUploadCatalogs;
 	}
 
+	/**
+	 * @deprecated Not used any more. Track permissions on an app basis
+	 * @return
+	 */
 	public void setUploadCatalogs(HitTracker inUploadCatalogs)
 	{
 		fieldUploadCatalogs = inUploadCatalogs;
