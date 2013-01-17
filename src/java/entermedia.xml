@@ -27,6 +27,14 @@
 	<bean id="WebServer" class="com.openedit.BaseWebServer">
 	</bean>
 
+	<bean id="searcherManager" class="org.openedit.data.SearcherManager">
+		<property name="moduleManager">
+			<ref bean="moduleManager" />
+		</property>
+		<property name="xmlArchive"><ref bean="xmlArchive"/></property>
+	</bean>
+
+
 	<!-- oe.root.path is retrieved from a system property set in the init method of the filter -->
 	<bean id="userManager" class="com.openedit.users.filesystem.FileSystemUserManager">
 		<constructor-arg index="0"><value>/WEB-INF/data/system/users</value></constructor-arg>

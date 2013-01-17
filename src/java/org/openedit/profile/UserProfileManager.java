@@ -112,20 +112,20 @@ public class UserProfileManager
 		List ok = new ArrayList();
 
 		// check the parent first, then the appid
-		String parentid = inReq.findValue("parentapplicationid");
-		Collection catalogs = getSearcherManager().getSearcher(parentid, "catalogs").getAllHits();
-
-		for (Iterator iterator = catalogs.iterator(); iterator.hasNext();)
-		{
-			Data cat = (Data) iterator.next();
-			Boolean canview = inReq.getPageStreamer().canView("/" + cat.getId());
-			if (canview != null && canview)
-			{
-				ok.add(cat);
-			}
-		}
-		userprofile.setCatalogs(new ListHitTracker(ok));
-		userprofile.setUploadCatalogs(new ListHitTracker(ok));
+//		String parentid = inReq.findValue("parentapplicationid");
+//		Collection catalogs = getSearcherManager().getSearcher(parentid, "catalogs").getAllHits();
+//
+//		for (Iterator iterator = catalogs.iterator(); iterator.hasNext();)
+//		{
+//			Data cat = (Data) iterator.next();
+//			Boolean canview = inReq.getPageStreamer().canView("/" + cat.getId());
+//			if (canview != null && canview)
+//			{
+//				ok.add(cat);
+//			}
+//		}
+//		userprofile.setCatalogs(new ListHitTracker(ok));
+//		userprofile.setUploadCatalogs(new ListHitTracker(ok));
 
 		String appid = inReq.findValue("applicationid");
 
