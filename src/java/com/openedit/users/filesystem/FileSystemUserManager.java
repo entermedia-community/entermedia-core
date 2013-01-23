@@ -824,7 +824,7 @@ public class FileSystemUserManager implements UserManager
 			user.setId(newid);
 		}
 		Element userNameElem = userElem.addElement("user-name");
-		userNameElem.setText(user.getUserName());
+		userNameElem.addCDATA(user.getUserName());
 
 		Element passwordElem = userElem.addElement("password");
 		//
@@ -834,7 +834,7 @@ public class FileSystemUserManager implements UserManager
 			ps = encrypt(ps);
 			//password may have changed we should set it so it's not in plain text anymore.
 			user.setPassword(ps);
-			passwordElem.setText(ps);
+			passwordElem.addCDATA(ps);
 		}
 		Element creationDateElem = userElem.addElement("creation-date");
 		if( user.getCreationDate() !=  null)

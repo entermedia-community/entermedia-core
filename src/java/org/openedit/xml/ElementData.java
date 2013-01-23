@@ -92,8 +92,10 @@ public class ElementData implements MultiValued, Comparable
 	}
 	public void setProperty(String inId, String inValue)
 	{
+		//TODO: Deal with XML in the value if XML addCData
 		if( inId.equals("name"))
 		{
+			
 			getElement().setText(inValue);
 		}
 		else
@@ -108,7 +110,10 @@ public class ElementData implements MultiValued, Comparable
 			}
 			else
 			{
-				getElement().addAttribute(inId,inValue);
+				synchronized (getElement())
+				{
+					getElement().addAttribute(inId,inValue);					
+				}
 			}
 		}
 	}
