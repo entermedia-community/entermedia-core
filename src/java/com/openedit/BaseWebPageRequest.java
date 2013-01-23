@@ -1183,7 +1183,7 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 		{
 			return null;
 		}
-		String val = getUserProfile().getValue(inKey);
+		String val = getUserProfile().get(inKey);
 		return val;
 	}
 

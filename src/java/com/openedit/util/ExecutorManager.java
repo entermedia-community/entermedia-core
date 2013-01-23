@@ -38,20 +38,31 @@ public class ExecutorManager
 	{
 		fieldThreadCount = inThreadCount;
 	}
-
 	public ExecutorService createExecutor() 
+	{
+		int max = getThreadCount();
+		return createExecutor(max, max);
+		
+	}
+	public ExecutorService createExecutor(int startThreads, int maxThreads) 
 	{
 			//fieldExecutor = Executors.newCachedThreadPool();
 			//fieldExecutor = Executors.newFixedThreadPool(8);
-			int minimum = getThreadCount();
 			
 			DefaultThreadFactory factory = new DefaultThreadFactory();
 			
-			return new ThreadPoolExecutor(minimum, minimum,
+			return new ThreadPoolExecutor(startThreads, maxThreads,
                     10L, TimeUnit.MINUTES,
                     new LinkedBlockingQueue<Runnable>(),
                    factory,
                     new ThreadPoolExecutor.CallerRunsPolicy());
+	}
+	public ExecutorService createUnlimitedExecutor() 
+	{
+		int min = getThreadCount();
+		int max = Integer.MAX_VALUE;
+		return createExecutor(min, max);
+
 	}
 	
 	
@@ -89,7 +100,7 @@ public class ExecutorManager
 	{
 		if (fieldSharedExecutor == null)
 		{
-			fieldSharedExecutor = createExecutor();
+			fieldSharedExecutor = createUnlimitedExecutor();
 		}
 		return fieldSharedExecutor;
 	}

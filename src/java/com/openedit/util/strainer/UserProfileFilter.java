@@ -46,7 +46,7 @@ public class UserProfileFilter extends BaseFilter
 		{
 			return false;
 		}
-		String value = data.getValue(getPropertyName());
+		String value = data.get(getPropertyName());
 		if( value == null && getValue() == null)
 		{
 			return true;

@@ -215,6 +215,11 @@ public class XmlFile implements Data
 		child.addAttribute("id", inId);
 		child.setText(inText);
 	}
+	public void add(Element inChild)
+	{
+		getRoot().add(inChild);
+	}
+	
 	public void clear()
 	{
 		if( getRoot() != null)

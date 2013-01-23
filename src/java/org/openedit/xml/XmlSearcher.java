@@ -110,7 +110,7 @@ public class XmlSearcher extends BaseSearcher
 
 	public void reIndexAll() throws OpenEditException
 	{
-		
+		getCache().clear();
 	}
 	
 	public boolean passes(Element inElement, SearchQuery inQuery) throws ParseException
@@ -359,7 +359,10 @@ public class XmlSearcher extends BaseSearcher
 		}
 		return fieldXmlFile;
 	}
-
+	public void setXmlFile(XmlFile inFile)
+	{
+		fieldXmlFile = inFile;
+	}
 	protected XmlFile loadXmlFile()
 	{
 		try

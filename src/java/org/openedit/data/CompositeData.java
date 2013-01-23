@@ -8,7 +8,6 @@ import org.openedit.Data;
 public interface CompositeData extends Data
 {
 	
-	public void addData(Data inData);
 	public String get(String inId);
 
 
@@ -21,6 +20,9 @@ public interface CompositeData extends Data
 	public Map getProperties();
 	public Iterator<Data> iterator();
 	public int size();
-	
+	public void refresh();
+
+
+	public void saveChanges();
 	
 }

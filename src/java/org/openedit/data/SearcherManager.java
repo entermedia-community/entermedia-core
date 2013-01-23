@@ -1,13 +1,17 @@
 package org.openedit.data;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.dom4j.Element;
 import org.openedit.Data;
 import org.openedit.xml.XmlArchive;
+import org.openedit.xml.XmlFile;
+import org.openedit.xml.XmlSearcher;
 
 import com.openedit.ModuleManager;
 import com.openedit.OpenEditRuntimeException;
@@ -91,6 +95,10 @@ public class SearcherManager
 			{
 				log.debug("Searcher not found creating dynamic instance ");
 			}
+//			if( inCatalogId.length() == 0 && "catalogs".equals(inFieldName))
+//			{
+//				XmlSearcher xml = (XmlSearcher)searcher;
+//			}
 		}
 		log.info("Loaded " + inFieldName + " with " + beanName);
 		return searcher;
@@ -229,4 +237,41 @@ public class SearcherManager
 		}
 		getModuleManager().clearBean(inCatalogId, beanName);
 	}
+	/*
+	public Collection getCatalogs()
+	{
+		XmlFile file = getCatalogXml();
+		XmlSearcher searcher = (XmlSearcher)getSearcher("", "catalogs");
+		searcher.setXmlFile(file);
+		return searcher.getAllHits();
+	}
+	protected XmlFile getCatalogXml()
+	{
+		XmlFile file = getXmlArchive().getXml("/WEB-INF/data/catalogs.xml");
+		if( !file.isExist() )
+		{
+			file = getXmlArchive().getXml("/WEB-INF/data/media/lists/catalogs.xml"); //legacy
+		}
+		return file;
+	}
+	public Element getCatalog(String inId)
+	{
+		XmlFile file = getCatalogXml();
+		Element element = file.getElementById(inId);
+		return element;
+	}
+	public void saveCatalog(String inId, String inName)
+	{
+		XmlFile file = getCatalogXml();
+		Element element = file.getElementById(inId);
+		if( element == null )
+		{
+			element = file.createElement();
+			file.add(element);
+		}
+		element.addAttribute("id", inId);
+		element.setText(inName);
+		getXmlArchive().saveXml(file, null);
+	}
+	*/
 }

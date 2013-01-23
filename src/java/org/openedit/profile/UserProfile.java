@@ -45,7 +45,9 @@ public class UserProfile extends ElementData
 
 	public User getUser()
 	{
-		return fieldUser;
+	
+
+	return fieldUser;
 	}
 
 	public void setUser(User inUser)
@@ -90,18 +92,34 @@ public class UserProfile extends ElementData
 
 	public boolean isEnabled(String inPreference)
 	{
-		String val = getValue(inPreference);
+		String val = get(inPreference);
 		return Boolean.parseBoolean(val);
 	}
 
-	public String getValue(String inPreference)
+//	@Override
+//	public String get(String inId) {
+//		// TODO Auto-generated method stub
+//		return getValue(inId);
+//	}
+//	
+	
+	public String get(String inPreference)
 	{
 		if (inPreference == null)
 		{
 			return null;
 		}
-		String val = get(inPreference);
-
+		
+		String val = super.get(inPreference);
+		if(val == null  && inPreference.equals("firstname")){
+			val = super.get("firstName");
+		}
+		
+		if(val == null && inPreference.equals("lastname")){
+			val = super.get("lastName");
+		}
+		
+		
 		if (val == null && getSettingsGroup() != null)
 		{
 			val = getSettingsGroup().get(inPreference);
@@ -114,9 +132,11 @@ public class UserProfile extends ElementData
 		return val;
 	}
 
+	
+	
 	public Collection getValues(String inPreference)
 	{
-		String val = getValue(inPreference);
+		String val = get(inPreference);
 
 		if (val == null)
 			return null;
@@ -142,7 +162,7 @@ public class UserProfile extends ElementData
 			if (end != -1)
 			{
 				String key = value.substring(start + 2, end);
-				String variable = getValue(key); // check for property
+				String variable = get(key); // check for property
 
 				if (variable != null)
 				{
@@ -175,7 +195,7 @@ public class UserProfile extends ElementData
 	{
 		if (fieldSettingsGroup == null)
 		{
-			String groupid = get("settingsgroup");
+			String groupid = super.get("settingsgroup");
 			if (groupid == null)
 			{
 				groupid = "guest";
@@ -263,34 +283,25 @@ public class UserProfile extends ElementData
 	public String toString()
 	{
 
-		return getScreenName();
+		return getShortDescription();
 		
 		
 		
 
 	}
-	public String getScreenName()
-	{
-		String sn = (String)get("screenname");
-		
-		if (sn == null)
-		{
-			return getShortDescription();
-		}
-		return sn;
-	}
+	
 	
 	public String getShortDescription()
 	{
 		StringBuffer out = new StringBuffer();
-		if ( get("firstname") != null)
+		if ( get("firstName") != null)
 		{
-			out.append( get("firstname") );
+			out.append( get("firstName") );
 			out.append(" ");
-		}
-		if (  get("lastname") != null)
+		} 
+		if (  get("lastName") != null)
 		{
-			out.append(get("lastname"));
+			out.append(get("lastName"));
 		}
 		if( out.length() == 0)
 		{
@@ -305,12 +316,19 @@ public class UserProfile extends ElementData
 		}
 		return out.toString();
 	}
-
+	/**
+	 * @deprecated Not used any more. Track permissions on an app basis
+	 * @return
+	 */
 	public HitTracker getCatalogs()
 	{
 		return fieldCatalogs;
 	}
 
+	/**
+	 * @deprecated Not used any more. Track permissions on an app basis
+	 * @return
+	 */
 	public void setCatalogs(HitTracker inCatalogs)
 	{
 		fieldCatalogs = inCatalogs;
@@ -356,7 +374,7 @@ public class UserProfile extends ElementData
 	public int getHitsPerPageForSearchType(String inResultsView) throws Exception
 	{
 		String view = inResultsView + "hitsperpage";
-		String value = getValue(view);
+		String value = get(view);
 		if (value == null)
 		{
 			return 15;
@@ -376,7 +394,7 @@ public class UserProfile extends ElementData
 
 	public String getSortForSearchType(String inResultsType)
 	{
-		String value = getValue(inResultsType + "sort");
+		String value = get(inResultsType + "sort");
 		return value;
 	}
 
@@ -396,10 +414,13 @@ public class UserProfile extends ElementData
 
 	public String getViewForResultType(String inResultsView)
 	{
-		String view = getValue(inResultsView);
+		String view = get(inResultsView);
 		return view;
 	}
-
+	/**
+	 * @deprecated Not used any more. Track permissions on an app basis
+	 * @return
+	 */
 	public Data getLastCatalog()
 	{
 		String catid = get("lastcatalog");
@@ -417,12 +438,19 @@ public class UserProfile extends ElementData
 		}
 		return null;
 	}
-
+	/**
+	 * @deprecated Not used any more. Track permissions on an app basis
+	 * @return
+	 */
 	public HitTracker getUploadCatalogs()
 	{
 		return fieldUploadCatalogs;
 	}
 
+	/**
+	 * @deprecated Not used any more. Track permissions on an app basis
+	 * @return
+	 */
 	public void setUploadCatalogs(HitTracker inUploadCatalogs)
 	{
 		fieldUploadCatalogs = inUploadCatalogs;
@@ -489,6 +517,7 @@ public class UserProfile extends ElementData
 			if ("lastname".equalsIgnoreCase(inId))
 			{
 				getUser().setLastName(inValue);
+
 			}
 			if ("email".equalsIgnoreCase(inId))
 			{
@@ -498,6 +527,9 @@ public class UserProfile extends ElementData
 			{
 				getUser().setPassword(inValue);
 			}
+		}
+		if(inId.equals("settingsgroup")){
+			setSettingsGroup("settingsgroup");
 		}
 		// TODO Auto-generated method stub
 		super.setProperty(inId, inValue);
