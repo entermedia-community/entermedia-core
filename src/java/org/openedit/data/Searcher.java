@@ -82,10 +82,24 @@ public interface Searcher
 
 	public PropertyDetails getPropertyDetails();
 
+	/**
+	 * @deprecated No longer need a user passed in
+	 * @param inView
+	 * @param inUser
+	 * @return
+	 */
 	public List getDetailsForView(String inView, User inUser);
 
 	public List getDetailsForView(String inView, UserProfile inUserProfile);
 
+	/**
+	 * Do we even need this to work?
+	 * @deprecated No longer need a user passed in
+	 * @param inView
+	 * @param inFieldName
+	 * @param inUser
+	 * @return
+	 */
 	public PropertyDetail getDetailForView(String inView, String inFieldName, User inUser);
 	
 	public List getProperties();

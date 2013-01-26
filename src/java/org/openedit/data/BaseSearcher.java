@@ -370,7 +370,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			PropertyDetail detail = new PropertyDetail();
 			detail.setCatalogId(getCatalogId());
 			detail.setId(attr);
-			query.addMatches(detail, value); //this is addMatches and not addExact so that we can handle wildcards
+			query.addExact(detail, value); //this is addMatches and not addExact so that we can handle wildcards
 		}
 		if (orderby != null)
 		{
@@ -692,7 +692,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		}		
 	}
 	
-	private PropertyDetail getDetail(String inString, WebPageRequest inReq)
+	protected PropertyDetail getDetail(String inString, WebPageRequest inReq)
 	{
 		String searchtype = inReq.findValue("searchtype");
 		if (searchtype == null)
@@ -722,19 +722,19 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		{
 			catalogid = getCatalogId();
 		}
-		Searcher remoteSearcher = getSearcherManager().getSearcher(catalogid, searchtype);
-		if (remoteSearcher != null)
-		{
-			detail = remoteSearcher.getDetailForView(view, propertyid, inReq.getUser());
-		}
-		if (detail == null)
-		{
-			detail = getPropertyDetailsArchive().getDataProperty(getSearchType(), view, propertyid, inReq.getUser());
-		}
-		if (detail == null)
-		{
-			detail = getDetail(propertyid);
-		}
+//		Searcher remoteSearcher = getSearcherManager().getSearcher(catalogid, searchtype);
+//		if (remoteSearcher != null)
+//		{
+//			detail = remoteSearcher.getDetailForView(view, propertyid, inReq.getUser());
+//		}
+//		if (detail == null)
+//		{
+		detail = getPropertyDetailsArchive().getDetail(getSearchType(), view, propertyid, inReq.getUserProfile());  //Add View.getDetail( API then make sure everyone get's a cached view object
+//		}
+//		if (detail == null)
+//		{
+//			detail = getDetail(propertyid);
+//		}
 		if (detail == null)
 		{
 			// continue;
@@ -1259,7 +1259,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	protected SearchQuery createSearchQuery(String[] inQueryStrings, WebPageRequest inReq)
 	{
 		SearchQuery query = createSearchQuery();
-		
+
 		for (int i = 0; i < inQueryStrings.length; i++)
 		{
 			String querystring = inQueryStrings[i];
@@ -1558,6 +1558,9 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		return getDetailsForView(inView, (UserProfile)null);
 	}
 	//Some problem with Velocity, if the user is null then it does not resolve this method
+	/**
+	 * @deprecated remove this by April 1 2013
+	 */
 	public List getDetailsForView(String inView, User inUser)
 	{
 		List results = getPropertyDetailsArchive().getDataProperties(getSearchType(), inView, inUser);
@@ -1566,28 +1569,37 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	
 	public List getDetailsForView(String inView, UserProfile inProfile)
 	{
-		List results = getPropertyDetailsArchive().getDataProperties(getSearchType(), inView, inProfile);
-		return results;
+//		List results = getPropertyDetailsArchive().getDataProperties(getSearchType(), inView, inProfile);
+//		return results;
+		View view = getPropertyDetailsArchive().getView(getSearchType(), inView, inProfile);
+		return view;
 	}
 
-
+	/**
+	 * This is old code and should not be used any more
+	 */
 	public PropertyDetail getDetailForView(String inView, String inFieldName, User inUser)
 	{
-		PropertyDetails details = getPropertyDetailsArchive().getPropertyDetailsCached(getSearchType());
-		if (details == null)
-		{
-			return null;
-		}
-		PropertyDetail detail = null;
-		if( inView != null )
-		{
-			detail = getPropertyDetailsArchive().getDetail(details, inView, inFieldName, inUser);
-		}
-		if (detail == null)
-		{
-			detail = details.getDetail(inFieldName);
-		}
-		return detail;
+		return getDetail(inFieldName);
+//		PropertyDetails details = getPropertyDetailsArchive().getPropertyDetailsCached(getSearchType());
+//		if (details == null)
+//		{
+//			return null;
+//		}
+		
+//		getPropertyDetailsArchive().getDetails(details,inView,inUser);
+//
+//		
+//		PropertyDetail detail = null;
+//		if( inView != null )
+//		{
+//			detail = getPropertyDetailsArchive().getDetail(details, inView, inFieldName, inUser);
+//		}
+//		if (detail == null)
+//		{
+//			detail = details.getDetail(inFieldName);
+//		}
+//		return detail;
 	}
 
 	public List getDetailsForFields(String[] headers)
