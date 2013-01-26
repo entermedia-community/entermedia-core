@@ -440,6 +440,7 @@ public class FileSystemUserManager implements UserManager
 		{
 			inPassword = new PasswordGenerator().generate();//Integer.toString((int)(100000 + generator.nextDouble() * 899999D));
 		}
+		inPassword = encrypt(inPassword);
 		
 		createUserFile(inUserName, inPassword);
 		User user = getUser(inUserName );
