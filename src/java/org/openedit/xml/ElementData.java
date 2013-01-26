@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import org.dom4j.Attribute;
 import org.dom4j.DocumentHelper;
@@ -182,7 +183,15 @@ public class ElementData implements MultiValued, Comparable
 		if (val == null)
 			return null;
 		
-		String[] vals = val.split("\\s+");
+		String[] vals = null;
+		if( val.contains("|") )
+		{
+			vals = VALUEDELMITER.split(val);
+		}
+		else
+		{
+			vals = val.split("\\s+"); //legacy
+		}
 
 		Collection collection = Arrays.asList(vals);
 		//if null check parent
@@ -198,7 +207,7 @@ public class ElementData implements MultiValued, Comparable
 			values.append(detail);
 			if( iterator.hasNext())
 			{
-				values.append(" ");
+				values.append(" | ");
 			}
 		}
 		setProperty(inKey,values.toString());
