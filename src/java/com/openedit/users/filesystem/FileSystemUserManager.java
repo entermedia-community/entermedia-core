@@ -440,6 +440,7 @@ public class FileSystemUserManager implements UserManager
 		{
 			inPassword = new PasswordGenerator().generate();//Integer.toString((int)(100000 + generator.nextDouble() * 899999D));
 		}
+		inPassword = encrypt(inPassword);
 		
 		createUserFile(inUserName, inPassword);
 		User user = getUser(inUserName );
@@ -823,7 +824,7 @@ public class FileSystemUserManager implements UserManager
 			user.setId(newid);
 		}
 		Element userNameElem = userElem.addElement("user-name");
-		userNameElem.setText(user.getUserName());
+		userNameElem.addCDATA(user.getUserName());
 
 		Element passwordElem = userElem.addElement("password");
 		//
@@ -833,7 +834,7 @@ public class FileSystemUserManager implements UserManager
 			ps = encrypt(ps);
 			//password may have changed we should set it so it's not in plain text anymore.
 			user.setPassword(ps);
-			passwordElem.setText(ps);
+			passwordElem.addCDATA(ps);
 		}
 		Element creationDateElem = userElem.addElement("creation-date");
 		if( user.getCreationDate() !=  null)

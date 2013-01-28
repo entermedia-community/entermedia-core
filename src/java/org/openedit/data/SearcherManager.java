@@ -67,7 +67,7 @@ public class SearcherManager
 		//log.debug("return " + id + " " + searcher);
 		return searcher;
 	}
-	protected Searcher loadSearcher(PropertyDetailsArchive newarchive, String inFieldName)
+	protected synchronized Searcher loadSearcher(PropertyDetailsArchive newarchive, String inFieldName)
 	{
 		String inCatalogId = newarchive.getCatalogId();
 		Searcher searcher;

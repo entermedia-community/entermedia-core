@@ -424,6 +424,10 @@ public class UserProfile extends ElementData
 	public Data getLastCatalog()
 	{
 		String catid = get("lastcatalog");
+		if( getCatalogs() == null )
+		{
+			return null;
+		}
 		for (Iterator iterator = getCatalogs().iterator(); iterator.hasNext();)
 		{
 			Data cat = (Data) iterator.next();

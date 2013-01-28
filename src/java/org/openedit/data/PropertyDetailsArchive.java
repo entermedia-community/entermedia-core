@@ -38,7 +38,6 @@ public class PropertyDetailsArchive
 	protected PageManager fieldPageManager;
 	protected SearcherManager fieldSearcherManager;
 	protected Map<String,View> fieldViewCache;
-	protected Map<String,XmlFile> fieldViewXmlCache;
 	protected Map fieldPropertyDetails;
 
 	public SearcherManager getSearcherManager()
@@ -178,54 +177,52 @@ public class PropertyDetailsArchive
 
 	public boolean viewExists(String inView)
 	{
-		XmlFile file = getViewXml(inView, null);
+		XmlFile file = getViewXml(inView);
 		return file.isExist();
 	}
 
-	protected XmlFile getViewXml(String inView, String inLevel)
+	protected XmlFile getViewXml(String inView)
 	{
-		
-		String id = inView + "_" + inLevel;
-		XmlFile file = getViewXmlCache().get(id);
-		if( file != null )
-		{
-			return file;
-		}
-		if (inLevel != null)
-		{
-			String path = getConfigurationPath("/views/" + inView + inLevel + ".xml");
-			file = getXmlArchive().getXml(path);
-		}
-		if (file == null || !file.isExist())
-		{
-			String path = getConfigurationPath("/views/" + inView + ".xml");
-			file = getXmlArchive().getXml(path);
-		}
-		if( getViewXmlCache().size() > 100 )
-		{
-			getViewXmlCache().clear();
-		}
-		getViewXmlCache().put( id, file);
+		String path = getConfigurationPath("/views/" + inView + ".xml");
+		XmlFile file = getXmlArchive().getXml(path);
 		return file;
 	}
 
+	public View getView(String inSearchType, String inView, UserProfile inProfile)
+	{
+		PropertyDetails details = getPropertyDetailsCached(inSearchType);
+		View view = getView(details,inView,inProfile);
+		return view;
+	}
+	
+	/**
+	 * @deprecated use getView(
+	 */
 	public View getDetails(PropertyDetails propdetails, String inView, User inUser)
 	{
-		return getDetails(propdetails, inView, (UserProfile) null);
+		return getView(propdetails, inView, (UserProfile) null);
 	}
 
+	/**
+	 * @deprecated use getView(
+	 */
 	public View getDetails(PropertyDetails propdetails, String inView, UserProfile inProfile)
+	{
+		return getView(propdetails,inView,inProfile);
+	}
+
+	public View getView(PropertyDetails propdetails, String inView, UserProfile inProfile)
 	{
 		String id = inView;
 		Collection values = null;
-		if( inProfile != null )
+		if( inProfile != null ) //this is important since they may have created a custom search screen or something
 		{
-			id = id + "_" + inProfile.get("settingsgroup");
+			id = id + "_" + inProfile.get("settingsgroup"); 
 			String propId = "view_" + inView.replace('/', '_');
 			values = inProfile.getValues(propId);
 			if( values != null )
 			{
-				id = null;//id + "_" + inProfile.getId(); //More specific to the user, 1000 limit cache
+				id = id + "_" + values.toString(); //More specific to the user, 1000 limit cache
 			}
 		}
 		
@@ -238,8 +235,8 @@ public class PropertyDetailsArchive
 		{
 			return view;
 		}
-		XmlFile types = getViewXml(inView, null); //TODO: Dont check the file system for non admin users
-		if (types != null && types.isExist())  //This exists is a fast boolean
+		XmlFile types = getViewXml(inView); 
+		if (types.isExist()) 
 		{
 			view = readViewElement(propdetails, types.getRoot(), inView);
 			if (view != null)
@@ -268,12 +265,7 @@ public class PropertyDetailsArchive
 						String vid = (String) iterator.next();
 						if (vid.length() > 0 && view.findDetail(id) == null)
 						{
-							PropertyDetail detail = getDetail(propdetails, inView, vid, null);
-							if (detail == null)
-							{
-								detail = propdetails.getDetail(vid);
-
-							}
+							PropertyDetail detail = loadDetail(propdetails, types, inView, vid);
 							if (detail != null)
 							{
 								view.add(detail);
@@ -292,31 +284,35 @@ public class PropertyDetailsArchive
 
 		return null;
 	}
-
-	public PropertyDetail getDetail(PropertyDetails propdetails, String inView, String inFieldName, User inUser)
+//	public PropertyDetail getDetail(PropertyDetails propdetails, String inView, String inFieldName, User inUser)
+//	{
+//		View viewdetails = getDetails(propdetails, inView, inUser);
+//	}
+	
+	protected PropertyDetail loadDetail(PropertyDetails propdetails, XmlFile inViewData, String inView, String inFieldName)
 	{
-		String level = null;//
-		if (inUser != null)
+//		String level = null;//
+//		if (inUser != null)
+//		{
+//		String level = (String) inUser.getProperty("datalevel");
+//		}
+//		XmlFile types = null;
+//		if (level != null)
+//		{
+//			String path = getConfigurationPath("/views/" + inView + level + ".xml");
+//			types = getXmlArchive().getXml(path);
+//		}
+//		if (types == null || !types.isExist())
+//		{
+//			String path = getConfigurationPath("/views/" + inView + ".xml");
+//			types = getXmlArchive().getXml(path);
+//		}
+		PropertyDetail detail = propdetails.getDetail(inFieldName);
+		if (inViewData.isExist())
 		{
-			level = (String) inUser.getProperty("datalevel");
-		}
-		XmlFile types = null;
-		if (level != null)
-		{
-			String path = getConfigurationPath("/views/" + inView + level + ".xml");
-			types = getXmlArchive().getXml(path);
-		}
-		if (types == null || !types.isExist())
-		{
-			String path = getConfigurationPath("/views/" + inView + ".xml");
-			types = getXmlArchive().getXml(path);
-		}
-		if (types != null && types.isExist())
-		{
-			PropertyDetail detail = propdetails.getDetail(inFieldName);
 			if (detail != null)
 			{
-				Element child = types.getElementById(inFieldName);
+				Element child = inViewData.getElementById(inFieldName);
 				if (child != null)
 				{
 					PropertyDetail local = detail.copy();
@@ -328,7 +324,7 @@ public class PropertyDetailsArchive
 				}
 			}
 		}
-		return null;
+		return detail;
 	}
 
 	public XmlArchive getXmlArchive()
@@ -452,20 +448,11 @@ public class PropertyDetailsArchive
 		}
 		return fieldViewCache;
 	}
-	protected Map<String,XmlFile> getViewXmlCache()
-	{
-		if (fieldViewXmlCache== null)
-		{
-			fieldViewXmlCache = new HashMap<String,XmlFile>();
-		}
-		return fieldViewXmlCache;
-	}
-	
 	public void clearCache()
 	{
 		getPropertyDetails().clear();
 		getViewCache().clear();
-		getViewXmlCache().clear();
+		getViewLabels().clear();
 	}
 
 	public void savePropertyDetails(PropertyDetails inDetails, String inType, User inUser, String path)
@@ -713,7 +700,8 @@ public class PropertyDetailsArchive
 
 	public Data getView(String inType, String inView)
 	{
-		return getViewXml(inView, null);
+		//Guess the type is not used. the inview has the type in the path name?
+		return getViewXml(inView);
 	}
 
 	public String getViewLabel(String inView)
@@ -721,7 +709,7 @@ public class PropertyDetailsArchive
 		String usage = (String) getViewLabels().get(inView);
 		if (usage == null)
 		{
-			Data view = getViewXml(inView, null);
+			Data view = getViewXml(inView);
 			usage = view.get("usagelabel");
 			if (usage == null)
 			{
@@ -805,6 +793,36 @@ public class PropertyDetailsArchive
 
 		}
 
+	}
+	/**
+	 * This is cached
+	 * @param inSearchType
+	 * @param inView
+	 * @param inPropertyid
+	 * @param inUserProfile
+	 * @return
+	 */
+	public PropertyDetail getDetail(String inSearchType, String inView, String inPropertyid, UserProfile inUserProfile)
+	{
+		PropertyDetail detail = null;
+		if( inView == null )
+		{
+			PropertyDetails details = getPropertyDetailsCached(inSearchType);
+			detail = details.getDetail(inPropertyid);
+			return detail;
+		}
+		
+		View view = getView(inSearchType, inView,inUserProfile);
+		if( view != null )
+		{
+			detail = view.findDetail(inPropertyid);
+		}
+		else
+		{
+			PropertyDetails details = getPropertyDetailsCached(inSearchType);
+			detail = details.getDetail(inPropertyid);
+		}
+		return detail;
 	}
 
 }

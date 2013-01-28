@@ -1,15 +1,14 @@
 package org.openedit.xml;
 
 import java.io.InputStream;
-import java.io.Reader;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
+import org.entermedia.locks.Lock;
+import org.entermedia.locks.LockManager;
+import org.entermedia.locks.MemoryLockManager;
 import org.openedit.Data;
 import org.openedit.repository.ContentItem;
 
@@ -23,24 +22,23 @@ import com.openedit.util.XmlUtil;
 public class XmlArchive
 {
 	private static final Log log = LogFactory.getLog(XmlArchive.class);
-	protected Map fieldCache;
 	protected PageManager fieldPageManager;
 	protected XmlUtil fieldXmlUtil;
-	protected Map fieldLocks;
+	protected LockManager fieldLockManager;
 	
-	protected Map getLocks()
+	public LockManager getLockManager()
 	{
-		if (fieldLocks == null)
+		if (fieldLockManager == null)
 		{
-			synchronized (this)
-			{
-				if( fieldLocks == null)
-				{
-					fieldLocks = new HashMap();
-				}
-			}
+			fieldLockManager = new MemoryLockManager();
 		}
-		return fieldLocks;
+
+		return fieldLockManager;
+	}
+
+	public void setLockManager(LockManager inLockManager)
+	{
+		fieldLockManager = inLockManager;
 	}
 
 	/**
@@ -73,14 +71,11 @@ public class XmlArchive
 		try
 		{// This can be specified within the page action with a <property
 			// name="xmlfile">./data.xml</property>
-			XmlFile element = (XmlFile) getCache().get(inId);
+			XmlFile	element = null;
 			if( path.startsWith("/WEB-INF/data") )
 			{
 				ContentItem input = getPageManager().getRepository().get(path);
-				if (element == null || element.getLastModified() != input.lastModified().getTime() )
-				{
-					element = load(inId, path, inElementName, input);
-				}
+				element = load(inId, path, inElementName, input);
 			}
 			else
 			{
@@ -112,19 +107,23 @@ public class XmlArchive
 		return getXml(inId,path,null);
 	}
 	/**
+	 * @deprecated use getXml(String)
 	 */
 	public XmlFile loadXmlFile( String inId) throws OpenEditException
 	{
-		XmlFile element = (XmlFile)getCache().get(inId);
-		if( element != null)
+		return getXml(inId);
+	}
+	public long getLastModified( String inPath) throws OpenEditException
+	{
+		if( inPath.startsWith("/WEB-INF/data") )
 		{
-			Page input = getPageManager().getPage(element.getPath(),true);
-			if ( element.getLastModified() != input.lastModified() )
-			{
-				return null;
-			}
+			ContentItem input = getPageManager().getRepository().get(inPath);
+			return input.getLastModified();
 		}
-		return element;
+		else
+		{
+			return getPageManager().getPage(inPath).lastModified();
+		}
 	}
 	
 	protected XmlFile load(String inId, String path, String inElementName, ContentItem input) throws OpenEditException
@@ -178,76 +177,39 @@ public class XmlArchive
 		element.setLastModified(input.lastModified().getTime());
 		element.setId(inId);
 
-		if( getCache().size() > 1000)
-		{
-			getCache().clear();
-		}
-		getCache().put(inId, element);
-
 		return element;
 	}
 	
-	
-	public Map getCache()
-	{
-		if (fieldCache == null)
-		{
-			fieldCache = new HashMap();
-		}
-		return fieldCache;
-	}
-
-	public void setCache(Map inCache)
-	{
-		fieldCache = inCache;
-	}
 	public void saveXml(Data inFile, User inUser) throws OpenEditException
 	{
 		saveXml((XmlFile)inFile,inUser);
 	}
 	public void saveXml(XmlFile inFile, User inUser) throws OpenEditException
 	{
-		Object lock = getLock(inFile.getPath());
-		synchronized (lock)
+		Lock lock = getLockManager().lock("system", inFile.getPath(), null ); //this will retry 10 times then timeout and throw an exception
+		try
 		{
-			Page page = getPageManager().getPage(inFile.getPath(), false);
-	
-			ContentItem tmp = getPageManager().getRepository().getStub(inFile.getPath() + ".tmp.xml");
-			tmp.setMakeVersion(false);
-			getXmlUtil().saveXml(inFile.getRoot(), tmp.getOutputStream(),page.getCharacterEncoding());
-	
-			ContentItem xmlcontent = getPageManager().getRepository().getStub(inFile.getPath());
-			xmlcontent.setMakeVersion(false);
-			getPageManager().getRepository().remove(xmlcontent); //might be a little faster to remove it first
-			getPageManager().getRepository().move(tmp, xmlcontent);
-			getPageManager().firePageModified(page);
-			
-			xmlcontent = getPageManager().getRepository().getStub(inFile.getPath());
-			inFile.setLastModified(xmlcontent.getLastModified());
-			inFile.setExist(true);
-			getCache().put(inFile.getPath(),inFile);
-			//log.info("Save " + inFile.getPath());
+				Page page = getPageManager().getPage(inFile.getPath(), false);
+		
+				ContentItem tmp = getPageManager().getRepository().getStub(inFile.getPath() + ".tmp.xml");
+				tmp.setMakeVersion(false);
+				getXmlUtil().saveXml(inFile.getRoot(), tmp.getOutputStream(),page.getCharacterEncoding());
+		
+				ContentItem xmlcontent = getPageManager().getRepository().getStub(inFile.getPath());
+				xmlcontent.setMakeVersion(false);
+				getPageManager().getRepository().remove(xmlcontent); //might be a little faster to remove it first
+				getPageManager().getRepository().move(tmp, xmlcontent);
+				getPageManager().firePageModified(page);
+				
+				xmlcontent = getPageManager().getRepository().getStub(inFile.getPath());
+				inFile.setLastModified(xmlcontent.getLastModified());
+				inFile.setExist(true);
+				//log.info("Save " + inFile.getPath());
 		}
-	}
-
-	private Object getLock(String inPath)
-	{
-		Object lock = getLocks().get(inPath);
-		if( lock == null)
+		finally
 		{
-			//create one
-			synchronized (getLocks())
-			{
-				//double check
-				lock = getLocks().get(inPath);
-				if( lock == null)
-				{
-					lock = new Object();
-					getLocks().put(inPath,lock);
-				}
-			}
+			getLockManager().release("system", lock);
 		}
-		return lock;
 	}
 
 	public PageManager getPageManager()
@@ -279,18 +241,12 @@ public class XmlArchive
 
 	public void deleteXmlFile(XmlFile inSettings) throws OpenEditException
 	{
-		getCache().remove(inSettings.getId());
-
 		Page page = getPageManager().getPage(inSettings.getPath(),true);
 		page.getContentItem().setMakeVersion(false);
 		getPageManager().removePage(page);
 		
 	}
-	public void clear(String inId)
-	{
-		getCache().remove(inId);
-		
-	}
+
 
 
 	

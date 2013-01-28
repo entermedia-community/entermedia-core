@@ -175,7 +175,6 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 		return 0;
 	}
 
-	//TODO: Add these methods to the Data interface
 	public Collection getValues(String inPreference)
 	{
 		String val = get(inPreference);
@@ -183,7 +182,15 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 		if (val == null)
 			return null;
 		
-		String[] vals = val.split("\\s+");
+		String[] vals = null;
+		if( val.contains("|") )
+		{
+			vals = VALUEDELMITER.split(val);
+		}
+		else
+		{
+			vals = val.split("\\s+"); //legacy
+		}
 
 		Collection collection = Arrays.asList(vals);
 		//if null check parent
@@ -199,7 +206,7 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 			values.append(detail);
 			if( iterator.hasNext())
 			{
-				values.append(" ");
+				values.append(" | ");
 			}
 		}
 		setProperty(inKey,values.toString());
