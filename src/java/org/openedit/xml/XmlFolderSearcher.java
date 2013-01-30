@@ -1,6 +1,7 @@
 package org.openedit.xml;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -191,4 +192,12 @@ public class XmlFolderSearcher extends XmlSearcher
 		
 	}
 	
+	public void saveAllData(Collection inAll, User inUser, String path)
+	{
+		for (Iterator iterator = inAll.iterator(); iterator.hasNext();)
+		{
+			Data data = (Data) iterator.next();
+			saveData(data,inUser,false);
+		}
+	}	
 }
