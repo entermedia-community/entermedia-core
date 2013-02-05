@@ -177,7 +177,10 @@ public class BaseWebServer implements WebServer
 			}
 			
 			File overrideFile = new File( getRootDirectory(), "/WEB-INF/pluginoverrides.xml" ); //TODO: Use a directory of files
-			context.load(new FileSystemResource(overrideFile));
+			if( overrideFile.exists() )
+			{
+				context.load(new FileSystemResource(overrideFile));
+			}
 
 			context.refresh();			
 			
