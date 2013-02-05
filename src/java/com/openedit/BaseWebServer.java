@@ -155,8 +155,28 @@ public class BaseWebServer implements WebServer
 				log.info("Loading " + plugin.getPluginXml().getPath() );
 				context.load(new UrlResource(plugin.getPluginXml() ) );
 			}
+			//Loop over the src folders
+			File folders = new File( getRootDirectory(), "/WEB-INF/base/");
+			File[] children = folders.listFiles();
+			if( children != null )
+			{
+				for (int i = 0; i < children.length; i++)
+				{
+					File script = new File( children[i],"/src/plugin.xml");
+					if( script.exists() )
+					{
+						context.load(new FileSystemResource(script) );
+					}
+				}
+			}
+
+			File custom = new File( getRootDirectory(), "/WEB-INF/src/plugin.xml");
+			if( custom.exists() )
+			{
+				context.load(new FileSystemResource(custom) );
+			}
 			
-			File overrideFile = new File( getRootDirectory(), "WEB-INF/pluginoverrides.xml" ); //TODO: Use a directory of files
+			File overrideFile = new File( getRootDirectory(), "/WEB-INF/pluginoverrides.xml" ); //TODO: Use a directory of files
 			context.load(new FileSystemResource(overrideFile));
 
 			context.refresh();			
