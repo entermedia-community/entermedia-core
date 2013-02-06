@@ -148,7 +148,6 @@ public class BaseWebServer implements WebServer
 			context.getBeanFactory().registerSingleton("root",getRootDirectory() );
 
 			List sorted = getAllPlugIns();
-			getBeanFactory();
 			for (Iterator iter = sorted.iterator(); iter.hasNext();)
 			{
 				PlugIn plugin = (PlugIn)iter.next();

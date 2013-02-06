@@ -89,6 +89,10 @@ public class SearcherManager
 				//searchertype
 				PropertyDetails details = newarchive.getPropertyDetails(inFieldName);
 				beanName = details.getBeanName();
+				if( beanName == null )
+				{
+					beanName = "dynamicSearcher";
+				}
 			}
 			searcher = (Searcher)getModuleManager().getBean(beanName);
 			if(log.isDebugEnabled())
@@ -233,6 +237,10 @@ public class SearcherManager
 			{
 				PropertyDetails details = getPropertyDetailsArchive(inCatalogId).getPropertyDetails(inFieldName);
 				beanName = details.getBeanName();
+				if( beanName == null )
+				{
+					beanName = "dynamicSearcher";
+				}
 			}
 		}
 		getModuleManager().clearBean(inCatalogId, beanName);

@@ -31,10 +31,10 @@ public class PropertyDetails extends AbstractCollection
 			{
 				fieldBeanName = getInputFile().getRoot().attributeValue("beanname");
 			}
-			if( fieldBeanName == null )
-			{
-				fieldBeanName = "dynamicSearcher";
-			}
+//			if( fieldBeanName == null )
+//			{
+//				fieldBeanName = "dynamicSearcher";
+//			}
 		}
 		return fieldBeanName;
 	}
