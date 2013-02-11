@@ -288,7 +288,7 @@ public class SearchQueryArchive
 			}
 			String[] values = new String[valueList.size()];
 			valueList.toArray(values);
-			inQuery.setProperty(key, values);
+			inQuery.setPropertyValues(key, values);
 		}
 	}
 	

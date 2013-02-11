@@ -933,7 +933,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					search.setProperty(t.getId(), select[j]);
 				}
 				search.addQuery(field, or.toQuery());
-				search.setProperty("picker." + param, select);
+				search.setPropertyValues("picker." + param, select);
 			}
 		}
 		return t;
