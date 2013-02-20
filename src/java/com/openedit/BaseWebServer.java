@@ -24,13 +24,15 @@ import org.dom4j.Element;
 import org.openedit.PlugIn;
 import org.openedit.repository.Repository;
 import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
-import org.springframework.context.support.GenericXmlApplicationContext;
+import org.springframework.beans.factory.FactoryBean;
+import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.UrlResource;
-import org.springframework.scripting.config.ScriptingDefaultsParser;
 
+import com.openedit.config.SpringContext;
 import com.openedit.page.Page;
 import com.openedit.page.manage.PageManager;
 import com.openedit.servlet.OpenEditEngine;
@@ -107,7 +109,33 @@ public class BaseWebServer implements WebServer
 		
 		try
 		{
-			GenericXmlApplicationContext context = new GenericXmlApplicationContext()
+//			DefaultListableBeanFactory factory = new DefaultListableBeanFactory()
+//			{ 
+//				public boolean isFactoryBean(String name) throws org.springframework.beans.factory.NoSuchBeanDefinitionException 
+//				{
+//					String beanName = transformedBeanName(name);
+//
+//					Object beanInstance = getSingleton(beanName, false);
+//					if (beanInstance != null) {
+//						boolean ret = (beanInstance instanceof FactoryBean || beanInstance instanceof BeanPostProcessor);
+//						return ret;
+//					}
+//					else if (containsSingleton(beanName)) {
+//						// null instance registered
+//						return false;
+//					}
+//
+//					// No singleton instance found -> check bean definition.
+//					if (!containsBeanDefinition(beanName) && getParentBeanFactory() instanceof ConfigurableBeanFactory) {
+//						// No bean definition found in this factory -> delegate to parent.
+//						return ((ConfigurableBeanFactory) getParentBeanFactory()).isFactoryBean(name);
+//					}
+//
+//					return isFactoryBean(beanName, getMergedLocalBeanDefinition(beanName));
+//				};
+//			};
+			
+			SpringContext context = new SpringContext() //factory
 			{
 				public org.springframework.core.io.Resource getResource(String location) 
 				{
@@ -133,6 +161,7 @@ public class BaseWebServer implements WebServer
 					return super.getResource(location);
 				};
 			};
+
 			context.setValidating(false);
 			///context.set
 			ClassLoader loader = getClass().getClassLoader();

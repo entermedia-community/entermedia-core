@@ -5,15 +5,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
+import org.entermedia.cache.CacheManager;
 import org.openedit.Data;
 import org.openedit.data.BaseSearcher;
 import org.openedit.data.PropertyDetail;
@@ -35,24 +34,22 @@ public class XmlSearcher extends BaseSearcher
 	protected XmlArchive fieldXmlArchive;
 	private static final Log log = LogFactory.getLog(XmlSearcher.class);
 	protected PropertyDetails fieldDefaultDetails;
-	protected Map fieldCache;
-	protected Map fieldIdcache;
+	protected CacheManager fieldCacheManager;
 	protected XmlFile fieldXmlFile;
 	
-	public Map getCache()
+	public CacheManager getCacheManager()
 	{
-		if (fieldCache == null)
+		if (fieldCacheManager == null)
 		{
-			fieldCache = new HashMap();
-			
+			fieldCacheManager = new CacheManager();
 		}
 
-		return fieldCache;
+		return fieldCacheManager;
 	}
 
-	public void setCache(Map inCache)
+	public void setCacheManager(CacheManager inCache)
 	{
-		fieldCache = inCache;
+		fieldCacheManager = inCache;
 	}
 	
 
@@ -60,7 +57,7 @@ public class XmlSearcher extends BaseSearcher
 	{
 		if (inId != null)
 		{
-			Object hit = getIdCache().get(inId);
+			Object hit = getCacheManager().get(getCatalogId() + getSearchType(), inId);
 			if (hit != null)
 			{
 				return hit;
@@ -72,11 +69,7 @@ public class XmlSearcher extends BaseSearcher
 			if (hits.size() > 0)
 			{
 				hit = hits.get(0);
-				if(getIdCache().size()>100)
-				{
-					getIdCache().clear();
-				}
-				getIdCache().put(inId, hit);
+				getCacheManager().put(getCatalogId() + getSearchType(),inId, hit);
 				return hit;
 			}
 		}
@@ -110,7 +103,7 @@ public class XmlSearcher extends BaseSearcher
 
 	public void reIndexAll() throws OpenEditException
 	{
-		getCache().clear();
+		getCacheManager().clear(getCatalogId() + getSearchType() );
 	}
 	
 	public boolean passes(Element inElement, SearchQuery inQuery) throws ParseException
@@ -279,7 +272,7 @@ public class XmlSearcher extends BaseSearcher
 	{
 		XmlFile settings = getXmlFile();  //this is slow. Only reload if someone has called save on this searcher
 
-		HitTracker hits = (HitTracker) getCache().get(inQuery.toQuery() + inQuery.getSortBy());
+		HitTracker hits = (HitTracker) getCacheManager().get(getCatalogId() + getSearchType(), inQuery.toQuery() + inQuery.getSortBy());
 		if(hits != null)
 		{
 			if( log.isDebugEnabled() )
@@ -320,12 +313,11 @@ public class XmlSearcher extends BaseSearcher
 		hits.setSearchQuery(inQuery);
 		hits.setIndexId(getSearchType() + settings.getLastModified());
 		hits.addAll(results);
-		//checkCache(settings.getLastModified());
-		if( getCache().size() > 500)
-		{
-			clearIndex();
-		}
-		getCache().put(inQuery.toQuery() + inQuery.getSortBy(), hits);
+//		if( getCache().size() > 500)
+//		{
+//			clearIndex();
+//		}
+		getCacheManager().put(getCatalogId() + getSearchType(),inQuery.toQuery() + inQuery.getSortBy(), hits);
 		if( log.isDebugEnabled() )
 		{
 			log.debug("Search " + getSearchType() + " " + inQuery.toQuery() + " (sorted by " + inQuery.getSortBy() + ") found " + hits.size());
@@ -607,22 +599,12 @@ public class XmlSearcher extends BaseSearcher
 		clearIndex();
 	}
 
-	protected Map getIdCache()
-	{
-		if (fieldIdcache == null)
-		{
-			fieldIdcache = new HashMap();
-		}
-		return fieldIdcache;
-	}
-	
 	public void clearIndex()
 	{
 		synchronized (this)
 		{
 			fieldXmlFile = null;
-			getCache().clear();
-			getIdCache().clear();
+			getCacheManager().clear(getCatalogId() + getSearchType());
 		}
 	}
 	

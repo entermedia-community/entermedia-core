@@ -27,7 +27,7 @@
 	<bean id="WebServer" class="com.openedit.BaseWebServer">
 	</bean>
 
-	<bean id="searcherManager" class="org.openedit.data.SearcherManager">
+	<bean id="searcherManager" class="org.openedit.data.SearcherManager" >
 		<property name="moduleManager">
 			<ref bean="moduleManager" />
 		</property>
@@ -72,6 +72,8 @@
 	<bean id="pageManager" class="com.openedit.page.manage.PageManager">
 		<property name="repository"><ref bean="repository"/></property>
 		<property name="pageSettingsManager"><ref bean="pageSettingsManager"/></property>
+		<property name="cacheManager"><ref bean="cacheManager"/></property>
+		
 	</bean>
 	
 	<bean id="moduleManager" class="com.openedit.ModuleManager">
@@ -102,7 +104,7 @@
 		<property name="xconfReader"><ref bean="xConfToPageSettingsConverter"/></property>
 		<property name="pageSettingsWriter"><ref bean="pageSettingsToXconfWriter"/></property>
 		<property name="textLabelManager"><ref bean="textLabelManager"/></property>
-		
+		<property name="cacheManager"><ref bean="cacheManager"/></property>
 	</bean>
 	
 	<bean id="xConfToPageSettingsConverter" class="com.openedit.page.manage.XConfToPageSettingsConverter">
@@ -278,6 +280,9 @@
 		<property name="searcherManager"><ref bean="searcherManager"/></property>
 	</bean>
 
+	<bean id="cacheManager" class="org.entermedia.cache.CacheManager"  >
+	
+	</bean>
 
 
 </beans>

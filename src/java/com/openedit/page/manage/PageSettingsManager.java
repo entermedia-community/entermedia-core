@@ -6,9 +6,9 @@ package com.openedit.page.manage;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.collections.map.ReferenceMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.entermedia.cache.CacheManager;
 import org.openedit.repository.ContentItem;
 import org.openedit.repository.Repository;
 import org.openedit.repository.RepositoryException;
@@ -40,19 +40,19 @@ public class PageSettingsManager
 	protected ModuleManager fieldModuleManager;
 	protected Generator fieldDefaultGenerator;
 	protected Repository fieldRepository;
-	protected Map fieldCache;
+	protected CacheManager fieldCacheManager;
 	protected MimeTypeMap fieldMimeTypeMap;
 
 	protected XConfToPageSettingsConverter fieldXconfReader;
 	protected PageSettingsToXconfWriter fieldPageSettingsWriter;
 	protected TextLabelManager fieldTextLabelManager;
-	
+	private static final String CACHE = PageSettingsManager.class.getName();
 	public PageSettings getPageSettings( String inPath ) throws OpenEditException
 	{
-		PageSettings page = (PageSettings) getCache().get( inPath );
+		PageSettings page = (PageSettings) getCacheManager().get( CACHE, inPath );
 		if ( page != null )
 		{
-			if( page.isCurrent()) //This is slow but is only run in the initial creation. After that it is seldom run
+			if( page.isCurrent()) //This is slow but is only run in the initial creation. After that it is seldom run since pages are cached
 			{
 				return page;				
 			}
@@ -61,15 +61,13 @@ public class PageSettingsManager
 		return page;
 	}
 
-	protected Map getCache()
+	protected CacheManager getCacheManager()
 	{
-		if( fieldCache == null)
-		{
-			//HARD means even if the object goes out of scope we still keep it in the hashmap
-			//until the memory runs low then things get dumped randomly
-			fieldCache = new ReferenceMap(ReferenceMap.HARD,ReferenceMap.SOFT);
-		}
-		return fieldCache;
+		return fieldCacheManager;
+	}
+	public void setCacheManager(CacheManager inCacheManager)
+	{
+		fieldCacheManager = inCacheManager;
 	}
 	public Generator getGenerator( String inName ) throws OpenEditException
 	{
@@ -129,11 +127,7 @@ public class PageSettingsManager
 			settings.setMimeType(mimeType);
 		}
 		getXconfReader().configure( settings, inUrlPath );
-//		if( getCache().size() > 2000)
-//		{
-//			getCache().clear(); //This seems a bit harsh
-//		}
-		getCache().put( inUrlPath, settings );
+		getCacheManager().put( CACHE, inUrlPath, settings );
 		return settings;
 	}
 
@@ -226,11 +220,11 @@ public class PageSettingsManager
 			log.error( ex );
 			throw new OpenEditException(ex);
 		}		
-		getCache().remove(inXconf.getPath()); //this also should remove the *.html version
+		getCacheManager().remove(CACHE, inXconf.getPath()); //this also should remove the *.html version
 	}
 	public void clearCache()
 	{
-		getCache().clear();
+		getCacheManager().clear(CACHE);
 	}
 	protected XConfToPageSettingsConverter getXconfReader()
 	{
@@ -254,11 +248,11 @@ public class PageSettingsManager
 	 */
 	public void clearCache(String inPath) 
 	{
-		getCache().remove(inPath);
+		getCacheManager().remove(CACHE,inPath); //Is this normal?
 		if( !inPath.endsWith(".xconf"))
 		{
 			String path = toXconfPath(inPath);
-			getCache().remove(path);
+			getCacheManager().remove(CACHE,path);
 		}
 	}
 	public TextLabelManager getTextLabelManager()
