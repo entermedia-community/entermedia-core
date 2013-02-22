@@ -3,6 +3,8 @@
  */
 package com.openedit;
 
+import groovy.util.GroovyScriptEngine;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,14 +26,11 @@ import org.dom4j.Element;
 import org.openedit.PlugIn;
 import org.openedit.repository.Repository;
 import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.FactoryBean;
-import org.springframework.beans.factory.config.BeanPostProcessor;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.UrlResource;
 
+import com.openedit.config.ScriptPathLoader;
 import com.openedit.config.SpringContext;
 import com.openedit.page.Page;
 import com.openedit.page.manage.PageManager;
@@ -161,15 +160,21 @@ public class BaseWebServer implements WebServer
 					return super.getResource(location);
 				};
 			};
-
+			
 			context.setValidating(false);
-			///context.set
-			ClassLoader loader = getClass().getClassLoader();
-			if( loader == null)
-			{
-				loader = ClassLoader.getSystemClassLoader();
-			}
+			ScriptPathLoader pathloader = new ScriptPathLoader();
+			pathloader.setRoot(getRootDirectory());
+			List classpathfolders = pathloader.findPaths();
+			GroovyScriptEngine engine = new GroovyScriptEngine((String[])classpathfolders.toArray(new String[classpathfolders.size()]));
+			
+			ClassLoader loader = engine.getGroovyClassLoader();
+//			
+//			if( loader == null)
+//			{
+//				loader = ClassLoader.getSystemClassLoader();
+//			}
 			context.setClassLoader(loader);
+
 			
 			InputStreamResource resource = new InputStreamResource(loader.getResourceAsStream("entermedia.xml"));
 			context.load(new UrlResource(loader.getResource("entermedia.xml")) );
