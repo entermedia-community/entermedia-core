@@ -524,6 +524,7 @@ public class PropertyDetail implements Data, ViewItem, Comparable
 		d.fieldText = fieldText;
 		d.fieldDataType = fieldDataType;
 		d.fieldSortable = fieldSortable;
+		d.fieldTextLabelManager = fieldTextLabelManager;
 		
 		d.getProperties().putAll(getProperties());
 
