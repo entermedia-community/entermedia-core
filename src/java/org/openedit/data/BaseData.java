@@ -115,7 +115,7 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 		{
 			if( i > 0)
 			{
-				buffer.append(' ');
+				buffer.append(" | ");
 			}
 			buffer.append(inValues[i]);
 		}

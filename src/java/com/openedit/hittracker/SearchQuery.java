@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -200,7 +201,36 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		getTerms().add(term);
 		return term;
 	}
-
+	public Term addOrsGroup(PropertyDetail inDetail, final String[] inValues)
+	{
+		Term term = new Term()
+		{
+			public String toQuery()
+			{
+				StringBuffer orString = new StringBuffer();
+				if (inValues.length > 0)
+				{
+					orString.append("(");
+					for (int i = 0; i < inValues.length - 1; i++)
+					{
+						if(inValues[i].length() > 0)
+						{
+							orString.append(inValues[i]);
+							orString.append(" OR ");
+						}
+					}
+					orString.append(inValues[inValues.length - 1]);
+					orString.append(")");
+				}
+				return getDetail().getId() + ":" + orString.toString();
+			}
+		};
+		term.setDetail(inDetail);
+		term.setValues(inValues);
+		term.setOperation("orgroup");
+		getTerms().add(term);
+		return term;
+	}
 	public Term addOrsGroup(PropertyDetail inDetail, String inValue)
 	{
 		Term term = new Term()
@@ -586,24 +616,10 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		return null;
 	}
 
-	public String[] getInputs(String inKey)
+	public Collection getInputs(String inKey)
 	{
-		Object input = get(inKey);
-		if (input != null)
-		{
-			if (input instanceof String)
-			{
-				String[] results = { (String) input };
-				return results;
-			}
-			else
-			{
-				String[] vals = (String[]) input;
-				return vals;
-			}
-		}
-
-		return null;
+		Collection input = getValues(inKey);
+		return input;
 	}
 
 	public String getSortBy()

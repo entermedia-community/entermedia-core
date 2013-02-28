@@ -543,6 +543,11 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 
 				String[] vals = inPageRequest.getRequestParameters(detail.getId() + ".value");
 				String val = null;
+				if( vals != null && vals.length == 1 && vals[0].length() == 0)
+				{
+					vals = null;
+				}
+				
 				if (vals != null && vals.length > count.intValue())
 				{
 					val = vals[count.intValue()]; //We should not get array out of bounds
@@ -553,30 +558,34 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				}
 				if (val == null)
 				{
-					String[] ors = inPageRequest.getRequestParameters(detail.getId() + ".orvalue");
-					if (ors != null)
-					{
-						val = createOrValue(ors);
-					}
+					//This is dumb
+					vals = inPageRequest.getRequestParameters(detail.getId() + ".values");
+
+//					//This is dumb
+//					String[] ors = inPageRequest.getRequestParameters(detail.getId() + ".orvalue");
+//					if (ors != null)
+//					{
+//						val = createOrValue(ors);
+//					}
 				}
 
 				String op = operations[i];
-				Term t = addTerm(search, detail, val, op);
+				Term t = addTerm(search, detail, val, vals, op);
 				if (t == null)
 				{
 					t = addDate(inPageRequest, search, formater, detail, val, op, count.intValue());
 					if (t == null)
 					{
-						t = addSelect(inPageRequest, search, detail, op);
+//						t = addSelect(inPageRequest, search, detail, op);
+//						if (t == null)
+//						{
+						t = addNumber(inPageRequest, search, detail, val, op);
 						if (t == null)
 						{
-							t = addNumber(inPageRequest, search, detail, val, op);
-							if (t == null)
-							{
-								//This is for lobpicker and primaryproductpicker and maybe other ones
-								addPicker(inPageRequest, search, detail, val, op, count.intValue());
-							}
+							//This is for lobpicker and primaryproductpicker and maybe other ones
+							addPicker(inPageRequest, search, detail, val, op, count.intValue());
 						}
+//						}
 					}
 				}
 
@@ -748,8 +757,12 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 
 		return detail;
 	}
+	protected Term addTerm(SearchQuery search, PropertyDetail detail, String val, String op)
+	{
+		return addTerm(search, detail, val, null, op);
+	}
 
-	private Term addTerm(SearchQuery search, PropertyDetail detail, String val, String op)
+	protected Term addTerm(SearchQuery search, PropertyDetail detail, String val, String[] vals, String op)
 	{
 		Term t = null;
 		if ((val != null && val.length() > 0))
@@ -778,11 +791,19 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			{
 				t = search.addOrsGroup(detail, val);
 			}
-			if (t != null)
+			if( t != null )
 			{
-				t.addParameter("op", op);
 				search.setProperty(t.getId(), val);
 			}
+		}
+		else if( vals != null )
+		{
+			t = search.addOrsGroup(detail, vals);
+			search.setPropertyValues(t.getId(), vals);
+		}
+		if (t != null)
+		{
+			t.addParameter("op", op);
 		}
 		return t;
 	}
@@ -1885,24 +1906,29 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			for (int i = 0; i < fields.length; i++)
 			{
 				String field = fields[i];
-				String[] value = inReq.getRequestParameters(field + ".value");
-				if (value != null && value.length > 1)
+
+				String[] values = inReq.getRequestParameters(field + ".values");
+				if( values == null )
+				{
+					values = inReq.getRequestParameters(field + ".value");
+				}
+				if (values != null && values.length > 1)
 				{
 					StringBuffer buf = new StringBuffer();
-					for (int j = 0; j < value.length; j++)
+					for (int j = 0; j < values.length; j++)
 					{
-						String val = value[j];
+						String val = values[j];
 						buf.append(val);
-						if (j != value.length - 1)
+						if (j != values.length - 1)
 						{
-							buf.append(' ');
+							buf.append(" | ");
 						}
 						data.setProperty(field, buf.toString());
 					}
 				}
-				else if (value != null)
+				else if (values != null)
 				{
-					data.setProperty(field, value[0]);
+					data.setProperty(field, values[0]);
 				}
 				else
 				{
