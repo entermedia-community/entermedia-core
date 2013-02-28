@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -87,18 +88,15 @@ public class SearchQueryArchive
 		for (Iterator iterator = inQuery.getProperties().keySet().iterator(); iterator.hasNext();)
 		{
 			String key = (String) iterator.next();
-			String[] values = inQuery.getInputs(key);
+			Collection values = inQuery.getInputs(key);
 			Element input = inputs.addElement("input");
 			input.addAttribute("key", key);
-			for (int i = 0; i < values.length; i++)
+			if( values != null )
 			{
-				if (values[i] == null)
+				for (Iterator iterator2 = values.iterator(); iterator2.hasNext();)
 				{
-					input.addElement("value").setText("");
-				}
-				else
-				{
-					input.addElement("value").setText(values[i]);
+					String val = (String) iterator2.next();
+					input.addElement("value").setText(val);					
 				}
 			}
 		}
