@@ -54,7 +54,10 @@ public class CacheManager
 	public void remove(String inType, String inKey)
 	{
 		Map cache = getCaches().get(inType);
-		cache.remove(inKey);
+		if( cache != null )
+		{
+			cache.remove(inKey);
+		}
 	}
 
 	public void clear(String inType)
