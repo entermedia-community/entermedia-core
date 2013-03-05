@@ -270,8 +270,6 @@ public class XmlSearcher extends BaseSearcher
 	 */
 	public HitTracker search(SearchQuery inQuery) 
 	{
-		XmlFile settings = getXmlFile();  //this is slow. Only reload if someone has called save on this searcher
-
 		HitTracker hits = (HitTracker) getCacheManager().get(getCatalogId() + getSearchType(), inQuery.toQuery() + inQuery.getSortBy());
 		if(hits != null)
 		{
@@ -281,6 +279,7 @@ public class XmlSearcher extends BaseSearcher
 			}
 			return hits;
 		}
+		XmlFile settings = getXmlFile(); 
 		
 		List results = new ArrayList();
 		
