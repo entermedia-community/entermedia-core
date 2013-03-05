@@ -8,28 +8,28 @@ import com.google.common.cache.CacheBuilder;
 
 public class CacheManager
 {
-	protected Map<String,Map> fieldCaches;
+	protected Map<String,Cache> fieldCaches;
 	
-	public Map<String,Map> getCaches()
+	public Map<String,Cache> getCaches()
 	{
 		if (fieldCaches == null)
 		{
-			fieldCaches = new HashMap<String,Map>();
+			fieldCaches = new HashMap<String,Cache>();
 		}
 		return fieldCaches;
 	}
 
-	public Map createCache(int inTargetSize)
+	protected Cache createCache(int inTargetSize)
 	{
 		Cache<String, Object> map = CacheBuilder.newBuilder()
 			       .maximumSize(inTargetSize)
 			       .build();
-		return map.asMap();
+		return map;
 	}
 
 	public Object get(String inType, String inId)
 	{
-		Map cache = getCaches().get(inType);
+		Cache cache = getCaches().get(inType);
 		if( cache == null )
 		{
 			synchronized (getCaches())
@@ -42,27 +42,27 @@ public class CacheManager
 				}
 			}
 		}
-		return cache.get(inId);
+		return cache.getIfPresent(inId);
 	}
 
 	public void put(String inType, String inKey, Object inValue)
 	{
-		Map cache = getCaches().get(inType);
+		Cache cache = getCaches().get(inType);
 		cache.put(inKey, inValue);
 	}
 
 	public void remove(String inType, String inKey)
 	{
-		Map cache = getCaches().get(inType);
+		Cache cache = getCaches().get(inType);
 		if( cache != null )
 		{
-			cache.remove(inKey);
+			cache.invalidate(inKey);
 		}
 	}
 
 	public void clear(String inType)
 	{
-		Map cache = getCaches().get(inType);
-		cache.clear();
+		Cache cache = getCaches().get(inType);
+		cache.invalidateAll();
 	}
 }
