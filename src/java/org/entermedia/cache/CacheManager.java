@@ -29,6 +29,11 @@ public class CacheManager
 
 	public Object get(String inType, String inId)
 	{
+		Cache cache = getCache(inType);
+		return cache.getIfPresent(inId);
+	}
+
+	private Cache getCache(String inType) {
 		Cache cache = getCaches().get(inType);
 		if( cache == null )
 		{
@@ -42,12 +47,12 @@ public class CacheManager
 				}
 			}
 		}
-		return cache.getIfPresent(inId);
+		return cache;
 	}
 
 	public void put(String inType, String inKey, Object inValue)
 	{
-		Cache cache = getCaches().get(inType);
+		Cache cache =getCache(inType);
 		cache.put(inKey, inValue);
 	}
 
