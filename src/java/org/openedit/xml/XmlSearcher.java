@@ -144,7 +144,7 @@ public class XmlSearcher extends BaseSearcher
 			}
 			else if("beforedate".equals(term.getOperation()))
 			{
-				String low = term.getParameter("lowDate");
+				String low = term.getParameter("beforeDate");
 				Date before = null;
 				if( low != null)
 				{
@@ -419,6 +419,7 @@ public class XmlSearcher extends BaseSearcher
 		clearIndex();
 		log.info("Saved to "  + settings.getPath());
 		getXmlArchive().saveXml(settings, inUser);
+		
 	}
 	
 	public void saveAllData(Collection inAll, User inUser){

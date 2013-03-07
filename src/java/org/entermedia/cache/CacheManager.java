@@ -32,6 +32,16 @@ public class CacheManager
 		Cache cache = getCaches().get(inType);
 		if( cache == null )
 		{
+			return null;
+		}
+		return cache.getIfPresent(inId);
+	}
+
+	public void put(String inType, String inKey, Object inValue)
+	{
+		Cache cache = getCaches().get(inType);
+		if( cache == null )
+		{
 			synchronized (getCaches())
 			{
 				cache = getCaches().get(inType);
@@ -42,12 +52,6 @@ public class CacheManager
 				}
 			}
 		}
-		return cache.getIfPresent(inId);
-	}
-
-	public void put(String inType, String inKey, Object inValue)
-	{
-		Cache cache = getCaches().get(inType);
 		cache.put(inKey, inValue);
 	}
 
