@@ -57,7 +57,7 @@ public class XmlSearcher extends BaseSearcher
 	{
 		if (inId != null)
 		{
-			Object hit = getCacheManager().get(getCatalogId() + getSearchType(), inId);
+			Object hit = getCacheManager().get(cacheId(), inId);
 			if (hit != null)
 			{
 				return hit;
@@ -66,14 +66,19 @@ public class XmlSearcher extends BaseSearcher
 			query.addMatches("id", inId);
 			//TODO: Search for only one then stop
 			HitTracker hits = search(query);
-			if (hits.size() > 0)
+			hit = hits.first();
+			if (hit != null)
 			{
-				hit = hits.get(0);
-				getCacheManager().put(getCatalogId() + getSearchType(),inId, hit);
+				getCacheManager().put(cacheId(),inId, hit);
 				return hit;
 			}
 		}
 		return null;
+	}
+
+	protected String cacheId()
+	{
+		return getCatalogId() + getSearchType();
 	}
 
 	public HitTracker getAllHits(WebPageRequest inReq) 
@@ -103,7 +108,7 @@ public class XmlSearcher extends BaseSearcher
 
 	public void reIndexAll() throws OpenEditException
 	{
-		getCacheManager().clear(getCatalogId() + getSearchType() );
+		getCacheManager().clear(cacheId() );
 	}
 	
 	public boolean passes(Element inElement, SearchQuery inQuery) throws ParseException
@@ -270,7 +275,7 @@ public class XmlSearcher extends BaseSearcher
 	 */
 	public HitTracker search(SearchQuery inQuery) 
 	{
-		HitTracker hits = (HitTracker) getCacheManager().get(getCatalogId() + getSearchType(), inQuery.toQuery() + inQuery.getSortBy());
+		HitTracker hits = (HitTracker) getCacheManager().get(cacheId(), inQuery.toQuery() + inQuery.getSortBy());
 		if(hits != null)
 		{
 			if( log.isDebugEnabled() )
@@ -316,7 +321,7 @@ public class XmlSearcher extends BaseSearcher
 //		{
 //			clearIndex();
 //		}
-		getCacheManager().put(getCatalogId() + getSearchType(),inQuery.toQuery() + inQuery.getSortBy(), hits);
+		getCacheManager().put(cacheId(),inQuery.toQuery() + inQuery.getSortBy(), hits);
 		if( log.isDebugEnabled() )
 		{
 			log.debug("Search " + getSearchType() + " " + inQuery.toQuery() + " (sorted by " + inQuery.getSortBy() + ") found " + hits.size());
@@ -406,19 +411,29 @@ public class XmlSearcher extends BaseSearcher
 
 		settings.setPath(path);
 		ElementData data = (ElementData)inData;
-		if( data.getElement().getParent() == null)
-		{
-			settings.getRoot().add(data.getElement());
-			//getdata.getElement();
-		}
+
+		Element element = null;
 		if( data.getId() == null)
 		{
-			//TODO: Use counter
 			data.setId( String.valueOf( new Date().getTime() ));
 		}
-		clearIndex();
+		else
+		{
+			element = settings.getElementById(inData.getId());
+		}
+		if( element == null )
+		{
+			//New element
+			element = settings.getRoot().addElement(settings.getElementName());
+			element.addAttribute("id", inData.getId());
+		}
+		List attributes = data.getElement().attributes();
+		element.setAttributes(attributes);
+		element.setText(inData.getName());
+		
 		log.info("Saved to "  + settings.getPath());
 		getXmlArchive().saveXml(settings, inUser);
+		clearIndex();
 		
 	}
 	
@@ -604,7 +619,7 @@ public class XmlSearcher extends BaseSearcher
 		synchronized (this)
 		{
 			fieldXmlFile = null;
-			getCacheManager().clear(getCatalogId() + getSearchType());
+			getCacheManager().clear(cacheId());
 		}
 	}
 	
