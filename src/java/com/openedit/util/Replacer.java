@@ -66,7 +66,7 @@ public class Replacer
 				{
 					String objectname = key.substring(0,dot);
 					
-					Object object = inValues.get(objectname);  //123  {system.user.firstname}
+					Object object = inValues.get(objectname);  //${division.folder}
 					if( object instanceof String )
 					{
 						object = getData(objectname,(String)object); //division

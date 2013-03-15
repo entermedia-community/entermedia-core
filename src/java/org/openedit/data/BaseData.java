@@ -108,14 +108,14 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 	 * @param inId
 	 * @param inValue
 	 */
-	public void setProperty(String inId, String[] inValues) 
+	public void setPropertyValues(String inId, String[] inValues) 
 	{
 		StringBuffer buffer = new StringBuffer();
 		for (int i = 0; i < inValues.length; i++)
 		{
 			if( i > 0)
 			{
-				buffer.append(' ');
+				buffer.append(" | ");
 			}
 			buffer.append(inValues[i]);
 		}

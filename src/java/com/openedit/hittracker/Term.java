@@ -17,6 +17,10 @@ abstract public class Term {
 	
 	public Object[] getValues()
 	{
+//		if( fieldValues == null && fieldValue != null)
+//		{
+//			return new Object[] { getValue() };
+//		}
 		return fieldValues;
 	}
 

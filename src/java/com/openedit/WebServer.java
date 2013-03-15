@@ -6,7 +6,7 @@ package com.openedit;
 import java.io.File;
 import java.util.List;
 
-import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.beans.factory.BeanFactory;
 
 import com.openedit.page.manage.PageManager;
 import com.openedit.servlet.OpenEditEngine;
@@ -32,7 +32,7 @@ import com.openedit.users.UserManager;
  */
 public interface WebServer
 {
-    public ConfigurableListableBeanFactory getBeanFactory();
+    public BeanFactory getBeanFactory();
 
     public PageManager getPageManager();
 

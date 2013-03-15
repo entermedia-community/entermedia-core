@@ -288,6 +288,11 @@ public class ModuleManager implements BeanFactoryAware, ShutdownList
 				{
 					//Could not set catalogId
 				}
+				
+				//if instanceof GroovyBean
+				//bean = bean.getProxy()
+
+				
 				getCatalogIdBeans().put(inCatalogId + "_" + inBeanName, bean);
 			}
 		}
@@ -385,7 +390,7 @@ public class ModuleManager implements BeanFactoryAware, ShutdownList
 		}
 		return null;
 	}
-	protected ConfigurableListableBeanFactory getBeanFactory()
+	protected BeanFactory getBeanFactory()
 	{
 		return fieldBeanFactory;
 	}
@@ -435,33 +440,33 @@ public class ModuleManager implements BeanFactoryAware, ShutdownList
 //		return allModules;
 //	}
 	
-	public String getVersion(String inBeanName) 
-	{
-		if (getBeanFactory().containsBean(inBeanName)) {
-			BeanDefinition beanDe = getBeanFactory().getBeanDefinition(inBeanName);
-			if (!(beanDe instanceof AbstractBeanDefinition)) {
-				throw new OpenEditRuntimeException("Spring version not supported yet");
-
-			}
-			AbstractBeanDefinition beanDef = (AbstractBeanDefinition) beanDe;
-
-			try {
-				beanDef.resolveBeanClass(Thread.currentThread().getContextClassLoader());
-			} catch (Exception ex) {
-				log.info("Could not load: " + inBeanName + " " + ex);
-				return null;
-			}
-
-			// get version of module
-			String version = beanDef.getBeanClass().getPackage().getImplementationVersion();
-			return version;
-			// get title of module
-//			String title = beanDef.getBeanClass().getPackage().getImplementationTitle();
-//			bean.setTitle(title);
-			//return bean;
-		}
-		return null;
-	}
+//	public String getVersion(String inBeanName) 
+//	{
+//		if (getBeanFactory().containsBean(inBeanName)) {
+//			BeanDefinition beanDe = getBeanFactory().getBeanDefinition(inBeanName);
+//			if (!(beanDe instanceof AbstractBeanDefinition)) {
+//				throw new OpenEditRuntimeException("Spring version not supported yet");
+//
+//			}
+//			AbstractBeanDefinition beanDef = (AbstractBeanDefinition) beanDe;
+//
+//			try {
+//				beanDef.resolveBeanClass(Thread.currentThread().getContextClassLoader());
+//			} catch (Exception ex) {
+//				log.info("Could not load: " + inBeanName + " " + ex);
+//				return null;
+//			}
+//
+//			// get version of module
+//			String version = beanDef.getBeanClass().getPackage().getImplementationVersion();
+//			return version;
+//			// get title of module
+////			String title = beanDef.getBeanClass().getPackage().getImplementationTitle();
+////			bean.setTitle(title);
+//			//return bean;
+//		}
+//		return null;
+//	}
 
 	public XmlArchive getXmlArchive()
 	{

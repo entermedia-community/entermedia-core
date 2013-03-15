@@ -1,17 +1,13 @@
 package org.openedit.data;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.dom4j.Element;
 import org.openedit.Data;
 import org.openedit.xml.XmlArchive;
-import org.openedit.xml.XmlFile;
-import org.openedit.xml.XmlSearcher;
 
 import com.openedit.ModuleManager;
 import com.openedit.OpenEditRuntimeException;
@@ -89,6 +85,10 @@ public class SearcherManager
 				//searchertype
 				PropertyDetails details = newarchive.getPropertyDetails(inFieldName);
 				beanName = details.getBeanName();
+				if( beanName == null )
+				{
+					beanName = "dynamicSearcher";
+				}
 			}
 			searcher = (Searcher)getModuleManager().getBean(beanName);
 			if(log.isDebugEnabled())
@@ -233,6 +233,10 @@ public class SearcherManager
 			{
 				PropertyDetails details = getPropertyDetailsArchive(inCatalogId).getPropertyDetails(inFieldName);
 				beanName = details.getBeanName();
+				if( beanName == null )
+				{
+					beanName = "dynamicSearcher";
+				}
 			}
 		}
 		getModuleManager().clearBean(inCatalogId, beanName);

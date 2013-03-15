@@ -1,6 +1,7 @@
 package org.openedit.xml;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -61,22 +62,27 @@ public class XmlFolderSearcher extends XmlSearcher
 				loadChildren(inName, children2, root, existing);
 			}
 			
-			HitTracker hits = getSearcherManager().getList(
-					getCatalogId(), "dataextensions");
-			for (Iterator iterator = hits.iterator(); iterator
-					.hasNext();) {
-				Data hit = (Data) iterator.next();
-				String catalogid = hit.get("catalogid");
-
-				List<String> children3 = getPageManager().getChildrenPaths("/" + catalogid + "/data" + "/lists/" + inName + "/",true);
-				if( children3.size() > 0)
-				{
-					composite.setExist(true);
-					boolean existing = children2.size() > 0;
-					loadChildren(inName, children3, root, existing);
-				}
-				
-			}
+//			HitTracker hits = getSearcherManager().getList(
+//					getCatalogId(), "dataextensions");
+//			for (Iterator iterator = hits.iterator(); iterator
+//					.hasNext();) {
+//				Data hit = (Data) iterator.next();
+//				String catalogid = hit.get("catalogid");
+//
+//				List<String> children3 = getPageManager().getChildrenPaths("/" + catalogid + "/data" + "/lists/" + inName + "/",true);
+//				if( children3.size() > 0)
+//				{
+//					composite.setExist(true);
+//					boolean existing = children2.size() > 0;
+//					if( !existing )
+//					{
+//						existing = children.size() > 0;
+//					}
+//					loadChildren(inName, children3, root, existing);
+//				}
+//				
+//			}
+			
 			//remove deleted
 			for (Iterator iterator = new ArrayList(composite.getElements()).iterator(); iterator.hasNext();)
 			{
@@ -191,4 +197,12 @@ public class XmlFolderSearcher extends XmlSearcher
 		
 	}
 	
+	public void saveAllData(Collection inAll, User inUser, String path)
+	{
+		for (Iterator iterator = inAll.iterator(); iterator.hasNext();)
+		{
+			Data data = (Data) iterator.next();
+			saveData(data,inUser,false);
+		}
+	}	
 }

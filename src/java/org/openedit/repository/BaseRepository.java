@@ -317,9 +317,9 @@ public abstract class BaseRepository implements Repository
 		}
 		
 		//now check the filter
-		inPath = inPath.toLowerCase();
 		if( getFilterOut() != null )
 		{
+			inPath = inPath.toLowerCase();
 			for( String out: getFilterOutList() )
 			{
 				if(PathUtilities.match(inPath,out))

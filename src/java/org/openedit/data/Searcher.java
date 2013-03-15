@@ -32,6 +32,8 @@ public interface Searcher
 
 	public HitTracker fieldSearch(String attr, String value);
 
+	public HitTracker fieldSearch(String attr, String value, String orderby); 
+
 	public abstract SearchQuery addStandardSearchTerms(WebPageRequest inPageRequest) throws OpenEditException;
 
 	public Data updateData(WebPageRequest inReq, String[] fields, Data data);

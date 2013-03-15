@@ -24,6 +24,7 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.entermedia.cache.CacheManager;
 import org.openedit.repository.CompoundRepository;
 import org.openedit.repository.ContentItem;
 import org.openedit.repository.OutputStreamItem;
@@ -51,10 +52,10 @@ public class PageManager
 	private static Log log = LogFactory.getLog( PageManager.class );
 
 	protected Map fieldPageAccessListeners;
-	protected Map fieldCache;
+	protected CacheManager fieldCacheManager;
 	protected CompoundRepository fieldRepository;
 	protected PageSettingsManager fieldSettingsManager;
-
+	private static final String CACHEID = PageManager.class.getName();
 	public PageManager()
 	{
 		log.debug("create page manager instance");
@@ -210,7 +211,7 @@ public class PageManager
 		}
 		String fullPath = PathUtilities.buildRelative( inPath, "/" );
 		
-		Page page = (Page) getCache().get( fullPath );
+		Page page = (Page) getCacheManager().get( CACHEID, fullPath );
 		boolean reloadPage = false;
 		if ( page != null )
 		{
@@ -229,9 +230,9 @@ public class PageManager
 					reloadPage = true;
 				}
 		}
-		synchronized( getCache() )
+		synchronized( getCacheManager() )
 		{	//lock down the config until we can configure the thing 
-			page = (Page) getCache().get( fullPath );
+			page = (Page) getCacheManager().get( CACHEID, fullPath );
 			if ( page == null || reloadPage ) //check for other threads that where waiting
 			{
 				if ( reloadPage)
@@ -239,11 +240,7 @@ public class PageManager
 					getPageSettingsManager().clearCache(fullPath);  //in case alternative file shows up
 				}
 				page = createPage( fullPath );
-				if( getCache().size() > 2000)
-				{
-					getCache().clear(); //This seems a bit harsh
-				}
-				getCache().put( fullPath, page );
+				getCacheManager().put(CACHEID, fullPath, page );
 				firePageRequested( page );
 			}
 		}
@@ -355,7 +352,7 @@ public class PageManager
 		inPage.getContentItem().setPath(inPage.getPath());
 		getRepository().remove( inPage.getContentItem() );
 		//getRepository().remove( inPage.getPageSettings().getXConf() );
-		getCache().remove( inPage.getPath() );
+		getCacheManager().remove( CACHEID, inPage.getPath() );
 		firePageRemoved( inPage );
 	}
 
@@ -405,16 +402,13 @@ public class PageManager
 		firePageModified(inPage);
 		clearCache(inPage);
 	}
-	protected Map getCache()
+	protected CacheManager getCacheManager()
 	{
-		if (fieldCache == null)
-		{
-			//HARD means even if the object goes out of scope we still keep it in the hashmap
-			//until the memory runs low then things get dumped randomly
-			fieldCache = new HashMap();// new ReferenceMap(ReferenceMap.HARD,ReferenceMap.HARD);
-		}
-
-		return fieldCache;
+		return fieldCacheManager;
+	}
+	public void setCacheManager(CacheManager inCacheManager)
+	{
+		fieldCacheManager = inCacheManager;
 	}
 
 	public CompoundRepository getRepositoryManager()
@@ -497,9 +491,9 @@ public class PageManager
 	}
 	public void clearCache()
 	{
-		synchronized( getCache() )
+		synchronized( getCacheManager() )
 		{
-			getCache().clear();
+			getCacheManager().clear(CACHEID);
 			getPageSettingsManager().clearCache();
 		}
 	}
@@ -515,9 +509,9 @@ public class PageManager
 	{
 		if( inPath != null )
 		{
-			synchronized( getCache() )
+			synchronized( getCacheManager() )
 			{
-				getCache().remove(inPath);
+				getCacheManager().remove(CACHEID, inPath);
 				getPageSettingsManager().clearCache(inPath);
 			}
 		}

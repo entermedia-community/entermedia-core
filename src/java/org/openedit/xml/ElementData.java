@@ -101,19 +101,19 @@ public class ElementData implements MultiValued, Comparable
 		}
 		else
 		{
-			if( inValue == null || inValue.length() == 0)
+			synchronized (getElement())
 			{
-				Attribute attr = getElement().attribute(inId);
-				if( attr != null)
+				if( inValue == null || inValue.length() == 0)
 				{
-					getElement().remove(attr);
+					Attribute attr = getElement().attribute(inId);
+					if( attr != null)
+					{
+						getElement().remove(attr);
+					}
 				}
-			}
-			else
-			{
-				synchronized (getElement())
+				else
 				{
-					getElement().addAttribute(inId,inValue);					
+						getElement().addAttribute(inId,inValue);					
 				}
 			}
 		}

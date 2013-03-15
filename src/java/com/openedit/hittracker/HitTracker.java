@@ -436,18 +436,12 @@ public abstract class HitTracker implements Serializable, Collection
 
 		if (query != null && inValue != null && inKey != null)
 		{
-			String[] inputs = query.getInputs(inKey);
+			Collection inputs = query.getInputs(inKey);
 			if (inputs != null)
 			{
-				for (int i = 0; i < inputs.length; i++)
+				if( inputs.contains(inValue) )
 				{
-					if (inputs[i] != null)
-					{
-						if (inputs[i].equals(inValue))
-						{
-							return true;
-						}
-					}
+					return true;
 				}
 			}
 		}
