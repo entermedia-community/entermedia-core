@@ -35,20 +35,20 @@ public class MemoryLockManager implements LockManager
 		while( !grabLock(inCatId, inOwnerId, lock))
 		{
 			tries++;
-			if( tries > 9)
+			if( tries > 20)
 			{
 				throw new OpenEditException("Could not lock file " + inPath + " locked by " + lock.getNodeId() + " " + lock.getOwnerId() );
 			}
 			try
 			{
-				Thread.sleep(250);
+				Thread.sleep(500);
 			}
 			catch( Exception ex)
 			{
 				//does not happen
 				log.info(ex);
 			}
-			log.info("Could not lock " + inPath + " trying again  " + tries);
+			log.info("Could not lock " + inPath + " trying again  " + tries  + " locked by " + lock.getNodeId() + " " + lock.getOwnerId() );
 			lock = loadLock(inCatId, inPath);
 		}
 		return lock;
