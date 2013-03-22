@@ -49,6 +49,9 @@ public class Replacer
 		{
 			return inCode;
 		}
+		if(inValues == null){
+			return inCode;
+		}
 		int start = 0;
 		while( (start = inCode.indexOf("${",start)) != -1)
 		{
