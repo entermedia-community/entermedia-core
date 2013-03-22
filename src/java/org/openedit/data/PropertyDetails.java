@@ -22,6 +22,8 @@ public class PropertyDetails extends AbstractCollection
 	protected XmlFile fieldInputFile;
 	protected String fieldPrefix;
 	protected String fieldBeanName;
+	protected String fieldToString;
+
 	
 	public String getBeanName()
 	{
@@ -41,6 +43,27 @@ public class PropertyDetails extends AbstractCollection
 	public void setBeanName(String inBeanName)
 	{
 		fieldBeanName = inBeanName;
+	}
+	
+	
+	public String getRender()
+	{
+		if( fieldToString == null)
+		{
+			if( getInputFile() != null && getInputFile().getRoot() != null)
+			{
+				fieldToString = getInputFile().getRoot().attributeValue("tostring");
+			}
+//			if( fieldBeanName == null )
+//			{
+//				fieldBeanName = "dynamicSearcher";
+//			}
+		}
+		return fieldToString;
+	}
+	public void setRender(String inBeanName)
+	{
+		fieldToString = inBeanName;
 	}
 	public PropertyDetails()
 	{

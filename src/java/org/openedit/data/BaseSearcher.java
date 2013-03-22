@@ -1928,7 +1928,15 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				}
 				else if (values != null)
 				{
-					data.setProperty(field, values[0]);
+					String val = values[0];
+					String hour = inReq.getRequestParameter(field + ".hour");
+					String minute = inReq.getRequestParameter(field + ".minute");
+					if(hour != null && minute != null){
+						val = val + " " + hour + ":" + minute;
+					}
+					
+					
+					data.setProperty(field, val);
 				}
 				else
 				{
