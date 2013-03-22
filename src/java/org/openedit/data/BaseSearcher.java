@@ -442,7 +442,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		String resultype = inPageRequest.getRequestParameter("resulttype");
 		if (resultype == null)
 		{
-			resultype = "search";
+			resultype = getSearchType();
 		}
 		search.setResultType(resultype);
 
