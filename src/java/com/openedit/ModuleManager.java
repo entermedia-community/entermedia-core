@@ -364,9 +364,9 @@ public class ModuleManager implements BeanFactoryAware, ShutdownList
 		try
 		{
 			Object bean = getBeanFactory().getBean( inBeanName );
-			if( bean != null)
+			if( bean != null && bean instanceof Shutdownable)
 			{
-				getLoadedBeans().add(bean);
+				addForShutdown((Shutdownable)bean);
 			}
 			return bean;
 		} catch ( NoSuchBeanDefinitionException ex)
@@ -409,7 +409,7 @@ public class ModuleManager implements BeanFactoryAware, ShutdownList
 		return getBeanFactory().containsBean(inKey);
 	}
 
-	public Set getLoadedBeans()
+	public Set<Shutdownable> getLoadedBeans()
 	{
 		if (fieldLoadedBeans == null)
 		{

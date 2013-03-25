@@ -1116,8 +1116,36 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 	}
 	public String getDate(Date inDate)
 	{
+		
 		return getLocaleManager().formatDateForDisplay( inDate, getLocale());
 	}
+	
+	
+	public String getHours(String inDate)
+	{
+		Date date = getLocaleManager().getDateStorageUtil().parseFromStorage(inDate);
+		if(date == null){
+			return null;
+		}
+		
+		return String.valueOf(date.getHours());
+	}
+	
+	
+	public String getMinutes(String inDate)
+	{
+		if(inDate == null){
+			return null;
+		}
+		Date date = getLocaleManager().getDateStorageUtil().parseFromStorage(inDate);
+		if(date == null){
+			return null;
+		}
+		return String.valueOf(date.getMinutes());
+	}
+	
+	
+	
 	public String getDate(String inStorageFormat)
 	{
 		return getLocaleManager().formatDateForDisplay( inStorageFormat, getLocale());
