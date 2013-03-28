@@ -184,11 +184,11 @@ public abstract class HitTracker implements Serializable, Collection
 		}
 	}
 	
-	public void setPage(int inPage)
+	public void setPage(int inPageOneBased)
 	{
-		if( fieldPage != inPage || fieldCurrentPage == null)
+		if( fieldPage != inPageOneBased || fieldCurrentPage == null)
 		{
-			fieldPage = inPage;
+			fieldPage = inPageOneBased;
 			
 			int inHitsPerPage = getHitsPerPage();
 			List page = new ArrayList();
