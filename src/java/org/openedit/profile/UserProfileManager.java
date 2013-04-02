@@ -94,11 +94,14 @@ public class UserProfileManager
 			{
 				userprofile.setProperty("settingsgroup", "administrator");
 			}
+			else if( user != null)
+			{
+				userprofile.setProperty("settingsgroup", "users");
+			}
 			else
 			{
 				userprofile.setProperty("settingsgroup", "guest");
 			}
-
 			userprofile.setSourcePath(inUserName);
 			userprofile.setCatalogId(inCatalogId);
 			saveUserProfile(userprofile);
