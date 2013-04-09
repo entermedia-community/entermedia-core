@@ -87,7 +87,7 @@ public class UserProfile extends ElementData
 
 	public String getUserId()
 	{
-		return get("userid");
+		return getId();
 	}
 
 	public boolean isEnabled(String inPreference)

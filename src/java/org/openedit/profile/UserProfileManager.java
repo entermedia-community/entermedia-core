@@ -83,7 +83,22 @@ public class UserProfileManager
 			}
 		}
 		Searcher searcher = getSearcherManager().getSearcher(inCatalogId, "userprofile");
-		userprofile = (UserProfile) searcher.searchByField("userid", inUserName);
+		userprofile = (UserProfile) searcher.searchById(inUserName);
+		
+		if(userprofile != null && userprofile.get("userid") != null)
+		{
+			String validuserid = userprofile.get("userid");
+			if(!inUserName.equals(validuserid))
+			{
+				userprofile = (UserProfile) searcher.searchByField("userid", inUserName);
+				searcher.delete(userprofile, null);
+				userprofile.setSourcePath(inUserName);
+				userprofile.setProperty("id", inUserName);
+				
+			}
+			userprofile.setProperty("userid", null);
+			searcher.saveData(userprofile, inReq.getUser());
+		}
 		User user = getUserManager().getUser(inUserName);
 		if (userprofile == null)
 		{
