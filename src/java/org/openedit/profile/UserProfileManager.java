@@ -84,16 +84,19 @@ public class UserProfileManager
 		}
 		Searcher searcher = getSearcherManager().getSearcher(inCatalogId, "userprofile");
 		userprofile = (UserProfile) searcher.searchById(inUserName);
+		if(userprofile == null){
+			userprofile = (UserProfile) searcher.searchByField("userid", inUserName);
+		}
+		
 		
 		if(userprofile != null && userprofile.get("userid") != null)
 		{
-			String validuserid = userprofile.get("userid");
-			if(!inUserName.equals(validuserid))
+			String dataid = userprofile.getId();
+			if(!inUserName.equals(dataid))
 			{
-				userprofile = (UserProfile) searcher.searchByField("userid", inUserName);
 				searcher.delete(userprofile, null);
 				userprofile.setSourcePath(inUserName);
-				userprofile.setProperty("id", inUserName);
+				userprofile.setId(inUserName);
 				
 			}
 			userprofile.setProperty("userid", null);
@@ -103,7 +106,6 @@ public class UserProfileManager
 		if (userprofile == null)
 		{
 			userprofile = (UserProfile) searcher.createNewData();
-			userprofile.setProperty("userid", inUserName);
 			userprofile.setId(inUserName);
 			if (inUserName.equals("admin"))
 			{
