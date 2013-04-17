@@ -108,7 +108,12 @@ public class PropertyDetail implements Data, ViewItem, Comparable
 	{
 		return isDataType("list") || isViewType("list");
 	}
-	
+
+	public boolean isMultiValue()
+	{
+		return isViewType("multiselect") || isViewType("libraries");
+	}
+
 	public boolean isBoolean()
 	{
 		return isDataType("boolean") || isViewType("boolean");

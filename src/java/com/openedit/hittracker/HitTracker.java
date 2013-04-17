@@ -608,21 +608,16 @@ public abstract class HitTracker implements Serializable, Collection
 		{
 			return this;
 		}
-		ListHitTracker hits = new ListHitTracker(getSelectedHits());
+		SelectedHitsTracker hits = new SelectedHitsTracker(this);
 		hits.setHitsName("selected" + getHitsName());
 		hits.setSessionId("selected" + getSessionId() );
 		hits.selectAll();
 		return hits;
 	}
 
-	public List getSelectedHits(){
-		ArrayList hits = new ArrayList();
-		for (Iterator iterator = getSelections().iterator(); iterator.hasNext();)
-		{
-			Integer hit = (Integer) iterator.next();
-			hits.add(get(hit.intValue()));
-			
-		}
+	public List getSelectedHits()
+	{
+		ArrayList hits = new ArrayList(getSelections());
 		return hits;
 	}
 	public boolean hasMultipleSelections()
@@ -942,5 +937,10 @@ public abstract class HitTracker implements Serializable, Collection
 			}
 		}
 		return null;
+	}
+
+	public void loadPreviousSelections(HitTracker inOld) 
+	{
+		setSelections(inOld.getSelections());
 	}
 }
