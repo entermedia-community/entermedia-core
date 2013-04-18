@@ -476,6 +476,7 @@ public class UserProfile extends ElementData
 		SearchQuery q = viewSearcher.createSearchQuery();
 		q.addMatches("module", inModuleId);
 		q.addMatches("systemdefined", "false");
+		q.addSortBy("ordering");
 		HitTracker row = (HitTracker) viewSearcher.search(q);
 		if (row.size() > 0)
 		{
