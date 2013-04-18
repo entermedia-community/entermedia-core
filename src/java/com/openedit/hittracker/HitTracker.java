@@ -920,11 +920,11 @@ public abstract class HitTracker implements Serializable, Collection
 		return getSelectedHits().size() == getTotal();
 	}
 	
-	public Data findRow(String inField, String inValue)
+	public int findRow(String inField, String inValue)
 	{
 		if(inValue == null || inField == null)
 		{
-			return null;
+			return -1;
 		}
 		
 		for (int i = 0; i < size(); i++)
@@ -932,10 +932,10 @@ public abstract class HitTracker implements Serializable, Collection
 			Data hit = get(i);
 			if(inValue.equals(hit.get(inField)))
 			{
-				return hit;
+				return i;
 			}
 		}
-		return null;
+		return -1;
 	}
 
 	public void loadPreviousSelections(HitTracker inOld) 
