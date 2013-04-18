@@ -5,10 +5,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
 
 import org.openedit.Data;
 import org.openedit.data.PropertyDetail;
@@ -674,7 +674,7 @@ public abstract class HitTracker implements Serializable, Collection
 	{
 		if (fieldSelections == null)
 		{
-			fieldSelections = new TreeSet<String>();
+			fieldSelections = new HashSet<String>();
 		}
 		return fieldSelections;
 	}
