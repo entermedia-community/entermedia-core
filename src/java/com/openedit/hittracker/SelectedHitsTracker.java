@@ -1,5 +1,6 @@
 package com.openedit.hittracker;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 
 import org.openedit.Data;
@@ -10,7 +11,7 @@ public class SelectedHitsTracker extends ListHitTracker
 	public SelectedHitsTracker(HitTracker inTracker )
 	{
 		setTracker(inTracker);
-		setList(inTracker.getSelectedHits());
+		setList(new ArrayList( inTracker.getSelections() ) );
 	}
 	protected HitTracker fieldTracker;
 	
@@ -21,18 +22,7 @@ public class SelectedHitsTracker extends ListHitTracker
 	public void setTracker(HitTracker inTracker) {
 		fieldTracker = inTracker;
 	}
-//	
-//	@Override
-//	public boolean hasMultipleSelections() {
-//		// TODO Auto-generated method stub
-//		return getTracker().hasMultipleSelections();
-//	}
-//	@Override
-//	public boolean hasSelections() {
-//		// TODO Auto-generated method stub
-//		return getTracker().hasSelections();
-//	}
-	
+
 	public Iterator iterator()
 	{
 		final Iterator list = getList().iterator();
@@ -44,8 +34,9 @@ public class SelectedHitsTracker extends ListHitTracker
 			}
 
 			public Object next() {
-				Integer i = (Integer)list.next();
-				return getTracker().get(i);
+				String assetid = (String)list.next();
+				int index = getTracker().findRow("id", assetid);
+				return getTracker().get(index);
 			}
 
 			public void remove() {
@@ -58,13 +49,17 @@ public class SelectedHitsTracker extends ListHitTracker
 	@Override
 	public Data get(int inCount) 
 	{
-		Integer first = getLocation(inCount);
+		int first = getLocation(inCount);
 		return getTracker().get(first);
 	}
 
-	private Integer getLocation(int inCount) {
-		Integer first = (Integer)getList().get(inCount);
-		return first;
+	private Integer getLocation(int inCount) 
+	{
+	
+		String assetid = (String)getList().get(inCount);
+		
+		int index = getTracker().findRow("id", assetid);
+		return index;
 	}
 
 	public boolean contains(Object inHit) {

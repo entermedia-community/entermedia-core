@@ -179,7 +179,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 						tracker.setHitsPerPage(Integer.parseInt(hitsperpage));
 					}
 
-					if( oldtracker.hasSelections() )
+					if(oldtracker != null && oldtracker.hasSelections() )
 					{
 						tracker.loadPreviousSelections(oldtracker);
 					}
