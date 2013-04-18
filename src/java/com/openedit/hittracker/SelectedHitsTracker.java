@@ -1,34 +1,17 @@
 package com.openedit.hittracker;
 
 import java.util.Iterator;
-import java.util.Set;
 
 import org.openedit.Data;
 
-public class SelectedHitsTracker extends HitTracker 
+
+public class SelectedHitsTracker extends ListHitTracker
 {
-	
 	public SelectedHitsTracker(HitTracker inTracker )
 	{
 		setTracker(inTracker);
+		setList(inTracker.getSelectedHits());
 	}
-	
-	
-	protected String fieldSessionId;
-	public String getSessionId()
-	{
-		if( fieldSessionId == null)
-		{
-			return super.getSessionId();
-		}
-		return fieldSessionId;
-	}
-
-	public void setSessionId(String inSessionId)
-	{
-		fieldSessionId = inSessionId;
-	}
-
 	protected HitTracker fieldTracker;
 	
 	public HitTracker getTracker() {
@@ -38,60 +21,54 @@ public class SelectedHitsTracker extends HitTracker
 	public void setTracker(HitTracker inTracker) {
 		fieldTracker = inTracker;
 	}
+//	
+//	@Override
+//	public boolean hasMultipleSelections() {
+//		// TODO Auto-generated method stub
+//		return getTracker().hasMultipleSelections();
+//	}
+//	@Override
+//	public boolean hasSelections() {
+//		// TODO Auto-generated method stub
+//		return getTracker().hasSelections();
+//	}
+	
+	public Iterator iterator()
+	{
+		final Iterator list = getList().iterator();
+		return new Iterator() 
+		{
+			public boolean hasNext() {
+				// TODO Auto-generated method stub
+				return list.hasNext();
+			}
 
+			public Object next() {
+				Integer i = (Integer)list.next();
+				return getTracker().get(i);
+			}
+
+			public void remove() {
+				// TODO Auto-generated method stub
+				
+			}
+		};
+	}
+	
 	@Override
 	public Data get(int inCount) 
 	{
-		return getTracker().get(inCount);
+		Integer first = getLocation(inCount);
+		return getTracker().get(first);
 	}
 
-	public Object first()
-	{
-		if( size() == 0)
-		{
-			return null;
-		}
-		return iterator().next();
-	}
-	@Override
-	public Iterator iterator() 
-	{
-		return new SelectIterator(getTracker().getSelections().iterator());
+	private Integer getLocation(int inCount) {
+		Integer first = (Integer)getList().get(inCount);
+		return first;
 	}
 
 	public boolean contains(Object inHit) {
 		return false;
 	}
 
-	@Override
-	public int size() {
-		return getTracker().getSelections().size();
-	}
-
-	
-	class SelectIterator implements Iterator
-	{
-		Iterator selections;
-		SelectIterator(Iterator iter)
-		{
-			selections = iter;
-		}
-		@Override
-		public boolean hasNext() {
-			return selections.hasNext();
-		}
-
-		public Object next() 
-		{
-			Integer index = (Integer)selections.next();
-			return get(index);
-		}
-
-		@Override
-		public void remove() {
-			// TODO Auto-generated method stub
-			
-		}
-		
-	}
 }
