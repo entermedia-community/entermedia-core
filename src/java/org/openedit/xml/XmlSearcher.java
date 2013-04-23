@@ -181,7 +181,7 @@ public class XmlSearcher extends BaseSearcher
 			{
 				String value = term.getValue();
 				String attribval = inElement.attributeValue(term.getDetail().getId());
-				if( !value.contains(attribval) )
+				if(attribval == null || !value.contains(attribval) )
 				{
 					return false;
 				}
@@ -433,6 +433,7 @@ public class XmlSearcher extends BaseSearcher
 		
 		log.info("Saved to "  + settings.getPath());
 		getXmlArchive().saveXml(settings, inUser);
+		
 		clearIndex();
 		
 	}

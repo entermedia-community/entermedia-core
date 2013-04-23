@@ -87,10 +87,10 @@ public class SearcherManager
 				beanName = details.getBeanName();
 				if( beanName == null )
 				{
-					beanName = "dynamicSearcher";
+					beanName = "listSearcher";
 				}
 			}
-			searcher = (Searcher)getModuleManager().getBean(beanName);
+			searcher = (Searcher)getModuleManager().getBean(inCatalogId, beanName);
 			if(log.isDebugEnabled())
 			{
 				log.debug("Searcher not found creating dynamic instance ");
