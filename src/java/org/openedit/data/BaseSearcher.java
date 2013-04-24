@@ -1562,7 +1562,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			BaseData data = new BaseData();
 			return data;
 		}
-		return (Data)getModuleManager().getBean(getCatalogId(), getNewDataName());
+		return (Data)getModuleManager().getBean( getNewDataName());
 	}
 
 

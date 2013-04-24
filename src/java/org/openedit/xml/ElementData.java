@@ -134,6 +134,7 @@ public class ElementData implements MultiValued, Comparable
 			org.dom4j.Attribute attr = (org.dom4j.Attribute) iterator.next();
 			all.put(attr.getName(),attr.getValue() );
 		}
+		//all.put("name", getName()); 
 		return all;
 	}
 	public List getAttributes()
