@@ -84,23 +84,27 @@ public class UserProfileManager
 		}
 		Searcher searcher = getSearcherManager().getSearcher(inCatalogId, "userprofile");
 		userprofile = (UserProfile) searcher.searchById(inUserName);
-		if(userprofile == null){
+		if(userprofile == null)
+		{
 			userprofile = (UserProfile) searcher.searchByField("userid", inUserName);
 		}
 		
-		
-		if(userprofile != null && userprofile.get("userid") != null)
+		if( userprofile != null )
 		{
-			String dataid = userprofile.getId();
-			if(!inUserName.equals(dataid))
+			userprofile.setCatalogId(inCatalogId);
+			if( userprofile.get("userid") != null)
 			{
-				searcher.delete(userprofile, null);
-				userprofile.setSourcePath(inUserName);
-				userprofile.setId(inUserName);
-				
+				String dataid = userprofile.getId();
+				if(!inUserName.equals(dataid))
+				{
+					searcher.delete(userprofile, null);
+					userprofile.setSourcePath(inUserName);
+					userprofile.setId(inUserName);
+					
+				}
+				userprofile.setProperty("userid", null);
+				searcher.saveData(userprofile, inReq.getUser());
 			}
-			userprofile.setProperty("userid", null);
-			searcher.saveData(userprofile, inReq.getUser());
 		}
 		User user = getUserManager().getUser(inUserName);
 		if (userprofile == null)
