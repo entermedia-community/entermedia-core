@@ -24,6 +24,7 @@ public class UserProfile extends ElementData
 	protected String fieldCatalogId;
 	protected SearcherManager fieldSearcherManager;
 	protected Data fieldSettingsGroup;
+//	protected Map<String,String> fieldSettingsGroupPermissions;
 	protected Map fieldResultViews;
 	protected XmlArchive fieldXmlArchive;
 	protected HitTracker fieldCatalogs;
@@ -102,7 +103,6 @@ public class UserProfile extends ElementData
 //		return getValue(inId);
 //	}
 //	
-	
 	public String get(String inPreference)
 	{
 		if (inPreference == null)
@@ -119,11 +119,16 @@ public class UserProfile extends ElementData
 			val = super.get("lastName");
 		}
 		
-		
+//		
 		if (val == null && getSettingsGroup() != null)
 		{
 			val = getSettingsGroup().get(inPreference);
 		}
+		
+//		if (val == null && getSettingsGroup() != null)
+//		{
+//			val = getSettingsGroupPermissions().get(inPreference);
+//		}		
 		if (val == null && getUser() != null)
 		{
 			val = getUser().get(inPreference);
@@ -206,14 +211,20 @@ public class UserProfile extends ElementData
 			{
 				log.debug("No settings group defined");
 			}
+//			else
+//			{
+//				Searcher searcher = getSearcherManager().getSearcher(getCatalogId(),"settingsgrouppermissions");
+//				SearchQuery q = searcher.createSearchQuery();
+//				q.
+//				
+//			}
 		}
 		return fieldSettingsGroup;
 	}
 
 	public void setSettingsGroup(String inSettingsGroupId)
 	{
-		setProperty("settingsgroupid", inSettingsGroupId);
-		fieldSettingsGroup = null;
+		setProperty("settingsgroup", inSettingsGroupId);
 	}
 
 	public void save(User inUser)
@@ -533,19 +544,23 @@ public class UserProfile extends ElementData
 				getUser().setPassword(inValue);
 			}
 		}
-		if(inId.equals("settingsgroup")){
-			setSettingsGroup("settingsgroup");
+		if(inId.equals("settingsgroup"))
+		{
+			fieldSettingsGroup = null;
 		}
-		// TODO Auto-generated method stub
 		super.setProperty(inId, inValue);
 	}
-
-@Override
-public String getName()
-{
-	return toString();
-}	
 	
+//	public Map<String,String> getSettingsGroupPermissions() {
+//		return fieldSettingsGroupPermissions;
+//	}
+	
+	@Override
+	public String getName()
+	{
+		return toString();
+	}	
+		
 	public String getText(){
 		return toString();
 	}

@@ -238,12 +238,6 @@ public class UserProfileManager
 				all.add(data.get("libraryid"));
 			}
 		}
-
-		
-	
-
-		
-		
 		
 		inUserprofile.setCombinedLibraries(all);
 	}
