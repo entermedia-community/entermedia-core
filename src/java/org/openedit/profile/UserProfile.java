@@ -198,7 +198,7 @@ public class UserProfile extends ElementData
 
 	public Data getSettingsGroup()
 	{
-		if (fieldSettingsGroup == null)
+		if (fieldSettingsGroup == null && getCatalogId() != null)
 		{
 			String groupid = super.get("settingsgroup");
 			if (groupid == null)
