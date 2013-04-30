@@ -588,6 +588,10 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 	 */
 	public Object getSessionValue(String inKey)
 	{
+		if( inKey == null)
+		{
+			return null;
+		}
 		if (getSession() == null)
 		{
 			return getSessionValues().get(inKey);
