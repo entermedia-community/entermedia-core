@@ -656,22 +656,21 @@ public class PropertyDetailsArchive
 				set.add(path);
 			}
 		}
-		// We don't want this in a loop or to follow a chain.
+//		// We don't want this in a loop or to follow a chain.
 		List sorted = new ArrayList(set);
-		if (includeExtensions)
-		{
-			HitTracker extensions = (HitTracker) getSearcherManager().getList(getCatalogId(), "dataextensions");
-
-			for (Iterator iterator = extensions.iterator(); iterator.hasNext();)
-			{
-				Data remotecatalog = (Data) iterator.next();
-				String catalogid = remotecatalog.get("catalogid");
-				PropertyDetailsArchive archive = getSearcherManager().getPropertyDetailsArchive(catalogid);
-				List remotevalues = archive.listFilesByFolderType(inFolderType, false);
-				sorted.addAll(remotevalues);
-			}
-		}
-
+//		if (includeExtensions)
+//		{
+//			HitTracker extensions = (HitTracker) getSearcherManager().getList(getCatalogId(), "dataextensions");
+//
+//			for (Iterator iterator = extensions.iterator(); iterator.hasNext();)
+//			{
+//				Data remotecatalog = (Data) iterator.next();
+//				String catalogid = remotecatalog.get("catalogid");
+//				PropertyDetailsArchive archive = getSearcherManager().getPropertyDetailsArchive(catalogid);
+//				List remotevalues = archive.listFilesByFolderType(inFolderType, false);
+//				sorted.addAll(remotevalues);
+//			}
+//		}
 		Collections.sort(sorted);
 		return sorted;
 

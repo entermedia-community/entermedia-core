@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 import org.dom4j.Attribute;
 import org.dom4j.DocumentHelper;
@@ -19,7 +18,14 @@ public class ElementData implements MultiValued, Comparable
 {
 	protected Element fieldElement;
 	protected String fieldSourcePath;
+	protected String fieldVersion;
 	
+	public String getVersion() {
+		return fieldVersion;
+	}
+	public void setVersion(String inVersion) {
+		fieldVersion = inVersion;
+	}
 	public ElementData()
 	{
 	}
@@ -56,6 +62,8 @@ public class ElementData implements MultiValued, Comparable
 			} else{
 				return getElement().attributeValue(inId);
 			}
+		} else if(inId.equals(".version")){
+			return getVersion();//elastic search
 		}
 		else if( inId.equals("sourcepath"))
 		{
@@ -99,7 +107,11 @@ public class ElementData implements MultiValued, Comparable
 			
 			getElement().setText(inValue);
 		}
+		else if(inId.equals(".version")){
+			setVersion(inValue);
+		}
 		else
+			
 		{
 			synchronized (getElement())
 			{
@@ -128,12 +140,14 @@ public class ElementData implements MultiValued, Comparable
 	}
 	public Map getProperties() 
 	{
+		
 		Map all = new HashMap();
 		for (Iterator iterator = getAttributes().iterator(); iterator.hasNext();)
 		{
 			org.dom4j.Attribute attr = (org.dom4j.Attribute) iterator.next();
 			all.put(attr.getName(),attr.getValue() );
 		}
+		//all.put("name", getName()); 
 		return all;
 	}
 	public List getAttributes()

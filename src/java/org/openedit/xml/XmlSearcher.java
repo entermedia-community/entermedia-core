@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.dom4j.Attribute;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.entermedia.cache.CacheManager;
@@ -181,7 +182,7 @@ public class XmlSearcher extends BaseSearcher
 			{
 				String value = term.getValue();
 				String attribval = inElement.attributeValue(term.getDetail().getId());
-				if( !value.contains(attribval) )
+				if(attribval == null || !value.contains(attribval) )
 				{
 					return false;
 				}
@@ -428,11 +429,20 @@ public class XmlSearcher extends BaseSearcher
 			element.addAttribute("id", inData.getId());
 		}
 		List attributes = data.getElement().attributes();
+//		List attributessaved = new ArrayList(attributes.size()); 
+//		for (Iterator iterator = attributes.iterator(); iterator.hasNext();) {
+//			Attribute attr = (Attribute) iterator.next();
+//			if( !attr.getName().startsWith(".") )
+//			{
+//				attributessaved.add(attr);				
+//			}
+//		}
 		element.setAttributes(attributes);
 		element.setText(inData.getName());
 		
 		log.info("Saved to "  + settings.getPath());
 		getXmlArchive().saveXml(settings, inUser);
+		
 		clearIndex();
 		
 	}

@@ -10,7 +10,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.collections.set.ListOrderedSet;
 import org.openedit.Data;
 import org.openedit.data.PropertyDetail;
 import org.openedit.util.DateStorageUtil;
@@ -19,10 +18,19 @@ import com.openedit.OpenEditException;
 
 public abstract class HitTracker implements Serializable, Collection
 {
+	protected boolean fieldAllSelected;
+
+
+	protected void setAllSelected(boolean inSelectAll)
+	{
+		fieldAllSelected = inSelectAll;
+	}
+
+	protected Set<String> fieldSelections;
+	
 	protected int fieldPage = 0;
 	protected int fieldHitsPerPage = 15;
 	protected int fieldCurrentHit;
-	protected Set fieldSelections;
 	protected SearchQuery fieldSearchQuery;
 	protected boolean fieldUseRandom;
 	protected List fieldRandomLookup;
@@ -608,25 +616,41 @@ public abstract class HitTracker implements Serializable, Collection
 		{
 			return this;
 		}
-		ListHitTracker hits = new ListHitTracker(getSelectedHits());
+		ListHitTracker hits = new ListHitTracker(new ArrayList( getSelectedHits() ) );
+//		SelectedHitsTracker hits = new SelectedHitsTracker(this);
 		hits.setHitsName("selected" + getHitsName());
 		hits.setSessionId("selected" + getSessionId() );
 		hits.selectAll();
 		return hits;
 	}
 
-	public List getSelectedHits(){
-		ArrayList hits = new ArrayList();
-		for (Iterator iterator = getSelections().iterator(); iterator.hasNext();)
+	public Collection getSelectedHits()
+	{
+		if( isAllSelected() )
 		{
-			Integer hit = (Integer) iterator.next();
-			hits.add(get(hit.intValue()));
-			
+			return this;
+		}
+		ArrayList hits = new ArrayList(getSelections().size() );
+		
+		//Loop over all the asset id's?
+		for (Iterator iterator = getSelections().iterator(); iterator.hasNext();) 
+		{
+			String	assetid = (String) iterator.next();
+			int row = findRow("id", assetid);
+			if( row != -1)
+			{
+				hits.add(get(row));
+			}
 		}
 		return hits;
 	}
 	public boolean hasMultipleSelections()
 	{
+		if( isAllSelected() )
+		{
+			return true;
+		}
+
 		if( fieldSelections != null && fieldSelections.size() > 1 )
 		{
 			return true;
@@ -635,6 +659,10 @@ public abstract class HitTracker implements Serializable, Collection
 	}
 	public boolean hasSelections()
 	{
+		if( isAllSelected() )
+		{
+			return true;
+		}
 		if( fieldSelections != null && fieldSelections.size() > 0 )
 		{
 			return true;
@@ -642,60 +670,62 @@ public abstract class HitTracker implements Serializable, Collection
 		return false;
 	}
 	
-	public Set<Integer> getSelections()
+	public Set<String> getSelections()
 	{
 		if (fieldSelections == null)
 		{
-			fieldSelections = new ListOrderedSet();
+			fieldSelections = new HashSet<String>();
 		}
-
 		return fieldSelections;
 	}
 
-	public void setSelections(Set<Integer> inSelections)
+	public void setSelections(Set<String> inSelections)
 	{
 		fieldSelections = inSelections;
 	}
 
-	public void addSelection(int hit)
+	public void addSelection(String inId)
 	{
-		getSelections().add(new Integer(hit));
+		getSelections().add(inId);
 	}
 
 	
-	public void removeSelection(int hit)
+	public void removeSelection(String inId)
 	{
 		
-		getSelections().remove(new Integer(hit));
+		getSelections().remove(inId);
 	}
 
-	public boolean isSelected(int hit)
+	public boolean isSelected(String inId)
 	{
-		
-		return getSelections().contains(new Integer(hit));
-
-	}
-
-	public boolean isSelectedOnPage(int count)
-	{
-
-		int bottom = (getPage() - 1) * getHitsPerPage(); // this is the start of
-		int index = bottom + count; // the offset
-		
-		boolean selected = getSelections().contains(new Integer(index));
-		return selected;
-
-	}
-
-	public void toggleSelected(int inCount)
-	{
-		if (isSelected(inCount))
+		if( isAllSelected() )
 		{
-			removeSelection(inCount);
+			return true;
+		}
+		return getSelections().contains(inId);
+
+	}
+
+	public boolean isSelectedOnPage(String inId)
+	{
+
+//		int bottom = (getPage() - 1) * getHitsPerPage(); // this is the start of
+//		int index = bottom + count; // the offset
+//		
+//		boolean selected = getSelections().contains(new Integer(index));
+//		return selected;
+		return isSelected(inId);
+	}
+
+	public void toggleSelected(String inId)
+	{
+		if (isSelected(inId))
+		{
+			removeSelection(inId);
 		}
 		else
 		{
-			addSelection(inCount);
+			addSelection(inId);
 		}
 
 	}
@@ -703,37 +733,33 @@ public abstract class HitTracker implements Serializable, Collection
 	public void selectAll()
 	{
 		
-		for (int count = 0; count < size(); count++)
-		{
-			
-			
-			addSelection(count);
-			
-
-		}
+		fieldAllSelected = true;
 
 	}
 
 	public void deselectAll()
 	{
-		setSelections(null);
-
+		getSelections().clear();
+		fieldAllSelected = false;
 	}
-
+	public String getFirstSelected()
+	{
+		if( isAllSelected())
+		{
+			return get(0).getId();
+		}
+		String first = getSelections().iterator().next();
+		return first;
+	}
+	
 	public void selectCurrentPage() throws Exception
 	{
 		//deselectAll();
 		List page = getPageOfHits();
-		int bottom = (getPage() - 1) * getHitsPerPage(); // this is the start of
-		
-
-		for (int count = 0; count < page.size(); count++)
+		for (Iterator iterator = page.iterator(); iterator.hasNext();) 
 		{
-			int index = bottom + count; // the offset
-			
-			addSelection(index);
-			
-
+			Data row = (Data) iterator.next();
+			addSelection(row.getId());
 		}
 
 	}
@@ -922,15 +948,16 @@ public abstract class HitTracker implements Serializable, Collection
 		return 0;
 	}
 	
-	public boolean isAllSelected(){
-		return getSelectedHits().size() == getTotal();
+	public boolean isAllSelected()
+	{
+		return fieldAllSelected;
 	}
 	
-	public Data findRow(String inField, String inValue)
+	public int findRow(String inField, String inValue)
 	{
 		if(inValue == null || inField == null)
 		{
-			return null;
+			return -1;
 		}
 		
 		for (int i = 0; i < size(); i++)
@@ -938,9 +965,15 @@ public abstract class HitTracker implements Serializable, Collection
 			Data hit = get(i);
 			if(inValue.equals(hit.get(inField)))
 			{
-				return hit;
+				return i;
 			}
 		}
-		return null;
+		return -1;
+	}
+
+	public void loadPreviousSelections(HitTracker inOld) 
+	{
+		setSelections(inOld.getSelections());
+		setAllSelected(inOld.isAllSelected());
 	}
 }

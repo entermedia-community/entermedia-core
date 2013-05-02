@@ -67,13 +67,8 @@ public class SearcherManager
 	{
 		String inCatalogId = newarchive.getCatalogId();
 		Searcher searcher;
-		String beanName = null;
-		if( getModuleManager().contains(inCatalogId,inFieldName + "Searcher") )
-		{
-			beanName = inFieldName + "Searcher";
-			searcher = (Searcher)getModuleManager().getBean(inCatalogId,beanName);
-		}
-		else
+		String beanName = inFieldName + "Searcher";
+		if( !getModuleManager().contains(inCatalogId,inFieldName + "Searcher") )
 		{
 			if( inFieldName.endsWith("Log"))
 			{
@@ -87,19 +82,19 @@ public class SearcherManager
 				beanName = details.getBeanName();
 				if( beanName == null )
 				{
-					beanName = "dynamicSearcher";
+					beanName = "listSearcher";
 				}
 			}
-			searcher = (Searcher)getModuleManager().getBean(beanName);
-			if(log.isDebugEnabled())
-			{
-				log.debug("Searcher not found creating dynamic instance ");
-			}
+		}
+		searcher = (Searcher)getModuleManager().getBean(inCatalogId, beanName, false);
+		if(log.isDebugEnabled())
+		{
+			log.debug("Searcher not found creating dynamic instance ");
+		}
 //			if( inCatalogId.length() == 0 && "catalogs".equals(inFieldName))
 //			{
 //				XmlSearcher xml = (XmlSearcher)searcher;
 //			}
-		}
 		log.info("Loaded " + inFieldName + " with " + beanName);
 		return searcher;
 	}

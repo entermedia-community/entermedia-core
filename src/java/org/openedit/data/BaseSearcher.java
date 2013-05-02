@@ -179,6 +179,10 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 						tracker.setHitsPerPage(Integer.parseInt(hitsperpage));
 					}
 
+					if(oldtracker != null && oldtracker.hasSelections() )
+					{
+						tracker.loadPreviousSelections(oldtracker);
+					}
 					if (isFireEvents() && inQuery.isFireSearchEvent())
 					{
 						WebEvent event = new WebEvent();
@@ -1558,7 +1562,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			BaseData data = new BaseData();
 			return data;
 		}
-		return (Data)getModuleManager().getBean(getNewDataName());
+		return (Data)getModuleManager().getBean( getNewDataName());
 	}
 
 

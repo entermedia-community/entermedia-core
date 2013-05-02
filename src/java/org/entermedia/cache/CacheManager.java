@@ -67,6 +67,9 @@ public class CacheManager
 	public void clear(String inType)
 	{
 		Cache cache = getCaches().get(inType);
+		if(cache == null){
+			return;
+		}
 		cache.invalidateAll();
 	}
 }

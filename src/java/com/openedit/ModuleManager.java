@@ -263,10 +263,17 @@ public class ModuleManager implements BeanFactoryAware, ShutdownList
 		String beanName = resolveBean(inCatalogId, inBeanName);
 		return contains(beanName);
 	}
-
-	
 	public Object getBean( String inCatalogId, String inBeanName )
 	{
+		return getBean(inCatalogId,inBeanName,true);
+	}
+	
+	public Object getBean( String inCatalogId, String inBeanName, boolean inCached )
+	{
+		if( !inCached )
+		{
+			return loadBean(inCatalogId, inBeanName);
+		}
 		Object bean = getCatalogIdBeans().get(inCatalogId + "_" + inBeanName);
 		if( bean == null)
 		{
@@ -277,24 +284,28 @@ public class ModuleManager implements BeanFactoryAware, ShutdownList
 				{
 					return bean;
 				}
-				String beanName = resolveBean(inCatalogId, inBeanName);
-				bean = getBean(beanName);
-				try
-				{
-					Method catalogSetter = bean.getClass().getMethod("setCatalogId", new Class[] {String.class});
-					catalogSetter.invoke(bean, new Object[] {inCatalogId});
-				}
-				catch (Exception e)
-				{
-					//Could not set catalogId
-				}
+				bean = loadBean(inCatalogId, inBeanName);
 				
 				//if instanceof GroovyBean
 				//bean = bean.getProxy()
-
-				
 				getCatalogIdBeans().put(inCatalogId + "_" + inBeanName, bean);
 			}
+		}
+		return bean;
+	}
+
+	private Object loadBean(String inCatalogId, String inBeanName) {
+		Object bean;
+		String beanName = resolveBean(inCatalogId, inBeanName);
+		bean = getBean(beanName);
+		try
+		{
+			Method catalogSetter = bean.getClass().getMethod("setCatalogId", new Class[] {String.class});
+			catalogSetter.invoke(bean, new Object[] {inCatalogId});
+		}
+		catch (Exception e)
+		{
+			//Could not set catalogId
 		}
 		return bean;
 	}
