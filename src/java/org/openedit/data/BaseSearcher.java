@@ -769,6 +769,9 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	protected Term addTerm(SearchQuery search, PropertyDetail detail, String val, String[] vals, String op)
 	{
 		Term t = null;
+		if(detail.isDataType("number") || detail.isDataType("double") || detail.isDataType("float")){
+			return null;
+		}
 		if ((val != null && val.length() > 0))
 		{
 			if ("matches".equals(op))
@@ -859,9 +862,14 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 
 	protected Term addNumber(WebPageRequest inPageRequest, SearchQuery search, PropertyDetail field, String val, String op)
 	{
+		if(!(field.isDataType("number") || field.isDataType("double") || field.isDataType("float"))){
+			return null;
+		}
 		Term t = null;
 		if (val != null && val.length() > 0)
 		{
+		
+			
 			if ("greaterthannumber".equals(op))
 			{
 				t = search.addGreaterThan(field, Long.parseLong(val));
@@ -870,8 +878,8 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			{
 				t = search.addLessThan(field, Long.parseLong(val));
 			}
-
-			else if ("equaltonumber".equals(op))
+			
+			if ("equaltonumber".equals(op) || "matches".equals(op) || "startswith".equals(op))
 			{
 				t = search.addExact(field, Long.parseLong(val));
 			}
