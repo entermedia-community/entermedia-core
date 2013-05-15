@@ -900,6 +900,12 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		String inString = String.valueOf(inParseInt);
 		return addExact(inField, inString);
 	}
+	
+	public Term addExact(PropertyDetail inField, double inParseInt)
+	{
+		String inString = String.valueOf(inParseInt);
+		return addExact(inField, inString);
+	}
 
 	public Term addStartsWith(String inString, String inQuery)
 	{

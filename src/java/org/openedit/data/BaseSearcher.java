@@ -865,6 +865,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		if(!(field.isDataType("number") || field.isDataType("double") || field.isDataType("float"))){
 			return null;
 		}
+		
 		Term t = null;
 		if (val != null && val.length() > 0)
 		{
@@ -881,7 +882,12 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			
 			if ("equaltonumber".equals(op) || "matches".equals(op) || "startswith".equals(op))
 			{
-				t = search.addExact(field, Long.parseLong(val));
+				if(field.isDataType("number") || field.isDataType("long")){
+					t = search.addExact(field, Long.parseLong(val));
+				} 
+				if(field.isDataType("double")){
+					t = search.addExact(field, Double.parseDouble(val));
+				}
 			}
 			if (t != null)
 			{
