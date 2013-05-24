@@ -360,6 +360,33 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		return hits;
 	}
 
+	
+	
+	public HitTracker fieldSearch(String attr, String value, WebPageRequest inContext)
+	{
+		return fieldSearch(attr, value, null, inContext);
+	}
+
+	public HitTracker fieldSearch(String attr, String value, String orderby, WebPageRequest inContext)
+	{
+		SearchQuery query = createSearchQuery();
+
+		if (attr != null && value != null)
+		{
+			PropertyDetail detail = new PropertyDetail();
+			detail.setCatalogId(getCatalogId());
+			detail.setId(attr);
+			query.addExact(detail, value); //this is addMatches and not addExact so that we can handle wildcards
+		}
+		if (orderby != null)
+		{
+			query.setSortBy(orderby);
+		}
+
+		return cachedSearch(inContext, query);
+	}
+	
+	
 	public HitTracker fieldSearch(String attr, String value)
 	{
 		return fieldSearch(attr, value, null);
