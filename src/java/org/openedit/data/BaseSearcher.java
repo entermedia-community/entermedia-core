@@ -389,7 +389,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	
 	public HitTracker fieldSearch(String attr, String value)
 	{
-		return fieldSearch(attr, value, null);
+		return fieldSearch(attr, value, (String)null);
 	}
 
 	public HitTracker fieldSearch(String attr, String value, String orderby)
