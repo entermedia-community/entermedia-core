@@ -226,13 +226,16 @@ public class Exec
 		try
 		{
 			log.info("Running: " + com + " in " + inRunFrom);
-			String[] env = null;
-			if( isOnWindows() )
+			ProcessBuilder builder = new ProcessBuilder(inCommand);
+//			if( isOnWindows() )
 			{
-				env  = new String[] { "HOME=" + inRunFrom.getAbsolutePath() };
+				//String[] env  = new String[] { "HOME=" + inRunFrom.getAbsolutePath() };
+				builder.environment().put("HOME", inRunFrom.getAbsolutePath());
 			}
+			builder.redirectErrorStream(true);
+			builder.directory(inRunFrom);
 			
-			Process proc = Runtime.getRuntime().exec(inCommand,env,inRunFrom);
+			Process proc = builder.start();//Runtime.getRuntime().exec(inCommand,env,inRunFrom);
 
 			InputStreamHandler reader1 = new InputStreamHandler(inSaveOutput);
 			reader1.setStream("stdout",proc.getInputStream());
@@ -253,10 +256,10 @@ public class Exec
 					getFiller().close(out);
 				}
 			}
-			InputStreamHandler errreader = new InputStreamHandler(inSaveOutput);
-			errreader.setStream("stderr",proc.getErrorStream());
-			//getExecutorManager().execute(errreader);
-			errreader.run();
+//			InputStreamHandler errreader = new InputStreamHandler(inSaveOutput);
+//			errreader.setStream("stderr",proc.getErrorStream());
+//			//getExecutorManager().execute(errreader);
+//			errreader.run();
 			
 			int ret = proc.waitFor();
 			
@@ -265,14 +268,14 @@ public class Exec
 			{
 				result.setStandardOut(stdo);
 			}
-			String stder = errreader.getText();
-			if (stder != null && stder.length() > 0)
-			{
-				result.setStandardError(stder);
-			}
+//			String stder = errreader.getText();
+//			if (stder != null && stder.length() > 0)
+//			{
+//				result.setStandardError(stder);
+//			}
 			if( ret != 0 )
 			{
-				log.error("Error: " + ret + " stderr: " + stder + " stdo:" + stdo + " when running " + com);
+				log.error("Error: " + ret + " stdo:" + stdo + " when running " + com);
 			}
 			if( ret == 0 )
 			{
