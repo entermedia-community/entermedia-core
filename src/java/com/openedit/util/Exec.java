@@ -227,7 +227,7 @@ public class Exec
 		{
 			log.info("Running: " + com + " in " + inRunFrom);
 			ProcessBuilder builder = new ProcessBuilder(inCommand);
-//			if( isOnWindows() )
+			if( isOnWindows() )
 			{
 				//String[] env  = new String[] { "HOME=" + inRunFrom.getAbsolutePath() };
 				builder.environment().put("HOME", inRunFrom.getAbsolutePath());
