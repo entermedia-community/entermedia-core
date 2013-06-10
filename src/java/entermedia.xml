@@ -284,5 +284,8 @@
 	
 	</bean>
 
-
+	<bean id="replacer" class="com.openedit.util.Replacer"  >
+			<property name="searcherManager"><ref bean="searcherManager"/></property>
+	
+	</bean>
 </beans>
