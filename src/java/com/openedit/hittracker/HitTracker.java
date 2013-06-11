@@ -5,11 +5,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.openedit.Data;
 import org.openedit.data.PropertyDetail;
 import org.openedit.util.DateStorageUtil;
@@ -18,16 +18,10 @@ import com.openedit.OpenEditException;
 
 public abstract class HitTracker implements Serializable, Collection
 {
+
+	private static final Log log = LogFactory.getLog(HitTracker.class);
 	protected boolean fieldAllSelected;
-
-
-	protected void setAllSelected(boolean inSelectAll)
-	{
-		fieldAllSelected = inSelectAll;
-	}
-
-	protected Set<String> fieldSelections;
-	
+	protected Collection<Data> fieldSelections;
 	protected int fieldPage = 0;
 	protected int fieldHitsPerPage = 15;
 	protected int fieldCurrentHit;
@@ -39,12 +33,17 @@ public abstract class HitTracker implements Serializable, Collection
 	protected String fieldDataSource;
 	protected List fieldCurrentPage;
 	protected int fieldMaxPageListing = 10; //used for page listing
-	
 
 	public HitTracker()
 	{
 
 	}
+
+	protected void setAllSelected(boolean inSelectAll)
+	{
+		fieldAllSelected = inSelectAll;
+	}
+
 
 	public String getResultType()
 	{
@@ -624,25 +623,13 @@ public abstract class HitTracker implements Serializable, Collection
 		return hits;
 	}
 
-	public Collection getSelectedHits()
+	public Collection<Data> getSelectedHits()
 	{
 		if( isAllSelected() )
 		{
 			return this;
 		}
-		ArrayList hits = new ArrayList(getSelections().size() );
-		
-		//Loop over all the asset id's?
-		for (Iterator iterator = getSelections().iterator(); iterator.hasNext();) 
-		{
-			String	assetid = (String) iterator.next();
-			int row = findRow("id", assetid);
-			if( row != -1)
-			{
-				hits.add(get(row));
-			}
-		}
-		return hits;
+		return getSelections();
 	}
 	public boolean hasMultipleSelections()
 	{
@@ -670,30 +657,43 @@ public abstract class HitTracker implements Serializable, Collection
 		return false;
 	}
 	
-	public Set<String> getSelections()
+	public Collection<Data> getSelections()
 	{
 		if (fieldSelections == null)
 		{
-			fieldSelections = new HashSet<String>();
+			fieldSelections = new ArrayList<Data>();
 		}
 		return fieldSelections;
 	}
 
-	public void setSelections(Set<String> inSelections)
+	public void setSelections(Collection<Data> inSelections)
 	{
 		fieldSelections = inSelections;
 	}
 
 	public void addSelection(String inId)
 	{
-		getSelections().add(inId);
+		Data selectedrow = findData("id", inId);
+		if (selectedrow != null)
+		{
+			getSelections().add(selectedrow);
+		}
+		else 
+		{
+			log.info("row not found "+inId);
+		}
 	}
-
 	
 	public void removeSelection(String inId)
 	{
-		
-		getSelections().remove(inId);
+		for(Data data:getSelections() )
+		{
+			if( data.getId().equals(inId))
+			{
+				getSelections().remove(data);
+				break;
+			}
+		}
 	}
 
 	public boolean isSelected(String inId)
@@ -702,13 +702,26 @@ public abstract class HitTracker implements Serializable, Collection
 		{
 			return true;
 		}
-		return getSelections().contains(inId);
+		
+		for(Data data:getSelections() )
+		{
+			if( data.getId().equals(inId))
+			{
+				return true;
+			}
+		}
+		return false;
 
 	}
 
+	/**
+	 * @deprecated Call isSelected instead
+	 * @param inId
+	 * @return
+	 */
+	
 	public boolean isSelectedOnPage(String inId)
 	{
-
 //		int bottom = (getPage() - 1) * getHitsPerPage(); // this is the start of
 //		int index = bottom + count; // the offset
 //		
@@ -748,8 +761,12 @@ public abstract class HitTracker implements Serializable, Collection
 		{
 			return get(0).getId();
 		}
-		String first = getSelections().iterator().next();
-		return first;
+		Data first = getSelections().iterator().next();
+		if( first != null)
+		{
+			return first.getId();
+		}
+		return null;
 	}
 	
 	public void selectCurrentPage() throws Exception
@@ -952,14 +969,35 @@ public abstract class HitTracker implements Serializable, Collection
 	{
 		return fieldAllSelected;
 	}
-	
+	public Data findData(String inField, String inValue)
+	{
+		if(inValue == null || inField == null)
+		{
+			return null;
+		}
+		for (Data hit: getPageOfHits() )
+		{
+			if(inValue.equals(hit.get(inField)))
+			{
+				return hit;
+			}			
+		}
+		for (int i = 0; i < size(); i++)
+		{
+			Data hit = get(i);
+			if(inValue.equals(hit.get(inField)))
+			{
+				return hit;
+			}
+		}
+		return null;
+	}
 	public int findRow(String inField, String inValue)
 	{
 		if(inValue == null || inField == null)
 		{
 			return -1;
 		}
-		
 		for (int i = 0; i < size(); i++)
 		{
 			Data hit = get(i);

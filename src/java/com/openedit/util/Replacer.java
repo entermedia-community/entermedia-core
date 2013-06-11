@@ -11,7 +11,8 @@ import com.openedit.WebPageRequest;
 public class Replacer
 {
 	protected SearcherManager fieldSearcherManager;
-	protected boolean fieldAlwaysReplace;
+	protected boolean fieldAlwaysReplace =  false;
+	protected String fieldCatalogId;
 	
 	public boolean isAlwaysReplace() {
 		return fieldAlwaysReplace;
@@ -31,17 +32,22 @@ public class Replacer
 		fieldSearcherManager = inSearcherManager;
 	}
 
-	public String getDefaultCatalogId()
+	public String getCatalogId()
 	{
-		return fieldDefaultCatalogId;
+		return fieldCatalogId;
 	}
 
-	public void setDefaultCatalogId(String inDefaultCatalogId)
+	public void setCatalogId(String inDefaultCatalogId)
 	{
-		fieldDefaultCatalogId = inDefaultCatalogId;
+		fieldCatalogId = inDefaultCatalogId;
 	}
 
-	protected String fieldDefaultCatalogId;
+
+	public String replace(String inCode, Data inValues)
+	{
+		return replace(inCode, inValues.getProperties() );
+	}
+
 	
 	public String replace(String inCode, Map<String, Object> inValues)
 	{
@@ -50,12 +56,12 @@ public class Replacer
 			return inCode;
 		}
 		if(inValues == null){
-			return inCode;
+			return inCode;	
 		}
 		int start = 0;
 		while( (start = inCode.indexOf("${",start)) != -1)
 		{
-			int end = inCode.indexOf("}",start);
+			int end = inCode.indexOf("}",start);			
 			if( end == -1)
 			{
 				break;
@@ -64,6 +70,7 @@ public class Replacer
 			Object variable = inValues.get(key); //check for property
 			if( variable == null )
 			{
+				//TODO: Loop over each of the dots to find the final object
 				int dot = key.indexOf('.');
 				if( dot > 0)
 				{
@@ -113,6 +120,6 @@ public class Replacer
 		{
 			return null;
 		}
-		return getSearcherManager().getData(getDefaultCatalogId(), inType, inId);
+		return getSearcherManager().getData(getCatalogId(), inType, inId);
 	}
 }

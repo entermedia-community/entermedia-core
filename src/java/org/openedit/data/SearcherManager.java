@@ -12,6 +12,7 @@ import org.openedit.xml.XmlArchive;
 import com.openedit.ModuleManager;
 import com.openedit.OpenEditRuntimeException;
 import com.openedit.hittracker.HitTracker;
+import com.openedit.util.Replacer;
 
 public class SearcherManager
 {
@@ -20,9 +21,7 @@ public class SearcherManager
 	protected ModuleManager fieldModuleManager;
 	protected Map fieldCache;
 	protected XmlArchive fieldXmlArchive;
-	
-	
-		
+			
 	//A fieldName can be product or orderstatus. If there is no orderstatus searcher then we use an XML lookup for this catalog. 
 	public Searcher getSearcher(String inCatalogId, String inFieldName)
 	{
@@ -138,6 +137,18 @@ public class SearcherManager
 		return getData(inDetail.getListCatalogId(), inDetail.getListId(), inValue);
 	}
 
+	public String getValue(String inCatalogId, String inLookup,Map inValues)
+	{
+		if( inLookup == null)
+		{
+			return null;
+		}
+		Replacer replacer = (Replacer)getModuleManager().getBean(inCatalogId, "replacer");
+		String val = replacer.replace(inLookup, inValues);
+		
+		return val; 
+	}
+	
 	public Data getData(String inCatalogId, String inSearchType, String inId)
 	{
 		if( inId == null)
