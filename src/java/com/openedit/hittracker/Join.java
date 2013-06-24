@@ -48,4 +48,9 @@ public class Join
 	{
 		fieldLocalColumn = inLocalColumn;
 	}
+	public boolean equals(Object inObj)
+	{
+		Join join = (Join)inObj;
+		return join.getRemoteQuery().equals(getRemoteQuery());
+	}
 }

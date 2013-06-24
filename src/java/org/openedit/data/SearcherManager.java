@@ -136,7 +136,11 @@ public class SearcherManager
 	{
 		return getData(inDetail.getListCatalogId(), inDetail.getListId(), inValue);
 	}
-
+	public String getValue(String inCatalogId, PropertyDetail inDetail, Map inValues)
+	{
+		//we might need to loop up the parent via a join first
+		return null;
+	}
 	public String getValue(String inCatalogId, String inLookup,Map inValues)
 	{
 		if( inLookup == null)

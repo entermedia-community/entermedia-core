@@ -80,8 +80,9 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		}
 		inPageRequest.putPageValue("searcher", this);
 		HitTracker tracker = null;
-		String fullq = inQuery.toQuery();
-		if (fullq == null || fullq.length() == 0)
+		
+		
+		if (inQuery.isEmpty())
 		{
 			return null;
 		}
@@ -99,27 +100,14 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 
 		boolean runsearch = true;
 
-		if (fullq != null)
-		{
+		//String fullq = inQuery.toQuery();
 			if (tracker != null)
 			{
 				if (!hasChanged(tracker))
 				{
-					if (fullq.length() == 0)
-					{
-						runsearch = false; // they are just going to the next
-											// page
-					}
-					else if (fullq.equals(tracker.getQuery()))
+					if (inQuery.equals(tracker.getSearchQuery()))
 					{
 						runsearch = false;
-						//						String pagenumber = inPageRequest.getRequestParameter("page");
-						//						if (pagenumber != null)
-						//						{
-						//							tracker.setPage(Integer.parseInt(pagenumber));
-						//							runsearch = false;
-						//						}
-						// duplicate search skip it
 						String cache = inPageRequest.getRequestParameter("cache");
 						if (cache != null && !Boolean.parseBoolean(cache))
 						{
@@ -135,11 +123,11 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 							runsearch = true;
 						}
 					}
-				}
-				if (inQuery.getSortBy() == null)
-				{
-					String oldSort = tracker.getOrdering();
-					inQuery.setSortBy(oldSort);
+					if (inQuery.getSortBy() == null)
+					{
+						String oldSort = tracker.getOrdering();
+						inQuery.setSortBy(oldSort);
+					}
 				}
 			}
 			if (runsearch)
@@ -200,13 +188,13 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				}
 				catch (Exception ex)
 				{
+					String fullq = inQuery.toQuery();
 					inPageRequest.putPageValue("error", "Invalid search input. " + URLUtilities.xmlEscape(fullq));
 					log.error(ex + " on " + fullq);
 					ex.printStackTrace();
 					inQuery.setProperty("error", "Invalid search " + URLUtilities.xmlEscape(fullq));
 				}
 			}
-		}
 		if (tracker != null)
 		{
 			if( !runsearch )
@@ -1593,7 +1581,8 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 
 	public Object searchById(String inId)
 	{
-		if(inId == null || inId.length() == 0){
+		if(inId == null || inId.length() == 0)
+		{
 			return null;
 		}
 		return searchByField("id",inId);

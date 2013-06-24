@@ -479,7 +479,7 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		term.setOperation("matches");
 		term.setDetail(inDetail);
 		term.setValue(inVal);
-		addTerm(term);
+		addTermByDataType(term);
 		return term;
 	}
 
@@ -514,16 +514,60 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		term.setOperation("contains");
 		term.setDetail(inDetail);
 		term.setValue(inVal);
-		addTerm(term);
+		addTermByDataType(term);
 		return term;
 	}
 	
 	
 	public boolean isEmpty()
 	{
-		return fieldTerms.isEmpty();
+		if(fieldTerms.isEmpty() && getParentJoins() == null)
+		{
+//			String fullq = toQuery();
+//			if( fullq == null || fullq.length() == 0 )
+//			{
+			return true;
+//			}
+		}
+		return false;
 	}
 
+	@Override
+	public boolean equals(Object inObj)
+	{
+		if( inObj == this )
+		{
+			return true;
+		}
+		if( inObj instanceof SearchQuery)
+		{
+			SearchQuery q = (SearchQuery)inObj;
+			String one = q.toQuery();
+			if( one != null)
+			{
+				if( !one.equals(toQuery() ) )
+				{
+					return false;
+				}
+			}
+			if( fieldParentJoins != null )
+			{
+				if( q.getParentJoins() != null )
+				{
+					if( !fieldParentJoins.equals( q.getParentJoins() ) )
+					{
+						return false;
+					}
+				}
+				else
+				{
+					return false;
+				}
+			}
+			return true;
+		}
+		return false;
+	}
 	public Term addNot(PropertyDetail inField, String inVal)
 	{
 		Term term = new Term()
@@ -583,7 +627,7 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		term.setOperation("startswith");
 		term.setDetail(inField);
 		term.setValue(inVal);
-		addTerm(term);
+		addTermByDataType(term);
 		return term;
 	}
 
@@ -1037,7 +1081,7 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	}
 	protected void addTermByDataType(Term inTerm)
 	{
-		getTerms().add(inTerm);
+		addTerm(inTerm);
 	}
 	
 	/**
