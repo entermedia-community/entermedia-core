@@ -276,6 +276,10 @@ public class XmlSearcher extends BaseSearcher
 	 */
 	public HitTracker search(SearchQuery inQuery) 
 	{
+		if( inQuery == null)
+		{
+			return null;
+		}
 		HitTracker hits = (HitTracker) getCacheManager().get(cacheId(), inQuery.toQuery() + inQuery.getSortBy());
 		if(hits != null)
 		{

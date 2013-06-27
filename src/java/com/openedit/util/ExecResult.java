@@ -13,6 +13,10 @@ public class ExecResult {
 		fieldStandardOut = standardOut;
 	}
 	public String getStandardError() {
+		if( fieldStandardError == null && !isRunOk() )
+		{
+			return getStandardOut();
+		}
 		return fieldStandardError;
 	}
 	public void setStandardError(String standardError) {

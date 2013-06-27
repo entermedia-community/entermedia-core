@@ -46,6 +46,8 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	protected boolean fieldFireSearchEvent = false;
 	protected boolean fieldFilter = false;
 	protected boolean fieldFindAll = false;
+	protected List<Join> fieldParentJoins;
+	
 	
 	public String getResultType()
 	{
@@ -178,7 +180,7 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		term.addParameter("afterDate", date);
 		term.setOperation("afterdate");
 		term.setValue(date);
-		getTerms().add(term);
+		addTermByDataType(term);
 		return term;
 	}
 
@@ -198,7 +200,7 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		term.addParameter("beforeDate", date);
 		term.setValue(date);
 		term.setOperation("beforedate");
-		getTerms().add(term);
+		addTermByDataType(term);
 		return term;
 	}
 	public Term addOrsGroup(PropertyDetail inDetail, final String[] inValues)
@@ -228,7 +230,7 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		term.setDetail(inDetail);
 		term.setValues(inValues);
 		term.setOperation("orgroup");
-		getTerms().add(term);
+		addTermByDataType(term);
 		return term;
 	}
 	public Term addOrsGroup(PropertyDetail inDetail, String inValue)
@@ -259,7 +261,7 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		term.setDetail(inDetail);
 		term.setValue(inValue);
 		term.setOperation("orgroup");
-		getTerms().add(term);
+		addTermByDataType(term);
 		return term;
 	}
 
@@ -290,7 +292,7 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		term.setDetail(inDetail);
 		term.setValue(inNots);
 		term.setOperation("notgroup");
-		getTerms().add(term);
+		addTermByDataType(term);
 		return term;
 	}
 	
@@ -421,7 +423,7 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		term.setOperation("exact");
 		term.setDetail(inDetail);
 		term.setValue(inValue);
-		getTerms().add(term);
+		addTermByDataType(term);
 		return term;
 	}
 
@@ -477,7 +479,7 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		term.setOperation("matches");
 		term.setDetail(inDetail);
 		term.setValue(inVal);
-		addTerm(term);
+		addTermByDataType(term);
 		return term;
 	}
 
@@ -512,16 +514,60 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		term.setOperation("contains");
 		term.setDetail(inDetail);
 		term.setValue(inVal);
-		addTerm(term);
+		addTermByDataType(term);
 		return term;
 	}
 	
 	
 	public boolean isEmpty()
 	{
-		return fieldTerms.isEmpty();
+		if(fieldTerms.isEmpty() && getParentJoins() == null)
+		{
+//			String fullq = toQuery();
+//			if( fullq == null || fullq.length() == 0 )
+//			{
+			return true;
+//			}
+		}
+		return false;
 	}
 
+	@Override
+	public boolean equals(Object inObj)
+	{
+		if( inObj == this )
+		{
+			return true;
+		}
+		if( inObj instanceof SearchQuery)
+		{
+			SearchQuery q = (SearchQuery)inObj;
+			String one = q.toQuery();
+			if( one != null)
+			{
+				if( !one.equals(toQuery() ) )
+				{
+					return false;
+				}
+			}
+			if( fieldParentJoins != null )
+			{
+				if( q.getParentJoins() != null )
+				{
+					if( !fieldParentJoins.equals( q.getParentJoins() ) )
+					{
+						return false;
+					}
+				}
+				else
+				{
+					return false;
+				}
+			}
+			return true;
+		}
+		return false;
+	}
 	public Term addNot(PropertyDetail inField, String inVal)
 	{
 		Term term = new Term()
@@ -546,7 +592,7 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		term.setOperation("not");
 		term.setDetail(inField);
 		term.setValue(inVal);
-		getTerms().add(term);
+		addTermByDataType(term);
 		return term;
 	}
 
@@ -581,7 +627,7 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		term.setOperation("startswith");
 		term.setDetail(inField);
 		term.setValue(inVal);
-		addTerm(term);
+		addTermByDataType(term);
 		return term;
 	}
 
@@ -701,7 +747,7 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 			};
 			term.setDetail(inId);
 			term.setValue(inFilter);
-			getTerms().add(term);
+			addTermByDataType(term);
 			return term;
 		}
 		return null;
@@ -773,7 +819,7 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		term.addParameter("afterDate", getDateFormat().format(inAfter));
 		term.addParameter("beforeDate", getDateFormat().format(inBefore));
 		term.setOperation("betweendates");
-		getTerms().add(term);
+		addTermByDataType(term);
 		return term;
 	}
 
@@ -896,6 +942,12 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	}
 
 	public Term addExact(PropertyDetail inField, long inParseInt)
+	{
+		String inString = String.valueOf(inParseInt);
+		return addExact(inField, inString);
+	}
+	
+	public Term addExact(PropertyDetail inField, double inParseInt)
 	{
 		String inString = String.valueOf(inParseInt);
 		return addExact(inField, inString);
@@ -1027,7 +1079,10 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		}
 		return null;
 	}
-
+	protected void addTermByDataType(Term inTerm)
+	{
+		addTerm(inTerm);
+	}
 	
 	/**
 	 * A better way to do this is to have "or" composite terms
@@ -1350,6 +1405,34 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	public void setFindAll(boolean inFindAll) 
 	{
 		fieldFindAll = inFindAll;
+	}
+	/**
+	 * Pass in the relationship back to the parent.
+	 * filterquery, "id", false, "division", "division_id"
+	 * @param inSearchType
+	 * @param inParentColumn
+	 * @param inChildSearchType
+	 * @param inChildColumn
+	 */
+	public void addRemoteJoin(SearchQuery remoteQuery, String inRemoteColumn, boolean inRemoteHasMultiValues, String remoteSearchType, String inLocalColumn)
+	{
+		Join join = new Join();
+		join.setRemoteHasMultiValues(inRemoteHasMultiValues);
+		join.setRemoteSearchType(remoteSearchType);
+		join.setRemoteQuery(remoteQuery);
+		join.setRemoteColumn(inRemoteColumn);
+		join.setLocalColumn(inLocalColumn);
+		
+		if( fieldParentJoins == null)
+		{
+			fieldParentJoins = new ArrayList();
+		}
+		fieldParentJoins.add(join);
+	}
+	
+	public List<Join> getParentJoins()
+	{
+		return fieldParentJoins;
 	}
 
 }

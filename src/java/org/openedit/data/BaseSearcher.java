@@ -80,8 +80,9 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		}
 		inPageRequest.putPageValue("searcher", this);
 		HitTracker tracker = null;
-		String fullq = inQuery.toQuery();
-		if (fullq == null || fullq.length() == 0)
+		
+		
+		if (inQuery.isEmpty())
 		{
 			return null;
 		}
@@ -99,27 +100,14 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 
 		boolean runsearch = true;
 
-		if (fullq != null)
-		{
+		//String fullq = inQuery.toQuery();
 			if (tracker != null)
 			{
 				if (!hasChanged(tracker))
 				{
-					if (fullq.length() == 0)
-					{
-						runsearch = false; // they are just going to the next
-											// page
-					}
-					else if (fullq.equals(tracker.getQuery()))
+					if (inQuery.equals(tracker.getSearchQuery()))
 					{
 						runsearch = false;
-						//						String pagenumber = inPageRequest.getRequestParameter("page");
-						//						if (pagenumber != null)
-						//						{
-						//							tracker.setPage(Integer.parseInt(pagenumber));
-						//							runsearch = false;
-						//						}
-						// duplicate search skip it
 						String cache = inPageRequest.getRequestParameter("cache");
 						if (cache != null && !Boolean.parseBoolean(cache))
 						{
@@ -135,11 +123,11 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 							runsearch = true;
 						}
 					}
-				}
-				if (inQuery.getSortBy() == null)
-				{
-					String oldSort = tracker.getOrdering();
-					inQuery.setSortBy(oldSort);
+					if (inQuery.getSortBy() == null)
+					{
+						String oldSort = tracker.getOrdering();
+						inQuery.setSortBy(oldSort);
+					}
 				}
 			}
 			if (runsearch)
@@ -200,13 +188,13 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				}
 				catch (Exception ex)
 				{
+					String fullq = inQuery.toQuery();
 					inPageRequest.putPageValue("error", "Invalid search input. " + URLUtilities.xmlEscape(fullq));
 					log.error(ex + " on " + fullq);
 					ex.printStackTrace();
 					inQuery.setProperty("error", "Invalid search " + URLUtilities.xmlEscape(fullq));
 				}
 			}
-		}
 		if (tracker != null)
 		{
 			if( !runsearch )
@@ -360,9 +348,36 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		return hits;
 	}
 
+	
+	
+	public HitTracker fieldSearch(String attr, String value, WebPageRequest inContext)
+	{
+		return fieldSearch(attr, value, null, inContext);
+	}
+
+	public HitTracker fieldSearch(String attr, String value, String orderby, WebPageRequest inContext)
+	{
+		SearchQuery query = createSearchQuery();
+
+		if (attr != null && value != null)
+		{
+			PropertyDetail detail = new PropertyDetail();
+			detail.setCatalogId(getCatalogId());
+			detail.setId(attr);
+			query.addExact(detail, value); //this is addMatches and not addExact so that we can handle wildcards
+		}
+		if (orderby != null)
+		{
+			query.setSortBy(orderby);
+		}
+
+		return cachedSearch(inContext, query);
+	}
+	
+	
 	public HitTracker fieldSearch(String attr, String value)
 	{
-		return fieldSearch(attr, value, null);
+		return fieldSearch(attr, value, (String)null);
 	}
 
 	public HitTracker fieldSearch(String attr, String value, String orderby)
@@ -598,8 +613,11 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		return search;
 	}
 
-	protected void addShowOnly(WebPageRequest inPageRequest, SearchQuery search)
+	public void addShowOnly(WebPageRequest inPageRequest, SearchQuery search)
 	{
+		if(inPageRequest == null){
+			return;
+		}
 		String querystring = inPageRequest.findValue(getSearchType() + "showonly");
 		if( querystring == null )
 		{
@@ -769,6 +787,9 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	protected Term addTerm(SearchQuery search, PropertyDetail detail, String val, String[] vals, String op)
 	{
 		Term t = null;
+		if(detail.isDataType("number") || detail.isDataType("double") || detail.isDataType("float")){
+			return null;
+		}
 		if ((val != null && val.length() > 0))
 		{
 			if ("matches".equals(op))
@@ -859,9 +880,15 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 
 	protected Term addNumber(WebPageRequest inPageRequest, SearchQuery search, PropertyDetail field, String val, String op)
 	{
+		if(!(field.isDataType("number") || field.isDataType("double") || field.isDataType("float"))){
+			return null;
+		}
+		
 		Term t = null;
 		if (val != null && val.length() > 0)
 		{
+		
+			
 			if ("greaterthannumber".equals(op))
 			{
 				t = search.addGreaterThan(field, Long.parseLong(val));
@@ -870,10 +897,15 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			{
 				t = search.addLessThan(field, Long.parseLong(val));
 			}
-
-			else if ("equaltonumber".equals(op))
+			
+			if ("equaltonumber".equals(op) || "matches".equals(op) || "startswith".equals(op))
 			{
-				t = search.addExact(field, Long.parseLong(val));
+				if(field.isDataType("number") || field.isDataType("long")){
+					t = search.addExact(field, Long.parseLong(val));
+				} 
+				if(field.isDataType("double")){
+					t = search.addExact(field, Double.parseDouble(val));
+				}
 			}
 			if (t != null)
 			{
@@ -1549,7 +1581,8 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 
 	public Object searchById(String inId)
 	{
-		if(inId == null || inId.length() == 0){
+		if(inId == null || inId.length() == 0)
+		{
 			return null;
 		}
 		return searchByField("id",inId);
