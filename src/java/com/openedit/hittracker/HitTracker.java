@@ -12,6 +12,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openedit.Data;
 import org.openedit.data.PropertyDetail;
+import org.openedit.data.Searcher;
 import org.openedit.util.DateStorageUtil;
 
 import com.openedit.OpenEditException;
@@ -21,7 +22,7 @@ public abstract class HitTracker implements Serializable, Collection
 
 	private static final Log log = LogFactory.getLog(HitTracker.class);
 	protected boolean fieldAllSelected;
-	protected Collection<Data> fieldSelections;
+	protected Collection<String> fieldSelections;
 	protected int fieldPage = 0;
 	protected int fieldHitsPerPage = 15;
 	protected int fieldCurrentHit;
@@ -33,12 +34,17 @@ public abstract class HitTracker implements Serializable, Collection
 	protected String fieldDataSource;
 	protected List fieldCurrentPage;
 	protected int fieldMaxPageListing = 10; //used for page listing
-
+	protected Searcher fieldSearcher;
+	
+	
 	public HitTracker()
 	{
 
 	}
-
+	public HitTracker(Searcher inSearcher)
+	{
+		setSearcher(inSearcher);
+	}
 	protected void setAllSelected(boolean inSelectAll)
 	{
 		fieldAllSelected = inSelectAll;
@@ -611,26 +617,53 @@ public abstract class HitTracker implements Serializable, Collection
 
 	public HitTracker getSelectedHitracker()
 	{
-		if( getSessionId().startsWith("selected") )
-		{
-			return this;
-		}
-		ListHitTracker hits = new ListHitTracker(new ArrayList( getSelectedHits() ) );
-//		SelectedHitsTracker hits = new SelectedHitsTracker(this);
-		hits.setHitsName("selected" + getHitsName());
-		hits.setSessionId("selected" + getSessionId() );
-		hits.selectAll();
-		return hits;
-	}
-
-	public Collection<Data> getSelectedHits()
-	{
 		if( isAllSelected() )
 		{
 			return this;
 		}
-		return getSelections();
+		if( getSessionId().startsWith("selected") )
+		{
+			return this;
+		}
+		
+		//TODO: get fresh data from the searcher
+		HitTracker hits = null;
+		if( fieldSearcher == null)
+		{
+			List list = new ArrayList( getSelections().size() );
+			//Look for all the selected objects
+			for (Iterator iterator = getSelections().iterator(); iterator.hasNext();)
+			{
+				String id = (String) iterator.next();
+				Data found = findData("id", id);
+				if( found != null)
+				{
+					list.add(found);
+				}
+			}
+			ListHitTracker lhits = new ListHitTracker();	
+			lhits.setSessionId("selected" + getSessionId() );
+			hits = lhits;
+		}
+		else
+		{
+			hits = getSearcher().searchByIds(getSelections());
+		}
+		
+//		SelectedHitsTracker hits = new SelectedHitsTracker(this);
+		hits.setHitsName("selected" + getHitsName());
+		hits.selectAll();
+		return hits;
 	}
+//
+//	public Collection<Data> getSelectedHits()
+//	{
+//		if( isAllSelected() )
+//		{
+//			return this;
+//		}
+//		return getSelectedHitracker();
+//	}
 	public boolean hasMultipleSelections()
 	{
 		if( isAllSelected() )
@@ -657,43 +690,28 @@ public abstract class HitTracker implements Serializable, Collection
 		return false;
 	}
 	
-	public Collection<Data> getSelections()
+	public Collection<String> getSelections()
 	{
 		if (fieldSelections == null)
 		{
-			fieldSelections = new ArrayList<Data>();
+			fieldSelections = new ArrayList<String>();
 		}
 		return fieldSelections;
 	}
 
-	public void setSelections(Collection<Data> inSelections)
+	public void setSelections(Collection<String> inSelections)
 	{
 		fieldSelections = inSelections;
 	}
 
 	public void addSelection(String inId)
 	{
-		Data selectedrow = findData("id", inId);
-		if (selectedrow != null)
-		{
-			getSelections().add(selectedrow);
-		}
-		else 
-		{
-			log.info("row not found "+inId);
-		}
+		getSelections().add(inId);
 	}
 	
 	public void removeSelection(String inId)
 	{
-		for(Data data:getSelections() )
-		{
-			if( data.getId().equals(inId))
-			{
-				getSelections().remove(data);
-				break;
-			}
-		}
+		getSelections().remove(inId);
 	}
 
 	public boolean isSelected(String inId)
@@ -702,15 +720,7 @@ public abstract class HitTracker implements Serializable, Collection
 		{
 			return true;
 		}
-		
-		for(Data data:getSelections() )
-		{
-			if( data.getId().equals(inId))
-			{
-				return true;
-			}
-		}
-		return false;
+		return getSelections().contains(inId);
 
 	}
 
@@ -757,14 +767,17 @@ public abstract class HitTracker implements Serializable, Collection
 	}
 	public String getFirstSelected()
 	{
-		if( isAllSelected())
+		if( hasSelections() )
 		{
-			return get(0).getId();
-		}
-		Data first = getSelections().iterator().next();
-		if( first != null)
-		{
-			return first.getId();
+			if( isAllSelected())
+			{
+				return get(0).getId();
+			}
+			String first = getSelections().iterator().next();
+			if( first != null)
+			{
+				return first;
+			}
 		}
 		return null;
 	}
@@ -1014,4 +1027,18 @@ public abstract class HitTracker implements Serializable, Collection
 		setSelections(inOld.getSelections());
 		setAllSelected(inOld.isAllSelected());
 	}
+
+	public Searcher getSearcher()
+	{
+		return fieldSearcher;
+	}
+
+	public void setSearcher(Searcher inSearcher)
+	{
+		fieldSearcher = inSearcher;
+	}
+
+
+	
 }
+
