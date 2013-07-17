@@ -319,6 +319,7 @@ public class XmlSearcher extends BaseSearcher
 		sortResults(inQuery, results);
 		
 		hits = new DataHitTracker();
+		hits.setSearcher(this);
 		hits.setSearchQuery(inQuery);
 		hits.setIndexId(getSearchType() + settings.getLastModified());
 		hits.addAll(results);

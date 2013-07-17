@@ -1576,9 +1576,18 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		SearchQuery query = createSearchQuery();
 		query.addMatches(inField, inValue);
 		HitTracker hits = search(query);
+		hits.setHitsPerPage(1);
 		return hits.first();
 	}
-
+	public HitTracker searchByIds(Collection<String> inIds)
+	{
+		SearchQuery query = createSearchQuery();
+		String[] args = inIds.toArray(new String[inIds.size()]);
+		PropertyDetail detail = getDetail("id");
+		query.addOrsGroup(detail, args);
+		HitTracker hits = search(query);
+		return hits;
+	}
 	public Object searchById(String inId)
 	{
 		if(inId == null || inId.length() == 0)
