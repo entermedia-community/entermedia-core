@@ -513,7 +513,15 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			return null;
 		}
 		SearchQuery search = createSearchQuery();
-
+		String and = inPageRequest.getRequestParameter("querytype");
+		if( and != null)
+		{
+			if("or".equals(and))
+			{
+				search.setAndTogether(false);
+			}
+		}
+		
 		String[] operations = inPageRequest.getRequestParameters("operation");
 		// String[] values = inPageRequest.getRequestParameters("value");
 		// check the new naming convention for values (fieldid.value)
