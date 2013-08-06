@@ -222,6 +222,7 @@ public class BaseWebServer implements WebServer
 			
 		} catch ( Throwable ex)
 		{
+			log.error("Could not start server: " , ex);
 			throw new OpenEditRuntimeException(ex);
 		}
 
