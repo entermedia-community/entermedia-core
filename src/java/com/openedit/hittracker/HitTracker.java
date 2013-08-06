@@ -615,6 +615,11 @@ public abstract class HitTracker implements Serializable, Collection
 
 	}
 
+	
+	@Deprecated public Collection getSelectedHits(){
+		return getSelectedHitracker();
+	}
+	
 	public HitTracker getSelectedHitracker()
 	{
 		if( isAllSelected() )

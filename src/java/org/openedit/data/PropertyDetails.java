@@ -108,7 +108,8 @@ public class PropertyDetails extends AbstractCollection
 		}
 			
 			getDetails().add(inDetail);
-		
+			getDetailsCached().remove(inDetail.getId());
+			getDetailsCached().put(inDetail.getId(), inDetail);
 	}
 
 	public List findIndexProperties() {
