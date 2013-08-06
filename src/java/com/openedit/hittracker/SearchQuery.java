@@ -880,7 +880,7 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	}
 
 	/**
-	 * @deprecated use getTermByTermId(String) instead
+	 * @deprecated use getTermByDetailId(String) instead
 	 */
 	public Term getTerm(String inFieldId)
 	{

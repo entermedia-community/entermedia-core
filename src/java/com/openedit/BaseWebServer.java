@@ -25,6 +25,7 @@ import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.openedit.PlugIn;
 import org.openedit.repository.Repository;
+import org.openedit.repository.filesystem.FileRepository;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.InputStreamResource;
@@ -663,6 +664,7 @@ public class BaseWebServer implements WebServer
 				config.setFilterOut(child.attributeValue("filterout")); //*.old
 					
 				String externalpath = child.attributeValue("externalpath");
+				externalpath = PathUtilities.resolveRelativePath(externalpath, getRootDirectory().getPath() );
 				config.setExternalPath(externalpath);
 				
 				//This is used when no external path is passed in
@@ -686,11 +688,7 @@ public class BaseWebServer implements WebServer
 				
 				//Might need to create the mount so we can find the virtual children
 				//TODO: Remove the need to create the folder
-				Page local = getPageManager().getPage(config.getPath() + "/");
-				if( !local.exists() )
-				{
-					getPageManager().putPage(local);
-				}
+				new File( getRootDirectory(), config.getPath() ).mkdirs();
 
 				
 			}

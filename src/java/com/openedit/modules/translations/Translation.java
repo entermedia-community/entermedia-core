@@ -4,6 +4,9 @@
 package com.openedit.modules.translations;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -11,14 +14,20 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpException;
-import org.apache.commons.httpclient.NameValuePair;
-import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpException;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.velocity.anakia.OutputWrapper;
 
 import com.openedit.page.PageProperty;
+import com.openedit.util.OutputFiller;
 
 public class Translation
 {
@@ -142,16 +151,17 @@ public class Translation
 		}
 		String googlePage = "http://translate.google.com/translate_a/t";
 		//http://translate.google.com/translate_a/t?client=t&text=Friends%20of&hl=en&sl=en&tl=es&pc=0&oc=0
-		HttpClient client = new HttpClient();
-		PostMethod method = new PostMethod( googlePage );
-		method.addParameter(new NameValuePair("client", "t"));
-		method.addParameter(new NameValuePair("text", text));
-		method.addParameter(new NameValuePair("hl", "en"));
-		method.addParameter(new NameValuePair("sl", "en"));
-		method.addParameter(new NameValuePair("tl", inLocale));
-		method.addParameter(new NameValuePair("pc", "0"));
-		method.addParameter(new NameValuePair("oc", "1"));
-//		try
+		DefaultHttpClient client = new DefaultHttpClient();
+		HttpPost httpPost = new HttpPost( googlePage );
+		List <NameValuePair> nvps = new ArrayList <NameValuePair>();
+		nvps.add(new BasicNameValuePair("client", "t"));
+		nvps.add(new BasicNameValuePair("text", text));
+		nvps.add(new BasicNameValuePair("hl", "en"));
+		nvps.add(new BasicNameValuePair("sl", "en"));
+		nvps.add(new BasicNameValuePair("tl", inLocale));
+		nvps.add(new BasicNameValuePair("pc", "0"));
+		nvps.add(new BasicNameValuePair("oc", "1"));
+		//		try
 //		{
 //			log.info(method.getURI());
 //		}
@@ -163,14 +173,16 @@ public class Translation
 		String translated = null;
 		try
 		{
-			int statusCode = client.executeMethod( method );
+			httpPost.setEntity(new UrlEncodedFormEntity(nvps));
+			HttpResponse response2 = client.execute(httpPost);
 		
-		    if( statusCode != -1 ) 
+		    if(response2.getStatusLine().getStatusCode() != -1 ) 
 		    {
-		      String contents = method.getResponseBodyAsString();
-			  method.releaseConnection();
-			  
-			 // {"trans":
+		    	HttpEntity entity2 = response2.getEntity();
+		    	StringWriter out = new StringWriter();
+		    	new OutputFiller().fill(new InputStreamReader( entity2.getContent(), "UTF-8" ), out );
+		    	String contents = out.toString();
+		    	httpPost.releaseConnection();
 			  int start =  4;
 			  int end = contents.indexOf("\",\"",start);
 			  if( start != -1 && end != -1)
@@ -182,9 +194,6 @@ public class Translation
 				log.info("Could not translate into " + inLocale + " " + text );
 		      }
 		    }
-		} catch (HttpException e)
-		{
-			e.printStackTrace();
 		} catch (IOException e)
 		{
 			e.printStackTrace();

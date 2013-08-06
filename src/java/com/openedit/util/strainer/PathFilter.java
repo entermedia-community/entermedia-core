@@ -70,7 +70,8 @@ public class PathFilter extends BaseFilter
 	public boolean passes(Object inObj) throws FilterException, ClassCastException
 	{
 		WebPageRequest req = (WebPageRequest) inObj;
-		boolean ok = PathUtilities.match(req.getPage().getPath(), getPath());
+		String path = req.getContentPage().replaceProperty(getPath());
+		boolean ok = PathUtilities.match(req.getPage().getPath(), path);
 		return ok;
 		//return (getPath() == null) || .startsWith(getPath());
 	}

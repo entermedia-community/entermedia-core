@@ -52,6 +52,7 @@ public class FileRepository extends  BaseRepository
 		}
 		
 		ContentItem revision = createContentItem(inPath);
+
 		return revision;
 	}
 
@@ -61,7 +62,10 @@ public class FileRepository extends  BaseRepository
 		{
 			log.debug("reading:" + inPath);
 		}
-		return createContentItem(inPath);
+		ContentItem item = createContentItem(inPath);
+		item.setStub(true);
+
+		return item;
 	}
 
 	public void put(ContentItem inContent) throws RepositoryException
