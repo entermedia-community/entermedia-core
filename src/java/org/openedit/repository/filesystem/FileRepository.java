@@ -58,14 +58,15 @@ public class FileRepository extends  BaseRepository
 
 	public ContentItem getStub(String inPath) throws RepositoryException
 	{
-		if ( log.isDebugEnabled() )
-		{
-			log.debug("reading:" + inPath);
-		}
-		ContentItem item = createContentItem(inPath);
-		item.setStub(true);
-
-		return item;
+//		if ( log.isDebugEnabled() )
+//		{
+//			log.debug("reading:" + inPath);
+//		}
+//		ContentItem item = createContentItem(inPath);
+//		item.setStub(true);
+//
+//		return item;
+		return get(inPath); //Nothing different here
 	}
 
 	public void put(ContentItem inContent) throws RepositoryException

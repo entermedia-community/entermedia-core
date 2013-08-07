@@ -281,7 +281,7 @@ public class PageManager
 		{
 			path = inPage.getAlternateContentPath();
 		}
-		ContentItem revision = getRepository().get( path );
+		ContentItem revision = getRepository().getStub( path );
 		return revision;
 	}
 	
