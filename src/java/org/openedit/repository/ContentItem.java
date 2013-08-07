@@ -75,7 +75,13 @@ public abstract class ContentItem
 	{
 		fieldPath = path;
 	}
-	public String getName(){
+	public String getName()
+	{
+		if( getPath().endsWith("/"))
+		{
+			String path  = getPath().substring(0,getPath().length() - 1);
+			return PathUtilities.extractFileName(path);
+		}
 		return PathUtilities.extractFileName(getPath());
 	}
 	/**
