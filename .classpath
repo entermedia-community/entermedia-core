@@ -21,7 +21,7 @@
 	<classpathentry exported="true" kind="lib" path="lib/commons-codec-1.7.jar"/>
 	<classpathentry exported="true" kind="con" path="GROOVY_SUPPORT"/>
 	<classpathentry exported="true" kind="lib" path="lib/httpclient-4.2.3.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/httpcore-4.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-httpclient-3.1.jar"/>
+	<classpathentry kind="lib" path="lib/httpcore-4.3.jar"/>
 	<classpathentry kind="output" path="build"/>
 </classpath>

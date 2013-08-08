@@ -208,7 +208,6 @@ public class PropertyDetailsArchive {
 													// 1000 limit cache
 			}
 		}
-
 		View view = null;
 		if (id != null) {
 			view = getViewCache().get(id);
