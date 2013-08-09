@@ -248,7 +248,7 @@
 	 
 <bean id="translationSearcher" name="translationSearcher"
         class="com.openedit.modules.translations.TranslationSearcher" abstract="false"
-        singleton="true" lazy-init="default" autowire="default"
+        singleton="false" lazy-init="default" autowire="default"
         dependency-check="default">
         
        

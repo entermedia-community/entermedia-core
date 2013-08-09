@@ -16,6 +16,7 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpException;
 import org.apache.http.HttpResponse;
@@ -161,6 +162,7 @@ public class Translation
 		nvps.add(new BasicNameValuePair("tl", inLocale));
 		nvps.add(new BasicNameValuePair("pc", "0"));
 		nvps.add(new BasicNameValuePair("oc", "1"));
+		nvps.add(new BasicNameValuePair("ie", "UTF-8"));
 		//		try
 //		{
 //			log.info(method.getURI());
@@ -179,8 +181,23 @@ public class Translation
 		    if(response2.getStatusLine().getStatusCode() != -1 ) 
 		    {
 		    	HttpEntity entity2 = response2.getEntity();
+		    	String charset = "UTF-8";
+		    	Header[] headers = response2.getHeaders("Content-Type");
+		    	if (headers!=null && headers.length > 0)
+		    	{
+		    		String val = headers[0].getValue();
+			    	int index =-1;
+			    	if ((index = val.indexOf("charset=")) != -1)
+			    	{
+			    		charset = val.substring(index+"charset=".length()).trim();
+			    		if (charset.isEmpty())//fail-safe
+		    			{
+			    			charset = "UTF-8";
+		    			}
+			    	}
+		    	}
 		    	StringWriter out = new StringWriter();
-		    	new OutputFiller().fill(new InputStreamReader( entity2.getContent(), "UTF-8" ), out );
+		    	new OutputFiller().fill(new InputStreamReader( entity2.getContent(), charset ), out );
 		    	String contents = out.toString();
 		    	httpPost.releaseConnection();
 			  int start =  4;
