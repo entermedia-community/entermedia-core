@@ -526,6 +526,17 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 //			String fullq = toQuery();
 //			if( fullq == null || fullq.length() == 0 )
 //			{
+			if( hasChildren() )
+			{
+				for (Iterator iterator = getChildren().iterator(); iterator.hasNext();)
+				{
+					SearchQuery q = (SearchQuery) iterator.next();
+					if( !q.isEmpty() )
+					{
+						return false;
+					}
+				}
+			}
 			return true;
 //			}
 		}
