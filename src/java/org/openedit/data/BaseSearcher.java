@@ -595,7 +595,11 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 //						val = createOrValue(ors);
 //					}
 				}
-
+				if( operations.length >= i)
+				{
+					log.info("Cant search without operations" );
+					return null;
+				}
 				String op = operations[i];
 				Term t = addTerm(search, detail, val, vals, op);
 				if (t == null)
