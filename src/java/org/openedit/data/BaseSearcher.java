@@ -595,7 +595,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 //						val = createOrValue(ors);
 //					}
 				}
-				if( operations.length >= i)
+				if( operations.length <= i)
 				{
 					log.info("Cant search without operations" );
 					return null;
