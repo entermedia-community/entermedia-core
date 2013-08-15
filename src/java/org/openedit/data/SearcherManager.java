@@ -149,7 +149,10 @@ public class SearcherManager
 		}
 		Replacer replacer = (Replacer)getModuleManager().getBean(inCatalogId, "replacer");
 		String val = replacer.replace(inLookup, inValues);
-		
+		if( val.startsWith("$") && val.equals(inLookup) )
+		{
+			return "";
+		}
 		return val; 
 	}
 	
