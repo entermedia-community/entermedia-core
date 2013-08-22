@@ -911,14 +911,14 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 	public String getLocale()
 	{
 		String locale = (String)getPageValue("sessionlocale");
-		if( locale == null || locale.length() == 0)
-		{
-			User user = getUser();
-			if( user != null)
-			{
-				//locale = (String)user.get("locale");
-			}
-		}
+//		if( locale == null || locale.length() == 0)
+//		{
+//			User user = getUser();
+//			if( user != null)
+//			{
+//				//locale = (String)user.get("locale");
+//			}
+//		}
 		if( locale == null || locale.length() == 0)
 		{
 			Browser browser = (Browser)getPageValue("browser");
@@ -927,7 +927,10 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 				locale = browser.getLocale().toString();
 			}
 		}
-
+		if( locale == null )
+		{
+			return "en_US";
+		}
 		return locale;
 	}
 
