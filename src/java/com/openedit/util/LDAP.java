@@ -104,6 +104,7 @@ public class LDAP
 			//dnbuffer.append(",");
 			dnbuffer.append(post);
 		}
+		//uid=%s,ou=People,dc=company,dc=com
 		// String base = "ou=People,dc=example,dc=com";
 		// String dn = "uid=" + inUser.getUserName() + "," + base;
 
