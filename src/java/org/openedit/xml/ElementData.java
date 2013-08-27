@@ -126,7 +126,7 @@ public class ElementData implements MultiValued, Comparable
 			{
 				if( inId.equals("name"))
 				{
-					getElement().setText(null);
+					getElement().setText("");
 				}
 				//always check for a child
 				Element child = getElement().element(inId);
