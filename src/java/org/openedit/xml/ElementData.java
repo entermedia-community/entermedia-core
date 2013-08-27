@@ -6,11 +6,15 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.dom4j.Attribute;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.openedit.MultiValued;
+
+import sun.reflect.ReflectionFactory.GetReflectionFactoryAction;
 
 import com.openedit.OpenEditException;
 
@@ -19,6 +23,7 @@ public class ElementData implements MultiValued, Comparable
 	protected Element fieldElement;
 	protected String fieldSourcePath;
 	protected String fieldVersion;
+	protected static final Pattern INVALIDSTUFF = Pattern.compile("[\'\"\n<>&]");  
 	
 	public String getVersion() {
 		return fieldVersion;
@@ -54,6 +59,12 @@ public class ElementData implements MultiValued, Comparable
 	
 	public String get(String inId)
 	{
+		Element child = getElement().element(inId);
+		if( child != null)
+		{
+			return child.getText();
+		}
+		
 		if( inId.equals("name"))
 		{
 			String name =getElement().getText();
@@ -101,20 +112,25 @@ public class ElementData implements MultiValued, Comparable
 	}
 	public void setProperty(String inId, String inValue)
 	{
-		//TODO: Deal with XML in the value if XML addCData
-		if( inId.equals("name"))
+		if(inId.equals(".version"))
 		{
-			
-			getElement().setText(inValue);
-		}
-		else if(inId.equals(".version")){
 			setVersion(inValue);
 		}
 		else
-			
 		{
 			synchronized (getElement())
 			{
+				if( inId.equals("name"))
+				{
+					getElement().setText(null);
+				}
+				//always check for a child
+				Element child = getElement().element(inId);
+				if( child != null)
+				{
+					getElement().remove(child);
+				}
+				
 				if( inValue == null || inValue.length() == 0)
 				{
 					Attribute attr = getElement().attribute(inId);
@@ -125,7 +141,19 @@ public class ElementData implements MultiValued, Comparable
 				}
 				else
 				{
-						getElement().addAttribute(inId,inValue);					
+					if( INVALIDSTUFF.matcher(inValue).find() )
+					{
+						Attribute attr = getElement().attribute(inId);
+						if( attr != null)
+						{
+							getElement().remove(attr);
+						}
+						getElement().addElement(inId).addCDATA(inValue);
+					}
+					else
+					{
+						getElement().addAttribute(inId,inValue);
+					}
 				}
 			}
 		}
