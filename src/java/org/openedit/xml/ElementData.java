@@ -129,13 +129,19 @@ public class ElementData implements MultiValued, Comparable
 					getElement().setText("");
 				}
 				//always check for a child
-				Element child = getElement().element(inId);
-				if( child != null)
+				//THIS DOES NOT WORK HERE BECAUSE WE RELOAD THE DATA FROM DISK WHILE SAVING
+				Iterator children = getElement().elementIterator(inId);
+				if( children != null)
 				{
+					for (Iterator iterator = children; iterator
+							.hasNext();) {
+						Element child = (Element) iterator.next();
+						getElement().remove(child);	
+					}
 					//TODO: See if value changed?
-					getElement().remove(child);
+					
 				}
-				
+				 children = getElement().elementIterator(inId);
 				if( inValue == null || inValue.length() == 0)
 				{
 					Attribute attr = getElement().attribute(inId);
@@ -153,7 +159,11 @@ public class ElementData implements MultiValued, Comparable
 						{
 							getElement().remove(attr);
 						}
-						getElement().addElement(inId).addCDATA(inValue);
+						
+						if(inValue != null && !inValue.isEmpty()){
+							Element child = getElement().addElement(inId);
+							child.addCDATA(inValue);
+						}
 					}
 					else
 					{
