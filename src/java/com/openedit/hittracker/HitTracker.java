@@ -630,29 +630,39 @@ public abstract class HitTracker implements Serializable, Collection
 		{
 			return this;
 		}
-		
-		//TODO: get fresh data from the searcher
 		HitTracker hits = null;
-		if( fieldSearcher == null)
-		{
-			List list = new ArrayList( getSelections().size() );
-			//Look for all the selected objects
-			for (Iterator iterator = getSelections().iterator(); iterator.hasNext();)
+		if( hasSelections() )
+		{			
+			//TODO: get fresh data from the searcher
+			if( fieldSearcher == null)
 			{
-				String id = (String) iterator.next();
-				Data found = findData("id", id);
-				if( found != null)
+				//Is this used at all?
+				List list = new ArrayList( getSelections().size() );
+				//Look for all the selected objects
+				for (Iterator iterator = getSelections().iterator(); iterator.hasNext();)
 				{
-					list.add(found);
+					String id = (String) iterator.next();
+					Data found = findData("id", id);
+					if( found != null)
+					{
+						list.add(found);
+					}
 				}
+				ListHitTracker lhits = new ListHitTracker(list);	
+				lhits.setSessionId("selected" + getSessionId() );
+				hits = lhits;
 			}
-			ListHitTracker lhits = new ListHitTracker();	
-			lhits.setSessionId("selected" + getSessionId() );
-			hits = lhits;
+			else
+			{
+				hits = getSearcher().searchByIds(getSelections());
+			}
 		}
 		else
 		{
-			hits = getSearcher().searchByIds(getSelections());
+			ListHitTracker lhits = new ListHitTracker();	
+			lhits.setSessionId("selected" + getSessionId() );
+			hits = lhits;
+			
 		}
 		
 //		SelectedHitsTracker hits = new SelectedHitsTracker(this);

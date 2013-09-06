@@ -672,9 +672,14 @@ public class BaseWebServer implements WebServer
 				{
 					String rootpath = getCleanRootPath(config.getPath());
 					config.setExternalPath(rootpath);
-				} else{
-					externalpath = PathUtilities.resolveRelativePath(externalpath, getRootDirectory().getPath() );
-					config.setExternalPath(externalpath);
+				}
+				else
+				{
+					if( externalpath != null)
+					{
+						externalpath = PathUtilities.resolveRelativePath(externalpath, getRootDirectory().getPath() );
+						config.setExternalPath(externalpath);
+					}
 				}
 				
 				List properties = child.elements("property");
