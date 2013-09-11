@@ -35,6 +35,7 @@ public abstract class HitTracker implements Serializable, Collection
 	protected List fieldCurrentPage;
 	protected int fieldMaxPageListing = 10; //used for page listing
 	protected Searcher fieldSearcher;
+	protected boolean fieldShowOnlySelected;
 	
 	
 	public HitTracker()
@@ -50,6 +51,14 @@ public abstract class HitTracker implements Serializable, Collection
 		fieldAllSelected = inSelectAll;
 	}
 
+	public boolean isShowOnlySelected()
+	{
+		return fieldShowOnlySelected;
+	}
+	public void setShowOnlySelected(boolean inShowOnlySelected)
+	{
+		fieldShowOnlySelected = inShowOnlySelected;
+	}
 
 	public String getResultType()
 	{
@@ -691,6 +700,19 @@ public abstract class HitTracker implements Serializable, Collection
 			return true;
 		}
 		return false;
+	}
+	
+	public int getSelectionSize()
+	{
+		if( isAllSelected() )
+		{
+			return size();
+		}
+		if( fieldSelections != null )
+		{
+			return fieldSelections.size();
+		}
+		return 0;
 	}
 	public boolean hasSelections()
 	{

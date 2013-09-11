@@ -222,7 +222,7 @@ public class PropertyDetails extends AbstractCollection
 						{
 							id = id.substring(index + 1);
 						}
-						if (inName.equals(id) || inName.equals(id.replace(" ", ""))) 
+						if (inName.equalsIgnoreCase(id) || inName.equals(id.replace(" ", ""))) 
 						{
 							found = detail;
 							getExternalIdCache().put(inName, found);
