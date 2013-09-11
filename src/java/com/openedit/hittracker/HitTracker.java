@@ -32,6 +32,7 @@ public abstract class HitTracker implements Serializable, Collection
 	protected transient String fieldIndexId; //cause this index to invalidate
 	protected String fieldResultType;
 	protected String fieldDataSource;
+	protected String fieldHitsName;	
 	protected List fieldCurrentPage;
 	protected int fieldMaxPageListing = 10; //used for page listing
 	protected Searcher fieldSearcher;
@@ -634,50 +635,32 @@ public abstract class HitTracker implements Serializable, Collection
 		if( isAllSelected() )
 		{
 			return this;
-		}
-		if( getSessionId().startsWith("selected") )
+		}		
+		if( getHitsName().startsWith("selected") )
 		{
 			return this;
 		}
-		HitTracker hits = null;
-		if( hasSelections() )
-		{			
-			//TODO: get fresh data from the searcher
-			if( fieldSearcher == null)
-			{
-				//Is this used at all?
-				List list = new ArrayList( getSelections().size() );
-				//Look for all the selected objects
-				for (Iterator iterator = getSelections().iterator(); iterator.hasNext();)
-				{
-					String id = (String) iterator.next();
-					Data found = findData("id", id);
-					if( found != null)
-					{
-						list.add(found);
-					}
-				}
-				ListHitTracker lhits = new ListHitTracker(list);	
-				lhits.setSessionId("selected" + getSessionId() );
-				hits = lhits;
-			}
-			else
-			{
-				hits = getSearcher().searchByIds(getSelections());
-			}
+
+		HitTracker selecteddata = getSearcher().search(getSearchQuery());
+		if( isAllSelected() )
+		{
+			//rerun the search
+			selecteddata.selectAll();
 		}
 		else
 		{
-			ListHitTracker lhits = new ListHitTracker();	
-			lhits.setSessionId("selected" + getSessionId() );
-			hits = lhits;
-			
+			selecteddata.setSelections(getSelections());
+			selecteddata.setShowOnlySelected(true);
 		}
-		
+//		else
+//		{
+//			ListHitTracker lhits = new ListHitTracker();	
+//			lhits.setSessionId("selected" + getSessionId() );
+//			hits = lhits;
+			
 //		SelectedHitsTracker hits = new SelectedHitsTracker(this);
-		hits.setHitsName("selected" + getHitsName());
-		hits.selectAll();
-		return hits;
+		selecteddata.setHitsName("selected" + getHitsName() + selecteddata.size() );
+		return selecteddata;
 	}
 //
 //	public Collection<Data> getSelectedHits()
@@ -838,12 +821,16 @@ public abstract class HitTracker implements Serializable, Collection
 	
 	public String getHitsName()
 	{
+		if( fieldHitsName != null)
+		{
+			return fieldHitsName;
+		}
 		return getSearchQuery().getHitsName();
 	}
 	
 	public void setHitsName(String inHitsname)
 	{
-		getSearchQuery().setHitsName(inHitsname);
+		fieldHitsName = inHitsname;
 	}
 	
 	public String getCatalogId()
