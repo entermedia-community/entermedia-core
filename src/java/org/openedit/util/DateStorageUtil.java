@@ -223,6 +223,13 @@ public class DateStorageUtil {
 		}else{
 			two = parseFromStorage(last);
 		}
-		return getDiffYears(one, two);
+		if(one != null && two != null){
+			return getDiffYears(one, two);
+			
+		} 
+		else{ 
+			return -1;
+		}
+		
 	}
 }
