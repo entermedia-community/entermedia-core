@@ -1110,4 +1110,8 @@ public class FileSystemUserManager implements UserManager
 		return inUserName;
 	}
 
+public String nextId() {
+	int id = getUserIdCounter().incrementCount(); 
+	return  String.valueOf(id); 
+}
 }
