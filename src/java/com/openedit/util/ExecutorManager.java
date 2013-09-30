@@ -29,6 +29,7 @@ public class ExecutorManager
 			{
 				fieldThreadCount--;
 			}
+			fieldThreadCount = Math.max(fieldThreadCount, 4); //minimum of 4 threads
 		}
 
 		return fieldThreadCount;
