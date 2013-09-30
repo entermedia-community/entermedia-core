@@ -136,20 +136,29 @@ public class SearcherManager
 	{
 		return getData(inDetail.getListCatalogId(), inDetail.getListId(), inValue);
 	}
-	public String getValue(String inCatalogId, PropertyDetail inDetail, Map inValues)
+	public String getValue(Data inParent,PropertyDetail inDetail)
 	{
-		//we might need to loop up the parent via a join first
-		return null;
+		String mask = inDetail.get("render");
+		String val = null;
+		if( mask != null)
+		{
+			val = getValue(inDetail.getCatalogId(),mask,inParent.getProperties());
+		}
+		else
+		{
+			val = inParent.get(inDetail.getId());
+		}
+		return val;
 	}
-	public String getValue(String inCatalogId, String inLookup,Map inValues)
+	public String getValue(String inCatalogId, String inMask,Map inValues)
 	{
-		if( inLookup == null)
+		if( inMask == null)
 		{
 			return null;
 		}
 		Replacer replacer = (Replacer)getModuleManager().getBean(inCatalogId, "replacer");
-		String val = replacer.replace(inLookup, inValues);
-		if( val.startsWith("$") && val.equals(inLookup) )
+		String val = replacer.replace(inMask, inValues);
+		if( val.startsWith("$") && val.equals(inMask) )
 		{
 			return "";
 		}
