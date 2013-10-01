@@ -23,6 +23,7 @@ public class SelectedFacet
 		values = inValues;
 	}
 	
+
 	
 	
 }
