@@ -42,7 +42,7 @@ public class ExecutorManager
 	public ExecutorService createExecutor() 
 	{
 		int max = getThreadCount();
-		return createExecutor(max, max);
+		return createExecutor(1, max);
 		
 	}
 	public ExecutorService createExecutor(int startThreads, int maxThreads) 

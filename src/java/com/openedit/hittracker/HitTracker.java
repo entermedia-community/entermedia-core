@@ -37,6 +37,7 @@ public abstract class HitTracker implements Serializable, Collection
 	protected int fieldMaxPageListing = 10; //used for page listing
 	protected Searcher fieldSearcher;
 	protected boolean fieldShowOnlySelected;
+	protected String fieldTempSessionId;
 	
 	
 	public HitTracker()
@@ -636,7 +637,7 @@ public abstract class HitTracker implements Serializable, Collection
 		{
 			return this;
 		}		
-		if( getHitsName().startsWith("selected") )
+		if( getSessionId().startsWith("selected") )
 		{
 			return this;
 		}
@@ -659,7 +660,8 @@ public abstract class HitTracker implements Serializable, Collection
 //			hits = lhits;
 			
 //		SelectedHitsTracker hits = new SelectedHitsTracker(this);
-		selecteddata.setHitsName("selected" + getHitsName() + selecteddata.size() );
+//		selecteddata.setHitsName("selected" + getHitsName() + selecteddata.size() );
+		selecteddata.setSessionId("selected" + getSessionId());
 		return selecteddata;
 	}
 //
@@ -816,6 +818,10 @@ public abstract class HitTracker implements Serializable, Collection
 	
 	public String getSessionId()
 	{
+		if( fieldTempSessionId != null)
+		{
+			return fieldTempSessionId;
+		}
 		return getSearchQuery().getSessionId();
 	}
 	
@@ -1062,7 +1068,10 @@ public abstract class HitTracker implements Serializable, Collection
 		fieldSearcher = inSearcher;
 	}
 
-
+	protected void setSessionId(String inSessionId)
+	{
+		fieldTempSessionId = inSessionId;
+	}
 	
 }
 
