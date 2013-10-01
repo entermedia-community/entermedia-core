@@ -4,7 +4,6 @@
 package com.openedit.modules.translations;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -18,14 +17,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpException;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.velocity.anakia.OutputWrapper;
 
 import com.openedit.page.PageProperty;
 import com.openedit.util.OutputFiller;
@@ -175,6 +172,7 @@ public class Translation
 		String translated = null;
 		try
 		{
+			
 			httpPost.setEntity(new UrlEncodedFormEntity(nvps));
 			HttpResponse response2 = client.execute(httpPost);
 		

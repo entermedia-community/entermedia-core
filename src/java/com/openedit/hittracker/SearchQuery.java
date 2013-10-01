@@ -47,8 +47,14 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	protected boolean fieldFilter = false;
 	protected boolean fieldFindAll = false;
 	protected List<Join> fieldParentJoins;
+	protected FacetValues fieldFacetValues;
 	
 	
+	public void setFacetValues(FacetValues inFacetValues)
+	{
+		fieldFacetValues = inFacetValues;
+	}
+
 	public String getResultType()
 	{
 		return fieldResultType;
@@ -1445,5 +1451,17 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	{
 		return fieldParentJoins;
 	}
+
+	public FacetValues getFacetValues()
+	{
+		return fieldFacetValues;
+	}
+
+	
+
+	
+
+	
+
 
 }

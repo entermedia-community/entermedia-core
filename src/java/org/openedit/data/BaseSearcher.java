@@ -452,12 +452,13 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	{
 		SearchQuery search = addFields(inPageRequest);
 		search = addOrGroups(search, inPageRequest);
+		
 		if( search == null)
 		{
 			return null;
 		}
 		addShowOnly(inPageRequest, search);
-
+		addFacets(inPageRequest, search);
 		String resultype = inPageRequest.getRequestParameter("resulttype");
 		if (resultype == null)
 		{
@@ -470,6 +471,32 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		return search;
 	}
 	
+	public void addFacets(WebPageRequest inReq, SearchQuery inSearch)
+	{
+
+		//Grab from userprofile.
+		UserProfile profile = inReq.getUserProfile();
+		List details = getPropertyDetails().getDetailsByProperty("filter", "true");
+		
+		//assettype, color, 
+		
+		for (Iterator iterator = details.iterator(); iterator.hasNext();)
+		{
+			PropertyDetail detail = (PropertyDetail) iterator.next();
+			HitTracker selected = profile.getFacetsForType(detail.getId());
+			
+			//Collection filters = inReq.getUserProfile().getValues(detail.getId() + "selectedfacets");
+			
+		}
+		
+
+		
+		
+		
+		// TODO Auto-generated method stub
+		
+	}
+
 	protected SearchQuery addOrGroups(SearchQuery inSearch, WebPageRequest inPageRequest)
 	{
 		String[] orgroups = inPageRequest.getRequestParameters("orgroup");
