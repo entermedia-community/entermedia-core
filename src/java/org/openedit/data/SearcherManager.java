@@ -138,6 +138,9 @@ public class SearcherManager
 	}
 	public String getValue(Data inParent,PropertyDetail inDetail)
 	{
+		if(inParent == null){
+			return null;
+		}
 		String mask = inDetail.get("render");
 		String val = null;
 		if( mask != null)
