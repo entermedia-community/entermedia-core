@@ -1072,6 +1072,19 @@ public abstract class HitTracker implements Serializable, Collection
 	{
 		fieldTempSessionId = inSessionId;
 	}
+	public void selectFilters(List selected) {
+	//nothing to do	
+	}
 	
+	public boolean hasSelectedFilters() {
+		return false;
+	}
+	public void loadPreviousFilters(HitTracker oldtracker) {
+		// TODO Auto-generated method stub
+		
+	}
+	public List<FilterNode> getFilters() {
+	return new ArrayList();
+	}
 }
 

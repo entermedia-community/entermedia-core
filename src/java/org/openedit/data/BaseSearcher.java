@@ -146,6 +146,11 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 						inQuery.setSortBy(sort);
 					}
 					HitTracker oldtracker = tracker;
+				//Copy over any selected filters
+					if(oldtracker != null && oldtracker.getSearchQuery().getFacetValues() != null){
+						inQuery.setFacetValues(oldtracker.getSearchQuery().getFacetValues());
+					}
+					
 					tracker = search(inQuery); //search here ----
 					tracker.setSearchQuery(inQuery);
 
@@ -171,6 +176,8 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					{
 						tracker.loadPreviousSelections(oldtracker);
 					}
+					
+					
 					if (isFireEvents() && inQuery.isFireSearchEvent())
 					{
 						WebEvent event = new WebEvent();
@@ -1345,6 +1352,15 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			}
 		}
 	}
+	
+	
+	
+	public void updateFilters(WebPageRequest inReq) throws OpenEditException
+	{
+		//not supported
+	}
+	
+	
 	
 	protected SearchQuery createSearchQuery(String inQueryString, WebPageRequest inPageRequest)
 	{
