@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
@@ -146,14 +147,25 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 						inQuery.setSortBy(sort);
 					}
 					HitTracker oldtracker = tracker;
-				//Copy over any selected filters
+				//
 					if(oldtracker != null && oldtracker.getSearchQuery().getFacetValues() != null){
 						inQuery.setFacetValues(oldtracker.getSearchQuery().getFacetValues());
+		
+					
+
 					}
 					
 					tracker = search(inQuery); //search here ----
 					tracker.setSearchQuery(inQuery);
-
+				
+					
+					if(oldtracker != null && oldtracker.getSearchQuery().getFacetValues() != null){
+						tracker.setFilters(oldtracker.getFilters());			
+						tracker.refreshFilters();
+					}
+					
+					
+					
 					String hitsperpage = inPageRequest.getRequestParameter("hitsperpage");
 					if (hitsperpage == null)
 					{
@@ -1354,12 +1366,31 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	}
 	
 	
-	
 	public void updateFilters(WebPageRequest inReq) throws OpenEditException
 	{
-		//not supported
+
+		String[] selected = inReq.getRequestParameters("filter");
+		HitTracker hits = loadHits(inReq);
+
+		
+		if (hits != null)
+		{
+			SearchQuery group = hits.getSearchQuery();
+			if(selected != null){
+			List selecteditems = Arrays.asList(selected);
+			hits.selectFilters(selecteditems);
+			} else{
+				hits.selectFilters(new ArrayList());
+			}
+			List filters = hits.getFilters();
+			group.setFacetValues(filters);
+			hits.setIndexId(hits.getIndexId() + 1); // Causes the hits to
+			// be // reloaded
+			cachedSearch(inReq, group);
+
+		}
+		
 	}
-	
 	
 	
 	protected SearchQuery createSearchQuery(String inQueryString, WebPageRequest inPageRequest)

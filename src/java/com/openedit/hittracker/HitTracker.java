@@ -39,7 +39,17 @@ public abstract class HitTracker implements Serializable, Collection
 	protected boolean fieldShowOnlySelected;
 	protected String fieldTempSessionId;
 	
-	
+	protected List fieldFacets;
+
+	protected List getFacets()
+	{
+		return fieldFacets;
+	}
+
+	protected void setFacets(List <FilterNode> inFacets)
+	{
+		fieldFacets = inFacets;
+	}
 	public HitTracker()
 	{
 
@@ -1072,19 +1082,81 @@ public abstract class HitTracker implements Serializable, Collection
 	{
 		fieldTempSessionId = inSessionId;
 	}
-	public void selectFilters(List selected) {
-	//nothing to do	
-	}
+	public List<FilterNode> getFilters()
+	{
+		if(fieldFacets == null){
+			try
+			{
+				fieldFacets = getFacetedResults();
+			}
+			catch (Exception e)
+			{
+				throw new OpenEditException(e);
+			}
+		}
+		return fieldFacets;
 	
-	public boolean hasSelectedFilters() {
+	}
+	public void setFilters(List <FilterNode> filters){
+		fieldFacets = filters;
+	}
+
+	protected List getFacetedResults() throws Exception
+	{
+		// TODO Auto-generated method stub
+		return new ArrayList(); //this is load code
+	}
+
+	public void selectFilters(List selected)
+	{
+		List topnodes = getFilters();
+		
+		if (topnodes != null)//Assettype, colour, 
+		{
+			for (Iterator iterator = topnodes.iterator(); iterator.hasNext();)
+			{
+				FilterNode node = (FilterNode) iterator.next();
+				for (Iterator iterator2 = node.getChildren().iterator(); iterator2.hasNext();)
+				{
+					FilterNode child = (FilterNode) iterator2.next();
+					if (selected.contains(child.getId()))
+					{
+						child.setSelected(true);//values						
+					}
+					else
+					{
+						child.setSelected(false);
+					}
+				}
+			}
+		}
+
+	}
+
+	public boolean hasSelectedFilters()
+	{
+
+		List topnodes = getFilters();
+		for (Iterator iterator = topnodes.iterator(); iterator.hasNext();)
+		{
+			FilterNode node = (FilterNode) iterator.next();
+			for (Iterator iterator2 = node.getChildren().iterator(); iterator2.hasNext();)
+			{
+				FilterNode child = (FilterNode) iterator2.next();
+				if (child.isSelected())
+				{
+					return true;
+				}
+			}
+		}
 		return false;
 	}
-	public void loadPreviousFilters(HitTracker oldtracker) {
+
+	public void refreshFilters() throws Exception
+	{
 		// TODO Auto-generated method stub
 		
 	}
-	public List<FilterNode> getFilters() {
-	return new ArrayList();
-	}
+	
 }
 
