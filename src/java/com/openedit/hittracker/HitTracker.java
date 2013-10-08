@@ -2,6 +2,7 @@ package com.openedit.hittracker;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -11,6 +12,7 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openedit.Data;
+import org.openedit.MultiValued;
 import org.openedit.data.PropertyDetail;
 import org.openedit.data.Searcher;
 import org.openedit.util.DateStorageUtil;
@@ -532,6 +534,28 @@ public abstract class HitTracker implements Serializable, Collection
 	{
 		return inHit.get(inString);
 	}
+	//Use SearchResultsData.getValues
+//	public Collection getValues(Object inHit, String inString)
+//	{
+//		String val =  getValue((Data)inHit, inString);
+//		if( val == null)
+//		{
+//			return Collections.EMPTY_LIST;
+//		}
+//		String[] vals = null;
+//		Collection collection = null;
+//		if( val.contains("|") )
+//		{
+//			vals = MultiValued.VALUEDELMITER.split(val);
+//		}
+//		else
+//		{
+//			vals = new String[] { val };
+//		}
+//		collection = Arrays.asList(vals);
+//		//if null check parent
+//		return collection;
+//	}
 
 	public String toString(Data inHit)
 	{

@@ -204,7 +204,13 @@ public class PropertyDetails extends AbstractCollection
 		}
 	}
 
-	public PropertyDetail getDetailByExternalId(String inName) {
+	/**
+	 * inName should be lower case with or without spaces
+	 * @param inName
+	 * @return
+	 */
+	public PropertyDetail getDetailByExternalId(String inName) 
+	{
 		PropertyDetail found = (PropertyDetail) getExternalIdCache()
 				.get(inName);
 		if (found == null) {
@@ -215,14 +221,14 @@ public class PropertyDetails extends AbstractCollection
 				if (all != null) {
 					for (int i = 0; i < all.length; i++) 
 					{
-						String id = all[i];
+						String id = all[i].toLowerCase();
 						//strip off the : from XMP-dc:Title
 						int index = id.indexOf(':');
 						if( index > 0 )
 						{
 							id = id.substring(index + 1);
 						}
-						if (inName.equalsIgnoreCase(id) || inName.equals(id.replace(" ", ""))) 
+						if (inName.equals(id) || inName.equals(id.replace(" ", ""))) 
 						{
 							found = detail;
 							getExternalIdCache().put(inName, found);
