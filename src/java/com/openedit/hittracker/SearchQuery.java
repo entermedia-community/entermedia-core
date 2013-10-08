@@ -47,10 +47,10 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	protected boolean fieldFilter = false;
 	protected boolean fieldFindAll = false;
 	protected List<Join> fieldParentJoins;
-	protected FacetValues fieldFacetValues;
+	protected List fieldFacetValues; //these are "FacetNodes"
 	
 	
-	public void setFacetValues(FacetValues inFacetValues)
+	public void setFacetValues(List inFacetValues)
 	{
 		fieldFacetValues = inFacetValues;
 	}
@@ -1452,7 +1452,7 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		return fieldParentJoins;
 	}
 
-	public FacetValues getFacetValues()
+	public List  getFacetValues()
 	{
 		return fieldFacetValues;
 	}
