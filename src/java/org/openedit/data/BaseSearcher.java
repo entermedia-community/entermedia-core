@@ -631,7 +631,6 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				}
 				if (val == null)
 				{
-					//This is dumb
 					vals = inPageRequest.getRequestParameters(detail.getId() + ".values");
 
 //					//This is dumb
