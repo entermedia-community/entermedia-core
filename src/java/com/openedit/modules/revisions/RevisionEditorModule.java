@@ -52,6 +52,8 @@ public class RevisionEditorModule extends BaseEditorModule
 		List revisions = getPageManager().getRepository().getVersions( path );
 		session.setRevisions(revisions);
 		inContext.putSessionValue( "revisions", session );
+		inContext.putPageValue( "revisions", session );
+
 		return session;
 	}
 	
