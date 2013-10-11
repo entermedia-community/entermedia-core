@@ -127,15 +127,9 @@ public class OpenEditException extends OpenEditRuntimeException implements Seria
 	public String toStackTrace()
 	{
 		StringWriter out = new StringWriter();
-
-		if (getCause() != null)
-		{
-			getCause().printStackTrace(new PrintWriter(out));
-		}
-		else
-		{
-			printStackTrace(new PrintWriter(out));
-		}
+		PrintWriter writer = new PrintWriter(out);
+		printStackTrace(writer);
+		writer.flush();
 
 		return out.toString();
 	}
