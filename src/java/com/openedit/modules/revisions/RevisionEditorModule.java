@@ -91,7 +91,7 @@ public class RevisionEditorModule extends BaseEditorModule
 	 * 
 	 * @param inContext  The web page context
 	 */
-	public void getRevisionContent( WebPageRequest inContext )
+	public ContentItem getRevisionContent( WebPageRequest inContext )
 		throws OpenEditException
 	{
 		RevisionSession session = getRevisions(inContext);
@@ -110,8 +110,20 @@ public class RevisionEditorModule extends BaseEditorModule
 				}
 				session.setOldPage(oldpage);
 				session.setSelectedRevision(revision);
-				break;
+				return revision;
 			}
+		}
+		return null;
+	}
+	
+	public void restoreRevision(WebPageRequest inReq) throws Exception
+	{
+		ContentItem revision = getRevisionContent(inReq);
+		if( revision != null)
+		{
+			RevisionSession session = getRevisions(inReq);
+			saveRevision(inReq, session, revision);
+			getRevisions(inReq);
 		}
 	}
 
@@ -140,6 +152,12 @@ public class RevisionEditorModule extends BaseEditorModule
 		RevisionSession session = getRevisions(inContext);
 		ContentItem revision = session.getSelectedRevision();
 		
+		saveRevision(inContext, session, revision);
+		//inContext.redirect(inContext.getPath() + "#reload?reload=true");
+	}
+
+	protected void saveRevision(WebPageRequest inContext, RevisionSession session, ContentItem revision)
+	{
 		String message = "Version "	+ revision.getVersion() + " restored.";
 		String content = session.getRevisionContent();
 		if ( content != null )
@@ -159,7 +177,6 @@ public class RevisionEditorModule extends BaseEditorModule
 		}
 		log.info("restored revision " + session.getEditPath() );
 		inContext.removeSessionValue("revisions");
-		//inContext.redirect(inContext.getPath() + "#reload?reload=true");
 	}
 	
 	public void deleteAll(WebPageRequest inReq) throws OpenEditException
