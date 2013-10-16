@@ -47,13 +47,7 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	protected boolean fieldFilter = false;
 	protected boolean fieldFindAll = false;
 	protected List<Join> fieldParentJoins;
-	protected List fieldFacetValues; //these are "FacetNodes"
-	
-	
-	public void setFacetValues(List inFacetValues)
-	{
-		fieldFacetValues = inFacetValues;
-	}
+	protected List<FilterNode> fieldFilters; 
 
 	public String getResultType()
 	{
@@ -1452,14 +1446,61 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		return fieldParentJoins;
 	}
 
-	public List  getFacetValues()
+	public void addFilter(String inToaddType, String inToaddvalue, String toAddLabel)
 	{
-		return fieldFacetValues;
+		FilterNode node = new FilterNode();
+		node.setId(inToaddType);
+		node.setProperty("value", inToaddvalue);
+		node.setName(toAddLabel);
+		getFilters().add(node);
+	}
+	public boolean hasFilters()
+	{
+		return fieldFilters != null && !fieldFilters.isEmpty();
+	}
+	public List<FilterNode> getFilters()
+	{
+		if( fieldFilters == null)
+		{
+			fieldFilters = new ArrayList<FilterNode>();
+		}
+		return fieldFilters;
 	}
 
-	
+	public void setFilters(List<FilterNode> inFilters)
+	{
+		fieldFilters = inFilters;
+	}
 
-	
+	public void removeFilter(String inToremove)
+	{
+		if( hasFilters() )
+		{
+			for (FilterNode node: getFilters())
+			{
+				if(inToremove.equals( node.getId() ) )
+				{
+					getFilters().remove(node);
+					break;
+				}
+			}
+		}
+	}
+
+	public boolean hasFilter(String inId)
+	{
+		if( hasFilters() )
+		{
+			for (FilterNode node: getFilters())
+			{
+				if(inId.equals( node.getId() ) )
+				{
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 
 	
 
