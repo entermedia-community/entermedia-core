@@ -668,7 +668,7 @@ public class BaseWebServer implements WebServer
 			
 				
 				//This is used when no external path is passed in
-				if( config.getExternalPath() == null)
+				if( externalpath == null)
 				{
 					String rootpath = getCleanRootPath(config.getPath());
 					config.setExternalPath(rootpath);
