@@ -40,18 +40,8 @@ public abstract class HitTracker implements Serializable, Collection
 	protected Searcher fieldSearcher;
 	protected boolean fieldShowOnlySelected;
 	protected String fieldTempSessionId;
-	
-	protected List fieldFacets;
+	protected List<FilterNode> fieldFilterOptions;
 
-	protected List getFacets()
-	{
-		return fieldFacets;
-	}
-
-	protected void setFacets(List <FilterNode> inFacets)
-	{
-		fieldFacets = inFacets;
-	}
 	public HitTracker()
 	{
 
@@ -1106,23 +1096,23 @@ public abstract class HitTracker implements Serializable, Collection
 	{
 		fieldTempSessionId = inSessionId;
 	}
-	public List<FilterNode> getFilters()
+	public List<FilterNode> getFilterOptions()
 	{
-		if(fieldFacets == null){
+		if(fieldFilterOptions == null){
 			try
 			{
-				fieldFacets = getFacetedResults();
+				fieldFilterOptions = getFacetedResults();
 			}
 			catch (Exception e)
 			{
 				throw new OpenEditException(e);
 			}
 		}
-		return fieldFacets;
+		return fieldFilterOptions;
 	
 	}
-	public void setFilters(List <FilterNode> filters){
-		fieldFacets = filters;
+	public void setFilterOptions(List <FilterNode> filters){
+		fieldFilterOptions = filters;
 	}
 
 	protected List getFacetedResults() throws Exception
@@ -1131,56 +1121,56 @@ public abstract class HitTracker implements Serializable, Collection
 		return new ArrayList(); //this is load code
 	}
 
-	public void selectFilters(List selected)
-	{
-		List topnodes = getFilters();
-		
-		if (topnodes != null)//Assettype, colour, 
-		{
-			for (Iterator iterator = topnodes.iterator(); iterator.hasNext();)
-			{
-				FilterNode node = (FilterNode) iterator.next();
-				for (Iterator iterator2 = node.getChildren().iterator(); iterator2.hasNext();)
-				{
-					FilterNode child = (FilterNode) iterator2.next();
-					if (selected.contains(child.getId()))
-					{
-						child.setSelected(true);//values						
-					}
-					else
-					{
-						child.setSelected(false);
-					}
-				}
-			}
-		}
+//	public void selectFilters(List selected)
+//	{
+//		List topnodes = getFilters();
+//		
+//		if (topnodes != null)//Assettype, colour, 
+//		{
+//			for (Iterator iterator = topnodes.iterator(); iterator.hasNext();)
+//			{
+//				FilterNode node = (FilterNode) iterator.next();
+//				for (Iterator iterator2 = node.getChildren().iterator(); iterator2.hasNext();)
+//				{
+//					FilterNode child = (FilterNode) iterator2.next();
+//					if (selected.contains(child.getId()))
+//					{
+//						child.setSelected(true);//values						
+//					}
+//					else
+//					{
+//						child.setSelected(false);
+//					}
+//				}
+//			}
+//		}
+//
+//	}
 
-	}
+//	public boolean hasSelectedFilters()
+//	{
+//
+//		List topnodes = getFilters();
+//		for (Iterator iterator = topnodes.iterator(); iterator.hasNext();)
+//		{
+//			FilterNode node = (FilterNode) iterator.next();
+//			for (Iterator iterator2 = node.getChildren().iterator(); iterator2.hasNext();)
+//			{
+//				FilterNode child = (FilterNode) iterator2.next();
+//				if (child.isSelected())
+//				{
+//					return true;
+//				}
+//			}
+//		}
+//		return false;
+//	}
 
-	public boolean hasSelectedFilters()
-	{
-
-		List topnodes = getFilters();
-		for (Iterator iterator = topnodes.iterator(); iterator.hasNext();)
-		{
-			FilterNode node = (FilterNode) iterator.next();
-			for (Iterator iterator2 = node.getChildren().iterator(); iterator2.hasNext();)
-			{
-				FilterNode child = (FilterNode) iterator2.next();
-				if (child.isSelected())
-				{
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-
-	public void refreshFilters() throws Exception
-	{
-		// TODO Auto-generated method stub
-		
-	}
+//	public void refreshFilters() throws Exception
+//	{
+//		// TODO Auto-generated method stub
+//		
+//	}
 	
 }
 

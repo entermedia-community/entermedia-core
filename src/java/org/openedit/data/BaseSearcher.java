@@ -148,23 +148,23 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					}
 					HitTracker oldtracker = tracker;
 				//
-					if(oldtracker != null && oldtracker.getSearchQuery().getFacetValues() != null){
-						inQuery.setFacetValues(oldtracker.getSearchQuery().getFacetValues());
-		
-					
-
+					if(oldtracker != null && oldtracker.getSearchQuery().hasFilters() )
+					{
+						String clearfilters = inPageRequest.getRequestParameter("clearfilters");
+						if( !Boolean.parseBoolean(clearfilters))
+						{
+							inQuery.setFilters(oldtracker.getSearchQuery().getFilters());
+						}
 					}
 					
 					tracker = search(inQuery); //search here ----
 					tracker.setSearchQuery(inQuery);
 				
 					
-					if(oldtracker != null && oldtracker.getSearchQuery().getFacetValues() != null){
-						tracker.setFilters(oldtracker.getFilters());			
-						tracker.refreshFilters();
-					}
-					
-					
+//					if(oldtracker != null && oldtracker.getSearchQuery().hasFilters() ){
+//						tracker.setFilters(oldtracker.getFilters());			
+//						tracker.refreshFilters();
+//					}
 					
 					String hitsperpage = inPageRequest.getRequestParameter("hitsperpage");
 					if (hitsperpage == null)
@@ -477,7 +477,6 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			return null;
 		}
 		addShowOnly(inPageRequest, search);
-		addFacets(inPageRequest, search);
 		String resultype = inPageRequest.getRequestParameter("resulttype");
 		if (resultype == null)
 		{
@@ -490,31 +489,31 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		return search;
 	}
 	
-	public void addFacets(WebPageRequest inReq, SearchQuery inSearch)
-	{
-
-		//Grab from userprofile.
-		UserProfile profile = inReq.getUserProfile();
-		List details = getPropertyDetails().getDetailsByProperty("filter", "true");
-		
-		//assettype, color, 
-		
-		for (Iterator iterator = details.iterator(); iterator.hasNext();)
-		{
-			PropertyDetail detail = (PropertyDetail) iterator.next();
-			HitTracker selected = profile.getFacetsForType(detail.getId());
-			
-			//Collection filters = inReq.getUserProfile().getValues(detail.getId() + "selectedfacets");
-			
-		}
-		
-
-		
-		
-		
-		// TODO Auto-generated method stub
-		
-	}
+//	public void addFacets(WebPageRequest inReq, SearchQuery inSearch)
+//	{
+//
+//		//Grab from userprofile.
+//		UserProfile profile = inReq.getUserProfile();
+//		List details = getPropertyDetails().getDetailsByProperty("filter", "true");
+//		
+//		//assettype, color, 
+//		
+//		for (Iterator iterator = details.iterator(); iterator.hasNext();)
+//		{
+//			PropertyDetail detail = (PropertyDetail) iterator.next();
+//			HitTracker selected = profile.getFacetsForType(detail.getId());
+//			
+//			//Collection filters = inReq.getUserProfile().getValues(detail.getId() + "selectedfacets");
+//			
+//		}
+//		
+//
+//		
+//		
+//		
+//		// TODO Auto-generated method stub
+//		
+//	}
 
 	protected SearchQuery addOrGroups(SearchQuery inSearch, WebPageRequest inPageRequest)
 	{
@@ -1367,26 +1366,26 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	
 	public void updateFilters(WebPageRequest inReq) throws OpenEditException
 	{
-
-		String[] selected = inReq.getRequestParameters("filter");
 		HitTracker hits = loadHits(inReq);
 
-		
 		if (hits != null)
 		{
-			SearchQuery group = hits.getSearchQuery();
-			if(selected != null){
-			List selecteditems = Arrays.asList(selected);
-			hits.selectFilters(selecteditems);
-			} else{
-				hits.selectFilters(new ArrayList());
+			String toadd = inReq.getRequestParameter("filtertype");
+			SearchQuery query = hits.getSearchQuery();
+			if( toadd != null)
+			{
+				String toaddvalue = inReq.getRequestParameter("filtervalue");
+				String toaddlabel = inReq.getRequestParameter("filterlabel");
+				query.addFilter(toadd,toaddvalue,toaddlabel);
 			}
-			List filters = hits.getFilters();
-			group.setFacetValues(filters);
-			hits.setIndexId(hits.getIndexId() + 1); // Causes the hits to
+			else
+			{
+				String toremove = inReq.getRequestParameter("removefilter");
+				query.removeFilter(toremove);
+			}
+				hits.setIndexId(hits.getIndexId() + 1); // Causes the hits to
 			// be // reloaded
-			cachedSearch(inReq, group);
-
+			cachedSearch(inReq, query);
 		}
 		
 	}

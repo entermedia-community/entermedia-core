@@ -330,6 +330,8 @@ public class PageManager
 		{
 			ContentItem item = inDestination.getContentItem(); //Use new path
 			item.setPath(inDestination.getPath());
+			String makeversion = inDestination.getProperty("makeversion");
+			item.setMakeVersion(Boolean.parseBoolean(makeversion));
 			getRepository().move( inSource.getContentItem(),  item);
 		}
 		else
