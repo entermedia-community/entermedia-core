@@ -984,7 +984,7 @@ public abstract class HitTracker implements Serializable, Collection
 	
 	public int indexOfId(String inId)
 	{
-		if( inId == null)
+		if( inId == null || inId.startsWith("multiedit:") || inId.trim().isEmpty() )
 		{
 			return -1;
 		}
