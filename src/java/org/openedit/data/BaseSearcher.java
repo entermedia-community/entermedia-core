@@ -963,6 +963,29 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					t = search.addExact(field, Double.parseDouble(val));
 				}
 			}
+			else if("betweennumbers".equals(op))
+			{
+				String highval = null;
+				String lowval = null; 
+				//see if we have a range
+				if( !val.contains("-"))
+				{
+					t = search.addExact(field, Long.parseLong(val));
+				}
+				else
+				{
+					String[] range = val.split("-");
+					if(range[0].length()> 0 )
+					{
+						lowval = range[0];
+					}
+					if( range.length > 1 && range[1].length() > 0)
+					{
+						highval = range[1]; 	
+					}
+					t = addNumberRange(search, field, t, highval, lowval);
+				}
+			}
 			if (t != null)
 			{
 				search.setProperty(t.getId(), val);
@@ -973,20 +996,26 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		{
 			String highval = inPageRequest.getRequestParameter(field + ".highval");
 			String lowval = inPageRequest.getRequestParameter(field + ".lowval");
-			if (highval != null && lowval == null)
-			{
-				t = search.addLessThan(field, Long.parseLong(highval));
-			}
-			else if (highval == null && lowval != null)
-			{
-				t = search.addGreaterThan(field, Long.parseLong(lowval));
-			}
-			else if (highval != null && lowval != null)
-			{
-				t = search.addBetween(field, Long.parseLong(lowval), Long.parseLong(highval));
-			}
+			t = addNumberRange(search, field, t, highval, lowval);
 		}
 
+		return t;
+	}
+
+	protected Term addNumberRange(SearchQuery search, PropertyDetail field, Term t, String highval, String lowval)
+	{
+		if (highval != null && lowval == null)
+		{
+			t = search.addLessThan(field, Long.parseLong(highval));
+		}
+		else if (highval == null && lowval != null)
+		{
+			t = search.addGreaterThan(field, Long.parseLong(lowval));
+		}
+		else if (highval != null && lowval != null)
+		{
+			t = search.addBetween(field, Long.parseLong(lowval), Long.parseLong(highval));
+		}
 		return t;
 	}
 
