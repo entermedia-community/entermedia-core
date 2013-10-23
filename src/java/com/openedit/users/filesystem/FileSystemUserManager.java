@@ -150,6 +150,7 @@ public class FileSystemUserManager implements UserManager
 		
 		if( group == null)
 		{
+			//System.out.println("calling " + inGroupId + " " + hashCode() );
 			group = new FileSystemGroup();
 		}
 		FileSystemGroup loadgroup = (FileSystemGroup)group;
