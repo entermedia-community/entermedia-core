@@ -281,7 +281,7 @@ public class PageManager
 		{
 			path = inPage.getAlternateContentPath();
 		}
-		ContentItem revision = getRepository().get( path );
+		ContentItem revision = getRepository().getStub( path );
 		return revision;
 	}
 	
@@ -330,6 +330,8 @@ public class PageManager
 		{
 			ContentItem item = inDestination.getContentItem(); //Use new path
 			item.setPath(inDestination.getPath());
+			String makeversion = inDestination.getProperty("makeversion");
+			item.setMakeVersion(Boolean.parseBoolean(makeversion));
 			getRepository().move( inSource.getContentItem(),  item);
 		}
 		else

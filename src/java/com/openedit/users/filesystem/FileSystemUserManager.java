@@ -150,6 +150,7 @@ public class FileSystemUserManager implements UserManager
 		
 		if( group == null)
 		{
+			//System.out.println("calling " + inGroupId + " " + hashCode() );
 			group = new FileSystemGroup();
 		}
 		FileSystemGroup loadgroup = (FileSystemGroup)group;
@@ -515,6 +516,7 @@ public class FileSystemUserManager implements UserManager
 				log.error("Missing group " + group.attributeValue("id") );
 			}
 		}
+		//TODO :Replace with cache
 		getUserNameToUserMap().put(user.getUserName(), user);
 
 		return user;
@@ -906,7 +908,7 @@ public class FileSystemUserManager implements UserManager
 		File file = loadGroupFile(inGroup.getId());
 		getXmlUtil().saveXml(doc, file);
 
-		getGroupIdToGroupMap().put( inGroup.getId(), inGroup);
+		getGroupIdToGroupMap().remove(inGroup.getId() );
 	}
 
 	public String encrypt(String inPassword) throws UserManagerException
@@ -1109,4 +1111,8 @@ public class FileSystemUserManager implements UserManager
 		return inUserName;
 	}
 
+public String nextId() {
+	int id = getUserIdCounter().incrementCount(); 
+	return  String.valueOf(id); 
+}
 }

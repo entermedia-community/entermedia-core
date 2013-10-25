@@ -108,7 +108,8 @@ public class PropertyDetails extends AbstractCollection
 		}
 			
 			getDetails().add(inDetail);
-		
+			getDetailsCached().remove(inDetail.getId());
+			getDetailsCached().put(inDetail.getId(), inDetail);
 	}
 
 	public List findIndexProperties() {
@@ -203,7 +204,13 @@ public class PropertyDetails extends AbstractCollection
 		}
 	}
 
-	public PropertyDetail getDetailByExternalId(String inName) {
+	/**
+	 * inName should be lower case with or without spaces
+	 * @param inName
+	 * @return
+	 */
+	public PropertyDetail getDetailByExternalId(String inName) 
+	{
 		PropertyDetail found = (PropertyDetail) getExternalIdCache()
 				.get(inName);
 		if (found == null) {
@@ -214,7 +221,7 @@ public class PropertyDetails extends AbstractCollection
 				if (all != null) {
 					for (int i = 0; i < all.length; i++) 
 					{
-						String id = all[i];
+						String id = all[i].toLowerCase();
 						//strip off the : from XMP-dc:Title
 						int index = id.indexOf(':');
 						if( index > 0 )
@@ -235,6 +242,8 @@ public class PropertyDetails extends AbstractCollection
 	}
 
 	public List getDetailsByProperty(String property, String value) {
+		//TODO: Add a cache here. 
+		
 		List properties = new ArrayList();
 		for (Iterator iter = getDetails().iterator(); iter.hasNext();) {
 			PropertyDetail detail = (PropertyDetail) iter.next();

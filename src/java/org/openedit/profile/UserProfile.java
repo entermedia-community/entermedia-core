@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
@@ -563,5 +564,16 @@ public class UserProfile extends ElementData
 		
 	public String getText(){
 		return toString();
+	}
+
+	public HitTracker getFacetsForType(String inId)
+	{
+		Searcher facetsearcher = getSearcherManager().getSearcher(getCatalogId(), "userfacets");
+		SearchQuery query = facetsearcher.createSearchQuery();
+		query.addMatches("userid", getId());
+		query.addMatches("type", inId);//needed?
+		HitTracker hits = facetsearcher.search(query);
+		return hits;
+		
 	}
 }

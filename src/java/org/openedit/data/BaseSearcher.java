@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
@@ -146,9 +147,25 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 						inQuery.setSortBy(sort);
 					}
 					HitTracker oldtracker = tracker;
+				//
+					if(oldtracker != null && oldtracker.getSearchQuery().hasFilters() )
+					{
+						String clearfilters = inPageRequest.getRequestParameter("clearfilters");
+						if( !Boolean.parseBoolean(clearfilters))
+						{
+							inQuery.setFilters(oldtracker.getSearchQuery().getFilters());
+						}
+					}
+					
 					tracker = search(inQuery); //search here ----
 					tracker.setSearchQuery(inQuery);
-
+				
+					
+//					if(oldtracker != null && oldtracker.getSearchQuery().hasFilters() ){
+//						tracker.setFilters(oldtracker.getFilters());			
+//						tracker.refreshFilters();
+//					}
+					
 					String hitsperpage = inPageRequest.getRequestParameter("hitsperpage");
 					if (hitsperpage == null)
 					{
@@ -171,6 +188,8 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					{
 						tracker.loadPreviousSelections(oldtracker);
 					}
+					
+					
 					if (isFireEvents() && inQuery.isFireSearchEvent())
 					{
 						WebEvent event = new WebEvent();
@@ -452,12 +471,12 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	{
 		SearchQuery search = addFields(inPageRequest);
 		search = addOrGroups(search, inPageRequest);
+		
 		if( search == null)
 		{
 			return null;
 		}
 		addShowOnly(inPageRequest, search);
-
 		String resultype = inPageRequest.getRequestParameter("resulttype");
 		if (resultype == null)
 		{
@@ -470,6 +489,32 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		return search;
 	}
 	
+//	public void addFacets(WebPageRequest inReq, SearchQuery inSearch)
+//	{
+//
+//		//Grab from userprofile.
+//		UserProfile profile = inReq.getUserProfile();
+//		List details = getPropertyDetails().getDetailsByProperty("filter", "true");
+//		
+//		//assettype, color, 
+//		
+//		for (Iterator iterator = details.iterator(); iterator.hasNext();)
+//		{
+//			PropertyDetail detail = (PropertyDetail) iterator.next();
+//			HitTracker selected = profile.getFacetsForType(detail.getId());
+//			
+//			//Collection filters = inReq.getUserProfile().getValues(detail.getId() + "selectedfacets");
+//			
+//		}
+//		
+//
+//		
+//		
+//		
+//		// TODO Auto-generated method stub
+//		
+//	}
+
 	protected SearchQuery addOrGroups(SearchQuery inSearch, WebPageRequest inPageRequest)
 	{
 		String[] orgroups = inPageRequest.getRequestParameters("orgroup");
@@ -513,7 +558,15 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			return null;
 		}
 		SearchQuery search = createSearchQuery();
-
+		String and = inPageRequest.getRequestParameter("querytype");
+		if( and != null)
+		{
+			if("or".equals(and))
+			{
+				search.setAndTogether(false);
+			}
+		}
+		
 		String[] operations = inPageRequest.getRequestParameters("operation");
 		// String[] values = inPageRequest.getRequestParameters("value");
 		// check the new naming convention for values (fieldid.value)
@@ -577,7 +630,6 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				}
 				if (val == null)
 				{
-					//This is dumb
 					vals = inPageRequest.getRequestParameters(detail.getId() + ".values");
 
 //					//This is dumb
@@ -587,7 +639,11 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 //						val = createOrValue(ors);
 //					}
 				}
-
+				if( operations.length <= i)
+				{
+					log.info("Cant search without operations" );
+					return null;
+				}
 				String op = operations[i];
 				Term t = addTerm(search, detail, val, vals, op);
 				if (t == null)
@@ -907,6 +963,29 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					t = search.addExact(field, Double.parseDouble(val));
 				}
 			}
+			else if("betweennumbers".equals(op))
+			{
+				String highval = null;
+				String lowval = null; 
+				//see if we have a range
+				if( !val.contains("-"))
+				{
+					t = search.addExact(field, Long.parseLong(val));
+				}
+				else
+				{
+					String[] range = val.split("-");
+					if(range[0].length()> 0 )
+					{
+						lowval = range[0];
+					}
+					if( range.length > 1 && range[1].length() > 0)
+					{
+						highval = range[1]; 	
+					}
+					t = addNumberRange(search, field, t, highval, lowval);
+				}
+			}
 			if (t != null)
 			{
 				search.setProperty(t.getId(), val);
@@ -917,20 +996,26 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		{
 			String highval = inPageRequest.getRequestParameter(field + ".highval");
 			String lowval = inPageRequest.getRequestParameter(field + ".lowval");
-			if (highval != null && lowval == null)
-			{
-				t = search.addLessThan(field, Long.parseLong(highval));
-			}
-			else if (highval == null && lowval != null)
-			{
-				t = search.addGreaterThan(field, Long.parseLong(lowval));
-			}
-			else if (highval != null && lowval != null)
-			{
-				t = search.addBetween(field, Long.parseLong(lowval), Long.parseLong(highval));
-			}
+			t = addNumberRange(search, field, t, highval, lowval);
 		}
 
+		return t;
+	}
+
+	protected Term addNumberRange(SearchQuery search, PropertyDetail field, Term t, String highval, String lowval)
+	{
+		if (highval != null && lowval == null)
+		{
+			t = search.addLessThan(field, Long.parseLong(highval));
+		}
+		else if (highval == null && lowval != null)
+		{
+			t = search.addGreaterThan(field, Long.parseLong(lowval));
+		}
+		else if (highval != null && lowval != null)
+		{
+			t = search.addBetween(field, Long.parseLong(lowval), Long.parseLong(highval));
+		}
 		return t;
 	}
 
@@ -1306,6 +1391,34 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			}
 		}
 	}
+	
+	
+	public void updateFilters(WebPageRequest inReq) throws OpenEditException
+	{
+		HitTracker hits = loadHits(inReq);
+
+		if (hits != null)
+		{
+			String toadd = inReq.getRequestParameter("filtertype");
+			SearchQuery query = hits.getSearchQuery();
+			if( toadd != null)
+			{
+				String toaddvalue = inReq.getRequestParameter("filtervalue");
+				String toaddlabel = inReq.getRequestParameter("filterlabel");
+				query.addFilter(toadd,toaddvalue,toaddlabel);
+			}
+			else
+			{
+				String toremove = inReq.getRequestParameter("removefilter");
+				query.removeFilter(toremove);
+			}
+				hits.setIndexId(hits.getIndexId() + 1); // Causes the hits to
+			// be // reloaded
+			cachedSearch(inReq, query);
+		}
+		
+	}
+	
 	
 	protected SearchQuery createSearchQuery(String inQueryString, WebPageRequest inPageRequest)
 	{

@@ -47,8 +47,8 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	protected boolean fieldFilter = false;
 	protected boolean fieldFindAll = false;
 	protected List<Join> fieldParentJoins;
-	
-	
+	protected List<FilterNode> fieldFilters; 
+
 	public String getResultType()
 	{
 		return fieldResultType;
@@ -526,6 +526,17 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 //			String fullq = toQuery();
 //			if( fullq == null || fullq.length() == 0 )
 //			{
+			if( hasChildren() )
+			{
+				for (Iterator iterator = getChildren().iterator(); iterator.hasNext();)
+				{
+					SearchQuery q = (SearchQuery) iterator.next();
+					if( !q.isEmpty() )
+					{
+						return false;
+					}
+				}
+			}
 			return true;
 //			}
 		}
@@ -880,7 +891,7 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	}
 
 	/**
-	 * @deprecated use getTermByTermId(String) instead
+	 * @deprecated use getTermByDetailId(String) instead
 	 */
 	public Term getTerm(String inFieldId)
 	{
@@ -1434,5 +1445,64 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	{
 		return fieldParentJoins;
 	}
+
+	public void addFilter(String inToaddType, String inToaddvalue, String toAddLabel)
+	{
+		FilterNode node = new FilterNode();
+		node.setId(inToaddType);
+		node.setProperty("value", inToaddvalue);
+		node.setName(toAddLabel);
+		getFilters().add(node);
+	}
+	public boolean hasFilters()
+	{
+		return fieldFilters != null && !fieldFilters.isEmpty();
+	}
+	public List<FilterNode> getFilters()
+	{
+		if( fieldFilters == null)
+		{
+			fieldFilters = new ArrayList<FilterNode>();
+		}
+		return fieldFilters;
+	}
+
+	public void setFilters(List<FilterNode> inFilters)
+	{
+		fieldFilters = inFilters;
+	}
+
+	public void removeFilter(String inToremove)
+	{
+		if( hasFilters() )
+		{
+			for (FilterNode node: getFilters())
+			{
+				if(inToremove.equals( node.getId() ) )
+				{
+					getFilters().remove(node);
+					break;
+				}
+			}
+		}
+	}
+
+	public boolean hasFilter(String inId)
+	{
+		if( hasFilters() )
+		{
+			for (FilterNode node: getFilters())
+			{
+				if(inId.equals( node.getId() ) )
+				{
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	
+
 
 }

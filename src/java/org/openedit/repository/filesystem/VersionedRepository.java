@@ -30,17 +30,17 @@ public abstract class VersionedRepository extends FileRepository
 	{
 		File file = getFile( inPath);
 		FileItem contentItem = new FileItem();
-		if ( inPath.endsWith(".html") && !file.exists() )
-		{
-			String xmlPath = PathUtilities.extractPagePath( inPath )+ ".xml";
-			File xfile = getFile(xmlPath);
-			if( xfile.exists())
-			{
-				file = xfile;
-				contentItem.setActualPath(xmlPath);
-			}
-		}
-		checkVersion(file, inPath);
+//		if ( inPath.endsWith(".html") && !file.exists() )
+//		{
+//			String xmlPath = PathUtilities.extractPagePath( inPath )+ ".xml";
+//			File xfile = getFile(xmlPath);
+//			if( xfile.exists())
+//			{
+//				file = xfile;
+//				contentItem.setActualPath(xmlPath);
+//			}
+//		}
+//		checkVersion(file, inPath);
 		contentItem.setPath( inPath );
 		contentItem.setFile( file);
 		return contentItem;
@@ -280,13 +280,13 @@ public abstract class VersionedRepository extends FileRepository
 	
 	public abstract List getVersions( String inPath ) throws RepositoryException;
 		
-	protected ContentItem getContentItem( String inPath, ContentItem inContentItem )
-	{
-		FileItem contentItem = new FileItem();
-		contentItem.setPath( inPath );
-		contentItem.setFile( getVersionFile( getFile( inPath ), inContentItem.getVersion() ) );
-		return contentItem;
-	}
+//	protected ContentItem getContentItem( String inPath, ContentItem inContentItem )
+//	{
+//		FileItem contentItem = new FileItem();
+//		contentItem.setPath( inPath );
+//		contentItem.setFile( getVersionFile( getFile( inPath ), inContentItem.getVersion() ) );
+//		return contentItem;
+//	}
 	
 	protected ContentItem createInitialContentItem( String inPath ) throws RepositoryException
 	{

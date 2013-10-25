@@ -2,6 +2,7 @@ package com.openedit.hittracker;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -11,6 +12,7 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openedit.Data;
+import org.openedit.MultiValued;
 import org.openedit.data.PropertyDetail;
 import org.openedit.data.Searcher;
 import org.openedit.util.DateStorageUtil;
@@ -32,11 +34,14 @@ public abstract class HitTracker implements Serializable, Collection
 	protected transient String fieldIndexId; //cause this index to invalidate
 	protected String fieldResultType;
 	protected String fieldDataSource;
+	protected String fieldHitsName;	
 	protected List fieldCurrentPage;
 	protected int fieldMaxPageListing = 10; //used for page listing
 	protected Searcher fieldSearcher;
-	
-	
+	protected boolean fieldShowOnlySelected;
+	protected String fieldTempSessionId;
+	protected List<FilterNode> fieldFilterOptions;
+
 	public HitTracker()
 	{
 
@@ -50,6 +55,14 @@ public abstract class HitTracker implements Serializable, Collection
 		fieldAllSelected = inSelectAll;
 	}
 
+	public boolean isShowOnlySelected()
+	{
+		return fieldShowOnlySelected;
+	}
+	public void setShowOnlySelected(boolean inShowOnlySelected)
+	{
+		fieldShowOnlySelected = inShowOnlySelected;
+	}
 
 	public String getResultType()
 	{
@@ -521,6 +534,28 @@ public abstract class HitTracker implements Serializable, Collection
 	{
 		return inHit.get(inString);
 	}
+	//Use SearchResultsData.getValues
+//	public Collection getValues(Object inHit, String inString)
+//	{
+//		String val =  getValue((Data)inHit, inString);
+//		if( val == null)
+//		{
+//			return Collections.EMPTY_LIST;
+//		}
+//		String[] vals = null;
+//		Collection collection = null;
+//		if( val.contains("|") )
+//		{
+//			vals = MultiValued.VALUEDELMITER.split(val);
+//		}
+//		else
+//		{
+//			vals = new String[] { val };
+//		}
+//		collection = Arrays.asList(vals);
+//		//if null check parent
+//		return collection;
+//	}
 
 	public String toString(Data inHit)
 	{
@@ -615,45 +650,43 @@ public abstract class HitTracker implements Serializable, Collection
 
 	}
 
+	
+	@Deprecated public Collection getSelectedHits(){
+		return getSelectedHitracker();
+	}
+	
 	public HitTracker getSelectedHitracker()
 	{
 		if( isAllSelected() )
 		{
 			return this;
-		}
+		}		
 		if( getSessionId().startsWith("selected") )
 		{
 			return this;
 		}
-		
-		//TODO: get fresh data from the searcher
-		HitTracker hits = null;
-		if( fieldSearcher == null)
+
+		HitTracker selecteddata = getSearcher().search(getSearchQuery());
+		if( isAllSelected() )
 		{
-			List list = new ArrayList( getSelections().size() );
-			//Look for all the selected objects
-			for (Iterator iterator = getSelections().iterator(); iterator.hasNext();)
-			{
-				String id = (String) iterator.next();
-				Data found = findData("id", id);
-				if( found != null)
-				{
-					list.add(found);
-				}
-			}
-			ListHitTracker lhits = new ListHitTracker();	
-			lhits.setSessionId("selected" + getSessionId() );
-			hits = lhits;
+			//rerun the search
+			selecteddata.selectAll();
 		}
 		else
 		{
-			hits = getSearcher().searchByIds(getSelections());
+			selecteddata.setSelections(getSelections());
+			selecteddata.setShowOnlySelected(true);
 		}
-		
+//		else
+//		{
+//			ListHitTracker lhits = new ListHitTracker();	
+//			lhits.setSessionId("selected" + getSessionId() );
+//			hits = lhits;
+			
 //		SelectedHitsTracker hits = new SelectedHitsTracker(this);
-		hits.setHitsName("selected" + getHitsName());
-		hits.selectAll();
-		return hits;
+//		selecteddata.setHitsName("selected" + getHitsName() + selecteddata.size() );
+		selecteddata.setSessionId("selected" + getSessionId());
+		return selecteddata;
 	}
 //
 //	public Collection<Data> getSelectedHits()
@@ -676,6 +709,19 @@ public abstract class HitTracker implements Serializable, Collection
 			return true;
 		}
 		return false;
+	}
+	
+	public int getSelectionSize()
+	{
+		if( isAllSelected() )
+		{
+			return size();
+		}
+		if( fieldSelections != null )
+		{
+			return fieldSelections.size();
+		}
+		return 0;
 	}
 	public boolean hasSelections()
 	{
@@ -796,17 +842,25 @@ public abstract class HitTracker implements Serializable, Collection
 	
 	public String getSessionId()
 	{
+		if( fieldTempSessionId != null)
+		{
+			return fieldTempSessionId;
+		}
 		return getSearchQuery().getSessionId();
 	}
 	
 	public String getHitsName()
 	{
+		if( fieldHitsName != null)
+		{
+			return fieldHitsName;
+		}
 		return getSearchQuery().getHitsName();
 	}
 	
 	public void setHitsName(String inHitsname)
 	{
-		getSearchQuery().setHitsName(inHitsname);
+		fieldHitsName = inHitsname;
 	}
 	
 	public String getCatalogId()
@@ -930,7 +984,7 @@ public abstract class HitTracker implements Serializable, Collection
 	
 	public int indexOfId(String inId)
 	{
-		if( inId == null)
+		if( inId == null || inId.startsWith("multiedit:") || inId.trim().isEmpty() )
 		{
 			return -1;
 		}
@@ -1038,7 +1092,85 @@ public abstract class HitTracker implements Serializable, Collection
 		fieldSearcher = inSearcher;
 	}
 
+	protected void setSessionId(String inSessionId)
+	{
+		fieldTempSessionId = inSessionId;
+	}
+	public List<FilterNode> getFilterOptions()
+	{
+		if(fieldFilterOptions == null){
+			try
+			{
+				fieldFilterOptions = getFacetedResults();
+			}
+			catch (Exception e)
+			{
+				throw new OpenEditException(e);
+			}
+		}
+		return fieldFilterOptions;
+	
+	}
+	public void setFilterOptions(List <FilterNode> filters){
+		fieldFilterOptions = filters;
+	}
 
+	protected List getFacetedResults() throws Exception
+	{
+		// TODO Auto-generated method stub
+		return new ArrayList(); //this is load code
+	}
+
+//	public void selectFilters(List selected)
+//	{
+//		List topnodes = getFilters();
+//		
+//		if (topnodes != null)//Assettype, colour, 
+//		{
+//			for (Iterator iterator = topnodes.iterator(); iterator.hasNext();)
+//			{
+//				FilterNode node = (FilterNode) iterator.next();
+//				for (Iterator iterator2 = node.getChildren().iterator(); iterator2.hasNext();)
+//				{
+//					FilterNode child = (FilterNode) iterator2.next();
+//					if (selected.contains(child.getId()))
+//					{
+//						child.setSelected(true);//values						
+//					}
+//					else
+//					{
+//						child.setSelected(false);
+//					}
+//				}
+//			}
+//		}
+//
+//	}
+
+//	public boolean hasSelectedFilters()
+//	{
+//
+//		List topnodes = getFilters();
+//		for (Iterator iterator = topnodes.iterator(); iterator.hasNext();)
+//		{
+//			FilterNode node = (FilterNode) iterator.next();
+//			for (Iterator iterator2 = node.getChildren().iterator(); iterator2.hasNext();)
+//			{
+//				FilterNode child = (FilterNode) iterator2.next();
+//				if (child.isSelected())
+//				{
+//					return true;
+//				}
+//			}
+//		}
+//		return false;
+//	}
+
+//	public void refreshFilters() throws Exception
+//	{
+//		// TODO Auto-generated method stub
+//		
+//	}
 	
 }
 

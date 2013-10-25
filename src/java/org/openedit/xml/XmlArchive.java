@@ -189,6 +189,8 @@ public class XmlArchive
 		Lock lock = getLockManager().lock("system", inFile.getPath(), null ); //this will retry 10 times then timeout and throw an exception
 		try
 		{
+			//TODO: Use ContentItem to speed this up. Need character encoding info tho
+			
 				Page page = getPageManager().getPage(inFile.getPath(), false);
 		
 				ContentItem tmp = getPageManager().getRepository().getStub(inFile.getPath() + ".tmp.xml");

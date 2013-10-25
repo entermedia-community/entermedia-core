@@ -181,10 +181,25 @@ public class XmlSearcher extends BaseSearcher
 			else if("orgroup".equals(term.getOperation()))
 			{
 				String value = term.getValue();
+				Object[] values = term.getValues();
+				
 				String attribval = inElement.attributeValue(term.getDetail().getId());
-				if(attribval == null || !value.contains(attribval) )
+				
+				if(value != null && (attribval == null || !value.contains(attribval)) )
 				{
 					return false;
+				}
+				if(values != null){
+					boolean foundmatch = false;
+					for (int i = 0; i < values.length; i++) {
+						String val = (String) values[i];
+						if(attribval != null && val.contains(attribval)){
+							foundmatch =true;
+						}
+					}
+					if(!foundmatch){
+						return false;
+					}
 				}
 			}
 			else

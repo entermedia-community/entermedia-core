@@ -42,15 +42,25 @@ public abstract class ContentItem
 	protected String fieldPath;
 	protected String fieldActualPath; //only used when content actually comes from another path
 	protected String fieldAbsolutePath; //Used as an URL or full system location
-
-	public void setAbsolutePath(String inAbsolutePath)
-	{
-		fieldAbsolutePath = inAbsolutePath;
-	}
+	protected boolean fieldStub;
 	protected Date fieldLastModified;
 	protected long fieldLength = -1;
 	protected boolean fieldMakeVersion = true; //used when saving content
 	protected OutputStream fieldOutputStream;
+	
+	
+	public boolean isStub()
+	{
+		return fieldStub;
+	}
+	public void setStub(boolean inStub)
+	{
+		fieldStub = inStub;
+	}
+	public void setAbsolutePath(String inAbsolutePath)
+	{
+		fieldAbsolutePath = inAbsolutePath;
+	}
 	
 	/**
 	 * This path is relative.
@@ -65,7 +75,13 @@ public abstract class ContentItem
 	{
 		fieldPath = path;
 	}
-	public String getName(){
+	public String getName()
+	{
+		if( getPath().endsWith("/"))
+		{
+			String path  = getPath().substring(0,getPath().length() - 1);
+			return PathUtilities.extractFileName(path);
+		}
 		return PathUtilities.extractFileName(getPath());
 	}
 	/**

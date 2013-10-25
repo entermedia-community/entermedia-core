@@ -153,4 +153,6 @@ public interface Searcher
 	public Data uniqueResult(SearchQuery inQ);
 
 	HitTracker searchByIds(Collection<String> inIds);
+
+	public void updateFilters(WebPageRequest inReq);
 }

@@ -520,6 +520,14 @@ public final class PathUtilities
 		{
 			return null;
 		}
+		if( path.endsWith("/"))
+		{
+			path = path.substring(0,path.length() - 1);
+		}
+		if( path.isEmpty() )
+		{
+			return "";
+		}
 		String newpath = path.replace('\\','/');
 		int start = newpath.lastIndexOf("/");
 		if ( start == -1)

@@ -76,6 +76,10 @@ public class FileGenerator extends BaseGenerator implements Generator
 
 		HttpServletResponse res = inContext.getResponse();
 		HttpServletRequest req = inContext.getRequest();
+		if( res != null && req != null)
+		{
+			checkCors( req, res);
+		}
 		long start = -1;
 		InputStream in = null;
 		try

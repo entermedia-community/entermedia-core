@@ -319,6 +319,7 @@ public class BaseUser extends FileSystemObject implements User, Comparable
 		{
 			throw new OpenEditRuntimeException("Dont add null groups");
 		}
+		removeGroup(inGroup);
 		getGroups().add(inGroup);
 	}
 
@@ -332,7 +333,15 @@ public class BaseUser extends FileSystemObject implements User, Comparable
 	 */
 	public void removeGroup(Group inGroup)
 	{
-		getGroups().remove(inGroup);
+		for (Iterator iterator = getGroups().iterator(); iterator.hasNext();)
+		{
+			Group group = (Group) iterator.next();
+			if( group.getId().equals(inGroup.getId()))
+			{
+				getGroups().remove(group);
+				return;
+			}
+		}
 	}
 
 	public String toString()

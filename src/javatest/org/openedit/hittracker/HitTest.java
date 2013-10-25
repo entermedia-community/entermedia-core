@@ -3,11 +3,20 @@ package org.openedit.hittracker;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.openedit.MultiValued;
+
 import com.openedit.BaseTestCase;
 import com.openedit.hittracker.ListHitTracker;
 
 public class HitTest extends BaseTestCase
 {
+	public void testSplit()
+	{
+		
+		String[] vals = MultiValued.VALUEDELMITER.split("dfds|dsfdsf");
+		
+		assertTrue( vals.length  > 1 );
+	}
 	
 	public void testRows() throws Exception
 	{

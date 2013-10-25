@@ -65,7 +65,7 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 	protected Map fieldParameters;
 	protected Map fieldBackUpSession;
 	protected LocaleManager fieldLocaleManager;
-	
+	protected String fieldLocale;
 	protected boolean fieldHasRedirected;
 	protected boolean fieldHasForwarded;
 	protected boolean fieldHasCancelActions;
@@ -911,23 +911,32 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 	public String getLocale()
 	{
 		String locale = (String)getPageValue("sessionlocale");
+//		if( locale == null || locale.length() == 0)
+//		{
+//			User user = getUser();
+//			if( user != null)
+//			{
+//				//locale = (String)user.get("locale");
+//			}
+//		}
+		//TODO Cache this
 		if( locale == null || locale.length() == 0)
 		{
-			User user = getUser();
-			if( user != null)
+			if( fieldLocale != null)
 			{
-				//locale = (String)user.get("locale");
+				return fieldLocale;
 			}
-		}
-		if( locale == null || locale.length() == 0)
-		{
 			Browser browser = (Browser)getPageValue("browser");
 			if( browser != null && browser.getLocale() != null)
 			{
 				locale = browser.getLocale().toString();
 			}
+			fieldLocale = locale;
 		}
-
+		if( locale == null )
+		{
+			locale = "en_US";
+		}
 		return locale;
 	}
 
