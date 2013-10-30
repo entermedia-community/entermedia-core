@@ -390,8 +390,8 @@ public final class PathUtilities
 	 * <p><b>Example:</b></p>
 	 * <pre>
 	 *   relative path:  ../images/test.jpg
-	 *   absolute path:  file:/d:/eigene dateien/eigene bilder/
-	 *   result:         file:/d:/eigene dateien/images/test.jpg
+	 *   absolute path:  /eigene dateien/eigene bilder/
+	 *   result:         /eigene dateien/images/test.jpg
 	 * </pre>
 	 *
 	 * @param relPath  The relative URL string to resolve.  Unlike the Calcom version, this may be
@@ -409,6 +409,10 @@ public final class PathUtilities
 	 */
 	public static String resolveRelativePath(String relPath, String absPath)
 	{
+		if( !relPath.startsWith("."))
+		{
+			return relPath;
+		}
 		//	if relative path is really absolute, then ignore absPath (eInnovation change)
 		if ( relPath.startsWith( "/" ) )
 		{
