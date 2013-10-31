@@ -409,23 +409,21 @@ public final class PathUtilities
 	 */
 	public static String resolveRelativePath(String relPath, String absPath)
 	{
-		if( !relPath.startsWith("."))
+		//This might be a path with no / in it such as files.html
+		
+//		if( !relPath.startsWith("."))
+//		{
+//			return relPath;
+//		}
+		//	if relative path is really absolute, then ignore absPath (eInnovation change)
+		if ( relPath.startsWith( "/" ) ) 
 		{
 			return relPath;
-		}
-		//	if relative path is really absolute, then ignore absPath (eInnovation change)
-		if ( relPath.startsWith( "/" ) )
-		{
-			absPath = "";
 		}
 
 		String newAbsPath = absPath;
 		String newRelPath = relPath;
-		if( relPath.startsWith("$"))
-		{
-			return relPath;
-		}
-		else if (absPath.endsWith("/"))
+		if (absPath.endsWith("/"))
 		{
 			newAbsPath = absPath.substring(0, absPath.length() - 1);
 		}
