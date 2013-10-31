@@ -676,7 +676,10 @@ public class BaseWebServer implements WebServer
 				}
 				else
 				{
-					externalpath = PathUtilities.resolveRelativePath(externalpath, getRootDirectory().getPath() );
+					if(externalpath.startsWith("."))
+					{
+						externalpath = PathUtilities.resolveRelativePath(externalpath, getRootDirectory().getPath() );
+					}
 					config.setExternalPath(externalpath);
 				}
 				
