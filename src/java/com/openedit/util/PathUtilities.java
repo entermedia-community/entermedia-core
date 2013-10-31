@@ -416,7 +416,7 @@ public final class PathUtilities
 //			return relPath;
 //		}
 		//	if relative path is really absolute, then ignore absPath (eInnovation change)
-		if ( relPath.startsWith( "/" ) ) 
+		if ( relPath.startsWith( "/" ) || relPath.startsWith( "$" ) ) //$ is for variables ${innerlayout}
 		{
 			return relPath;
 		}
