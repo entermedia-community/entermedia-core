@@ -969,6 +969,17 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		return addMatches(detail, value);
 	}
 
+	
+	public Term addContains(String inString, String value)
+	{
+		PropertyDetail detail = createDetail(inString);
+		detail.setId(inString);
+		return addContains(detail, value);
+	}
+
+	
+	
+	
 	public Term addAfter(String inString, Date inSearchDate)
 	{
 		PropertyDetail detail = createDetail(inString);
