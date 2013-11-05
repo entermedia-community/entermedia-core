@@ -18,6 +18,7 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openedit.Data;
+import org.openedit.MultiValued;
 import org.openedit.event.WebEvent;
 import org.openedit.event.WebEventListener;
 import org.openedit.profile.UserProfile;
@@ -628,7 +629,12 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				{
 					val = inPageRequest.getRequestParameter(field + ".value");
 				}
-				if (val == null)
+				if( val != null && val.contains("|"))
+				{
+					vals = MultiValued.VALUEDELMITER.split(val);
+					val = null;
+				}
+				else if (val == null)
 				{
 					vals = inPageRequest.getRequestParameters(detail.getId() + ".values");
 
@@ -848,7 +854,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		}
 		if ((val != null && val.length() > 0))
 		{
-			if ("matches".equals(op))
+			if ("matches".equals(op) || "andgroup".equals(op))
 			{
 				t = search.addMatches(detail, val);
 			}
@@ -879,7 +885,14 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		}
 		else if( vals != null )
 		{
-			t = search.addOrsGroup(detail, vals);
+			if ("andgroup".equals(op))
+			{
+				t = search.addAndGroup(detail, vals);
+			}
+			else
+			{
+				t = search.addOrsGroup(detail, vals);
+			}
 			search.setPropertyValues(t.getId(), vals);
 		}
 		if (t != null)

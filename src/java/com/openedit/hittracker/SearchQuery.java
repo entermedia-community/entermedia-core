@@ -264,6 +264,36 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		addTermByDataType(term);
 		return term;
 	}
+	public Term addAndGroup(PropertyDetail inDetail, final String[] inValues)
+	{
+		Term term = new Term()
+		{
+			public String toQuery()
+			{
+				StringBuffer orString = new StringBuffer();
+				if (inValues.length > 0)
+				{
+					orString.append("(");
+					for (int i = 0; i < inValues.length; i++)
+					{
+						if(inValues[i].length() > 0)
+						{
+							orString.append("+");
+							orString.append(inValues[i]);
+							orString.append(" ");
+						}
+					}
+					orString.append(")");
+				}
+				return getDetail().getId() + ":" + orString.toString();
+			}
+		};
+		term.setDetail(inDetail);
+		term.setValues(inValues);
+		term.setOperation("andgroup");
+		addTermByDataType(term);
+		return term;
+	}
 
 	public Term addNots(PropertyDetail inDetail, String inNots)
 	{
