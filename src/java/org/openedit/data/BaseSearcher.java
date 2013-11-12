@@ -80,6 +80,8 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		{
 			log.debug("checking: " + getCatalogId() + " " + inQuery.toFriendly());
 		}
+		addShowOnly(inPageRequest, inQuery);
+
 		inPageRequest.putPageValue("searcher", this);
 		HitTracker tracker = null;
 		
