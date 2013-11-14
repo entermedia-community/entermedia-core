@@ -40,6 +40,8 @@ public interface Searcher
 	
 	public abstract List deselect(String inField, String[] toremove) throws OpenEditException;
 
+	public QueryBuilder query();
+
 	/**
 	 * Use this to automatically filter a search with the .xconf that declares the action.
 	 * Example: 

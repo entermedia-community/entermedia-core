@@ -16,6 +16,7 @@ import org.openedit.data.SearcherManager;
 import org.openedit.xml.ElementData;
 import org.openedit.xml.XmlArchive;
 
+import com.openedit.WebPageRequest;
 import com.openedit.hittracker.HitTracker;
 import com.openedit.hittracker.SearchQuery;
 import com.openedit.users.User;
@@ -32,6 +33,7 @@ public class UserProfile extends ElementData
 	protected HitTracker fieldUploadCatalogs;
 	protected Collection fieldCombinedLibraries;
 	protected Collection<Data> fieldModules;
+	
 	
 	public Collection<Data> getModules()
 	{
@@ -477,6 +479,19 @@ public class UserProfile extends ElementData
 		return fieldCombinedLibraries;
 	}
 
+	public HitTracker getSelectedLibraries(WebPageRequest inReq)
+	{
+		Searcher librarySearcher = getSearcherManager().getSearcher(getCatalogId(), "library");
+		HitTracker tracker = librarySearcher.getAllHits();
+		tracker.setSelections(getCombinedLibraries());
+		if( inReq.getUser() != null && inReq.getUser().isInGroup("administrators"))
+		{
+			tracker.selectAll();
+		}
+		//tracker.setShowOnlySelected(true);
+		return tracker;
+		
+	}
 	public void setCombinedLibraries(Collection inCombinedLibraries)
 	{
 		fieldCombinedLibraries = inCombinedLibraries;
