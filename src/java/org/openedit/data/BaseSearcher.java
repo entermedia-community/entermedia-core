@@ -4,7 +4,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
@@ -71,6 +70,12 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		super();
 	}
 
+	public QueryBuilder query()
+	{
+		QueryBuilder builder = new QueryBuilder();
+		builder.setSearcher(this);
+		return builder;
+	}
 	/*
 	 * This is the main search method
 	 */
