@@ -38,7 +38,7 @@ public class QueryBuilder
 		getQuery().addNot(inId, inValue);
 		return this;
 	}
-	public QueryBuilder sort(String inId, String inValue)
+	public QueryBuilder sort(String inId)
 	{
 		getQuery().addSortBy(inId);
 		return this;
