@@ -1,5 +1,9 @@
 package org.openedit.data;
 
+import java.util.Collection;
+
+import org.openedit.Data;
+
 import com.openedit.WebPageRequest;
 import com.openedit.hittracker.HitTracker;
 import com.openedit.hittracker.SearchQuery;
@@ -33,6 +37,13 @@ public class QueryBuilder
 		getQuery().addMatches(inId, inValue);
 		return this;
 	}
+	public QueryBuilder orgroup(String inKey, Collection<String> inIds)
+	{
+		getQuery().addOrsGroup(inKey, inIds);
+		return this;
+	}
+	
+	
 	public QueryBuilder not(String inId, String inValue)
 	{
 		getQuery().addNot(inId, inValue);
@@ -58,5 +69,11 @@ public class QueryBuilder
 	{
 		HitTracker tracker = getSearcher().search(getQuery());
 		return tracker;
+	}
+	public Data searchOne()
+	{
+		getQuery().toFriendly();
+		Data found = getSearcher().searchByQuery(getQuery());
+		return found;
 	}
 }

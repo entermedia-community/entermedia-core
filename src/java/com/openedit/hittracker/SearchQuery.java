@@ -965,15 +965,19 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	public Term addMatches(String inString, String value)
 	{
 		PropertyDetail detail = createDetail(inString);
-		detail.setId(inString);
 		return addMatches(detail, value);
 	}
 
+	public Term addOrsGroup(String inString, Collection<String> values)
+	{
+		PropertyDetail detail = createDetail(inString);
+		String[] array = values.toArray(new String[values.size()]);
+		return addOrsGroup(detail, array);
+	}
 	
 	public Term addContains(String inString, String value)
 	{
 		PropertyDetail detail = createDetail(inString);
-		detail.setId(inString);
 		return addContains(detail, value);
 	}
 
@@ -983,7 +987,6 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	public Term addAfter(String inString, Date inSearchDate)
 	{
 		PropertyDetail detail = createDetail(inString);
-		detail.setId(inString);
 		return addAfter(detail, inSearchDate);
 	}
 

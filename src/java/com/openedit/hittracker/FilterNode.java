@@ -41,6 +41,33 @@ public class FilterNode extends BaseData
 		
 	}
 	
+	public int getCount(String inId)
+	{
+		FilterNode child = getChild(inId);
+		if( child != null)
+		{
+			String count = child.get("count");
+			if( count != null)
+			{
+				return Integer.parseInt(count);
+			}
+		}
+		return 0;
+	}
+	
+	public FilterNode getChild(String inId)
+	{
+		for (Iterator iterator = getChildren().iterator(); iterator.hasNext();)
+		{
+			FilterNode child = (FilterNode) iterator.next();
+			if(inId.equals( child.getId() ) )
+			{
+				return child;
+			}
+		}
+		return null;
+	}
+	
 	public boolean hasSelections(FilterNode node){
 		if(node.isSelected()){
 			return true;
