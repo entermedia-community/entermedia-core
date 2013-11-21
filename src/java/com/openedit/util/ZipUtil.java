@@ -322,7 +322,12 @@ public class ZipUtil {
 
 			try {
 				addTozip(inContent, path, zipOutputStream);
-			} catch (Exception e) {
+			} catch (Exception e) 
+			{
+				if( e.getMessage().startsWith("duplicate"))
+				{
+					return;
+				}
 				throw new OpenEditException(e);
 			}
 
