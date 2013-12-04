@@ -76,4 +76,13 @@ public class QueryBuilder
 		Data found = getSearcher().searchByQuery(getQuery());
 		return found;
 	}
+	public QueryBuilder exact(String inKey, String inValue) {
+		getQuery().addExact(inKey, inValue);
+		return this;
+	}
+	
+	public QueryBuilder startsWith(String inKey, String inValue) {
+		getQuery().addStartsWith(inKey, inValue);
+		return this;
+	}
 }
