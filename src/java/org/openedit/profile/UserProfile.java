@@ -391,7 +391,11 @@ public class UserProfile extends ElementData
 		String value = get(view);
 		if (value == null)
 		{
-			return 15;
+			value = get("modulehitsperpage");
+			if (value == null)
+			{
+				return 15;
+			}
 		}
 		return Integer.parseInt(value);
 	}
