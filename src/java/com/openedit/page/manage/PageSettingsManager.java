@@ -133,6 +133,10 @@ public class PageSettingsManager
 
 	public String toXconfPath(String xconfPath) 
 	{
+		if(xconfPath.endsWith(".draft.html")){
+			xconfPath = xconfPath.replace(".draft.html", ".html");
+		}
+		
 		if( xconfPath.endsWith(".xconf"))
 		{
 			return xconfPath;
