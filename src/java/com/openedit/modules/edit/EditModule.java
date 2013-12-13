@@ -73,7 +73,10 @@ public class EditModule extends BaseEditorModule
 			}
 
 			//String editPath = getPath(inParameters, "editPath");
-			String editPath = inReq.getRequiredParameter( "editPath" );
+			String editPath = inReq.getRequestParameter( "editPath" );
+			if(editPath == null){
+				return;
+			}
 			editPath = normalizePath( editPath );
 			User oldUser = getEditLockRegistry().getLockOwner(editPath);
 
