@@ -55,12 +55,19 @@ public class XmlVersionRepository extends VersionedRepository
 		String rootDir = PathUtilities.extractDirectoryPath(inPath);
 		String filename = PathUtilities.extractFileName(inPath);
 		String versionPath = rootDir + "/" + inVersionsDir + "/" + version.attributeValue("number") + "~" + filename ;
-
+		
 		ContentItem item = createContentItem(versionPath);
-		item.setPath(inPath);
 		item.setActualPath(versionPath);
 
-		
+		if(!item.exists())
+		{
+			//check older version format also
+			versionPath = rootDir + "/" + inVersionsDir + "/"+ filename + "~" + version.attributeValue("number")  ;
+			item = createContentItem(versionPath);
+			item.setActualPath(versionPath);
+		}
+		item.setPath(inPath);
+
 		//We dont need the date here since we use a FileItem that points to the date on the disk
 		//This should be changed if we ever have problems with it.
 		

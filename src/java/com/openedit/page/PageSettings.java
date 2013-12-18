@@ -229,6 +229,12 @@ public class PageSettings
 		return PathUtilities.extractDirectoryName(getPath());
 	}
 	
+	public String getParentPath()
+	{
+		return PathUtilities.extractDirectoryPath(getPath());
+	}
+	
+	
 	public List getPageActions()
 	{
 		//add top level parents last
