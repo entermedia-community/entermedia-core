@@ -349,7 +349,7 @@ public class XConfToPageSettingsConverter
 		catch (Exception e )
 		{
 			log.error("Could not read: " + inUrlPath );
-			throw new OpenEditException(e + "path: " + inUrlPath,e,inUrlPath);
+			throw new OpenEditException(e + "path: " + inPageSettings.getPath(),e,inUrlPath);
 		}
 		config.populate(root);
 		inPageSettings.getProperties().putAll( loadProperties( config.getProperties()));
