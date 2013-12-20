@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -177,6 +178,11 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					String hitsperpage = inPageRequest.getRequestParameter("hitsperpage");
 					if (hitsperpage == null)
 					{
+						hitsperpage = inPageRequest.getPageProperty("hitsperpage");
+					}
+					if (hitsperpage == null)
+					{
+						
 						if (usersettings != null)
 						{
 							tracker.setHitsPerPage(usersettings.getHitsPerPageForSearchType(inQuery.getResultType()));
@@ -1463,6 +1469,11 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 						PropertyDetail detail = getDetail(parts[0].substring(1), inReq);
 						addTerm(query, detail, parts[1], "not");
 					}
+					else if (parts[0].startsWith("~"))
+					{
+						PropertyDetail detail = getDetail(parts[0].substring(1), inReq);
+						addTerm(query, detail, parts[1], "matches");
+					}
 					else
 					{
 						PropertyDetail detail = getDetail(parts[0], inReq);
@@ -2093,17 +2104,17 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				}
 				if (values != null && values.length > 1)
 				{
-					StringBuffer buf = new StringBuffer();
-					for (int j = 0; j < values.length; j++)
-					{
-						String val = values[j];
-						buf.append(val);
-						if (j != values.length - 1)
-						{
-							buf.append(" | ");
-						}
-						data.setProperty(field, buf.toString());
+					HashSet<String> hash = new HashSet<String>();
+					for (String val:values){
+						hash.add(val);
 					}
+					StringBuilder buf = new StringBuilder();
+					Iterator<String> itr = hash.iterator();
+					while (itr.hasNext()){
+						buf.append(itr.next());
+						if (itr.hasNext()) buf.append(" | ");
+					}
+					data.setProperty(field, buf.toString());
 				}
 				else if (values != null)
 				{
