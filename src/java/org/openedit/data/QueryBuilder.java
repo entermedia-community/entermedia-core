@@ -54,6 +54,13 @@ public class QueryBuilder
 		getQuery().addSortBy(inId);
 		return this;
 	}
+	public QueryBuilder named(String inId)
+	{
+		getQuery().setHitsName(inId);
+		return this;
+	}
+	
+	
 	public HitTracker search(WebPageRequest inContext)
 	{
 		HitTracker tracker = getSearcher().cachedSearch(inContext, getQuery());
