@@ -209,7 +209,9 @@ public interface UserManager
 	public Collection listUserNames();
 
 	public Collection listGroupIds();
+	
 	public String nextId();
 	
+	public User loadUser(String inId);
 
 }
