@@ -718,6 +718,15 @@ public class Page implements Data, Comparable
 		}
 		return false;
 	}
+	
+	public boolean isVideo() {
+		String mime = getMimeType();
+		if ( mime != null && mime.startsWith("video"))
+		{
+			return true;
+		}
+		return false;
+	}
 	public boolean isDraft()
 	{
 		if( getContentItem().getActualPath().indexOf(".draft.") > -1 && exists() )

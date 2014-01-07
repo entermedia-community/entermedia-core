@@ -175,6 +175,7 @@ public class ElementData implements MultiValued, Comparable
 	{
 		
 		Map all = new HashMap();
+		//all.put("name", getName()); //would this cause problems when saving?
 		for (Iterator iterator = getAttributes().iterator(); iterator.hasNext();)
 		{
 			org.dom4j.Attribute attr = (org.dom4j.Attribute) iterator.next();
@@ -185,7 +186,7 @@ public class ElementData implements MultiValued, Comparable
 			Element child = (Element) iterator.next();
 			all.put(child.getName(),child.getText());
 		}
-		//all.put("name", getName()); 
+		
 		return all;
 	}
 	public List getAttributes()

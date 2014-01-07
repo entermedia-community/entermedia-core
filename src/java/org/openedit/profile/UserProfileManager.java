@@ -242,6 +242,9 @@ public class UserProfileManager
 				all.add(data.get("libraryid"));
 			}
 		}
+		//Add in special adminstrator rights?
+		
+		
 		
 		inUserprofile.setCombinedLibraries(all);
 	}

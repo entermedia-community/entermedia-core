@@ -264,6 +264,36 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		addTermByDataType(term);
 		return term;
 	}
+	public Term addAndGroup(PropertyDetail inDetail, final String[] inValues)
+	{
+		Term term = new Term()
+		{
+			public String toQuery()
+			{
+				StringBuffer orString = new StringBuffer();
+				if (inValues.length > 0)
+				{
+					orString.append("(");
+					for (int i = 0; i < inValues.length; i++)
+					{
+						if(inValues[i].length() > 0)
+						{
+							orString.append("+");
+							orString.append(inValues[i]);
+							orString.append(" ");
+						}
+					}
+					orString.append(")");
+				}
+				return getDetail().getId() + ":" + orString.toString();
+			}
+		};
+		term.setDetail(inDetail);
+		term.setValues(inValues);
+		term.setOperation("andgroup");
+		addTermByDataType(term);
+		return term;
+	}
 
 	public Term addNots(PropertyDetail inDetail, String inNots)
 	{
@@ -935,14 +965,28 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	public Term addMatches(String inString, String value)
 	{
 		PropertyDetail detail = createDetail(inString);
-		detail.setId(inString);
 		return addMatches(detail, value);
 	}
 
+	public Term addOrsGroup(String inString, Collection<String> values)
+	{
+		PropertyDetail detail = createDetail(inString);
+		String[] array = values.toArray(new String[values.size()]);
+		return addOrsGroup(detail, array);
+	}
+	
+	public Term addContains(String inString, String value)
+	{
+		PropertyDetail detail = createDetail(inString);
+		return addContains(detail, value);
+	}
+
+	
+	
+	
 	public Term addAfter(String inString, Date inSearchDate)
 	{
 		PropertyDetail detail = createDetail(inString);
-		detail.setId(inString);
 		return addAfter(detail, inSearchDate);
 	}
 

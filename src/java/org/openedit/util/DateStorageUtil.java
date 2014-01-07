@@ -41,6 +41,11 @@ public class DateStorageUtil {
 		// 2010:09:20 13:20:53-04:00
 		return getDateFormat("yyyy:MM:dd HH:mm:ssZ");
 	}
+	
+	protected DateFormat getExifPhotoshopFormat(){
+		//XMP-photoshop:DateCreated 
+		return getDateFormat("yyyy:MM:dd HH:mm:ss.S");
+	}
 
 	protected DateFormat getStandardLogFormat() {
 		return getDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
@@ -102,6 +107,12 @@ public class DateStorageUtil {
 				if (inStoredDate.contains("T")) {
 					return getStandardLogFormat().parse(inStoredDate);
 				}
+				
+				if (inStoredDate.substring(inStoredDate.length() - ".000".length()).contains("."))
+				{
+					return getExifPhotoshopFormat().parse(inStoredDate);
+				}
+				
 				if (inStoredDate.indexOf("-") < 6) {
 					return getStandardFormat().parse(inStoredDate);
 				}
@@ -121,6 +132,9 @@ public class DateStorageUtil {
 							inStoredDate.length() - 3)
 							+ "00";
 				}
+				
+				
+				
 				return getExifFormat().parse(inStoredDate);
 			}
 
@@ -185,7 +199,8 @@ public class DateStorageUtil {
 
 	public String checkFormat(String inValue) {
 		if (inValue.length() > 21) {
-			if (!inValue.contains("T") && inValue.indexOf("-") < 6) {
+			if (!inValue.contains("T") && inValue.indexOf("-") < 6 && 
+					!inValue.substring(inValue.length() - ".000".length()).contains(".")) {
 				return inValue;
 			}
 		}

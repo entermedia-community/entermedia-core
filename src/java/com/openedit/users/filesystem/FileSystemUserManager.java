@@ -452,7 +452,7 @@ public class FileSystemUserManager implements UserManager
 	/**
 	 * May be subclassed
 	 */
-	protected User loadUser( String inUserName ) throws UserManagerException
+	public User loadUser( String inUserName ) throws UserManagerException
 	{
 		File userFile = loadUserFile(inUserName);
 		if(!userFile.exists())

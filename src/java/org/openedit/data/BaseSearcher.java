@@ -4,13 +4,13 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +18,7 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openedit.Data;
+import org.openedit.MultiValued;
 import org.openedit.event.WebEvent;
 import org.openedit.event.WebEventListener;
 import org.openedit.profile.UserProfile;
@@ -70,6 +71,12 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		super();
 	}
 
+	public QueryBuilder query()
+	{
+		QueryBuilder builder = new QueryBuilder();
+		builder.setSearcher(this);
+		return builder;
+	}
 	/*
 	 * This is the main search method
 	 */
@@ -79,6 +86,8 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		{
 			log.debug("checking: " + getCatalogId() + " " + inQuery.toFriendly());
 		}
+		addShowOnly(inPageRequest, inQuery);
+
 		inPageRequest.putPageValue("searcher", this);
 		HitTracker tracker = null;
 		
@@ -169,6 +178,11 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					String hitsperpage = inPageRequest.getRequestParameter("hitsperpage");
 					if (hitsperpage == null)
 					{
+						hitsperpage = inPageRequest.getPageProperty("hitsperpage");
+					}
+					if (hitsperpage == null)
+					{
+						
 						if (usersettings != null)
 						{
 							tracker.setHitsPerPage(usersettings.getHitsPerPageForSearchType(inQuery.getResultType()));
@@ -628,7 +642,12 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				{
 					val = inPageRequest.getRequestParameter(field + ".value");
 				}
-				if (val == null)
+				if( val != null && val.contains("|"))
+				{
+					vals = MultiValued.VALUEDELMITER.split(val);
+					val = null;
+				}
+				else if (val == null)
 				{
 					vals = inPageRequest.getRequestParameters(detail.getId() + ".values");
 
@@ -848,7 +867,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		}
 		if ((val != null && val.length() > 0))
 		{
-			if ("matches".equals(op))
+			if ("matches".equals(op) || "andgroup".equals(op))
 			{
 				t = search.addMatches(detail, val);
 			}
@@ -879,7 +898,14 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		}
 		else if( vals != null )
 		{
-			t = search.addOrsGroup(detail, vals);
+			if ("andgroup".equals(op))
+			{
+				t = search.addAndGroup(detail, vals);
+			}
+			else
+			{
+				t = search.addOrsGroup(detail, vals);
+			}
 			search.setPropertyValues(t.getId(), vals);
 		}
 		if (t != null)
@@ -1442,6 +1468,11 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					{
 						PropertyDetail detail = getDetail(parts[0].substring(1), inReq);
 						addTerm(query, detail, parts[1], "not");
+					}
+					else if (parts[0].startsWith("~"))
+					{
+						PropertyDetail detail = getDetail(parts[0].substring(1), inReq);
+						addTerm(query, detail, parts[1], "matches");
 					}
 					else
 					{
@@ -2073,17 +2104,17 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				}
 				if (values != null && values.length > 1)
 				{
-					StringBuffer buf = new StringBuffer();
-					for (int j = 0; j < values.length; j++)
-					{
-						String val = values[j];
-						buf.append(val);
-						if (j != values.length - 1)
-						{
-							buf.append(" | ");
-						}
-						data.setProperty(field, buf.toString());
+					HashSet<String> hash = new HashSet<String>();
+					for (String val:values){
+						hash.add(val);
 					}
+					StringBuilder buf = new StringBuilder();
+					Iterator<String> itr = hash.iterator();
+					while (itr.hasNext()){
+						buf.append(itr.next());
+						if (itr.hasNext()) buf.append(" | ");
+					}
+					data.setProperty(field, buf.toString());
 				}
 				else if (values != null)
 				{

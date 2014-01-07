@@ -222,13 +222,14 @@ public class PropertyDetails extends AbstractCollection
 					for (int i = 0; i < all.length; i++) 
 					{
 						String id = all[i].toLowerCase();
+						String targetname = inName.toLowerCase();
 						//strip off the : from XMP-dc:Title
 						int index = id.indexOf(':');
 						if( index > 0 )
 						{
 							id = id.substring(index + 1);
 						}
-						if (inName.equals(id) || inName.equals(id.replace(" ", ""))) 
+						if (targetname.equals(id) || targetname.equals(id.replace(" ", ""))) 
 						{
 							found = detail;
 							getExternalIdCache().put(inName, found);

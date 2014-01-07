@@ -271,9 +271,9 @@ public class BaseWebServer implements WebServer
 		{
 			getOpenEditEngine().executePathActions(request);
 		}
-		else if( getModuleManager().contains("Scheduler") )
+		if( getModuleManager().contains("PathEventModule") )
 		{
-			getModuleManager().execute("Scheduler.init", request);
+			getModuleManager().execute("PathEventModule.init", request);
 		}
 		//getBeanFactory().preInstantiateSingletons();
         

@@ -34,10 +34,13 @@ public class ConfigModule extends BaseEditorModule
 		
 		// Add the user home
 		String[] fields = inReq.getRequestParameters("field");
-		for (int i = 0; i < fields.length; i++)
+		if(fields != null )
 		{
-			String value = inReq.getRequestParameter(fields[i] + ".value");
-			settings.setProperty(fields[i], value);
+			for (int i = 0; i < fields.length; i++)
+			{
+				String value = inReq.getRequestParameter(fields[i] + ".value");
+				settings.setProperty(fields[i], value);
+			}
 		}
 		getPageManager().saveSettings(session.getEditPage());
 	}

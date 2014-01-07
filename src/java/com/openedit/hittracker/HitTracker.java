@@ -1121,6 +1121,22 @@ public abstract class HitTracker implements Serializable, Collection
 		return new ArrayList(); //this is load code
 	}
 
+	public FilterNode findFilterNode(String inType)
+	{
+		List <FilterNode> nodes = getFilterOptions();
+		if( nodes != null)
+		{
+			for (Iterator iterator = nodes.iterator(); iterator.hasNext();)
+			{
+				FilterNode filterNode = (FilterNode) iterator.next();
+				if( filterNode.getId().endsWith(inType))
+				{
+					return filterNode;
+				}
+			}
+		}
+		return null;
+	}
 //	public void selectFilters(List selected)
 //	{
 //		List topnodes = getFilters();
