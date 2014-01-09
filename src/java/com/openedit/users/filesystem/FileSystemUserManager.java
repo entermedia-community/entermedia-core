@@ -1062,9 +1062,12 @@ public class FileSystemUserManager implements UserManager
 		Group group = getGroup(inGroupId);
 		if( group == null)
 		{
-			throw new OpenEditRuntimeException("No such auto login group " + inGroupId );
+			log.error("No such auto login group " + inGroupId );
 		}
-		user.addGroup(group);
+		else
+		{
+			user.addGroup(group);
+		}
 		return user;
 	}
 
