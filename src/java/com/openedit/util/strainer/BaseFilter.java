@@ -3,6 +3,7 @@ package com.openedit.util.strainer;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.openedit.config.Configuration;
 import com.openedit.config.XMLConfiguration;
 
 public class BaseFilter implements Filter
@@ -118,4 +119,12 @@ public class BaseFilter implements Filter
 	{
 		return String.valueOf( getValue() );
 	}
+
+	@Override
+	public void setConfiguration(Configuration inConfig) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	
 }

@@ -27,7 +27,7 @@ public class FilterWriter
 {
 	protected ModuleManager fieldModuleManager;
 
-	public void writeFilterCollection(Permission inPermission, Configuration inParent) 
+	public Configuration writeFilterCollection(Permission inPermission, Configuration inParent) 
 	{
 		Configuration child = inParent.addChild("permission");
 		child.setAttribute("name", inPermission.getName());
@@ -35,6 +35,7 @@ public class FilterWriter
 		{
 			addFilter( child, inPermission.getRootFilter());
 		}
+		return child;
 
 	}
 	
@@ -140,7 +141,7 @@ public class FilterWriter
 			newChild.setAttribute("name",filter.getPropertyName());
 		}
 		
-		
+	
 		else if (elemName.equals("action"))
 		{
 			ActionFilter action = (ActionFilter)inFilter;
