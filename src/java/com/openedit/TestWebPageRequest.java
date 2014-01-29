@@ -13,6 +13,16 @@ public class TestWebPageRequest extends BaseWebPageRequest
 {
 	Map fieldFakeSession = new HashMap();
 	Map fieldFakeProperties = new HashMap();
+	protected String fieldMethod = "GET";
+	
+	public String getMethod() {
+		return fieldMethod;
+	}
+
+	public void setMethod(String inMethod) {
+		fieldMethod = inMethod;
+	}
+
 	/**
 	 * @param inContext
 	 */
