@@ -701,11 +701,11 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		}
 		if (querystring != null)
 		{
-			addShowOnly(inPageRequest, querystring, search);
+			addShowOnlyFilter(inPageRequest, querystring, search);
 		}
 	}
 	
-	public void addShowOnly(WebPageRequest inPageRequest, String querystring, SearchQuery search){
+	public void addShowOnlyFilter(WebPageRequest inPageRequest, String querystring, SearchQuery search){
 		
 		if (querystring != null)
 		{
