@@ -201,6 +201,15 @@ public class FilterReader {
 					elemName + "Filter");
 			if (filter != null) {
 				filter.setConfiguration(inConfig);
+				for (Iterator iterator = inConfig.getAttributeNames()
+						.iterator(); iterator.hasNext();) {
+					String key = (String) iterator.next();
+					String val = inConfig.getAttribute(key);
+					if (val != null) {
+						filter.setProperty(key, val);
+					}
+
+				}
 				result = filter;
 			} else {
 				throw new OpenEditException("Unrecognized filter element <"
