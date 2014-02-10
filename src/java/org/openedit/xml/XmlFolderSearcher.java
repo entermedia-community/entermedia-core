@@ -59,7 +59,7 @@ public class XmlFolderSearcher extends XmlSearcher
 			{
 				composite.setExist(true);
 				boolean existing = children.size() > 0;
-				loadChildren(inName, children2, root, existing);
+				loadChildren(inName, children2, root, true);
 			}
 			
 //			HitTracker hits = getSearcherManager().getList(
