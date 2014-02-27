@@ -83,11 +83,37 @@ public class Replacer
 					if( dot > 0)
 					{
 						String objectname = value.substring(0,dot);
+						Object object = null;
 						
-						Object object = inValues.get(objectname);  //${division.folder}
+						String localproperty = null;
+						String foreigntable = null;
+						
+						if(objectname.contains(":"))
+						{
+							//${localfield:listid.field} Use this format if your local field maps to a different table 
+							String [] splits = objectname.split(":");
+							if (splits.length==2)
+							{
+								localproperty = splits[0];
+							    foreigntable = splits[1];
+								object = inValues.get(localproperty);
+							}
+						}
+						else
+						{
+							object = inValues.get(objectname);  //${division.folder}
+						}
 						if( object instanceof String )
 						{
-							object = getData(objectname,(String)object); //division
+							if (localproperty!=null &&  foreigntable!=null)
+							{
+								String localval = (String) inValues.get(localproperty);
+								object = getData(foreigntable,localval);
+							}
+							else
+							{
+								object = getData(objectname,(String)object); //division
+							}
 							if(isAlwaysReplace() && object == null)
 							{
 								variable="";

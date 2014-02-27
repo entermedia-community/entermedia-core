@@ -82,6 +82,9 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	 */
 	public HitTracker cachedSearch(WebPageRequest inPageRequest, SearchQuery inQuery) throws OpenEditException
 	{
+		if (inQuery == null){
+			return null;
+		}
 		if (log.isDebugEnabled())
 		{
 			log.debug("checking: " + getCatalogId() + " " + inQuery.toFriendly());
