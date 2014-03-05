@@ -56,9 +56,18 @@ public class XmlSearcher extends BaseSearcher
 
 	public Object searchById(String inId)
 	{
+	return searchById(inId, true );
+	}
+	
+	
+	public Object searchById(String inId, boolean inCache)
+	{
 		if (inId != null)
 		{
-			Object hit = getCacheManager().get(cacheId(), inId);
+			Object hit = null;
+			if(inCache && getCacheManager() != null){
+			 hit = getCacheManager().get(cacheId(), inId);
+			} 
 			if (hit != null)
 			{
 				return hit;
@@ -68,7 +77,7 @@ public class XmlSearcher extends BaseSearcher
 			//TODO: Search for only one then stop
 			HitTracker hits = search(query);
 			hit = hits.first();
-			if (hit != null)
+			if (hit != null && inCache)
 			{
 				getCacheManager().put(cacheId(),inId, hit);
 				return hit;
@@ -76,6 +85,7 @@ public class XmlSearcher extends BaseSearcher
 		}
 		return null;
 	}
+	
 
 	protected String cacheId()
 	{
