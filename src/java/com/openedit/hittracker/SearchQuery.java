@@ -1530,7 +1530,32 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 			}
 		}
 	}
-
+	
+	public void clearFilters()
+	{
+		if( !hasFilters() )
+		{
+			return;
+		}
+		
+		List<FilterNode> nodes = getFilters();
+		
+		if(nodes == null)
+		{
+			return;
+		}
+		
+		int amtOfNodes = nodes.size();
+		
+		for (int i=amtOfNodes - 1;i >= 0; --i)
+		{
+			if(nodes.get(i) != null)
+			{
+				nodes.remove(nodes.get(i));
+			}
+		}
+	}
+	
 	public boolean hasFilter(String inId)
 	{
 		if( hasFilters() )

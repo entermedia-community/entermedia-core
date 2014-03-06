@@ -1446,7 +1446,16 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			else
 			{
 				String toremove = inReq.getRequestParameter("removefilter");
-				query.removeFilter(toremove);
+				String asterisk = "*";
+				if(toremove.equals(asterisk))
+				{
+					query.clearFilters();
+				}
+				else
+				{
+					query.removeFilter(toremove);
+				}
+				
 			}
 				hits.setIndexId(hits.getIndexId() + 1); // Causes the hits to
 			// be // reloaded
