@@ -52,7 +52,7 @@ public class XmlFolderSearcher extends XmlSearcher
 			if( children.size() > 0)
 			{
 				composite.setExist(true);
-				loadChildren(inName, children, root, false);
+				loadChildren(inName, children, root, true);
 			}
 			List<String> children2 = getPageManager().getChildrenPaths("/" + getCatalogId() + "/data" + "/lists/" + inName + "/",true);
 			if( children2.size() > 0)
