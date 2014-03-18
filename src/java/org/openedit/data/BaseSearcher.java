@@ -1728,6 +1728,17 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		}
 		return details.findStoredProperties();
 	}
+	
+	public List getKeywordProperties()
+	{
+		PropertyDetails details = getPropertyDetailsArchive().getPropertyDetailsCached(getSearchType());
+		if (details == null)
+		{
+			return null;
+		}
+		return details.findKeywordProperties();
+	}
+	
 	public Data searchByQuery(SearchQuery inQuery)
 	{
 		HitTracker hits = search(inQuery);
