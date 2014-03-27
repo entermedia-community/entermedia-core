@@ -44,6 +44,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	protected SearcherManager fieldSearcherManager;
 	protected WebEventListener fieldWebEventListener;
 	protected boolean fieldFireEvents = false;
+
 	protected ModuleManager fieldModuleManager;
 	public ModuleManager getModuleManager()
 	{
@@ -58,7 +59,15 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	
 	public String getNewDataName()
 	{
+		if (fieldNewDataName == null)
+		{
+			fieldNewDataName = getPropertyDetails().getClassName();
+			
+		}
+
 		return fieldNewDataName;
+		
+		
 	}
 
 	public void setNewDataName(String inDataClassName)
@@ -1773,7 +1782,8 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 
 	public Data createNewData()
 	{
-		if( fieldNewDataName == null)
+		String classname = getNewDataName();
+		if( classname == null)
 		{
 			BaseData data = new BaseData();
 			return data;

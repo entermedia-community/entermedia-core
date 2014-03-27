@@ -23,8 +23,29 @@ public class PropertyDetails extends AbstractCollection
 	protected String fieldPrefix;
 	protected String fieldBeanName;
 	protected String fieldToString;
+	protected String fieldClassName;//The object type to create
 
 	
+	public String getClassName()
+	{
+		if( fieldClassName == null)
+		{
+			if( getInputFile() != null && getInputFile().getRoot() != null)
+			{
+				fieldClassName = getInputFile().getRoot().attributeValue("classname");
+			}
+//			if( fieldBeanName == null )
+//			{
+//				fieldBeanName = "dynamicSearcher";
+//			}
+		}
+		return fieldClassName;
+	}
+	
+	public void setClassName(String inClassName)
+	{
+		fieldClassName = inClassName;
+	}
 	public String getBeanName()
 	{
 		if( fieldBeanName == null)
