@@ -62,12 +62,8 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		if (fieldNewDataName == null)
 		{
 			fieldNewDataName = getPropertyDetails().getClassName();
-			
 		}
-
 		return fieldNewDataName;
-		
-		
 	}
 
 	public void setNewDataName(String inDataClassName)
