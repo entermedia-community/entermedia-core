@@ -32,7 +32,7 @@ public class PropertyDetails extends AbstractCollection
 		{
 			if( getInputFile() != null && getInputFile().getRoot() != null)
 			{
-				fieldClassName = getInputFile().getRoot().attributeValue("classname");
+				fieldClassName = getInputFile().getRoot().attributeValue("class");
 			}
 //			if( fieldBeanName == null )
 //			{
