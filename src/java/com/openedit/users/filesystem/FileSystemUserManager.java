@@ -790,13 +790,15 @@ public class FileSystemUserManager implements UserManager
 		for (Iterator iter = listUserNames().iterator(); iter.hasNext();) 
 		{
 			String username = (String) iter.next();
-			User element = getUser(username);
-
-			String email = element.getEmail();
-			if ( email != null && email.equalsIgnoreCase(emailaddress))
+			User element = getUser(username);//require null pointer check here
+			if (element!=null)
 			{
-				return element;	
-			}		
+				String email = element.getEmail();
+				if ( email != null && email.equalsIgnoreCase(emailaddress))
+				{
+					return element;	
+				}
+			}
 		}
 		return null;
 	}
