@@ -178,6 +178,18 @@ public class FilterReader {
 			{
 				action.setConfiguration(inConfig);
 			}
+//			if (inConfig.getChildren("property") != null) {
+//				for (Iterator iterator = inConfig.getChildIterator("property"); iterator
+//						.hasNext();) {
+//					Configuration config = (Configuration) iterator.next();
+//					String key = config.get("id");
+//					String value = config.getValue();
+//					if (key != null && value != null) {
+//						action.setProperty(key, value);
+//					}
+//
+//				}
+//			}
 			result = action;
 		} else if (elemName.equals("referer")) {
 			String target = inConfig.getAttribute("value");

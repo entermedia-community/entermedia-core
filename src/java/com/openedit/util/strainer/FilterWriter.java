@@ -121,6 +121,21 @@ public class FilterWriter {
 					newChild.addChild(conf);
 				}
 			}
+//			if(action.getProperties() != null){
+//				for (Iterator iterator = action.getProperties().keySet().iterator(); iterator
+//						.hasNext();) {
+//					String key = (String) iterator.next();
+//					String value = action.get(key);
+//					if(key != null && value != null){
+//						Configuration prop=  newChild.addChild("property");
+//						
+//						prop.setAttribute("id", key);
+//						prop.setValue(value);
+//						
+//					}
+//				}
+//			}
+			
 		} else {
 
 			if (inFilter.getConfiguration() != null) {
