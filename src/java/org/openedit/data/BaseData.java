@@ -180,8 +180,9 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 		String val = get(inPreference);
 		
 		if (val == null)
+		{
 			return null;
-		
+		}
 		String[] vals = null;
 		if( val.contains("|") )
 		{

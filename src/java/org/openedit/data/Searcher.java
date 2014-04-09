@@ -152,6 +152,11 @@ public interface Searcher
 
 	public abstract void saveDetails(WebPageRequest inReq, String[] fields,	Data data, String id);
 
+	/**
+	 * @deprecated use searchByQuery
+	 * @param inQ
+	 * @return
+	 */
 	public Data uniqueResult(SearchQuery inQ);
 
 	HitTracker searchByIds(Collection<String> inIds);

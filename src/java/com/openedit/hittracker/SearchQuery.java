@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
@@ -706,6 +707,19 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	public Collection getInputs(String inKey)
 	{
 		Collection input = getValues(inKey);
+		if( input == null)
+		{
+			Term term = getTermByDetailId(inKey);
+			if( term == null)
+			{
+				term = getTerm(inKey);
+			}
+			if( term != null && term.getValues() != null)
+			{
+				return Arrays.asList( term.getValues() );
+			}
+			return null;
+		}
 		return input;
 	}
 
