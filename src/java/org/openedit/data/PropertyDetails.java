@@ -66,7 +66,10 @@ public class PropertyDetails extends AbstractCollection
 		fieldBeanName = inBeanName;
 	}
 	
-	
+	/**
+	 * This is used for autocomplete fields when searching on this table that may not have a name column
+	 * @return
+	 */
 	public String getRender()
 	{
 		if( fieldToString == null)

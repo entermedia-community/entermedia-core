@@ -153,13 +153,59 @@ public class SearcherManager
 		}
 		return val;
 	}
+	public String getLabel(Searcher inSearcher, Data inData)
+	{
+		if(inData == null){
+			return null;
+		}
+		String val = null;
+		String mask = inSearcher.getPropertyDetails().getRender();
+		if( mask != null)
+		{
+			val =  getValue(inSearcher.getCatalogId(),mask,inData.getProperties());
+		}
+		else
+		{
+			val = inData.getName();
+		}
+		return val;
+	}
+	
+	public String getLabel(PropertyDetail inDetail, Data inData)
+	{
+		if(inData == null){
+			return null;
+		}
+		String mask = inDetail.get("render");
+		String val = null;
+		if( mask != null)
+		{
+			val = getValue(inDetail.getCatalogId(),mask,inData.getProperties());
+		}
+		else
+		{
+			Searcher listsearcher = getSearcher(inDetail.getListCatalogId(),inDetail.getListId() );
+			mask = listsearcher.getPropertyDetails().getRender();
+			if( mask != null)
+			{
+				val =  getValue(inDetail.getCatalogId(),mask,inData.getProperties());
+			}
+			else
+			{
+				val = inData.getName();
+			}
+		}
+		return val;
+	}
+	
 	public String getValue(String inCatalogId, String inMask,Map inValues)
 	{
 		if( inMask == null)
 		{
 			return null;
 		}
-		Replacer replacer = (Replacer)getModuleManager().getBean(inCatalogId, "replacer");
+		Replacer replacer = getReplacer(inCatalogId);
+		
 		String val = replacer.replace(inMask, inValues);
 		if( val.startsWith("$") && val.equals(inMask) )
 		{
@@ -168,6 +214,10 @@ public class SearcherManager
 		return val; 
 	}
 	
+	public Replacer getReplacer(String inCatalogId)
+	{
+		return (Replacer)getModuleManager().getBean(inCatalogId, "replacer");
+	}
 	public Data getData(String inCatalogId, String inSearchType, String inId)
 	{
 		if( inId == null)
