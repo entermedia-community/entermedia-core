@@ -906,6 +906,11 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			{
 				t = search.addOrsGroup(detail, val);
 			}
+			else if ("freeform".equals(op))
+			{
+				t = search.addFreeFormQuery(detail, val);
+			}
+			
 			if( t != null )
 			{
 				search.setProperty(t.getId(), val);

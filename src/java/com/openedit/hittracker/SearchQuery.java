@@ -1428,6 +1428,27 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		detail.setId(inString);
 		addBefore(detail, inDate);		
 	}	
+
+	public Term addFreeFormQuery(PropertyDetail inField, String inValue)
+	{
+		Term term = new Term()
+		{
+			public String toQuery()
+			{
+				String inVal = getValue();
+				return inVal;
+			}
+		};
+		term.setOperation("freeform");
+		term.setDetail(inField);
+		term.setValue(inValue);
+		addTermByDataType(term);
+		return term;
+	}
+
+	
+
+	
 	public int compareTo(Object inO)
 	{
 		SearchQuery q1 = (SearchQuery)inO;
