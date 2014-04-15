@@ -48,7 +48,7 @@ public class DateStorageUtil {
 	}
 
 	protected DateFormat getStandardLogFormat() {
-		return getDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+		return getDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 	}
 
 	protected DateFormat getOldColonFormat() {
@@ -105,6 +105,10 @@ public class DateStorageUtil {
 
 			if (inStoredDate.length() > 21) {
 				if (inStoredDate.contains("T")) {
+					if(inStoredDate.endsWith("Z")){
+					
+						return getElasticDefaultFormat().parse(inStoredDate);
+					}
 					return getStandardLogFormat().parse(inStoredDate);
 				}
 				
@@ -172,9 +176,15 @@ public class DateStorageUtil {
 				return getOldShortStandardFormat().parse(inStoredDate);
 			}
 		} catch (Exception ex) {
-			log.debug("Could not parse date " + inStoredDate);
+			log.info("Could not parse date " + inStoredDate);
 		}
 		return null;
+	}
+
+	private DateFormat getElasticDefaultFormat()
+	{
+		// TODO Auto-generated method stub
+		return getDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 	}
 
 	private DateFormat getAlmostStandardPlus() {

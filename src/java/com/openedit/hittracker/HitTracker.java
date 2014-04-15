@@ -1187,6 +1187,20 @@ public abstract class HitTracker implements Serializable, Collection
 //		// TODO Auto-generated method stub
 //		
 //	}
+
+	public boolean isChildFacetSelected(FilterNode inNode){
+		List selectedfilters = getSearchQuery().getFilters();
+		for (Iterator iterator = selectedfilters.iterator(); iterator.hasNext();)
+		{
+			FilterNode selected = (FilterNode) iterator.next();
+			if(selected.getId().equals(inNode.getId())){
+				return true;
+			}
+			
+		}
+		return false;
+		
+	}
 	
 }
 

@@ -409,6 +409,11 @@ public class PropertyDetailsArchive {
 		if (inDetails.getPrefix() != null) {
 			root.addAttribute("prefix", inDetails.getPrefix());
 		}
+		if (inDetails.getClassName() != null) {
+			root.addAttribute("class", inDetails.getClassName());
+		}
+		
+		
 		if (inDetails.getBeanName() != null) {
 			root.addAttribute("beanname", inDetails.getBeanName());
 		}

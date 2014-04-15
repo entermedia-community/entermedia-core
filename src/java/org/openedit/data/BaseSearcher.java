@@ -44,6 +44,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	protected SearcherManager fieldSearcherManager;
 	protected WebEventListener fieldWebEventListener;
 	protected boolean fieldFireEvents = false;
+
 	protected ModuleManager fieldModuleManager;
 	public ModuleManager getModuleManager()
 	{
@@ -58,6 +59,10 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	
 	public String getNewDataName()
 	{
+		if (fieldNewDataName == null)
+		{
+			fieldNewDataName = getPropertyDetails().getClassName();
+		}
 		return fieldNewDataName;
 	}
 
@@ -82,6 +87,9 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	 */
 	public HitTracker cachedSearch(WebPageRequest inPageRequest, SearchQuery inQuery) throws OpenEditException
 	{
+		if (inQuery == null){
+			return null;
+		}
 		if (log.isDebugEnabled())
 		{
 			log.debug("checking: " + getCatalogId() + " " + inQuery.toFriendly());
@@ -699,6 +707,13 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			//Legacy check. Remove this line after Feb 15 2013
 			querystring = inPageRequest.findValue("showonly");
 		}
+		if (querystring != null)
+		{
+			addShowOnlyFilter(inPageRequest, querystring, search);
+		}
+	}
+	
+	public void addShowOnlyFilter(WebPageRequest inPageRequest, String querystring, SearchQuery search){
 		
 		if (querystring != null)
 		{
@@ -891,6 +906,11 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			{
 				t = search.addOrsGroup(detail, val);
 			}
+			else if ("freeform".equals(op))
+			{
+				t = search.addFreeFormQuery(detail, val);
+			}
+			
 			if( t != null )
 			{
 				search.setProperty(t.getId(), val);
@@ -1436,7 +1456,16 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			else
 			{
 				String toremove = inReq.getRequestParameter("removefilter");
-				query.removeFilter(toremove);
+				String asterisk = "*";
+				if(toremove.equals(asterisk))
+				{
+					query.clearFilters();
+				}
+				else
+				{
+					query.removeFilter(toremove);
+				}
+				
 			}
 				hits.setIndexId(hits.getIndexId() + 1); // Causes the hits to
 			// be // reloaded
@@ -1709,6 +1738,17 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		}
 		return details.findStoredProperties();
 	}
+	
+	public List getKeywordProperties()
+	{
+		PropertyDetails details = getPropertyDetailsArchive().getPropertyDetailsCached(getSearchType());
+		if (details == null)
+		{
+			return null;
+		}
+		return details.findKeywordProperties();
+	}
+	
 	public Data searchByQuery(SearchQuery inQuery)
 	{
 		HitTracker hits = search(inQuery);
@@ -1743,7 +1783,8 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 
 	public Data createNewData()
 	{
-		if( fieldNewDataName == null)
+		String classname = getNewDataName();
+		if( classname == null)
 		{
 			BaseData data = new BaseData();
 			return data;

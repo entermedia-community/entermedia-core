@@ -1,5 +1,10 @@
 package com.openedit.util.strainer;
 
+import java.util.List;
+import java.util.Map;
+
+import com.openedit.config.Configuration;
+
 /**
  * This interface supplies a contract for determining whether an object passes
  * certain criteria.  It should be implemented by multiple subclasses, each of
@@ -51,8 +56,13 @@ public interface Filter
 
 	void setValue(String inValue);
 
-	Filter copy(String inName);
+	Filter copy(FilterReader inReader, String inName);
 
 	void setProperty(String inKey, String inValue);
+
+	void setConfiguration(Configuration inConfig);
+	Configuration getConfiguration();
+	public Map<String,String> getProperties();
+	public String get(String inType);
 
 }

@@ -19,6 +19,7 @@ import org.openedit.repository.filesystem.FileItem;
 import com.openedit.BaseTestCase;
 import com.openedit.util.strainer.AndFilter;
 import com.openedit.util.strainer.Filter;
+import com.openedit.util.strainer.FilterReader;
 import com.openedit.util.strainer.GroupFilter;
 import com.openedit.util.strainer.NotFilter;
 import com.openedit.util.strainer.OrFilter;
@@ -187,7 +188,7 @@ public class PageTest extends BaseTestCase
 		assertEquals("NotFilter's UserFilter's username", "baz", userFilter2.getUsername());
 
 	
-		Filter copy =userFilter2.copy("somename");
+		Filter copy =userFilter2.copy((FilterReader)getFixture().getModuleManager().getBean("filterReader"),"somename");
 		assertNotNull(copy);
 		assertTrue( copy instanceof UserFilter);
 		assertEquals("NotFilter's UserFilter's username", "baz", ((UserFilter)copy).getUsername());

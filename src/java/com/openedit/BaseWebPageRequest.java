@@ -1235,5 +1235,15 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 		
 	}
 
+	
+	
+	public String getMethod(){
+		return getRequest().getMethod();
+	}
+	
+	
+	public void setMethod(String inMethod){
+		//NOOP
+	}
 
 }

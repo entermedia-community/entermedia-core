@@ -3,6 +3,7 @@ package com.openedit.util.strainer;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.openedit.config.Configuration;
 import com.openedit.config.XMLConfiguration;
 
 public class BaseFilter implements Filter
@@ -84,16 +85,16 @@ public class BaseFilter implements Filter
 		return fieldValue;
 	}
 
-	public Filter copy(String inName)
+	public Filter copy(FilterReader inReader, String inName)
 	{
 		XMLConfiguration config = new XMLConfiguration();
 		
 		FilterWriter writer = new FilterWriter();
 		writer.addFilter(config,this);
 		
-		FilterReader reader = new FilterReader();
+	
 		//Configuration child = (Configuration)config.getChildren().get(0);
-		Filter done = reader.readFilterCollection(config, inName);
+		Filter done = inReader.readFilterCollection(config, inName);
 		return done;
 	}
 
@@ -118,4 +119,18 @@ public class BaseFilter implements Filter
 	{
 		return String.valueOf( getValue() );
 	}
+
+	@Override
+	public void setConfiguration(Configuration inConfig) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Configuration getConfiguration() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	
 }

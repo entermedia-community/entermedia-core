@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
@@ -706,6 +707,19 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	public Collection getInputs(String inKey)
 	{
 		Collection input = getValues(inKey);
+		if( input == null)
+		{
+			Term term = getTermByDetailId(inKey);
+			if( term == null)
+			{
+				term = getTerm(inKey);
+			}
+			if( term != null && term.getValues() != null)
+			{
+				return Arrays.asList( term.getValues() );
+			}
+			return null;
+		}
 		return input;
 	}
 
@@ -1414,6 +1428,27 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		detail.setId(inString);
 		addBefore(detail, inDate);		
 	}	
+
+	public Term addFreeFormQuery(PropertyDetail inField, String inValue)
+	{
+		Term term = new Term()
+		{
+			public String toQuery()
+			{
+				String inVal = getValue();
+				return inVal;
+			}
+		};
+		term.setOperation("freeform");
+		term.setDetail(inField);
+		term.setValue(inValue);
+		addTermByDataType(term);
+		return term;
+	}
+
+	
+
+	
 	public int compareTo(Object inO)
 	{
 		SearchQuery q1 = (SearchQuery)inO;
@@ -1530,7 +1565,32 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 			}
 		}
 	}
-
+	
+	public void clearFilters()
+	{
+		if( !hasFilters() )
+		{
+			return;
+		}
+		
+		List<FilterNode> nodes = getFilters();
+		
+		if(nodes == null)
+		{
+			return;
+		}
+		
+		int amtOfNodes = nodes.size();
+		
+		for (int i=amtOfNodes - 1;i >= 0; --i)
+		{
+			if(nodes.get(i) != null)
+			{
+				nodes.remove(nodes.get(i));
+			}
+		}
+	}
+	
 	public boolean hasFilter(String inId)
 	{
 		if( hasFilters() )
