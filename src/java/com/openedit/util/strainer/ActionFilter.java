@@ -1,6 +1,7 @@
 package com.openedit.util.strainer;
 
 import java.util.Iterator;
+import java.util.Map;
 
 import com.openedit.ModuleManager;
 import com.openedit.OpenEditException;
@@ -24,17 +25,18 @@ public class ActionFilter extends BaseFilter {
 	public boolean passes(Object inObj) throws FilterException {
 		WebPageRequest req = (WebPageRequest) inObj;
 		try {
-			if(getActionName() == null){
+			if (getActionName() == null) {
 				return true;//
 			}
 			PageAction action = new PageAction(getActionName());
 			action.setConfig(getConfig());
-			for (Iterator iterator = getProperties().keySet().iterator(); iterator
-					.hasNext();) {
-				String key = (String) iterator.next();
-				String value = get(key);
-				req.putPageValue(key, value);
-
+			if (getConfig() != null) {
+				for (Iterator iterator = getConfig().getAttributeNames()
+						.iterator(); iterator.hasNext();) {
+					String key = (String) iterator.next();
+					String value = get(key);
+					req.putPageValue(key, value);
+				}
 			}
 			req.setCurrentAction(action);
 			Object returned = getModuleManager().execute(getActionName(), req);
@@ -84,7 +86,7 @@ public class ActionFilter extends BaseFilter {
 	}
 
 	public void addProperty(String inKey, String inValue) {
-		if("name".equals(inKey)){
+		if ("name".equals(inKey)) {
 			setActionName(inValue);
 			return;
 		}
