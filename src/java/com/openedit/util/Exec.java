@@ -233,6 +233,9 @@ public class Exec
 				builder.environment().put("HOME", inRunFrom.getAbsolutePath());
 			}
 			builder.redirectErrorStream(true);
+			if(inRunFrom == null){
+				inRunFrom = getRoot();
+			}
 			builder.directory(inRunFrom);
 			
 			Process proc = builder.start();//Runtime.getRuntime().exec(inCommand,env,inRunFrom);
