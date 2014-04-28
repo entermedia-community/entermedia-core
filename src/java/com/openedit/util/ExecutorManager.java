@@ -81,7 +81,7 @@ public class ExecutorManager
 	{
 		if (fieldSharedExecutor == null)
 		{
-			fieldSharedExecutor =  createExecutor(2, 2, "Unlimited");
+			fieldSharedExecutor =  createExecutor(2, Integer.MAX_VALUE, "Unlimited");
 		}
 		return fieldSharedExecutor;
 	}
