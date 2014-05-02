@@ -32,7 +32,7 @@
 			<ref bean="moduleManager" />
 		</property>
 		<property name="xmlArchive"><ref bean="xmlArchive"/></property>
-				<property name="searcherManager"><ref bean="searcherManager"/></property>
+		<property name="lockManager"><ref bean="lockManager"/></property>
 		
 	</bean>
 
@@ -270,7 +270,6 @@
 	</bean>
 
 	<bean id="lockManager" class="org.entermedia.locks.LockManager" singleton="true" >
-		<property name="searcherManager"><ref bean="searcherManager"/></property>
 	</bean>
 	<bean id="lock" class="org.entermedia.locks.Lock" singleton="false" >
 	</bean>
