@@ -32,6 +32,8 @@
 			<ref bean="moduleManager" />
 		</property>
 		<property name="xmlArchive"><ref bean="xmlArchive"/></property>
+				<property name="searcherManager"><ref bean="searcherManager"/></property>
+		
 	</bean>
 
 

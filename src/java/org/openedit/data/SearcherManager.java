@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.entermedia.locks.LockManager;
 import org.openedit.Data;
 import org.openedit.xml.XmlArchive;
 
@@ -21,7 +22,15 @@ public class SearcherManager
 	protected ModuleManager fieldModuleManager;
 	protected Map fieldCache;
 	protected XmlArchive fieldXmlArchive;
-			
+    public LockManager getLockManager() {
+		return fieldLockManager;
+	}
+	public void setLockManager(LockManager inLockManager) {
+		fieldLockManager = inLockManager;
+	}
+
+	protected LockManager fieldLockManager;
+    
 	//A fieldName can be product or orderstatus. If there is no orderstatus searcher then we use an XML lookup for this catalog. 
 	public Searcher getSearcher(String inCatalogId, String inFieldName)
 	{

@@ -34,9 +34,10 @@ import org.openedit.event.WebEvent;
 import org.openedit.event.WebEventHandler;
 import org.openedit.repository.ContentItem;
 import org.openedit.util.DateStorageUtil;
+import org.openedit.xml.XmlArchive;
+import org.openedit.xml.XmlFile;
 
 import com.openedit.OpenEditException;
-import com.openedit.OpenEditRuntimeException;
 import com.openedit.hittracker.HitTracker;
 import com.openedit.hittracker.ListHitTracker;
 import com.openedit.page.Page;
@@ -76,7 +77,9 @@ public class FileSystemUserManager implements UserManager
 	protected IntCounter fieldUserIdCounter;
 	protected Map fieldGroupIdToGroupMap;
 	protected Map fieldUserNameToUserMap;
+	protected XmlArchive fieldXmlArchive;
 
+	
 	protected long fieldLastEditTime;
 	protected Authenticator fieldAuthenticator;
 	protected StringEncryption fieldStringEncryption;
@@ -870,11 +873,24 @@ public class FileSystemUserManager implements UserManager
 				child.addAttribute("id",group.getId());
 			}
 		}
-		File file = loadUserFile(user.getUserName());
-		getXmlUtil().saveXml(doc, file);
+		
+		//File file = loadUserFile(user.getUserName());
+		XmlFile xfile = new XmlFile();
+		xfile.setRoot(doc.getRootElement());
+		xfile.setPath(getUserDirectory() + "/" + user.getUserName() + ".xml");
+		getXmlArchive().saveXml(xfile, null);
+		
 		getUserNameToUserMap().put(user.getUserName(), user);
 	}
 	
+	public XmlArchive getXmlArchive() {
+		return fieldXmlArchive;
+	}
+
+	public void setXmlArchive(XmlArchive inXmlArchive) {
+		fieldXmlArchive = inXmlArchive;
+	}
+
 	public void saveGroup(Group inGroup) throws UserManagerException
 	{
 		Document doc = DocumentFactory.getInstance().createDocument();
