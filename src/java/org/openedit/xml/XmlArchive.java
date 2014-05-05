@@ -179,18 +179,12 @@ public class XmlArchive
 
 		return element;
 	}
+
+	public void saveXml(XmlFile inFile, User inUser, Lock lock) throws OpenEditException
+	{
+		
+		//Lock lock = getLockManager().lock("system", inFile.getPath(), null ); //this will retry 10 times then timeout and throw an exception
 	
-	public void saveXml(Data inFile, User inUser) throws OpenEditException
-	{
-		saveXml((XmlFile)inFile,inUser);
-	}
-	public void saveXml(XmlFile inFile, User inUser) throws OpenEditException
-	{
-		Lock lock = getLockManager().lock("system", inFile.getPath(), null ); //this will retry 10 times then timeout and throw an exception
-		try
-		{
-			//TODO: Use ContentItem to speed this up. Need character encoding info tho
-			
 				Page page = getPageManager().getPage(inFile.getPath(), false);
 		
 				ContentItem tmp = getPageManager().getRepository().getStub(inFile.getPath() + ".tmp.xml");
@@ -207,12 +201,27 @@ public class XmlArchive
 				inFile.setLastModified(xmlcontent.getLastModified());
 				inFile.setExist(true);
 				//log.info("Save " + inFile.getPath());
+	
+	}
+	
+	public void saveXml(XmlFile inFile, User inUser) throws OpenEditException
+	{
+		
+		Lock lock = getLockManager().lock("system", inFile.getPath(), null ); //this will retry 10 times then timeout and throw an exception
+		try
+		{
+			saveXml(inFile, inUser,lock);
+				//log.info("Save " + inFile.getPath());
 		}
 		finally
 		{
+			
 			getLockManager().release("system", lock);
 		}
 	}
+	
+	
+	
 
 	public PageManager getPageManager()
 	{

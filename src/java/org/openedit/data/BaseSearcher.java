@@ -17,6 +17,7 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.entermedia.locks.LockManager;
 import org.openedit.Data;
 import org.openedit.MultiValued;
 import org.openedit.event.WebEvent;
@@ -2212,5 +2213,11 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	public void saveData(Data inData, User inUser)
 	{
 		throw new OpenEditException("Save not implemented for " + getSearchType());
+	}
+	
+	
+	
+	public LockManager getLockManager(){
+	return getSearcherManager().getLockManager();	
 	}
 }

@@ -32,6 +32,8 @@
 			<ref bean="moduleManager" />
 		</property>
 		<property name="xmlArchive"><ref bean="xmlArchive"/></property>
+		<property name="lockManager"><ref bean="lockManager"/></property>
+		
 	</bean>
 
 
@@ -43,6 +45,8 @@
 		<property name="authenticator"><ref bean="authenticator"/></property>
 		<property name="stringEncryption"><ref bean="stringEncryption"/></property>
 		<property name="webEventHandler"><ref bean="userEventHandler"/></property>
+				<property name="xmlArchive"><ref bean="xmlArchive"/></property>
+		
 	</bean>
 	
 	<bean id="exec" class="com.openedit.util.Exec">
@@ -268,7 +272,6 @@
 	</bean>
 
 	<bean id="lockManager" class="org.entermedia.locks.LockManager" singleton="true" >
-		<property name="searcherManager"><ref bean="searcherManager"/></property>
 	</bean>
 	<bean id="lock" class="org.entermedia.locks.Lock" singleton="false" >
 	</bean>
