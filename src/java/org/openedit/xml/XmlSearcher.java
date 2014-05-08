@@ -92,31 +92,6 @@ public class XmlSearcher extends BaseSearcher
 		return getCatalogId() + getSearchType();
 	}
 
-	public HitTracker getAllHits(WebPageRequest inReq) 
-	{
-		SearchQuery query = createSearchQuery();
-		query.addMatches("id","*");
-		query.setCatalogId(getCatalogId());
-		if( inReq != null )
-		{
-			String sort = inReq.findValue("sortby");
-			query.setSortBy(sort);
-		}
-		
-		HitTracker tracker = search(query);
-		if (inReq != null)
-		{
-			String hitsname = inReq.findValue("hitsname");
-			if (hitsname != null)
-			{
-				query.setHitsName(hitsname);
-			} 
-			inReq.putSessionValue(tracker.getSessionId(), tracker);
-			inReq.putPageValue(tracker.getHitsName(), tracker);
-		}
-		return tracker;
-	}
-
 	public void reIndexAll() throws OpenEditException
 	{
 		getCacheManager().clear(cacheId() );
@@ -215,16 +190,20 @@ public class XmlSearcher extends BaseSearcher
 			else
 			{
 				String name = term.getDetail().getId();
+				String value = term.getValue();
 				if (name == null)
 				{
 					name = "id";
 				}
 				else if( name.equals("description") )
 				{
+					if( value != null && "*".equals(value))
+					{
+						return true;
+					}
 					name = "name"; //This is temporary until we support isKeyword
 				}
 				
-				String value = term.getValue();
 				if( value == null && term.getDetail().isBoolean() )
 				{
 					value = "false";
