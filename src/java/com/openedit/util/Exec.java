@@ -244,7 +244,6 @@ public class Exec
 			reader1.setStream("stdout",proc.getInputStream());
 			getExecutorManager().execute(reader1);
 
-			
 			if(inputStream != null)
 			{
 				OutputStream out = proc.getOutputStream();
@@ -263,9 +262,25 @@ public class Exec
 //			errreader.setStream("stderr",proc.getErrorStream());
 //			//getExecutorManager().execute(errreader);
 //			errreader.run();
-			
 			int ret = proc.waitFor();
 			
+			int tries = 10;
+			if( !reader1.isCompleted() )
+			{
+				synchronized (reader1)
+				{
+					while( !reader1.isCompleted() )
+					{
+						reader1.wait(60000);
+						tries--;
+						if( tries == 0)
+						{
+							log.error("Waiting over 10 minutes to just read the output of a command " + com);
+							reader1.wait();
+						}
+					}			
+				}
+			}
 			String stdo = reader1.getText();
 			if (stdo != null && stdo.length() > 0)
 			{
@@ -300,8 +315,19 @@ public class Exec
     	protected InputStream fieldStream;
     	protected String fieldText;
     	protected boolean fieldSaveText;
+    	protected boolean fieldCompleted;
     	
-    	InputStreamHandler(boolean inSave)
+    	public boolean isCompleted()
+		{
+			return fieldCompleted;
+		}
+
+		public void setCompleted(boolean inCompleted)
+		{
+			fieldCompleted = inCompleted;
+		}
+
+		InputStreamHandler(boolean inSave)
     	{
     		fieldSaveText = inSave;
     	}
@@ -328,6 +354,7 @@ public class Exec
     			{
 	    			StringBuffer writer = new StringBuffer();
 	    			String line = null;
+
 			        while ((line = reader.readLine()) != null) 
 			        {
 			        	if( log.isDebugEnabled() )
@@ -355,6 +382,16 @@ public class Exec
 			        	}
     				}
     			}
+    			
+    			if( !isCompleted() )
+	        	{
+	    			synchronized (this)
+					{
+	        			setCompleted(true);
+	        			this.notifyAll();					
+					}
+	        	}
+    			
     		}
     		catch ( IOException ex)
     		{
