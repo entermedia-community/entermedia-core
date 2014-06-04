@@ -12,6 +12,8 @@ import java.util.regex.Pattern;
 import org.dom4j.Attribute;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
+import org.dom4j.Node;
+import org.dom4j.Text;
 import org.openedit.MultiValued;
 
 import sun.reflect.ReflectionFactory.GetReflectionFactoryAction;
@@ -122,11 +124,19 @@ public class ElementData implements MultiValued, Comparable
 		}
 		else
 		{
-			synchronized (getElement())
-			{
+			//synchronized (getElement())  //TODO: Remove this now that we have proper locking?
+			//{
 				if( inId.equals("name"))
 				{
-					getElement().setText("");
+					for (Iterator iterator = getElement().nodeIterator(); iterator.hasNext();)
+					{
+						Node type = (Node) iterator.next();
+						if( type instanceof Text)
+						{
+							getElement().remove(type);
+							break;
+						}
+					}
 				}
 				//always check for a child
 				Element child = getElement().element(inId);
@@ -153,14 +163,15 @@ public class ElementData implements MultiValued, Comparable
 						{
 							getElement().remove(attr);
 						}
+						
 						getElement().addElement(inId).addCDATA(inValue);
 					}
 					else
 					{
-						getElement().addAttribute(inId,inValue);
+						getElement().addAttribute(inId,inValue);						
 					}
 				}
-			}
+			//}
 		}
 	}
 	public String getSourcePath()
