@@ -851,7 +851,7 @@ public abstract class HitTracker implements Serializable, Collection
 	
 	public String getHitsName()
 	{
-		if( fieldHitsName != null)
+		if( fieldHitsName != null) //This may be not needed
 		{
 			return fieldHitsName;
 		}
