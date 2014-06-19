@@ -49,7 +49,8 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	protected boolean fieldFindAll = false;
 	protected List<Join> fieldParentJoins;
 	protected List<FilterNode> fieldFilters; 
-
+	protected Collection<String> fieldSecurityIds;
+	
 	public String getResultType()
 	{
 		return fieldResultType;
@@ -1604,6 +1605,16 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 			}
 		}
 		return false;
+	}
+
+	public Collection<String> getSecurityIds()
+	{
+		return fieldSecurityIds;
+	}
+
+	public void setSecurityIds(Collection<String> inSecurityIds)
+	{
+		fieldSecurityIds = inSecurityIds;
 	}
 
 	

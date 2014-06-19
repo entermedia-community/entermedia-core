@@ -178,6 +178,8 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					tracker = search(inQuery); //search here ----
 					tracker.setSearchQuery(inQuery);
 				
+					attachSecurityFilter(inPageRequest,tracker);
+					
 					
 //					if(oldtracker != null && oldtracker.getSearchQuery().hasFilters() ){
 //						tracker.setFilters(oldtracker.getFilters());			
@@ -262,7 +264,6 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					page--;
 					tracker.setPage(page);
 				}
-
 				else
 				{
 					tracker.setPage(Integer.parseInt(pagenumber));
@@ -280,11 +281,31 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					tracker.setHitsName("hits");
 				}
 			}
+				
 			inPageRequest.putPageValue(tracker.getHitsName(), tracker);
 			inPageRequest.putSessionValue(tracker.getSessionId(), tracker);
 		}
 
 		return tracker;
+	}
+
+	protected void attachSecurityFilter(WebPageRequest inPageRequest, HitTracker inTracker)
+	{
+		String enabled = inPageRequest.findValue("enforcesecurity");
+		
+		if( Boolean.parseBoolean( enabled ) )
+		{
+			//Run a search on another table, find a list of id's, add them to the query
+			if( "library".equals( getSearchType() ) )
+			{
+				UserProfile profile = inPageRequest.getUserProfile();
+				if( profile != null)
+				{
+					Collection<String> libraryids = profile.getCombinedLibraries();
+					inTracker.getSearchQuery().setSecurityIds(libraryids);
+				}
+			}
+		}
 	}
 
 	public boolean hasChanged(HitTracker inTracker)

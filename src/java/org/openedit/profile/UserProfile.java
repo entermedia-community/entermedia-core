@@ -478,7 +478,7 @@ public class UserProfile extends ElementData
 		fieldUploadCatalogs = inUploadCatalogs;
 	}
 
-	public Collection getCombinedLibraries()
+	public Collection<String> getCombinedLibraries()
 	{
 		return fieldCombinedLibraries;
 	}
@@ -496,7 +496,7 @@ public class UserProfile extends ElementData
 		return tracker;
 		
 	}
-	public void setCombinedLibraries(Collection inCombinedLibraries)
+	public void setCombinedLibraries(Collection<String> inCombinedLibraries)
 	{
 		fieldCombinedLibraries = inCombinedLibraries;
 	}
