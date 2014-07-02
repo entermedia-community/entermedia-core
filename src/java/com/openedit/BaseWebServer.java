@@ -177,7 +177,7 @@ public class BaseWebServer implements WebServer
 			context.setClassLoader(loader);
 
 			
-			InputStreamResource resource = new InputStreamResource(loader.getResourceAsStream("entermedia.xml"));
+			//InputStreamResource resource = new InputStreamResource(loader.getResourceAsStream("entermedia.xml"));
 			context.load(new UrlResource(loader.getResource("entermedia.xml")) );
 			context.getBeanFactory().registerSingleton("WebServer",this);
 			context.getBeanFactory().registerSingleton("root",getRootDirectory() );
@@ -678,7 +678,7 @@ public class BaseWebServer implements WebServer
 				{
 					if(externalpath.startsWith("."))
 					{
-						externalpath = PathUtilities.resolveRelativePath(externalpath, getRootDirectory().getPath() );
+						externalpath = PathUtilities.resolveRelativePath(externalpath, getRootDirectory().getPath() + "/WEB-INF/" );
 					}
 					config.setExternalPath(externalpath);
 				}
