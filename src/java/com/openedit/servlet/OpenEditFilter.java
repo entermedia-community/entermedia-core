@@ -53,6 +53,13 @@ public class OpenEditFilter implements Filter
 
 		HttpServletResponse response = (HttpServletResponse) inResponse;
 
+//		String path = request.getRequestURI();
+//		if (path.startsWith("/entermedia/services/websocket")) 
+//		{
+//			chain.doFilter(request, response); // Just continue chain.
+//			return;
+//		}
+//		
 		if (getEngine() == null)
 		{
 			response
