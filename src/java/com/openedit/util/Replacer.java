@@ -50,11 +50,12 @@ public class Replacer
 	public String replace(String inCode, Data inValues)
 	{
 		Map<?,?> props = inValues.getProperties();
-		Map map = new HashMap();
+		Map<String,Object> map = new HashMap<String,Object>();
 		map.put("id",inValues.getId());
 		map.put("name",inValues.getName());
+		map.put("sourcepath", inValues.getSourcePath());
 		for (Iterator itr = props.keySet().iterator(); itr.hasNext(); ){
-			Object key = itr.next();
+			String key = itr.next().toString();
 			map.put(key,props.get(key));
 		}
 		return replace(inCode, map);
