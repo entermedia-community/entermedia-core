@@ -92,4 +92,14 @@ public class QueryBuilder
 		getQuery().addStartsWith(inKey, inValue);
 		return this;
 	}
+	
+	public QueryBuilder or() {
+		getQuery().setAndTogether(false);
+		return this;
+	}
+	
+	public QueryBuilder and() {
+		getQuery().setAndTogether(true);
+		return this;
+	}
 }
