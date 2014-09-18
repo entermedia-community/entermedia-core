@@ -10,11 +10,11 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.dom4j.Attribute;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.entermedia.cache.CacheManager;
 import org.openedit.Data;
+import org.openedit.data.BaseData;
 import org.openedit.data.BaseSearcher;
 import org.openedit.data.PropertyDetail;
 import org.openedit.data.PropertyDetails;
@@ -22,7 +22,6 @@ import org.openedit.util.DateStorageUtil;
 
 import com.openedit.OpenEditException;
 import com.openedit.OpenEditRuntimeException;
-import com.openedit.WebPageRequest;
 import com.openedit.hittracker.DataHitTracker;
 import com.openedit.hittracker.HitTracker;
 import com.openedit.hittracker.SearchQuery;
@@ -266,6 +265,18 @@ public class XmlSearcher extends BaseSearcher
 		{
 			return inAttribval.contains(inValue);
 		}
+		if(inAttribval.contains("|")){
+			String[] vals = BaseData.VALUEDELMITER.split(inAttribval);
+			for (int i = 0; i < vals.length; i++)
+			{
+				String val = vals[i];
+				if(PathUtilities.match(inValue, val)){
+					return true;
+				}
+				
+			}
+		}
+		
 		return	PathUtilities.match(inAttribval.toLowerCase(), inValue);
 	}
 
