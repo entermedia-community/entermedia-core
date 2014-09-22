@@ -295,6 +295,13 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		
 		if( Boolean.parseBoolean( enabled ) )
 		{
+			User user = inPageRequest.getUser();
+			
+			if(  user != null && user.isInGroup("administrators"))
+			{
+				//dont filter since its the admin
+				return;
+			}
 			//Run a search on another table, find a list of id's, add them to the query
 			if( "library".equals( getSearchType() ) )
 			{
