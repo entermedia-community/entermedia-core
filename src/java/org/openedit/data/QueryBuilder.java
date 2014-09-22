@@ -60,7 +60,6 @@ public class QueryBuilder
 		return this;
 	}
 	
-	
 	public HitTracker search(WebPageRequest inContext)
 	{
 		HitTracker tracker = getSearcher().cachedSearch(inContext, getQuery());
@@ -79,7 +78,7 @@ public class QueryBuilder
 	}
 	public Data searchOne()
 	{
-		getQuery().toFriendly();
+		//getQuery().toFriendly();
 		Data found = getSearcher().searchByQuery(getQuery());
 		return found;
 	}
