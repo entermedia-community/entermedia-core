@@ -243,9 +243,6 @@ public class UserProfileManager
 			}
 		}
 		//Add in special adminstrator rights?
-		
-		
-		
 		inUserprofile.setCombinedLibraries(all);
 	}
 
