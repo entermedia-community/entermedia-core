@@ -1,6 +1,8 @@
 package com.openedit.util;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.StringTokenizer;
 
@@ -47,7 +49,16 @@ public class Replacer
 
 	public String replace(String inCode, Data inValues)
 	{
-		return replace(inCode, inValues.getProperties() );
+		Map<?,?> props = inValues.getProperties();
+		Map<String,Object> map = new HashMap<String,Object>();
+		map.put("id",inValues.getId());
+		map.put("name",inValues.getName());
+		map.put("sourcepath", inValues.getSourcePath());
+		for (Iterator itr = props.keySet().iterator(); itr.hasNext(); ){
+			String key = itr.next().toString();
+			map.put(key,props.get(key));
+		}
+		return replace(inCode, map);
 	}
 
 	

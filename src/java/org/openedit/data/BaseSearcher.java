@@ -856,7 +856,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		String[] splits = inString.split(BaseSearcher.delim);
 
 		String propertyid = inString; //this is for backward compatability
-		if (splits.length > 1)
+		if (splits.length > 2)
 		{
 			catalogid = splits[0];
 			view = splits[1];
