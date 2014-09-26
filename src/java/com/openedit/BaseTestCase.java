@@ -67,11 +67,12 @@ public class BaseTestCase extends TestCase
 
 	public TestFixture getFixture()
 	{
-		if (fieldFixture == null)
-		{
-			fieldFixture = new TestFixture();
-		}
-		return fieldFixture;
+//		if (fieldFixture == null)
+//		{
+//			fieldFixture = new TestFixture();
+//		}
+//		return fieldFixture;
+		return getStaticFixture();
 	}
 	public static TestFixture getStaticFixture()
 	{
