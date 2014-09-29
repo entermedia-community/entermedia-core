@@ -221,42 +221,55 @@ public class PropertyDetailsArchive {
 			if (view != null) {
 				view.setViewFile(types);
 			}
-			if (inProfile != null) {
-				// Support custom values such as columns or searches
-				if (values != null) {
-					// filter out any that are not in the user values
-					List existing = new ArrayList(view);
-					for (Iterator iterator = existing.iterator(); iterator
-							.hasNext();) {
-						PropertyDetail detail = (PropertyDetail) iterator
-								.next();
-						if (!values.contains(detail)) {
-							view.remove(detail);
-						}
-					}
+		}
 
-					// add new columns
-					for (Iterator iterator = values.iterator(); iterator
-							.hasNext();) {
-						String vid = (String) iterator.next();
-						if (vid.length() > 0 && view.findDetail(id) == null) {
-							PropertyDetail detail = loadDetail(propdetails,
-									types, inView, vid);
-							if (detail != null) {
-								view.add(detail);
-							}
+		if(view == null){
+			view = new View();
+			view.setId(inView);
+		}
+		
+		if (inProfile != null) {
+			// Support custom values such as columns or searches
+			if (values != null) {
+				// filter out any that are not in the user values
+				List existing = new ArrayList(view);
+				for (Iterator iterator = existing.iterator(); iterator
+						.hasNext();) {
+					PropertyDetail detail = (PropertyDetail) iterator
+							.next();
+					if (!values.contains(detail)) {
+						view.remove(detail);
+					}
+				}
+
+				// add new columns
+				for (Iterator iterator = values.iterator(); iterator
+						.hasNext();) {
+					String vid = (String) iterator.next();
+					if (vid.length() > 0 && view.findDetail(id) == null) {
+						PropertyDetail detail = loadDetail(propdetails,
+								types, inView, vid);
+						if (detail != null) {
+							view.add(detail);
 						}
 					}
 				}
 			}
-			if (getViewCache().size() > 1000) {
+		}
+		
+		if(view.size() == 0){
+			return null;
+		}
+
+		
+		
+		if (getViewCache().size() > 1000) {
 				getViewCache().clear();
 			}
 			getViewCache().put(id, view);
 			return view;
-		}
-
-		return null;
+		
+		
 	}
 
 	// public PropertyDetail getDetail(PropertyDetails propdetails, String

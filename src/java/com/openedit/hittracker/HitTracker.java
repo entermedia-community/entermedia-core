@@ -41,7 +41,16 @@ public abstract class HitTracker implements Serializable, Collection
 	protected boolean fieldShowOnlySelected;
 	protected String fieldTempSessionId;
 	protected List<FilterNode> fieldFilterOptions;
-
+	protected boolean fieldAutoRefresh = true;
+	
+	public boolean isAutoRefresh()
+	{
+		return fieldAutoRefresh;
+	}
+	public void setAutoRefresh(boolean inAutoRefresh)
+	{
+		fieldAutoRefresh = inAutoRefresh;
+	}
 	public HitTracker()
 	{
 
