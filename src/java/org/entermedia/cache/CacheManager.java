@@ -1,6 +1,8 @@
 package org.entermedia.cache;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import com.google.common.cache.Cache;
@@ -55,12 +57,20 @@ public class CacheManager
 		cache.put(inKey, inValue);
 	}
 
-	public void remove(String inType, String inKey)
+	public void remove(String inType, String inKey )
 	{
 		Cache cache = getCaches().get(inType);
 		if( cache != null )
 		{
 			cache.invalidate(inKey);
+		}
+	}
+	public void removeAll(String inType, Collection inAll)
+	{
+		Cache cache = getCaches().get(inType);
+		if( cache != null )
+		{
+			cache.invalidateAll(inAll);
 		}
 	}
 

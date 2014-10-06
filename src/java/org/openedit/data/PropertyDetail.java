@@ -574,6 +574,7 @@ public class PropertyDetail implements Data, ViewItem, Comparable
 	
 	public boolean isSortable()
 	{
+		//Make most things sortable automtically
 		if( fieldSortable || isDataType("date") || isDataType("boolean") )
 		{
 			return true;
@@ -587,10 +588,11 @@ public class PropertyDetail implements Data, ViewItem, Comparable
 	
 	public String getSortProperty()
 	{
-		if( !isSortable() || isDataType("date") || isDataType("boolean")  )
+		if( isList() )
 		{
-			return getId();
+			return getId() + "_sorted";  //For lists only?
 		}
-		return getId() + "_sorted";
+		
+		return getId();
 	}
 }
