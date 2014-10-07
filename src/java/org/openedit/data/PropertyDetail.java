@@ -571,11 +571,18 @@ public class PropertyDetail implements Data, ViewItem, Comparable
 		}
 		return getName().compareTo(detail.getName());
 	}
-	
+	public boolean isExternalSort()
+	{
+		if( isDataType("date") || isDataType("boolean") || isNumber() )
+		{
+			return false;
+		}
+		return fieldSortable;
+	}
 	public boolean isSortable()
 	{
 		//Make most things sortable automtically
-		if( fieldSortable || isDataType("date") || isDataType("boolean") )
+		if( fieldSortable || isDataType("date") || isDataType("boolean") || isNumber() )
 		{
 			return true;
 		}
@@ -588,11 +595,20 @@ public class PropertyDetail implements Data, ViewItem, Comparable
 	
 	public String getSortProperty()
 	{
-		if( isList() )
+		if( isExternalSort() )
 		{
 			return getId() + "_sorted";  //For lists only?
 		}
 		
 		return getId();
+	}
+
+	public boolean isNumber()
+	{
+		if (isDataType("double") || isDataType("number") || isDataType("long"))
+		{
+			return true;
+		}
+		return false;
 	}
 }
