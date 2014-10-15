@@ -70,7 +70,17 @@ public class BaseOpenEditEngine implements OpenEditEngine
 				inResponse.sendRedirect(contextPath + page.getPath() );
 			}
     	}
-
+		else
+		{
+			if( page.getPageType() == null)
+			{
+				String alternative = page.get("alternative_extension");
+				if(alternative != null)
+				{
+					page = getPageManager().getPage( requestedPath + "." + alternative,false);
+				}
+			}
+		}
 	    if ( page.isHtml() )
 		{
 			inRequest.setCharacterEncoding( page.getCharacterEncoding() );

@@ -332,7 +332,11 @@ public class Page implements Data, Comparable
 		String path = PathUtilities.extractPageName(getPath());
 		return path;
 	}
-
+	public String getPageType()
+	{
+		String type = PathUtilities.extractPageType(getPath());
+		return type;
+	}
 	
 	/**
 	 * Get the named page property using the default Locale.  If the property is not found then
