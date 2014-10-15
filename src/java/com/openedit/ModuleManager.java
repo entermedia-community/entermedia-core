@@ -174,7 +174,9 @@ public class ModuleManager implements BeanFactoryAware, ShutdownList
 	public void executePathActions( Page inPage, WebPageRequest inPageRequest ) throws OpenEditException
 	{
 		List actions = inPage.getPathActions(); //a list of action sorted from lower pages up to the root
-		List copy = condenseActions(actions );  //reverse the list with the root run first
+		String method = inPageRequest.getMethod();
+		
+		List copy = condenseActions(method, actions );  //reverse the list with the root run first
 		for (Iterator iter = copy.iterator(); iter.hasNext();)
 		{
 			//TODO: Add mime type checks to speed this up
@@ -216,7 +218,7 @@ public class ModuleManager implements BeanFactoryAware, ShutdownList
 			}
 		}		
 	}
-	public List condenseActions(List inActions)
+	public List condenseActions(String method, List inActions)
 	{
 		//remove any duplicates keeping the ones on the end first
 		if( inActions.size() < 2)
@@ -229,6 +231,12 @@ public class ModuleManager implements BeanFactoryAware, ShutdownList
 		for (int i = inActions.size()-1; i >= 0; i--) //start at the end from /sub/sdfds.xconf first
 		{
 			PageAction pageAction = (PageAction) inActions.get(i);
+			String targetmethod = pageAction.getConfig().getAttribute("method");
+
+			if(targetmethod != null && !targetmethod.equals(method)){
+				continue;
+			}
+			
 			String cancel = pageAction.getConfig().getAttribute("cancel");
 			if ( Boolean.parseBoolean(cancel) )
 			{
@@ -253,6 +261,8 @@ public class ModuleManager implements BeanFactoryAware, ShutdownList
 					copynames.add(pageAction.getActionName());
 				}
 			}
+			
+			
 		}
 		Collections.reverse(copy);
 		return copy;
