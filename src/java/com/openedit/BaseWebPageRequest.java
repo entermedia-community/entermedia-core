@@ -1238,7 +1238,11 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 	
 	
 	public String getMethod(){
+		if(getRequest() != null){
 		return getRequest().getMethod();
+		}
+		
+		return null;
 	}
 	
 	
