@@ -74,8 +74,15 @@ public class BaseOpenEditEngine implements OpenEditEngine
 		{
 			if( page.getPageType() == null)
 			{
+				boolean found = false;
+				String alternative_page = page.get("alternative_page");
+				if(alternative_page != null){
+					page = getPageManager().getPage( alternative_page,false);
+					found=true;
+				}
+				
 				String alternative = page.get("alternative_extension");
-				if(alternative != null)
+				if(alternative != null && !found)
 				{
 					page = getPageManager().getPage( requestedPath + "." + alternative,false);
 				}
