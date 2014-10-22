@@ -239,6 +239,9 @@ public class UserProfile extends ElementData
 	public void setValuesFromDetails(String inKey, Collection<PropertyDetail> inValues)
 	{
 		StringBuffer values = new StringBuffer();
+		if(inValues == null){
+			return;
+		}
 		for (Iterator iterator = inValues.iterator(); iterator.hasNext();)
 		{
 			PropertyDetail detail = (PropertyDetail) iterator.next();
