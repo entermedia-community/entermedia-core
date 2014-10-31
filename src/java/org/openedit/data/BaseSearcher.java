@@ -309,6 +309,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				if( profile != null)
 				{
 					Collection<String> libraryids = profile.getCombinedLibraries();
+					log.info( "added security filer for " + inPageRequest.getUserProfile() );
 					inTracker.getSearchQuery().setSecurityIds(libraryids);
 				}
 			}
