@@ -215,6 +215,12 @@ public class XmlSearcher extends BaseSearcher
 				if( "name".equals(name))
 				{
 					attribval = inElement.getTextTrim();
+					if(attribval == null || attribval.length()==0){
+						attribval = inElement.attributeValue("name");
+						if(attribval != null){
+							attribval = attribval.trim();
+						}
+					}
 				}
 				else
 				{
