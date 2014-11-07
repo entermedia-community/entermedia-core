@@ -237,6 +237,16 @@ public class SearcherManager
 		Object data = searcher.searchById(inId);
 		return (Data)data;
 	}
+	public Data getData(PropertyDetail inDetail, String inId)
+	{
+		if( inId == null)
+		{
+			return null;
+		}
+		Searcher searcher = getSearcher(inDetail.getListCatalogId(), inDetail.getListId());
+		Object data = searcher.searchById(inId);
+		return (Data)data;
+	}
 
 	public HitTracker getList(PropertyDetail inDetail)
 	{
