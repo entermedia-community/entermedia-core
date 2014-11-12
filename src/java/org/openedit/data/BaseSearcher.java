@@ -292,17 +292,17 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	protected void attachSecurityFilter(WebPageRequest inPageRequest, HitTracker inTracker)
 	{
 		String enabled = inPageRequest.findValue("enforcesecurity");
-		log.info( "security filer enabled "  + enabled );
+		//log.info( "security filer enabled "  + enabled );
 		if( Boolean.parseBoolean( enabled ) )
 		{
 			User user = inPageRequest.getUser();
-			log.info( "found filer user  "  + user + " " + user.isInGroup("administrators"));
+			//log.info( "found filer user  "  + user + " " + user.isInGroup("administrators"));
 			if(  user != null && user.isInGroup("administrators"))
 			{
 				//dont filter since its the admin
 				return;
 			}
-			log.info( "filer type " + getSearchType());
+			//log.info( "filer type " + getSearchType());
 			
 			//Run a search on another table, find a list of id's, add them to the query
 			if( "library".equals( getSearchType() ) )
@@ -311,7 +311,10 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				if( profile != null)
 				{
 					Collection<String> libraryids = profile.getCombinedLibraries();
-					log.info( "added security filer for " + inPageRequest.getUserProfile() );
+					if( log.isDebugEnabled() )
+					{
+						log.debug( "added security filer for " + inPageRequest.getUserProfile() );
+					}
 					inTracker.getSearchQuery().setSecurityIds(libraryids);
 				}
 			}
