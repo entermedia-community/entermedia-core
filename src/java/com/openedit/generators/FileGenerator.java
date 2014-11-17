@@ -221,7 +221,7 @@ public class FileGenerator extends BaseGenerator implements Generator
 	{
 		long now = System.currentTimeMillis();			
 		boolean cache = true;
-		String nocache = inContext.getRequestParameter("cache");
+		String nocache = inContext.findValue("cache");
 		if( nocache != null ) 
 		{
 			cache = Boolean.parseBoolean(nocache);
@@ -230,7 +230,7 @@ public class FileGenerator extends BaseGenerator implements Generator
 		{
 			//is this recenlty modified?
 			//3333333recent99  + 24 hours (mil * sec * min * hours) will be more than now
-			cache = contentpage.getLastModified().getTime() + (1000 * 60 * 60 * 24 ) < now;
+			cache = contentpage.lastModified() + (1000 * 60 * 60 * 24 ) < now;
 		}
 		if( cache && req != null)
 		{
