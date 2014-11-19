@@ -14,8 +14,11 @@
  */
 package com.openedit;
 
+import groovy.json.JsonSlurper;
+
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.Reader;
 import java.io.Writer;
 import java.util.Date;
 import java.util.Enumeration;
@@ -91,6 +94,28 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 	{
 	}
 
+	@Override
+	public Map getJsonRequest()
+	{	
+		Map jsonRequest = (Map)getPageValue("_jsonRequest");
+		
+		if( jsonRequest == null && getRequest() != null)
+		{
+			JsonSlurper slurper = new JsonSlurper();
+			try
+			{
+				Reader reader = getRequest().getReader();
+				jsonRequest = (Map)slurper.parse(reader); //this is real, the other way is just for t
+				putPageValue("_jsonRequest", jsonRequest);
+			}
+			catch ( Throwable ex)
+			{
+				throw new OpenEditException(ex);
+			}
+		}
+		
+		return jsonRequest;
+	}
 	protected Set getProtectedFields()
 	{
 		if (fieldProtectedFields == null )

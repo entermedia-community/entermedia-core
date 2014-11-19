@@ -40,6 +40,8 @@ public interface WebPageRequest
 	
 	HttpServletResponse getResponse();
 	
+	Map getJsonRequest();
+	
 	HttpSession getSession();
 	
 	/**
