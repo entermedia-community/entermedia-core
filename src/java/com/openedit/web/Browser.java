@@ -30,8 +30,7 @@ public class Browser
 	public static final int GECKO_BROWSER = 2;
 	public static final int NETSCAPE_BROWSER = 3;
 	public static final int CHROME_BROWSER = 4;
-	public static final int SAFARI_BROWSER = 5;
-	public static final int SAFARI_IPAD_BROWSER = 6;
+	public static final int WEBKIT_BROWSER = 5;
 	public static final int OPERA_BROWSER = 7;
 	public static final int TEXT_BROWSER = 8;
 	protected int fieldBrowserType = UNKNOWN_BROWSER;
@@ -104,7 +103,7 @@ public class Browser
 
 	public boolean isHtml5VideoOnly()
 	{
-		return (getBrowserType() == SAFARI_IPAD_BROWSER);
+		return (getBrowserType() == WEBKIT_BROWSER);
 	}
 
 	public boolean isHtml5Browser()
@@ -199,7 +198,7 @@ public class Browser
 
 			return;
 		}
-
+		
 		String[] details = getUserAgent().split(" ");
 		int found = UNKNOWN_BROWSER;
 		//start at the end and work upwards
@@ -219,6 +218,13 @@ public class Browser
 				return;
 			}
 		}
+		
+		//Mozilla/5.0 (iPad; CPU OS 6_0 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10A5355d Safari/8536.25
+		if( getUserAgent().contains("AppleWebKit"))
+		{
+			setBrowserType(WEBKIT_BROWSER);
+		}
+		
 	}
 
 	protected void setVersions(String inBrowser)
@@ -292,11 +298,7 @@ public class Browser
 		}
 		if (browVer.startsWith("Safari") )
 		{
-			if( getUserAgent().contains("iPad"))
-			{
-				return SAFARI_IPAD_BROWSER;
-			}
-			return SAFARI_BROWSER;		
+			return WEBKIT_BROWSER;		
 		}
 		else if (browVer.startsWith("Gecko"))
 		{
