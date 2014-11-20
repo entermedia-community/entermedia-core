@@ -146,9 +146,7 @@
 			<property name="pageManager"><ref bean="pageManager"/></property>
 	</bean>
 	
-	<bean id="jsp" class="com.openedit.generators.FilterGenerator"/>
-	<bean id="filter" class="com.openedit.generators.FilterGenerator"/>
-	<bean id="servlet" class="com.openedit.generators.ServletGenerator"/>
+	
 		
 	
 	<!-- a page value for testing -->
@@ -195,10 +193,13 @@
 		<property name="pageManager"><ref bean="pageManager"/></property>
 		<property name="xmlUtil"><ref bean="xmlUtil"/></property>
 	</bean>
-
+<!-- 
 	<bean id="generatedResourceLoader" class="com.openedit.generators.GeneratedResourceLoader" >
+		 
 		<property name="generatorLoader"><ref bean="pageSettingsManager"/></property>
+		
 	</bean>
+	-->
 	<!-- ********************************
 	     Stuff recently moved from editor
 	     ******************************** -->
