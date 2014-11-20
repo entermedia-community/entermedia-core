@@ -90,10 +90,10 @@
 
 	
 	<!-- Repository config -->
-	<bean id="versionRepository" class="org.openedit.repository.filesystem.XmlVersionRepository" singleton="false">
+	<bean id="versionRepository" class="org.openedit.repository.filesystem.XmlVersionRepository" scope="prototype">
 	</bean>
 	
-	<bean id="fileRepository" class="org.openedit.repository.filesystem.FileRepository" singleton="false">
+	<bean id="fileRepository" class="org.openedit.repository.filesystem.FileRepository" scope="prototype">
 	</bean>
 	
 	<bean id="repository" class="org.openedit.repository.CompoundRepository">
@@ -209,7 +209,7 @@
 
 	<bean id="windowsUtil" name="windowsUtil"
 		class="org.openedit.util.WindowsUtil" abstract="false"
-		singleton="true" lazy-init="default" autowire="default"
+		 lazy-init="default" autowire="default"
 		dependency-check="default">
 		<property name="root"><ref bean="root"/></property>
 	</bean>
@@ -252,7 +252,7 @@
 	 
 <bean id="translationSearcher" name="translationSearcher"
         class="com.openedit.modules.translations.TranslationSearcher" abstract="false"
-        singleton="false" lazy-init="default" autowire="default"
+        scope="prototype" lazy-init="default" autowire="default"
         dependency-check="default">
         
        
@@ -267,19 +267,19 @@
 
 	</bean>
 
-	<bean id="userProfile" class="org.openedit.profile.UserProfile" singleton="false" >
+	<bean id="userProfile" class="org.openedit.profile.UserProfile" scope="prototype" >
 		<property name="searcherManager"><ref bean="searcherManager"/></property>
 	</bean>
 
-	<bean id="lockManager" class="org.entermedia.locks.LockManager" singleton="true" >
+	<bean id="lockManager" class="org.entermedia.locks.LockManager" >
 	</bean>
-	<bean id="lock" class="org.entermedia.locks.Lock" singleton="false" >
+	<bean id="lock" class="org.entermedia.locks.Lock" scope="prototype" >
 	</bean>
 
 	<bean id="executorManager" class="com.openedit.util.ExecutorManager" >
 	</bean>
 
-	<bean id="permissionManager" class="com.openedit.page.PermissionManager" singleton="false" >
+	<bean id="permissionManager" class="com.openedit.page.PermissionManager" scope="prototype" >
 		<property name="searcherManager"><ref bean="searcherManager"/></property>
 	</bean>
 
@@ -287,7 +287,7 @@
 	
 	</bean>
 
-	<bean id="replacer" class="com.openedit.util.Replacer"  singleton="false">
+	<bean id="replacer" class="com.openedit.util.Replacer"  scope="prototype">
 			<property name="searcherManager"><ref bean="searcherManager"/></property>
 	</bean>
 </beans>
