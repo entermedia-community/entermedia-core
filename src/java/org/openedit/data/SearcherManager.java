@@ -175,7 +175,17 @@ public class SearcherManager
 		}
 		else
 		{
-			val = inData.getName();
+			String name = inData.getName();
+			
+			if(name != null)
+			{
+				val = name;
+			}
+			else
+			{
+				val = inData.getId();
+			}
+			
 		}
 		return val;
 	}
@@ -201,7 +211,17 @@ public class SearcherManager
 			}
 			else
 			{
-				val = inData.getName();
+				String name = inData.getName();
+				
+				if(name != null)
+				{
+					val = name;
+				}
+				else
+				{
+					val = inData.getId();
+				}
+				
 			}
 		}
 		return val;
