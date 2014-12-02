@@ -212,6 +212,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					if(oldtracker != null && oldtracker.hasSelections() )
 					{
 						tracker.loadPreviousSelections(oldtracker);
+						tracker.setShowOnlySelected(oldtracker.isShowOnlySelected());
 					}
 					
 					
@@ -1462,7 +1463,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			if (!sort.equals(group.getSortBy()))
 			{
 				group.setSortBy(sort);
-				hits.setIndexId(hits.getIndexId() + sort); // Causes the hits to be														// reloaded
+				hits.setIndexId(hits.getIndexId() + sort); // Causes the hits to be	rerun													// reloaded
 				cachedSearch(inReq, group);
 				UserProfile pref = (UserProfile) inReq.getUserProfile();
 				if (pref != null)
