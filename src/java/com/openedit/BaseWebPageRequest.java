@@ -110,6 +110,7 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 			}
 			catch ( Throwable ex)
 			{
+				putPageValue("_jsonRequest", new HashMap());
 				throw new OpenEditException(ex);
 			}
 		}
@@ -186,6 +187,11 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 			if( getRequest() != null )
 			{
 				value = getRequest().getParameter(inKey);
+			}
+			
+			if( value == null && getVariables().containsKey("_jsonRequest"))
+			{
+				value = (String) getJsonRequest().get(inKey);
 			}
 		}
 		if ( value != null && value.length() == 0)
