@@ -49,7 +49,7 @@ public class CacheManager
 				cache = getCaches().get(inType);
 				if( cache == null )
 				{
-					cache = createCache(100000);
+					cache = createCache(1000);
 					getCaches().put(inType,cache);
 				}
 			}
