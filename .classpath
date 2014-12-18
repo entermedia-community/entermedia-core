@@ -9,7 +9,6 @@
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry exported="true" kind="lib" path="lib/aopalliance-1.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jaxen-1.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/guava-14.0-rc1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-codec-1.7.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/httpclient-4.2.3.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-httpclient-3.1.jar"/>
@@ -23,5 +22,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/spring-context-4.1.2.RELEASE.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/spring-core-4.1.2.RELEASE.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/spring-expression-4.1.2.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib/guava-18.0.jar"/>
 	<classpathentry kind="output" path="build"/>
 </classpath>
