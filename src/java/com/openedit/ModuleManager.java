@@ -520,6 +520,11 @@ public class ModuleManager implements BeanFactoryAware, ShutdownList
 
 	public void clearBean( String inCatalogId, String inBeanName )
 	{
+		Object obj = getCatalogIdBeans().get(inCatalogId + "_" + inBeanName);
+		if( obj instanceof Shutdownable)
+		{
+			((Shutdownable)obj).shutdown();
+		}
 		getCatalogIdBeans().remove(inCatalogId + "_" + inBeanName);		
 	}
 	
