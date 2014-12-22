@@ -118,6 +118,20 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 		
 		return jsonRequest;
 	}
+	
+	@Override
+	public void setJsonRequest(Map inMap)
+	{
+		if( getParent() != null)
+		{
+			getParent().putPageValue("_jsonRequest", inMap);
+		}
+		else
+		{
+			putPageValue("_jsonRequest", inMap);
+		}
+	}
+	
 	protected Set getProtectedFields()
 	{
 		if (fieldProtectedFields == null )
