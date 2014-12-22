@@ -150,7 +150,7 @@ public class BaseOpenEditEngine implements OpenEditEngine
 				pageStreamer.render();
 			}
 		}
-		catch( Exception e )
+		catch( Throwable e )
 		{
 			log.error(e);
 			//e.printStackTrace();

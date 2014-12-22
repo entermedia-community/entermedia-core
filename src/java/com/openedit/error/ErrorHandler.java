@@ -15,6 +15,6 @@ public interface ErrorHandler
 	 * Return if consumed
 	 * @param error The error
 	 */
-	public boolean handleError(Exception inException, WebPageRequest inPageStreamer );
+	public boolean handleError(Throwable inException, WebPageRequest inPageStreamer );
 
 }

@@ -128,11 +128,13 @@
 		<property name="errorHandlers">
 			<list>
 				<!-- ref bean="fileNotFoundErrorHandler"/ -->
+				<ref bean="jsonErrorHandler"/>
 				<ref bean="htmlErrorHandler"/>
 			</list>
 		</property>
 	</bean>
 	<bean id="htmlErrorHandler" class="com.openedit.error.HtmlErrorHandler" />
+	<bean id="jsonErrorHandler" class="com.openedit.error.JsonErrorHandler" />
 	
 	<bean id="velocity" class="com.openedit.generators.VelocityGenerator" >
 		<property name="rootDirectory"><ref bean="root" /></property>

@@ -231,13 +231,21 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 						fireSearchEvent(event);
 					}
 				}
-				catch (Exception ex)
+				catch (Throwable ex)
 				{
 					String fullq = inQuery.toQuery();
 					inPageRequest.putPageValue("error", "Invalid search input. " + URLUtilities.xmlEscape(fullq));
 					log.error(ex + " on " + fullq);
-					ex.printStackTrace();
+					//ex.printStackTrace();
 					inQuery.setProperty("error", "Invalid search " + URLUtilities.xmlEscape(fullq));
+					if( ex instanceof OpenEditException)
+					{
+						throw (OpenEditException)ex;
+					}
+					else
+					{
+						throw new OpenEditException(ex);
+					}	
 				}
 			}
 		if (tracker != null)

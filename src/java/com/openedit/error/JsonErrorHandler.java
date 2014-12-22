@@ -12,6 +12,7 @@ See the GNU Lesser General Public License for more details.
 
 package com.openedit.error;
 
+import java.io.PrintWriter;
 import java.io.Writer;
 
 import org.apache.commons.logging.Log;
@@ -30,17 +31,22 @@ import com.openedit.page.PageStreamer;
  *
  * @author cburkey
  */
-public class HtmlErrorHandler implements ErrorHandler
+public class JsonErrorHandler implements ErrorHandler
 {
 	protected String fieldPathToErrorFile;
-	private static final Log log = LogFactory.getLog(HtmlErrorHandler.class);
-
+	private static final Log log = LogFactory.getLog(JsonErrorHandler.class);
 
 	/**
 	 * @see org.jpublish.ErrorHandler#handleError(JPublishError)
 	 */
 	public boolean handleError(Throwable error, WebPageRequest context ) 
 	{
+		if( context.getResponse() != null && context.getResponse().getContentType() != null && 
+				!context.getResponse().getContentType().contains("json") )
+		{
+			return false;
+		}
+		
 		OpenEditException exception = null;
 		if (context != null)
 		{
@@ -78,30 +84,14 @@ public class HtmlErrorHandler implements ErrorHandler
 				context.putPageValue("oe-exception", exception); //must be a top level thing since we create a new context
 				PageStreamer pages = (PageStreamer)context.getPageValue(PageRequestKeys.PAGES);
 				
-				//exception.getPathWithError()
-				//Page content = pages.getPage();
-				Page content = context.getPage();
-				String errorpagepath = content.getProperty("errorpage");
-				
-				Page errorPage = null;
-				
-				if (errorpagepath == null)
-				{
-					errorpagepath = "/system/errorpage.html";
-				}
-				errorPage = pages.getPage(errorpagepath);
-				
-				if( !errorPage.exists() )
-				{
-					log.error("No error page found" + errorPage.getPath());
-					return false;
-				}
-				else
-				{
-					Writer out = context.getWriter();
-					errorPage.generate(context,new Output(out, null));
-					out.flush();
-				}
+				Writer out = context.getWriter();
+				out.append("{ \"reponse\": {\n");
+				out.append(" \"status\":\"error\",");				
+				out.append("{ \"path\":\"" + pathWithError + "\",");
+				out.append("{ \"details\":\"" + error + "\"");
+				out.append("\n}");
+				//error.printStackTrace( new PrintWriter( writer ) );
+				out.flush();
 			} catch ( Exception ex)
 			{
 				//Do not throw an error here is it will be infinite
