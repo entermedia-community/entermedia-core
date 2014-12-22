@@ -57,7 +57,8 @@ public class BaseOpenEditEngine implements OpenEditEngine
 	    Page page = getPageManager().getPage( requestedPath,checkdates);
 	    
 		//If link does not exists. Then put a real welcome page on there so that fallback will work
-		if ( page.isFolder() )
+	    boolean wasfolder = page.isFolder(); 
+		if ( wasfolder )
 	    {
 	    	page = findWelcomePage(page, checkdates); 
 			if( !util.requestPath().endsWith("/"))
@@ -68,27 +69,25 @@ public class BaseOpenEditEngine implements OpenEditEngine
 					contextPath  = ""; //No Webapp
 				}
 				inResponse.sendRedirect(contextPath + page.getPath() );
+				return;
 			}
     	}
-		else
+		if( page.getPageType() == null || wasfolder)
 		{
-			if( page.getPageType() == null)
+			boolean found = false;
+			String alternative_page = page.get("alternative_page");
+			if(alternative_page != null)
 			{
-				boolean found = false;
-				String alternative_page = page.get("alternative_page");
-				if(alternative_page != null)
-				{
-					page = getPageManager().getPage( alternative_page,false);
-				}
-				else
-				{
-					String alternative = page.get("alternative_extension");
-					if(alternative != null)
-					{
-						page = getPageManager().getPage( requestedPath + "." + alternative,false);
-					}
-				}	
+				page = getPageManager().getPage( alternative_page,false);
 			}
+			else
+			{
+				String alternative = page.get("alternative_extension");
+				if(alternative != null)
+				{
+					page = getPageManager().getPage( requestedPath + "." + alternative,false);
+				}
+			}	
 		}
 	    if ( page.isHtml() )
 		{
