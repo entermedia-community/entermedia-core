@@ -9,6 +9,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.openedit.data.SearcherManager;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 
@@ -47,7 +48,7 @@ public abstract class BaseModule implements BeanFactoryAware, Secured
 	{
 		return fieldBeanFactory;
 	}
-	public void setBeanFactory( BeanFactory beanFactory )
+	public void setBeanFactory( BeanFactory beanFactory ) throws BeansException
 	{
 		fieldBeanFactory = beanFactory;
 	}

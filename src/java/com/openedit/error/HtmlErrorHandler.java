@@ -39,7 +39,7 @@ public class HtmlErrorHandler implements ErrorHandler
 	/**
 	 * @see org.jpublish.ErrorHandler#handleError(JPublishError)
 	 */
-	public boolean handleError(Exception error, WebPageRequest context ) 
+	public boolean handleError(Throwable error, WebPageRequest context ) 
 	{
 		OpenEditException exception = null;
 		if (context != null)

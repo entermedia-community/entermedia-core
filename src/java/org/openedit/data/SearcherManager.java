@@ -175,7 +175,17 @@ public class SearcherManager
 		}
 		else
 		{
-			val = inData.getName();
+			String name = inData.getName();
+			
+			if(name != null)
+			{
+				val = name;
+			}
+			else
+			{
+				val = inData.getId();
+			}
+			
 		}
 		return val;
 	}
@@ -201,7 +211,17 @@ public class SearcherManager
 			}
 			else
 			{
-				val = inData.getName();
+				String name = inData.getName();
+				
+				if(name != null)
+				{
+					val = name;
+				}
+				else
+				{
+					val = inData.getId();
+				}
+				
 			}
 		}
 		return val;
@@ -234,6 +254,16 @@ public class SearcherManager
 			return null;
 		}
 		Searcher searcher = getSearcher(inCatalogId, inSearchType);
+		Object data = searcher.searchById(inId);
+		return (Data)data;
+	}
+	public Data getData(PropertyDetail inDetail, String inId)
+	{
+		if( inId == null)
+		{
+			return null;
+		}
+		Searcher searcher = getSearcher(inDetail.getListCatalogId(), inDetail.getListId());
 		Object data = searcher.searchById(inId);
 		return (Data)data;
 	}

@@ -16,7 +16,7 @@ public class CompoundErrorHandler implements ErrorHandler
 {
 	protected List fieldErrorHandlers;
 	
-	public boolean handleError( Exception inException, WebPageRequest inContext )
+	public boolean handleError( Throwable inException, WebPageRequest inContext )
 	{
 		//WebPageRequest inContext = inPageStreamer.getContext();
 		inContext.putPageValue( "oe-exception", inException );

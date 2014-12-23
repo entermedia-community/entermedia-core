@@ -212,6 +212,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					if(oldtracker != null && oldtracker.hasSelections() )
 					{
 						tracker.loadPreviousSelections(oldtracker);
+						tracker.setShowOnlySelected(oldtracker.isShowOnlySelected());
 					}
 					
 					
@@ -230,13 +231,21 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 						fireSearchEvent(event);
 					}
 				}
-				catch (Exception ex)
+				catch (Throwable ex)
 				{
 					String fullq = inQuery.toQuery();
 					inPageRequest.putPageValue("error", "Invalid search input. " + URLUtilities.xmlEscape(fullq));
 					log.error(ex + " on " + fullq);
 					ex.printStackTrace();
 					inQuery.setProperty("error", "Invalid search " + URLUtilities.xmlEscape(fullq));
+//					if( ex instanceof OpenEditException)
+//					{
+//						throw (OpenEditException)ex;
+//					}
+//					else
+//					{
+//						throw new OpenEditException(ex);
+//					}	
 				}
 			}
 		if (tracker != null)
@@ -292,16 +301,18 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	protected void attachSecurityFilter(WebPageRequest inPageRequest, HitTracker inTracker)
 	{
 		String enabled = inPageRequest.findValue("enforcesecurity");
-		
+		//log.info( "security filer enabled "  + enabled );
 		if( Boolean.parseBoolean( enabled ) )
 		{
 			User user = inPageRequest.getUser();
-			
+			//log.info( "found filer user  "  + user + " " + user.isInGroup("administrators"));
 			if(  user != null && user.isInGroup("administrators"))
 			{
 				//dont filter since its the admin
 				return;
 			}
+			//log.info( "filer type " + getSearchType());
+			
 			//Run a search on another table, find a list of id's, add them to the query
 			if( "library".equals( getSearchType() ) )
 			{
@@ -309,6 +320,10 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				if( profile != null)
 				{
 					Collection<String> libraryids = profile.getCombinedLibraries();
+					if( log.isDebugEnabled() )
+					{
+						log.debug( "added security filer for " + inPageRequest.getUserProfile() );
+					}
 					inTracker.getSearchQuery().setSecurityIds(libraryids);
 				}
 			}
@@ -1456,7 +1471,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			if (!sort.equals(group.getSortBy()))
 			{
 				group.setSortBy(sort);
-				hits.setIndexId(hits.getIndexId() + sort); // Causes the hits to be														// reloaded
+				hits.setIndexId(hits.getIndexId() + sort); // Causes the hits to be	rerun													// reloaded
 				cachedSearch(inReq, group);
 				UserProfile pref = (UserProfile) inReq.getUserProfile();
 				if (pref != null)

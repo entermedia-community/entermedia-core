@@ -1,14 +1,18 @@
 package org.openedit.event;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import org.openedit.Data;
+import org.openedit.MultiValued;
 
 import com.openedit.users.User;
 
-public class WebEvent implements Data
+public class WebEvent implements Data, MultiValued
 { 
 	protected String fieldId; //optional
 	protected String fieldSearchType;  //user search
@@ -143,5 +147,42 @@ public class WebEvent implements Data
 			fieldProperties = new HashMap();
 		}
 		return fieldProperties;
+	}
+	public Collection getValues(String inPreference)
+	{
+		String val = get(inPreference);
+		
+		if (val == null)
+		{
+			return null;
+		}
+		String[] vals = null;
+		if( val.contains("|") )
+		{
+			vals = VALUEDELMITER.split(val);
+		}
+		else
+		{
+			vals = val.split("\\s+"); //legacy
+		}
+
+		Collection collection = Arrays.asList(vals);
+		//if null check parent
+		return collection;
+	}
+	
+	public void setValues(String inKey, Collection<String> inValues)
+	{
+		StringBuffer values = new StringBuffer();
+		for (Iterator iterator = inValues.iterator(); iterator.hasNext();)
+		{
+			String detail = (String) iterator.next();
+			values.append(detail);
+			if( iterator.hasNext())
+			{
+				values.append(" | ");
+			}
+		}
+		setProperty(inKey,values.toString());
 	}
 }

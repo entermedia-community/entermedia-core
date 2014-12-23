@@ -14,9 +14,13 @@
  */
 package com.openedit;
 
+import groovy.json.JsonSlurper;
+
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.Reader;
 import java.io.Writer;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -91,6 +95,43 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 	{
 	}
 
+	@Override
+	public Map getJsonRequest()
+	{	
+		Map jsonRequest = (Map)getPageValue("_jsonRequest");
+		
+		if( jsonRequest == null && getRequest() != null)
+		{
+			JsonSlurper slurper = new JsonSlurper();
+			try
+			{
+				Reader reader = getRequest().getReader();
+				jsonRequest = (Map)slurper.parse(reader); //this is real, the other way is just for t
+				putPageValue("_jsonRequest", jsonRequest);
+			}
+			catch ( Throwable ex)
+			{
+				putPageValue("_jsonRequest", new HashMap());
+				throw new OpenEditException(ex);
+			}
+		}
+		
+		return jsonRequest;
+	}
+	
+	@Override
+	public void setJsonRequest(Map inMap)
+	{
+		if( getParent() != null)
+		{
+			getParent().putPageValue("_jsonRequest", inMap);
+		}
+		else
+		{
+			putPageValue("_jsonRequest", inMap);
+		}
+	}
+	
 	protected Set getProtectedFields()
 	{
 		if (fieldProtectedFields == null )
@@ -161,6 +202,23 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 			if( getRequest() != null )
 			{
 				value = getRequest().getParameter(inKey);
+			}
+			
+			if( value == null && getVariables().containsKey("_jsonRequest"))
+			{
+				Object vals = getJsonRequest().get(inKey);
+				if (vals instanceof Collection )
+				{
+					Collection array = (Collection)vals;
+					if( array.size() > 0)
+					{
+						value = (String)array.iterator().next();
+					}
+				}
+				else
+				{
+					value = (String)vals;
+				}
 			}
 		}
 		if ( value != null && value.length() == 0)
@@ -574,6 +632,15 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 		if ( parameter == null && getRequest() != null)
 		{
 			parameter = getRequest().getParameterValues(inKey);
+		}
+		if( parameter == null && getVariables().containsKey("_jsonRequest"))
+		{
+			parameter = getJsonRequest().get(inKey);
+			if (parameter instanceof Collection )
+			{
+				Collection col = (Collection)parameter;
+				return (String[]) col.toArray(new String[col.size()]);
+			}
 		}
 
 		if (parameter instanceof String[] || parameter == null)

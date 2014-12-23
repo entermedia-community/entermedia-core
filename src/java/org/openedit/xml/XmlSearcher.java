@@ -22,6 +22,7 @@ import org.openedit.util.DateStorageUtil;
 
 import com.openedit.OpenEditException;
 import com.openedit.OpenEditRuntimeException;
+import com.openedit.Shutdownable;
 import com.openedit.hittracker.DataHitTracker;
 import com.openedit.hittracker.HitTracker;
 import com.openedit.hittracker.SearchQuery;
@@ -29,7 +30,7 @@ import com.openedit.hittracker.Term;
 import com.openedit.users.User;
 import com.openedit.util.PathUtilities;
 
-public class XmlSearcher extends BaseSearcher
+public class XmlSearcher extends BaseSearcher implements Shutdownable
 {
 	protected XmlArchive fieldXmlArchive;
 	private static final Log log = LogFactory.getLog(XmlSearcher.class);
@@ -215,6 +216,12 @@ public class XmlSearcher extends BaseSearcher
 				if( "name".equals(name))
 				{
 					attribval = inElement.getTextTrim();
+					if(attribval == null || attribval.length()==0){
+						attribval = inElement.attributeValue("name");
+						if(attribval != null){
+							attribval = attribval.trim();
+						}
+					}
 				}
 				else
 				{
@@ -651,6 +658,10 @@ public class XmlSearcher extends BaseSearcher
 			fieldXmlFile = null;
 			getCacheManager().clear(cacheId());
 		}
+	}
+	public void shutdown()
+	{
+		clearIndex();
 	}
 	
 }

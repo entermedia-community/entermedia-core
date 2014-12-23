@@ -90,10 +90,10 @@
 
 	
 	<!-- Repository config -->
-	<bean id="versionRepository" class="org.openedit.repository.filesystem.XmlVersionRepository" singleton="false">
+	<bean id="versionRepository" class="org.openedit.repository.filesystem.XmlVersionRepository" scope="prototype">
 	</bean>
 	
-	<bean id="fileRepository" class="org.openedit.repository.filesystem.FileRepository" singleton="false">
+	<bean id="fileRepository" class="org.openedit.repository.filesystem.FileRepository" scope="prototype">
 	</bean>
 	
 	<bean id="repository" class="org.openedit.repository.CompoundRepository">
@@ -128,11 +128,13 @@
 		<property name="errorHandlers">
 			<list>
 				<!-- ref bean="fileNotFoundErrorHandler"/ -->
+				<ref bean="jsonErrorHandler"/>
 				<ref bean="htmlErrorHandler"/>
 			</list>
 		</property>
 	</bean>
 	<bean id="htmlErrorHandler" class="com.openedit.error.HtmlErrorHandler" />
+	<bean id="jsonErrorHandler" class="com.openedit.error.JsonErrorHandler" />
 	
 	<bean id="velocity" class="com.openedit.generators.VelocityGenerator" >
 		<property name="rootDirectory"><ref bean="root" /></property>
@@ -146,9 +148,7 @@
 			<property name="pageManager"><ref bean="pageManager"/></property>
 	</bean>
 	
-	<bean id="jsp" class="com.openedit.generators.FilterGenerator"/>
-	<bean id="filter" class="com.openedit.generators.FilterGenerator"/>
-	<bean id="servlet" class="com.openedit.generators.ServletGenerator"/>
+	
 		
 	
 	<!-- a page value for testing -->
@@ -195,10 +195,13 @@
 		<property name="pageManager"><ref bean="pageManager"/></property>
 		<property name="xmlUtil"><ref bean="xmlUtil"/></property>
 	</bean>
-
+<!-- 
 	<bean id="generatedResourceLoader" class="com.openedit.generators.GeneratedResourceLoader" >
+		 
 		<property name="generatorLoader"><ref bean="pageSettingsManager"/></property>
+		
 	</bean>
+	-->
 	<!-- ********************************
 	     Stuff recently moved from editor
 	     ******************************** -->
@@ -209,7 +212,7 @@
 
 	<bean id="windowsUtil" name="windowsUtil"
 		class="org.openedit.util.WindowsUtil" abstract="false"
-		singleton="true" lazy-init="default" autowire="default"
+		 lazy-init="default" autowire="default"
 		dependency-check="default">
 		<property name="root"><ref bean="root"/></property>
 	</bean>
@@ -252,7 +255,7 @@
 	 
 <bean id="translationSearcher" name="translationSearcher"
         class="com.openedit.modules.translations.TranslationSearcher" abstract="false"
-        singleton="false" lazy-init="default" autowire="default"
+        scope="prototype" lazy-init="default" autowire="default"
         dependency-check="default">
         
        
@@ -267,19 +270,19 @@
 
 	</bean>
 
-	<bean id="userProfile" class="org.openedit.profile.UserProfile" singleton="false" >
+	<bean id="userProfile" class="org.openedit.profile.UserProfile" scope="prototype" >
 		<property name="searcherManager"><ref bean="searcherManager"/></property>
 	</bean>
 
-	<bean id="lockManager" class="org.entermedia.locks.LockManager" singleton="true" >
+	<bean id="lockManager" class="org.entermedia.locks.LockManager" >
 	</bean>
-	<bean id="lock" class="org.entermedia.locks.Lock" singleton="false" >
+	<bean id="lock" class="org.entermedia.locks.Lock" scope="prototype" >
 	</bean>
 
 	<bean id="executorManager" class="com.openedit.util.ExecutorManager" >
 	</bean>
 
-	<bean id="permissionManager" class="com.openedit.page.PermissionManager" singleton="false" >
+	<bean id="permissionManager" class="com.openedit.page.PermissionManager" scope="prototype" >
 		<property name="searcherManager"><ref bean="searcherManager"/></property>
 	</bean>
 
@@ -287,7 +290,7 @@
 	
 	</bean>
 
-	<bean id="replacer" class="com.openedit.util.Replacer"  singleton="false">
+	<bean id="replacer" class="com.openedit.util.Replacer"  scope="prototype">
 			<property name="searcherManager"><ref bean="searcherManager"/></property>
 	</bean>
 </beans>

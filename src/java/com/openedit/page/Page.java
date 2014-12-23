@@ -609,6 +609,27 @@ public class Page implements Data, Comparable
 		}
 	}
 	
+	
+	public Reader getReader(String inEncoding) throws OpenEditException
+	{
+		if ( exists() )
+		{
+			InputStreamReader in = null;
+			try
+			{
+				in = new InputStreamReader( getContentItem().getInputStream(), inEncoding );
+			} catch ( Exception ex )
+			{
+				throw new OpenEditException(ex);
+			}
+			return in;
+		}
+		else
+		{
+			throw new ContentNotAvailableException("No such page " + getPath(),getPath() );
+		}
+	}
+	
 	protected long getOriginalyModified()
 	{
 		return fieldOriginalyModified;
