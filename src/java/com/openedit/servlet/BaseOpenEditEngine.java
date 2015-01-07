@@ -89,7 +89,7 @@ public class BaseOpenEditEngine implements OpenEditEngine
 				}
 			}	
 		}
-	    if ( page.isHtml() )
+	    if ( page.isDynamic() )
 		{
 			inRequest.setCharacterEncoding( page.getCharacterEncoding() );
 			inResponse.setContentType( page.getMimeType() + "; charset=" + page.getCharacterEncoding() );
