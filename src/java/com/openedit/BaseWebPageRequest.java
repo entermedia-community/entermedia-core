@@ -106,13 +106,15 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 			try
 			{
 				Reader reader = getRequest().getReader();
-				jsonRequest = (Map)slurper.parse(reader); //this is real, the other way is just for t
-				putPageValue("_jsonRequest", jsonRequest);
+				if(reader != null){
+					jsonRequest = (Map)slurper.parse(reader); //this is real, the other way is just for t
+					putPageValue("_jsonRequest", jsonRequest);
+				}
 			}
 			catch ( Throwable ex)
 			{
 				putPageValue("_jsonRequest", new HashMap());
-				throw new OpenEditException(ex);
+				//throw new OpenEditException(ex);
 			}
 		}
 		
