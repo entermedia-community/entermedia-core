@@ -95,6 +95,7 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable
 	public void reIndexAll() throws OpenEditException
 	{
 		getCacheManager().clear(cacheId() );
+		fieldXmlFile = null;
 	}
 	
 	public boolean passes(Element inElement, SearchQuery inQuery) throws ParseException

@@ -205,4 +205,5 @@ public class XmlFolderSearcher extends XmlSearcher
 			saveData(data,inUser,false);
 		}
 	}	
+	
 }
