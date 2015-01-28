@@ -37,6 +37,11 @@ public class DateStorageUtil {
 		return getDateFormat("yyyy-MM-dd HH:mm:ss Z");
 	}
 
+	public DateFormat getJsonFormat() 
+	{
+		return getDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+	}
+	
 	protected DateFormat getExifFormat() {
 		// 2010:09:20 13:20:53-04:00
 		return getDateFormat("yyyy:MM:dd HH:mm:ssZ");
