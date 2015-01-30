@@ -211,6 +211,10 @@ public class DateStorageUtil {
 		DateFormat formater = getDateFormat(inFormat);
 		return date != null ? formater.format(date) : null;
 	}
+	public String formatDateObj(Date date, String inFormat) {
+		DateFormat formater = getDateFormat(inFormat);
+		return date != null ? formater.format(date) : null;
+	}
 
 	public String checkFormat(String inValue) {
 		if (inValue.length() > 21) {
