@@ -260,6 +260,23 @@ public class BaseUser extends FileSystemObject implements User, Comparable
 		else if ("creationdate".equals(inPropertyName)){
 			return DateStorageUtil.getStorageUtil().formatForStorage(getCreationDate());
 		}
+		else if( "groups".equals(inPropertyName)){
+			StringBuffer groups = new StringBuffer();
+			for (Iterator iterator = getGroups().iterator(); iterator.hasNext();)
+			{
+				Group group = (Group) iterator.next();
+				groups.append(group.getId());
+				if( iterator.hasNext() )
+				{
+					groups.append(" | ");
+				}
+			}
+			if( groups.length() == 0)
+			{
+				return null;
+			}
+			return groups.toString();
+		}
 		return (String)getProperty(inPropertyName);
 	}
 	
