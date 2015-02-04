@@ -317,6 +317,13 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 			Map locals = getAllLocalParameters();
 			combinedparams.putAll(locals);
 			
+			//get json stuff
+			Map jsonRequest = (Map)getPageValue("_jsonRequest");
+			if( jsonRequest != null)
+			{
+				combinedparams.putAll(jsonRequest); 
+			}
+			
 			return combinedparams;
 	
 		}
@@ -342,6 +349,15 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 		}
 		return parents;
 	}
+	protected Map getLocalParameters()
+	{
+		if (fieldParameters == null)
+		{
+			fieldParameters = new HashMap();
+		}
+		return fieldParameters;
+	}
+
 	/*
 	 * Children's params have precedence
 	 */
@@ -375,15 +391,6 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 			}	
 		}
 		return vars;
-	}
-
-	protected Map getLocalParameters()
-	{
-		if (fieldParameters == null)
-		{
-			fieldParameters = new HashMap();
-		}
-		return fieldParameters;
 	}
 
 	/* 
