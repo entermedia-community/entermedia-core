@@ -745,7 +745,7 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 	 * TODO: copy this to standard WebPageContext API
 	 * @param inMap
 	 */
-	public void putPageValues(SessionMap inMap)
+	public void putPageValues(Map inMap)
 	{
 		getVariables().putAll(inMap);
 	}
