@@ -176,7 +176,8 @@ public class BaseEditorModule extends BaseModule
 			}
 		}
 		
-		
+		if ( inReq.getContentPage().getPath().equals( inReq.getPath()))
+		{
 			if ( inReq.getPage().isHtml() &&  inReq.isEditable() )
 			{
 				String path = inReq.findValue("404wizardpage");
@@ -218,8 +219,14 @@ public class BaseEditorModule extends BaseModule
 					inReq.setHasRedirected(true);
 				}
 			}
-	
-		
+		}
+		else
+		{
+			inReq.getWriter().write("404 on " + inReq.getPath());
+			inReq.getWriter().flush();
+			inReq.setHasRedirected(true);
+			
+		}
 	}
 	
 	protected boolean createDraft(Page inEditPage, WebPageRequest inReq)
