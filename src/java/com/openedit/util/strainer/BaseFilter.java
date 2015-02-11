@@ -11,6 +11,7 @@ public class BaseFilter implements Filter
 	protected Filter[] fieldFilters;
 	protected String fieldValue;
 	protected Map<String,String> fieldProperties;
+	protected Configuration fieldConfiguration;
 	
 	public Filter[] getFilters()
 	{
@@ -113,7 +114,12 @@ public class BaseFilter implements Filter
 	}
 	public String get(String inType)
 	{
-		return getProperties().get(inType);
+		String prop = getProperties().get(inType);
+		if( prop == null && fieldConfiguration != null)
+		{
+			prop = getConfiguration().get(inType);
+		}
+		return prop;
 	}
 	public String toString()
 	{
@@ -122,14 +128,12 @@ public class BaseFilter implements Filter
 
 	@Override
 	public void setConfiguration(Configuration inConfig) {
-		// TODO Auto-generated method stub
-		
+		fieldConfiguration = inConfig;
 	}
 
 	@Override
 	public Configuration getConfiguration() {
-		// TODO Auto-generated method stub
-		return null;
+		return fieldConfiguration;
 	}
 
 	
