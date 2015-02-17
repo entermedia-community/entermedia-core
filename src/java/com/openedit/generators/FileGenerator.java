@@ -132,7 +132,7 @@ public class FileGenerator extends BaseGenerator implements Generator
 			
 			
 			long length = -1;
-			if ( res != null && !contentpage.isHtml() && inContext.getContentPage() == contentpage  )
+			if ( res != null && !contentpage.isHtml() && !contentpage.isJson() && inContext.getContentPage() == contentpage  )
 			{	//we can set the length unless there is a decorator on it somehow
 				length = (long)contentpage.getContentItem().getLength();
 				if ( length != -1)

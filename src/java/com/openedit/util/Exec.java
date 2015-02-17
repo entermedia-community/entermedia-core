@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -27,7 +26,7 @@ public class Exec
 {
 	private static final Log log = LogFactory.getLog(Exec.class);
 	
-	protected int timelimit; // an optional timelimit on the exececution time
+	protected int fieldTimeLimit; // an optional timelimit on the exececution time
 	protected boolean fieldTimeLimited = false;// set a time limit for this process to complete
 	
 	protected String fieldXmlCommandsFilename;
@@ -67,14 +66,14 @@ public class Exec
 		fieldCachedCommands = new HashMap<String, ExecCommand>();
 	}
 	
-	public int getTimelimit()
+	public int getTimeLimit()
 	{
-		return timelimit;
+		return fieldTimeLimit;
 	}
 
-	public void setTimelimit(int inTimelimit)
+	public void setTimeLimit(int inTimelimit)
 	{
-		timelimit = inTimelimit;
+		fieldTimeLimit = inTimelimit;
 	}
 
 	public boolean isTimeLimited()
@@ -262,7 +261,29 @@ public class Exec
 //			errreader.setStream("stderr",proc.getErrorStream());
 //			//getExecutorManager().execute(errreader);
 //			errreader.run();
-			int ret = proc.waitFor();
+			
+			int ret = -1;
+			long timelimit = (long) getTimeLimit();
+			if ( timelimit > 0){
+				log.info("executing processing with a timeout of "+timelimit+" ms (process hashcode="+proc.hashCode()+")");
+				try
+			    {
+			      synchronized(proc) {
+			    	  proc.wait(timelimit);
+			      }
+			    } catch (InterruptedException e) {}
+				try{
+					ret = proc.exitValue();
+				}catch (IllegalThreadStateException e){
+					log.info("unable to retrieve exit value on process (hashcode="+proc.hashCode()+"), process did not complete within allotted time interval ("+timelimit+" ms), setting a return value of -1");
+					ret = -1;
+					ProcessDestroyer wrap = new ProcessDestroyer();
+					wrap.setProcess(proc);
+					new Thread(wrap).start();
+				}
+			} else {
+				ret = proc.waitFor();
+			}
 			
 			int tries = 10;
 			if( !reader1.isCompleted() )
@@ -306,6 +327,44 @@ public class Exec
 		catch (Exception ex)
 		{
 			throw new OpenEditException(ex);
+		}
+	}
+	
+	class ProcessDestroyer implements Runnable{
+		
+		Process process;
+		
+		public void setProcess(Process inProcess){
+			process = inProcess;
+		}
+		
+		public boolean isAlive(){
+			try{
+				process.exitValue();
+				return false;
+			} catch (Exception e){};
+			return true;
+		}
+
+		@Override
+		public void run() {
+			long ms = System.currentTimeMillis();
+			log.info("attempting to kill process with hashcode="+process.hashCode());
+			//try to kill process for 5 minutes (max)
+			for (int i=0; i<1200 && isAlive(); i++){
+				try{
+					Thread.sleep(250);
+				}catch (Exception e){}
+				try{
+		    		process.destroy();
+		    	}catch(Exception e){}	
+			}
+			ms = System.currentTimeMillis() - ms;
+			if (isAlive()){
+				log.error("unable to kill process with hashcode="+process.hashCode());
+			} else {
+				log.info("successfully killed process with hashcode="+process.hashCode()+", took "+ms+" ms");
+			}
 		}
 	}
 

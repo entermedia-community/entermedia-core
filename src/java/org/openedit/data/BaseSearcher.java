@@ -117,36 +117,54 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		}
 		tracker = (HitTracker) inPageRequest.getSessionValue(inQuery.getSessionId());
 
-		boolean runsearch = true;
+		boolean runsearch = false;
 
-		//String fullq = inQuery.toQuery();
-			if (tracker != null)
+		if( tracker == null )
+		{
+			runsearch = true;
+		}
+			if (!runsearch && tracker != null)
 			{
-				if (!hasChanged(tracker))
+				String clear = inPageRequest.getRequestParameter(getSearchType() + "clearselection");
+				if( Boolean.parseBoolean(clear))
 				{
-					if (inQuery.equals(tracker.getSearchQuery()))
+					tracker.deselectAll();
+					tracker.setShowOnlySelected(false);
+					runsearch = true;
+				}
+				else
+				{
+					String showonly = inPageRequest.getRequestParameter(getSearchType() + "showonlyselections");
+					
+					if( showonly != null)
 					{
-						runsearch = false;
-						String cache = inPageRequest.getRequestParameter("cache");
-						if (cache != null && !Boolean.parseBoolean(cache))
-						{
-							runsearch = true;
-						}
+						tracker.setShowOnlySelected(Boolean.parseBoolean(showonly));
+						runsearch = true;
 					}
-					if (inQuery.getSortBy() != null)
+				}
+				
+				if (!runsearch && hasChanged(tracker))
+				{
+					runsearch = true;
+				}
+				if (!runsearch && !inQuery.equals(tracker.getSearchQuery()))
+				{
+					runsearch = true;
+				}
+				if (!runsearch && inQuery.getSortBy() != null)
+				{
+					String oldSort = tracker.getOrdering();
+					String currentsort = inQuery.getSortBy();
+					if (!currentsort.equals(oldSort))
 					{
-						String oldSort = tracker.getOrdering();
-						String currentsort = inQuery.getSortBy();
-						if (!currentsort.equals(oldSort))
-						{
-							runsearch = true;
-						}
+						runsearch = true;
 					}
-					if (inQuery.getSortBy() == null)
-					{
-						String oldSort = tracker.getOrdering();
-						inQuery.setSortBy(oldSort);
-					}
+				}
+				//Move this code down
+				if (inQuery.getSortBy() == null)
+				{
+					String oldSort = tracker.getOrdering();
+					inQuery.setSortBy(oldSort);
 				}
 			}
 			if (runsearch)
@@ -337,6 +355,9 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 
 		if (id1 == null || id1.equals(id2))
 		{
+			
+			
+			
 			return false;
 		}
 		return true;
@@ -2022,12 +2043,29 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		if (tracker != null && tracker.getQuery() != null)
 		{
 			String forcerun = inReq.getRequestParameter("cache");
+			boolean runsearch = false;
 			if( forcerun != null && !Boolean.parseBoolean(forcerun))
 			{
 				tracker.setIndexId(tracker.getIndexId() + "1"); // Causes the hits to be
+				runsearch = true;
 			}
 
-			if (hasChanged(tracker))
+			String clear = inReq.getRequestParameter(getSearchType() + "clearselection");
+			if( clear != null)
+			{
+				runsearch = true;
+			}
+			else
+			{
+				String showonly = inReq.getRequestParameter(getSearchType() + "showonlyselections");
+				if(showonly != null)
+				{
+					runsearch = true;
+				}
+			}
+			//TODO: Check for new sorting
+			
+			if (runsearch || hasChanged(tracker))
 			{
 				int oldNum = tracker.getPage();
 				SearchQuery newQuery = tracker.getSearchQuery().copy();

@@ -57,6 +57,26 @@ public class CacheManager
 		cache.put(inKey, inValue);
 	}
 
+	
+	public void put(String inType, String inKey, Object inValue, int size)
+	{
+		Cache cache = getCaches().get(inType);
+		if( cache == null )
+		{
+			synchronized (getCaches())
+			{
+				cache = getCaches().get(inType);
+				if( cache == null )
+				{
+					cache = createCache(size);
+					getCaches().put(inType,cache);
+				}
+			}
+		}
+		cache.put(inKey, inValue);
+	}
+	
+	
 	public void remove(String inType, String inKey )
 	{
 		Cache cache = getCaches().get(inType);

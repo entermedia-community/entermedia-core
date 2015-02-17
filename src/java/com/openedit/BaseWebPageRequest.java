@@ -106,13 +106,15 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 			try
 			{
 				Reader reader = getRequest().getReader();
-				jsonRequest = (Map)slurper.parse(reader); //this is real, the other way is just for t
-				putPageValue("_jsonRequest", jsonRequest);
+				if(reader != null){
+					jsonRequest = (Map)slurper.parse(reader); //this is real, the other way is just for t
+					putPageValue("_jsonRequest", jsonRequest);
+				}
 			}
 			catch ( Throwable ex)
 			{
 				putPageValue("_jsonRequest", new HashMap());
-				throw new OpenEditException(ex);
+				//throw new OpenEditException(ex);
 			}
 		}
 		
@@ -315,6 +317,13 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 			Map locals = getAllLocalParameters();
 			combinedparams.putAll(locals);
 			
+			//get json stuff
+			Map jsonRequest = (Map)getPageValue("_jsonRequest");
+			if( jsonRequest != null)
+			{
+				combinedparams.putAll(jsonRequest); 
+			}
+			
 			return combinedparams;
 	
 		}
@@ -340,6 +349,15 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 		}
 		return parents;
 	}
+	protected Map getLocalParameters()
+	{
+		if (fieldParameters == null)
+		{
+			fieldParameters = new HashMap();
+		}
+		return fieldParameters;
+	}
+
 	/*
 	 * Children's params have precedence
 	 */
@@ -373,15 +391,6 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 			}	
 		}
 		return vars;
-	}
-
-	protected Map getLocalParameters()
-	{
-		if (fieldParameters == null)
-		{
-			fieldParameters = new HashMap();
-		}
-		return fieldParameters;
 	}
 
 	/* 
@@ -736,7 +745,7 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 	 * TODO: copy this to standard WebPageContext API
 	 * @param inMap
 	 */
-	public void putPageValues(SessionMap inMap)
+	public void putPageValues(Map inMap)
 	{
 		getVariables().putAll(inMap);
 	}

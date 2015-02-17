@@ -160,7 +160,7 @@ public class Page implements Data, Comparable
 	public List getPageActions()
 	{
 		List actions =  getPageSettings().getPageActions();
-		if( isHtml() )
+		if( isDynamic() )
 		{
 			return actions;
 		}
@@ -268,7 +268,7 @@ public class Page implements Data, Comparable
 	public List getPathActions()
 	{
 		List actions = getPageSettings().getPathActions();
-		if( isHtml() )
+		if( isDynamic() )
 		{
 			return actions;
 		}
@@ -723,10 +723,22 @@ public class Page implements Data, Comparable
 	}
 	
 	
+	public boolean isDynamic() {
+		return isHtml() || isJson();
+	}
 	
 	/**
 	 * @return
 	 */
+	public boolean isJson() {
+		String mime = getMimeType();
+		if ( mime != null && mime.endsWith("json"))
+		{
+			return true;
+		}
+		return false;
+	}
+	
 	public boolean isHtml() {
 		String mime = getMimeType();
 		if ( mime != null && mime.endsWith("html"))
