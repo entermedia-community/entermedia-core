@@ -23,6 +23,7 @@ import org.openedit.MultiValued;
 import org.openedit.event.WebEvent;
 import org.openedit.event.WebEventListener;
 import org.openedit.profile.UserProfile;
+import org.openedit.util.DateStorageUtil;
 
 import com.openedit.ModuleManager;
 import com.openedit.OpenEditException;
@@ -2242,12 +2243,22 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				else if (values != null)
 				{
 					String val = values[0];
-					String hour = inReq.getRequestParameter(field + ".hour");
-					String minute = inReq.getRequestParameter(field + ".minute");
-					if(hour != null && minute != null){
-						val = val + " " + hour + ":" + minute;
-					}
 					
+					PropertyDetail detail = getDetail(field);
+					if( detail != null)
+					{
+						String hour = inReq.getRequestParameter(field + ".hour");
+						String minute = inReq.getRequestParameter(field + ".minute");
+						if(hour != null && minute != null)
+						{
+							val = val + " " + hour + ":" + minute;
+							val = DateStorageUtil.getStorageUtil().formatForStorage(val, "MM/dd/yyyy  hh:mm");
+						}
+						else if( detail.isDate() )
+						{
+							val = DateStorageUtil.getStorageUtil().formatForStorage(val, "MM/dd/yyyy");							 	
+						}
+					}
 					
 					data.setProperty(field, val);
 				}

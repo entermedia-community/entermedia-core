@@ -201,6 +201,18 @@ public class DateStorageUtil {
 		return getDateFormat("dd/MM/yyyy hh:mm");
 	}
 
+	public String formatForStorage(String inDate, String inFormat) 
+	{
+		DateFormat format = getDateFormat(inFormat);
+		try
+		{
+			Date parsed = format.parse(inDate);
+			return formatForStorage(parsed);
+		} catch (Exception ex) {
+			log.info("Could not parse date " + inDate);
+			return null;
+		}
+	}
 	public String formatForStorage(Date inDate) {
 		String storage = getStandardFormat().format(inDate);
 		return storage;
