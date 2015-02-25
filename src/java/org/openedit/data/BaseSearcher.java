@@ -2252,7 +2252,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 						if(hour != null && minute != null)
 						{
 							val = val + " " + hour + ":" + minute;
-							val = DateStorageUtil.getStorageUtil().formatForStorage(val, "yyyy-MM-dd  hh:mm");
+							val = DateStorageUtil.getStorageUtil().formatForStorage(val, "yyyy-MM-dd HH:mm");
 						}
 						else if( detail.isDate() )
 						{
