@@ -411,7 +411,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	{
 		if (fieldDefaultDateFormat == null)
 		{
-			fieldDefaultDateFormat = new SimpleDateFormat("MM/dd/yyyy");
+			fieldDefaultDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		}
 		return fieldDefaultDateFormat;
 	}
