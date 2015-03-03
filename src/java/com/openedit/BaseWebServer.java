@@ -61,7 +61,16 @@ public class BaseWebServer implements WebServer
 	protected BeanFactory fieldBeanFactory;
 	protected File fieldRootDirectory;
 	protected List fieldAllPlugIns;
+	protected String fieldNodeId;
 	
+	public String getNodeId()
+	{
+		return fieldNodeId;
+	}
+	public void setNodeId(String inNodeId)
+	{
+		fieldNodeId = inNodeId;
+	}
 	public BeanFactory getBeanFactory()
 	{
 //		if ( fieldBeanFactory == null )

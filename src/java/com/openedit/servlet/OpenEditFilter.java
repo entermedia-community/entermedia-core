@@ -93,6 +93,7 @@ public class OpenEditFilter implements Filter
 
 		BaseWebServer server = new BaseWebServer();
 		server.setRootDirectory(new File(rootPath));
+		server.setNodeId(inConfig.getInitParameter("entermedianodeid"));
 		server.initialize();
 		servletContext.setAttribute(server.getClass().getName(), server); //TODO: Why is this here?
 		fieldEngine = server.getOpenEditEngine();

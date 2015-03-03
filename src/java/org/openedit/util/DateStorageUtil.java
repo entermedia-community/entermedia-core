@@ -198,7 +198,7 @@ public class DateStorageUtil {
 	}
 
 	public DateFormat getSlashedDateFormat() {
-		return getDateFormat("dd/MM/yyyy hh:mm");
+		return getDateFormat("dd/MM/yyyy HH:mm");
 	}
 
 	public String formatForStorage(String inDate, String inFormat) 
