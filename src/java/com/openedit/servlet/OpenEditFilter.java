@@ -72,7 +72,7 @@ public class OpenEditFilter implements Filter
 		request.setAttribute("servletchain", chain); //This is used by the ServletChainGenerator to call doFilter at the right time
 		getEngine().render(request, response);
 	}
-
+	
 	/**
 	 * @see Filter#init(FilterConfig)
 	 */
@@ -93,7 +93,7 @@ public class OpenEditFilter implements Filter
 
 		BaseWebServer server = new BaseWebServer();
 		server.setRootDirectory(new File(rootPath));
-		server.setNodeId(inConfig.getInitParameter("entermedianodeid"));
+		server.setNodeId(servletContext.getInitParameter("entermedianodeid"));
 		server.initialize();
 		servletContext.setAttribute(server.getClass().getName(), server); //TODO: Why is this here?
 		fieldEngine = server.getOpenEditEngine();
