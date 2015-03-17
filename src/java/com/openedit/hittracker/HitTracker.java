@@ -752,6 +752,10 @@ public abstract class HitTracker implements Serializable, Collection
 
 	public void addSelection(String inId)
 	{
+		if( inId == null)
+		{
+			return;
+		}
 		getSelections().add(inId);
 	}
 	
@@ -1099,14 +1103,7 @@ public abstract class HitTracker implements Serializable, Collection
 	public List<FilterNode> getFilterOptions()
 	{
 		if(fieldFilterOptions == null){
-			try
-			{
-				fieldFilterOptions = getFacetedResults();
-			}
-			catch (Exception e)
-			{
-				throw new OpenEditException(e);
-			}
+			fieldFilterOptions = getFacetedResults();
 		}
 		return fieldFilterOptions;
 	
@@ -1115,7 +1112,7 @@ public abstract class HitTracker implements Serializable, Collection
 		fieldFilterOptions = filters;
 	}
 
-	protected List getFacetedResults() throws Exception
+	protected List getFacetedResults() 
 	{
 		// TODO Auto-generated method stub
 		return new ArrayList(); //this is load code
