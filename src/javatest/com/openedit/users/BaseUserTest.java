@@ -73,7 +73,8 @@ public class BaseUserTest extends BaseTestCase
 		public UserManager createUserManager() throws IOException
 		{
 			FileSystemUserManager userManager = new FileSystemUserManager();
-			userManager.setUserDirectory("/test/users");
+			
+			//userManager.setUserDirectory("/test/users");
 
 			ContentItem stub = getFixture().getPageManager().getRepository().getStub( "/test/users");
 			File f = new File(stub.getAbsolutePath());
@@ -84,7 +85,7 @@ public class BaseUserTest extends BaseTestCase
 		   f.mkdirs();
 
 
-			userManager.setGroupDirectory("/test/groups");
+			//userManager.setGroupDirectory("/test/groups");
 			Authenticator authen = (Authenticator)getFixture().getModuleManager().getBean("authenticator");
 			userManager.setAuthenticator(authen);
 			

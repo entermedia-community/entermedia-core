@@ -38,9 +38,11 @@
 
 
 	<!-- oe.root.path is retrieved from a system property set in the init method of the filter -->
-	<bean id="userManager" class="com.openedit.users.filesystem.FileSystemUserManager">
+	<bean id="userManager" class="com.openedit.users.filesystem.FileSystemUserManager" scope="prototype">
+		<!-- 
 		<constructor-arg index="0"><value>/WEB-INF/data/system/users</value></constructor-arg>
 		<constructor-arg index="1"><value>/WEB-INF/data/system/groups</value></constructor-arg>
+		 -->
 		<property name="pageManager"><ref bean="pageManager"/></property>
 		<property name="authenticator"><ref bean="authenticator"/></property>
 		<property name="stringEncryption"><ref bean="stringEncryption"/></property>

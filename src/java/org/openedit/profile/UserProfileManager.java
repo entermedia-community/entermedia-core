@@ -202,7 +202,7 @@ public class UserProfileManager
 			SearchQuery query = searcher.createSearchQuery();
 			StringBuffer groups = new StringBuffer();
 
-			User user = (User) getSearcherManager().getData("system", "user", inUserprofile.getUserId());
+			User user = (User) getSearcherManager().getData(inCatalogId, "user", inUserprofile.getUserId());
 			if (user != null)
 			{
 				for (Iterator iterator = user.getGroups().iterator(); iterator.hasNext();)

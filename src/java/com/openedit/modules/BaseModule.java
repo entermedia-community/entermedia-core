@@ -34,10 +34,15 @@ public abstract class BaseModule implements BeanFactoryAware, Secured
 		return (PageManager)getBeanFactory().getBean( "pageManager" );
 	}
 
-	public UserManager getUserManager()
-	{
-		return (UserManager)getBeanFactory().getBean( "userManager" );
-	}
+//	public UserManager getUserManager(WebPageRequest inReq)
+//	{
+//		String catalogid = inReq.findValue("catalogid");
+//		
+//		return (UserManager) getModuleManager().getBean(catalogid, "userManager");
+//		
+//	}
+	
+	
 	
 	protected SearcherManager getSearcherManager()
 	{
@@ -139,4 +144,5 @@ public abstract class BaseModule implements BeanFactoryAware, Secured
 	{
 		return inRequest.findValue(inName);
 	}
+
 }

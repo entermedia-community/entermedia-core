@@ -70,7 +70,9 @@ public class RevisionEditorModule extends BaseEditorModule
 			inReq.putPageValue("latest", revision);
 			
 			String author = revision.getAuthor();
-			User user = getUserManager().getUser(author);
+			String catalogid = inReq.findValue("catalogid");
+			
+			User user = (User) getSearcherManager().getData(catalogid, "user", author);
 			if (user != null)
 			{
 				inReq.putPageValue("latestemail", user.getEmail());

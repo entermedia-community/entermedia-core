@@ -213,6 +213,6 @@ public interface UserManager
 	
 	public User loadUser(String inId);
 
-	Collection listUserNames(String inCatid);
+	Collection listUserNames();
 
 }
