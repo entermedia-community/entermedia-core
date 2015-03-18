@@ -289,7 +289,7 @@ public class FileSystemUserManager implements UserManager
 	 */
 	public HitTracker getUsers()
 	{
-		List col = listUserNames();
+		List col = listUserNames("system");
 		HitTracker tracker = new ListHitTracker();
 		for (Iterator iterator = col.iterator(); iterator.hasNext();) {
 			String id = (String) iterator.next();
@@ -302,7 +302,7 @@ public class FileSystemUserManager implements UserManager
 		return tracker;
 	}
 
-	public List listUserNames()
+	public List listUserNames(String inCatid)
 	{
 		List all = new ArrayList();
 		ContentItem item = getPageManager().getRepository().get(getUserDirectory() );
@@ -530,7 +530,7 @@ public class FileSystemUserManager implements UserManager
 	 */
 	public void deleteGroup(Group inGroup) throws UserManagerException
 	{
-		for (Iterator iter = listUserNames().iterator(); iter.hasNext();)
+		for (Iterator iter = listUserNames("system").iterator(); iter.hasNext();)
 		{
 			String username = (String) iter.next();
 			User user = getUser(username);
@@ -790,7 +790,7 @@ public class FileSystemUserManager implements UserManager
 			}		
 		}
 		//TODO: replace with UserSearch object that can be replaced with Lucene or JDBC
-		for (Iterator iter = listUserNames().iterator(); iter.hasNext();) 
+		for (Iterator iter = listUserNames("system").iterator(); iter.hasNext();) 
 		{
 			String username = (String) iter.next();
 			User element = getUser(username);//require null pointer check here

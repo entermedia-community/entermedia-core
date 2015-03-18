@@ -206,12 +206,13 @@ public interface UserManager
 	public String getScreenName(String userName);
 	void flush();
 
-	public Collection listUserNames();
 
 	public Collection listGroupIds();
 	
 	public String nextId();
 	
 	public User loadUser(String inId);
+
+	Collection listUserNames(String inCatid);
 
 }

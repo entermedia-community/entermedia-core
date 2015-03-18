@@ -6,13 +6,18 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.dom4j.Element;
 import org.entermedia.locks.LockManager;
 import org.openedit.Data;
 import org.openedit.xml.XmlArchive;
+import org.openedit.xml.XmlFile;
 
 import com.openedit.ModuleManager;
 import com.openedit.OpenEditRuntimeException;
 import com.openedit.hittracker.HitTracker;
+import com.openedit.page.Page;
+import com.openedit.page.PageSettings;
+import com.openedit.util.PathUtilities;
 import com.openedit.util.Replacer;
 
 public class SearcherManager
@@ -49,13 +54,14 @@ public class SearcherManager
 				searcher = (Searcher)getCache().get(id);
 				if( searcher == null )
 				{
-					PropertyDetailsArchive newarchive = getPropertyDetailsArchive(inCatalogId);
+					String finalcatalogid = resolveCatalogId(inCatalogId, inFieldName);
+					PropertyDetailsArchive newarchive = getPropertyDetailsArchive(finalcatalogid);
 					if( inFieldName == null)
 					{
 						return null;
 					}
 					searcher = loadSearcher(newarchive, inFieldName);
-					searcher.setCatalogId(inCatalogId);
+					searcher.setCatalogId(finalcatalogid);
 					searcher.setSearchType(inFieldName); //This may be product or orderstatus
 					//set the data
 					searcher.setPropertyDetailsArchive(newarchive);
@@ -94,6 +100,7 @@ public class SearcherManager
 				}
 			}
 		}
+		
 		searcher = (Searcher)getModuleManager().getBean(inCatalogId, beanName, false);
 		if(log.isDebugEnabled())
 		{
@@ -392,4 +399,22 @@ public class SearcherManager
 		getXmlArchive().saveXml(file, null);
 	}
 	*/
+	
+	
+	
+	public String resolveCatalogId(String inCatalogId, String inSearchType)
+	{
+		if("searchtypes".equals(inSearchType)){
+			return inCatalogId;
+		}
+		
+		Data catalogdata = getData(inCatalogId, "searchtypes", inSearchType);
+		if(catalogdata != null){
+			return catalogdata.get("catalogid");
+		} else{
+			return inCatalogId;
+
+		}
+		
+	}
 }
