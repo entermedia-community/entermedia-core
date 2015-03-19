@@ -409,12 +409,18 @@ public class SearcherManager
 		}
 		
 		Data catalogdata = getData(inCatalogId, "searchtypes", inSearchType);
-		if(catalogdata != null){
+		if(catalogdata != null)
+		{
 			return catalogdata.get("catalogid");
-		} else{
-			return inCatalogId;
-
 		}
+		else
+		{
+			if( inSearchType.equals("user") || inSearchType.equals("group"))
+			{
+				return "system";
+			}
+		}
+		return inCatalogId;
 		
 	}
 }
