@@ -49,7 +49,6 @@ import com.openedit.users.Group;
 import com.openedit.users.GroupComparator;
 import com.openedit.users.User;
 import com.openedit.users.UserComparator;
-import com.openedit.users.UserManager;
 import com.openedit.users.UserManagerException;
 import com.openedit.users.UserNotEnabledException;
 import com.openedit.users.authenticate.AuthenticationRequest;
@@ -70,7 +69,7 @@ import com.openedit.util.XmlUtil;
  * @see #setGroupDirectory(File)
  * @see #load()
  */
-public class FileSystemUserManager implements UserManager {
+public class XmlUserArchive  {
 	protected String fieldCatalogId;
 
 	public String getCatalogId() {
@@ -98,13 +97,13 @@ public class FileSystemUserManager implements UserManager {
 	protected PermissionsManager fieldPermissionsManager;
 	protected XmlUtil fieldXmlUtil;
 	private static final Log log = LogFactory
-			.getLog(FileSystemUserManager.class);
+			.getLog(XmlUserArchive.class);
 	private static final int MAX_LOGIN_FAILS = 5;
 
 	/**
 	 * Constructor for FileSystemUserManager.
 	 */
-	public FileSystemUserManager() {
+	public XmlUserArchive() {
 		super();
 	}
 
@@ -335,6 +334,7 @@ public class FileSystemUserManager implements UserManager {
 	}
 
 	/**
+	 * Move this API to the UserManager
 	 * @see com.openedit.users.UserManager#authenticate(User, String)
 	 */
 	public boolean authenticate(User inUser, String inPassword)

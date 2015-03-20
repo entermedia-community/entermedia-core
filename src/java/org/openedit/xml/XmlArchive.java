@@ -28,11 +28,6 @@ public class XmlArchive
 	
 	public LockManager getLockManager()
 	{
-		if (fieldLockManager == null)
-		{
-			fieldLockManager = new MemoryLockManager();
-		}
-
 		return fieldLockManager;
 	}
 

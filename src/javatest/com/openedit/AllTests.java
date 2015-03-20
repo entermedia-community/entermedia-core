@@ -35,7 +35,7 @@ public class AllTests
 		suite.addTest( com.openedit.servlet.AllTests.suite() );
 		suite.addTest( com.openedit.util.AllTests.suite() );
 		suite.addTest( com.openedit.web.AllTests.suite() );
-		suite.addTest( com.openedit.users.filesystem.AllTests.suite() );
+		//suite.addTest( com.openedit.users.filesystem.AllTests.suite() );
 		suite.addTest( org.openedit.repository.AllTests.suite() );
 		suite.addTest( com.openedit.modules.AllTests.suite(  ) );
 

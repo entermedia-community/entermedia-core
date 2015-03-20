@@ -31,13 +31,6 @@ import com.openedit.util.StringEncryption;
  */
 public interface UserManager
 {
-	/**
-	 * Retrieve the list of permissions that may be assigned to groups.
-	 *
-	 * @return A list of {@link Permission}s
-	 * @throws UserManagerException
-	 */
-	List getPermissions() throws UserManagerException;
 	
 	List getSystemPermissionGroups();
 	
@@ -185,8 +178,6 @@ public interface UserManager
 
 	HitTracker getUsersInGroup(String inString);
 	
-	void setAuthenticator(Authenticator inAuthen);
-
 	Authenticator getAuthenticator();
 	
 	StringEncryption getStringEncryption();
@@ -215,4 +206,7 @@ public interface UserManager
 
 	Collection listUserNames();
 
+	UserSearcher getUserSearcher();
+	GroupSearcher getGroupSearcher();
+	
 }
