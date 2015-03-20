@@ -43,6 +43,10 @@ public class SearcherManager
 		{
 			throw new OpenEditRuntimeException("Catalog id is required");
 		}
+		if ( inFieldName == null )
+		{
+			return null;
+		}
 		//look in map for existing
 		String id = inCatalogId + "|" + inFieldName;
 		
