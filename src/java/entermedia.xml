@@ -39,7 +39,7 @@
 		<property name="catalogId"><value>system</value></property>
 	</bean>
 	
-	<bean id="xmlUserArchive" class="org.openedit.users.XmlUserArchive" scope="prototype">
+	<bean id="xmlUserArchive" class="com.openedit.users.filesystem.XmlUserArchive" scope="prototype">
 		<property name="pageManager"><ref bean="pageManager"/></property>
 		<property name="authenticator"><ref bean="authenticator"/></property>
 		<property name="stringEncryption"><ref bean="stringEncryption"/></property>
