@@ -192,6 +192,7 @@
 	<bean id="xmlArchive" class="org.openedit.xml.XmlArchive" >
 		<property name="pageManager"><ref bean="pageManager"/></property>
 		<property name="xmlUtil"><ref bean="xmlUtil"/></property>
+		<property name="lockManager"><ref bean="lockManager"/></property>		
 	</bean>
 <!-- 
 	<bean id="generatedResourceLoader" class="com.openedit.generators.GeneratedResourceLoader" >
