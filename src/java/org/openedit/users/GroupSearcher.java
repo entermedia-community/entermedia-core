@@ -1,6 +1,8 @@
-package com.openedit.users;
+package org.openedit.users;
 
 import org.openedit.data.Searcher;
+
+import com.openedit.users.Group;
 
 public interface GroupSearcher extends Searcher
 {

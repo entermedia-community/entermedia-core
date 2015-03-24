@@ -16,6 +16,8 @@ import java.util.Collection;
 import java.util.List;
 
 import org.openedit.event.WebEventHandler;
+import org.openedit.users.GroupSearcher;
+import org.openedit.users.UserSearcher;
 
 import com.openedit.OpenEditException;
 import com.openedit.hittracker.HitTracker;

@@ -411,7 +411,9 @@ public class SearcherManager
 		if("searchtypes".equals(inSearchType)){
 			return inCatalogId;
 		}
-		
+		if(inSearchType == null){
+			return inCatalogId;
+		}
 		Data catalogdata = getData(inCatalogId, "searchtypes", inSearchType);
 		if(catalogdata != null)
 		{
@@ -419,6 +421,7 @@ public class SearcherManager
 		}
 		else
 		{
+			
 			if( inSearchType.equals("user") || inSearchType.equals("group"))
 			{
 				return "system";
