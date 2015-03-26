@@ -267,7 +267,10 @@ public class URLUtilities
 			return null;
 		}
 
-		return URLEncoder.encode(s);
+		String encoded = URLEncoder.encode(s);
+		encoded = encoded.replace("%2F", "/");
+		encoded = encoded.replace(" ", "%20");
+		return encoded;
 	}
 	public String decode(String s)
 	{
