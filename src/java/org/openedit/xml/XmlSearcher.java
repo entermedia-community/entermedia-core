@@ -42,7 +42,7 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable
 	{
 		if (fieldCacheManager == null)
 		{
-			fieldCacheManager = new CacheManager();
+			fieldCacheManager = new CacheManager(); //TODO: make this shared across catalogs?
 		}
 
 		return fieldCacheManager;

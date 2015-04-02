@@ -104,16 +104,19 @@ public class XmlFolderSearcher extends XmlSearcher
 	{
 		for(String child:children)
 		{
-			XmlFile settings = getXmlArchive().getXml(child,child,inName);
-			for (Iterator iterator = settings.getRoot().elementIterator(); iterator
-					.hasNext();) 
+			if(child.endsWith(".xml"))
 			{
-				Element row = (Element) iterator.next();
-				Element existing = getElementById(root,row.attributeValue("id"));
-				if( !noDups || existing == null )
+				XmlFile settings = getXmlArchive().getXml(child,child,inName);
+				for (Iterator iterator = settings.getRoot().elementIterator(); iterator
+						.hasNext();) 
 				{
-					row.setParent(null);
-					root.add(row);
+					Element row = (Element) iterator.next();
+					Element existing = getElementById(root,row.attributeValue("id"));
+					if( !noDups || existing == null )
+					{
+						row.setParent(null);
+						root.add(row);
+					}
 				}
 			}
 		}
