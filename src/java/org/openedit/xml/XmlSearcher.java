@@ -37,6 +37,7 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable
 	protected PropertyDetails fieldDefaultDetails;
 	protected CacheManager fieldCacheManager;
 	protected XmlFile fieldXmlFile;
+	protected long fieldEditCount = 0;
 	
 	public CacheManager getCacheManager()
 	{
@@ -291,7 +292,7 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable
 	public String getIndexId()
 	{
 		XmlFile settings = getXmlFile();
-		return getSearchType() + settings.getLastModified();
+		return getSearchType() + settings.getLastModified() + fieldEditCount;
 	}
 	/**
 	 * Because of the way SearchQuery is coded, we can't get to the operation information.
@@ -351,7 +352,7 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable
 //			clearIndex();
 //		}
 		getCacheManager().put(cacheId(),inQuery.toQuery() + inQuery.getSortBy(), hits);
-		if( log.isDebugEnabled() )
+		//if( log.isDebugEnabled() )
 		{
 			log.debug("Search " + getSearchType() + " " + inQuery.toQuery() + " (sorted by " + inQuery.getSortBy() + ") found " + hits.size());
 		}
@@ -438,12 +439,11 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable
 		String path = "/WEB-INF/data/" + getCatalogId() + "/lists" + "/" + getSearchType() + ".xml";
 
 		settings.setPath(path);
-		ElementData data = (ElementData)inData;
 
 		Element element = null;
-		if( data.getId() == null)
+		if( inData.getId() == null)
 		{
-			data.setId( String.valueOf( new Date().getTime() ));
+			inData.setId( String.valueOf( new Date().getTime() ));
 		}
 		else
 		{
@@ -455,20 +455,35 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable
 			element = settings.getRoot().addElement(settings.getElementName());
 			element.addAttribute("id", inData.getId());
 		}
-		
-		List attributes = data.getElement().attributes();
-//		List attributessaved = new ArrayList(attributes.size()); 
-//		for (Iterator iterator = attributes.iterator(); iterator.hasNext();) {
-//			Attribute attr = (Attribute) iterator.next();
-//			if( !attr.getName().startsWith(".") )
-//			{
-//				attributessaved.add(attr);				
-//			}
-//		}
-		element.setAttributes(attributes);
-		//element.setText(inData.getName());
-		//existing row exists
-		element.setContent(data.getElement().content());
+		if( inData instanceof Element)
+		{
+			ElementData data = (ElementData)inData;
+			List attributes = data.getElement().attributes();
+	//		List attributessaved = new ArrayList(attributes.size()); 
+	//		for (Iterator iterator = attributes.iterator(); iterator.hasNext();) {
+	//			Attribute attr = (Attribute) iterator.next();
+	//			if( !attr.getName().startsWith(".") )
+	//			{
+	//				attributessaved.add(attr);				
+	//			}
+	//		}
+			element.setAttributes(attributes);
+			//element.setText(inData.getName());
+			//existing row exists
+			element.setContent(data.getElement().content());
+		}
+		else
+		{
+			ElementData data = new ElementData(element);
+			data.setId(inData.getId());
+			data.setName(inData.getName());
+			data.setSourcePath(inData.getSourcePath());
+			for (Iterator iterator = inData.getProperties().keySet().iterator(); iterator.hasNext();)
+			{
+				String key	= (String) iterator.next();
+				data.setProperty(key, inData.get(key));
+			}
+		}
 		
 		log.info("Saved to "  + settings.getPath());
 		getXmlArchive().saveXml(settings, inUser);
@@ -656,9 +671,10 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable
 
 	public void clearIndex()
 	{
+		fieldEditCount++;
 		synchronized (this)
 		{
-			fieldXmlFile = null;
+			fieldXmlFile = null; //reload it each time?
 			getCacheManager().clear(cacheId());
 		}
 	}

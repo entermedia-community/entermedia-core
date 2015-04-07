@@ -44,6 +44,9 @@ public class XmlFolderSearcher extends XmlSearcher
 			
 			String rootpath = "/WEB-INF/data/" + getCatalogId() + "/lists/" + inName ;
 			composite.setPath(rootpath + "/custom.xml");
+
+			long inLastModified = getPageManager().getRepository().getStub(composite.getPath()).lastModified().getTime();
+			composite.setLastModified(inLastModified);
 			
 			Element root = DocumentHelper.createElement(inName);
 			composite.setRoot(root);
@@ -61,7 +64,6 @@ public class XmlFolderSearcher extends XmlSearcher
 				boolean existing = children.size() > 0;
 				loadChildren(inName, children2, root, true);
 			}
-			
 //			HitTracker hits = getSearcherManager().getList(
 //					getCatalogId(), "dataextensions");
 //			for (Iterator iterator = hits.iterator(); iterator
