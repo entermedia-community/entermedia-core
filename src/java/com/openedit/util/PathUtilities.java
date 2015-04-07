@@ -664,11 +664,11 @@ public final class PathUtilities
 
 	
 	/**
-	 * Get the name of the parent of the given path.
+	 * Get the name of the root of the given path.
 	 *
 	 * @param path The path for which to retrieve the parent
 	 *
-	 * @return The parent path's name. /sub/sub2/index.html -> sub2 If the given path is the root path ("/" or ""), return a blank string.
+	 * @return The parent path's name. /sub/sub2/index.html -> /sub If the given path is the root path ("/" or ""), return a blank string.
 	 */
 	public static String extractRootDirectory(String path)
 	{
