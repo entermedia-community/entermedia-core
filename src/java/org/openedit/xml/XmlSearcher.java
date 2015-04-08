@@ -459,14 +459,6 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable
 		{
 			ElementData data = (ElementData)inData;
 			List attributes = data.getElement().attributes();
-	//		List attributessaved = new ArrayList(attributes.size()); 
-	//		for (Iterator iterator = attributes.iterator(); iterator.hasNext();) {
-	//			Attribute attr = (Attribute) iterator.next();
-	//			if( !attr.getName().startsWith(".") )
-	//			{
-	//				attributessaved.add(attr);				
-	//			}
-	//		}
 			element.setAttributes(attributes);
 			//element.setText(inData.getName());
 			//existing row exists
