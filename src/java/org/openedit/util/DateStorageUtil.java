@@ -52,10 +52,6 @@ public class DateStorageUtil {
 		return getDateFormat("yyyy:MM:dd HH:mm:ss.S");
 	}
 
-	protected DateFormat getStandardLogFormat() {
-		return getDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-	}
-
 	protected DateFormat getOldColonFormat() {
 		return getDateFormat("yyyy:MM:dd HH:mm:ss");
 	}
@@ -107,44 +103,34 @@ public class DateStorageUtil {
 			return null;
 		}
 		try {
+			if (inStoredDate.length() > 20) 
+			{
+				if( inStoredDate.endsWith("Z") )
+				{
+					inStoredDate = inStoredDate.replaceAll("Z$", "+0000");
+				}
 
-			if (inStoredDate.length() > 21) {
 				if (inStoredDate.contains("T")) 
 				{
-					if(inStoredDate.endsWith("Z"))
-					{
-						return getElasticDefaultFormat().parse(inStoredDate);
-					}
-					return getStandardLogFormat().parse(inStoredDate);
-				}
-				
-				if (inStoredDate.substring(inStoredDate.length() - ".000".length()).contains("."))
-				{
-					return getExifPhotoshopFormat().parse(inStoredDate);
+					return getJsonFormat().parse(inStoredDate); //Also works for ElasticSearch
 				}
 				
 				if (inStoredDate.indexOf("-") < 6) {
 					return getStandardFormat().parse(inStoredDate);
 				}
+				
+				if(inStoredDate.substring(inStoredDate.length() - ".000".length()).contains(".")) //What is this??!!
+				{
+					return getExifPhotoshopFormat().parse(inStoredDate);
+				}				
 
-				if (inStoredDate.contains("+")) {
-					inStoredDate = inStoredDate.substring(0,
-							inStoredDate.length() - 3)
-							+ inStoredDate.substring(inStoredDate.length() - 2); // remove
-																					// the
-																					// last
-																					// :
-					return getAlmostStandardPlus().parse(inStoredDate);
+				String ending = inStoredDate.substring(inStoredDate.length() - 5,  inStoredDate.length());
+				if( ending.contains(":"))
+				{
+					ending = ending.replaceAll(":","");
+					inStoredDate = inStoredDate.substring(0,inStoredDate.length() - 5) + ending;
 				}
-
-				if (inStoredDate.endsWith(":00")) {
-					inStoredDate = inStoredDate.substring(0,
-							inStoredDate.length() - 3)
-							+ "00";
-				}
-				
-				
-				
+			
 				return getExifFormat().parse(inStoredDate);
 			}
 
@@ -187,15 +173,6 @@ public class DateStorageUtil {
 		return null;
 	}
 
-	private DateFormat getElasticDefaultFormat()
-	{
-		return getDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ"); //yyyyMMdd’T'HHmmss.SSSZ
-	}
-
-	private DateFormat getAlmostStandardPlus() {
-		// 2008:04:09 07:47:24+06:00
-		return getDateFormat("yyyy:MM:dd HH:mm:ss+Z");
-	}
 
 	public DateFormat getSlashedDateFormat() {
 		return getDateFormat("dd/MM/yyyy HH:mm");
