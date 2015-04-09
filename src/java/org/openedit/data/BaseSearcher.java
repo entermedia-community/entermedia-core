@@ -2310,9 +2310,21 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		throw new OpenEditException("Save not implemented for " + getSearchType());
 	}
 	
+	@Override
+	public Data loadData(Data inHit)
+	{
+		if( inHit instanceof SaveableData)
+		{
+			return inHit;
+		}
+		else
+		{
+			return (Data)searchById(inHit.getId());
+		}
+	}
 	
-	
-	public LockManager getLockManager(){
-	return getSearcherManager().getLockManager();	
+	public LockManager getLockManager()
+	{
+		return getSearcherManager().getLockManager();	
 	}
 }

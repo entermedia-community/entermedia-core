@@ -48,7 +48,7 @@ public class ModuleManager implements BeanFactoryAware, ShutdownList
 	
 	public void executePageAction( PageAction inAction, WebPageRequest inReq ) throws OpenEditException
 	{
-		if( log.isDebugEnabled() )
+		//if( log.isDebugEnabled() )
 		{
 			log.debug("Running "  +  inAction.getActionName() + " from  " + inAction.getPath()  + " " + inReq.getPath());
 		}

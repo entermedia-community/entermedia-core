@@ -66,6 +66,8 @@ public interface Searcher
 
 	public Object searchById(String inId);
 
+	public Data loadData(Data inHit);
+	
 	public Object searchByField(String inField,String inValue);
 
 	public Data searchByQuery(SearchQuery inQuery);

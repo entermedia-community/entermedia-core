@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.dom4j.Attribute;
@@ -15,12 +14,11 @@ import org.dom4j.Element;
 import org.dom4j.Node;
 import org.dom4j.Text;
 import org.openedit.MultiValued;
-
-import sun.reflect.ReflectionFactory.GetReflectionFactoryAction;
+import org.openedit.data.SaveableData;
 
 import com.openedit.OpenEditException;
 
-public class ElementData implements MultiValued, Comparable
+public class ElementData implements MultiValued, SaveableData, Comparable
 {
 	protected Element fieldElement;
 	protected String fieldSourcePath;
