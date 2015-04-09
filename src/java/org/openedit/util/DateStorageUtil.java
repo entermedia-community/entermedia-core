@@ -109,9 +109,10 @@ public class DateStorageUtil {
 		try {
 
 			if (inStoredDate.length() > 21) {
-				if (inStoredDate.contains("T")) {
-					if(inStoredDate.endsWith("Z")){
-					
+				if (inStoredDate.contains("T")) 
+				{
+					if(inStoredDate.endsWith("Z"))
+					{
 						return getElasticDefaultFormat().parse(inStoredDate);
 					}
 					return getStandardLogFormat().parse(inStoredDate);
@@ -188,8 +189,7 @@ public class DateStorageUtil {
 
 	private DateFormat getElasticDefaultFormat()
 	{
-		// TODO Auto-generated method stub
-		return getDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+		return getDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ"); //yyyyMMdd’T'HHmmss.SSSZ
 	}
 
 	private DateFormat getAlmostStandardPlus() {
