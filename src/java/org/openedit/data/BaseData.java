@@ -175,7 +175,7 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 		return 0;
 	}
 	
-	public Collection getValues(String inPreference)
+	public Collection<String> getValues(String inPreference)
 	{
 		String val = get(inPreference);
 		
