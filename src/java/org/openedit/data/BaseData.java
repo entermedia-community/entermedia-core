@@ -23,12 +23,16 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 	}
 
 	public BaseData(Map inMap) {
-		setMap(inMap);
+		fieldMap = inMap;
 	}
 
 	public String get(String inId) {
 		if ("id".equals(inId)) {
 			return getId();
+		}
+		if( fieldMap == null)
+		{
+			return null;
 		}
 		Object object = getProperties().get(inId);
 		if (object == null) {
@@ -133,12 +137,12 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 			throw new OpenEditException(e);
 		}
 	}
-	public Map getMap() {
-		return getProperties();
-	}
-
-	public void setMap(Map inMap) {
-		fieldMap = inMap;
+	protected Map getMap() 
+	{
+		if (fieldMap == null) {
+			fieldMap = new HashMap(5);
+		}
+		return fieldMap;
 	}
 
 	public void setId(int inNewid) {
@@ -157,11 +161,9 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 		setProperty("sourcepath", inSourcepath);
 	}
 
-	public Map getProperties() {
-		if (fieldMap == null) {
-			fieldMap = new HashMap(5);
-		}
-		return fieldMap;
+	public Map getProperties() 
+	{
+		return getMap();
 	}
 	public void setProperties(Map<String,String> inProperties)
 	{
