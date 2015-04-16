@@ -209,10 +209,10 @@ public class XmlFolderSearcher extends XmlSearcher
 		}
 		else
 		{
-			//element.clearContent();
-			//element.setAttributes(Collections.EMPTY_LIST);
+			element.clearContent();
+			element.setAttributes(null);
 			
-			ElementData data = new ElementData();
+			ElementData data = new ElementData(element);
 			data.setId(inData.getId());
 			data.setName(inData.getName());
 			data.setSourcePath(inData.getSourcePath());

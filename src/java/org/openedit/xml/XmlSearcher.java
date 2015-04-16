@@ -467,7 +467,7 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable
 		else
 		{
 			element.clearContent();
-			element.setAttributes(Collections.EMPTY_LIST);
+			element.setAttributes(null);
 			
 			ElementData data = new ElementData(element);
 			data.setId(inData.getId());
