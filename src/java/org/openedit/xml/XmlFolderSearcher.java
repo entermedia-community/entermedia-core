@@ -2,6 +2,7 @@ package org.openedit.xml;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -197,7 +198,7 @@ public class XmlFolderSearcher extends XmlSearcher
 			element.addAttribute("id", inData.getId());
 		}		
 		
-		if( inData instanceof Element)
+		if( inData instanceof ElementData)
 		{
 			ElementData data = (ElementData)inData;
 			List attributes = data.getElement().attributes();
@@ -208,6 +209,9 @@ public class XmlFolderSearcher extends XmlSearcher
 		}
 		else
 		{
+			element.clearContent();
+			element.setAttributes(Collections.EMPTY_LIST);
+			
 			ElementData data = new ElementData(element);
 			data.setId(inData.getId());
 			data.setName(inData.getName());

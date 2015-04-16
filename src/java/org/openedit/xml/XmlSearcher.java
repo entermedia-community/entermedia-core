@@ -455,7 +455,7 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable
 			element = settings.getRoot().addElement(settings.getElementName());
 			element.addAttribute("id", inData.getId());
 		}
-		if( inData instanceof Element)
+		if( inData instanceof ElementData)
 		{
 			ElementData data = (ElementData)inData;
 			List attributes = data.getElement().attributes();
@@ -466,6 +466,9 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable
 		}
 		else
 		{
+			element.clearContent();
+			element.setAttributes(Collections.EMPTY_LIST);
+			
 			ElementData data = new ElementData(element);
 			data.setId(inData.getId());
 			data.setName(inData.getName());
