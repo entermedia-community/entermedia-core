@@ -162,7 +162,9 @@ public class MemoryLockManager implements LockManager
 		return true;
 			
 	}
-
+	/**
+	 * Tries once then gives up and returns null
+	 */
 	public Lock lockIfPossible(String inCatId, String inPath, String inOwnerId)
 	{
 		Lock lock = loadLock(inCatId, inPath);

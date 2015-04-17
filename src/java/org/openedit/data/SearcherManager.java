@@ -1,23 +1,21 @@
 package org.openedit.data;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.dom4j.Element;
 import org.entermedia.locks.LockManager;
 import org.openedit.Data;
 import org.openedit.xml.XmlArchive;
-import org.openedit.xml.XmlFile;
 
 import com.openedit.ModuleManager;
 import com.openedit.OpenEditRuntimeException;
 import com.openedit.hittracker.HitTracker;
-import com.openedit.page.Page;
-import com.openedit.page.PageSettings;
-import com.openedit.util.PathUtilities;
 import com.openedit.util.Replacer;
 
 public class SearcherManager
@@ -366,6 +364,22 @@ public class SearcherManager
 		}
 		getModuleManager().clearBean(inCatalogId, beanName);
 	}
+	
+	public Collection<Searcher> listLoadedSearchers(String inCatalogId)
+	{
+		List<Searcher> loaded = new ArrayList<Searcher>();
+		
+		for (Iterator iterator = getCache().values().iterator(); iterator.hasNext();)
+		{
+			Searcher searcher = (Searcher) iterator.next();
+			if( searcher.getCatalogId().equals(inCatalogId))
+			{
+				loaded.add(searcher);
+			}
+		}
+		return loaded;
+	}
+	
 	/*
 	public Collection getCatalogs()
 	{
