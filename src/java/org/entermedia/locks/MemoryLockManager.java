@@ -111,6 +111,10 @@ public class MemoryLockManager implements LockManager
 	@Override
 	public boolean release(String inCatId, Lock inLock)
 	{
+		if( inLock == null)
+		{
+			return true;
+		}
 		inLock.setLocked(false);
 		return true;
 		
