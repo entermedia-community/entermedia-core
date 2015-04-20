@@ -17,7 +17,6 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 	public static final Data NULL = new BaseData(); 
 	
 	protected Map fieldMap;
-	protected String fieldId;
 
 	public BaseData() {
 	}
@@ -27,9 +26,6 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 	}
 
 	public String get(String inId) {
-		if ("id".equals(inId)) {
-			return getId();
-		}
 		if( fieldMap == null)
 		{
 			return null;
@@ -76,7 +72,8 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 		return 0;
 	}
 	public String getId() {
-		return fieldId;
+		String name = get("id");
+		return name;
 	}
 
 	public String getName() {
@@ -96,11 +93,12 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 		return name;
 	}
 
-	public void setProperty(String inId, String inValue) {
-		if ("id".equals(inId)) {
-			setId(inValue);
-			return;
-		}
+	public void setProperty(String inId, String inValue) 
+	{
+//		if ("id".equals(inId)) {
+//			setId(inValue);
+//			return;
+//		}
 		if (inValue == null) {
 			getMap().remove(inId);
 		} else {
@@ -146,11 +144,11 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 	}
 
 	public void setId(int inNewid) {
-		fieldId = String.valueOf(inNewid);
+		setProperty("id", String.valueOf( inNewid) );
 	}
 
 	public void setId(String inNewid) {
-		fieldId = inNewid;
+		setProperty("id", inNewid);
 	}
 
 	public String getSourcePath() {

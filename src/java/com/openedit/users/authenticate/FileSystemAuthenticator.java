@@ -32,7 +32,7 @@ public class FileSystemAuthenticator extends BaseAuthenticator
 					if( !ok )
 					{
 						//log.info("Encrypted passwords did not match. Should be:" + password  + " was:" + inPassword);
-						log.info("Could not log in user");
+						log.info("Could not log in " + inAReq.getUserName() + ", bad DES password");
 					}
 					return ok;
 				}
@@ -43,7 +43,7 @@ public class FileSystemAuthenticator extends BaseAuthenticator
 						{
 							return true;
 						}
-						log.info("Could not log in user");
+						log.info("Could not log in " + inAReq.getUserName() + ", bad password");
 						//log.debug("decryptedString" + decryptedString + " from " + password + " did not equal " + inPassword);
 				}
 			}
