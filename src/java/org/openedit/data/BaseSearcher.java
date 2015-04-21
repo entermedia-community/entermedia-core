@@ -2329,10 +2329,16 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	}
 
 	@Override
-	public void restoreDefaults()
+	public void restoreSettings()
 	{
 		getPropertyDetailsArchive().clearCustomSettings(getSearchType());
 		
 	}
-
+	@Override
+	public void reloadSettings()
+	{
+		getPropertyDetailsArchive().reloadSettings(getSearchType());
+		
+	}
+	
 }

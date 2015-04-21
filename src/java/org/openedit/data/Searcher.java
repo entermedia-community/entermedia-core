@@ -165,5 +165,8 @@ public interface Searcher
 
 	public void updateFilters(WebPageRequest inReq);
 
-	public void restoreDefaults();
+	public void restoreSettings();
+	
+	public void reloadSettings();
+
 }

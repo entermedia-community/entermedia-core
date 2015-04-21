@@ -800,6 +800,11 @@ public class PropertyDetailsArchive {
 		getPageManager().removePage(found);
 
 		getPropertyDetails().remove(inSearchType);
-		
 	}
+	
+	public void reloadSettings(String inSearchType)
+	{
+		getPropertyDetails().remove(inSearchType);
+	}
+	
 }
