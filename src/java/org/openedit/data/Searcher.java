@@ -164,4 +164,6 @@ public interface Searcher
 	HitTracker searchByIds(Collection<String> inIds);
 
 	public void updateFilters(WebPageRequest inReq);
+
+	public void restoreDefaults();
 }

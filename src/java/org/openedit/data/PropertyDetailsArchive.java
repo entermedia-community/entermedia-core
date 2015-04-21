@@ -22,6 +22,7 @@ import org.openedit.xml.XmlFile;
 
 import com.openedit.OpenEditException;
 import com.openedit.OpenEditRuntimeException;
+import com.openedit.page.Page;
 import com.openedit.page.manage.PageManager;
 import com.openedit.page.manage.TextLabelManager;
 import com.openedit.users.User;
@@ -791,4 +792,14 @@ public class PropertyDetailsArchive {
 		return detail;
 	}
 
+	
+	public void clearCustomSettings(String inSearchType)
+	{
+		String path = getConfigurationPath("/fields/" + inSearchType + ".xml");
+		Page found = getPageManager().getPage(path);
+		getPageManager().removePage(found);
+
+		getPropertyDetails().remove(inSearchType);
+		
+	}
 }

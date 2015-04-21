@@ -2327,4 +2327,12 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	{
 		return getSearcherManager().getLockManager();	
 	}
+
+	@Override
+	public void restoreDefaults()
+	{
+		getPropertyDetailsArchive().clearCustomSettings(getSearchType());
+		
+	}
+
 }
