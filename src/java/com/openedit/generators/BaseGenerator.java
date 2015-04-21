@@ -102,15 +102,17 @@ public abstract class BaseGenerator implements Generator, Cloneable
 		{
 			return true;
 		}
-		String message = inWrapped.toString() + inWrapped.getMessage();
-		
-		if ( message.indexOf("Broken pipe") > -1 || 
-			message.indexOf("socket write error") > -1 ||
-			message.indexOf("Connection reset") > -1 )	 //tomcat			
+		if ("Closed".equals(inWrapped.getMessage()))
 		{
 			return true;
 		}
-	
+		String message = inWrapped.toString() + inWrapped.getMessage();
+		if ( message.indexOf("Broken pipe") > -1 || 
+			message.indexOf("socket write error") > -1 ||
+			message.indexOf("Connection reset") > -1 ) //tomcat
+		{
+			return true;
+		}
 		return ignoreError( inWrapped.getCause() );
 	}
 

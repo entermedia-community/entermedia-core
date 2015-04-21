@@ -91,7 +91,11 @@ public class Exec
 	}
 	public ExecResult runExec(String inCommandKey,List<String> inArgs)
 	{
-		return runExec(inCommandKey,  inArgs, false, null, null, null);
+		return runExec(inCommandKey, inArgs,-1);
+	}
+	public ExecResult runExec(String inCommandKey,List<String> inArgs, long inTimeout)
+	{
+		return runExec(inCommandKey,  inArgs, false, null, null, null, inTimeout);
 	}
 	public ExecResult runExec(String inCommandKey,List<String> inArgs, File inRootFolder)
 	{
@@ -99,7 +103,11 @@ public class Exec
 	}
 	public ExecResult runExec(String inCommandKey,List<String> inArgs, boolean inSaveOutput)
 	{
-		return runExec(inCommandKey,  inArgs, inSaveOutput, null, null, null);
+		return runExec(inCommandKey,  inArgs, inSaveOutput, -1);
+	}
+	public ExecResult runExec(String inCommandKey,List<String> inArgs, boolean inSaveOutput, long inTimeout)
+	{
+		return runExec(inCommandKey,  inArgs, inSaveOutput, null, null, null, inTimeout);
 	}
 	
 	/**
@@ -121,8 +129,13 @@ public class Exec
 	
 	public ExecResult runExec(String inCommandKey, List<String> inArgs, boolean inSaveOutput, InputStream inPut, OutputFiller inOutputFiller, File inRootFolder)
 	{
-		ArrayList<String> command = new ArrayList<String>();
+		return runExec(inCommandKey,inArgs,inSaveOutput,inPut, inOutputFiller, inRootFolder, -1);
+	}
+	
+	public ExecResult runExec(String inCommandKey, List<String> inArgs, boolean inSaveOutput, InputStream inPut, OutputFiller inOutputFiller, File inRootFolder, long inTimeout)
+	{
 		
+		ArrayList<String> command = new ArrayList<String>();
 		//check for cached version
 		ExecCommand cachedCommand = (ExecCommand)fieldCachedCommands.get(inCommandKey);
 		if(cachedCommand == null)
@@ -203,11 +216,11 @@ public class Exec
 		}
 		if( inRootFolder == null )
 		{
-			return runExec(command,cachedCommand.inStartDir,inSaveOutput, inPut);
+			return runExec(command,cachedCommand.inStartDir,inSaveOutput, inPut, inTimeout);
 		}
 		else
 		{
-			return runExec(command,inRootFolder,inSaveOutput, inPut);
+			return runExec(command,inRootFolder,inSaveOutput, inPut, inTimeout);
 		}
 	}
 	class ExecCommand
@@ -216,8 +229,12 @@ public class Exec
 		protected File inStartDir;
 	}
 	
-	
 	public ExecResult runExec(List<String> com, File inRunFrom, boolean inSaveOutput, InputStream inputStream) throws OpenEditException
+	{
+		return runExec(com,inRunFrom,inSaveOutput,inputStream,-1);
+	}
+	
+	public ExecResult runExec(List<String> com, File inRunFrom, boolean inSaveOutput, InputStream inputStream, long inTimeout) throws OpenEditException
 	{
 		ExecResult result = new ExecResult();
 		result.setRunOk(false);
@@ -263,7 +280,7 @@ public class Exec
 //			errreader.run();
 			
 			int ret = -1;
-			long timelimit = (long) getTimeLimit();
+			long timelimit = inTimeout > 0 ? inTimeout : (long) getTimeLimit();
 			if ( timelimit > 0){
 				log.info("executing processing with a timeout of "+timelimit+" ms (process hashcode="+proc.hashCode()+")");
 				try
