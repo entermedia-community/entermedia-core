@@ -1212,6 +1212,11 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 	
 	public String getHours(String inDate)
 	{
+		if( inDate == null || inDate.length() == 0)
+		{
+			return null;
+		}
+			
 		Date date = getLocaleManager().getDateStorageUtil().parseFromStorage(inDate);
 		if(date == null){
 			return null;
