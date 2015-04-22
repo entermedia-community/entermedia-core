@@ -58,10 +58,11 @@ public class SearcherManager
 				{
 					String finalcatalogid = resolveCatalogId(inCatalogId, inFieldName);
 					PropertyDetailsArchive newarchive = getPropertyDetailsArchive(finalcatalogid);
-					if( inFieldName == null)
-					{
-						return null;
-					}
+//					if( inFieldName == null)
+//					{
+//						return null;
+//					}
+					
 					searcher = loadSearcher(newarchive, inFieldName);
 					searcher.setCatalogId(finalcatalogid);
 					searcher.setSearchType(inFieldName); //This may be product or orderstatus
@@ -83,8 +84,15 @@ public class SearcherManager
 	{
 		String inCatalogId = newarchive.getCatalogId();
 		Searcher searcher;
-		String beanName = inFieldName + "Searcher";
-		if( !getModuleManager().contains(inCatalogId,inFieldName + "Searcher") )
+		//Check the properites
+		PropertyDetails details = newarchive.getPropertyDetails(inFieldName);
+		String beanName = details.getBeanName();
+		
+		if( beanName == null && getModuleManager().contains(inCatalogId,inFieldName + "Searcher") )
+		{
+			beanName = inFieldName + "Searcher";
+		}	
+		else
 		{
 			if( inFieldName.endsWith("Log"))
 			{
@@ -92,17 +100,9 @@ public class SearcherManager
 			}
 			else
 			{
-				//Check the properites
-				//searchertype
-				PropertyDetails details = newarchive.getPropertyDetails(inFieldName);
-				beanName = details.getBeanName();
-				if( beanName == null )
-				{
-					beanName = "listSearcher";
-				}
+				beanName = "listSearcher";
 			}
 		}
-		
 		searcher = (Searcher)getModuleManager().getBean(inCatalogId, beanName, false);
 		if(log.isDebugEnabled())
 		{
