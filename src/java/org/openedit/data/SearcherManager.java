@@ -88,19 +88,22 @@ public class SearcherManager
 		PropertyDetails details = newarchive.getPropertyDetails(inFieldName);
 		String beanName = details.getBeanName();
 		
-		if( beanName == null && getModuleManager().contains(inCatalogId,inFieldName + "Searcher") )
+		if( beanName == null )
 		{
-			beanName = inFieldName + "Searcher";
-		}	
-		else
-		{
-			if( inFieldName.endsWith("Log"))
+			if( getModuleManager().contains(inCatalogId,inFieldName + "Searcher") )
 			{
-				beanName = "dynamicLogSearcher";					
-			}
+				beanName = inFieldName + "Searcher";
+			}	
 			else
 			{
-				beanName = "listSearcher";
+				if( inFieldName.endsWith("Log"))
+				{
+					beanName = "dynamicLogSearcher";					
+				}
+				else
+				{
+					beanName = "listSearcher";
+				}
 			}
 		}
 		searcher = (Searcher)getModuleManager().getBean(inCatalogId, beanName, false);
