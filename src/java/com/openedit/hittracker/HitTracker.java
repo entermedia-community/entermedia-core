@@ -1103,7 +1103,7 @@ public abstract class HitTracker implements Serializable, Collection
 	public List<FilterNode> getFilterOptions()
 	{
 		if(fieldFilterOptions == null){
-			fieldFilterOptions = getFacetedResults();
+			fieldFilterOptions = loadFacetsFromResults();
 		}
 		return fieldFilterOptions;
 	
@@ -1112,7 +1112,7 @@ public abstract class HitTracker implements Serializable, Collection
 		fieldFilterOptions = filters;
 	}
 
-	protected List getFacetedResults() 
+	protected List loadFacetsFromResults() 
 	{
 		// TODO Auto-generated method stub
 		return new ArrayList(); //this is load code
