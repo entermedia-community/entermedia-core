@@ -372,6 +372,7 @@ public class ModuleManager implements BeanFactoryAware, ShutdownList
 				break;
 			}
 		}
+		log.info("Looking for " + inBeanName + " found " + beanName);
 		return beanName;
 	}
 
@@ -427,7 +428,9 @@ public class ModuleManager implements BeanFactoryAware, ShutdownList
 	 */
 	public boolean contains(String inKey)
 	{
-		return getBeanFactory().containsBean(inKey);
+		boolean has = getBeanFactory().containsBean(inKey);
+		log.info("HadBean " + inKey + " = " + has);
+		return has;
 	}
 
 	public Set<Shutdownable> getLoadedBeans()
