@@ -429,7 +429,7 @@ public class ModuleManager implements BeanFactoryAware, ShutdownList
 	public boolean contains(String inKey)
 	{
 		boolean has = getBeanFactory().containsBean(inKey);
-		log.info("HadBean " + inKey + " = " + has);
+		//log.info("HadBean " + inKey + " = " + has);
 		return has;
 	}
 
