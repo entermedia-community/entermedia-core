@@ -86,25 +86,26 @@ public class SearcherManager
 		Searcher searcher;
 		//Check the properites
 		PropertyDetails details = newarchive.getPropertyDetails(inFieldName);
-		String beanName = details.getBeanName();
 		
-		if( beanName == null )
+		String beanName = null;
+		if( getModuleManager().contains(inCatalogId,inFieldName + "Searcher") ) //this might be a lookup
 		{
-			if( getModuleManager().contains(inCatalogId,inFieldName + "Searcher") )
-			{
-				beanName = inFieldName + "Searcher";
-			}	
-			else
-			{
-				if( inFieldName.endsWith("Log"))
+			beanName = inFieldName + "Searcher";
+		}	
+		else
+		{
+				beanName = details.getBeanName(); //Once item is saved it always uses dataSearcher for the type
+				if( beanName == null)
 				{
-					beanName = "dynamicLogSearcher";					
+					if( inFieldName.endsWith("Log"))
+					{
+						beanName = "dynamicLogSearcher";					
+					}
+					else
+					{
+						beanName = "listSearcher";
+					}
 				}
-				else
-				{
-					beanName = "listSearcher";
-				}
-			}
 		}
 		searcher = (Searcher)getModuleManager().getBean(inCatalogId, beanName, false);
 		if(log.isDebugEnabled())
@@ -115,7 +116,7 @@ public class SearcherManager
 //			{
 //				XmlSearcher xml = (XmlSearcher)searcher;
 //			}
-		log.info("Loaded " + inFieldName + " with " + beanName);
+		//log.info("Loaded " + inFieldName + " with " + beanName);
 		return searcher;
 	}
 	public PropertyDetailsArchive getPropertyDetailsArchive(String inCatalogId)
