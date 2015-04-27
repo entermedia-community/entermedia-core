@@ -400,6 +400,10 @@ public class UserProfile extends BaseData implements SaveableData
 				return 15;
 			}
 		}
+		if( "null".equals( value) )
+		{
+			return 15;
+		}
 		return Integer.parseInt(value);
 	}
 
