@@ -101,4 +101,10 @@ public class QueryBuilder
 		getQuery().setAndTogether(true);
 		return this;
 	}
+	
+	public QueryBuilder all() 
+	{
+		getQuery().addMatches("id", "*");
+		return this;
+	}
 }

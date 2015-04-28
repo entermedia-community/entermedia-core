@@ -448,4 +448,11 @@ public class SearcherManager
 		return inCatalogId;
 		
 	}
+	
+	public  QueryBuilder query(String inCatalogId, String inSearchType)
+	{
+		Searcher searcher = getSearcher(inCatalogId, inSearchType);
+		return searcher.query();
+	}
+	
 }

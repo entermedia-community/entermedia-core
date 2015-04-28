@@ -30,7 +30,7 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 		{
 			return null;
 		}
-		Object object = getProperties().get(inId);
+		Object object = getMap().get(inId);
 		if (object == null) {
 			return null;
 		}
