@@ -12,6 +12,7 @@ import org.entermedia.locks.MemoryLockManager;
 import org.openedit.Data;
 import org.openedit.repository.ContentItem;
 
+import com.openedit.ModuleManager;
 import com.openedit.OpenEditException;
 import com.openedit.page.Page;
 import com.openedit.page.manage.PageManager;
@@ -24,16 +25,17 @@ public class XmlArchive
 	private static final Log log = LogFactory.getLog(XmlArchive.class);
 	protected PageManager fieldPageManager;
 	protected XmlUtil fieldXmlUtil;
-	protected LockManager fieldLockManager;
+	protected ModuleManager fieldModuleManager;
 	
-	public LockManager getLockManager()
+
+	public ModuleManager getModuleManager()
 	{
-		return fieldLockManager;
+		return fieldModuleManager;
 	}
 
-	public void setLockManager(LockManager inLockManager)
+	public void setModuleManager(ModuleManager inModuleManager)
 	{
-		fieldLockManager = inLockManager;
+		fieldModuleManager = inModuleManager;
 	}
 
 	/**
@@ -202,7 +204,7 @@ public class XmlArchive
 	public void saveXml(XmlFile inFile, User inUser) throws OpenEditException
 	{
 		
-		Lock lock = getLockManager().lock("system", inFile.getPath(), null ); //this will retry 10 times then timeout and throw an exception
+		Lock lock = getLockManager().lock(inFile.getPath(), null ); //this will retry 10 times then timeout and throw an exception
 		try
 		{
 			saveXml(inFile, inUser,lock);
@@ -211,12 +213,22 @@ public class XmlArchive
 		finally
 		{
 			
-			getLockManager().release("system", lock);
+			getLockManager().release(lock);
 		}
 	}
 	
 	
+	public LockManager getLockManager(String inCatalogId)
+	{
+		LockManager manager = (LockManager)getModuleManager().getBean(inCatalogId,"lockManager");
+		return manager;
+	}
 	
+
+	protected LockManager getLockManager()
+	{
+		return getLockManager("system");
+	}
 
 	public PageManager getPageManager()
 	{

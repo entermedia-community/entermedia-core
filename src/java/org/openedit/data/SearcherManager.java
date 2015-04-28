@@ -25,14 +25,6 @@ public class SearcherManager
 	protected ModuleManager fieldModuleManager;
 	protected Map fieldCache;
 	protected XmlArchive fieldXmlArchive;
-    public LockManager getLockManager() {
-		return fieldLockManager;
-	}
-	public void setLockManager(LockManager inLockManager) {
-		fieldLockManager = inLockManager;
-	}
-
-	protected LockManager fieldLockManager;
     
 	//A fieldName can be product or orderstatus. If there is no orderstatus searcher then we use an XML lookup for this catalog. 
 	public Searcher getSearcher(String inCatalogId, String inFieldName)
@@ -454,5 +446,12 @@ public class SearcherManager
 		Searcher searcher = getSearcher(inCatalogId, inSearchType);
 		return searcher.query();
 	}
+
+	public LockManager getLockManager(String inCatalogId)
+	{
+		LockManager manager = (LockManager)getModuleManager().getBean(inCatalogId,"lockManager");
+		return manager;
+	}
+
 	
 }

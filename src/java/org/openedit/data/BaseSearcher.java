@@ -2325,7 +2325,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	
 	public LockManager getLockManager()
 	{
-		return getSearcherManager().getLockManager();	
+		return getSearcherManager().getLockManager(getCatalogId());	
 	}
 
 	@Override

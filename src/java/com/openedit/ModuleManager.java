@@ -271,6 +271,11 @@ public class ModuleManager implements BeanFactoryAware, ShutdownList
 	public boolean contains(String inCatalogId, String inBeanName)
 	{
 		String beanName = resolveBean(inCatalogId, inBeanName);
+		if( getCatalogIdBeans().containsKey(inCatalogId + "_" + inBeanName) )
+		{
+			return true;
+		}
+
 		return contains(beanName);
 	}
 	public Object getBean( String inCatalogId, String inBeanName )

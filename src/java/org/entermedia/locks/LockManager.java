@@ -5,18 +5,21 @@ import java.util.Collection;
 public interface LockManager
 {
 
-	public abstract Lock lock(String inCatId, String inPath, String inOwnerId);
+	public abstract Lock lock(String inPath, String inOwnerId);
 
-	public abstract Lock loadLock(String inCatId, String inPath);
+	public abstract Lock loadLock(String inPath);
 
-	public abstract Collection getLocksByDate(String inCatId, String inPath);
+	public abstract Collection<Lock> getLocksByDate(String inPath);
 
-	public abstract Lock lockIfPossible(String inCatId, String inPath, String inOwnerId);
+	public abstract Lock lockIfPossible(String inPath, String inOwnerId);
 
-	public abstract boolean release(String inCatId, Lock inLock);
+	public abstract boolean release(Lock inLock);
 
-	public abstract void releaseAll(String inCatalogId, String inPath);
+	public abstract void releaseAll(String inPath);
 
-	public boolean isOwner(String inCatalogId, Lock lock);
+	public boolean isOwner(Lock lock);
+	
+	String getCatalogId();
 
+	void setCatalogId(String inId);
 }
