@@ -3,9 +3,10 @@ package org.entermedia.locks;
 import java.util.Date;
 
 import org.openedit.data.BaseData;
+import org.openedit.data.SaveableData;
 import org.openedit.util.DateStorageUtil;
 
-public class Lock extends BaseData
+public class Lock extends BaseData implements SaveableData
 {
 	public String getOwnerId()
 	{

@@ -377,7 +377,10 @@ public class ModuleManager implements BeanFactoryAware, ShutdownList
 				break;
 			}
 		}
-		log.info("Looking for " + inBeanName + " found " + beanName);
+		if( log.isDebugEnabled() )
+		{
+			log.info("Looking for " + inBeanName + " found " + beanName);
+		}
 		return beanName;
 	}
 
