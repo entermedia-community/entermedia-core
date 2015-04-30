@@ -437,6 +437,10 @@ public class SearcherManager
 	public  QueryBuilder query(String inCatalogId, String inSearchType)
 	{
 		Searcher searcher = getSearcher(inCatalogId, inSearchType);
+		if( searcher == null)
+		{
+			return null;
+		}
 		return searcher.query();
 	}
 
