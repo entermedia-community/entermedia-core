@@ -13,6 +13,7 @@ import org.entermedia.locks.LockManager;
 import org.openedit.Data;
 import org.openedit.xml.XmlArchive;
 
+import com.openedit.BeanNameLoader;
 import com.openedit.ModuleManager;
 import com.openedit.OpenEditRuntimeException;
 import com.openedit.hittracker.HitTracker;
@@ -24,8 +25,7 @@ public class SearcherManager
 	
 	protected ModuleManager fieldModuleManager;
 	protected Map fieldCache;
-	protected XmlArchive fieldXmlArchive;
-    
+  
 	//A fieldName can be product or orderstatus. If there is no orderstatus searcher then we use an XML lookup for this catalog. 
 	public Searcher getSearcher(String inCatalogId, String inFieldName)
 	{
@@ -319,14 +319,7 @@ public class SearcherManager
 		}
 		return fieldCache;
 	}
-	public XmlArchive getXmlArchive()
-	{
-		return fieldXmlArchive;
-	}
-	public void setXmlArchive(XmlArchive inXmlArchive)
-	{
-		fieldXmlArchive = inXmlArchive;
-	}
+	
 
 	public FilteredTracker makeFilteredTracker()
 	{

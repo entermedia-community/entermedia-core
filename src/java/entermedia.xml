@@ -30,8 +30,6 @@
 		<property name="moduleManager">
 			<ref bean="moduleManager" />
 		</property>
-		<property name="xmlArchive"><ref bean="xmlArchive"/></property>
-		
 	</bean>
 	<bean id="userManager" class="org.openedit.users.BaseUserManager" scope="prototype">
 		<property name="searcherManager"><ref bean="searcherManager"/></property>
@@ -78,8 +76,14 @@
 	</bean>
 	
 	<bean id="moduleManager" class="com.openedit.ModuleManager">
+		<property name="beanNameLoader"><ref bean="beanNameLoader"/></property>
 	</bean>
 	
+	<bean id="beanNameLoader" class="com.openedit.BeanNameLoader">
+		<property name="pageManager"><ref bean="pageManager"/></property>
+		<property name="cacheManager"><ref bean="cacheManager"/></property>
+        <property name="xmlArchive"><ref bean="xmlArchive"/></property>
+	</bean>
 
 	<bean id="mimeTypeMap" class="com.openedit.page.manage.BaseMimeTypeMap">
 		<property name="rootDirectory"><ref bean="root" /></property>
