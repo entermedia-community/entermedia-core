@@ -16,14 +16,6 @@ public class Lock extends BaseData implements SaveableData
 	{
 		setProperty("ownerid", inOwnerId);
 	}
-	public String getPath()
-	{
-		return get("path");
-	}
-	public void setPath(String inPath)
-	{
-		setProperty("path", inPath);
-	}
 	public Date getDate()
 	{
 		String date = get("date");
@@ -49,7 +41,7 @@ public class Lock extends BaseData implements SaveableData
 	}
 	public String getName()
 	{
-		return getPath();
+		return getSourcePath();
 	}
 	public void setNodeId(String inId)
 	{

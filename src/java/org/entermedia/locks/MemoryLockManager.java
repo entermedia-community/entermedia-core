@@ -77,7 +77,7 @@ public class MemoryLockManager implements LockManager
 			throw new OpenEditException("lock id is currently null");
 		}
 
-		Lock owner = loadLock(lock.getPath());
+		Lock owner = loadLock(lock.getSourcePath());
 		if( owner == null)
 		{
 			throw new OpenEditException("Owner lock is currently null");
@@ -143,7 +143,7 @@ public class MemoryLockManager implements LockManager
 	{
 		Lock lockrequest = new Lock();
 		lockrequest.setId(String.valueOf( nextId() ) );
-		lockrequest.setPath(inPath);
+		lockrequest.setSourcePath(inPath);
 		lockrequest.setOwnerId(inOwnerId);
 		lockrequest.setDate(new Date());
 		lockrequest.setNodeId("inmemory");

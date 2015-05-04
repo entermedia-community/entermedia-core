@@ -177,11 +177,8 @@ public class XmlArchive
 		return element;
 	}
 
-	public void saveXml(XmlFile inFile, User inUser, Lock lock) throws OpenEditException
+	public void saveXml(XmlFile inFile, User inUser) throws OpenEditException
 	{
-		
-		//Lock lock = getLockManager().lock("system", inFile.getPath(), null ); //this will retry 10 times then timeout and throw an exception
-	
 				Page page = getPageManager().getPage(inFile.getPath(), false);
 		
 				ContentItem tmp = getPageManager().getRepository().getStub(inFile.getPath() + ".tmp.xml");
@@ -201,34 +198,34 @@ public class XmlArchive
 	
 	}
 	
-	public void saveXml(XmlFile inFile, User inUser) throws OpenEditException
-	{
-		
-		Lock lock = getLockManager().lock(inFile.getPath(), null ); //this will retry 10 times then timeout and throw an exception
-		try
-		{
-			saveXml(inFile, inUser,lock);
-				//log.info("Save " + inFile.getPath());
-		}
-		finally
-		{
-			
-			getLockManager().release(lock);
-		}
-	}
+//	public void saveXml(XmlFile inFile, User inUser) throws OpenEditException
+//	{
+//		
+////		Lock lock = getLockManager().lock(inFile.getPath(), null ); //this will retry 10 times then timeout and throw an exception
+////		try
+////		{
+//			saveXml(inFile, inUser,null);
+//				//log.info("Save " + inFile.getPath());
+////		}
+////		finally
+////		{
+////			
+////			getLockManager().release(lock);
+////		}
+//	}
 	
 	
-	public LockManager getLockManager(String inCatalogId)
-	{
-		LockManager manager = (LockManager)getModuleManager().getBean(inCatalogId,"lockManager");
-		return manager;
-	}
+//	public LockManager getLockManager(String inCatalogId)
+//	{
+//		LockManager manager = (LockManager)getModuleManager().getBean(inCatalogId,"lockManager");
+//		return manager;
+//	}
 	
 
-	protected LockManager getLockManager()
-	{
-		return getLockManager("system");
-	}
+//	protected LockManager getLockManager()
+//	{
+//		return getLockManager("system");
+//	}
 
 	public PageManager getPageManager()
 	{
