@@ -417,14 +417,22 @@ public class SearcherManager
 		if(inSearchType == null){
 			return inCatalogId;
 		}
-		Data catalogdata = getData(inCatalogId, "searchtypes", inSearchType);
+		Searcher typeSearcher = getSearcher(inCatalogId, "searchtypes");
+		if( typeSearcher.getPropertyDetails().size() == 0)
+		{
+			if( inSearchType.equals("user") || inSearchType.equals("group"))
+			{
+				return "system";
+			}
+			return inCatalogId;
+		}
+		Data catalogdata = (Data)typeSearcher.searchById(inSearchType);
 		if(catalogdata != null)
 		{
 			return catalogdata.get("catalogid");
 		}
 		else
 		{
-			
 			if( inSearchType.equals("user") || inSearchType.equals("group"))
 			{
 				return "system";
