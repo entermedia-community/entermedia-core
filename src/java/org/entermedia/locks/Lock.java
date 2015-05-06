@@ -27,7 +27,7 @@ public class Lock extends BaseData implements SaveableData
 		String date = DateStorageUtil.getStorageUtil().formatForStorage(inDate);
 		setProperty("date", date);
 	}
-	public boolean isOwner(String inNodeId, String inOwnerId)
+	public boolean isLockedBy(String inNodeId, String inOwnerId)
 	{
 		boolean owner = inOwnerId.equals(getOwnerId());
 		if(owner)
