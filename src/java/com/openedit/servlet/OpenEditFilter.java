@@ -59,7 +59,11 @@ public class OpenEditFilter implements Filter
 			chain.doFilter(request, response); // Just continue chain.
 			return;
 		}
-
+		if (path.startsWith("/entermedia/servlets")) 
+		{
+			chain.doFilter(request, response); // Just continue chain.
+			return;
+		}
 		if (getEngine() == null)
 		{
 			response
