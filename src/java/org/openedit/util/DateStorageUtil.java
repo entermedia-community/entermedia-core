@@ -205,7 +205,12 @@ public class DateStorageUtil {
 		return date != null ? formater.format(date) : null;
 	}
 
-	public String checkFormat(String inValue) {
+	public String checkFormat(String inValue) 
+	{
+		if( inValue == null)
+		{
+			return null;
+		}
 		if (inValue.length() > 21) {
 			if (!inValue.contains("T") && inValue.indexOf("-") < 6 && 
 					!inValue.substring(inValue.length() - ".000".length()).contains(".")) {
