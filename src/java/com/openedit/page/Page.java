@@ -8,6 +8,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -878,5 +879,18 @@ public class Page implements Data, Comparable
 		return getPageSettings().replaceProperty(inValue);
 	}
 	
-	
+	public void setValues(String inKey, Collection<String> inValues)
+	{
+		StringBuffer values = new StringBuffer();
+		for (Iterator iterator = inValues.iterator(); iterator.hasNext();)
+		{
+			String detail = (String) iterator.next();
+			values.append(detail);
+			if( iterator.hasNext())
+			{
+				values.append(" | ");
+			}
+		}
+		setProperty(inKey,values.toString());
+	}
 }

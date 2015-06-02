@@ -4,6 +4,7 @@
 package org.openedit.xml;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -262,5 +263,18 @@ public class XmlFile implements Data
 			setProperty(key, inProperties.get(key));
 		}
 	}
-
+	public void setValues(String inKey, Collection<String> inValues)
+	{
+		StringBuffer values = new StringBuffer();
+		for (Iterator iterator = inValues.iterator(); iterator.hasNext();)
+		{
+			String detail = (String) iterator.next();
+			values.append(detail);
+			if( iterator.hasNext())
+			{
+				values.append(" | ");
+			}
+		}
+		setProperty(inKey,values.toString());
+	}
 }
