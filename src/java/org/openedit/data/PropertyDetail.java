@@ -113,7 +113,9 @@ public class PropertyDetail implements Data, ViewItem, Comparable
 
 	public boolean isMultiValue()
 	{
-		return isViewType("multiselect") || isViewType("libraries") || getId().equals("category") || getId().equals("keywords");
+		return isViewType("multiselect") 
+				|| isDataType("multi")
+				|| isViewType("tageditor") || isViewType("libraries") || getId().equals("category") || getId().equals("keywords");
 	}
 
 	public boolean isBoolean()
