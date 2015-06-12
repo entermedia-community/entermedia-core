@@ -2258,7 +2258,13 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 						{
 							if( val.length() == 10) //We assume US format or Storage Format
 							{
-								val = DateStorageUtil.getStorageUtil().formatForStorage(val, "yyyy-MM-dd");
+								String format;
+								if (val.matches("[0-9]{2}/[0-9]{2}/[0-9]{4}")) {
+									format = "MM/dd/yyyy";
+								} else {
+									format = "yyyy-MM-dd";
+								}
+								val = DateStorageUtil.getStorageUtil().formatForStorage(val, format);
 							}
 						}
 					}

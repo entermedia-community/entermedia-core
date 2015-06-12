@@ -17,7 +17,7 @@ public class DateStorageUtil {
 	protected Map<String, DateFormat> fieldDateFormats;
 	protected DateFormat fieldOldDashFormat;
 	// 1 day = 24 hour x 60 minutes x 60 seconds x 1000 millisecond;
-	private static final long PERIOR_OF_DAY = 24 * 60 * 60 * 1000;
+	private static final long PERIOD_OF_DAY = 24 * 60 * 60 * 1000;
 	static final private ThreadLocal perThreadCache = new ThreadLocal();
 
 	public DateFormat getDateFormat(String inFormat) {
@@ -94,7 +94,7 @@ public class DateStorageUtil {
 		// Need to add timezone here
 		Date current = new Date();
 		double duration = (double) (current.getTime() - lastDateTime.getTime())
-				/ PERIOR_OF_DAY;
+				/ PERIOD_OF_DAY;
 		return duration;
 	}
 
