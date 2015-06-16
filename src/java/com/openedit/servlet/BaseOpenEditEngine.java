@@ -315,6 +315,7 @@ public class BaseOpenEditEngine implements OpenEditEngine
      */
 	public void shutdown()
 	{
+		System.out.println("OpenEditEngine shutdown start");
 		Object[] beans = getModuleManager().getLoadedBeans().toArray();
 
 		for (int i = 0; i < beans.length; i++)
@@ -324,8 +325,8 @@ public class BaseOpenEditEngine implements OpenEditEngine
 			{
 				((Shutdownable)module).shutdown();
 			}
-			
 		}
+		System.out.println("OpenEditEngine shutdown complete");
 	}
 
 
