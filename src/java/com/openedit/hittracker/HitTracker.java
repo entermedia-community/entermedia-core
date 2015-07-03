@@ -1198,6 +1198,10 @@ public abstract class HitTracker implements Serializable, Collection
 		return false;
 		
 	}
+	public void invalidate()
+	{
+		setIndexId(getIndexId() + 1);
+	}
 	
 }
 

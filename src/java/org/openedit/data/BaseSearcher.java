@@ -1533,7 +1533,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				}
 				
 			}
-				hits.setIndexId(hits.getIndexId() + 1); // Causes the hits to
+				hits.invalidate(); // Causes the hits to
 			// be // reloaded
 			cachedSearch(inReq, query);
 		}
