@@ -13,6 +13,7 @@ import org.entermedia.locks.LockManager;
 import org.openedit.Data;
 import org.openedit.xml.XmlArchive;
 
+import com.openedit.BeanNameLoader;
 import com.openedit.ModuleManager;
 import com.openedit.OpenEditRuntimeException;
 import com.openedit.hittracker.HitTracker;
@@ -24,16 +25,7 @@ public class SearcherManager
 	
 	protected ModuleManager fieldModuleManager;
 	protected Map fieldCache;
-	protected XmlArchive fieldXmlArchive;
-    public LockManager getLockManager() {
-		return fieldLockManager;
-	}
-	public void setLockManager(LockManager inLockManager) {
-		fieldLockManager = inLockManager;
-	}
-
-	protected LockManager fieldLockManager;
-    
+  
 	//A fieldName can be product or orderstatus. If there is no orderstatus searcher then we use an XML lookup for this catalog. 
 	public Searcher getSearcher(String inCatalogId, String inFieldName)
 	{
@@ -327,14 +319,7 @@ public class SearcherManager
 		}
 		return fieldCache;
 	}
-	public XmlArchive getXmlArchive()
-	{
-		return fieldXmlArchive;
-	}
-	public void setXmlArchive(XmlArchive inXmlArchive)
-	{
-		fieldXmlArchive = inXmlArchive;
-	}
+	
 
 	public FilteredTracker makeFilteredTracker()
 	{
@@ -432,14 +417,22 @@ public class SearcherManager
 		if(inSearchType == null){
 			return inCatalogId;
 		}
-		Data catalogdata = getData(inCatalogId, "searchtypes", inSearchType);
+		Searcher typeSearcher = getSearcher(inCatalogId, "searchtypes");
+		if( typeSearcher.getPropertyDetails().size() == 0)
+		{
+			if( inSearchType.equals("user") || inSearchType.equals("group"))
+			{
+				return "system";
+			}
+			return inCatalogId;
+		}
+		Data catalogdata = (Data)typeSearcher.searchById(inSearchType);
 		if(catalogdata != null)
 		{
 			return catalogdata.get("catalogid");
 		}
 		else
 		{
-			
 			if( inSearchType.equals("user") || inSearchType.equals("group"))
 			{
 				return "system";
@@ -448,4 +441,22 @@ public class SearcherManager
 		return inCatalogId;
 		
 	}
+	
+	public  QueryBuilder query(String inCatalogId, String inSearchType)
+	{
+		Searcher searcher = getSearcher(inCatalogId, inSearchType);
+		if( searcher == null)
+		{
+			return null;
+		}
+		return searcher.query();
+	}
+
+	public LockManager getLockManager(String inCatalogId)
+	{
+		LockManager manager = (LockManager)getModuleManager().getBean(inCatalogId,"lockManager");
+		return manager;
+	}
+
+	
 }

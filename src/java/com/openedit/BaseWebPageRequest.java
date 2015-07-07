@@ -928,7 +928,13 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 
 	public User getUser()
 	{
-		return (User) getPageValue(USER);
+		User user = (User) getPageValue(USER);
+//		if( user == null)
+//		{
+//			String catalogid = findValue("catalogid");
+//			user = (User) getSessionValue(catalogid + "user");
+//		}
+		return user;
 	}
 
 	/**

@@ -1,5 +1,6 @@
 package org.openedit;
 
+import java.util.Collection;
 import java.util.Map;
 
 public interface Data
@@ -17,5 +18,7 @@ public interface Data
 	Map getProperties();
 	
 	void setProperties(Map<String,String> inProperties);
+	public void setValues(String inKey, Collection<String> inValues);
+
 
 }

@@ -255,11 +255,12 @@ public class LDAP
 		}
 		catch (SizeLimitExceededException e)
 		{
-			
+			log.error(e);
 		}
 		catch (PartialResultException e)
 		{
 			//more than 1
+			log.error(e);
 		}
 		catch (NamingException e)
 		{

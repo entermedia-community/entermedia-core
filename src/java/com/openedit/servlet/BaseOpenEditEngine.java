@@ -48,12 +48,13 @@ public class BaseOpenEditEngine implements OpenEditEngine
 	    URLUtilities util = new URLUtilities(inRequest, inResponse);
 
 	    String requestedPath = util.getOriginalPath();
-	    HttpSession session = inRequest.getSession(false);
+//	    HttpSession session = inRequest.getSession(false);
 	    boolean checkdates = false;
-	    if( session != null)
-	    {
-	    	checkdates = session.getAttribute("user") != null;
-	    }
+//	    if( session != null)
+//	    {
+	    	checkdates = Boolean.parseBoolean( inRequest.getParameter("reload") );
+	    	//session.getAttribute("user") != null;
+//	    }
 	    Page page = getPageManager().getPage( requestedPath,checkdates);
 	    
 		//If link does not exists. Then put a real welcome page on there so that fallback will work
@@ -314,6 +315,7 @@ public class BaseOpenEditEngine implements OpenEditEngine
      */
 	public void shutdown()
 	{
+		System.out.println("OpenEditEngine shutdown start");
 		Object[] beans = getModuleManager().getLoadedBeans().toArray();
 
 		for (int i = 0; i < beans.length; i++)
@@ -323,8 +325,8 @@ public class BaseOpenEditEngine implements OpenEditEngine
 			{
 				((Shutdownable)module).shutdown();
 			}
-			
 		}
+		System.out.println("OpenEditEngine shutdown complete");
 	}
 
 

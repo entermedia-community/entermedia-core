@@ -3,9 +3,10 @@ package org.entermedia.locks;
 import java.util.Date;
 
 import org.openedit.data.BaseData;
+import org.openedit.data.SaveableData;
 import org.openedit.util.DateStorageUtil;
 
-public class Lock extends BaseData
+public class Lock extends BaseData implements SaveableData
 {
 	public String getOwnerId()
 	{
@@ -14,14 +15,6 @@ public class Lock extends BaseData
 	public void setOwnerId(String inOwnerId)
 	{
 		setProperty("ownerid", inOwnerId);
-	}
-	public String getPath()
-	{
-		return get("path");
-	}
-	public void setPath(String inPath)
-	{
-		setProperty("path", inPath);
 	}
 	public Date getDate()
 	{
@@ -34,7 +27,7 @@ public class Lock extends BaseData
 		String date = DateStorageUtil.getStorageUtil().formatForStorage(inDate);
 		setProperty("date", date);
 	}
-	public boolean isOwner(String inNodeId, String inOwnerId)
+	public boolean isLockedBy(String inNodeId, String inOwnerId)
 	{
 		boolean owner = inOwnerId.equals(getOwnerId());
 		if(owner)
@@ -48,7 +41,7 @@ public class Lock extends BaseData
 	}
 	public String getName()
 	{
-		return getPath();
+		return getSourcePath();
 	}
 	public void setNodeId(String inId)
 	{

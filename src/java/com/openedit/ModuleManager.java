@@ -22,9 +22,7 @@ import org.openedit.xml.XmlFile;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
-import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
-import org.springframework.beans.factory.support.AbstractBeanDefinition;
 
 import com.openedit.modules.BaseModule;
 import com.openedit.page.Page;
@@ -43,7 +41,16 @@ public class ModuleManager implements BeanFactoryAware, ShutdownList
 	protected Set fieldLoadedBeans;
 	protected XmlArchive fieldXmlArchive;
 	protected Map fieldCatalogIdBeans;
-	
+	 protected BeanNameLoader fieldBeanLoader;
+	    
+		public BeanNameLoader getBeanNameLoader()
+		{
+			return fieldBeanLoader;
+		}
+		public void setBeanNameLoader(BeanNameLoader inBeanLoader)
+		{
+			fieldBeanLoader = inBeanLoader;
+		}
 	private static final Log log = LogFactory.getLog(ModuleManager.class);
 	
 	public void executePageAction( PageAction inAction, WebPageRequest inReq ) throws OpenEditException
@@ -271,6 +278,11 @@ public class ModuleManager implements BeanFactoryAware, ShutdownList
 	public boolean contains(String inCatalogId, String inBeanName)
 	{
 		String beanName = resolveBean(inCatalogId, inBeanName);
+		if( getCatalogIdBeans().containsKey(inCatalogId + "_" + inBeanName) )
+		{
+			return true;
+		}
+
 		return contains(beanName);
 	}
 	public Object getBean( String inCatalogId, String inBeanName )
@@ -322,58 +334,7 @@ public class ModuleManager implements BeanFactoryAware, ShutdownList
 
 	public String resolveBean(String inCatalogId, String inBeanName)
 	{
-		//TODO: Cache this lookup
-		String beanName = inBeanName;
-
-		String parentlocation = "/" + inCatalogId + "/configuration/beans.xml";
-		Page page = getPageManager().getPage(parentlocation);
-		//log.info("BEANS PAGE: " + page);
-		//log.info("BEANS EXISTS?: " + page.exists());
-		//log.info("BEANS LOOKING FOR: " + inBeanName);
-		
-		int loopcheck = 0; //
-		while(page.exists())
-		{
-			loopcheck++;
-			if( loopcheck > 10)
-			{
-				throw new OpenEditRuntimeException("Infinite loop 1");
-			}
-			XmlFile file = getXmlArchive().getXml(page.getPath());
-			Element field = file.getElementById(inBeanName);
-			if( field != null)
-			{
-				//log.info("BEANS FOUND: " + field + ", with bean: " + field.attributeValue("bean"));
-				beanName = field.attributeValue("bean");
-				break;
-			}
-			
-			//look up the tree. Make sure we do not find ourself again. Look out for infinte loops
-			PageSettings fallback = page.getPageSettings().getFallback();
-			int loopcheck2 = 0;
-			while( fallback != null )
-			{
-				loopcheck2++;
-				if( loopcheck2 > 10)
-				{
-					throw new OpenEditRuntimeException("Infinite loop 2");
-				}
-				String fallbacklocation = PathUtilities.extractDirectoryPath(fallback.getPath()) + "/beans.xml";
-				if( !fallbacklocation.equals(page.getContentItem().getPath()))
-				{
-					//we found a new fallback
-					page = getPageManager().getPage(fallbacklocation);
-					break;
-				}
-				fallback = fallback.getFallback(); //look up a level
-			}
-			if( fallback == null)
-			{
-				break;
-			}
-		}
-		log.info("Looking for " + inBeanName + " found " + beanName);
-		return beanName;
+		return getBeanNameLoader().findName(inCatalogId, inBeanName);
 	}
 
 	protected PageManager getPageManager()
@@ -530,5 +491,5 @@ public class ModuleManager implements BeanFactoryAware, ShutdownList
 		}
 		getCatalogIdBeans().remove(inCatalogId + "_" + inBeanName);		
 	}
-	
+		
 }

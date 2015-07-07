@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.openedit.BaseWebServer;
+import com.openedit.WebServer;
 
 public class OpenEditFilter implements Filter
 {
@@ -33,6 +34,7 @@ public class OpenEditFilter implements Filter
 
 	public void destroy()
 	{
+		//We try to shutdown in three ways 1. Filter.destroy() 2. Web.xml ShutdownListener.java 3. BaseWebServer.initialize() shutdown hook
 		getEngine().shutdown();
 	}
 
@@ -59,7 +61,11 @@ public class OpenEditFilter implements Filter
 			chain.doFilter(request, response); // Just continue chain.
 			return;
 		}
-
+		if (path.startsWith("/entermedia/servlets")) 
+		{
+			chain.doFilter(request, response); // Just continue chain.
+			return;
+		}
 		if (getEngine() == null)
 		{
 			response
@@ -91,13 +97,13 @@ public class OpenEditFilter implements Filter
 			rootPath = System.getProperty("oe.root.path");
 		}
 
-		BaseWebServer server = new BaseWebServer();
+		BaseWebServer server = new BaseWebServer();  //Singleton?
 		server.setRootDirectory(new File(rootPath));
 		server.setNodeId(servletContext.getInitParameter("entermedianodeid"));
 		server.initialize();
-		servletContext.setAttribute(server.getClass().getName(), server); //TODO: Why is this here?
+		servletContext.setAttribute(BaseWebServer.class.getName(), server); //TODO: Why is this here?
+		servletContext.setAttribute(WebServer.class.getName(), server); //TODO: Why is this here?
 		fieldEngine = server.getOpenEditEngine();
-		
 	}
 
 	protected OpenEditEngine getEngine()

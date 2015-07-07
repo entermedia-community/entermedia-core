@@ -1533,7 +1533,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				}
 				
 			}
-				hits.setIndexId(hits.getIndexId() + 1); // Causes the hits to
+				hits.invalidate(); // Causes the hits to
 			// be // reloaded
 			cachedSearch(inReq, query);
 		}
@@ -2258,7 +2258,13 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 						{
 							if( val.length() == 10) //We assume US format or Storage Format
 							{
-								val = DateStorageUtil.getStorageUtil().formatForStorage(val, "yyyy-MM-dd");
+								String format;
+								if (val.matches("[0-9]{2}/[0-9]{2}/[0-9]{4}")) {
+									format = "MM/dd/yyyy";
+								} else {
+									format = "yyyy-MM-dd";
+								}
+								val = DateStorageUtil.getStorageUtil().formatForStorage(val, format);
 							}
 						}
 					}
@@ -2325,7 +2331,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	
 	public LockManager getLockManager()
 	{
-		return getSearcherManager().getLockManager();	
+		return getSearcherManager().getLockManager(getCatalogId());	
 	}
 
 	@Override

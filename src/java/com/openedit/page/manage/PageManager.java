@@ -63,7 +63,7 @@ public class PageManager
 	public Page getPage(String inPath, WebPageRequest inReq) throws OpenEditException
 	{
 		//this gets the page for this user
-		boolean checkCurrent = inReq.getUser() != null;
+		boolean checkCurrent = Boolean.parseBoolean( inReq.findValue("reload") );
 		Page real = getPage(inPath, checkCurrent);
 		return getPage(real,checkCurrent,inReq);
 	}
@@ -80,7 +80,8 @@ public class PageManager
 	 */
 	public Page getPage(Page inPage, WebPageRequest inReq) throws OpenEditException
 	{
-		boolean checkCurrent = inReq.getUser() != null;
+		//boolean checkCurrent = inReq.getUser() != null; //this no longer works since we do not have a user yet
+		boolean checkCurrent = Boolean.parseBoolean( inReq.findValue("reload") );
 		return getPage( inPage, checkCurrent, inReq);
 	}
 	public Page getPage(Page inPage, boolean inCheckCurrent, WebPageRequest inReq) throws OpenEditException

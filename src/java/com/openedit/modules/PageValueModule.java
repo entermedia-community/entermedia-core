@@ -18,7 +18,11 @@ public class PageValueModule extends BaseModule
 	{
 		PageAction inAction = inContext.getCurrentAction();
 		String key = inAction.getConfig().getAttribute("bean");
-
+		
+		if( inContext.getPageValue(key) != null)
+		{
+			return;
+		}
 		String className = inAction.getConfig().getAttribute("class");
 		if ( className != null)
 		{

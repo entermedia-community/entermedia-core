@@ -18,7 +18,18 @@ public class MemoryLockManager implements LockManager
 
 	protected Map<String,Lock> fieldLocks;
 	protected long fieldLockId = 0;
+	protected String fieldCatalogId;
 	
+	public String getCatalogId()
+	{
+		return fieldCatalogId;
+	}
+
+	public void setCatalogId(String inCatalogId)
+	{
+		fieldCatalogId = inCatalogId;
+	}
+
 	protected Map<String,Lock> getLocks()
 	{
 		if (fieldLocks == null)
@@ -28,11 +39,11 @@ public class MemoryLockManager implements LockManager
 		return fieldLocks;
 	}
 
-	public Lock lock(String inCatId, String inPath, String inOwnerId)
+	public Lock lock(String inPath, String inOwnerId)
 	{
-		Lock lock = loadLock(inCatId, inPath);
+		Lock lock = loadLock(inPath);
 		int tries = 0;
-		while( !grabLock(inCatId, inOwnerId, lock))
+		while( !grabLock( inOwnerId, lock))
 		{
 			tries++;
 			if( tries > 20)
@@ -49,13 +60,13 @@ public class MemoryLockManager implements LockManager
 				log.info(ex);
 			}
 			log.info("Could not lock " + inPath + " trying again  " + tries  + " locked by " + lock.getNodeId() + " " + lock.getOwnerId() );
-			lock = loadLock(inCatId, inPath);
+			lock = loadLock(inPath);
 		}
 		return lock;
 
 	}
 
-	public boolean isOwner(String inCatId, Lock lock)
+	public boolean isOwner(Lock lock)
 	{
 		if( lock == null)
 		{
@@ -66,7 +77,7 @@ public class MemoryLockManager implements LockManager
 			throw new OpenEditException("lock id is currently null");
 		}
 
-		Lock owner = loadLock(inCatId, lock.getPath());
+		Lock owner = loadLock(lock.getSourcePath());
 		if( owner == null)
 		{
 			throw new OpenEditException("Owner lock is currently null");
@@ -84,7 +95,7 @@ public class MemoryLockManager implements LockManager
 		return fieldLockId++;
 	}
 	@Override
-	public Lock loadLock(String inCatId, String inPath)
+	public Lock loadLock(String inPath)
 	{
 		Lock lock = getLocks().get(inPath);
 		if( lock == null)
@@ -103,13 +114,13 @@ public class MemoryLockManager implements LockManager
 	}
 
 	@Override
-	public Collection getLocksByDate(String inCatId, String inPath)
+	public Collection getLocksByDate(String inPath)
 	{
 		throw new OpenEditException("Not implemented");
 	}
 
 	@Override
-	public boolean release(String inCatId, Lock inLock)
+	public boolean release(Lock inLock)
 	{
 		if( inLock == null)
 		{
@@ -121,7 +132,7 @@ public class MemoryLockManager implements LockManager
 	}
 
 	@Override
-	public void releaseAll(String inCatalogId, String inPath)
+	public void releaseAll(String inPath)
 	{
 		getLocks().clear();
 	}
@@ -132,7 +143,7 @@ public class MemoryLockManager implements LockManager
 	{
 		Lock lockrequest = new Lock();
 		lockrequest.setId(String.valueOf( nextId() ) );
-		lockrequest.setPath(inPath);
+		lockrequest.setSourcePath(inPath);
 		lockrequest.setOwnerId(inOwnerId);
 		lockrequest.setDate(new Date());
 		lockrequest.setNodeId("inmemory");
@@ -140,7 +151,7 @@ public class MemoryLockManager implements LockManager
 		return lockrequest;
 	}
 
-	public boolean grabLock(String inCatId, String inOwner, Lock lock)
+	public boolean grabLock(String inOwner, Lock lock)
 	{
 		if( lock == null)
 		{
@@ -169,11 +180,11 @@ public class MemoryLockManager implements LockManager
 	/**
 	 * Tries once then gives up and returns null
 	 */
-	public Lock lockIfPossible(String inCatId, String inPath, String inOwnerId)
+	public Lock lockIfPossible(String inPath, String inOwnerId)
 	{
-		Lock lock = loadLock(inCatId, inPath);
+		Lock lock = loadLock(inPath);
 		
-		if( grabLock(inCatId, inOwnerId, lock) )
+		if( grabLock(inOwnerId, lock) )
 		{
 			return lock;
 		}

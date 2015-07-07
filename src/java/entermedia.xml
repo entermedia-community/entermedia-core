@@ -30,9 +30,6 @@
 		<property name="moduleManager">
 			<ref bean="moduleManager" />
 		</property>
-		<property name="xmlArchive"><ref bean="xmlArchive"/></property>
-		<property name="lockManager"><ref bean="lockManager"/></property>
-		
 	</bean>
 	<bean id="userManager" class="org.openedit.users.BaseUserManager" scope="prototype">
 		<property name="searcherManager"><ref bean="searcherManager"/></property>
@@ -79,8 +76,14 @@
 	</bean>
 	
 	<bean id="moduleManager" class="com.openedit.ModuleManager">
+		<property name="beanNameLoader"><ref bean="beanNameLoader"/></property>
 	</bean>
 	
+	<bean id="beanNameLoader" class="com.openedit.BeanNameLoader">
+		<property name="pageManager"><ref bean="pageManager"/></property>
+		<property name="cacheManager"><ref bean="cacheManager"/></property>
+        <property name="xmlArchive"><ref bean="xmlArchive"/></property>
+	</bean>
 
 	<bean id="mimeTypeMap" class="com.openedit.page.manage.BaseMimeTypeMap">
 		<property name="rootDirectory"><ref bean="root" /></property>
@@ -192,7 +195,9 @@
 	<bean id="xmlArchive" class="org.openedit.xml.XmlArchive" >
 		<property name="pageManager"><ref bean="pageManager"/></property>
 		<property name="xmlUtil"><ref bean="xmlUtil"/></property>
-		<property name="lockManager"><ref bean="lockManager"/></property>		
+		<property name="moduleManager">
+			<ref bean="moduleManager" />
+		</property>		
 	</bean>
 <!-- 
 	<bean id="generatedResourceLoader" class="com.openedit.generators.GeneratedResourceLoader" >
@@ -273,7 +278,7 @@
 		<property name="searcherManager"><ref bean="searcherManager"/></property>
 	</bean>
 
-	<bean id="lockManager" class="org.entermedia.locks.MemoryLockManager" >
+	<bean id="lockManager" class="org.entermedia.locks.MemoryLockManager"  scope="prototype" >
 		
 	</bean>
 

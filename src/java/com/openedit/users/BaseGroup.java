@@ -207,4 +207,20 @@ public class BaseGroup extends FileSystemObject implements Group, Serializable, 
 		//compare by name
 		return this.getName().compareToIgnoreCase(group.getName());
 	}
+	
+	
+	public void setValues(String inKey, Collection<String> inValues)
+	{
+		StringBuffer values = new StringBuffer();
+		for (Iterator iterator = inValues.iterator(); iterator.hasNext();)
+		{
+			String detail = (String) iterator.next();
+			values.append(detail);
+			if( iterator.hasNext())
+			{
+				values.append(" | ");
+			}
+		}
+		setProperty(inKey,values.toString());
+	}
 }

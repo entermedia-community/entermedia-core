@@ -65,24 +65,11 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable
 	{
 		if (inId != null)
 		{
-			Object hit = null;
-			if(inCache && getCacheManager() != null){
-			 hit = getCacheManager().get(cacheId(), inId);
-			} 
-			if (hit != null)
-			{
-				return hit;
-			}
 			SearchQuery query = createSearchQuery();
 			query.addMatches("id", inId);
-			//TODO: Search for only one then stop
 			HitTracker hits = search(query);
-			hit = hits.first();
-			if (hit != null && inCache)
-			{
-				getCacheManager().put(cacheId(),inId, hit);
-				return hit;
-			}
+			Object hit = hits.first();
+			return hit;
 		}
 		return null;
 	}

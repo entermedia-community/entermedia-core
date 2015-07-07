@@ -14,8 +14,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.openedit.OpenEditException;
+import com.openedit.Shutdownable;
 
-public class ExecutorManager
+public class ExecutorManager implements Shutdownable
 {
 	private static final Log log = LogFactory.getLog(ExecutorManager.class);
 	
@@ -208,6 +209,26 @@ static class DefaultThreadFactory implements ThreadFactory {
             t.setPriority(Thread.NORM_PRIORITY);
         return t;
     }
+}
+
+@Override
+public void shutdown()
+{
+	// TODO Auto-generated method stub
+	if( fieldSharedExecutor != null)
+	{
+		try
+		{
+			fieldSharedExecutor.shutdown();
+			fieldSharedExecutor.awaitTermination(1L, TimeUnit.MINUTES);
+		}
+		catch (Throwable e)
+		{
+			//	throw new OpenEditException(e);
+		}
+		log.debug("Exec shut down");
+		
+	}
 }
 
 

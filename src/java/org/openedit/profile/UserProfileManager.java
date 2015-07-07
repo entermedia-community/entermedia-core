@@ -155,7 +155,7 @@ public class UserProfileManager
 		String appid = inReq.findValue("applicationid");
 
 
-		Collection modules = getSearcherManager().getSearcher(inCatalogId, "module").getAllHits();
+		Collection modules = getSearcherManager().getSearcher(inCatalogId, "module").query().match("id", "*").sort("name").search(inReq);
 		List<Data> okmodules = new ArrayList<Data>();
 		for (Iterator iterator = modules.iterator(); iterator.hasNext();)
 		{
