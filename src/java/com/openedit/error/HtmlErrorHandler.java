@@ -54,6 +54,20 @@ public class HtmlErrorHandler implements ErrorHandler
 				{
 					exception = (OpenEditException)error;
 				}
+				if( exception instanceof ContentNotAvailableException)
+				{
+					try
+					{
+						context.getResponse().setStatus(404);
+						return true;
+					}
+					catch( Exception ex)
+					{
+						//ignored
+						log.debug("Ignored:" + ex);
+					}
+				}
+				
 				if( !context.hasRedirected() && context.getResponse() != null)
 				{
 					try
