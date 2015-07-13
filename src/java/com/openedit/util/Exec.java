@@ -157,7 +157,7 @@ public class Exec
 						if( commandBase != null)
 						{
 							commandBase = commandBase.replace('\\', '/'); //Make sure all commands are in Linux notation for now
-							if( commandBase.startsWith("./"))
+							if( commandBase.startsWith("./") || commandBase.startsWith("../"))
 							{
 								String root = getRoot().getAbsolutePath();
 								root = root.replace('\\', '/');
@@ -165,7 +165,7 @@ public class Exec
 								{
 									root = root.substring(0,root.length() -1);
 								}
-								commandBase  =  root + commandBase.substring(1);
+								commandBase = PathUtilities.buildRelative(commandBase,root);
 							}
 							//commandBase = commandBase.replace('\\', '/'); //Make sure all commands are in Linux notation for now
 						}
