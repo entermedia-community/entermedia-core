@@ -181,7 +181,7 @@ public class Exec
 						}
 						else
 						{
-							if( commandText.startsWith("./") || commandText.startsWith(".\\"))
+							if( commandText.startsWith("./") || commandText.startsWith(".\\") || commandText.startsWith("../") || commandText.startsWith("..\\")) 
 							{
 								commandText = commandText.replace('\\', '/'); //Make sure all commands are in Linux notation for now
 								String commandline = PathUtilities.buildRelative(commandText, commandBase);
