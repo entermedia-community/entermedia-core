@@ -271,19 +271,26 @@ public class BaseWebServer implements WebServer
            
        
         
-        
-		Page page = getPageManager().getPage("/WEB-INF/startup.html");
-		BaseWebPageRequest request = new BaseWebPageRequest();
-		request.setContentPage(page);
-		request.setPage(page);
-		if( page.getPageSettings().exists())
-		{
-			getOpenEditEngine().executePathActions(request);
-		}
-		if( getModuleManager().contains("PathEventModule") )
-		{
-			getModuleManager().execute("PathEventModule.init", request);
-		}
+        try
+        {
+        	
+			Page page = getPageManager().getPage("/WEB-INF/startup.html");
+			BaseWebPageRequest request = new BaseWebPageRequest();
+			request.setContentPage(page);
+			request.setPage(page);
+			if( page.getPageSettings().exists())
+			{
+				getOpenEditEngine().executePathActions(request);
+			}
+			if( getModuleManager().contains("PathEventModule") )
+			{
+				getModuleManager().execute("PathEventModule.init", request);
+			}
+        } 
+        catch( Throwable ex)
+        {
+        	log.error("Could not initiallize cleanly ", ex);
+        }
 		//getBeanFactory().preInstantiateSingletons();
         
 	}
