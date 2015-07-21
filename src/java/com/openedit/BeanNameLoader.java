@@ -132,15 +132,16 @@ public class BeanNameLoader
 		else
 		{
 			String type = file.getRoot().attributeValue("basedatatype");
-			if( type != null)
+			if( type == null)
 			{
-				file = getXmlArchive().getXml("/system/configuration/" + type + ".xml");
-				field = file.getElementById(inBeanName);
-				if( field != null)
-				{
-					//log.info("BEANS FOUND: " + field + ", with bean: " + field.attributeValue("bean"));
-					beanName = field.attributeValue("bean");
-				}
+				type = "lucene";
+			}
+			file = getXmlArchive().getXml("/system/configuration/" + type + ".xml");
+			field = file.getElementById(inBeanName);
+			if( field != null)
+			{
+				//log.info("BEANS FOUND: " + field + ", with bean: " + field.attributeValue("bean"));
+				beanName = field.attributeValue("bean");
 			}
 		}
 		
