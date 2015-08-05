@@ -49,6 +49,16 @@ public class SearcherManager
 				if( searcher == null )
 				{
 					String finalcatalogid = resolveCatalogId(inCatalogId, inFieldName);
+					if( !finalcatalogid.equals(inCatalogId))
+					{
+						searcher = (Searcher)getCache().get(finalcatalogid + "|" + inFieldName);
+						if( searcher != null )
+						{
+							return searcher;
+						}
+					}
+					//TODO: Look in the cache again for the target Searcher
+					
 					PropertyDetailsArchive newarchive = getPropertyDetailsArchive(finalcatalogid);
 //					if( inFieldName == null)
 //					{
@@ -66,6 +76,10 @@ public class SearcherManager
 						log.debug("Created New Searcher: Catalog = " + searcher.getCatalogId() + "SearchType = " + searcher.getSearchType() + "Searcher = " + searcher.getClass() );
 					}
 					getCache().put(id, searcher);
+					if( !finalcatalogid.equals(inCatalogId))
+					{
+						getCache().put(finalcatalogid + "|" + inFieldName, searcher); //make sure we store both versions since they are the same searcher
+					}
 				}
 			}
 		}
@@ -418,7 +432,7 @@ public class SearcherManager
 			return inCatalogId;
 		}
 		Searcher typeSearcher = getSearcher(inCatalogId, "searchtypes");
-		if( typeSearcher.getPropertyDetails().size() == 0)
+		if( typeSearcher.getPropertyDetails().size() == 0) //Not used in the system catalog
 		{
 			if( inSearchType.equals("user") || inSearchType.equals("group"))
 			{
