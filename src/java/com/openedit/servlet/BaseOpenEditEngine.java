@@ -117,6 +117,7 @@ public class BaseOpenEditEngine implements OpenEditEngine
 		}
 
 		WebPageRequest context = createWebPageRequest( page, inRequest, inResponse, util );
+		context.putPageValue("reloadpages", checkdates);
 		Page transpage = getPageManager().getPage(page,context);
 		if(! transpage.getPath().equals(page.getPath())){
 			
