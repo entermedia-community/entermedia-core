@@ -14,8 +14,6 @@
  */
 package com.openedit;
 
-import groovy.json.JsonSlurper;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Reader;
@@ -51,6 +49,8 @@ import com.openedit.util.PathUtilities;
 import com.openedit.util.SessionMap;
 import com.openedit.util.URLUtilities;
 import com.openedit.web.Browser;
+
+import groovy.json.JsonSlurper;
 
 /**
  * @author Matt Avery, mavery@einnovation.com
@@ -668,11 +668,12 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 		{
 			return null;
 		}
-		if (getSession() == null)
+		HttpSession session = getSession();
+		if ( session == null)
 		{
 			return getSessionValues().get(inKey);
 		}
-		return getSession().getAttribute(inKey);
+		return session.getAttribute(inKey);
 	}
 
 	/* 

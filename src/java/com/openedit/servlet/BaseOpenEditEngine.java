@@ -27,6 +27,7 @@ import com.openedit.page.Page;
 import com.openedit.page.PageRequestKeys;
 import com.openedit.page.PageStreamer;
 import com.openedit.page.manage.PageManager;
+import com.openedit.users.User;
 import com.openedit.util.RequestUtils;
 import com.openedit.util.URLUtilities;
 
@@ -53,6 +54,18 @@ public class BaseOpenEditEngine implements OpenEditEngine
 //	    if( session != null)
 //	    {
 	    	checkdates = Boolean.parseBoolean( inRequest.getParameter("reload") );
+	    	if( !checkdates)
+	    	{
+	    		HttpSession session = inRequest.getSession(false);
+	    		if ( session != null)
+	    		{
+	    			String mode = (String)session.getAttribute("oe.edit.mode");
+	    			if( "debug".equals(mode) || "editing".equals(mode))
+	    			{
+	    				checkdates = true;
+	    			}
+	    		}
+	    	}
 	    	//session.getAttribute("user") != null;
 //	    }
 	    Page page = getPageManager().getPage( requestedPath,checkdates);
