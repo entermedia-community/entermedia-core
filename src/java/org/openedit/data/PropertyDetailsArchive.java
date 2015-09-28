@@ -238,7 +238,7 @@ public class PropertyDetailsArchive {
 						.hasNext();) {
 					PropertyDetail detail = (PropertyDetail) iterator
 							.next();
-					if (!values.contains(detail)) {
+					if (values.size() > 0 && !values.contains(detail)) {
 						view.remove(detail);
 					}
 				}

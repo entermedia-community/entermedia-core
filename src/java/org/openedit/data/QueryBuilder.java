@@ -42,6 +42,11 @@ public class QueryBuilder
 		getQuery().addOrsGroup(inKey, inIds);
 		return this;
 	}
+	public QueryBuilder orgroup(String inKey, String inOrs)
+	{
+		getQuery().addOrsGroup(inKey, inOrs);
+		return this;
+	}
 	
 	
 	public QueryBuilder not(String inId, String inValue)

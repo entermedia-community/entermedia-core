@@ -343,6 +343,11 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					{
 						log.debug( "added security filer for " + inPageRequest.getUserProfile() );
 					}
+					if( libraryids.size() == 0)
+					{
+						libraryids = new ArrayList();
+						libraryids.add("-1");
+					}
 					inTracker.getSearchQuery().setSecurityIds(libraryids);
 				}
 			}

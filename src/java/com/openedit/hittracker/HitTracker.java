@@ -832,6 +832,32 @@ public abstract class HitTracker implements Serializable, Collection
 		return null;
 	}
 	
+	public void deselectCurrentPage() throws Exception
+	{
+		//deselectAll();
+		List page = getPageOfHits();
+		for (Iterator iterator = page.iterator(); iterator.hasNext();) 
+		{
+			Data row = (Data) iterator.next();
+			removeSelection(row.getId());
+		}
+
+	}
+	public boolean isPageSelected() throws Exception
+	{
+		//deselectAll();
+		List page = getPageOfHits();
+		for (Iterator iterator = page.iterator(); iterator.hasNext();) 
+		{
+			Data row = (Data) iterator.next();
+			if( !isSelected(row.getId()) )
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+	
 	public void selectCurrentPage() throws Exception
 	{
 		//deselectAll();

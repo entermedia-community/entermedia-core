@@ -27,6 +27,7 @@ import com.openedit.page.Page;
 import com.openedit.page.PageRequestKeys;
 import com.openedit.page.PageStreamer;
 import com.openedit.page.manage.PageManager;
+import com.openedit.users.User;
 import com.openedit.util.RequestUtils;
 import com.openedit.util.URLUtilities;
 
@@ -45,16 +46,20 @@ public class BaseOpenEditEngine implements OpenEditEngine
 	public void render( HttpServletRequest inRequest, HttpServletResponse inResponse ) throws IOException, OpenEditException 
 	{
 		checkEngineInit( inResponse );
+		//inRequest.setCharacterEncoding( "UTF-8" ); //This needs to be the first thing we do. Dont call getParameter
 	    URLUtilities util = new URLUtilities(inRequest, inResponse);
 
 	    String requestedPath = util.getOriginalPath();
-//	    HttpSession session = inRequest.getSession(false);
 	    boolean checkdates = false;
-//	    if( session != null)
-//	    {
-	    	checkdates = Boolean.parseBoolean( inRequest.getParameter("reload") );
-	    	//session.getAttribute("user") != null;
-//	    }
+		HttpSession session = inRequest.getSession(false);
+		if ( session != null)
+		{
+			String mode = (String)session.getAttribute("oe.edit.mode");
+			if( "debug".equals(mode) || "editing".equals(mode))
+			{
+				checkdates = true;
+			}
+		}
 	    Page page = getPageManager().getPage( requestedPath,checkdates);
 	    
 		//If link does not exists. Then put a real welcome page on there so that fallback will work
@@ -104,6 +109,7 @@ public class BaseOpenEditEngine implements OpenEditEngine
 		}
 
 		WebPageRequest context = createWebPageRequest( page, inRequest, inResponse, util );
+		context.putPageValue("reloadpages", checkdates);
 		Page transpage = getPageManager().getPage(page,context);
 		if(! transpage.getPath().equals(page.getPath())){
 			

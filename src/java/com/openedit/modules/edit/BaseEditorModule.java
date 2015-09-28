@@ -261,7 +261,8 @@ public class BaseEditorModule extends BaseModule
 		
 		if ( !user.hasProperty("oe.edit.draftmode" ))
 		{
-			if ( user.hasPermission("oe.edit.directedits") )
+			Boolean can = (Boolean)inReq.getPageValue("canopeneditdirectedit");
+			if ( user.hasPermission("oe.edit.directedits") || can )
 			{
 				//do nothing since they have permission to be direct editing
 				//or this file has a special property

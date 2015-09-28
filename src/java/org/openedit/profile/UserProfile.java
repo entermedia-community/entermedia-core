@@ -146,9 +146,10 @@ public class UserProfile extends BaseData implements SaveableData
 	{
 		String val = get(inPreference);
 
-		if (val == null)
+		if (val == null || val.trim().length() == 0)
+		{
 			return null;
-
+		}
 		String[] vals = val.split("\\s+");
 
 		Collection collection = Arrays.asList(vals);
