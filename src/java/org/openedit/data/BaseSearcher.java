@@ -780,6 +780,12 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		}
 		if (querystring != null)
 		{
+			//Shoud we run a replace on this filter? So that user and groups roles can be put in here?
+			//regionid:	${user.regionid}
+			if( querystring.contains("$"))
+			{
+			//	String result = getReplacer().replace(format, tmp);
+			}
 			addShowOnlyFilter(inPageRequest, querystring, search);
 		}
 	}
