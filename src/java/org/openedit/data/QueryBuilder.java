@@ -1,6 +1,8 @@
 package org.openedit.data;
 
 import java.util.Collection;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 import org.openedit.Data;
 
@@ -37,6 +39,19 @@ public class QueryBuilder
 		getQuery().addMatches(inId, inValue);
 		return this;
 	}
+	public QueryBuilder since(String inId, int date)
+	{
+		GregorianCalendar cal = new GregorianCalendar();
+		Date now = new Date();
+		cal.setTime(now);
+		if( date > 0)
+		{
+			date = 0 - date;
+		}
+		cal.add(GregorianCalendar.DAY_OF_MONTH, date);
+		getQuery().addBetween(inId, cal.getTime(),now);
+		return this;
+	}
 	public QueryBuilder orgroup(String inKey, Collection<String> inIds)
 	{
 		getQuery().addOrsGroup(inKey, inIds);
@@ -47,8 +62,6 @@ public class QueryBuilder
 		getQuery().addOrsGroup(inKey, inOrs);
 		return this;
 	}
-	
-	
 	public QueryBuilder not(String inId, String inValue)
 	{
 		getQuery().addNot(inId, inValue);

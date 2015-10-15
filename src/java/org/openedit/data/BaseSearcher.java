@@ -1209,9 +1209,9 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		Term t = null;
 		try
 		{
+			Date d = null;
 			if (op.startsWith("before"))
 			{
-				Date d = null;
 				if (op.length() > "before".length())
 				{
 					d = new Date();
@@ -1219,11 +1219,8 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					GregorianCalendar cal = new GregorianCalendar();
 					cal.setTime(d);
 					cal.add(GregorianCalendar.DAY_OF_MONTH, 0 - len); // subtract
-																		// start
-																		// date
 					t = search.addBetween(field, cal.getTime(), d);
 					t.setOperation(op);
-					
 				}
 				else if (val != null && !"".equals(val))
 				{
@@ -1236,16 +1233,32 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					search.setProperty("datedirection" + field, op);
 				}
 			}
-			else if ("after".equals(op) && val != null && !"".equals(val))
+			else if (op.startsWith("after") )
 			{
-				Date d = formater.parse(val);
-				t = search.addAfter(field, d);
-				search.setProperty("datedirection" + field, "after");
-				search.setProperty(t.getId(), val);
+				if (op.length() > "after".length())
+				{
+					d = new Date();
+					int len = Integer.parseInt(op.substring("after".length()));
+					GregorianCalendar cal = new GregorianCalendar();
+					cal.setTime(d);
+					cal.add(GregorianCalendar.DAY_OF_MONTH, len); // subtract
+					t = search.addBetween(field, d, cal.getTime());
+					t.setOperation(op);
+				}
+				else if (val != null && !"".equals(val))
+				{	
+					d = formater.parse(val);
+					t = search.addAfter(field, d);
+				}
+				if (t != null)
+				{
+					search.setProperty("datedirection" + field, op);
+					search.setProperty(t.getId(), val);
+				}
 			}
 			else if ("equals".equals(op) && val != null && !"".equals(val))
 			{
-				Date d = formater.parse(val);
+				d = formater.parse(val);
 				
 				Calendar c = new GregorianCalendar();
 
