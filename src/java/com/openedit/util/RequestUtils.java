@@ -16,6 +16,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openedit.profile.UserProfile;
 import org.openedit.util.LocaleManager;
 
 import com.openedit.BaseWebPageRequest;
@@ -112,20 +113,22 @@ public class RequestUtils {
 		this.fieldModuleManager = fieldModuleManager;
 	}
 
-
-	public WebPageRequest createVirtualPageRequest(String path, User inUser,URLUtilities inUtil)
+	public WebPageRequest createVirtualPageRequest(String path, User inUser,UserProfile inProfile)
 	{
     	WebPageRequest request = createPageRequest(path, inUser);
-    	if( inUtil != null)
-		{
-			// add the URLUtilities to the context
-			request.putProtectedPageValue(PageRequestKeys.URL_UTILITIES, inUtil);
-			request.putProtectedPageValue( PageRequestKeys.WEB_SERVER_PATH, inUtil.buildRoot() );
-			request.putProtectedPageValue(PageRequestKeys.HOME, inUtil.relativeHomePrefix());
-			
-				
-		}	
-		
+    	request.setUser(inUser);
+    	request.setUserProfile(inProfile);
+    	
+//    	if( inUtil != null)
+//		{
+//			// add the URLUtilities to the context
+//			request.putProtectedPageValue(PageRequestKeys.URL_UTILITIES, inUtil);
+//			request.putProtectedPageValue( PageRequestKeys.WEB_SERVER_PATH, inUtil.buildRoot() );
+//			request.putProtectedPageValue(PageRequestKeys.HOME, inUtil.relativeHomePrefix());
+//			
+//				
+//		}	
+//		
 		try
 		{
 		
@@ -196,7 +199,6 @@ public class RequestUtils {
 		BaseWebPageRequest request =  (BaseWebPageRequest)createPageRequest(page, null,null,inUser,null);
 
 		request.setWriter(new StringWriter() );
-		request.setUser(inUser);
 		if (parts != null && parts.length > 1)
 		{
 			String[] args = parts[1].split("&");
@@ -219,7 +221,7 @@ public class RequestUtils {
 		context.setLocaleManager(getLocaleManager());
 		context.putProtectedPageValue( PageRequestKeys.PAGE, inPage);
 		context.putProtectedPageValue(PageRequestKeys.CONTENT, inPage);			
-		
+		context.putProtectedPageValue(PageRequestKeys.USER, inUser);	
 		// put standard servlet stuff into the context
 		if( inRequest != null)
 		{
@@ -308,7 +310,7 @@ public class RequestUtils {
 
 		return context;
 	}
-	 
+	/* 
 	public String getRenderedPageContent(String inPath, WebPageRequest inReq, User inUser, URLUtilities util){
 		try
 		{
@@ -338,10 +340,8 @@ public class RequestUtils {
 		{
 			throw new OpenEditRuntimeException(e);
 		}
-	
-	
 	}
-
+	*/
 
 	public WebPageRequest createPageRequest(Page inPage, User inUser)
 	{
