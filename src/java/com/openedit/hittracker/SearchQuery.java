@@ -1528,6 +1528,13 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 
 	public void addFilter(String inToaddType, String inToaddvalue, String toAddLabel)
 	{
+		if (hasFilters()){
+			for (FilterNode node:getFilters()){
+				if (node.getId()!=null && node.getId().equals(inToaddType) && node.get("value") != null && node.get("value").equals(inToaddvalue)){
+					return;
+				}
+			}
+		}
 		FilterNode node = new FilterNode();
 		node.setId(inToaddType);
 		node.setProperty("value", inToaddvalue);
