@@ -395,6 +395,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			tracker = checkCurrent(inReq, tracker);
 			if (tracker != null)
 			{
+				//TODO: Remove this code, is not a good policy
 				String hitsname = inReq.findValue("hitsname");
 				if( hitsname == null)
 				{

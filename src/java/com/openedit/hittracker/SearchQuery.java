@@ -1505,14 +1505,14 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	 * @param inChildSearchType
 	 * @param inChildColumn
 	 */
-	public void addRemoteJoin(SearchQuery remoteQuery, String inRemoteColumn, boolean inRemoteHasMultiValues, String remoteSearchType, String inLocalColumn)
+	public void addJoinFilter(SearchQuery filterQuery, String inFilterColumn, boolean inFilterHasMultiValues, String filterSearchType, String inResultsColumn)
 	{
 		Join join = new Join();
-		join.setRemoteHasMultiValues(inRemoteHasMultiValues);
-		join.setRemoteSearchType(remoteSearchType);
-		join.setRemoteQuery(remoteQuery);
-		join.setRemoteColumn(inRemoteColumn);
-		join.setLocalColumn(inLocalColumn);
+		join.setFilterHasMultiValues(inFilterHasMultiValues);
+		join.setFilterSearchType(filterSearchType);
+		join.setFilterQuery(filterQuery);
+		join.setFilterColumn(inFilterColumn);
+		join.setResultsColumn(inResultsColumn);
 		
 		if( fieldParentJoins == null)
 		{
