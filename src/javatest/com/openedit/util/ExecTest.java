@@ -8,7 +8,7 @@ import com.openedit.BaseTestCase;
 public class ExecTest extends BaseTestCase
 {	
 	
-	public void XXtestSpeed()
+	public void testSpeed()
 	{
 		Exec exec = (Exec)getBean("exec");
 		List comm = new ArrayList();
