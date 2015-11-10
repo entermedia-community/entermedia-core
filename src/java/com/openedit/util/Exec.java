@@ -71,10 +71,22 @@ public class Exec
 	{
 		fieldTimeLimit = inTimelimit;
 	}
-
-	public ExecResult runExec(String inCommandKey, List<String> inArgs, InputStream inPut)
+	/**
+	 * @deprecated Use a command key
+	 * @param inArgs
+	 * @return
+	 */
+	public ExecResult runExec(List<String> inArgs)
 	{
-		return runExec(inCommandKey, inArgs, false, inPut, null, null);
+		return runExec(inArgs, null, false);
+	}
+
+	/**
+	 * @deprecated Use a command key
+	 */
+	public ExecResult runExec(List<String> inArgs, boolean inSaveOutput)
+	{
+		return runExec(inArgs, null, inSaveOutput);
 	}
 
 	public ExecResult runExec(String inCommandKey, List<String> inArgs)
@@ -84,12 +96,12 @@ public class Exec
 
 	public ExecResult runExec(String inCommandKey, List<String> inArgs, long inTimeout)
 	{
-		return runExec(inCommandKey, inArgs, false, null, null, null, inTimeout);
+		return runExec(inCommandKey, inArgs, false, null, inTimeout);
 	}
 
 	public ExecResult runExec(String inCommandKey, List<String> inArgs, File inRootFolder)
 	{
-		return runExec(inCommandKey, inArgs, false, null, null, inRootFolder);
+		return runExec(inCommandKey, inArgs, false, inRootFolder, getTimeLimit());
 	}
 
 	public ExecResult runExec(String inCommandKey, List<String> inArgs, boolean inSaveOutput)
@@ -99,33 +111,10 @@ public class Exec
 
 	public ExecResult runExec(String inCommandKey, List<String> inArgs, boolean inSaveOutput, long inTimeout)
 	{
-		return runExec(inCommandKey, inArgs, inSaveOutput, null, null, null, inTimeout);
+		return runExec(inCommandKey, inArgs, inSaveOutput, null, inTimeout);
 	}
 
-	/**
-	 * @deprecated Use a command key
-	 * @param inArgs
-	 * @return
-	 */
-	public ExecResult runExec(List<String> inArgs)
-	{
-		return runExec(inArgs, null, false, null);
-	}
-
-	/**
-	 * @deprecated Use a command key
-	 */
-	public ExecResult runExec(List<String> inArgs, boolean inSaveOutput)
-	{
-		return runExec(inArgs, null, inSaveOutput, null);
-	}
-
-	public ExecResult runExec(String inCommandKey, List<String> inArgs, boolean inSaveOutput, InputStream inPut, OutputFiller inOutputFiller, File inRootFolder)
-	{
-		return runExec(inCommandKey, inArgs, inSaveOutput, inPut, inOutputFiller, inRootFolder, getTimeLimit());
-	}
-
-	public ExecResult runExec(String inCommandKey, List<String> inArgs, boolean inSaveOutput, InputStream inPut, OutputFiller inOutputFiller, File inRootFolder, long inTimeout)
+	public ExecResult runExec(String inCommandKey, List<String> inArgs, boolean inSaveOutput, File inRootFolder, long inTimeout)
 	{
 		ArrayList<String> command = new ArrayList<String>();
 		//check for cached version
@@ -141,101 +130,19 @@ public class Exec
 		}
 		if (inRootFolder == null)
 		{
-			return runExec(command, cachedCommand.inStartDir, inSaveOutput, inPut, inTimeout);
+			return runExec(command, cachedCommand.inStartDir, inSaveOutput, inTimeout);
 		}
 		else
 		{
-			return runExec(command, inRootFolder, inSaveOutput, inPut, inTimeout);
+			return runExec(command, inRootFolder, inSaveOutput, inTimeout);
 		}
 	}
-
-	protected ExecCommand lookUpCommand(String inCommandKey)
+	public ExecResult runExec(List<String> com, File inRunFrom, boolean inSaveOutput) throws OpenEditException
 	{
-		ExecCommand cachedCommand = null;
-		//we need to search the xml file
-		XmlFile file = fieldXmlArchive.getXml(fieldXmlCommandsFilename, "commandmaps");
-		if (file != null)
-		{
-			String os = System.getProperty("os.name").toUpperCase();
-			Iterator<Element> iter = (Iterator) file.getElements("commandmap");
-			while (iter.hasNext())
-			{
-				// check for correct os
-				Element map = (Element) iter.next();
-				String mapOs = map.attributeValue("os");
-				if (mapOs != null && os.contains(mapOs))
-				{
-					cachedCommand = new ExecCommand();
-					String commandBase = map.elementText("commandbase");
-					if (commandBase != null)
-					{
-						commandBase = commandBase.replace('\\', '/'); //Make sure all commands are in Linux notation for now
-						if (commandBase.startsWith("./") || commandBase.startsWith("../"))
-						{
-							String root = getRoot().getAbsolutePath();
-							root = root.replace('\\', '/');
-							if (root.endsWith("/"))
-							{
-								root = root.substring(0, root.length() - 1);
-							}
-							commandBase = PathUtilities.buildRelative(commandBase, root);
-						}
-						//commandBase = commandBase.replace('\\', '/'); //Make sure all commands are in Linux notation for now
-					}
-					else
-					{
-						commandBase = getRoot().getAbsolutePath();
-					}
-					String commandText = map.elementText(inCommandKey);
-					if (commandText == null) //Did not exists
-					{
-						cachedCommand.inCommand = inCommandKey;
-						cachedCommand.inStartDir = new File(commandBase);
-					}
-					else
-					{
-						if (commandText.startsWith("./") || commandText.startsWith(".\\") || commandText.startsWith("../") || commandText.startsWith("..\\"))
-						{
-							commandText = commandText.replace('\\', '/'); //Make sure all commands are in Linux notation for now
-							String commandline = PathUtilities.buildRelative(commandText, commandBase);
-							File commandfile = new File(commandline);
-							cachedCommand.inStartDir = commandfile.getParentFile();
-							cachedCommand.inCommand = commandfile.getAbsolutePath();
-						}
-						else
-						{
-							cachedCommand.inStartDir = new File(commandBase); //TODO: Use the command for the parent dir?
-							cachedCommand.inCommand = commandText;
-						}
-					}
-					fieldCachedCommands.put(inCommandKey, cachedCommand);
-					break;
-				}
-			}
-		}
-		//there was no trace of the command in the xml file so we will just execute
-		//from the system path
-		if (cachedCommand == null)
-		{
-			cachedCommand = new ExecCommand();
-			cachedCommand.inCommand = inCommandKey;
-			fieldCachedCommands.put(inCommandKey, cachedCommand);
-		}
-		return cachedCommand;
+		return runExec(com, inRunFrom, inSaveOutput, getTimeLimit());
 	}
 
-	class ExecCommand
-	{
-		protected String inCommand;
-		protected File inStartDir;
-	}
-
-	public ExecResult runExec(List<String> com, File inRunFrom, boolean inSaveOutput, InputStream inputStream) throws OpenEditException
-	{
-		return runExec(com, inRunFrom, inSaveOutput, inputStream, getTimeLimit());
-	}
-
-	public ExecResult runExec(List<String> com, File inRunFrom, boolean inSaveOutput, InputStream inputStream, long inTimeout) throws OpenEditException
+	public ExecResult runExec(List<String> com, File inRunFrom, boolean inSaveOutput, long inTimeout) throws OpenEditException
 	{
 		if( inTimeout == -1)
 		{
@@ -454,6 +361,87 @@ public class Exec
 	public void setIsOnWindows(boolean inBoolean)
 	{
 		fieldOnWindows = inBoolean;
+	}
+
+	protected ExecCommand lookUpCommand(String inCommandKey)
+	{
+		ExecCommand cachedCommand = null;
+		//we need to search the xml file
+		XmlFile file = fieldXmlArchive.getXml(fieldXmlCommandsFilename, "commandmaps");
+		if (file != null)
+		{
+			String os = System.getProperty("os.name").toUpperCase();
+			Iterator<Element> iter = (Iterator) file.getElements("commandmap");
+			while (iter.hasNext())
+			{
+				// check for correct os
+				Element map = (Element) iter.next();
+				String mapOs = map.attributeValue("os");
+				if (mapOs != null && os.contains(mapOs))
+				{
+					cachedCommand = new ExecCommand();
+					String commandBase = map.elementText("commandbase");
+					if (commandBase != null)
+					{
+						commandBase = commandBase.replace('\\', '/'); //Make sure all commands are in Linux notation for now
+						if (commandBase.startsWith("./") || commandBase.startsWith("../"))
+						{
+							String root = getRoot().getAbsolutePath();
+							root = root.replace('\\', '/');
+							if (root.endsWith("/"))
+							{
+								root = root.substring(0, root.length() - 1);
+							}
+							commandBase = PathUtilities.buildRelative(commandBase, root);
+						}
+						//commandBase = commandBase.replace('\\', '/'); //Make sure all commands are in Linux notation for now
+					}
+					else
+					{
+						commandBase = getRoot().getAbsolutePath();
+					}
+					String commandText = map.elementText(inCommandKey);
+					if (commandText == null) //Did not exists
+					{
+						cachedCommand.inCommand = inCommandKey;
+						cachedCommand.inStartDir = new File(commandBase);
+					}
+					else
+					{
+						if (commandText.startsWith("./") || commandText.startsWith(".\\") || commandText.startsWith("../") || commandText.startsWith("..\\"))
+						{
+							commandText = commandText.replace('\\', '/'); //Make sure all commands are in Linux notation for now
+							String commandline = PathUtilities.buildRelative(commandText, commandBase);
+							File commandfile = new File(commandline);
+							cachedCommand.inStartDir = commandfile.getParentFile();
+							cachedCommand.inCommand = commandfile.getAbsolutePath();
+						}
+						else
+						{
+							cachedCommand.inStartDir = new File(commandBase); //TODO: Use the command for the parent dir?
+							cachedCommand.inCommand = commandText;
+						}
+					}
+					fieldCachedCommands.put(inCommandKey, cachedCommand);
+					break;
+				}
+			}
+		}
+		//there was no trace of the command in the xml file so we will just execute
+		//from the system path
+		if (cachedCommand == null)
+		{
+			cachedCommand = new ExecCommand();
+			cachedCommand.inCommand = inCommandKey;
+			fieldCachedCommands.put(inCommandKey, cachedCommand);
+		}
+		return cachedCommand;
+	}
+
+	class ExecCommand
+	{
+		protected String inCommand;
+		protected File inStartDir;
 	}
 
 }
