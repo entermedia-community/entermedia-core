@@ -149,11 +149,12 @@ public class Exec
 			inTimeout = getTimeLimit();
 		}
 		log.info("Running: " + com); 
-//		if(isOnWindows()) 
-//		{ 
-//			builder.environment().put("HOME", inRunFrom.getAbsolutePath()); 
-//		} 
+
 		FinalizedProcessBuilder pb = new FinalizedProcessBuilder(com).keepProcess(false).logInputtStream(inSaveOutput);
+		if(isOnWindows()) 
+		{ 
+			pb.environment().put("HOME", inRunFrom.getAbsolutePath()); 
+		} 
 		ExecResult result = new ExecResult();
 		try
 		{
@@ -188,116 +189,6 @@ public class Exec
 		return result;
 	}
 
-	/*
-	 * public ExecResult runExec(List<String> com, File inRunFrom, boolean
-	 * inSaveOutput, InputStream inputStream, long inTimeout) throws
-	 * OpenEditException { ExecResult result = new ExecResult();
-	 * result.setRunOk(false); String[] inCommand = (String[]) com.toArray(new
-	 * String[com.size()]); try { log.info("Running: " + com + " in " +
-	 * inRunFrom); ProcessBuilder builder = new ProcessBuilder(inCommand); if
-	 * (isOnWindows()) { //String[] env = new String[] { "HOME=" +
-	 * inRunFrom.getAbsolutePath() }; builder.environment().put("HOME",
-	 * inRunFrom.getAbsolutePath()); } builder.redirectErrorStream(true); if
-	 * (inRunFrom == null) { inRunFrom = getRoot(); }
-	 * builder.directory(inRunFrom);
-	 * 
-	 * Process proc =
-	 * builder.start();//Runtime.getRuntime().exec(inCommand,env,inRunFrom);
-	 * 
-	 * InputStreamHandler reader1 = new InputStreamHandler(inSaveOutput);
-	 * reader1.setStream("stdout", proc.getInputStream());
-	 * getExecutorManager().execute(reader1);
-	 * 
-	 * if (inputStream != null) { OutputStream out = proc.getOutputStream(); try
-	 * { getFiller().fill(inputStream, out);
-	 * 
-	 * } finally { getFiller().close(inputStream); getFiller().close(out); } }
-	 * // InputStreamHandler errreader = new InputStreamHandler(inSaveOutput);
-	 * // errreader.setStream("stderr",proc.getErrorStream()); //
-	 * //getExecutorManager().execute(errreader); // errreader.run();
-	 * 
-	 * int ret = -1; long timelimit = inTimeout > 0 ? inTimeout : (long)
-	 * getTimeLimit(); if (timelimit > 0) { log.debug(
-	 * "executing processing with a timeout of " + timelimit +
-	 * " ms (process hashcode=" + proc.hashCode() + ")"); try { synchronized
-	 * (proc) { proc.wait(timelimit); } } catch (InterruptedException e) { } try
-	 * { ret = proc.exitValue(); } catch (IllegalThreadStateException e) {
-	 * log.info("unable to retrieve exit value on process (hashcode=" +
-	 * proc.hashCode() +
-	 * "), process did not complete within allotted time interval (" + timelimit
-	 * + " ms), setting a return value of -1"); ret = -1; ProcessDestroyer wrap
-	 * = new ProcessDestroyer(); wrap.setProcess(proc); new
-	 * Thread(wrap).start(); } } else { ret = proc.waitFor(); }
-	 * 
-	 * int tries = 10; if (!reader1.isCompleted()) { synchronized (reader1) {
-	 * while (!reader1.isCompleted()) { reader1.wait(60000); tries--; if (tries
-	 * == 0) { log.error(
-	 * "Waiting over 10 minutes to just read the output of a command " + com);
-	 * reader1.wait(); } } } } String stdo = reader1.getText(); if (stdo != null
-	 * && stdo.length() > 0) { result.setStandardOut(stdo); } // String stder =
-	 * errreader.getText(); // if (stder != null && stder.length() > 0) // { //
-	 * result.setStandardError(stder); // } if (ret != 0) { log.error("Error: "
-	 * + ret + " stdo:" + stdo + " when running " + com); } if (ret == 0) {
-	 * result.setRunOk(true); } result.setReturnValue(ret); return result;
-	 * 
-	 * } catch (Exception ex) { throw new OpenEditException(ex); } }
-	 * 
-	 * class ProcessDestroyer implements Runnable {
-	 * 
-	 * Process process;
-	 * 
-	 * public void setProcess(Process inProcess) { process = inProcess; }
-	 * 
-	 * public boolean isAlive() { try { process.exitValue(); return false; }
-	 * catch (Exception e) { } ; return true; }
-	 * 
-	 * 
-	 * public void run() { long ms = System.currentTimeMillis(); log.info(
-	 * "attempting to kill process with hashcode=" + process.hashCode()); //try
-	 * to kill process for 5 minutes (max) for (int i = 0; i < 1200 &&
-	 * isAlive(); i++) { try { Thread.sleep(250); } catch (Exception e) { } try
-	 * { process.destroy(); } catch (Exception e) { } } ms =
-	 * System.currentTimeMillis() - ms; if (isAlive()) { log.error(
-	 * "unable to kill process with hashcode=" + process.hashCode()); } else {
-	 * log.info("successfully killed process with hashcode=" +
-	 * process.hashCode() + ", took " + ms + " ms"); } } }
-	 * 
-	 * class InputStreamHandler implements Runnable { protected String
-	 * fieldType; protected InputStream fieldStream; protected String fieldText;
-	 * protected boolean fieldSaveText; protected boolean fieldCompleted;
-	 * 
-	 * public boolean isCompleted() { return fieldCompleted; }
-	 * 
-	 * public void setCompleted(boolean inCompleted) { fieldCompleted =
-	 * inCompleted; }
-	 * 
-	 * InputStreamHandler(boolean inSave) { fieldSaveText = inSave; }
-	 * 
-	 * public String getText() { return fieldText; }
-	 * 
-	 * public InputStream getStream() { return fieldStream; }
-	 * 
-	 * public void setStream(String inType, InputStream inStream) { fieldType =
-	 * inType; fieldStream = inStream; }
-	 * 
-	 * public void run() { try { BufferedReader reader = new BufferedReader(new
-	 * InputStreamReader(getStream())); if (fieldSaveText) { StringBuffer writer
-	 * = new StringBuffer(); String line = null;
-	 * 
-	 * while ((line = reader.readLine()) != null) { if (log.isDebugEnabled()) {
-	 * log.debug(fieldType + " " + line); } writer.append(line);
-	 * writer.append('\n'); if (writer.length() > 100000) //Dont let this buffer
-	 * get more than 100k of memory { String cut =
-	 * writer.substring(writer.length() - 70000, writer.length()); writer = new
-	 * StringBuffer(cut); } } fieldText = writer.toString(); } else { String
-	 * line = null; while ((line = reader.readLine()) != null) { if
-	 * (log.isDebugEnabled()) { log.debug(fieldType + " " + line); } } }
-	 * 
-	 * if (!isCompleted()) { synchronized (this) { setCompleted(true);
-	 * this.notifyAll(); } }
-	 * 
-	 * } catch (IOException ex) { //ignore? log.error(ex); } } }
-	 */
 	public String getXmlCommandsFilename()
 	{
 		return fieldXmlCommandsFilename;
