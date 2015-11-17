@@ -783,10 +783,6 @@ public class BaseWebServer implements WebServer
 				}
 			}
 			child.addAttribute("repositorytype", existing.getRepositoryType());
-			
-			
-			
-			
 			Map properties = existing.getProperties();
 			if (properties != null)
 			{
