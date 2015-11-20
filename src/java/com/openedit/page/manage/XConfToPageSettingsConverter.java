@@ -94,8 +94,10 @@ public class XConfToPageSettingsConverter
 		{
 			Configuration pageActionElement = (Configuration) pageActionElements.next();
 			Style script = createStyle(inSettings, pageActionElement );
-			
-			pageActions.add( script );
+			if( script != null)
+			{
+				pageActions.add( script );
+			}
 		}
 		return pageActions;
 	}
@@ -103,6 +105,11 @@ public class XConfToPageSettingsConverter
 	
 	protected Script createScript(PageSettings inSettings, Configuration inConfigElement)
 	{
+		String cancel = inConfigElement.get("cancel");
+		if(cancel != null && cancel.equals("true") )
+		{
+			return null;
+		}
 		Script script = new Script();
 		script.setId(inConfigElement.get("id"));
 		script.setSrc(inConfigElement.get("src"));
