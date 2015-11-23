@@ -122,7 +122,9 @@ public class StreamGobbler implements Closeable, Runnable
 		{
 			if (isLoggingEnabled)
 			{
-				log.error("Failed to gobble stream", e);
+				log.debug("Failed to gobble stream", e);
+				log.info("Failed to gobble stream");
+				
 			}
 		}
 	}
