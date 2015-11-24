@@ -1023,7 +1023,7 @@ public abstract class HitTracker implements Serializable, Collection
 		{
 			return found;
 		}
-		if( getPageEnd() > getPage() )
+		if( getTotalPages() > getPage() )
 		{
 			//Look one after
 			found = findIdOnPage(inId,getPage() + 1);
