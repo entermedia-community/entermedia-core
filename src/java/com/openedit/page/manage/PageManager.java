@@ -63,7 +63,12 @@ public class PageManager
 	public Page getPage(String inPath, WebPageRequest inReq) throws OpenEditException
 	{
 		//this gets the page for this user
-		boolean checkCurrent = Boolean.parseBoolean( inReq.findValue("reload") );
+		Boolean checkCurrent = (Boolean)inReq.getPageValue("reloadpages");
+		if( checkCurrent == null)
+		{
+			checkCurrent = Boolean.FALSE;
+		}
+		//boolean checkCurrent = Boolean.parseBoolean( inReq.findValue("reload") );
 		Page real = getPage(inPath, checkCurrent);
 		return getPage(real,checkCurrent,inReq);
 	}
