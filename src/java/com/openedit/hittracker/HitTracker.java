@@ -1018,24 +1018,52 @@ public abstract class HitTracker implements Serializable, Collection
 		{
 			return -1;
 		}
-			int size = size();
-			int start = Math.max(0, getPage()-5) * getHitsPerPage();
-			int end = (getPage()+5) * getHitsPerPage();
-			end = Math.min(size, end);
-			for (int i = start; i < end; i++)
+		int found = findIdOnPage(inId,getPage());
+		if( found > -1)
+		{
+			return found;
+		}
+		if( getTotalPages() > getPage() )
+		{
+			//Look one after
+			found = findIdOnPage(inId,getPage() + 1);
+			if( found > -1)
 			{
-				Data hit = get(i);
-				String id = getValue(hit, "id");
-				if( id.equals(inId))
-				{
-					return i;
-				}
+				return found;
 			}
-			return -1;
-			//throw new OpenEditException("getById Not implemented");
+		}
+		//Look one before
+		if( getPage() > 1 )
+		{
+			found = findIdOnPage(inId,getPage() -1);
+			if( found > -1)
+			{
+				return found;
+			}
+		}
+	
+		return -1;
 		
 	}
 
+	protected int findIdOnPage(String inId, int inPage)
+	{
+		int size = size();
+		int start = (inPage-1) * getHitsPerPage();
+		int end = (inPage) * getHitsPerPage();
+		end = Math.min(size, end);
+		for (int i = start; i < end; i++)
+		{
+			Data hit = get(i);
+			String id = getValue(hit, "id");
+			if( id.equals(inId))
+			{
+				return i;
+			}
+		}
+		return -1;
+	}
+	
 	public String getDataSource() {
 		return fieldDataSource;
 	}

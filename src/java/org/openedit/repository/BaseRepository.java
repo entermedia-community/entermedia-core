@@ -55,7 +55,14 @@ public abstract class BaseRepository implements Repository
 	
 	public void setProperty(String inPropName, String inValue)
 	{
-		getProperties().put(inPropName, inValue);
+		if( inValue == null )
+		{
+			getProperties().remove(inPropName);
+		}
+		else
+		{
+			getProperties().put(inPropName, inValue);
+		}
 	}
 	
 	public String getProperty(String inPropName)

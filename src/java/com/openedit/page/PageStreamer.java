@@ -532,7 +532,7 @@ public class PageStreamer
 
 	public boolean canDo(String inDo, String inPath) throws OpenEditException
 	{
-		Page linkpage = getPageManager().getPage(inPath,getWebPageRequest().getUser() != null); 
+		Page linkpage = getPageManager().getPage(inPath); 
 		Permission filter = linkpage.getPermission(inDo);
 		if( filter != null)
 		{

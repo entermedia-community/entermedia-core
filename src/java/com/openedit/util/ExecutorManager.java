@@ -1,7 +1,15 @@
 package com.openedit.util;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.RejectedExecutionHandler;
@@ -20,29 +28,83 @@ public class ExecutorManager implements Shutdownable
 {
 	private static final Log log = LogFactory.getLog(ExecutorManager.class);
 	
-	protected ExecutorService fieldSharedExecutor; //will be unlimited
 	protected Integer fieldThreadCount;
+	protected Map fieldExecutors;
 	
-	public Integer getThreadCount()
+	protected Map getExecutors()
 	{
-		if (fieldThreadCount == null)
+		if (fieldExecutors == null)
 		{
-			fieldThreadCount = Runtime.getRuntime().availableProcessors();
-			if( fieldThreadCount > 2 )
-			{
-				fieldThreadCount--;
-			}
-			fieldThreadCount = Math.max(fieldThreadCount, 4); //minimum of 4 threads
-			fieldThreadCount = 2;
+			fieldExecutors = new HashMap();
 		}
 
-		return fieldThreadCount;
+		return fieldExecutors;
 	}
+
+	
 
 	public void setThreadCount(Integer inThreadCount)
 	{
 		fieldThreadCount = inThreadCount;
 	}
+	
+	public ExecutorService getExecutor(String inType)
+	{
+		ExecutorService exec = (ExecutorService)getExecutors().get(inType);
+		if( exec == null)
+		{
+			synchronized (this)
+			{
+				exec = (ExecutorService)getExecutors().get(inType);
+				if( exec != null)
+				{
+					return exec;
+				}
+				if( inType.equals("unlimited"))
+				{
+					exec =  createExecutor(2, Integer.MAX_VALUE, "Unlimited");
+				}
+				else if( inType.equals("conversions"))
+				{
+					int max =  Runtime.getRuntime().availableProcessors();
+					if( max > 20)
+					{
+						max = 15; //Disk IO gets crazy
+					}
+					else if( max < 4)
+					{
+						max = 4;
+					}
+					max--;
+					exec =  createExecutor(max, max); //Max does not seem to work as advertised
+				}
+				else if( inType.equals("importing"))
+				{
+					exec =  createExecutor(10, 10, "Importing");
+				}
+				getExecutors().put(inType, exec);
+			}
+		}
+		return exec;
+	}
+	public void execute(String inType, List<Runnable> inTasks)
+	{
+		Collection<Callable<Object>> runnow = new ArrayList<Callable<Object>>(inTasks.size());
+	
+		for (Runnable runner: inTasks)
+		{ 
+			runnow.add(Executors.callable(runner)); 
+		}
+		try
+		{
+			getExecutor(inType).invokeAll(runnow);
+		}
+		catch( Throwable ex)
+		{
+			throw new OpenEditException(ex);
+		}
+	}
+	
 	
 	public ExecutorService createExecutor(int startThreads, int maxThreads) 
 	{
@@ -77,20 +139,13 @@ public class ExecutorManager implements Shutdownable
 	        }
 	    }
 	}
-	
-	public ExecutorService getSharedExecutor()
+	public void execute(String inType, Runnable inRunnable)
 	{
-		if (fieldSharedExecutor == null)
-		{
-			fieldSharedExecutor =  createExecutor(2, Integer.MAX_VALUE, "Unlimited");
-			//fieldSharedExecutor =  createExecutor(2, 2, "Unlimited");
-		}
-		return fieldSharedExecutor;
+		getExecutor(inType).execute(inRunnable);
 	}
-	
 	public void execute(Runnable inRunnable)
 	{
-		getSharedExecutor().execute(inRunnable);
+		execute("unlimited",inRunnable);
 	}
 	public void waitForIt(ExecutorService inExec)
 	{
@@ -215,19 +270,20 @@ static class DefaultThreadFactory implements ThreadFactory {
 public void shutdown()
 {
 	// TODO Auto-generated method stub
-	if( fieldSharedExecutor != null)
+	for (Iterator iterator = getExecutors().keySet().iterator(); iterator.hasNext();)
 	{
+		String type = (String) iterator.next();
+		ExecutorService exec = (ExecutorService)getExecutors().get(type);
 		try
 		{
-			fieldSharedExecutor.shutdown();
-			fieldSharedExecutor.awaitTermination(1L, TimeUnit.MINUTES);
+			exec.shutdown();
+			exec.awaitTermination(10L, TimeUnit.SECONDS);
 		}
 		catch (Throwable e)
 		{
 			//	throw new OpenEditException(e);
 		}
 		log.debug("Exec shut down");
-		
 	}
 }
 

@@ -2,12 +2,12 @@
 
 <commandmaps>
 	<commandmap os="LINUX">
-		<commandbase>./exec</commandbase>
-		<lame>/echo.sh</lame>
-		<ffmpeg>/echo.sh</ffmpeg>
-		<imagemagick>/echo.sh</imagemagick>
-		<ghostscript>/echo.sh</ghostscript>
-		<exiftool>/echo.sh</exiftool>
+		<commandbase>./WEB-INF/bin/exec</commandbase>
+		<lame>./echo.sh</lame>
+		<ffmpeg>./echo.sh</ffmpeg>
+		<imagemagick>./echo.sh</imagemagick>
+		<ghostscript>./echo.sh</ghostscript>
+		<exiftool>./echo.sh</exiftool>
 	</commandmap>
 	<commandmap os="WINDOWS">
 		<commandbase></commandbase>

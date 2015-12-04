@@ -139,7 +139,7 @@ public interface WebPageRequest
 	 * @param inObject
 	 */
 	void setUser(User inUser);
-
+	public void setUserProfile(UserProfile inUserProfile);
 	/**
 	 * This is the path to the content
 	 */

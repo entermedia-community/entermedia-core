@@ -44,9 +44,9 @@ public class Page implements Data, Comparable
 	
 	protected String fieldPath;
 	protected PageSettings fieldPageSettings;
-	protected List fieldGenerators;
 	protected ContentItem fieldContentItem;
 	protected long fieldOriginalyModified;
+	protected Map fieldCache;
 	
 	public Page( String inPath, PageSettings inMetaData )
 	{
@@ -64,7 +64,14 @@ public class Page implements Data, Comparable
 		this( inPage.getPath(), inPage.getPageSettings() );
 		fieldContentItem = inPage.getContentItem();
 	}
-
+	protected Map getCache()
+	{
+		if( fieldCache == null)
+		{
+			fieldCache = new HashMap();
+		}
+		return fieldCache;
+	}
 	public boolean isBinary()
 	{
 		if ( getMimeType() == null)
@@ -160,19 +167,27 @@ public class Page implements Data, Comparable
 	 */
 	public List getPageActions()
 	{
-		List actions =  getPageSettings().getPageActions();
-		if( isDynamic() )
+		List copy = (List)getCache().get("pageActions");
+		if( copy == null)
 		{
-			return actions;
-		}
-		List copy = new ArrayList(actions.size());
-		for (Iterator iter = actions.iterator(); iter.hasNext();)
-		{
-			PageAction action = (PageAction) iter.next();
-			if ( action.isIncludesAll() )
+			List actions =  getPageSettings().getPageActions();
+			if( isDynamic() )
 			{
-				copy.add(action);
+				copy = actions;
 			}
+			else
+			{
+				copy = new ArrayList(actions.size());
+				for (Iterator iter = actions.iterator(); iter.hasNext();)
+				{
+					PageAction action = (PageAction) iter.next();
+					if ( action.isIncludesAll() )
+					{
+						copy.add(action);
+					}
+				}
+			}
+			getCache().put("pageActions",copy);
 		}
 		return copy;
 	}
@@ -189,6 +204,7 @@ public class Page implements Data, Comparable
 			for (Iterator iterator = styles.iterator(); iterator.hasNext();)
 			{
 				Style script = (Style) iterator.next();
+				
 				if( !got.contains(script.getId()) )
 				{
 					copy.add(script);
@@ -231,33 +247,41 @@ public class Page implements Data, Comparable
 	}
 	public List getScriptPaths()
 	{
-		List scripts = getScripts();
-		if( scripts != null)
+		List paths = (List)getCache().get("scriptPaths");
+		if( paths == null)
 		{
-			List paths = new ArrayList(scripts.size());
-			for (Iterator iterator = scripts.iterator(); iterator.hasNext();)
+			List scripts = getScripts();
+			if( scripts != null)
 			{
-				Script script = (Script) iterator.next();
-				paths.add(getPageSettings().replaceProperty(script.getSrc()));
+				paths = new ArrayList(scripts.size());
+				for (Iterator iterator = scripts.iterator(); iterator.hasNext();)
+				{
+					Script script = (Script) iterator.next();
+					paths.add(getPageSettings().replaceProperty(script.getSrc()));
+				}
+				getCache().put("scriptPaths",paths);
 			}
-			return paths;
 		}
-		return null;
+		return paths;
 	}
 	public List getStylePaths()
 	{
-		List styles = getStyles();
-		if( styles != null)
+		List paths = (List)getCache().get("stylePaths");
+		if( paths == null)
 		{
-			List paths = new ArrayList(styles.size());
-			for (Iterator iterator = styles.iterator(); iterator.hasNext();)
+			List styles = getStyles();
+			if( styles != null)
 			{
-				Style style = (Style) iterator.next();
-				paths.add(getPageSettings().replaceProperty(style.getHref()));
+				paths = new ArrayList(styles.size());
+				for (Iterator iterator = styles.iterator(); iterator.hasNext();)
+				{
+					Style style = (Style) iterator.next();
+					paths.add(getPageSettings().replaceProperty(style.getHref()));
+				}
+				getCache().put("stylePaths",paths);
 			}
-			return paths;
 		}
-		return null;
+		return paths;
 	}
 	
 	/**
@@ -268,20 +292,28 @@ public class Page implements Data, Comparable
 	 */
 	public List getPathActions()
 	{
-		List actions = getPageSettings().getPathActions();
-		if( isDynamic() )
+		List copy = (List)getCache().get("pathActions");
+		if( copy == null)
 		{
-			return actions;
-		}
-		List copy = new ArrayList(actions.size());
-		for (Iterator iter = actions.iterator(); iter.hasNext();)
-		{
-			PageAction action = (PageAction) iter.next();
-			if ( action.isIncludesAll() )
+			List actions = getPageSettings().getPathActions();
+			if( isDynamic() )
 			{
-				copy.add(action);
+				copy = actions;
 			}
-		}
+			else
+			{
+				copy = new ArrayList(actions.size());
+				for (Iterator iter = actions.iterator(); iter.hasNext();)
+				{
+					PageAction action = (PageAction) iter.next();
+					if ( action.isIncludesAll() )
+					{
+						copy.add(action);
+					}
+				}
+			}
+			getCache().put("pathActions",copy);
+		}	
 		return copy;
 	}
 
@@ -356,13 +388,6 @@ public class Page implements Data, Comparable
 		String val = null;
 		if( language != null )
 		{
-//			String[] locales = language.split("_");
-//			String lang = locales[0];
-//			String code2 = "";
-//			String code3 = "";
-//			if( locales.length> 1) 
-				
-//			Locale loc = new Locale();
 			PageProperty property = (PageProperty) getPageSettings().getProperty(name);
 			if (property != null)
 			{
@@ -482,20 +507,12 @@ public class Page implements Data, Comparable
 	{
 		return getPageSettings().getAlternateContentPath();
 	}
-	public List fieldGenerators()
-	{
-		return fieldGenerators;
-	}
 	/**
 	 * @return
 	 */
 	public List getGenerator()
 	{
-		if ( fieldGenerators == null)
-		{
-			fieldGenerators = getPageSettings().getGenerators();
-		}
-		return fieldGenerators;
+		return getPageSettings().getGenerators();
 	}
 	
 	public InputStream getInputStream() throws ContentNotAvailableException

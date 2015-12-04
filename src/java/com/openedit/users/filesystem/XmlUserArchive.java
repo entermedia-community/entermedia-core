@@ -427,6 +427,15 @@ public class XmlUserArchive  {
 	 * May be subclassed
 	 */
 	public User loadUser(String inUserName) throws UserManagerException {
+		
+		ContentItem userfolder = getPageManager().getRepository().getStub(
+				getUserDirectory() + "/" );
+		if(!userfolder.exists()){
+			File userfolderfile = new File(userfolder.getAbsolutePath());
+			userfolderfile.mkdirs();
+
+		}
+		
 		File userFile = loadUserFile(inUserName);
 		if (!userFile.exists()) {
 			ContentItem stub = getPageManager().getRepository().getStub(
@@ -698,9 +707,9 @@ public class XmlUserArchive  {
 		ContentItem stub = getPageManager().getRepository().getStub(
 				getUserDirectory() + "/" + inUserName + ".xml");
 		File file = new File(stub.getAbsolutePath());
-		if (!file.getParentFile().exists()) {
-			file.getParentFile().mkdirs();
-		}
+		
+		
+		
 		return file;
 	}
 

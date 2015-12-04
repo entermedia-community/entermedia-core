@@ -142,7 +142,6 @@ public class SearcherManager
 	 * 
 	 * @param inCatalogId
 	 * @param inDetail
-	 * @deprecated use getListSearcher($detail)
 	 * @return
 	 */
 	public Searcher getSearcher(String inCatalogId, PropertyDetail inDetail)  

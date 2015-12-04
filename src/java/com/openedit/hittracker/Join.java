@@ -2,55 +2,55 @@ package com.openedit.hittracker;
 
 public class Join
 {
-	protected String fieldRemoteColumn; //id
-	protected String fieldRemoteSearchType;
-	protected SearchQuery fieldRemoteQuery;
-	protected String fieldLocalColumn; //division_id
-	protected boolean fieldRemoteHasMultiValues;
+	protected String fieldFilterColumn; //id
+	protected String fieldFilterSearchType;
+	protected SearchQuery fieldFilterQuery;
+	protected String fieldResultsColumn; //division_id
+	protected boolean fieldFilterHasMultiValues;
 	
-	public boolean isRemoteHasMultiValues()
+	public boolean isFilterHasMultiValues()
 	{
-		return fieldRemoteHasMultiValues;
+		return fieldFilterHasMultiValues;
 	}
-	public void setRemoteHasMultiValues(boolean inRemoteHasMultiValues)
+	public void setFilterHasMultiValues(boolean inRemoteHasMultiValues)
 	{
-		fieldRemoteHasMultiValues = inRemoteHasMultiValues;
+		fieldFilterHasMultiValues = inRemoteHasMultiValues;
 	}
-	public String getRemoteColumn()
+	public String getFilterColumn()
 	{
-		return fieldRemoteColumn;
+		return fieldFilterColumn;
 	}
-	public void setRemoteColumn(String inRemoteColumn)
+	public void setFilterColumn(String inRemoteColumn)
 	{
-		fieldRemoteColumn = inRemoteColumn;
+		fieldFilterColumn = inRemoteColumn;
 	}
-	public String getRemoteSearchType()
+	public String getFilterSearchType()
 	{
-		return fieldRemoteSearchType;
+		return fieldFilterSearchType;
 	}
-	public void setRemoteSearchType(String inRemoteSearchType)
+	public void setFilterSearchType(String inRemoteSearchType)
 	{
-		fieldRemoteSearchType = inRemoteSearchType;
+		fieldFilterSearchType = inRemoteSearchType;
 	}
-	public SearchQuery getRemoteQuery()
+	public SearchQuery getFilterQuery()
 	{
-		return fieldRemoteQuery;
+		return fieldFilterQuery;
 	}
-	public void setRemoteQuery(SearchQuery inRemoteQuery)
+	public void setFilterQuery(SearchQuery inRemoteQuery)
 	{
-		fieldRemoteQuery = inRemoteQuery;
+		fieldFilterQuery = inRemoteQuery;
 	}
-	public String getLocalColumn()
+	public String getResultsColumn()
 	{
-		return fieldLocalColumn;
+		return fieldResultsColumn;
 	}
-	public void setLocalColumn(String inLocalColumn)
+	public void setResultsColumn(String inLocalColumn)
 	{
-		fieldLocalColumn = inLocalColumn;
+		fieldResultsColumn = inLocalColumn;
 	}
 	public boolean equals(Object inObj)
 	{
 		Join join = (Join)inObj;
-		return join.getRemoteQuery().equals(getRemoteQuery());
+		return join.getFilterQuery().equals(getFilterQuery());
 	}
 }
