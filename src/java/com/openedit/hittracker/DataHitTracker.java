@@ -5,7 +5,7 @@ import java.util.Iterator;
 
 import org.openedit.Data;
 
-public class DataHitTracker extends ListHitTracker 
+public class DataHitTracker<T> extends ListHitTracker 
 {
 	//Use getByID.
 	public Object get(String inId) throws IOException
@@ -18,7 +18,7 @@ public class DataHitTracker extends ListHitTracker
 	{
 		return (Data)getList().get(count);
 	}
-	public Object getById(String inId)
+	public Data getById(String inId)
 	{
 		if (inId == null)
 		{
@@ -31,7 +31,7 @@ public class DataHitTracker extends ListHitTracker
 				String id = ((Data)obj).getId();
 				if (inId.equals(id))
 				{
-					return obj;
+					return (Data)obj;
 				}
 			}
 		}

@@ -19,7 +19,7 @@ import org.openedit.util.DateStorageUtil;
 
 import com.openedit.OpenEditException;
 
-public abstract class HitTracker implements Serializable, Collection
+public abstract class HitTracker<T> implements Serializable, Collection
 {
 
 	private static final Log log = LogFactory.getLog(HitTracker.class);
@@ -102,7 +102,7 @@ public abstract class HitTracker implements Serializable, Collection
 
 	public abstract Data get(int count);
 
-	public Object getById(String inId)
+	public Data getById(String inId)
 	{
 		for (int i = 0; i < size(); i++)
 		{
@@ -557,27 +557,27 @@ public abstract class HitTracker implements Serializable, Collection
 //		return collection;
 //	}
 
-	public String toString(Data inHit)
-	{
-		if (inHit instanceof Data)
-		{
-			return inHit.toString();
-		}
-		else
-		{
-			String name = getValue(inHit, "name");
-			if (name == null)
-			{
-				name = getValue(inHit, "shortdescription");
-			}
-			if (name == null)
-			{
-				name = getValue(inHit, "id");
-			}
-
-			return name;
-		}
-	}
+//	public String toString(Data inHit)
+//	{
+//		if (inHit instanceof Data)
+//		{
+//			return inHit.toString();
+//		}
+//		else
+//		{
+//			String name = getValue(inHit, "name");
+//			if (name == null)
+//			{
+//				name = getValue(inHit, "shortdescription");
+//			}
+//			if (name == null)
+//			{
+//				name = getValue(inHit, "id");
+//			}
+//
+//			return name;
+//		}
+//	}
 
 	public void clear()
 	{

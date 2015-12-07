@@ -42,7 +42,7 @@ public class XmlHitTracker extends HitTracker
 		return getById(inId);
 	}
 
-	public Object getById(String inId)
+	public Data getById(String inId)
 	{
 		Element element = getXmlFile().getElementById(inId);
 		if( element == null)

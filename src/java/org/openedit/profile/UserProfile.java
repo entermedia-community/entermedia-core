@@ -389,7 +389,7 @@ public class UserProfile extends BaseData implements SaveableData
 		setProperty(inView, inPreference);
 	}
 
-	public int getHitsPerPageForSearchType(String inResultsView) throws Exception
+	public int getHitsPerPageForSearchType(String inResultsView)
 	{
 		String view = inResultsView + "hitsperpage";
 		String value = get(view);

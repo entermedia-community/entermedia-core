@@ -3,8 +3,6 @@
  */
 package com.openedit;
 
-import groovy.util.GroovyScriptEngine;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,10 +23,9 @@ import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.openedit.PlugIn;
 import org.openedit.repository.Repository;
-import org.openedit.repository.filesystem.FileRepository;
 import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.UrlResource;
 
 import com.openedit.config.ScriptPathLoader;
@@ -39,6 +36,8 @@ import com.openedit.servlet.OpenEditEngine;
 import com.openedit.users.UserManager;
 import com.openedit.util.PathUtilities;
 import com.openedit.util.XmlUtil;
+
+import groovy.util.GroovyScriptEngine;
 
 /**
  * <p>
@@ -169,7 +168,19 @@ public class BaseWebServer implements WebServer
 					}
 					return super.getResource(location);
 				};
+				
+				public void registerBeanDefinition(String beanName, org.springframework.beans.factory.config.BeanDefinition beanDefinition) throws org.springframework.beans.factory.BeanDefinitionStoreException 
+				{
+					beanDefinition.setLazyInit(true);
+					super.registerBeanDefinition(beanName, beanDefinition);
+				};
 			};
+
+			//TODO: Use this as a better way to load groovy scripts from an xml file. One bean at a time
+			
+			//http://www.digizenstudio.com/blog/2007/01/14/programmatically-build-a-spring-application-context/
+//			BeanDefinitionBuilder bdb1 = BeanDefinitionBuilder.rootBeanDefinition("org.springframework.scripting.support.ScriptFactoryPostProcessor").setLazyInit(false);
+//			context.registerBeanDefinition("scriptPostProcessor", bdb1.getBeanDefinition());
 			
 			context.setValidating(false);
 			ScriptPathLoader pathloader = new ScriptPathLoader();
