@@ -85,7 +85,7 @@ public class PageStreamer
 			User user = getWebPageRequest().getUser();
 			if( user != null)
 			{
-				if( "debug".equals(user.getProperty("oe.edit.mode")))
+				if( "debug".equals(user.getProperty("oe_edit_mode")))
 				{
 					setDebug(true);
 				}

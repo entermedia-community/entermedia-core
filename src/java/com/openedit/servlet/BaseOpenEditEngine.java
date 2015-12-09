@@ -54,7 +54,7 @@ public class BaseOpenEditEngine implements OpenEditEngine
 		HttpSession session = inRequest.getSession(false);
 		if ( session != null)
 		{
-			String mode = (String)session.getAttribute("oe.edit.mode");
+			String mode = (String)session.getAttribute("oe_edit_mode");
 			if( "debug".equals(mode) || "editing".equals(mode))
 			{
 				checkdates = true;

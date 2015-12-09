@@ -164,6 +164,9 @@ public class MapPropertyContainer implements PropertyContainer
 
 					if ((name != null) && (value != null))
 					{
+						if(name.contains(".")){
+							name.replace(".", "_");
+						}
 						properties.put(name, value);
 					}
 				}
