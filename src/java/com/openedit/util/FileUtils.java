@@ -485,7 +485,7 @@ public class FileUtils
 		
 	}
 	
-	protected Set getInvalidChars()
+	public Set getInvalidChars()
 	{
 		if (fieldInvalidChars == null)
 		{
