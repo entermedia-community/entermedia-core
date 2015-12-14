@@ -3,10 +3,9 @@ package org.openedit.hittracker;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.openedit.BaseTestCase;
 import org.openedit.MultiValued;
-
-import com.openedit.BaseTestCase;
-import com.openedit.hittracker.ListHitTracker;
+import org.openedit.hittracker.ListHitTracker;
 
 public class HitTest extends BaseTestCase
 {

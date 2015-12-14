@@ -124,7 +124,7 @@
         <include name="**"/>
       </dirset>
     </classpath>
-  		<test name="com.openedit.AllTests" outfile="./junit" todir="${report}">
+  		<test name="org.openedit.AllTests" outfile="./junit" todir="${report}">
   			<formatter type="xml"/>
   		</test>
 	

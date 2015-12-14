@@ -5,10 +5,9 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import org.openedit.Data;
-
-import com.openedit.WebPageRequest;
-import com.openedit.hittracker.HitTracker;
-import com.openedit.hittracker.SearchQuery;
+import org.openedit.WebPageRequest;
+import org.openedit.hittracker.HitTracker;
+import org.openedit.hittracker.SearchQuery;
 
 public class QueryBuilder
 {

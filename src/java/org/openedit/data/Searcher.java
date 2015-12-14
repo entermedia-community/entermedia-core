@@ -5,13 +5,12 @@ import java.util.Collection;
 import java.util.List;
 
 import org.openedit.Data;
+import org.openedit.OpenEditException;
+import org.openedit.WebPageRequest;
+import org.openedit.hittracker.HitTracker;
+import org.openedit.hittracker.SearchQuery;
 import org.openedit.profile.UserProfile;
-
-import com.openedit.OpenEditException;
-import com.openedit.WebPageRequest;
-import com.openedit.hittracker.HitTracker;
-import com.openedit.hittracker.SearchQuery;
-import com.openedit.users.User;
+import org.openedit.users.User;
 
 public interface Searcher
 {

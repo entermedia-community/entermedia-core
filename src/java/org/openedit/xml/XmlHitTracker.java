@@ -6,8 +6,7 @@ import java.util.List;
 
 import org.dom4j.Element;
 import org.openedit.Data;
-
-import com.openedit.hittracker.HitTracker;
+import org.openedit.hittracker.HitTracker;
 
 public class XmlHitTracker extends HitTracker
 {

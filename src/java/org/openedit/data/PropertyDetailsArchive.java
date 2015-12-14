@@ -16,17 +16,16 @@ import org.dom4j.Attribute;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.openedit.Data;
+import org.openedit.OpenEditException;
+import org.openedit.OpenEditRuntimeException;
+import org.openedit.page.Page;
+import org.openedit.page.manage.PageManager;
+import org.openedit.page.manage.TextLabelManager;
 import org.openedit.profile.UserProfile;
+import org.openedit.users.User;
+import org.openedit.util.PathUtilities;
 import org.openedit.xml.XmlArchive;
 import org.openedit.xml.XmlFile;
-
-import com.openedit.OpenEditException;
-import com.openedit.OpenEditRuntimeException;
-import com.openedit.page.Page;
-import com.openedit.page.manage.PageManager;
-import com.openedit.page.manage.TextLabelManager;
-import com.openedit.users.User;
-import com.openedit.util.PathUtilities;
 
 public class PropertyDetailsArchive {
 	private static final Log log = LogFactory

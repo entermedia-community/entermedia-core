@@ -21,9 +21,8 @@ import org.openedit.repository.ContentItem;
 import org.openedit.repository.OutputStreamItem;
 import org.openedit.repository.Repository;
 import org.openedit.repository.RepositoryException;
-
-import com.openedit.util.FileUtils;
-import com.openedit.util.PathUtilities;
+import org.openedit.util.FileUtils;
+import org.openedit.util.PathUtilities;
 
 /**
  * @author cburkey

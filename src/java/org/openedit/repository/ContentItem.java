@@ -18,7 +18,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Date;
 
-import com.openedit.util.PathUtilities;
+import org.openedit.util.PathUtilities;
 
 /**
  * The ContentItem is a lot like a versioned network "file".

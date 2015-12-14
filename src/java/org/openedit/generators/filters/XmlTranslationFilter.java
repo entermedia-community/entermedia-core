@@ -1,11 +1,10 @@
 package org.openedit.generators.filters;
 
+import org.openedit.ModuleManager;
 import org.openedit.data.SearcherManager;
-
-import com.openedit.ModuleManager;
-import com.openedit.modules.translations.TranslationSearcher;
-import com.openedit.page.Page;
-import com.openedit.page.manage.PageManager;
+import org.openedit.modules.translations.TranslationSearcher;
+import org.openedit.page.Page;
+import org.openedit.page.manage.PageManager;
 
 public class XmlTranslationFilter extends TextReaderFilter
 {

@@ -17,23 +17,22 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.entermedia.locks.LockManager;
 import org.openedit.Data;
+import org.openedit.ModuleManager;
 import org.openedit.MultiValued;
+import org.openedit.OpenEditException;
+import org.openedit.WebPageRequest;
+import org.openedit.config.Configuration;
 import org.openedit.event.WebEvent;
 import org.openedit.event.WebEventListener;
+import org.openedit.hittracker.HitTracker;
+import org.openedit.hittracker.SearchQuery;
+import org.openedit.hittracker.Term;
+import org.openedit.locks.LockManager;
 import org.openedit.profile.UserProfile;
+import org.openedit.users.User;
 import org.openedit.util.DateStorageUtil;
-
-import com.openedit.ModuleManager;
-import com.openedit.OpenEditException;
-import com.openedit.WebPageRequest;
-import com.openedit.config.Configuration;
-import com.openedit.hittracker.HitTracker;
-import com.openedit.hittracker.SearchQuery;
-import com.openedit.hittracker.Term;
-import com.openedit.users.User;
-import com.openedit.util.URLUtilities;
+import org.openedit.util.URLUtilities;
 
 public abstract class BaseSearcher implements Searcher, DataFactory
 {
@@ -372,7 +371,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	/**
 	 * @deprecated Use loadHits which checks hitssessionid
 	 * 
-	 * @see org.openedit.data.Searcher#loadHits(com.openedit.WebPageRequest,
+	 * @see org.openedit.data.Searcher#loadHits(org.openedit.WebPageRequest,
 	 *      java.lang.String)
 	 */
 	public HitTracker loadHits(WebPageRequest inReq, String hitsname) throws OpenEditException
@@ -436,7 +435,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.openedit.data.Searcher#fieldSearch(com.openedit.WebPageRequest)
+	 * @see org.openedit.data.Searcher#fieldSearch(org.openedit.WebPageRequest)
 	 */
 	public HitTracker fieldSearch(WebPageRequest inReq) throws OpenEditException
 	{
@@ -558,7 +557,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.openedit.data.Searcher#addStandardSearchTerms(com.openedit.WebPageRequest
+	 * org.openedit.data.Searcher#addStandardSearchTerms(org.openedit.WebPageRequest
 	 * )
 	 */
 	public SearchQuery addStandardSearchTerms(WebPageRequest inPageRequest) throws OpenEditException
@@ -1384,8 +1383,8 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.openedit.data.Searcher#addActionFilters(com.openedit.WebPageRequest,
-	 * com.openedit.hittracker.SearchQuery)
+	 * org.openedit.data.Searcher#addActionFilters(org.openedit.WebPageRequest,
+	 * org.openedit.hittracker.SearchQuery)
 	 */
 
 	public SearchQuery addActionFilters(WebPageRequest inReq, SearchQuery search)
@@ -2061,7 +2060,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	 * Check for a more recent index
 	 * 
 	 * @see
-	 * org.openedit.data.Searcher#checkCurrent(com.openedit.hittracker.HitTracker
+	 * org.openedit.data.Searcher#checkCurrent(org.openedit.hittracker.HitTracker
 	 * )
 	 */
 	public HitTracker checkCurrent(WebPageRequest inReq, HitTracker tracker) throws OpenEditException

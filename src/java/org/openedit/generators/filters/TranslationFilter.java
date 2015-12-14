@@ -1,6 +1,6 @@
 package org.openedit.generators.filters;
 
-import com.openedit.page.Page;
+import org.openedit.page.Page;
 
 public class TranslationFilter extends TextReaderFilter
 {

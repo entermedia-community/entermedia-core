@@ -25,8 +25,6 @@ import java.io.InputStreamReader;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.openedit.util.ExecutorManager;
-
 /**
  * An object that consumes an {@link InputStream} on a daemon thread to prevent
  * the stream from blocking.

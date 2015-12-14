@@ -7,13 +7,12 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openedit.Data;
+import org.openedit.WebPageRequest;
+import org.openedit.hittracker.CompositeHitTracker;
+import org.openedit.hittracker.HitTracker;
+import org.openedit.hittracker.SearchQuery;
 import org.openedit.profile.UserProfile;
 import org.openedit.profile.UserProfileManager;
-
-import com.openedit.WebPageRequest;
-import com.openedit.hittracker.CompositeHitTracker;
-import com.openedit.hittracker.HitTracker;
-import com.openedit.hittracker.SearchQuery;
 
 public abstract class CompositeSearcher extends BaseSearcher
 {

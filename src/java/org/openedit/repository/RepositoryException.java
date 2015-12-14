@@ -6,7 +6,7 @@
  */
 package org.openedit.repository;
 
-import com.openedit.OpenEditException;
+import org.openedit.OpenEditException;
 
 /**
  * @author avery

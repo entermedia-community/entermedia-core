@@ -7,11 +7,10 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
+import org.openedit.BaseTestCase;
 import org.openedit.repository.filesystem.BaseRepositoryTest;
 import org.openedit.repository.filesystem.FileItem;
 import org.openedit.repository.filesystem.FileRepository;
-
-import com.openedit.BaseTestCase;
 
 
 /**

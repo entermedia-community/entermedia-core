@@ -9,15 +9,12 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.entermedia.locks.LockManager;
 import org.openedit.Data;
-import org.openedit.xml.XmlArchive;
-
-import com.openedit.BeanNameLoader;
-import com.openedit.ModuleManager;
-import com.openedit.OpenEditRuntimeException;
-import com.openedit.hittracker.HitTracker;
-import com.openedit.util.Replacer;
+import org.openedit.ModuleManager;
+import org.openedit.OpenEditRuntimeException;
+import org.openedit.hittracker.HitTracker;
+import org.openedit.locks.LockManager;
+import org.openedit.util.Replacer;
 
 public class SearcherManager
 {

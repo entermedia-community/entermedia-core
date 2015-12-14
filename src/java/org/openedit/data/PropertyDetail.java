@@ -11,9 +11,8 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.openedit.Data;
-
-import com.openedit.WebPageRequest;
-import com.openedit.page.manage.TextLabelManager;
+import org.openedit.WebPageRequest;
+import org.openedit.page.manage.TextLabelManager;
 
 public class PropertyDetail implements Data, ViewItem, Comparable
 {

@@ -24,8 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.openedit.util.ExecutorManager;
-
 /**
  * This class wraps {@link ProcessBuilder} for creating operating system processes using the safer
  * {@link FinalizedProcess}.

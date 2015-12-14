@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.openedit.util.PathUtilities;
+import org.openedit.util.PathUtilities;
 
 public abstract class BaseRepository implements Repository
 {

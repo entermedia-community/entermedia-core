@@ -12,8 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.openedit.repository.filesystem.FileRepository;
-
-import com.openedit.util.PathUtilities;
+import org.openedit.util.PathUtilities;
 
 /**
  * @author Matthew Avery, mavery@einnovation.com

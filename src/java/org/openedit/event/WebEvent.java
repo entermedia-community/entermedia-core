@@ -9,8 +9,7 @@ import java.util.Map;
 
 import org.openedit.Data;
 import org.openedit.MultiValued;
-
-import com.openedit.users.User;
+import org.openedit.users.User;
 
 public class WebEvent implements Data, MultiValued
 { 

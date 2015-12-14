@@ -12,23 +12,22 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
-import org.entermedia.cache.CacheManager;
 import org.openedit.Data;
+import org.openedit.OpenEditException;
+import org.openedit.OpenEditRuntimeException;
+import org.openedit.Shutdownable;
+import org.openedit.cache.CacheManager;
 import org.openedit.data.BaseData;
 import org.openedit.data.BaseSearcher;
 import org.openedit.data.PropertyDetail;
 import org.openedit.data.PropertyDetails;
+import org.openedit.hittracker.DataHitTracker;
+import org.openedit.hittracker.HitTracker;
+import org.openedit.hittracker.SearchQuery;
+import org.openedit.hittracker.Term;
+import org.openedit.users.User;
 import org.openedit.util.DateStorageUtil;
-
-import com.openedit.OpenEditException;
-import com.openedit.OpenEditRuntimeException;
-import com.openedit.Shutdownable;
-import com.openedit.hittracker.DataHitTracker;
-import com.openedit.hittracker.HitTracker;
-import com.openedit.hittracker.SearchQuery;
-import com.openedit.hittracker.Term;
-import com.openedit.users.User;
-import com.openedit.util.PathUtilities;
+import org.openedit.util.PathUtilities;
 
 public class XmlSearcher extends BaseSearcher implements Shutdownable
 {

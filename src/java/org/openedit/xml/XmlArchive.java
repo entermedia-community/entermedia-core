@@ -6,19 +6,14 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
-import org.entermedia.locks.Lock;
-import org.entermedia.locks.LockManager;
-import org.entermedia.locks.MemoryLockManager;
-import org.openedit.Data;
+import org.openedit.ModuleManager;
+import org.openedit.OpenEditException;
+import org.openedit.page.Page;
+import org.openedit.page.manage.PageManager;
 import org.openedit.repository.ContentItem;
-
-import com.openedit.ModuleManager;
-import com.openedit.OpenEditException;
-import com.openedit.page.Page;
-import com.openedit.page.manage.PageManager;
-import com.openedit.users.User;
-import com.openedit.util.FileUtils;
-import com.openedit.util.XmlUtil;
+import org.openedit.users.User;
+import org.openedit.util.FileUtils;
+import org.openedit.util.XmlUtil;
 
 public class XmlArchive
 {

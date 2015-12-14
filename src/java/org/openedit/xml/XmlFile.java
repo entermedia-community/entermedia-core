@@ -14,8 +14,7 @@ import java.util.Set;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.openedit.Data;
-
-import com.openedit.util.PathUtilities;
+import org.openedit.util.PathUtilities;
 
 public class XmlFile implements Data 
 {

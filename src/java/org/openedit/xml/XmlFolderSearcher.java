@@ -2,7 +2,6 @@ package org.openedit.xml;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -12,13 +11,12 @@ import org.apache.commons.logging.LogFactory;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.openedit.Data;
-
-import com.openedit.OpenEditException;
-import com.openedit.OpenEditRuntimeException;
-import com.openedit.hittracker.HitTracker;
-import com.openedit.page.Page;
-import com.openedit.page.manage.PageManager;
-import com.openedit.users.User;
+import org.openedit.OpenEditException;
+import org.openedit.OpenEditRuntimeException;
+import org.openedit.hittracker.HitTracker;
+import org.openedit.page.Page;
+import org.openedit.page.manage.PageManager;
+import org.openedit.users.User;
 
 public class XmlFolderSearcher extends XmlSearcher
 {

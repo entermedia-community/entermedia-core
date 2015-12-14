@@ -17,8 +17,6 @@ package org.openedit.repository;
 import java.util.List;
 import java.util.Map;
 
-import org.openedit.Data;
-
 
 
 /**

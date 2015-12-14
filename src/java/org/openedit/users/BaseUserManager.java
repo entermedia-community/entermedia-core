@@ -4,20 +4,14 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import org.openedit.OpenEditException;
 import org.openedit.data.SearcherManager;
 import org.openedit.event.WebEventHandler;
-
-import com.openedit.OpenEditException;
-import com.openedit.hittracker.HitTracker;
-import com.openedit.users.Authenticator;
-import com.openedit.users.Group;
-import com.openedit.users.User;
-import com.openedit.users.UserManager;
-import com.openedit.users.UserManagerException;
-import com.openedit.users.authenticate.AuthenticationRequest;
-import com.openedit.users.filesystem.PermissionsManager;
-import com.openedit.users.filesystem.XmlUserArchive;
-import com.openedit.util.StringEncryption;
+import org.openedit.hittracker.HitTracker;
+import org.openedit.users.authenticate.AuthenticationRequest;
+import org.openedit.users.filesystem.PermissionsManager;
+import org.openedit.users.filesystem.XmlUserArchive;
+import org.openedit.util.StringEncryption;
 
 public class BaseUserManager implements UserManager
 {

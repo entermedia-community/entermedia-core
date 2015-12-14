@@ -22,8 +22,7 @@ import org.apache.commons.logging.LogFactory;
 import org.openedit.Data;
 import org.openedit.repository.ContentItem;
 import org.openedit.repository.RepositoryException;
-
-import com.openedit.util.PathUtilities;
+import org.openedit.util.PathUtilities;
 
 /**
  * @author Matthew Avery, mavery@einnovation.com

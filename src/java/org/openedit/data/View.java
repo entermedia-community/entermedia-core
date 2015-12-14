@@ -7,8 +7,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 
 import org.openedit.Data;
-
-import com.openedit.OpenEditException;
+import org.openedit.OpenEditException;
 
 /**
  * This is essentially a tree that may contain other View objects,

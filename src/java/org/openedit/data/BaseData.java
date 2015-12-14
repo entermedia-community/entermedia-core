@@ -9,8 +9,7 @@ import java.util.Map;
 
 import org.openedit.Data;
 import org.openedit.MultiValued;
-
-import com.openedit.OpenEditException;
+import org.openedit.OpenEditException;
 
 public class BaseData implements MultiValued, Comparable, Cloneable
 {

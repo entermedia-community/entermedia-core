@@ -3,11 +3,8 @@ package org.openedit.users;
 import java.util.List;
 
 import org.openedit.data.Searcher;
-
-import com.openedit.hittracker.HitTracker;
-import com.openedit.users.Group;
-import com.openedit.users.User;
-import com.openedit.users.filesystem.XmlUserArchive;
+import org.openedit.hittracker.HitTracker;
+import org.openedit.users.filesystem.XmlUserArchive;
 
 public interface UserSearcher extends Searcher
 {

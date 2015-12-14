@@ -14,9 +14,8 @@ import org.dom4j.Element;
 import org.dom4j.Node;
 import org.dom4j.Text;
 import org.openedit.MultiValued;
+import org.openedit.OpenEditException;
 import org.openedit.data.SaveableData;
-
-import com.openedit.OpenEditException;
 
 public class ElementData implements MultiValued, SaveableData, Comparable
 {
