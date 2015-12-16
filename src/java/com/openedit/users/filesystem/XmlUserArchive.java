@@ -805,14 +805,16 @@ public class XmlUserArchive  {
 				child.addAttribute("id", group.getId());
 			}
 		}
-
-		// File file = loadUserFile(user.getUserName());
-		XmlFile xfile = new XmlFile();
-		xfile.setRoot(doc.getRootElement());
-		xfile.setPath(getUserDirectory() + "/" + user.getUserName() + ".xml");
-		getXmlArchive().saveXml(xfile, null);
-
-		getUserNameToUserMap().put(user.getUserName(), user);
+		synchronized (user)
+		{
+			// File file = loadUserFile(user.getUserName());
+			XmlFile xfile = new XmlFile();
+			xfile.setRoot(doc.getRootElement());
+			xfile.setPath(getUserDirectory() + "/" + user.getUserName() + ".xml");
+			getXmlArchive().saveXml(xfile, null);
+	
+			getUserNameToUserMap().put(user.getUserName(), user);
+		}	
 	}
 
 	public XmlArchive getXmlArchive() {
