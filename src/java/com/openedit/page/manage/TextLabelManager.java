@@ -134,7 +134,7 @@ public class TextLabelManager
 			{
 				translation = inEnglish;
 			}
-			log.info(inFolder +  "translated " + inEnglish + "='" + translation +"'");
+			log.info(inFolder +  " translated to " + inLocale + " " + inEnglish + " = '" + translation +"'");
 			addLabel(inFolder, inEnglish, translation, lang);
 			inEnglish = translation;
 		}
