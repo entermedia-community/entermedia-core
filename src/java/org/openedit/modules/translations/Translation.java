@@ -3,10 +3,9 @@
  */
 package org.openedit.modules.translations;
 
-import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -15,16 +14,18 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+
 import org.openedit.page.PageProperty;
-import org.openedit.util.OutputFiller;
+import org.openedit.util.URLUtilities;
 
 public class Translation
 {
@@ -146,19 +147,33 @@ public class Translation
 			//we found that google would not translate mixed case words
 			text = text.toLowerCase();
 		}
-		String googlePage = "http://translate.google.com/translate_a/t";
+		String googlePage = "https://www.googleapis.com/language/translate/v2";
 		//http://translate.google.com/translate_a/t?client=t&text=Friends%20of&hl=en&sl=en&tl=es&pc=0&oc=0
-		DefaultHttpClient client = new DefaultHttpClient();
+		//DefaultHttpClient client = new DefaultHttpClient();
+		//HttpClient client = HttpClientBuilder.create().setUserAgent("Mozilla/5.0 (Mobile; rv:14.0) Gecko/14.0 Firefox/14.0").build();
+		String translated = null;
+
+		try
+		{
+		HttpClient client = URLUtilities.createTrustingHttpClient().setUserAgent("Mozilla/5.0 (Mobile; rv:14.0) Gecko/14.0 Firefox/14.0").build();
 		HttpPost httpPost = new HttpPost( googlePage );
 		List <NameValuePair> nvps = new ArrayList <NameValuePair>();
-		nvps.add(new BasicNameValuePair("client", "t"));
-		nvps.add(new BasicNameValuePair("text", text));
-		nvps.add(new BasicNameValuePair("hl", "en"));
-		nvps.add(new BasicNameValuePair("sl", "en"));
-		nvps.add(new BasicNameValuePair("tl", inLocale));
-		nvps.add(new BasicNameValuePair("pc", "0"));
-		nvps.add(new BasicNameValuePair("oc", "1"));
-		nvps.add(new BasicNameValuePair("ie", "UTF-8"));
+		
+		
+		//https://www.googleapis.com/language/translate/v2?key=INSERT-YOUR-KEY&q=hello%20world&source=en&target=de
+		
+		nvps.add(new BasicNameValuePair("key","AIzaSyD5Hjc70IgTTbcgZK5HSbtxMu2oTzTILps"));
+		nvps.add(new BasicNameValuePair("q", text));
+		nvps.add(new BasicNameValuePair("source", "en"));
+		nvps.add(new BasicNameValuePair("target", inLocale));
+//		nvps.add(new BasicNameValuePair("client", "t"));
+//		nvps.add(new BasicNameValuePair("text", text));
+//		nvps.add(new BasicNameValuePair("hl", "en"));
+//		nvps.add(new BasicNameValuePair("sl", "en"));
+//		nvps.add(new BasicNameValuePair("tl", inLocale));
+//		nvps.add(new BasicNameValuePair("pc", "0"));
+//		nvps.add(new BasicNameValuePair("oc", "1"));
+//		nvps.add(new BasicNameValuePair("ie", "UTF-8"));
 		//		try
 //		{
 //			log.info(method.getURI());
@@ -168,47 +183,42 @@ public class Translation
 //			// TODO Auto-generated catch block
 //			e1.printStackTrace();
 //		}
-		String translated = null;
-		try
-		{
-			
-			httpPost.setEntity(new UrlEncodedFormEntity(nvps));
+		httpPost.setHeader("X-HTTP-Method-Override","GET");
+		httpPost.setEntity(new UrlEncodedFormEntity(nvps));
 			HttpResponse response2 = client.execute(httpPost);
 		
 		    if(response2.getStatusLine().getStatusCode() != -1 ) 
 		    {
 		    	HttpEntity entity2 = response2.getEntity();
 		    	String charset = "UTF-8";
-		    	Header[] headers = response2.getHeaders("Content-Type");
-		    	if (headers!=null && headers.length > 0)
+//		    	Header[] headers = response2.getHeaders("Content-Type");
+//		    	if (headers!=null && headers.length > 0)
+//		    	{
+//		    		String val = headers[0].getValue();
+//			    	int index =-1;
+//			    	if ((index = val.indexOf("charset=")) != -1)
+//			    	{
+//			    		charset = val.substring(index+"charset=".length()).trim();
+//			    		if (charset.isEmpty())//fail-safe
+//		    			{
+//			    			charset = "UTF-8";
+//		    			}
+//			    	}
+//		    	}
+		    	//log.info(EntityUtils.toString(entity2));
+		    	//StringWriter out = new StringWriter();
+		    	JSONObject config = (JSONObject)new JSONParser().parse(new InputStreamReader( entity2.getContent(), charset ));
+		    	JSONObject data = (JSONObject)config.get("data");
+		    	Collection trans = (Collection)data.get("translations");
+		    	if( trans.size() > 0)
 		    	{
-		    		String val = headers[0].getValue();
-			    	int index =-1;
-			    	if ((index = val.indexOf("charset=")) != -1)
-			    	{
-			    		charset = val.substring(index+"charset=".length()).trim();
-			    		if (charset.isEmpty())//fail-safe
-		    			{
-			    			charset = "UTF-8";
-		    			}
-			    	}
+    				JSONObject found = (JSONObject)trans.iterator().next();
+		    		translated = (String)found.get("translatedText"); 
 		    	}
-		    	StringWriter out = new StringWriter();
-		    	new OutputFiller().fill(new InputStreamReader( entity2.getContent(), charset ), out );
-		    	String contents = out.toString();
+		    	//log.info(config.toJSONString());
 		    	httpPost.releaseConnection();
-			  int start =  4;
-			  int end = contents.indexOf("\",\"",start);
-			  if( start != -1 && end != -1)
-			  {
-		    	  translated = contents.substring(start, end);
-		      }
-		      else
-		      {
-				log.info("Could not translate into " + inLocale + " " + text );
-		      }
 		    }
-		} catch (IOException e)
+		} catch (Exception e)
 		{
 			e.printStackTrace();
 		}

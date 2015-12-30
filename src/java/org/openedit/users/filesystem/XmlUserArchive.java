@@ -426,6 +426,15 @@ public class XmlUserArchive  {
 	 * May be subclassed
 	 */
 	public User loadUser(String inUserName) throws UserManagerException {
+		
+		ContentItem userfolder = getPageManager().getRepository().getStub(
+				getUserDirectory() + "/" );
+		if(!userfolder.exists()){
+			File userfolderfile = new File(userfolder.getAbsolutePath());
+			userfolderfile.mkdirs();
+
+		}
+		
 		File userFile = loadUserFile(inUserName);
 		if (!userFile.exists()) {
 			ContentItem stub = getPageManager().getRepository().getStub(
@@ -697,9 +706,9 @@ public class XmlUserArchive  {
 		ContentItem stub = getPageManager().getRepository().getStub(
 				getUserDirectory() + "/" + inUserName + ".xml");
 		File file = new File(stub.getAbsolutePath());
-		if (!file.getParentFile().exists()) {
-			file.getParentFile().mkdirs();
-		}
+		
+		
+		
 		return file;
 	}
 
@@ -795,14 +804,16 @@ public class XmlUserArchive  {
 				child.addAttribute("id", group.getId());
 			}
 		}
-
-		// File file = loadUserFile(user.getUserName());
-		XmlFile xfile = new XmlFile();
-		xfile.setRoot(doc.getRootElement());
-		xfile.setPath(getUserDirectory() + "/" + user.getUserName() + ".xml");
-		getXmlArchive().saveXml(xfile, null);
-
-		getUserNameToUserMap().put(user.getUserName(), user);
+		synchronized (user)
+		{
+			// File file = loadUserFile(user.getUserName());
+			XmlFile xfile = new XmlFile();
+			xfile.setRoot(doc.getRootElement());
+			xfile.setPath(getUserDirectory() + "/" + user.getUserName() + ".xml");
+			getXmlArchive().saveXml(xfile, null);
+	
+			getUserNameToUserMap().put(user.getUserName(), user);
+		}	
 	}
 
 	public XmlArchive getXmlArchive() {

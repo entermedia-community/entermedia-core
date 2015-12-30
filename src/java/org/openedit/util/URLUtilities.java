@@ -61,13 +61,27 @@ package org.openedit.util;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.security.cert.X509Certificate;
 import java.util.regex.Pattern;
 
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.http.client.HttpClient;
+import org.apache.http.config.Registry;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.conn.HttpClientConnectionManager;
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.conn.socket.ConnectionSocketFactory;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.SSLSocketFactory;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.conn.BasicHttpClientConnectionManager;
 
 
 /**
@@ -678,4 +692,51 @@ public class URLUtilities
 	{
 		fieldRequest = inRequest;
 	}
+	
+	public static HttpClientBuilder createTrustingHttpClient() throws Exception {
+
+		  HttpClientBuilder builder = HttpClientBuilder.create();
+	        SSLContext sc = SSLContext.getInstance("SSL");
+	        sc.init(null, getTrustingManager(), new java.security.SecureRandom());
+		    SSLConnectionSocketFactory sslConnectionFactory = new SSLConnectionSocketFactory(sc, SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+		    builder.setSSLSocketFactory(sslConnectionFactory);
+
+		    Registry<ConnectionSocketFactory> registry = RegistryBuilder.<ConnectionSocketFactory>create()
+		            .register("https", sslConnectionFactory)
+		            .build();
+
+		    HttpClientConnectionManager ccm = new BasicHttpClientConnectionManager(registry);
+
+		    builder.setConnectionManager(ccm);
+
+		    return builder;
+		
+
+	        
+//	        ClientConnectionManager manager = httpClient.getConnectionManager();
+//	        manager.getSchemeRegistry().register(new Scheme("https", 443, factory));
+//	        httpclient.getConnectionManager().getSchemeRegistry().register(sch);
+//	        return httpclient;
+
+	}
+	 private static TrustManager[] getTrustingManager() {
+	        TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
+	            @Override
+	            public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+	                return null;
+	            }
+
+	            @Override
+	            public void checkClientTrusted(X509Certificate[] certs, String authType) {
+	                // Do nothing
+	            }
+
+	            @Override
+	            public void checkServerTrusted(X509Certificate[] certs, String authType) {
+	                // Do nothing
+	            }
+
+	        } };
+	        return trustAllCerts;
+	    }
 }

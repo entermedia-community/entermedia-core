@@ -15,7 +15,7 @@ public abstract class PathProcessor
 {
 	protected String fieldRootPath;
 	protected PageManager fieldPageManager;
-	protected int fieldExecCount;
+	protected long fieldExecCount;
 	protected List fieldIncludeExtensions;
 	protected List fieldExcludeMatches;
 	protected boolean fieldRecursive = true;
@@ -188,17 +188,17 @@ public abstract class PathProcessor
 		return true;
 	}
 
-	public int getExecCount()
+	public long getExecCount()
 	{
 		return fieldExecCount;
 	}
 
-	public void setExecCount(int inExecCount)
+	public void setExecCount(long inExecCount)
 	{
 		fieldExecCount = inExecCount;
 	}
 
-	public int incrementCount()
+	public long incrementCount()
 	{
 		fieldExecCount++;
 		return fieldExecCount;

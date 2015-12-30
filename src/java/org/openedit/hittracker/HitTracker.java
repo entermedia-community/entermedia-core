@@ -753,7 +753,9 @@ public abstract class HitTracker<T> implements Serializable, Collection
 		{
 			return;
 		}
-		getSelections().add(inId);
+		if(!getSelections().contains(inId)){
+			getSelections().add(inId);
+		}
 	}
 	
 	public void removeSelection(String inId)
@@ -1134,7 +1136,8 @@ public abstract class HitTracker<T> implements Serializable, Collection
 	public void loadPreviousSelections(HitTracker inOld) 
 	{
 		setSelections(inOld.getSelections());
-		setAllSelected(inOld.isAllSelected());
+		//setAllSelected(inOld.isAllSelected()); This is dangerous behaviour - 
+		//if I've done a search and had 10 hits and selected all, I don't want to still have all selected when I then do another search for totally different assets
 	}
 
 	public Searcher getSearcher()

@@ -58,6 +58,10 @@ public class BaseOpenEditEngine implements OpenEditEngine
 				checkdates = true;
 			}
 		}
+		if( !checkdates )
+		{
+			checkdates = Boolean.parseBoolean( inRequest.getParameter("reload") );
+		}
 	    Page page = getPageManager().getPage( requestedPath,checkdates);
 	    
 		//If link does not exists. Then put a real welcome page on there so that fallback will work

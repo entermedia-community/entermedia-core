@@ -148,7 +148,17 @@ public class FileGenerator extends BaseGenerator implements Generator
 
 						length = sent;
 					}
-					res.setContentLength((int)length);
+					if(length > 0 && length < Integer.MAX_VALUE)
+					{
+
+						res.setContentLength((int)length);
+					}	
+					else
+					{
+						log.info("Zero length file " + contentpage.getPath());
+					}
+					//res.removeHeader("Content-Length");
+					//res.setHeader("Content-Length", String.valueOf(length));
 				}
 			}
 
