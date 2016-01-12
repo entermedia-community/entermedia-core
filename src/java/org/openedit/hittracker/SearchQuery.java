@@ -1504,15 +1504,12 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	 * @param inChildSearchType
 	 * @param inChildColumn
 	 */
-	public void addJoinFilter(SearchQuery filterQuery, String inFilterColumn, boolean inFilterHasMultiValues, String filterSearchType, String inResultsColumn)
+	public void addChildFilter(String childtable, String fieldname, String inValue)
 	{
 		Join join = new Join();
-		join.setFilterHasMultiValues(inFilterHasMultiValues);
-		join.setFilterSearchType(filterSearchType);
-		join.setFilterQuery(filterQuery);
-		join.setFilterColumn(inFilterColumn);
-		join.setResultsColumn(inResultsColumn);
-		
+		join.setChildTable(childtable);
+		join.setChildColumn(fieldname);
+		join.setEqualsValue(inValue);
 		if( fieldParentJoins == null)
 		{
 			fieldParentJoins = new ArrayList();

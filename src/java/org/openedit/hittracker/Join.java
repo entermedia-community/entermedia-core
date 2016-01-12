@@ -2,55 +2,48 @@ package org.openedit.hittracker;
 
 public class Join
 {
-	protected String fieldFilterColumn; //id
-	protected String fieldFilterSearchType;
-	protected SearchQuery fieldFilterQuery;
-	protected String fieldResultsColumn; //division_id
-	protected boolean fieldFilterHasMultiValues;
+	protected String fieldChildColumn;
+	protected String fieldEqualsValue;
+	protected String fieldChildTable;
 	
-	public boolean isFilterHasMultiValues()
+	public String getChildTable()
 	{
-		return fieldFilterHasMultiValues;
+		return fieldChildTable;
 	}
-	public void setFilterHasMultiValues(boolean inRemoteHasMultiValues)
+
+
+	public void setChildTable(String inChildTable)
 	{
-		fieldFilterHasMultiValues = inRemoteHasMultiValues;
+		fieldChildTable = inChildTable;
 	}
-	public String getFilterColumn()
+
+
+	public String getChildColumn()
 	{
-		return fieldFilterColumn;
+		return fieldChildColumn;
 	}
-	public void setFilterColumn(String inRemoteColumn)
+
+
+	public void setChildColumn(String inChildColumn)
 	{
-		fieldFilterColumn = inRemoteColumn;
+		fieldChildColumn = inChildColumn;
 	}
-	public String getFilterSearchType()
+
+
+	public String getEqualsValue()
 	{
-		return fieldFilterSearchType;
+		return fieldEqualsValue;
 	}
-	public void setFilterSearchType(String inRemoteSearchType)
+
+
+	public void setEqualsValue(String inEqualsValue)
 	{
-		fieldFilterSearchType = inRemoteSearchType;
+		fieldEqualsValue = inEqualsValue;
 	}
-	public SearchQuery getFilterQuery()
-	{
-		return fieldFilterQuery;
-	}
-	public void setFilterQuery(SearchQuery inRemoteQuery)
-	{
-		fieldFilterQuery = inRemoteQuery;
-	}
-	public String getResultsColumn()
-	{
-		return fieldResultsColumn;
-	}
-	public void setResultsColumn(String inLocalColumn)
-	{
-		fieldResultsColumn = inLocalColumn;
-	}
+	
 	public boolean equals(Object inObj)
 	{
-		Join join = (Join)inObj;
-		return join.getFilterQuery().equals(getFilterQuery());
+		Join copy = (Join)inObj;
+		return fieldEqualsValue == copy.fieldEqualsValue;
 	}
 }
