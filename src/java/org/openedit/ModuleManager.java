@@ -306,6 +306,7 @@ public class ModuleManager implements BeanFactoryAware, ShutdownList
 				//if instanceof GroovyBean
 				//bean = bean.getProxy()
 				getCatalogIdBeans().put(inCatalogId + "_" + inBeanName, bean);
+				
 			}
 		}
 		return bean;
@@ -323,6 +324,10 @@ public class ModuleManager implements BeanFactoryAware, ShutdownList
 		catch (Exception e)
 		{
 			//Could not set catalogId
+		}
+		if( bean != null && bean instanceof Shutdownable)
+		{
+			addForShutdown((Shutdownable)bean);
 		}
 		return bean;
 	}
