@@ -5,6 +5,7 @@ package org.openedit.data;
 
 import java.util.AbstractCollection;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -24,7 +25,8 @@ public class PropertyDetails extends AbstractCollection
 	protected String fieldBeanName;
 	protected String fieldToString;
 	protected String fieldClassName;//The object type to create
-
+	protected List<String> fieldDependsOn;
+	
 	
 	public String getClassName()
 	{
@@ -333,6 +335,24 @@ public class PropertyDetails extends AbstractCollection
 	public void setPrefix(String fieldPrefix) 
 	{
 		this.fieldPrefix = fieldPrefix;
+	}
+
+	public List getDependsOn()
+	{
+		if (fieldDependsOn == null)
+		{
+			String depend = getInputFile().getRoot().attributeValue("dependson");
+			if( depend != null)
+			{
+				String[] vals = depend.split("\\s+");
+				fieldDependsOn = Arrays.asList(vals);
+			}
+			else
+			{
+				fieldDependsOn = new ArrayList();
+			}
+		}
+		return fieldDependsOn;
 	}
 
 }
