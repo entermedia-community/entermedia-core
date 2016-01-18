@@ -14,6 +14,10 @@ import org.openedit.users.User;
 
 public interface Searcher
 {
+	
+	
+	
+	
 	public String nextId();
 	
 	public abstract HitTracker cachedSearch(WebPageRequest inPageRequest, SearchQuery inQuery) throws OpenEditException;
@@ -167,5 +171,8 @@ public interface Searcher
 	public void restoreSettings();
 	
 	public void reloadSettings();
+	
+	public boolean isLazyInit();
+	
 
 }

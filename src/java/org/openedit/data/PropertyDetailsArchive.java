@@ -354,6 +354,9 @@ public class PropertyDetailsArchive {
 			}
 			log.info("Loading " + getCatalogId() + " " + inType);
 			settings = getXmlArchive().getXml(path);
+			
+			
+			
 			if (!settings.isExist() && !path.contains("dataextensions")) {
 				if (inType.endsWith("Log")) {
 					path = getConfigurationPath("/fields/defaultLog.xml");
@@ -367,7 +370,13 @@ public class PropertyDetailsArchive {
 			if (settings.isExist()) {
 				setAllDetails(details, inType, settings.getRoot());
 				getViewLabels().clear();
+				
+				
+				
 			}
+			
+			
+			
 			// load any defaults - AFTER we have loaded all the existing stuff.
 			// don't overwrite anything that is here already.
 			List paths = getPageManager()
@@ -430,6 +439,12 @@ public class PropertyDetailsArchive {
 		if (inDetails.getBeanName() != null) {
 			root.addAttribute("beanname", inDetails.getBeanName());
 		}
+		
+		if (inDetails.isLazyInit()) {
+			root.addAttribute("lazy-init", "true");
+		}
+		
+		
 		file.setRoot(root);
 		file.setElementName("property");
 

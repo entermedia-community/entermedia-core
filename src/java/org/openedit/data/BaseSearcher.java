@@ -45,7 +45,23 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	protected SearcherManager fieldSearcherManager;
 	protected WebEventListener fieldWebEventListener;
 	protected boolean fieldFireEvents = false;
+	protected boolean fieldLazyInit = true;
 
+
+	public boolean isLazyInit()
+	{
+		return fieldLazyInit;
+	}
+
+	public void setLazyInit(boolean inLazyInit)
+	{
+		fieldLazyInit = inLazyInit;
+	}
+
+	public void setLazyInit(Boolean inLazyInit)
+	{
+		fieldLazyInit = inLazyInit;
+	}
 	protected ModuleManager fieldModuleManager;
 	public ModuleManager getModuleManager()
 	{

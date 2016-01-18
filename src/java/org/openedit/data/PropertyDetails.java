@@ -13,11 +13,11 @@ import java.util.Map;
 
 import org.openedit.xml.XmlFile;
 
-public class PropertyDetails extends AbstractCollection 
+public class PropertyDetails extends AbstractCollection
 {
 	protected List fieldDetails;
 	protected Map fieldDetailsCached;
-	
+
 	protected Map fieldExternalIdCache;
 	protected Map fieldDefaults;
 	protected XmlFile fieldInputFile;
@@ -26,75 +26,97 @@ public class PropertyDetails extends AbstractCollection
 	protected String fieldToString;
 	protected String fieldClassName;//The object type to create
 	protected List<String> fieldDependsOn;
-	
-	
+
+	public Boolean isLazyInit()
+	{
+
+		if (getInputFile() != null && getInputFile().getRoot() != null)
+		{
+			String lazy = getInputFile().getRoot().attributeValue("lazy-init");
+			if (lazy != null)
+			{
+				return Boolean.parseBoolean(lazy);
+			}
+			
+		}
+		return true;
+
+	}
+
 	public String getClassName()
 	{
-		if( fieldClassName == null)
+		if (fieldClassName == null)
 		{
-			if( getInputFile() != null && getInputFile().getRoot() != null)
+			if (getInputFile() != null && getInputFile().getRoot() != null)
 			{
 				fieldClassName = getInputFile().getRoot().attributeValue("class");
 			}
-//			if( fieldBeanName == null )
-//			{
-//				fieldBeanName = "dynamicSearcher";
-//			}
+			//			if( fieldBeanName == null )
+			//			{
+			//				fieldBeanName = "dynamicSearcher";
+			//			}
 		}
 		return fieldClassName;
 	}
-	
+
 	public void setClassName(String inClassName)
 	{
 		fieldClassName = inClassName;
 	}
+
 	public String getBeanName()
 	{
-		if( fieldBeanName == null)
+		if (fieldBeanName == null)
 		{
-			if( getInputFile() != null && getInputFile().getRoot() != null)
+			if (getInputFile() != null && getInputFile().getRoot() != null)
 			{
 				fieldBeanName = getInputFile().getRoot().attributeValue("beanname");
 			}
-//			if( fieldBeanName == null )
-//			{
-//				fieldBeanName = "dynamicSearcher";
-//			}
+			//			if( fieldBeanName == null )
+			//			{
+			//				fieldBeanName = "dynamicSearcher";
+			//			}
 		}
 		return fieldBeanName;
 	}
+
 	public void setBeanName(String inBeanName)
 	{
 		fieldBeanName = inBeanName;
 	}
-	
+
 	/**
-	 * This is used for autocomplete fields when searching on this table that may not have a name column
+	 * This is used for autocomplete fields when searching on this table that
+	 * may not have a name column
+	 * 
 	 * @return
 	 */
 	public String getRender()
 	{
-		if( fieldToString == null)
+		if (fieldToString == null)
 		{
-			if( getInputFile() != null && getInputFile().getRoot() != null)
+			if (getInputFile() != null && getInputFile().getRoot() != null)
 			{
 				fieldToString = getInputFile().getRoot().attributeValue("tostring");
 			}
-//			if( fieldBeanName == null )
-//			{
-//				fieldBeanName = "dynamicSearcher";
-//			}
+			//			if( fieldBeanName == null )
+			//			{
+			//				fieldBeanName = "dynamicSearcher";
+			//			}
 		}
 		return fieldToString;
 	}
+
 	public void setRender(String inBeanName)
 	{
 		fieldToString = inBeanName;
 	}
+
 	public PropertyDetails()
 	{
 		// TODO Auto-generated constructor stub
 	}
+
 	public XmlFile getInputFile()
 	{
 		return fieldInputFile;
@@ -105,8 +127,10 @@ public class PropertyDetails extends AbstractCollection
 		fieldInputFile = inInputFile;
 	}
 
-	public Map getDefaults() {
-		if (fieldDefaults == null) {
+	public Map getDefaults()
+	{
+		if (fieldDefaults == null)
+		{
 			fieldDefaults = new HashMap();
 
 		}
@@ -114,57 +138,71 @@ public class PropertyDetails extends AbstractCollection
 		return fieldDefaults;
 	}
 
-	public void setDefaults(Map inDefaults) {
+	public void setDefaults(Map inDefaults)
+	{
 		fieldDefaults = inDefaults;
 	}
 
 	long fieldLastLoaded;
 
-	public List getDetails() {
-		if (fieldDetails == null) {
+	public List getDetails()
+	{
+		if (fieldDetails == null)
+		{
 			fieldDetails = new ArrayList();
 		}
 		return fieldDetails;
 	}
 
-	public void addDetail(PropertyDetail inDetail) {
+	public void addDetail(PropertyDetail inDetail)
+	{
 		PropertyDetail oldDetail = getDetail(inDetail.getId());
-		if(oldDetail != null){
+		if (oldDetail != null)
+		{
 			getDetails().remove(oldDetail);
 		}
-			
-			getDetails().add(inDetail);
-			getDetailsCached().remove(inDetail.getId());
-			getDetailsCached().put(inDetail.getId(), inDetail);
+
+		getDetails().add(inDetail);
+		getDetailsCached().remove(inDetail.getId());
+		getDetailsCached().put(inDetail.getId(), inDetail);
 	}
 
-	public List findIndexProperties() {
+	public List findIndexProperties()
+	{
 		List list = new ArrayList(getDetails().size());
-		for (Iterator iter = getDetails().iterator(); iter.hasNext();) {
+		for (Iterator iter = getDetails().iterator(); iter.hasNext();)
+		{
 			PropertyDetail d = (PropertyDetail) iter.next();
-			if (d.isIndex()) {
+			if (d.isIndex())
+			{
 				list.add(d);
 			}
 		}
 		return list;
 	}
 
-	public List findKeywordProperties() {
+	public List findKeywordProperties()
+	{
 		List list = new ArrayList(getDetails().size());
-		for (Iterator iter = getDetails().iterator(); iter.hasNext();) {
+		for (Iterator iter = getDetails().iterator(); iter.hasNext();)
+		{
 			PropertyDetail d = (PropertyDetail) iter.next();
-			if (d.isKeyword()) {
+			if (d.isKeyword())
+			{
 				list.add(d);
 			}
 		}
 		return list;
 	}
 
-	public List findStoredProperties() {
+	public List findStoredProperties()
+	{
 		List list = new ArrayList(getDetails().size());
-		for (Iterator iter = getDetails().iterator(); iter.hasNext();) {
+		for (Iterator iter = getDetails().iterator(); iter.hasNext();)
+		{
 			PropertyDetail d = (PropertyDetail) iter.next();
-			if (d.isStored()) {
+			if (d.isStored())
+			{
 				list.add(d);
 			}
 		}
@@ -188,74 +226,84 @@ public class PropertyDetails extends AbstractCollection
 	// }
 	//	
 
-	public boolean contains(String inKey) {
+	public boolean contains(String inKey)
+	{
 		PropertyDetail det = getDetail(inKey);
 
 		return det != null;
 	}
-	
-	public Map<String,PropertyDetail> getDetailsCached()
+
+	public Map<String, PropertyDetail> getDetailsCached()
 	{
 		if (fieldDetailsCached == null)
 		{
 			fieldDetailsCached = new HashMap(getDetails().size());
-			for (Iterator iter = getDetails().iterator(); iter.hasNext();) 
+			for (Iterator iter = getDetails().iterator(); iter.hasNext();)
 			{
 				PropertyDetail detail = (PropertyDetail) iter.next();
-				fieldDetailsCached.put(detail.getId(),detail);
+				fieldDetailsCached.put(detail.getId(), detail);
 			}
 		}
 		return fieldDetailsCached;
 	}
 
-	public PropertyDetail getDetail(String inId) {
-		if (inId == null) {
+	public PropertyDetail getDetail(String inId)
+	{
+		if (inId == null)
+		{
 			return null;
 		}
 		PropertyDetail detail = getDetailsCached().get(inId);
-		
+
 		return detail;
 	}
 
-	public void removeDetail(String inId) {
+	public void removeDetail(String inId)
+	{
 		PropertyDetail toRemove = null;
-		for (Iterator iterator = getDetails().iterator(); iterator.hasNext();) {
+		for (Iterator iterator = getDetails().iterator(); iterator.hasNext();)
+		{
 			PropertyDetail detail = (PropertyDetail) iterator.next();
-			if (inId.equals(detail.getId())) {
+			if (inId.equals(detail.getId()))
+			{
 				toRemove = detail;
 			}
 		}
-		if (toRemove != null) {
+		if (toRemove != null)
+		{
 			getDetails().remove(toRemove);
 		}
 	}
 
 	/**
 	 * inName should be lower case with or without spaces
+	 * 
 	 * @param inName
 	 * @return
 	 */
-	public PropertyDetail getDetailByExternalId(String inName) 
+	public PropertyDetail getDetailByExternalId(String inName)
 	{
-		PropertyDetail found = (PropertyDetail) getExternalIdCache()
-				.get(inName);
-		if (found == null) {
-			for (Iterator iter = getDetails().iterator(); iter.hasNext();) {
+		PropertyDetail found = (PropertyDetail) getExternalIdCache().get(inName);
+		if (found == null)
+		{
+			for (Iterator iter = getDetails().iterator(); iter.hasNext();)
+			{
 				PropertyDetail detail = (PropertyDetail) iter.next();
 				String[] all = detail.getExternalIds();
 
-				if (all != null) {
-					for (int i = 0; i < all.length; i++) 
+				if (all != null)
+				{
+					for (int i = 0; i < all.length; i++)
 					{
 						String id = all[i].toLowerCase();
 						String targetname = inName.toLowerCase();
 						//strip off the : from XMP-dc:Title
 						int index = id.indexOf(':');
-						if( index > 0 )
+						if (index > 0)
 						{
 							id = id.substring(index + 1);
 						}
-						if (targetname.equals(id) || targetname.equals(id.replace(" ", ""))) 
+						if (targetname.equals(id) || targetname.equals(id.replace(" ", "")))
 						{
 							found = detail;
 							getExternalIdCache().put(inName, found);
@@ -268,71 +316,86 @@ public class PropertyDetails extends AbstractCollection
 		return found;
 	}
 
-	public List getDetailsByProperty(String property, String value) {
+	public List getDetailsByProperty(String property, String value)
+	{
 		//TODO: Add a cache here. 
-		
+
 		List properties = new ArrayList();
-		for (Iterator iter = getDetails().iterator(); iter.hasNext();) {
+		for (Iterator iter = getDetails().iterator(); iter.hasNext();)
+		{
 			PropertyDetail detail = (PropertyDetail) iter.next();
 			String val = detail.get(property);
-			if (value.equals(val)) {
+			if (value.equals(val))
+			{
 				properties.add(detail);
 			}
 		}
 		return properties;
 	}
 
-	public List getDetailsByType(String property, String value) {
+	public List getDetailsByType(String property, String value)
+	{
 		List properties = new ArrayList();
-		for (Iterator iter = getDetails().iterator(); iter.hasNext();) {
+		for (Iterator iter = getDetails().iterator(); iter.hasNext();)
+		{
 			PropertyDetail detail = (PropertyDetail) iter.next();
 			String val = detail.get(property);
-			if (value.equals(val)) {
+			if (value.equals(val))
+			{
 				properties.add(detail);
 			}
 		}
 		return properties;
 	}
 
-	public long getLastLoaded() {
+	public long getLastLoaded()
+	{
 		return fieldLastLoaded;
 	}
 
-	public void setLastLoaded(long inLastLoaded) {
+	public void setLastLoaded(long inLastLoaded)
+	{
 		fieldLastLoaded = inLastLoaded;
 	}
 
-	public Iterator iterator() {
+	public Iterator iterator()
+	{
 		return getDetails().iterator();
 	}
 
-	public int size() {
+	public int size()
+	{
 		return getDetails().size();
 	}
 
-	public void setDetails(List inNewdetails) {
+	public void setDetails(List inNewdetails)
+	{
 		fieldDetails = new ArrayList(inNewdetails);
 	}
 
-	public Map getExternalIdCache() {
-		if (fieldExternalIdCache == null) {
+	public Map getExternalIdCache()
+	{
+		if (fieldExternalIdCache == null)
+		{
 			fieldExternalIdCache = new HashMap();
 		}
 
 		return fieldExternalIdCache;
 	}
-	public String getPrefix() 
+
+	public String getPrefix()
 	{
-		if( fieldPrefix == null)
+		if (fieldPrefix == null)
 		{
-			if( getInputFile() != null && getInputFile().getRoot() != null)
+			if (getInputFile() != null && getInputFile().getRoot() != null)
 			{
 				fieldPrefix = getInputFile().getRoot().attributeValue("prefix");
 			}
 		}
 		return fieldPrefix;
 	}
-	public void setPrefix(String fieldPrefix) 
+
+	public void setPrefix(String fieldPrefix)
 	{
 		this.fieldPrefix = fieldPrefix;
 	}
@@ -342,7 +405,7 @@ public class PropertyDetails extends AbstractCollection
 		if (fieldDependsOn == null)
 		{
 			String depend = getInputFile().getRoot().attributeValue("dependson");
-			if( depend != null)
+			if (depend != null)
 			{
 				String[] vals = depend.split("\\s+");
 				fieldDependsOn = Arrays.asList(vals);

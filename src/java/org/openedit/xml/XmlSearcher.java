@@ -37,7 +37,32 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable
 	protected CacheManager fieldCacheManager;
 	protected XmlFile fieldXmlFile;
 	protected long fieldEditCount = 0;
+	protected Boolean fieldLazyInit ;
 	
+	
+	
+	
+	
+
+	public boolean isLazyInit()
+	{
+		if (fieldLazyInit == null)
+		{
+			fieldLazyInit = getPropertyDetails().isLazyInit();
+			if(fieldLazyInit == null){
+				fieldLazyInit = false;
+			}
+			
+		}
+
+		return fieldLazyInit;
+	}
+
+	public void setLazyInit(boolean inLazyInit)
+	{
+		fieldLazyInit = inLazyInit;
+	}
+
 	public CacheManager getCacheManager()
 	{
 		if (fieldCacheManager == null)
@@ -663,6 +688,9 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable
 	{
 		clearIndex();
 	}
+	
+	
+	
 	
 }
 	
