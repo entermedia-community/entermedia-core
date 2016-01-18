@@ -172,7 +172,7 @@ public interface Searcher
 	
 	public void reloadSettings();
 	
-	public boolean isLazyInit();
+	public boolean initialize();
 	
 
 }

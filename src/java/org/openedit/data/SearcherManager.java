@@ -14,6 +14,7 @@ import org.openedit.ModuleManager;
 import org.openedit.OpenEditRuntimeException;
 import org.openedit.hittracker.HitTracker;
 import org.openedit.locks.LockManager;
+import org.openedit.node.NodeManager;
 import org.openedit.util.Replacer;
 
 public class SearcherManager
@@ -22,7 +23,6 @@ public class SearcherManager
 	
 	protected ModuleManager fieldModuleManager;
 	protected Map fieldCache;
-  
 	//A fieldName can be product or orderstatus. If there is no orderstatus searcher then we use an XML lookup for this catalog. 
 	public Searcher getSearcher(String inCatalogId, String inFieldName)
 	{
@@ -55,7 +55,7 @@ public class SearcherManager
 						}
 					}
 					//TODO: Look in the cache again for the target Searcher
-					
+					getNodeManager(finalcatalogid).connectCatalog(finalcatalogid);
 					PropertyDetailsArchive newarchive = getPropertyDetailsArchive(finalcatalogid);
 //					if( inFieldName == null)
 //					{
@@ -68,6 +68,7 @@ public class SearcherManager
 					//set the data
 					searcher.setPropertyDetailsArchive(newarchive);
 					searcher.setSearcherManager(this);
+					searcher.initialize();
 					if(log.isDebugEnabled())
 					{
 						log.debug("Created New Searcher: Catalog = " + searcher.getCatalogId() + "SearchType = " + searcher.getSearchType() + "Searcher = " + searcher.getClass() );
@@ -82,6 +83,10 @@ public class SearcherManager
 		}
 		//log.debug("return " + id + " " + searcher);
 		return searcher;
+	}
+	protected NodeManager getNodeManager(String inFinalcatalogid)
+	{
+		return (NodeManager)getModuleManager().getBean(inFinalcatalogid,"nodeManager");
 	}
 	protected synchronized Searcher loadSearcher(PropertyDetailsArchive newarchive, String inFieldName)
 	{
