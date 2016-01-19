@@ -3,12 +3,15 @@ package org.openedit.profile;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openedit.Data;
+import org.openedit.MultiValued;
 import org.openedit.WebPageRequest;
 import org.openedit.data.BaseData;
 import org.openedit.data.PropertyDetail;
@@ -24,7 +27,7 @@ public class UserProfile extends BaseData implements SaveableData
 {
 	protected String fieldCatalogId;
 	protected SearcherManager fieldSearcherManager;
-	protected Data fieldSettingsGroup;
+	protected MultiValued fieldSettingsGroup;
 //	protected Map<String,String> fieldSettingsGroupPermissions;
 	protected Map fieldResultViews;
 	protected XmlArchive fieldXmlArchive;
@@ -32,8 +35,18 @@ public class UserProfile extends BaseData implements SaveableData
 	protected HitTracker fieldUploadCatalogs;
 	protected Collection fieldCombinedLibraries;
 	protected Collection<Data> fieldModules;
+	protected Set fieldPermissions;
 	
-	
+	public Set getPermissions()
+	{
+		return fieldPermissions;
+	}
+
+	public void setPermissions(Set inPermissions)
+	{
+		fieldPermissions = inPermissions;
+	}
+
 	public Collection<Data> getModules()
 	{
 		return fieldModules;
@@ -209,11 +222,14 @@ public class UserProfile extends BaseData implements SaveableData
 				groupid = "guest";
 			}
 			Searcher settingsGroupSearcher = getSearcherManager().getSearcher(getCatalogId(), "settingsgroup");
-			fieldSettingsGroup = (Data) settingsGroupSearcher.searchById(groupid);
+			fieldSettingsGroup = (MultiValued) settingsGroupSearcher.searchById(groupid);
 			if (fieldSettingsGroup == null && log.isDebugEnabled())
 			{
 				log.debug("No settings group defined");
 			}
+			Collection permissions = fieldSettingsGroup.getValues("permissions");
+			fieldPermissions = new HashSet(permissions);
+
 //			else
 //			{
 //				Searcher searcher = getSearcherManager().getSearcher(getCatalogId(),"settingsgrouppermissions");
@@ -600,5 +616,12 @@ public class UserProfile extends BaseData implements SaveableData
 		HitTracker hits = facetsearcher.search(query);
 		return hits;
 		
+	}
+
+	public boolean hasPermission(String inPropertyName)
+	{
+		getSettingsGroup();
+		
+		return getPermissions().contains(inPropertyName);
 	}
 }

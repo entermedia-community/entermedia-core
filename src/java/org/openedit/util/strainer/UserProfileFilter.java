@@ -12,6 +12,8 @@ See the GNU Lesser General Public License for more details.
 
 package org.openedit.util.strainer;
 
+import java.util.Collection;
+
 import org.openedit.WebPageRequest;
 import org.openedit.profile.UserProfile;
 
@@ -45,16 +47,9 @@ public class UserProfileFilter extends BaseFilter
 		{
 			return false;
 		}
-		String value = data.get(getPropertyName());
-		if( value == null && getValue() == null)
-		{
-			return true;
-		}
-		if(value == null)
-		{
-			return false;
-		}
-		if( value.equals(getValue()))
+		//Collection values = data.getValues("permissions"); 
+		boolean contains = data.hasPermission(getPropertyName());//values.contains( getPropertyName() );
+		if( Boolean.parseBoolean(getValue()) && contains)
 		{
 			return true;
 		}
