@@ -128,9 +128,9 @@ public class BeanLoader
 
             for (int i = 0; i < methods.length; i++) 
             {
-                if (methods[i].getName().startsWith(name) && methods[i].getParameterCount() == 1) 
+                if (methods[i].getName().startsWith(name) && methods[i].getParameterTypes().length == 1) 
                 {
-                	String clas = methods[i].getParameters()[0].getParameterizedType().getTypeName();
+                	String clas = methods[i].getParameterTypes()[0].getName();
                 	if( "boolean".equals( clas ) )
                 	{
                 		methods[i].invoke(object, Boolean.valueOf( (String)fieldValue) );
