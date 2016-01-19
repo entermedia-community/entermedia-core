@@ -141,6 +141,10 @@
 		<property name="rootDirectory"><ref bean="root" /></property>
 		<property name="openEditEngine"><ref bean="OpenEditEngine" /></property>
 	</bean>
+	<bean id="velocityGenerator" class="org.openedit.generators.VelocityGenerator" >
+		<property name="rootDirectory"><ref bean="root" /></property>
+		<property name="openEditEngine"><ref bean="OpenEditEngine" /></property>
+	</bean>
 
 	<bean id="file" class="org.openedit.generators.FileGenerator">
 			<property name="pageManager"><ref bean="pageManager"/></property>
@@ -239,7 +243,7 @@
 
 	<bean id="userProfileManager" class="org.openedit.profile.UserProfileManager" >
 		<property name="searcherManager"><ref bean="searcherManager"/></property>
-		<property name="userManager"><ref bean="userManager"/></property>
+		<property name="moduleManager"><ref bean="moduleManager"/></property>
 
 	</bean>
 

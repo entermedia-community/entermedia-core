@@ -12,24 +12,23 @@ import org.openedit.ModuleManager;
 import org.openedit.Secured;
 import org.openedit.WebPageRequest;
 import org.openedit.data.SearcherManager;
+import org.openedit.di.BeanLoader;
+import org.openedit.di.BeanLoaderAware;
 import org.openedit.page.manage.PageManager;
 import org.openedit.users.User;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.BeanFactoryAware;
 
 /**
  * @author Matthew Avery, mavery@einnovation.com
  */
-public abstract class BaseModule implements BeanFactoryAware, Secured
+public abstract class BaseModule implements BeanLoaderAware, Secured
 {
-	protected BeanFactory fieldBeanFactory;
+	protected BeanLoader fieldBeanLoader;
 	protected List fieldPermissions;
 	protected List fieldRestrictedMethods;
 	
 	public PageManager getPageManager()
 	{
-		return (PageManager)getBeanFactory().getBean( "pageManager" );
+		return (PageManager)getBeanLoader().getBean( "pageManager" );
 	}
 
 //	public UserManager getUserManager(WebPageRequest inReq)
@@ -44,21 +43,21 @@ public abstract class BaseModule implements BeanFactoryAware, Secured
 	
 	protected SearcherManager getSearcherManager()
 	{
-		return (SearcherManager)getBeanFactory().getBean( "searcherManager" );
+		return (SearcherManager)getBeanLoader().getBean( "searcherManager" );
 	}
 
-	public BeanFactory getBeanFactory()
+	public BeanLoader getBeanLoader()
 	{
-		return fieldBeanFactory;
+		return fieldBeanLoader;
 	}
-	public void setBeanFactory( BeanFactory beanFactory ) throws BeansException
+	public void setBeanLoader( BeanLoader beanFactory ) 
 	{
-		fieldBeanFactory = beanFactory;
+		fieldBeanLoader = beanFactory;
 	}
 	
 	public ModuleManager getModuleManager()
 	{
-		return (ModuleManager) getBeanFactory().getBean( "moduleManager" );
+		return (ModuleManager) getBeanLoader().getBean( "moduleManager" );
 	}
 	public BaseModule getModule(String inName)
 	{
@@ -67,7 +66,7 @@ public abstract class BaseModule implements BeanFactoryAware, Secured
 	
 	public File getRoot()
 	{
-		return (File) getBeanFactory().getBean( "root" );
+		return (File) getBeanLoader().getBean( "root" );
 	}
 
 	/**

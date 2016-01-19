@@ -10,6 +10,7 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openedit.Data;
+import org.openedit.ModuleManager;
 import org.openedit.OpenEditException;
 import org.openedit.WebPageRequest;
 import org.openedit.data.Searcher;
@@ -22,17 +23,23 @@ import org.openedit.users.UserManager;
 public class UserProfileManager
 {
 	protected SearcherManager fieldSearcherManager;
-	protected UserManager fieldUserManager;
+	protected ModuleManager	 fieldModuleManager;
 
-	public UserManager getUserManager()
+	public ModuleManager getModuleManager()
 	{
-		return fieldUserManager;
+		return fieldModuleManager;
 	}
 
-	public void setUserManager(UserManager inUserManager)
+	public void setModuleManager(ModuleManager inModuleManager)
 	{
-		fieldUserManager = inUserManager;
+		fieldModuleManager = inModuleManager;
 	}
+
+	public UserManager getUserManager(String inCatalogId)
+	{
+		return (UserManager)getModuleManager().getBean(inCatalogId,"userManager");
+	}
+
 
 	private static final Log log = LogFactory.getLog(UserProfileManager.class);
 
@@ -104,7 +111,7 @@ public class UserProfileManager
 				searcher.saveData(userprofile, inReq.getUser());
 			}
 		}
-		User user = getUserManager().getUser(inUserName);
+		User user = getUserManager(inCatalogId).getUser(inUserName);
 		if (userprofile == null)
 		{
 			userprofile = (UserProfile) searcher.createNewData();

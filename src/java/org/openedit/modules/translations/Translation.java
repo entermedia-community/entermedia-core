@@ -23,7 +23,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-
 import org.openedit.page.PageProperty;
 import org.openedit.util.URLUtilities;
 

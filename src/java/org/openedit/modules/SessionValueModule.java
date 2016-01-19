@@ -38,7 +38,7 @@ public class SessionValueModule extends BaseModule
 		}
 		else
 		{
-			bean = getBeanFactory().getBean(key);
+			bean = getBeanLoader().getBean(key);
 			if ( bean != null)
 			{
 				inContext.putSessionValue(key,bean);

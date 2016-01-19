@@ -16,35 +16,33 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openedit.di.BeanLoader;
+import org.openedit.di.BeanLoaderAware;
 import org.openedit.modules.BaseModule;
 import org.openedit.page.Page;
 import org.openedit.page.PageAction;
 import org.openedit.page.PageRequestKeys;
 import org.openedit.page.manage.PageManager;
 import org.openedit.xml.XmlArchive;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.BeanFactoryAware;
-import org.springframework.beans.factory.NoSuchBeanDefinitionException;
-import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 
 /**
  * @author Matthew Avery, mavery@einnovation.com
  */
-public class ModuleManager implements BeanFactoryAware, ShutdownList
+public class ModuleManager implements BeanLoaderAware, ShutdownList
 {
-	protected ConfigurableListableBeanFactory fieldBeanFactory;
+	protected BeanLoader fieldBeanLoader;
 	protected Set fieldLoadedBeans;
 	protected XmlArchive fieldXmlArchive;
 	protected Map fieldCatalogIdBeans;
-	 protected BeanNameLoader fieldBeanLoader;
+	 protected BeanNameLoader fieldBeanNameLoader;
 	    
 		public BeanNameLoader getBeanNameLoader()
 		{
-			return fieldBeanLoader;
+			return fieldBeanNameLoader;
 		}
 		public void setBeanNameLoader(BeanNameLoader inBeanLoader)
 		{
-			fieldBeanLoader = inBeanLoader;
+			fieldBeanNameLoader = inBeanLoader;
 		}
 	private static final Log log = LogFactory.getLog(ModuleManager.class);
 	
@@ -346,13 +344,13 @@ public class ModuleManager implements BeanFactoryAware, ShutdownList
 	{
 		try
 		{
-			Object bean = getBeanFactory().getBean( inBeanName );
+			Object bean = getBeanLoader().getBean( inBeanName );
 			if( bean != null && bean instanceof Shutdownable)
 			{
 				addForShutdown((Shutdownable)bean);
 			}
 			return bean;
-		} catch ( NoSuchBeanDefinitionException ex)
+		} catch ( OpenEditException ex)
 		{
 			throw new OpenEditRuntimeException("Could not find bean named " + inBeanName, ex);
 		}
@@ -373,14 +371,14 @@ public class ModuleManager implements BeanFactoryAware, ShutdownList
 		}
 		return null;
 	}
-	protected BeanFactory getBeanFactory()
+	protected BeanLoader getBeanLoader()
 	{
-		return fieldBeanFactory;
+		return fieldBeanLoader;
 	}
-	public void setBeanFactory(BeanFactory inBeanFactory)
+	public void setBeanLoader(BeanLoader inBeanLoader)
 	{
 		//I assume this is true most of the times since OpenEdit is loading up this ModuleManager
-		fieldBeanFactory = (ConfigurableListableBeanFactory)inBeanFactory;
+		fieldBeanLoader = inBeanLoader;
 	}
 
 	/**
@@ -389,7 +387,7 @@ public class ModuleManager implements BeanFactoryAware, ShutdownList
 	 */
 	public boolean contains(String inKey)
 	{
-		boolean has = getBeanFactory().containsBean(inKey);
+		boolean has = getBeanLoader().containsBean(inKey);
 		//log.info("HadBean " + inKey + " = " + has);
 		return has;
 	}
@@ -412,7 +410,7 @@ public class ModuleManager implements BeanFactoryAware, ShutdownList
 //		List allModules = new ArrayList();
 //		List sortedNames = new ArrayList();
 //
-//		String[] names = getBeanFactory().getBeanDefinitionNames();
+//		String[] names = getBeanLoader().getBeanDefinitionNames();
 //		sortedNames = Arrays.asList(names);
 //
 //		for (int i = 0; i < sortedNames.size(); i++) {
@@ -427,8 +425,8 @@ public class ModuleManager implements BeanFactoryAware, ShutdownList
 	
 //	public String getVersion(String inBeanName) 
 //	{
-//		if (getBeanFactory().containsBean(inBeanName)) {
-//			BeanDefinition beanDe = getBeanFactory().getBeanDefinition(inBeanName);
+//		if (getBeanLoader().containsBean(inBeanName)) {
+//			BeanDefinition beanDe = getBeanLoader().getBeanDefinition(inBeanName);
 //			if (!(beanDe instanceof AbstractBeanDefinition)) {
 //				throw new OpenEditRuntimeException("Spring version not supported yet");
 //

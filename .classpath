@@ -14,11 +14,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/compile/servlet-api.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/dom4j-1.6.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/json-simple-1.1.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/spring-aop-4.1.2.RELEASE.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/spring-beans-4.1.2.RELEASE.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/spring-context-4.1.2.RELEASE.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/spring-core-4.1.2.RELEASE.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/spring-expression-4.1.2.RELEASE.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/guava-18.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/httpclient-4.4.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/httpcore-4.4.jar"/>

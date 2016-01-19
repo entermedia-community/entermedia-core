@@ -18,7 +18,6 @@ public class PageValueModule extends BaseModule
 	{
 		PageAction inAction = inContext.getCurrentAction();
 		String key = inAction.getConfig().getAttribute("bean");
-		
 		if( inContext.getPageValue(key) != null)
 		{
 			return;
@@ -32,7 +31,16 @@ public class PageValueModule extends BaseModule
 		}
 		else
 		{
-			Object bean = getBeanFactory().getBean(key);
+			String catalogid = inContext.findValue("catalogid");
+			Object bean = null;
+			if( catalogid == null)
+			{
+				bean = getModuleManager().getBean(key);
+			}
+			else
+			{
+				bean = getModuleManager().getBean(catalogid,key);
+			}
 			if ( bean != null)
 			{
 				inContext.putPageValue(key,bean);

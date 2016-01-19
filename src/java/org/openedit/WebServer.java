@@ -6,10 +6,10 @@ package org.openedit;
 import java.io.File;
 import java.util.List;
 
+import org.openedit.di.BeanLoader;
 import org.openedit.page.manage.PageManager;
 import org.openedit.servlet.OpenEditEngine;
 import org.openedit.users.UserManager;
-import org.springframework.beans.factory.BeanFactory;
 
 /**
  * <p>
@@ -31,7 +31,7 @@ import org.springframework.beans.factory.BeanFactory;
  */
 public interface WebServer
 {
-    public BeanFactory getBeanFactory();
+    public BeanLoader getBeanLoader();
 
     public PageManager getPageManager();
 

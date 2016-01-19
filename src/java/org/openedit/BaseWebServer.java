@@ -22,7 +22,7 @@ import org.apache.commons.logging.LogFactory;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.openedit.config.ScriptPathLoader;
-import org.openedit.config.SpringContext;
+import org.openedit.di.BeanLoader;
 import org.openedit.page.Page;
 import org.openedit.page.manage.PageManager;
 import org.openedit.repository.Repository;
@@ -30,9 +30,6 @@ import org.openedit.servlet.OpenEditEngine;
 import org.openedit.users.UserManager;
 import org.openedit.util.PathUtilities;
 import org.openedit.util.XmlUtil;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.UrlResource;
 
 import groovy.util.GroovyScriptEngine;
 
@@ -54,7 +51,7 @@ import groovy.util.GroovyScriptEngine;
 public class BaseWebServer implements WebServer
 {
 	private static final Log log = LogFactory.getLog(WebServer.class);
-	protected BeanFactory fieldBeanFactory;
+	protected BeanLoader fieldBeanLoader;
 	protected File fieldRootDirectory;
 	protected List fieldAllPlugIns;
 	protected String fieldNodeId;
@@ -67,11 +64,13 @@ public class BaseWebServer implements WebServer
 	{
 		fieldNodeId = inNodeId;
 	}
-	public BeanFactory getBeanFactory()
+	public BeanLoader getBeanLoader()
 	{
-//		if ( fieldBeanFactory == null )
-//		{
-//			synchronized( this ) //the reason for this is when spring is configured it may cause the scheduler to call getBeanFactory() in another thread
+		if ( fieldBeanLoader == null )
+		{
+			fieldBeanLoader = new BeanLoader();
+		}
+//			synchronized( this ) //the reason for this is when spring is configured it may cause the scheduler to call getBeanLoader() in another thread
 //			{ //We put the synchronized at this level to speed up the loading of web pages 
 //				if ( fieldBeanFactory == null )
 //				{
@@ -88,13 +87,13 @@ public class BaseWebServer implements WebServer
 ////					XmlBeanFactory xmlbeans = new XmlBeanFactory( resource );
 ////					xmlbeans.setAllowBeanDefinitionOverriding(true);
 ////					xmlbeans.destroySingletons();
-//					appContext.getBeanFactory().registerSingleton("WebServer",this);
-//					appContext.getBeanFactory().registerSingleton("root",getRootDirectory() );
+//					appContext.getBeanLoader().registerSingleton("WebServer",this);
+//					appContext.getBeanLoader().registerSingleton("root",getRootDirectory() );
 //					fieldBeanFactory = xmlbeans;
 //				}
 //			}
 //		}
-		return fieldBeanFactory;
+		return fieldBeanLoader;
 	}
 	public synchronized void initialize() 
 	{
@@ -114,97 +113,29 @@ public class BaseWebServer implements WebServer
 		
 		try
 		{
-//			DefaultListableBeanFactory factory = new DefaultListableBeanFactory()
-//			{ 
-//				public boolean isFactoryBean(String name) throws org.springframework.beans.factory.NoSuchBeanDefinitionException 
-//				{
-//					String beanName = transformedBeanName(name);
-//
-//					Object beanInstance = getSingleton(beanName, false);
-//					if (beanInstance != null) {
-//						boolean ret = (beanInstance instanceof FactoryBean || beanInstance instanceof BeanPostProcessor);
-//						return ret;
-//					}
-//					else if (containsSingleton(beanName)) {
-//						// null instance registered
-//						return false;
-//					}
-//
-//					// No singleton instance found -> check bean definition.
-//					if (!containsBeanDefinition(beanName) && getParentBeanFactory() instanceof ConfigurableBeanFactory) {
-//						// No bean definition found in this factory -> delegate to parent.
-//						return ((ConfigurableBeanFactory) getParentBeanFactory()).isFactoryBean(name);
-//					}
-//
-//					return isFactoryBean(beanName, getMergedLocalBeanDefinition(beanName));
-//				};
-//			};
-			
-			SpringContext context = new SpringContext() //factory
-			{
-				public org.springframework.core.io.Resource getResource(String location) 
-				{
-					File custom = new File( getRootDirectory(), "/WEB-INF/src/" + location);
-					if( custom.exists() )
-					{
-						return new FileSystemResource(custom);
-					}
-							
-					File folders = new File( getRootDirectory(), "/WEB-INF/base/");
-					File[] children = folders.listFiles();
-					if( children != null )
-					{
-						for (int i = 0; i < children.length; i++)
-						{
-							File script = new File( children[i],"/src/" + location);
-							if( script.exists() )
-							{
-								return new FileSystemResource(script);
-							}
-						}
-					}
-					return super.getResource(location);
-				};
-				
-				public void registerBeanDefinition(String beanName, org.springframework.beans.factory.config.BeanDefinition beanDefinition) throws org.springframework.beans.factory.BeanDefinitionStoreException 
-				{
-					beanDefinition.setLazyInit(true);
-					super.registerBeanDefinition(beanName, beanDefinition);
-				};
-			};
-
-			//TODO: Use this as a better way to load groovy scripts from an xml file. One bean at a time
-			
 			//http://www.digizenstudio.com/blog/2007/01/14/programmatically-build-a-spring-application-context/
 //			BeanDefinitionBuilder bdb1 = BeanDefinitionBuilder.rootBeanDefinition("org.springframework.scripting.support.ScriptFactoryPostProcessor").setLazyInit(false);
 //			context.registerBeanDefinition("scriptPostProcessor", bdb1.getBeanDefinition());
-			
-			context.setValidating(false);
+			log.info("loading beans");
 			ScriptPathLoader pathloader = new ScriptPathLoader();
 			pathloader.setRoot(getRootDirectory());
 			List classpathfolders = pathloader.findPaths();
 			GroovyScriptEngine engine = new GroovyScriptEngine((String[])classpathfolders.toArray(new String[classpathfolders.size()]));
 			
 			ClassLoader loader = engine.getGroovyClassLoader();
-//			
-//			if( loader == null)
-//			{
-//				loader = ClassLoader.getSystemClassLoader();
-//			}
-			context.setClassLoader(loader);
+			getBeanLoader().setClassloader(loader);
 
 			
-			//InputStreamResource resource = new InputStreamResource(loader.getResourceAsStream("entermedia.xml"));
-			context.load(new UrlResource(loader.getResource("entermedia.xml")) );
-			context.getBeanFactory().registerSingleton("WebServer",this);
-			context.getBeanFactory().registerSingleton("root",getRootDirectory() );
+			getBeanLoader().load(loader.getResource("entermedia.xml"));
+			getBeanLoader().registerSingleton("WebServer",this);
+			getBeanLoader().registerSingleton("root",getRootDirectory() );
 
 			List sorted = getAllPlugIns();
 			for (Iterator iter = sorted.iterator(); iter.hasNext();)
 			{
 				PlugIn plugin = (PlugIn)iter.next();
 				log.info("Loading " + plugin.getPluginXml().getPath() );
-				context.load(new UrlResource(plugin.getPluginXml() ) );
+				getBeanLoader().load(plugin.getPluginXml());
 			}
 			//Loop over the src folders
 			File folders = new File( getRootDirectory(), "/WEB-INF/base/");
@@ -213,30 +144,30 @@ public class BaseWebServer implements WebServer
 			{
 				for (int i = 0; i < children.length; i++)
 				{
-					File script = new File( children[i],"/src/plugin.xml");
-					if( script.exists() )
+					if( children[i].isDirectory() )
 					{
-						context.load(new FileSystemResource(script) );
-					}
+						File script = new File( children[i],"/src/plugin.xml");
+						if( script.exists() )
+						{
+							getBeanLoader().load(script.toURL());
+						}
+					}	
 				}
 			}
 
 			File custom = new File( getRootDirectory(), "/WEB-INF/src/plugin.xml");
 			if( custom.exists() )
 			{
-				context.load(new FileSystemResource(custom) );
+				getBeanLoader().load(custom.toURL());
 			}
 			
 			File overrideFile = new File( getRootDirectory(), "/WEB-INF/pluginoverrides.xml" ); //TODO: Use a directory of files
 			if( overrideFile.exists() )
 			{
-				context.load(new FileSystemResource(overrideFile));
+				getBeanLoader().load(overrideFile.toURL());
 			}
+			log.info("loaded " + getBeanLoader().getLoadedBeans().size() + " beans");
 
-			context.refresh();			
-			
-			fieldBeanFactory = context;
-			
 		} catch ( Throwable ex)
 		{
 			log.error("Could not start server: " , ex);
@@ -299,7 +230,7 @@ public class BaseWebServer implements WebServer
         {
         	log.error("Could not initiallize cleanly ", ex);
         }
-		//getBeanFactory().preInstantiateSingletons();
+		//getBeanLoader().preInstantiateSingletons();
         
 	}
 	public List getAllPlugIns() 
@@ -483,7 +414,7 @@ public class BaseWebServer implements WebServer
 //	{
 //		try
 //		{
-//			XmlBeanFactory factory = new XmlBeanFactory( new InputStreamResource( inputStream ), getBeanFactory() );
+//			XmlBeanFactory factory = new XmlBeanFactory( new InputStreamResource( inputStream ), getBeanLoader() );
 //			String[] names = factory.getBeanDefinitionNames();
 //
 //			for (int i = 0; i < names.length; i++)
@@ -530,7 +461,7 @@ public class BaseWebServer implements WebServer
 //
 //			//I am not sure what this does.
 //			PropertyPlaceholderConfigurer configurator = new PropertyPlaceholderConfigurer();
-//			configurator.postProcessBeanFactory( getBeanFactory() );
+//			configurator.postProcessBeanFactory( getBeanLoader() );
 //
 //		} catch ( Exception ex )
 //		{
@@ -544,7 +475,7 @@ public class BaseWebServer implements WebServer
      */
 	public PageManager getPageManager()
 	{
-		return (PageManager)getBeanFactory().getBean( "pageManager" );
+		return (PageManager)getBeanLoader().getBean( "pageManager" );
 	}
 
 	/**
@@ -552,7 +483,7 @@ public class BaseWebServer implements WebServer
      */
 	public UserManager getUserManager()
 	{
-		return (UserManager)getBeanFactory().getBean( "userManager" );
+		return (UserManager)getBeanLoader().getBean( "userManager" );
 	}
 
 	
@@ -561,7 +492,7 @@ public class BaseWebServer implements WebServer
      */
 	public ModuleManager getModuleManager()
 	{
-		return (ModuleManager) getBeanFactory().getBean( "moduleManager" );
+		return (ModuleManager) getBeanLoader().getBean( "moduleManager" );
 	}
 
 	/**
@@ -569,7 +500,7 @@ public class BaseWebServer implements WebServer
      */
 	public OpenEditEngine getOpenEditEngine()
 	{
-		return (OpenEditEngine)getBeanFactory().getBean("OpenEditEngine");
+		return (OpenEditEngine)getBeanLoader().getBean("OpenEditEngine");
 	}
 
     /**
