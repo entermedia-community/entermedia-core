@@ -20,20 +20,22 @@ import org.openedit.WebServer;
 import org.openedit.util.FileUtils;
 import org.openedit.util.XmlUtil;
 
+import groovy.lang.GroovyClassLoader;
+
 public class BeanLoader
 {
 	private static final Log log = LogFactory.getLog(BeanLoader.class);
 
 	protected Map fieldLoadedBeans = new HashMap();
-	protected ClassLoader fieldClassloader;
+	protected GroovyClassLoader fieldClassloader;
 	XmlUtil xml = new XmlUtil();
 
-	public ClassLoader getClassloader()
+	public GroovyClassLoader getClassloader()
 	{
 		return fieldClassloader;
 	}
 
-	public void setClassloader(ClassLoader inClassloader)
+	public void setClassloader(GroovyClassLoader inClassloader)
 	{
 		fieldClassloader = inClassloader;
 	}
@@ -156,6 +158,10 @@ public class BeanLoader
 	{
 		try
 		{
+			if( inClassPath.endsWith(".groovy"))
+			{
+				inClassPath = inClassPath.replace("/",".").replace(".groovy","");
+			}
 			Object created =  getClassloader().loadClass(inClassPath).newInstance();
 			if( created instanceof BeanLoaderAware)
 			{

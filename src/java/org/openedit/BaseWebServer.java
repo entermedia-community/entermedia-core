@@ -31,6 +31,7 @@ import org.openedit.users.UserManager;
 import org.openedit.util.PathUtilities;
 import org.openedit.util.XmlUtil;
 
+import groovy.lang.GroovyClassLoader;
 import groovy.util.GroovyScriptEngine;
 
 /**
@@ -122,7 +123,7 @@ public class BaseWebServer implements WebServer
 			List classpathfolders = pathloader.findPaths();
 			GroovyScriptEngine engine = new GroovyScriptEngine((String[])classpathfolders.toArray(new String[classpathfolders.size()]));
 			
-			ClassLoader loader = engine.getGroovyClassLoader();
+			GroovyClassLoader loader = engine.getGroovyClassLoader();
 			getBeanLoader().setClassloader(loader);
 
 			
