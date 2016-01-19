@@ -133,7 +133,7 @@ public class BeanLoader
                 	{
                 		methods[i].invoke(object, Boolean.valueOf( (String)fieldValue) );
                 	}
-                	else if( "int".equals( clas ) )
+                	else if( "int".equals( clas ) || "java.lang.Integer".equals( clas ))
                 	{
                 		methods[i].invoke(object, Integer.valueOf( (String)fieldValue) );
                 	}
@@ -190,7 +190,7 @@ public class BeanLoader
 			String id = node.attributeValue("id");
 			fieldLoadedBeans.put(id, p);
 		}
-		log.info("Loaded " + fieldLoadedBeans.size() );
+		//log.info("Loaded " + fieldLoadedBeans.size() );
 		//<lang:groovy id="cmykpreprocessorCreator" script-source=
 	}
 
