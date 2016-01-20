@@ -43,6 +43,7 @@ public class BaseOpenEditEngine implements OpenEditEngine
 	
 	public void render( HttpServletRequest inRequest, HttpServletResponse inResponse ) throws IOException, OpenEditException 
 	{
+		//inRequest.setCharacterEncoding( "UTF-8" );
 		checkEngineInit( inResponse );
 		//inRequest.setCharacterEncoding( "UTF-8" ); //This needs to be the first thing we do. Dont call getParameter
 	    URLUtilities util = new URLUtilities(inRequest, inResponse);
@@ -58,10 +59,10 @@ public class BaseOpenEditEngine implements OpenEditEngine
 				checkdates = true;
 			}
 		}
-		if( !checkdates )
-		{
-			checkdates = Boolean.parseBoolean( inRequest.getParameter("reload") );
-		}
+//		if( !checkdates )
+//		{
+//			checkdates = Boolean.parseBoolean( inRequest.getParameter("reload") ); //Dont call before we call setCharacterEncoding
+//		}
 	    Page page = getPageManager().getPage( requestedPath,checkdates);
 	    
 		//If link does not exists. Then put a real welcome page on there so that fallback will work

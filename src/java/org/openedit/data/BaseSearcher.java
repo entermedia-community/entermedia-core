@@ -2020,7 +2020,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	public HitTracker getAllHits(WebPageRequest inReq)
 	{
 		SearchQuery q = createSearchQuery();
-		q.addMatches("*");
+		q.addMatches("id","*");
 		if (inReq != null)
 		{
 			String sort = inReq.getRequestParameter("sortby");

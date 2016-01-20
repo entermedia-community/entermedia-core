@@ -117,7 +117,7 @@ public class BaseWebServer implements WebServer
 			//http://www.digizenstudio.com/blog/2007/01/14/programmatically-build-a-spring-application-context/
 //			BeanDefinitionBuilder bdb1 = BeanDefinitionBuilder.rootBeanDefinition("org.springframework.scripting.support.ScriptFactoryPostProcessor").setLazyInit(false);
 //			context.registerBeanDefinition("scriptPostProcessor", bdb1.getBeanDefinition());
-			log.info("loading beans");
+			//log.info("loading beans");
 			ScriptPathLoader pathloader = new ScriptPathLoader();
 			pathloader.setRoot(getRootDirectory());
 			List classpathfolders = pathloader.findPaths();
