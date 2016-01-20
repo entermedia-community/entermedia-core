@@ -228,7 +228,9 @@ public class UserProfile extends BaseData implements SaveableData
 				log.debug("No settings group defined");
 			}
 			Collection permissions = fieldSettingsGroup.getValues("permissions");
+			if(permissions != null){
 			fieldPermissions = new HashSet(permissions);
+			}
 
 //			else
 //			{
