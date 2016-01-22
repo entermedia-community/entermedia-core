@@ -230,6 +230,8 @@ public class UserProfile extends BaseData implements SaveableData
 			Collection permissions = fieldSettingsGroup.getValues("permissions");
 			if(permissions != null){
 			fieldPermissions = new HashSet(permissions);
+			} else{
+				fieldPermissions = new HashSet();
 			}
 
 //			else
