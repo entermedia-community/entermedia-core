@@ -1034,4 +1034,11 @@ public class XmlUserArchive  {
 		int id = getUserIdCounter().incrementCount();
 		return String.valueOf(id);
 	}
+	
+	
+	public void clear(){
+		getUserNameToUserMap().clear();
+		getGroupIdToGroupMap().clear();
+		
+	}
 }

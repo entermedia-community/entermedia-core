@@ -18,5 +18,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/httpmime-4.4.jar"/>
 	<classpathentry exported="true" kind="con" path="GROOVY_DSL_SUPPORT"/>
 	<classpathentry exported="true" kind="lib" path="lib/groovy-all-2.4.3.jar"/>
+	<classpathentry kind="lib" path="lib/commons-codec-1.7.jar"/>
 	<classpathentry kind="output" path="build"/>
 </classpath>
