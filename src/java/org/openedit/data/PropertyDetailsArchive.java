@@ -821,4 +821,74 @@ public class PropertyDetailsArchive {
 		getPropertyDetails().remove(inSearchType);
 	}
 	
+	
+	public Map findSearchersWithDetail(String inDetail){
+		HashMap types = new HashMap();
+		for (Iterator iterator = listSearchTypes().iterator(); iterator.hasNext();)
+		{
+			String type = (String) iterator.next();
+			PropertyDetails details = getPropertyDetails(type);
+			PropertyDetail detail = details.getDetail(inDetail);
+			
+			if(detail != null){
+				types.put(type, detail);
+			}
+					
+		}
+		return types;
+	}
+	
+	public boolean convertAll(String inSearcher, String inDetail){
+		Map types = findSearchersWithDetail(inDetail);
+		PropertyDetails details = getPropertyDetails(inSearcher);
+		PropertyDetail  detail = details.getDetail(inDetail); 
+		for (Iterator iterator = types.keySet().iterator(); iterator.hasNext();)
+		{
+			String key = (String) iterator.next();
+			PropertyDetails targetdetails = getPropertyDetails(key);
+			targetdetails.removeDetail(inDetail);
+			detail.setSearchType(null);
+			targetdetails.addDetail(detail);			
+			savePropertyDetails(targetdetails, key, null);
+			
+		}
+		return true;
+	}
+	
+	
+	public boolean makeLegacy(String inSearcher, String inDetail){
+		Map types = findSearchersWithDetail(inDetail);
+		PropertyDetails details = getPropertyDetails(inSearcher);
+		PropertyDetail  detail = details.getDetail(inDetail); 
+		detail.setId(inSearcher + inDetail);
+		detail.setProperty("legacy", inDetail);
+		
+		savePropertyDetails(details, inSearcher, null);
+		
+		//should we search and reset any list ids?
+		for (Iterator iterator = listSearchTypes().iterator(); iterator.hasNext();)
+		{
+			String type = (String) iterator.next();
+			PropertyDetails searchdetails = getPropertyDetails(type);
+			List alldetails = searchdetails.getDetails();
+			for (Iterator iterator2 = searchdetails.iterator(); iterator2.hasNext();)
+			{
+				PropertyDetail anotherdetail = (PropertyDetail) iterator2.next();
+				if(anotherdetail.isList() && inDetail.equals(anotherdetail.get("listid") ) ){
+					anotherdetail.setListId(detail.getId());
+					savePropertyDetails(searchdetails, inSearcher, null);
+				}
+			}
+			
+					
+		}
+		
+		return true;
+	}
+	
+	
+	
+	
+	
+	
 }
