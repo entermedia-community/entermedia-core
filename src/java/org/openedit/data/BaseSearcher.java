@@ -26,6 +26,7 @@ import org.openedit.config.Configuration;
 import org.openedit.event.WebEvent;
 import org.openedit.event.WebEventListener;
 import org.openedit.hittracker.HitTracker;
+import org.openedit.hittracker.Join;
 import org.openedit.hittracker.SearchQuery;
 import org.openedit.hittracker.Term;
 import org.openedit.locks.LockManager;
@@ -191,19 +192,31 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					}
 					HitTracker oldtracker = tracker;
 				//
-					if(oldtracker != null && oldtracker.getSearchQuery().hasFilters() )
+					if( oldtracker != null )
 					{
-						String clearfilters = inPageRequest.getRequestParameter("clearfilters");
-						if( !Boolean.parseBoolean(clearfilters))
+						if(oldtracker.getSearchQuery().hasFilters() )
 						{
-							inQuery.setFilters(oldtracker.getSearchQuery().getFilters());
+							String clearfilters = inPageRequest.getRequestParameter("clearfilters");
+							if( !Boolean.parseBoolean(clearfilters))
+							{
+								inQuery.setFilters(oldtracker.getSearchQuery().getFilters());
+							}
+						}
+						List<Join> joins = oldtracker.getSearchQuery().getParentJoins();
+						if( joins != null)
+						{
+							String clearfilters = inPageRequest.getRequestParameter("clearfilters");
+							if( !Boolean.parseBoolean(clearfilters))
+							{
+								inQuery.setParentJoins(joins);
+							}
 						}
 					}
 					
 					tracker = search(inQuery); //search here ----
 					tracker.setSearchQuery(inQuery);
 				
-					attachSecurityFilter(inPageRequest,tracker);
+					attachSecurityFilter(inPageRequest,tracker); //seems weird to do this so late in the game
 					
 					
 //					if(oldtracker != null && oldtracker.getSearchQuery().hasFilters() ){

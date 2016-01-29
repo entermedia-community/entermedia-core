@@ -18,7 +18,4 @@ public interface NodeManager
 
 	boolean connectCatalog(String inCatalogId);
 	
-	public boolean getShowSearchLogs(String inCatalogId);
-	public void setShowSearchLogs(String inCatalogId, boolean inValue);
-
 }

@@ -1620,6 +1620,11 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		fieldSecurityIds = inSecurityIds;
 	}
 
+	public void setParentJoins(List<Join> inJoins)
+	{
+		fieldParentJoins = inJoins;
+	}
+
 	
 
 

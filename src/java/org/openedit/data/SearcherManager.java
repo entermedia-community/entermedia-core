@@ -23,6 +23,8 @@ public class SearcherManager
 	
 	protected ModuleManager fieldModuleManager;
 	protected Map fieldCache;
+	protected HashMap fieldShowLogs;
+	
 	//A fieldName can be product or orderstatus. If there is no orderstatus searcher then we use an XML lookup for this catalog. 
 	public Searcher getSearcher(String inCatalogId, String inFieldName)
 	{
@@ -77,6 +79,14 @@ public class SearcherManager
 					if( !finalcatalogid.equals(inCatalogId))
 					{
 						getCache().put(finalcatalogid + "|" + inFieldName, searcher); //make sure we store both versions since they are the same searcher
+					}
+					if( id.equals("catalogsettings") )
+					{
+						Data defaultval = (Data)searcher.searchById("log_all_searches");
+						if( defaultval != null )
+						{
+							setShowSearchLogs(inCatalogId, Boolean.parseBoolean(defaultval.get("value")));
+						}
 					}
 				}
 			}
@@ -471,6 +481,29 @@ public class SearcherManager
 	{
 		LockManager manager = (LockManager)getModuleManager().getBean(inCatalogId,"lockManager");
 		return manager;
+	}
+
+	public boolean getShowSearchLogs(String inCatalogId)
+	{
+		Boolean found = (Boolean)getShowLogs().get(inCatalogId);
+		if( found == null)
+		{
+			found = false;
+			getShowLogs().put(inCatalogId, found);
+		}
+		return found;
+	}
+	protected Map getShowLogs()
+	{
+		if (fieldShowLogs == null)
+		{
+			fieldShowLogs = new HashMap();
+		}
+		return fieldShowLogs;
+	}
+	public void setShowSearchLogs(String inCatalogId, boolean inValue)
+	{
+		getShowLogs().put(inCatalogId, inValue);
 	}
 
 	
