@@ -689,6 +689,24 @@ public class PropertyDetailsArchive {
 		return sorted;
 	}
 
+	public List findChildTables(){
+		List searchtypes = listSearchTypes();
+		ArrayList tables = new ArrayList();
+		for (Iterator iterator = searchtypes.iterator(); iterator.hasNext();)
+		{
+			String type = (String) iterator.next();
+			PropertyDetails details = getPropertyDetails(type);
+			PropertyDetail parent = details.getDetail("_parent");
+			if(parent != null){
+				tables.add(type);
+			}
+			
+		}
+		return tables;
+		
+	}
+	
+	
 	public List listViewTypes() {
 		return listFilesByFolderType("views/", true);
 	}
