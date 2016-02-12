@@ -33,7 +33,7 @@ public class XmlHitTracker extends HitTracker
 		{
 			return null;
 		}
-		return new ElementData(element);
+		return new ElementData(element, getSearcher().getPropertyDetails());
 	}
 	//Use getByID
 	public Object get(String inId) throws IOException
@@ -81,7 +81,7 @@ public class XmlHitTracker extends HitTracker
 		{
 			return (Data)inHit;
 		}
-		return new ElementData(inHit);
+		return new ElementData(inHit, getSearcher().getPropertyDetails());
 	}
 	
 	public String getValue(Object inHit, String inString)

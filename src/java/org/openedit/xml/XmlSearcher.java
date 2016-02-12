@@ -337,7 +337,7 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable
 				{
 					if (passes(element, inQuery))
 					{
-						results.add(new ElementData(element));					
+						results.add(new ElementData(element, getPropertyDetails()));					
 					}
 				}
 				catch (ParseException e)
@@ -480,7 +480,7 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable
 			element.clearContent();
 			element.setAttributes(null);
 			
-			ElementData data = new ElementData(element);
+			ElementData data = new ElementData(element, getPropertyDetails());
 			data.setId(inData.getId());
 			data.setName(inData.getName());
 			data.setSourcePath(inData.getSourcePath());
@@ -562,7 +562,7 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable
 		XmlFile settings = getXmlFile();
 
 		Element newone = DocumentHelper.createElement(settings.getElementName());
-		ElementData data = new ElementData(newone);		
+		ElementData data = new ElementData(newone, getPropertyDetails());		
 		return data;
 	}
 	public List getIndexProperties()

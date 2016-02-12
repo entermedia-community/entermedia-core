@@ -210,7 +210,7 @@ public class XmlFolderSearcher extends XmlSearcher
 			element.clearContent();
 			element.setAttributes(null);
 			
-			ElementData data = new ElementData(element);
+			ElementData data = new ElementData(element, getPropertyDetails());
 			data.setId(inData.getId());
 			data.setName(inData.getName());
 			data.setSourcePath(inData.getSourcePath());

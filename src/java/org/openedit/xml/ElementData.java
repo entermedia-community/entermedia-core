@@ -15,6 +15,8 @@ import org.dom4j.Node;
 import org.dom4j.Text;
 import org.openedit.MultiValued;
 import org.openedit.OpenEditException;
+import org.openedit.data.PropertyDetail;
+import org.openedit.data.PropertyDetails;
 import org.openedit.data.SaveableData;
 
 public class ElementData implements MultiValued, SaveableData, Comparable
@@ -23,6 +25,35 @@ public class ElementData implements MultiValued, SaveableData, Comparable
 	protected String fieldSourcePath;
 	protected String fieldVersion;
 	protected static final Pattern INVALIDSTUFF = Pattern.compile("[\'\"\n<>&]");  
+	
+	public ElementData(Element inHit, PropertyDetails inPropertyDetails)
+	{
+		setElement(inHit);
+		//setId(getSearchHit().getId());
+		setPropertyDetails(inPropertyDetails);
+	}
+	
+	
+	public ElementData(Object inHit, PropertyDetails inPropertyDetails)
+	{
+		setElement((Element)inHit);
+		//setId(getSearchHit().getId());
+		setPropertyDetails(inPropertyDetails);
+	}
+	
+	
+protected PropertyDetails fieldPropertyDetails;
+	
+	public PropertyDetails getPropertyDetails()
+	{
+		return fieldPropertyDetails;
+	}
+
+	public void setPropertyDetails(PropertyDetails inPropertyDetails)
+	{
+		fieldPropertyDetails = inPropertyDetails;
+	}
+	
 	
 	public String getVersion() {
 		return fieldVersion;
@@ -83,7 +114,24 @@ public class ElementData implements MultiValued, SaveableData, Comparable
 		{
 			return getSourcePath();
 		}
-		return getElement().attributeValue(inId);
+		
+		String value =getElement().attributeValue(inId); 
+	
+				if( value == null && getPropertyDetails() != null)
+				{
+					PropertyDetail detail = getPropertyDetails().getDetail(inId);
+					if( detail != null)
+					{
+						String legacy = detail.get("legacy");
+						if( legacy != null)
+						{
+							value = get(legacy);
+						}
+					}
+				}
+				
+				
+		return value;
 	}
 	
 	public float getFloat(String inId)
