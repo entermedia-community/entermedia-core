@@ -8,9 +8,9 @@ import org.dom4j.QName;
 
 public class Pojo
 {	
-	public static final Namespace lang = new Namespace("lang", "http://www.springframework.org/schema/lang");
-	public static final QName groovy = new QName("groovy", lang);
-	public static final QName gproperty = new QName("property", lang);
+//	public static final Namespace lang = new Namespace("lang", "http://www.springframework.org/schema/lang");
+//	public static final QName groovy = new QName("groovy", lang);
+//	public static final QName gproperty = new QName("property", lang);
 
 	
 	Element fieldConfig;
@@ -45,10 +45,10 @@ public class Pojo
 	public List getProperties()
 	{
 		List elements = fieldConfig.elements("property");
-		if( elements == null)
-		{
-			elements =   fieldConfig.elements(gproperty);
-		}
+//		if( elements == null)
+//		{
+//			elements =   fieldConfig.elements(gproperty);
+//		}
 		return elements;
 	}
 

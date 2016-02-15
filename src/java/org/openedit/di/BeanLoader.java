@@ -188,7 +188,7 @@ public class BeanLoader
 			fieldLoadedBeans.put(id, p);
 		}
 
-		for (Iterator iterator = inRoot.elementIterator(Pojo.groovy); iterator.hasNext();)
+		for (Iterator iterator = inRoot.elementIterator("groovy"); iterator.hasNext();) //Pojo.groovy
 		{
 			Element node = (Element) iterator.next();
 			Pojo p = new Pojo();
@@ -196,11 +196,10 @@ public class BeanLoader
 			String id = node.attributeValue("id");
 			fieldLoadedBeans.put(id, p);
 		}
-		//log.info("Loaded " + fieldLoadedBeans.size() );
 		//<lang:groovy id="cmykpreprocessorCreator" script-source=
 	}
 
-	public void load(URL inResource)
+	public void load(URL inResource, String inPath)
 	{
 		InputStream in = null;
 		try
@@ -208,6 +207,7 @@ public class BeanLoader
 			in = inResource.openStream(); 
 			Element root = xml.getXml(in, "UTF-8");
 			loadBeans(root);
+			log.info("loaded " + inPath + " "  + root.elements().size() + " total: " + fieldLoadedBeans.size());
 		}
 		catch( Exception ex)
 		{

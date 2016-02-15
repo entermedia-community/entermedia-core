@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -56,6 +57,7 @@ public class BaseWebServer implements WebServer
 	protected File fieldRootDirectory;
 	protected List fieldAllPlugIns;
 	protected String fieldNodeId;
+	XmlUtil xml = new XmlUtil();
 	
 	public String getNodeId()
 	{
@@ -126,8 +128,6 @@ public class BaseWebServer implements WebServer
 			GroovyClassLoader loader = engine.getGroovyClassLoader();
 			getBeanLoader().setClassloader(loader);
 
-			
-			getBeanLoader().load(loader.getResource("entermedia.xml"));
 			getBeanLoader().registerSingleton("WebServer",this);
 			getBeanLoader().registerSingleton("root",getRootDirectory() );
 
@@ -135,38 +135,21 @@ public class BaseWebServer implements WebServer
 			for (Iterator iter = sorted.iterator(); iter.hasNext();)
 			{
 				PlugIn plugin = (PlugIn)iter.next();
-				log.info("Loading " + plugin.getPluginXml().getPath() );
-				getBeanLoader().load(plugin.getPluginXml());
+				getBeanLoader().load(plugin.getPluginXml(), plugin.getPluginXml().getPath() );
 			}
-			//Loop over the src folders
-			File folders = new File( getRootDirectory(), "/WEB-INF/base/");
-			File[] children = folders.listFiles();
-			if( children != null )
-			{
-				for (int i = 0; i < children.length; i++)
-				{
-					if( children[i].isDirectory() )
-					{
-						File script = new File( children[i],"/src/plugin.xml");
-						if( script.exists() )
-						{
-							getBeanLoader().load(script.toURL());
-						}
-					}	
-				}
-			}
-
-			File custom = new File( getRootDirectory(), "/WEB-INF/src/plugin.xml");
-			if( custom.exists() )
-			{
-				getBeanLoader().load(custom.toURL());
-			}
+//			File custom = new File( getRootDirectory(), "/WEB-INF/src/plugin.xml");
+//			if( custom.exists() )
+//			{
+//				getBeanLoader().load(custom.toURL(), custom.getAbsolutePath() );
+//			}
 			
 			File overrideFile = new File( getRootDirectory(), "/WEB-INF/pluginoverrides.xml" ); //TODO: Use a directory of files
 			if( overrideFile.exists() )
 			{
-				getBeanLoader().load(overrideFile.toURL());
+				getBeanLoader().load(overrideFile.toURL(), overrideFile.getAbsolutePath() );
 			}
+
+			//Loop over the src folders
 			log.info("loaded " + getBeanLoader().getLoadedBeans().size() + " beans");
 
 		} catch ( Throwable ex)
@@ -240,11 +223,13 @@ public class BaseWebServer implements WebServer
 		{
 			try
 			{
-				ClassLoader loader  = getClass().getClassLoader();
-				if( loader == null)
-				{
-					loader = ClassLoader.getSystemClassLoader();
-				}
+				ClassLoader loader  = ClassLoader.getSystemClassLoader(); //getClass().getClassLoader();
+//				if( loader == null)
+//				{
+//					loader = ClassLoader.getSystemClassLoader();
+//				}
+				//TODO: Load these from the only the base directory. Probably faster
+				
 				Enumeration pluginDefs = loader.getResources( "plugin.xml" ); //This locks jar files on Windows
 				fieldAllPlugIns = new ArrayList();
 				Map allplugins = new HashMap();
@@ -273,6 +258,26 @@ public class BaseWebServer implements WebServer
 					
 				}
 				populateDependants(allplugins,depends);
+				
+				//Now look in all the base folder
+				File folders = new File( getRootDirectory(), "/WEB-INF/base/");
+				File[] children = folders.listFiles();
+				if( children != null )
+				{
+					for (int i = 0; i < children.length; i++)
+					{
+						if( children[i].isDirectory() )
+						{
+							File script = new File( children[i],"/src/plugin.xml");
+							if( script.exists() )
+							{
+								PlugIn plugin = createPlugIn(script);
+								allplugins.put(plugin.getId(),plugin);
+							}
+						}	
+					}
+				}
+				fieldAllPlugIns.addAll(allplugins.values());
 				//NOW SORT!
 				DependentComparator compare = new DependentComparator();
 				Collections.sort(fieldAllPlugIns,compare);
@@ -286,6 +291,25 @@ public class BaseWebServer implements WebServer
 		return fieldAllPlugIns;
 	}
 
+	protected PlugIn createPlugIn(File inScript)
+	{
+		PlugIn plugin = new PlugIn();
+		try
+		{
+			plugin.setPluginXml(inScript.toURL());
+		}
+		catch (MalformedURLException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		plugin.setInstalled(true);
+		
+		Element root = xml.getXml(inScript, "utf-8");
+		plugin.dependsOn(root.attributeValue("dependson"));
+		plugin.setId(root.attributeValue("projectname"));
+		return plugin;
+	}
 	private void populateDependants(Map inPlugins, Map inDepends)
 	{
 		for (Iterator iterator = inPlugins.values().iterator(); iterator.hasNext();)
