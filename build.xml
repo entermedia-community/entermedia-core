@@ -68,7 +68,6 @@
       </classpath>
       <include name="**"/>
     </javac>
-  	<copy file="${src}/entermedia.xml" tofile="${build}/entermedia.xml"/>
   	<copy file="${src}/mimetypes.properties" tofile="${build}/mimetypes.properties"/>
   </target>
     
