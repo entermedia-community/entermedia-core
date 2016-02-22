@@ -3,8 +3,7 @@ package org.openedit.di;
 import java.util.List;
 
 import org.dom4j.Element;
-import org.dom4j.Namespace;
-import org.dom4j.QName;
+import org.openedit.WebServer;
 
 public class Pojo
 {	
@@ -26,6 +25,9 @@ public class Pojo
 	}
 	public boolean isSingleton()
 	{
+		if(fieldSingleton instanceof WebServer){
+			return true;
+		}
 		String scope = fieldConfig.attributeValue("scope");
 		if( scope == null || !scope.equals("prototype"))
 		{

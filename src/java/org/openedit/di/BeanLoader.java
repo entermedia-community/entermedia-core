@@ -13,8 +13,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
-import org.dom4j.Namespace;
-import org.dom4j.QName;
 import org.openedit.OpenEditException;
 import org.openedit.WebServer;
 import org.openedit.util.FileUtils;
@@ -29,6 +27,17 @@ public class BeanLoader
 	protected Map fieldLoadedBeans = new HashMap();
 	protected GroovyClassLoader fieldClassloader;
 	XmlUtil xml = new XmlUtil();
+	protected WebServer fieldWebServer;
+	
+	public WebServer getWebServer()
+	{
+		return fieldWebServer;
+	}
+
+	public void setWebServer(WebServer inWebServer)
+	{
+		fieldWebServer = inWebServer;
+	}
 
 	public GroovyClassLoader getClassloader()
 	{
@@ -42,6 +51,9 @@ public class BeanLoader
 
 	public Object getBean(String inName)
 	{
+		if("WebServer".equals(inName) && fieldWebServer!= null){
+			return fieldWebServer;
+		}
 		Pojo bean = (Pojo)fieldLoadedBeans.get(inName);
 		if( bean == null)
 		{
@@ -55,19 +67,20 @@ public class BeanLoader
 		synchronized (inBean)
 		{
 			Object loaded = null;
+			String classPath = inBean.getClassPath();
 			if( inBean.isSingleton() )
 			{
 				loaded = inBean.getSingleton();
 				if( loaded == null)
 				{
-					loaded = createObject(inBean.getClassPath());
+					loaded = createObject(classPath);
 					inBean.setSingleton(loaded);
 					loadProperties(inBean, loaded);
 				}
 			}
 			else
 			{
-				loaded = createObject(inBean.getClassPath());
+				loaded = createObject(classPath);
 				loadProperties(inBean, loaded);
 			}
 			return loaded;
@@ -225,7 +238,11 @@ public class BeanLoader
 		{
 			bean = new Pojo();
 			bean.fieldConfig = DocumentHelper.createElement("bean");
-			bean.fieldConfig.addAttribute("class", inObject.getClass().getCanonicalName());
+			String canonicalName = inObject.getClass().getCanonicalName();
+			bean.fieldConfig.addAttribute("class", canonicalName);
+			bean.fieldConfig.addAttribute("name", inName);
+
+			bean.setSingleton(inObject);
 			fieldLoadedBeans.put(inName, bean);	
 		}
 		bean.setSingleton(inObject);

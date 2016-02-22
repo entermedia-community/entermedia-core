@@ -101,9 +101,11 @@ public class OpenEditFilter implements Filter
 		server.setRootDirectory(new File(rootPath));
 		server.setNodeId(servletContext.getInitParameter("entermedianodeid"));
 		server.initialize();
+		server.getBeanLoader().registerSingleton("WebServer",this);
 		servletContext.setAttribute(BaseWebServer.class.getName(), server); //TODO: Why is this here?
 		servletContext.setAttribute(WebServer.class.getName(), server); //TODO: Why is this here?
 		fieldEngine = server.getOpenEditEngine();
+		server.finalizeStartup();
 	}
 
 	protected OpenEditEngine getEngine()

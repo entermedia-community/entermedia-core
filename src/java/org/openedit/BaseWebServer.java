@@ -24,6 +24,7 @@ import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.openedit.config.ScriptPathLoader;
 import org.openedit.di.BeanLoader;
+import org.openedit.di.Pojo;
 import org.openedit.page.Page;
 import org.openedit.page.manage.PageManager;
 import org.openedit.repository.Repository;
@@ -59,6 +60,11 @@ public class BaseWebServer implements WebServer
 	protected String fieldNodeId;
 	XmlUtil xml = new XmlUtil();
 	
+	
+	public BaseWebServer(){
+		log.info("Web Server created");
+	}
+	
 	public String getNodeId()
 	{
 		return fieldNodeId;
@@ -72,6 +78,7 @@ public class BaseWebServer implements WebServer
 		if ( fieldBeanLoader == null )
 		{
 			fieldBeanLoader = new BeanLoader();
+			fieldBeanLoader.setWebServer(this);
 		}
 //			synchronized( this ) //the reason for this is when spring is configured it may cause the scheduler to call getBeanLoader() in another thread
 //			{ //We put the synchronized at this level to speed up the loading of web pages 
@@ -188,8 +195,17 @@ public class BaseWebServer implements WebServer
 	    	}
 	    });
         Runtime.getRuntime().addShutdownHook(sh);
+        log.info(getBeanLoader().getLoadedBeans());
+        Pojo thisone = (Pojo) getBeanLoader().getLoadedBeans().get("WebServer");
+        Object singleton = thisone.getSingleton();
+        finalizeStartup();
+		//getBeanLoader().preInstantiateSingletons();
+        
+	}
 
-        reloadMounts();
+	public void finalizeStartup()
+	{
+		reloadMounts();
         
            
        
@@ -214,8 +230,6 @@ public class BaseWebServer implements WebServer
         {
         	log.error("Could not initiallize cleanly ", ex);
         }
-		//getBeanLoader().preInstantiateSingletons();
-        
 	}
 	public List getAllPlugIns() 
 	{
