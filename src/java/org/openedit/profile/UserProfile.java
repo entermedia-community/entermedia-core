@@ -633,6 +633,11 @@ public class UserProfile extends BaseData implements SaveableData
 	{
 		getSettingsGroup();
 
-		return getPermissions().contains(inPropertyName);
+		Set permissions = getPermissions();
+		if( permissions == null)
+		{
+			return false;
+		}
+		return permissions.contains(inPropertyName);
 	}
 }
