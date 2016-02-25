@@ -402,6 +402,9 @@ public class PropertyDetails extends AbstractCollection
 
 	public List getDependsOn()
 	{
+		if(getInputFile() == null){
+			return new ArrayList();
+		}
 		if (fieldDependsOn == null)
 		{
 			String depend = getInputFile().getRoot().attributeValue("dependson");
