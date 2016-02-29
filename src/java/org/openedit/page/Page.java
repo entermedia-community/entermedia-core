@@ -864,7 +864,7 @@ public class Page implements Data, Comparable
 		getPageSettings().setProperty(inId, inValue);
 		
 	}
-	public void setProperties(Map<String, String> inProperties)
+	public void setProperties(Map inProperties)
 	{
 		getPageSettings().setProperties(inProperties);
 	}
@@ -908,5 +908,15 @@ public class Page implements Data, Comparable
 			}
 		}
 		setProperty(inKey,values.toString());
+	}
+	@Override
+	public Object getValue(String inKey)
+	{
+		return getProperty(inKey);
+	}
+	@Override
+	public void setValue(String inKey, Object inValue)
+	{
+		setProperty(inKey, String.valueOf(inValue));
 	}
 }

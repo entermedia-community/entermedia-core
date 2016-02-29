@@ -33,7 +33,7 @@ public class PropertyDetail implements Data, ViewItem, Comparable
 	private String fieldDateFormatString;
 	protected String fieldDataType; //boolean, long, permission, etc...
 	protected DateFormat fieldDateFormat;
-	protected Map fieldProperties;
+	protected ValuesMap fieldProperties;
 	protected TextLabelManager fieldTextLabelManager;
 	
 	public PropertyDetail()
@@ -72,11 +72,11 @@ public class PropertyDetail implements Data, ViewItem, Comparable
 		fieldView = inView;
 	}
 
-	public Map getProperties()
+	public ValuesMap getProperties()
 	{
 		if (fieldProperties == null)
 		{
-			fieldProperties = new HashMap();
+			fieldProperties = new ValuesMap();
 		}
 		return fieldProperties;
 	}
@@ -500,11 +500,6 @@ public class PropertyDetail implements Data, ViewItem, Comparable
 		}
 	}
 	
-	public void setProperties(Map<String,String> inProperties)
-	{
-		getProperties().putAll(inProperties);
-	}
-
 	public String getName()
 	{
 		return getText();
@@ -616,16 +611,25 @@ public class PropertyDetail implements Data, ViewItem, Comparable
 	}
 	public void setValues(String inKey, Collection<String> inValues)
 	{
-		StringBuffer values = new StringBuffer();
-		for (Iterator iterator = inValues.iterator(); iterator.hasNext();)
-		{
-			String detail = (String) iterator.next();
-			values.append(detail);
-			if( iterator.hasNext())
-			{
-				values.append(" | ");
-			}
-		}
-		setProperty(inKey,values.toString());
+		getProperties().put(inKey, inValues);
+	}
+
+	@Override
+	public Object getValue(String inKey)
+	{
+		return getProperties().get(inKey);
+	}
+
+	@Override
+	public void setValue(String inKey, Object inValue)
+	{
+		getProperties().put(inKey,inValue);		
+	}
+
+	@Override
+	public void setProperties(Map inProperties)
+	{
+		getProperties().putAll(inProperties);
+		
 	}
 }

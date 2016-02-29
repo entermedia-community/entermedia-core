@@ -1,23 +1,16 @@
 package org.openedit.event;
 
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
-import org.openedit.Data;
-import org.openedit.MultiValued;
+import org.openedit.data.BaseData;
 import org.openedit.users.User;
 
-public class WebEvent implements Data, MultiValued
+public class WebEvent extends BaseData
 { 
 	protected String fieldId; //optional
 	protected String fieldSearchType;  //user search
 	protected String fieldOperation;  //login logout
 	protected Date fieldDate = new Date(); //defaults to "Right Now"
-	protected Map fieldProperties;
 	protected Object fieldSource;
 	protected User fieldUser;
 	/**
@@ -58,15 +51,6 @@ public class WebEvent implements Data, MultiValued
 	public void addDetail( String inKey, String inValue)
 	{
 		setProperty(inKey, inValue);
-	}
-	public String get( String inKey)
-	{
-		return (String)getProperties().get(inKey);
-	}
-
-	public void setProperties(Map inDetails)
-	{
-		fieldProperties = inDetails;
 	}
 	public Object getSource()
 	{
@@ -116,10 +100,6 @@ public class WebEvent implements Data, MultiValued
 	{
 		setSearchType(inName);
 	}
-	public void setProperty(String inId, String inValue)
-	{
-		getProperties().put( inId, inValue);
-	}
 	public String getId()
 	{
 		return fieldId;
@@ -139,49 +119,4 @@ public class WebEvent implements Data, MultiValued
 		setProperty("sourcepath", inSourcepath);		
 	}
 	
-	public Map getProperties() 
-	{
-		if (fieldProperties == null)
-		{
-			fieldProperties = new HashMap();
-		}
-		return fieldProperties;
-	}
-	public Collection getValues(String inPreference)
-	{
-		String val = get(inPreference);
-		
-		if (val == null)
-		{
-			return null;
-		}
-		String[] vals = null;
-		if( val.contains("|") )
-		{
-			vals = VALUEDELMITER.split(val);
-		}
-		else
-		{
-			vals = val.split("\\s+"); //legacy
-		}
-
-		Collection collection = Arrays.asList(vals);
-		//if null check parent
-		return collection;
-	}
-	
-	public void setValues(String inKey, Collection<String> inValues)
-	{
-		StringBuffer values = new StringBuffer();
-		for (Iterator iterator = inValues.iterator(); iterator.hasNext();)
-		{
-			String detail = (String) iterator.next();
-			values.append(detail);
-			if( iterator.hasNext())
-			{
-				values.append(" | ");
-			}
-		}
-		setProperty(inKey,values.toString());
-	}
 }

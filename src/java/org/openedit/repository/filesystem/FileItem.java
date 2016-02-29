@@ -175,7 +175,7 @@ public class FileItem extends ContentItem implements Data
 	{
 		throw new IllegalAccessError("Not implemented");
 	}
-	public void setProperties(Map<String, String> inProperties)
+	public void setProperties(Map inProperties)
 	{
 	}
 	
@@ -222,5 +222,15 @@ public class FileItem extends ContentItem implements Data
 			}
 		}
 		setProperty(inKey,values.toString());
+	}
+	@Override
+	public Object getValue(String inKey)
+	{
+		return get(inKey);
+	}
+	@Override
+	public void setValue(String inKey, Object inValue)
+	{
+		setProperty(inKey, String.valueOf(inValue));
 	}
 }

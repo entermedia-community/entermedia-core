@@ -160,7 +160,7 @@ public class BaseGroup extends FileSystemObject implements Group, Serializable, 
 		fieldId = inId;
 	}
 
-	public void setProperties(Map<String,String> inProperties)
+	public void setProperties(Map inProperties)
 	{
 		getProperties().putAll(inProperties);
 	}
@@ -221,5 +221,16 @@ public class BaseGroup extends FileSystemObject implements Group, Serializable, 
 			}
 		}
 		setProperty(inKey,values.toString());
+	}
+
+	@Override
+	public Object getValue(String inKey)
+	{
+		return get(inKey);
+	}
+	@Override
+	public void setValue(String inKey, Object inValue)
+	{
+		setProperty(inKey, String.valueOf(inValue));
 	}
 }

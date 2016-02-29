@@ -1,5 +1,6 @@
 package org.openedit.data;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
@@ -10,18 +11,23 @@ import java.util.Map;
 import org.openedit.Data;
 import org.openedit.MultiValued;
 import org.openedit.OpenEditException;
+import org.openedit.util.DateStorageUtil;
+
+import groovy.json.internal.ValueMap;
+
 
 public class BaseData implements MultiValued, Comparable, Cloneable
 {
 	public static final Data NULL = new BaseData(); 
 	
-	protected Map fieldMap;
+	protected ValuesMap fieldMap;
 
 	public BaseData() {
 	}
 
-	public BaseData(Map inMap) {
-		fieldMap = inMap;
+	public BaseData(Map inMap) 
+	{
+		fieldMap = new ValuesMap(inMap);
 	}
 
 	public String get(String inId) {
@@ -29,46 +35,16 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 		{
 			return null;
 		}
-		Object object = getMap().get(inId);
-		if (object == null) {
-			return null;
-		}
-		if (object instanceof String) {
-			return (String) object;
-		}
-		if (object instanceof Date) {
-			return String.valueOf((Date) object);
-		}
-		if (object instanceof Boolean) {
-			return String.valueOf((Boolean) object);
-		}
-		if (object instanceof Integer) {
-			return String.valueOf((Integer) object);
-		}
-		if (object instanceof Float) {
-			return String.valueOf((Float) object);
-		}
-		return String.valueOf(object);
+		return getMap().getString(inId);
 	}
 	public boolean getBoolean(String inId)
 	{
-		String val = get(inId);
-		if( val != null)
-		{
-			return Boolean.parseBoolean(val);
-		}
-		return false;
-		
+		return getMap().getBoolean(inId);
 	}
 	
 	public float getFloat(String inId)
 	{
-		String val = get(inId);
-		if( val != null)
-		{
-			return Float.parseFloat(val);
-		}
-		return 0;
+		return getMap().getFloat(inId);
 	}
 	public String getId() {
 		String name = get("id");
@@ -134,10 +110,10 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 			throw new OpenEditException(e);
 		}
 	}
-	protected Map getMap() 
+	protected ValuesMap getMap() 
 	{
 		if (fieldMap == null) {
-			fieldMap = new HashMap(5);
+			fieldMap = new ValuesMap();
 		}
 		return fieldMap;
 	}
@@ -162,7 +138,7 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 	{
 		return getMap();
 	}
-	public void setProperties(Map<String,String> inProperties)
+	public void setProperties(Map inProperties)
 	{
 		getMap().putAll(inProperties);
 	}
@@ -176,45 +152,87 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 	
 	public Collection<String> getValues(String inPreference)
 	{
-		Object object = getMap().get(inPreference);
-		if( object instanceof Collection)
-		{
-			return (Collection<String>)object;
-		}
-		String val = get(inPreference);
-		
-		if (val == null)
-		{
-			return null;
-		}
-		String[] vals = null;
-		if( val.contains("|") )
-		{
-			vals = VALUEDELMITER.split(val);
-		}
-		else
-		{
-			vals = val.split("\\s+"); //legacy
-		}
-
-		Collection collection = Arrays.asList(vals);
-		//if null check parent
-		return collection;
+		return getMap().getValues(inPreference);
+//		Object object = getValue(inPreference);
+//		if( object instanceof Collection)
+//		{
+//			return (Collection<String>)object;
+//		}
+//		String val = get(inPreference);
+//		
+//		if (val == null)
+//		{
+//			return null;
+//		}
+//		String[] vals = null;
+//		if( val.contains("|") )
+//		{
+//			vals = VALUEDELMITER.split(val);
+//		}
+//		else
+//		{
+//			vals = val.split("\\s+"); //legacy
+//		}
+//
+//		Collection collection = Arrays.asList(vals);
+//		//if null check parent
+//		return collection;
+	}
+	public Object getValue(String inKey)
+	{
+		return getMap().get(inKey);
+	}
+	public void setValue(String inKey, Object inValue)
+	{
+		getMap().put(inKey,inValue);
 	}
 	
+	/**
+	 * @deprecated use setValue
+	 */
 	public void setValues(String inKey, Collection<String> inValues)
 	{
-		StringBuffer values = new StringBuffer();
-		for (Iterator iterator = inValues.iterator(); iterator.hasNext();)
-		{
-			String detail = (String) iterator.next();
-			values.append(detail);
-			if( iterator.hasNext())
-			{
-				values.append(" | ");
-			}
-		}
-		setProperty(inKey,values.toString());
+//		StringBuffer values = new StringBuffer();
+//		for (Iterator iterator = inValues.iterator(); iterator.hasNext();)
+//		{
+//			String detail = (String) iterator.next();
+//			values.append(detail);
+//			if( iterator.hasNext())
+//			{
+//				values.append(" | ");
+//			}
+//		}
+		getMap().put(inKey, inValues);
+	}
+	public void addValue(String inKey, Object inNewValue)
+	{
+		getMap().addValue(inKey, inNewValue);
+//		String val = get(inKey);
+//		if( val == null )
+//		{
+//			setValue(inKey, inNewValue);
+//		}
+//		else 
+//		{
+//			Collection values = getValues(inKey);
+//			if(values.contains(inNewValue))
+//			{
+//				return;
+//			}
+//			else
+//			{
+//				values = new ArrayList(values);
+//				values.add(inNewValue);
+//			}
+//			setValue(inKey, values);
+//		}
+	}
+
+	@Override
+	public void removeValue(String inKey, Object inOldValue)
+	{
+		getMap().removeValue(inKey, inOldValue);
+		
 	}
 	
 }

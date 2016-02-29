@@ -1,5 +1,6 @@
 package org.openedit.xml;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -268,7 +269,7 @@ protected PropertyDetails fieldPropertyDetails;
 		}
 		return name;
 	}
-	public void setProperties(Map<String,String> inProperties)
+	public void setProperties(Map inProperties)
 	{
 		//getProperties().putAll(inProperties);
 		for (Iterator iterator = inProperties.keySet().iterator(); iterator.hasNext();)
@@ -276,7 +277,7 @@ protected PropertyDetails fieldPropertyDetails;
 			String key = (String) iterator.next();
 			if( key != null)
 			{
-				setProperty(key,inProperties.get(key));
+				setProperty(key,(String)inProperties.get(key));
 			}
 		}
 	}
@@ -329,4 +330,41 @@ protected PropertyDetails fieldPropertyDetails;
 			throw new OpenEditException(ex);
 		}
 	}
+	
+	@Override
+	public Object getValue(String inKey)
+	{
+		return get(inKey);
+	}
+	@Override
+	public void setValue(String inKey, Object inValue)
+	{
+		setProperty(inKey, String.valueOf(inValue));
+	}
+
+
+	@Override
+	public void addValue(String inKey, Object inNewValue)
+	{
+		String values = get(inKey);
+		if( values == null)
+		{
+			values = "";
+		}
+		else
+		{
+			values = values + "|";
+		}
+		values = values + String.valueOf( inNewValue );
+		setProperty(inKey,values);
+	}
+
+
+	@Override
+	public void removeValue(String inKey, Object inNewValue)
+	{
+		
+	}
+
+	
 }

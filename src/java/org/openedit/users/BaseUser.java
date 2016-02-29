@@ -448,7 +448,7 @@ public class BaseUser extends FileSystemObject implements User, Comparable
 		fieldId = inNewid;
 	}
 
-	public void setProperties(Map<String,String> inProperties)
+	public void setProperties(Map inProperties)
 	{
 		getProperties().putAll(inProperties);
 	}
@@ -557,4 +557,16 @@ public class BaseUser extends FileSystemObject implements User, Comparable
 		}
 		setProperty(inKey,values.toString());
 	}
+
+	@Override
+	public Object getValue(String inKey)
+	{
+		return get(inKey);
+	}
+	@Override
+	public void setValue(String inKey, Object inValue)
+	{
+		setProperty(inKey, String.valueOf(inValue));
+	}
+
 }
