@@ -122,15 +122,15 @@ public class VelocityGenerator extends BaseGenerator implements Generator
 		}
 		catch (MethodInvocationException ex)
 		{
-			if (ex.getWrappedThrowable() instanceof ContentNotAvailableException)
-			{
-				throw new OpenEditException("Error generating " + inPage.getPath(), (OpenEditException)ex.getWrappedThrowable());
-			}
-			if (ex.getWrappedThrowable() instanceof OpenEditException)
-			{
-				throw (OpenEditException) ex.getWrappedThrowable();
-			}
 			Throwable wrapped = ex.getWrappedThrowable();
+			if (wrapped instanceof ContentNotAvailableException)
+			{
+				throw new OpenEditException("Error generating " + inPage.getPath(), wrapped);
+			}
+			if (wrapped instanceof RuntimeException)
+			{
+				throw (RuntimeException) wrapped;
+			}
 			if( ignoreError( wrapped ))
 			{
 				//ignore
