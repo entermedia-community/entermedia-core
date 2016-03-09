@@ -332,7 +332,14 @@ public class BaseOpenEditEngine implements OpenEditEngine
 			Object module = (Object) beans[i];
 			if( module instanceof Shutdownable)
 			{
-				((Shutdownable)module).shutdown();
+				try
+				{
+					((Shutdownable)module).shutdown();
+				}
+				catch (Throwable ex)
+				{
+					log.error(ex);
+				}
 			}
 		}
 		System.out.println("OpenEditEngine shutdown complete");
