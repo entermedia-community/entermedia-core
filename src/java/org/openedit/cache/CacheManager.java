@@ -3,6 +3,7 @@ package org.openedit.cache;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
@@ -10,7 +11,18 @@ import com.google.common.cache.CacheBuilder;
 public class CacheManager
 {
 	protected Map<String,Cache> fieldCaches;
+	protected int fieldExpiryTime = -1;//minutes
 	
+	public int getExpiryTime()
+	{
+		return fieldExpiryTime;
+	}
+
+	public void setExpiryTime(int inExpiryTime)
+	{
+		fieldExpiryTime = inExpiryTime;
+	}
+
 	public Map<String,Cache> getCaches()
 	{
 		if (fieldCaches == null)
@@ -22,11 +34,27 @@ public class CacheManager
 
 	protected Cache createCache(int inTargetSize)
 	{
-		Cache<String, Object> map = CacheBuilder.newBuilder()
-			       .maximumSize(inTargetSize)
-			       .build();
+		Cache<String, Object> map = null;
+		
+		if(fieldExpiryTime == -1){
+			
+		map = CacheBuilder.newBuilder()
+				       .maximumSize(inTargetSize)
+//				       .expireAfterWrite(15, TimeUnit.MINUTES)
+				       .build();
+		} else{
+			map = CacheBuilder.newBuilder()
+				       .maximumSize(inTargetSize)
+				       .expireAfterWrite(fieldExpiryTime, TimeUnit.MINUTES)
+				       .build();
+		}
+		
 		return map;
 	}
+	
+	
+	
+	
 
 	public Object get(String inType, String inId)
 	{
