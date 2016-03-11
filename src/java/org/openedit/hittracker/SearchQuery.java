@@ -45,7 +45,6 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	protected String fieldResultType; //This might be things like assets, albums, selection or search. Used by resulttype
 	protected boolean fieldFireSearchEvent = false;
 	protected boolean fieldFilter = false;
-	protected boolean fieldFindAll = false;
 	protected List<Join> fieldParentJoins;
 	protected List<FilterNode> fieldFilters; 
 	protected Collection<String> fieldSecurityIds;
@@ -1487,15 +1486,7 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	{
 		fieldFilter = inVal;
 	}
-	public boolean isFindAll() 
-	{
-		return fieldFindAll;
-	}
 
-	public void setFindAll(boolean inFindAll) 
-	{
-		fieldFindAll = inFindAll;
-	}
 	/**
 	 * Pass in the relationship back to the parent.
 	 * filterquery, "id", false, "division", "division_id"

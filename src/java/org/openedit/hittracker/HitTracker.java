@@ -1256,6 +1256,11 @@ public abstract class HitTracker<T> implements Serializable, Collection
 	{
 		setIndexId(getIndexId() + 1);
 	}
+	public void refresh()
+	{
+		// TODO Auto-generated method stub
+		
+	}
 	
 }
 

@@ -328,7 +328,12 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					tracker.setHitsName("hits");
 				}
 			}
-				
+			//We only want to reload this search if we are on the first page
+			//This is because sometimes we are just clicking the next page link
+			if( !runsearch && tracker.getPage() == 1 ) 
+			{
+				tracker.refresh();
+			}
 			inPageRequest.putPageValue(tracker.getHitsName(), tracker);
 			inPageRequest.putSessionValue(tracker.getSessionId(), tracker);
 		}

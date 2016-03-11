@@ -312,6 +312,7 @@ public class SearcherManager
 		//If this is not my searcher type then use the manager to get the  correct search
 		Searcher searcher = getSearcher(inCatalogId, inFieldName);
 		HitTracker found = searcher.getAllHits();
+		found.setHitsPerPage(100);
 		return found;
 	}
 
