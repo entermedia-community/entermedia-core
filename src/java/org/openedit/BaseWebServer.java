@@ -195,7 +195,7 @@ public class BaseWebServer implements WebServer
 	    	}
 	    });
         Runtime.getRuntime().addShutdownHook(sh);
-        log.info(getBeanLoader().getLoadedBeans());
+        //log.info(getBeanLoader().getLoadedBeans());
         Pojo thisone = (Pojo) getBeanLoader().getLoadedBeans().get("WebServer");
         Object singleton = thisone.getSingleton();
         finalizeStartup();
