@@ -233,4 +233,14 @@ public class FileItem extends ContentItem implements Data
 	{
 		setProperty(inKey, String.valueOf(inValue));
 	}
+	@Override
+	public String toString()
+	{
+		String val = getPath();
+		if( val == null)
+		{
+			val = super.toString();
+		}
+		return val;
+	}
 }
