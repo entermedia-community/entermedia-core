@@ -102,41 +102,7 @@ public class ValuesMap extends HashMap
 	public String getString(String inKey)
 	{
 		Object object = get(inKey);
-		if (object == null) {
-			return null;
-		}
-		if (object instanceof String) {
-			return (String) object;
-		}
-		if (object instanceof Date) {
-			return DateStorageUtil.getStorageUtil().formatForStorage(((Date)object));
-		}
-		if (object instanceof Boolean) {
-			return String.valueOf((Boolean) object);
-		}
-		if (object instanceof Integer) {
-			return String.valueOf((Integer) object);
-		}
-		if (object instanceof Float) {
-			return String.valueOf((Float) object);
-		}
-		if( object instanceof Collection)
-		{
-			StringBuffer values = new StringBuffer();
-			Collection existingvalues = (Collection)object;
-			for (Iterator iterator = existingvalues.iterator(); iterator.hasNext();)
-			{
-				String detail = (String) iterator.next();
-				values.append(detail);
-				if( iterator.hasNext())
-				{
-					values.append("|");
-				}
-			}
-			return values.toString();
-		}
-		return String.valueOf(object);
-
+		return toString(object);
 	}
 	public boolean getBoolean(String inId)
 	{
@@ -193,6 +159,43 @@ public class ValuesMap extends HashMap
 			}
 		}
 		return null;
+	}
+	public String toString(Object object)
+	{
+		if (object == null) {
+			return null;
+		}
+		if (object instanceof String) {
+			return (String) object;
+		}
+		if (object instanceof Date) {
+			return DateStorageUtil.getStorageUtil().formatForStorage(((Date)object));
+		}
+		if (object instanceof Boolean) {
+			return String.valueOf((Boolean) object);
+		}
+		if (object instanceof Integer) {
+			return String.valueOf((Integer) object);
+		}
+		if (object instanceof Float) {
+			return String.valueOf((Float) object);
+		}
+		if( object instanceof Collection)
+		{
+			StringBuffer values = new StringBuffer();
+			Collection existingvalues = (Collection)object;
+			for (Iterator iterator = existingvalues.iterator(); iterator.hasNext();)
+			{
+				String detail = (String) iterator.next();
+				values.append(detail);
+				if( iterator.hasNext())
+				{
+					values.append("|");
+				}
+			}
+			return values.toString();
+		}
+		return String.valueOf(object);
 	}
 
 	

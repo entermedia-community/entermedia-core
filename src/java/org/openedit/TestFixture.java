@@ -109,9 +109,11 @@ public class TestFixture
 			Map args = PathUtilities.extractArguments(parts[1]);
 			context.putAllRequestParameters(args);
 		}
-		context.putPageValue("path", inPath);
+		String path = parts[0];
+		
+		context.putPageValue("path", path);
 
-		Page dynamicpage = getPageManager().getPage(inPath);
+		Page dynamicpage = getPageManager().getPage(path);
 		context.putPageValue( PageRequestKeys.PAGE, dynamicpage);
 		context.putPageValue( PageRequestKeys.CONTENT, dynamicpage);
 		context.putPageValue( PageRequestKeys.USER, getUserManager().getUser("admin"));

@@ -193,6 +193,10 @@ public class FileGenerator extends BaseGenerator implements Generator
 			{
 				log.error("Could not load " + contentpage.getPath());
 			}
+			if( eof instanceof OpenEditException)
+			{
+				throw (OpenEditException)eof;
+			}
 			throw new OpenEditException(eof);
 		}
 		finally

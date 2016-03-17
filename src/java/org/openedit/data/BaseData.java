@@ -30,12 +30,14 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 		fieldMap = new ValuesMap(inMap);
 	}
 
-	public String get(String inId) {
+	public String get(String inId) 
+	{
 		if( fieldMap == null)
 		{
 			return null;
 		}
-		return getMap().getString(inId);
+		Object value = getValue(inId);
+		return getMap().toString(value);
 	}
 	public boolean getBoolean(String inId)
 	{
