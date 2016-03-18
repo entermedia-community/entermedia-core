@@ -17,5 +17,7 @@ public interface NodeManager
 	void restoreSnapShot(String inCatalogId, String inSnapShotId);
 
 	boolean connectCatalog(String inCatalogId);
+
+	void deleteCatalog(String inId);
 	
 }
