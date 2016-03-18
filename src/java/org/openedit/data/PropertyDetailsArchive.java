@@ -352,7 +352,7 @@ public class PropertyDetailsArchive {
 			if (details != null && details.getInputFile() == settings) {
 				return details;
 			}
-			log.info("Loading " + getCatalogId() + " " + inType);
+			log.debug("Loading " + getCatalogId() + " " + inType);
 			settings = getXmlArchive().getXml(path);
 			
 			
