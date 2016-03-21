@@ -1,19 +1,11 @@
 package org.openedit.data;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import org.openedit.Data;
 import org.openedit.MultiValued;
 import org.openedit.OpenEditException;
-import org.openedit.util.DateStorageUtil;
-
-import groovy.json.internal.ValueMap;
 
 
 public class BaseData implements MultiValued, Comparable, Cloneable
