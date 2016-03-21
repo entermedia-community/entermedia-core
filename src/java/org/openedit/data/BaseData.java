@@ -218,12 +218,16 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 //			setValue(inKey, values);
 //		}
 	}
+	public void removeValue(String inKey)
+	{
+		getMap().remove(inKey);
+		
+	}
 
 	@Override
 	public void removeValue(String inKey, Object inOldValue)
 	{
 		getMap().removeValue(inKey, inOldValue);
-		
 	}
 	
 }
