@@ -72,14 +72,11 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 
 	public void setProperty(String inId, String inValue) 
 	{
-//		if ("id".equals(inId)) {
-//			setId(inValue);
-//			return;
-//		}
-		if (inValue == null) {
+		if (inValue == null) 
+		{
 			getMap().remove(inId);
 		} else {
-			getMap().put(inId, inValue);
+			setValue(inId, inValue);
 		}
 	}
 	/**
