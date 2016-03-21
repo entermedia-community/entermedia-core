@@ -81,7 +81,9 @@ public class CacheManager
 				}
 			}
 		}
+		if(inKey != null && inValue != null){
 		cache.put(inKey, inValue);
+		}
 	}
 
 	
