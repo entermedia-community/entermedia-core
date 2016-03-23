@@ -208,13 +208,19 @@ public class Translation
 		    	//StringWriter out = new StringWriter();
 		    	JSONObject config = (JSONObject)new JSONParser().parse(new InputStreamReader( entity2.getContent(), charset ));
 		    	JSONObject data = (JSONObject)config.get("data");
-		    	Collection trans = (Collection)data.get("translations");
-		    	if( trans.size() > 0)
+		    	if( data != null)
 		    	{
-    				JSONObject found = (JSONObject)trans.iterator().next();
-		    		translated = (String)found.get("translatedText"); 
+			    	Collection trans = (Collection)data.get("translations");
+			    	if( trans.size() > 0)
+			    	{
+	    				JSONObject found = (JSONObject)trans.iterator().next();
+			    		translated = (String)found.get("translatedText"); 
+			    	}
 		    	}
-		    	//log.info(config.toJSONString());
+		    	else
+		    	{
+		    		log.info(config.toJSONString());
+		    	}
 		    	httpPost.releaseConnection();
 		    }
 		} catch (Exception e)
