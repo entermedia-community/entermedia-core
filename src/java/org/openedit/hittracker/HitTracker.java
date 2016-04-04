@@ -38,7 +38,21 @@ public abstract class HitTracker<T> implements Serializable, Collection
 	protected boolean fieldShowOnlySelected;
 	protected String fieldTempSessionId;
 	protected List<FilterNode> fieldFilterOptions;
-	
+	protected boolean fieldUseServerCursor;
+
+	public void enableBulkOperations()
+	{
+		setUseServerCursor(true);
+		setHitsPerPage(1000);
+	}
+	public boolean isUseServerCursor()
+	{
+		return fieldUseServerCursor;
+	}
+	public void setUseServerCursor(boolean inUseServerCursor)
+	{
+		fieldUseServerCursor = inUseServerCursor;
+	}
 	public HitTracker()
 	{
 
