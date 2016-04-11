@@ -11,6 +11,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openedit.Data;
 import org.openedit.ModuleManager;
+import org.openedit.OpenEditException;
 import org.openedit.OpenEditRuntimeException;
 import org.openedit.hittracker.HitTracker;
 import org.openedit.locks.LockManager;
@@ -96,7 +97,15 @@ public class SearcherManager
 	}
 	protected NodeManager getNodeManager(String inFinalcatalogid)
 	{
-		return (NodeManager)getModuleManager().getBean(inFinalcatalogid,"nodeManager");
+		try
+		{
+			NodeManager manager = (NodeManager)getModuleManager().getBean(inFinalcatalogid,"nodeManager");
+			return manager;
+		}
+		catch( Exception ex)
+		{
+			throw new OpenEditException("Couldnot resolve " + inFinalcatalogid);
+		}
 	}
 	protected synchronized Searcher loadSearcher(PropertyDetailsArchive newarchive, String inFieldName)
 	{

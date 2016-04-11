@@ -2365,6 +2365,10 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	{
 		saveData((Data) inData, inUser);
 	}
+	public void saveData(Data inData)
+	{
+		saveData(inData, null);
+	}
 
 
 	public void saveData(Data inData, User inUser)
