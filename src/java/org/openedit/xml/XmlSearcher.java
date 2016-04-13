@@ -666,6 +666,10 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable
 	public void delete(Data inData, User inUser)
 	{
 		XmlFile settings = getXmlFile();
+		//TODO: Save this file to the data directory not the app
+		String path = "/WEB-INF/data/" + getCatalogId() + "/lists/" + getSearchType() + ".xml";
+		settings.setPath(path);
+		
 		Element record = settings.getElementById(inData.getId());
 		if( record != null)
 		{
