@@ -1465,11 +1465,12 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	{
 		HitTracker tracker = loadHits(inPageRequest);
 		UserProfile usersettings = (UserProfile) inPageRequest.getUserProfile();
-		Searcher searcher = tracker.getSearcher();
+		
 		if( tracker == null)
 		{
 			return null;
 		}
+		Searcher searcher = tracker.getSearcher();
 		// This is where we handle changing the number of hits per page
 		String hitsperpage = inPageRequest.getRequestParameter("hitsperpage");
 		if (hitsperpage == null) {
@@ -1483,11 +1484,11 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			{
 				int numhitsperpage = Integer.parseInt(hitsperpage);
 				tracker.setHitsPerPage(numhitsperpage);
-			} else if (usersettings != null)
+			}/* else if (usersettings != null)
 			{
 				tracker.setHitsPerPage(usersettings.getHitsPerPageForSearchType(searcher.getSearchType()));
 
-			}
+			}*/
 		}
 
 		String page = inPageRequest.getRequestParameter("page");
