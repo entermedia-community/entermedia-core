@@ -2,10 +2,13 @@ package org.openedit.data;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -200,6 +203,42 @@ public class SearcherManager
 			val = inParent.get(inDetail.getId());
 		}
 		return val;
+	}
+	public Collection getUniqueValues(Searcher inSearcher, HitTracker inHits, String inColumn, String startsWith)
+	{
+		Set	 results = new HashSet();
+		for (Iterator iterator = inHits.iterator(); iterator.hasNext();)
+		{
+			Data data = (Data) iterator.next();
+			Object obj = data.getValue(inColumn);
+			if( obj instanceof Collection)
+			{
+				Collection values = (Collection)obj;
+				for (Iterator iterator2 = values.iterator(); iterator2.hasNext();)
+				{
+					String val = (String) iterator2.next();
+					if( val.startsWith(startsWith))
+					{
+						results.add( val);
+					}
+				}
+			}
+			else
+			{
+				String val = (String) obj;
+				if( val.startsWith(startsWith))
+				{
+					results.add( val);
+				}
+			}
+			if( results.size() > 100)
+			{
+				break;
+			}
+		}
+		List<String> sorted = new ArrayList( results);
+		Collections.sort(sorted);
+		return sorted;
 	}
 	public String getLabel(Searcher inSearcher, Data inData)
 	{
