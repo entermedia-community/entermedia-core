@@ -22,7 +22,7 @@ public abstract class HitTracker<T> implements Serializable, Collection
 	private static final Log log = LogFactory.getLog(HitTracker.class);
 	protected boolean fieldAllSelected;
 	protected Collection<String> fieldSelections;
-	protected int fieldPage = 0;
+	protected int fieldPage = 1;
 	protected int fieldHitsPerPage = 15;
 	protected int fieldCurrentHit;
 	protected SearchQuery fieldSearchQuery;
@@ -44,6 +44,7 @@ public abstract class HitTracker<T> implements Serializable, Collection
 	{
 		setUseServerCursor(true);
 		setHitsPerPage(1000);
+		setIndexId(getIndexId() + System.currentTimeMillis());
 	}
 	public boolean isUseServerCursor()
 	{
@@ -191,9 +192,9 @@ public abstract class HitTracker<T> implements Serializable, Collection
 	{
 		if (inHitsPerPage > 0 && inHitsPerPage != fieldHitsPerPage)
 		{
-			fieldCurrentPage = null;
+			clear();
 			fieldHitsPerPage = inHitsPerPage;
-			if( fieldPage > 0)
+			if( fieldPage > 1)
 			{
 				setPage(1);
 			}
@@ -202,10 +203,6 @@ public abstract class HitTracker<T> implements Serializable, Collection
 
 	public int getPage()
 	{
-		if( fieldPage == 0)
-		{
-			setPage(1);
-		}
 		return fieldPage;
 	}
 	public void setPageByIndex(int inIndex)
@@ -228,7 +225,7 @@ public abstract class HitTracker<T> implements Serializable, Collection
 			fieldPage = inPageOneBased;
 			
 			int inHitsPerPage = getHitsPerPage();
-			List page = new ArrayList();
+			List page = new ArrayList(inHitsPerPage);
 			int count = (getPage() - 1) * inHitsPerPage; // pick up from here
 			fieldCurrentPage = page;
 			int total = size();
@@ -592,6 +589,7 @@ public abstract class HitTracker<T> implements Serializable, Collection
 
 	public void clear()
 	{
+		fieldCurrentPage = null;
 	}
 
 	public boolean containsAll(Collection arg0)
