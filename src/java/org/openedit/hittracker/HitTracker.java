@@ -678,16 +678,17 @@ public abstract class HitTracker<T> implements Serializable, Collection
 		}
 
 		HitTracker selecteddata = getSearcher().search(getSearchQuery());
-		if( isAllSelected() )
+/*		if( isAllSelected() )
 		{
 			//rerun the search
 			selecteddata.selectAll();
 		}
 		else
 		{
+*/
 			selecteddata.setSelections(getSelections());
 			selecteddata.setShowOnlySelected(true);
-		}
+//		}
 //		else
 //		{
 //			ListHitTracker lhits = new ListHitTracker();	
