@@ -107,7 +107,7 @@ public class SearcherManager
 		}
 		catch( Exception ex)
 		{
-			throw new OpenEditException("Couldnot resolve " + inFinalcatalogid);
+			throw new OpenEditException("Couldnot resolve " + inFinalcatalogid, ex);
 		}
 	}
 	protected synchronized Searcher loadSearcher(PropertyDetailsArchive newarchive, String inFieldName)
