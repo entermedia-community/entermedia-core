@@ -217,7 +217,7 @@ public class SearcherManager
 				for (Iterator iterator2 = values.iterator(); iterator2.hasNext();)
 				{
 					String val = (String) iterator2.next();
-					if( val.startsWith(startsWith))
+					if( val.toLowerCase().startsWith(startsWith))
 					{
 						results.add( val);
 					}
@@ -226,7 +226,7 @@ public class SearcherManager
 			else
 			{
 				String val = (String) obj;
-				if( val.startsWith(startsWith))
+				if( val.toLowerCase().startsWith(startsWith))
 				{
 					results.add( val);
 				}
