@@ -554,6 +554,23 @@ public class SearcherManager
 	{
 		getShowLogs().put(inCatalogId, inValue);
 	}
+	public Collection reloadLoadedSettings(String inCatalogid)
+	{
+		Collection<Searcher> tables = listLoadedSearchers(inCatalogid);
+		
+		List types = new ArrayList();
+		for (Iterator iterator = tables.iterator(); iterator.hasNext();)
+		{
+			Searcher searcher = (Searcher) iterator.next();
+			if (searcher instanceof Reloadable)
+			{
+				searcher.reloadSettings();
+				
+				types.add(searcher.getSearchType());
+			}
+		}
+		return types;
+	}
 
 	
 }
