@@ -207,8 +207,6 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 						{
 							inQuery.setFilters(oldtracker.getSearchQuery().getFilters());
 						}
-<<<<<<< 524709943091d641d1391751d32997bae404abae
-=======
 //						List<ChildFilter> joins = oldtracker.getSearchQuery().getChildrenFilters();
 //						if( joins != null)
 //						{
@@ -235,17 +233,16 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					if (hitsperpage == null)
 					{
 						hitsperpage = inPageRequest.getPageProperty("hitsperpage");
->>>>>>> a5419b682a10461ec2cfca09791e99c6f4acbabf
 					}
-					List<Join> joins = oldtracker.getSearchQuery().getParentJoins();
-					if (joins != null)
-					{
-						String clearfilters = inPageRequest.getRequestParameter("clearfilters");
-						if (!Boolean.parseBoolean(clearfilters))
-						{
-							inQuery.setParentJoins(joins);
-						}
-					}
+//					List<Join> joins = oldtracker.getSearchQuery().getParentJoins();
+//					if (joins != null)
+//					{
+//						String clearfilters = inPageRequest.getRequestParameter("clearfilters");
+//						if (!Boolean.parseBoolean(clearfilters))
+//						{
+//							inQuery.setParentJoins(joins);
+//						}
+//					}
 				}
 
 				tracker = search(inQuery); //search here ----
