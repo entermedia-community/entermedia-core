@@ -1,9 +1,8 @@
 package org.openedit.hittracker;
 
-public class Join
+public class ChildFilter extends Term
 {
 	protected String fieldChildColumn;
-	protected String fieldEqualsValue;
 	protected String fieldChildTable;
 	
 	public String getChildTable()
@@ -29,21 +28,16 @@ public class Join
 		fieldChildColumn = inChildColumn;
 	}
 
-
-	public String getEqualsValue()
-	{
-		return fieldEqualsValue;
-	}
-
-
-	public void setEqualsValue(String inEqualsValue)
-	{
-		fieldEqualsValue = inEqualsValue;
-	}
 	
 	public boolean equals(Object inObj)
 	{
-		Join copy = (Join)inObj;
-		return fieldEqualsValue == copy.fieldEqualsValue;
+		JoinFilter copy = (JoinFilter)inObj;
+		return fieldValue == copy.fieldValue;
+	}
+	@Override
+	public String toQuery()
+	{
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

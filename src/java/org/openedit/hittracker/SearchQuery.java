@@ -45,7 +45,7 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	protected String fieldResultType; //This might be things like assets, albums, selection or search. Used by resulttype
 	protected boolean fieldFireSearchEvent = false;
 	protected boolean fieldFilter = false;
-	protected List<Join> fieldParentJoins;
+	//protected List<ChildFilter> fieldChildrenFilters;
 	protected List<FilterNode> fieldFilters; 
 	protected Collection<String> fieldSecurityIds;
 	
@@ -551,7 +551,7 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	
 	public boolean isEmpty()
 	{
-		if(fieldTerms.isEmpty() && getParentJoins() == null)
+		if(fieldTerms.isEmpty())
 		{
 //			String fullq = toQuery();
 //			if( fullq == null || fullq.length() == 0 )
@@ -587,20 +587,6 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 			if( one != null)
 			{
 				if( !one.equals(toQuery() ) )
-				{
-					return false;
-				}
-			}
-			if( fieldParentJoins != null )
-			{
-				if( q.getParentJoins() != null )
-				{
-					if( !fieldParentJoins.equals( q.getParentJoins() ) )
-					{
-						return false;
-					}
-				}
-				else
 				{
 					return false;
 				}
@@ -1487,32 +1473,43 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		fieldFilter = inVal;
 	}
 
+	public Term addJoinFilter(PropertyDetail inField, String inValue)
+	{
+		return addJoinFilter( inField.getCatalogId(), inField.getId(), inField.getListId(), inValue, inField.getForeignKeyId());
+	}
+	
+	public Term addJoinFilter(String inCatalogId, String inType, String inFilterColumn, String inFilterValue, String inDataPath)
+	{
+		// TODO Auto-generated method stub
+		JoinFilter filter = new JoinFilter();
+		filter.addParameter("catalog", inCatalogId);
+		filter.addParameter("type", inType);
+		filter.addParameter("column", inFilterColumn);
+		filter.setValue(inFilterValue);
+		filter.addParameter("datapath", inDataPath);
+		filter.setOperation("searchjoin");
+		addTerm(filter);
+		return filter;
+	}
+
 	/**
-	 * Pass in the relationship back to the parent.
-	 * filterquery, "id", false, "division", "division_id"
-	 * @param inSearchType
-	 * @param inParentColumn
-	 * @param inChildSearchType
-	 * @param inChildColumn
+	 * Searching the parent table
+	 * A child depends on a parent but a parent does not depend on a child
+	 * The asset table is the parent table of many things
+	 * @param childtable
+	 * @param fieldname
+	 * @param inValue
 	 */
 	public void addChildFilter(String childtable, String fieldname, String inValue)
 	{
-		Join join = new Join();
+		ChildFilter join = new ChildFilter();
 		join.setChildTable(childtable);
 		join.setChildColumn(fieldname);
-		join.setEqualsValue(inValue);
-		if( fieldParentJoins == null)
-		{
-			fieldParentJoins = new ArrayList();
-		}
-		fieldParentJoins.add(join);
+		join.setValue(inValue);
+		join.setOperation("childfilter");
+		addTerm(join);
 	}
 	
-	public List<Join> getParentJoins()
-	{
-		return fieldParentJoins;
-	}
-
 	public void addFilter(String inToaddType, String inToaddvalue, String toAddLabel)
 	{
 		if (hasFilters()){
@@ -1610,13 +1607,5 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	{
 		fieldSecurityIds = inSecurityIds;
 	}
-
-	public void setParentJoins(List<Join> inJoins)
-	{
-		fieldParentJoins = inJoins;
-	}
-
 	
-
-
 }

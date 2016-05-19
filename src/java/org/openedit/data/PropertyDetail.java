@@ -652,4 +652,12 @@ public class PropertyDetail implements Data, ViewItem, Comparable
 		// TODO Auto-generated method stub
 		
 	}
+
+
+	
+	public String getForeignKeyId()
+	{
+		return get("foreignkeyid");
+	}
+	
 }

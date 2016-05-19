@@ -11,10 +11,13 @@ import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.codec.binary.Base64;
 import org.openedit.OpenEditException;
 import org.openedit.OpenEditRuntimeException;
+import org.openedit.WebPageRequest;
 
 public class StringEncryption
 {
@@ -274,4 +277,40 @@ public class StringEncryption
 			throw new OpenEditException(ex);
 		}
 	}
+	public void removeCookie(WebPageRequest inReq, String key)
+	{
+		HttpServletResponse res = inReq.getResponse();
+		if (res != null)
+		{
+			Cookie cookie = new Cookie(createMd5CookieName(inReq,key,true), "none");
+			cookie.setMaxAge(0);
+			cookie.setPath("/"); // http://www.unix.org.ua/orelly/java-ent/servlet/ch07_04.htm
+			res.addCookie(cookie);
+
+			cookie = new Cookie(createMd5CookieName(inReq,key, false), "none");
+			cookie.setMaxAge(0);
+			cookie.setPath("/"); // http://www.unix.org.ua/orelly/java-ent/servlet/ch07_04.htm
+			res.addCookie(cookie);
+
+		}
+	}
+
+	public String createMd5CookieName(WebPageRequest inReq, String keybase, boolean withapp)
+	{
+		String home = (String) inReq.getPageValue("home");
+		
+		String name = keybase + home;
+		if( withapp )
+		{
+			String root = PathUtilities.extractRootDirectory(inReq.getPath() );
+			if( root != null && root.length() > 1)
+			{
+				name = name + root.substring(1);
+			}
+		}
+		
+		return name;
+	}
+
+	
 }
