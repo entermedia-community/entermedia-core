@@ -260,4 +260,21 @@ public class DateStorageUtil {
 		}
 		
 	}
+
+	public Date parse(String inDate, String inFormat)
+	{
+
+		DateFormat format = getDateFormat(inFormat);
+		try
+		{
+			Date parsed = format.parse(inDate);
+			return parsed;
+		}
+		catch (Exception ex)
+		{
+			log.info("Could not parse date " + inDate);
+			return null;
+		}
+
+	}
 }

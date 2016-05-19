@@ -233,4 +233,18 @@ public class BaseGroup extends FileSystemObject implements Group, Serializable, 
 	{
 		setProperty(inKey, String.valueOf(inValue));
 	}
+
+	@Override
+	public String get(String inKey, String inLocale)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setValue(String inKey, Object inValue, String inLocale)
+	{
+		// TODO Auto-generated method stub
+		
+	}
 }

@@ -56,6 +56,10 @@ public class DataPropertyFilter extends BaseFilter
 		{
 			return true;
 		}
+		
+		
+		
+		
 		return false;
 	}
 	public String toString()

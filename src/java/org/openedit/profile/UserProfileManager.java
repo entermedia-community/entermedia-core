@@ -67,7 +67,7 @@ public class UserProfileManager
 		{
 			boolean reload = Boolean.parseBoolean(inReq.findValue("reloadprofile"));
 			userprofile = (UserProfile) inReq.getPageValue("userprofile");
-			if (!reload && userprofile != null)
+			if (!reload && userprofile != null && inUserName.equals(userprofile.getUserId()) && inCatalogId.equals(userprofile.getCatalogId()))
 			{
 				return userprofile;
 			}

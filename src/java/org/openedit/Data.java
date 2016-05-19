@@ -23,6 +23,8 @@ public interface Data
 	
 	Map getProperties();
 	void setProperties(Map inProperties);
+	
+	
 
 
 }

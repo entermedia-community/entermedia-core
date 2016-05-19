@@ -38,6 +38,14 @@ public class QueryBuilder
 		getQuery().addMatches(inId, inValue);
 		return this;
 	}
+	
+	public QueryBuilder contains(String inId, String inValue)
+	{
+		getQuery().addContains(inId, inValue);
+		return this;
+	}
+	
+	
 	public QueryBuilder since(String inId, int date)
 	{
 		GregorianCalendar cal = new GregorianCalendar();

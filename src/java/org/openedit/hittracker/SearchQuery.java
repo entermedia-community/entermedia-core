@@ -831,7 +831,7 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		Term term = getTermByTermId(inTermid);
 		removeTerm(term);
 	}
-
+ 
 	public void removeTerms(String inFieldId)
 	{
 		List terms = new ArrayList(getTerms());
