@@ -161,7 +161,7 @@ public class URLUtilities
 			return servername + "/";
 		}
 	}
-
+	
 	/**
 	 * This is the server name only 
 	 *

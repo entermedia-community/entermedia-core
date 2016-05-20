@@ -8,9 +8,11 @@ import java.security.spec.KeySpec;
 import java.util.Properties;
 
 import javax.crypto.Cipher;
+import javax.crypto.Mac;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
+import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
@@ -64,7 +66,47 @@ public class StringEncryption
 		setKeySpec(null);
 		setCipher(null);
 	}
-	public String getEncryptionKey() throws Exception
+	
+	/**
+	 * Computes RFC 2104-compliant HMAC signature. * @param data The data to be
+	 * signed.
+	 * 
+	 * @param key
+	 *            The signing key.
+	 * @return The Base64-encoded RFC 2104-compliant HMAC signature.
+	 * @throws java.security.SignatureException
+	 *             when signature generation fails
+	 */
+	public String calculateRFC2104HMAC(String privatekey, String data)
+	{
+		String HMAC_SHA1_ALGORITHM = "HmacSHA1";
+
+		byte[] result;
+		try
+		{
+			// get an hmac_sha1 key from the raw key bytes
+			SecretKeySpec signingKey = new SecretKeySpec(privatekey.getBytes(), HMAC_SHA1_ALGORITHM);
+
+			// get an hmac_sha1 Mac instance and initialize with the signing key
+			Mac mac = Mac.getInstance(HMAC_SHA1_ALGORITHM);
+			mac.init(signingKey);
+
+			// compute the hmac on input data bytes
+			byte[] rawHmac = mac.doFinal(data.getBytes());
+
+			// base64-encode the hmac
+			org.apache.commons.codec.binary.Base64 base64encoder = new org.apache.commons.codec.binary.Base64();
+			
+			result = base64encoder.encode(rawHmac);
+			return new String(result, "UTF8");
+		}
+		catch (Exception e)
+		{
+			throw new OpenEditException("Failed to generate HMAC : " + e.getMessage(), e);
+		}
+	}
+	
+	public String getEncryptionKey() 
 	{
 		if( fieldEncryptionKey == null)
 		{
@@ -77,6 +119,10 @@ public class StringEncryption
 				{
 					reader = new FileInputStream(prop);
 					props.load( reader);
+				}
+				catch( Throwable ex)
+				{
+					throw new OpenEditException(ex);
 				}
 				finally
 				{

@@ -431,6 +431,13 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 		return site;
 	}
 	
+	public String getSiteUrl()
+	{
+		URLUtilities util = (URLUtilities) get(URL_UTILITIES);
+		String url = getSiteRoot() + util.getOriginalUrl();
+		return url;
+	}
+	
 	public Object get(String inKey)
 	{
 		return getPageValue(inKey);

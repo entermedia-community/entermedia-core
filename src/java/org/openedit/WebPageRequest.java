@@ -264,6 +264,7 @@ public interface WebPageRequest
 	public void setMethod(String inMethod);
 	
 	
+	public String getSiteUrl();
 	
 	
 }

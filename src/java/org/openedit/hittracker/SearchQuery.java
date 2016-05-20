@@ -1507,6 +1507,7 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		join.setChildColumn(fieldname);
 		join.setValue(inValue);
 		join.setOperation("childfilter");
+		join.setDetail(createDetail("id"));
 		addTerm(join);
 	}
 	

@@ -365,20 +365,5 @@ protected PropertyDetails fieldPropertyDetails;
 	{
 		
 	}
-
-
-	public String get(String inKey, String inLocale)
-	{
-		// TODO Auto-generated method stub
-		return get(inKey + "." + inLocale);
-	}
-
-	@Override
-	public void setValue(String inKey, Object inValue, String inLocale)
-	{
-		setValue(inKey + "." + inLocale, inValue);
-		
-	}
-
 	
 }
