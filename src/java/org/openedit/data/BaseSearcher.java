@@ -2398,27 +2398,18 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 									String langval = inReq.getRequestParameter(field + "." + lang);
 									map.setText(langval, lang);									
 								}
-								
 								result = map;
-								
-								
-								
-								
 							}
-							
-							
-							if (!"multilanguage".equals(language))
+							if ("multilanguage".equals(language))
 							{
-							
-							} else{
 								JsonSlurper parser = new JsonSlurper();
 								Map vals = (Map) parser.parseText(val);
 								result = new LanguageMap(vals);
-								
-								
-								
 							}
-
+						}
+						else
+						{
+							result = val;
 						}
 
 					}
