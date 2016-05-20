@@ -31,7 +31,12 @@ public class LanguageMap extends TreeMap
 		put(inLocale, inVal); 
 	}
 	
-	
+	@Override
+	public String toString()
+	{
+		// TODO Auto-generated method stub
+	return getText("en");
+	}
 	
 	
 }

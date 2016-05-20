@@ -2343,8 +2343,8 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				{
 
 					Object result = null;
-
-					if (detail.isMultiValue())
+					
+					if (detail != null && detail.isMultiValue())
 					{
 						result = Arrays.asList(values);
 					}
@@ -2353,7 +2353,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 
 						String val = values[0];
 
-						if (detail.isDate())
+						if (detail != null && detail.isDate())
 						{
 
 							Date date = null;
@@ -2381,23 +2381,35 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 							}
 						}
 
-						if (detail.isMultiLanguage())
+						if (detail != null &&  detail.isMultiLanguage())
 						{
-
-							String language = inReq.getRequestParameter(field + ".language");
-							if (language == null)
-							{
-								language = "en";
-							}
-							if (!"multilanguage".equals(language))
-							{
+					
+							
+							String[] language = inReq.getRequestParameters(field + ".language");
+							if(language != null){
 								LanguageMap map = (LanguageMap) data.getValue(detail.getId());
 								if (map == null)
 								{
 									map = new LanguageMap();
 								}
-								map.setText(val, language);
+								for (int j = 0; j < language.length; j++)
+								{
+									String lang = language[j];
+									String langval = inReq.getRequestParameter(field + "." + lang);
+									map.setText(langval, lang);									
+								}
+								
 								result = map;
+								
+								
+								
+								
+							}
+							
+							
+							if (!"multilanguage".equals(language))
+							{
+							
 							} else{
 								JsonSlurper parser = new JsonSlurper();
 								Map vals = (Map) parser.parseText(val);
@@ -2411,7 +2423,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 
 					}
 					data.setValue(field, result);
-
+					
 				}
 				else
 				{
