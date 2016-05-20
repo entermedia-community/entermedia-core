@@ -2381,7 +2381,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 							}
 						}
 
-						if (detail != null &&  detail.isMultiLanguage())
+						else if (detail != null &&  detail.isMultiLanguage())
 						{
 					
 							
