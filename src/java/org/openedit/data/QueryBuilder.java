@@ -59,6 +59,26 @@ public class QueryBuilder
 		getQuery().addBetween(inId, cal.getTime(),now);
 		return this;
 	}
+	
+	public QueryBuilder before(String inId, int date)
+	{
+		GregorianCalendar cal = new GregorianCalendar();
+		Date now = new Date();
+		cal.setTime(now);
+		if( date > 0)
+		{
+			date = 0 - date;
+		}
+		cal.add(GregorianCalendar.DAY_OF_MONTH, date);
+		getQuery().addBefore(inId, now);
+		
+		return this;
+	}
+	
+	
+	
+	
+	
 	public QueryBuilder orgroup(String inKey, Collection<String> inIds)
 	{
 		getQuery().addOrsGroup(inKey, inIds);
