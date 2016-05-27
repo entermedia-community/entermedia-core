@@ -61,7 +61,8 @@ public class SearcherManager
 						}
 					}
 					//TODO: Look in the cache again for the target Searcher
-					getNodeManager(finalcatalogid).connectCatalog(finalcatalogid);
+					boolean created = getNodeManager(finalcatalogid).connectCatalog(finalcatalogid);
+					
 					PropertyDetailsArchive newarchive = getPropertyDetailsArchive(finalcatalogid);
 //					if( inFieldName == null)
 //					{

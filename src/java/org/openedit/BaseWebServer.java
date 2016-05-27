@@ -196,9 +196,9 @@ public class BaseWebServer implements WebServer
 	    });
         Runtime.getRuntime().addShutdownHook(sh);
         //log.info(getBeanLoader().getLoadedBeans());
-        Pojo thisone = (Pojo) getBeanLoader().getLoadedBeans().get("WebServer");
-        Object singleton = thisone.getSingleton();
-        finalizeStartup();
+        //Pojo thisone = (Pojo) getBeanLoader().getLoadedBeans().get("WebServer");
+        //Object singleton = thisone.getSingleton();
+       // finalizeStartup();
 		//getBeanLoader().preInstantiateSingletons();
         
 	}
@@ -206,24 +206,19 @@ public class BaseWebServer implements WebServer
 	public void finalizeStartup()
 	{
 		reloadMounts();
-        
-           
-       
-        
         try
         {
-        	
 			Page page = getPageManager().getPage("/WEB-INF/startup.html");
 			BaseWebPageRequest request = new BaseWebPageRequest();
 			request.setContentPage(page);
 			request.setPage(page);
+			if( getModuleManager().contains("MediaAdminModule") )
+			{
+				getModuleManager().execute("MediaAdminModule.initCatalogs", request);
+			}
 			if( page.getPageSettings().exists())
 			{
 				getOpenEditEngine().executePathActions(request);
-			}
-			if( getModuleManager().contains("PathEventModule") )
-			{
-				getModuleManager().execute("PathEventModule.init", request);
 			}
         } 
         catch( Throwable ex)
