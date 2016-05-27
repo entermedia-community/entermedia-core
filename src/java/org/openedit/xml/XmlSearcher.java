@@ -621,7 +621,7 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable
 		if( fieldDefaultDetails == null)
 		{
 			//fake one
-			PropertyDetails details = new PropertyDetails();
+			PropertyDetails details = new PropertyDetails(getSearchType());
 			PropertyDetail id = new PropertyDetail();
 			id.setIndex(true);
 			id.setStored(true);

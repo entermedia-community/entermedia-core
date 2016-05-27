@@ -366,7 +366,7 @@ public class PropertyDetailsArchive {
 				// This should not happen as well
 				settings = getXmlArchive().getXml(path);
 			}
-			details = new PropertyDetails();
+			details = new PropertyDetails(inType);
 			if (settings.isExist()) {
 				setAllDetails(details, inType, settings.getRoot());
 				getViewLabels().clear();
@@ -388,7 +388,7 @@ public class PropertyDetailsArchive {
 				String defaultfile = (String) iterator.next();
 				if (defaultfile.endsWith(".xml")) {
 					XmlFile defaults = getXmlArchive().loadXmlFile(defaultfile);
-					PropertyDetails extras = new PropertyDetails();
+					PropertyDetails extras = new PropertyDetails(inType);
 					setAllDetails(extras, inType, defaults.getRoot());
 					for (Iterator iterator2 = extras.iterator(); iterator2
 							.hasNext();) {
@@ -435,6 +435,9 @@ public class PropertyDetailsArchive {
 			root.addAttribute("class", inDetails.getClassName());
 		}
 		
+//		if (inDetails.getDependsOnText() != null) {
+//			root.addAttribute("dependson", inDetails.getDependsOnText());
+//		}
 		
 		if (inDetails.getBeanName() != null) {
 			root.addAttribute("beanname", inDetails.getBeanName());
@@ -695,10 +698,10 @@ public class PropertyDetailsArchive {
 		for (Iterator iterator = searchtypes.iterator(); iterator.hasNext();)
 		{
 			String type = (String) iterator.next();
-			PropertyDetails details = getPropertyDetails(type);
+			PropertyDetails details = getPropertyDetailsCached(type);
 			PropertyDetail parent = details.getDetail("_parent");
 			if(parent != null){
-				tables.add(type);
+				tables.add(details);
 			}
 			
 		}

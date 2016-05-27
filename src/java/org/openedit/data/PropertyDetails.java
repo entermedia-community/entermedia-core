@@ -15,6 +15,18 @@ import org.openedit.xml.XmlFile;
 
 public class PropertyDetails extends AbstractCollection
 {
+	protected String fieldId;
+	
+	public String getId()
+	{
+		return fieldId;
+	}
+
+	public void setId(String inId)
+	{
+		fieldId = inId;
+	}
+
 	protected List fieldDetails;
 	protected Map fieldDetailsCached;
 
@@ -25,8 +37,16 @@ public class PropertyDetails extends AbstractCollection
 	protected String fieldBeanName;
 	protected String fieldToString;
 	protected String fieldClassName;//The object type to create
-	protected List<String> fieldDependsOn;
+	protected String fieldDependsOnText;
 
+	public PropertyDetails()
+	{
+		// TODO Auto-generated constructor stub
+	}
+	public PropertyDetails(String inId)
+	{
+		setId(inId);
+	}
 	public Boolean isLazyInit()
 	{
 
@@ -112,10 +132,7 @@ public class PropertyDetails extends AbstractCollection
 		fieldToString = inBeanName;
 	}
 
-	public PropertyDetails()
-	{
-		// TODO Auto-generated constructor stub
-	}
+	
 
 	public XmlFile getInputFile()
 	{
@@ -399,26 +416,4 @@ public class PropertyDetails extends AbstractCollection
 	{
 		this.fieldPrefix = fieldPrefix;
 	}
-
-	public List getDependsOn()
-	{
-		if(getInputFile() == null){
-			return new ArrayList();
-		}
-		if (fieldDependsOn == null)
-		{
-			String depend = getInputFile().getRoot().attributeValue("dependson");
-			if (depend != null)
-			{
-				String[] vals = depend.split("\\s+");
-				fieldDependsOn = Arrays.asList(vals);
-			}
-			else
-			{
-				fieldDependsOn = new ArrayList();
-			}
-		}
-		return fieldDependsOn;
-	}
-
 }
