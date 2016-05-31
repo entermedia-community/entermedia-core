@@ -26,7 +26,6 @@ import org.openedit.config.Configuration;
 import org.openedit.event.WebEvent;
 import org.openedit.event.WebEventListener;
 import org.openedit.hittracker.HitTracker;
-import org.openedit.hittracker.ChildFilter;
 import org.openedit.hittracker.SearchQuery;
 import org.openedit.hittracker.Term;
 import org.openedit.locks.LockManager;
@@ -49,6 +48,21 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	protected SearcherManager fieldSearcherManager;
 	protected WebEventListener fieldWebEventListener;
 	protected boolean fieldFireEvents = false;
+	protected SearchQueryFilter fieldSearchQueryFilter;
+	
+	public SearchQueryFilter getSearchQueryFilter()
+	{
+		if (fieldSearchQueryFilter == null)
+		{
+			fieldSearchQueryFilter = (SearchQueryFilter)getModuleManager().getBean(getCatalogId(),"searchQueryFilter");
+		}
+		return fieldSearchQueryFilter;
+	}
+
+	public void setSearchQueryFilter(SearchQueryFilter inScriptedSearchFilter)
+	{
+		fieldSearchQueryFilter = inScriptedSearchFilter;
+	}
 
 	@Override
 	public boolean initialize()
@@ -197,7 +211,6 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					inQuery.setSortBy(sort);
 				}
 				HitTracker oldtracker = tracker;
-				//
 				if (oldtracker != null)
 				{
 					if (oldtracker.getSearchQuery().hasFilters())
@@ -207,54 +220,12 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 						{
 							inQuery.setFilters(oldtracker.getSearchQuery().getFilters());
 						}
-//						List<ChildFilter> joins = oldtracker.getSearchQuery().getChildrenFilters();
-//						if( joins != null)
-//						{
-//							String clearfilters = inPageRequest.getRequestParameter("clearfilters");
-//							if( !Boolean.parseBoolean(clearfilters))
-//							{
-//								inQuery.setParentJoins(joins);
-//							}
-//						}
 					}
-					
-					tracker = search(inQuery); //search here ----
-					tracker.setSearchQuery(inQuery);
-				
-					attachSecurityFilter(inPageRequest,tracker); //seems weird to do this so late in the game
-					
-					
-//					if(oldtracker != null && oldtracker.getSearchQuery().hasFilters() ){
-//						tracker.setFilters(oldtracker.getFilters());			
-//						tracker.refreshFilters();
-//					}
-					
-					String hitsperpage = inPageRequest.getRequestParameter("hitsperpage");
-					if (hitsperpage == null)
-					{
-						hitsperpage = inPageRequest.getPageProperty("hitsperpage");
-					}
-//					List<Join> joins = oldtracker.getSearchQuery().getParentJoins();
-//					if (joins != null)
-//					{
-//						String clearfilters = inPageRequest.getRequestParameter("clearfilters");
-//						if (!Boolean.parseBoolean(clearfilters))
-//						{
-//							inQuery.setParentJoins(joins);
-//						}
-//					}
 				}
-
-				tracker = search(inQuery); //search here ----
+				inQuery.setEndUserSearch(true);
+				inQuery = getSearchQueryFilter().attachFilter(inPageRequest, this, inQuery);
+				tracker = search(inQuery); //search here <----
 				tracker.setSearchQuery(inQuery);
-
-				attachSecurityFilter(inPageRequest, tracker); //seems weird to do this so late in the game
-
-				//					if(oldtracker != null && oldtracker.getSearchQuery().hasFilters() ){
-				//						tracker.setFilters(oldtracker.getFilters());			
-				//						tracker.refreshFilters();
-				//					}
-
 				String hitsperpage = inPageRequest.getRequestParameter("hitsperpage");
 				if (hitsperpage == null)
 				{
@@ -266,7 +237,6 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					if (usersettings != null)
 					{
 						tracker.setHitsPerPage(usersettings.getHitsPerPageForSearchType(inQuery.getResultType()));
-
 					}
 					else if (oldtracker != null)
 					{
@@ -369,43 +339,6 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		}
 
 		return tracker;
-	}
-
-	protected void attachSecurityFilter(WebPageRequest inPageRequest, HitTracker inTracker)
-	{
-		String enabled = inPageRequest.findValue("enforcesecurity");
-		//log.info( "security filer enabled "  + enabled );
-		if (Boolean.parseBoolean(enabled))
-		{
-			User user = inPageRequest.getUser();
-			//log.info( "found filer user  "  + user + " " + user.isInGroup("administrators"));
-			if (user != null && user.isInGroup("administrators"))
-			{
-				//dont filter since its the admin
-				return;
-			}
-			//log.info( "filer type " + getSearchType());
-
-			//Run a search on another table, find a list of id's, add them to the query
-			if ("library".equals(getSearchType()))
-			{
-				UserProfile profile = inPageRequest.getUserProfile();
-				if (profile != null)
-				{
-					Collection<String> libraryids = profile.getCombinedLibraries();
-					if (log.isDebugEnabled())
-					{
-						log.debug("added security filer for " + inPageRequest.getUserProfile());
-					}
-					if (libraryids.size() == 0)
-					{
-						libraryids = new ArrayList();
-						libraryids.add("-1");
-					}
-					inTracker.getSearchQuery().setSecurityIds(libraryids);
-				}
-			}
-		}
 	}
 
 	public boolean hasChanged(HitTracker inTracker)
@@ -699,6 +632,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			return null;
 		}
 		SearchQuery search = createSearchQuery();
+		search.setEndUserSearch(true);
 		String and = inPageRequest.getRequestParameter("querytype");
 		if (and != null)
 		{

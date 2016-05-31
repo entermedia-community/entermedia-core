@@ -6,6 +6,7 @@ package org.openedit.data;
 import java.util.AbstractCollection;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -416,4 +417,18 @@ public class PropertyDetails extends AbstractCollection
 	{
 		this.fieldPrefix = fieldPrefix;
 	}
+
+	public Collection findAutoIncludeProperties()
+	{
+		List list = new ArrayList(getDetails().size());
+		for (Iterator iter = getDetails().iterator(); iter.hasNext();)
+		{
+			PropertyDetail d = (PropertyDetail) iter.next();
+			if (d.isAutoInclude())
+			{
+				list.add(d);
+			}
+		}
+		return list;
+	}	
 }

@@ -31,6 +31,18 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	protected transient List fieldTerms = new ArrayList();
 
 	protected boolean fieldAndTogether = true;
+	protected boolean fieldEndUserSearch = false;
+	
+	public boolean isEndUserSearch()
+	{
+		return fieldEndUserSearch;
+	}
+
+	public void setEndUserSearch(boolean inEndUserSearch)
+	{
+		fieldEndUserSearch = inEndUserSearch;
+	}
+
 	protected List fieldSorts;
 	protected Map fieldSuggestedSearches;
 

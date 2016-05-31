@@ -643,5 +643,18 @@ public class PropertyDetail implements Data, ViewItem, Comparable
 	{
 		return get("foreignkeyid");
 	}
-	
+
+	public boolean isAutoInclude()
+	{
+		Object found = getValue("autoinclude");
+		if( found == null)
+		{
+			return false;
+		}
+		return Boolean.valueOf( (String)found );
+	}
+	public void setAutoInclude(boolean inTrue)
+	{
+		setValue("autoinclude", String.valueOf(inTrue));
+	}
 }
