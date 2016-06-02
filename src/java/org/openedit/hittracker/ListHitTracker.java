@@ -226,4 +226,19 @@ public class ListHitTracker extends HitTracker
 //		return null; //ListHitTrackers are always current
 //	}
 
+	
+	public void setHitsPerPage(int inHitsPerPage)
+	{
+		if (inHitsPerPage > 0 && inHitsPerPage != fieldHitsPerPage)
+		{
+			clear();
+			fieldHitsPerPage = inHitsPerPage;
+			fieldCurrentPage = null;
+				setPage(1);
+		
+		}
+	}
+	
+	
+	
 }

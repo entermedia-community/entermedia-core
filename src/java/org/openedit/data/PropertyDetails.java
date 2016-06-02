@@ -39,7 +39,25 @@ public class PropertyDetails extends AbstractCollection
 	protected String fieldToString;
 	protected String fieldClassName;//The object type to create
 	protected String fieldDependsOnText;
+	protected boolean fieldAllowDynamicFields;;
 
+	
+	
+	public boolean isAllowDynamicFields()
+	{
+		if (getInputFile() != null && getInputFile().getRoot() != null)
+		{
+			String lazy = getInputFile().getRoot().attributeValue("allowdynamicfields");
+			if (lazy != null)
+			{
+				return Boolean.parseBoolean(lazy);
+			}
+			
+		}
+		return false;
+	}
+
+	
 	public PropertyDetails()
 	{
 		// TODO Auto-generated constructor stub
