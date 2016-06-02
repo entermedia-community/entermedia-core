@@ -657,4 +657,9 @@ public class PropertyDetail implements Data, ViewItem, Comparable
 	{
 		setValue("autoinclude", String.valueOf(inTrue));
 	}
+
+	public boolean isString()
+	{
+	return !(isBoolean() || isDate() || isNumber() );
+	}
 }
