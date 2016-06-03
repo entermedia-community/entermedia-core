@@ -708,6 +708,22 @@ public class PropertyDetailsArchive {
 		return tables;
 		
 	}
+	public List<String> findChildTablesNames(){
+		List searchtypes = listSearchTypes();
+		ArrayList tables = new ArrayList();
+		for (Iterator iterator = searchtypes.iterator(); iterator.hasNext();)
+		{
+			String type = (String) iterator.next();
+			PropertyDetails details = getPropertyDetailsCached(type);
+			PropertyDetail parent = details.getDetail("_parent");
+			if(parent != null)
+			{
+				tables.add(type);
+			}
+		}
+		return tables;
+		
+	}
 	
 	
 	public List listViewTypes() {
