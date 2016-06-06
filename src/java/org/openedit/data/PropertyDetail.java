@@ -580,7 +580,7 @@ public class PropertyDetail implements Data, ViewItem, Comparable
 	public boolean isSortable()
 	{
 		//Make most things sortable automtically
-		if( fieldSortable || isDataType("date") || isDataType("boolean") || isNumber() )
+		if( fieldSortable || isDataType("date") || isDataType("boolean") || isNumber() || "name".equals( getName() ) )
 		{
 			return true;
 		}
