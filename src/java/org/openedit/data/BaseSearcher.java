@@ -226,6 +226,10 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				inQuery = getSearchQueryFilter().attachFilter(inPageRequest, this, inQuery);
 				tracker = search(inQuery); //search here <----
 				tracker.setSearchQuery(inQuery);
+				if (oldtracker != null)
+				{
+					 tracker.setPage(oldtracker.getPage());
+				}
 				String hitsperpage = inPageRequest.getRequestParameter("hitsperpage");
 				if (hitsperpage == null)
 				{
@@ -233,7 +237,6 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				}
 				if (hitsperpage == null)
 				{
-
 					if (usersettings != null)
 					{
 						tracker.setHitsPerPage(usersettings.getHitsPerPageForSearchType(inQuery.getResultType()));

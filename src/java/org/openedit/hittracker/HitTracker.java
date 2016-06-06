@@ -142,7 +142,23 @@ public abstract class HitTracker<T> implements Serializable, Collection
 	{
 		if( fieldCurrentPage == null)
 		{
-			setPage(1);
+			int inHitsPerPage = getHitsPerPage();
+			List page = new ArrayList(inHitsPerPage);
+			int count = (getPage() - 1) * inHitsPerPage; // pick up from here
+			fieldCurrentPage = page;
+			int total = size();
+			for (int i = 0; i < inHitsPerPage; i++)
+			{
+				if (count < total)
+				{
+					page.add(get(count));
+					count++;
+				}
+				else
+				{
+					break;
+				}
+			}
 		}
 		return fieldCurrentPage;
 	}
@@ -200,7 +216,10 @@ public abstract class HitTracker<T> implements Serializable, Collection
 			}
 		}
 	}
-
+	/**
+	 * One based
+	 * @return
+	 */
 	public int getPage()
 	{
 		return fieldPage;
@@ -217,32 +236,15 @@ public abstract class HitTracker<T> implements Serializable, Collection
 			setPage(page);
 		}
 	}
-	
 	public void setPage(int inPageOneBased)
 	{
-		if( fieldPage != inPageOneBased || fieldCurrentPage == null)
+		if( fieldPage != inPageOneBased )
 		{
+			fieldCurrentPage = null;
 			fieldPage = inPageOneBased;
-			
-			int inHitsPerPage = getHitsPerPage();
-			List page = new ArrayList(inHitsPerPage);
-			int count = (getPage() - 1) * inHitsPerPage; // pick up from here
-			fieldCurrentPage = page;
-			int total = size();
-			for (int i = 0; i < inHitsPerPage; i++)
-			{
-				if (count < total)
-				{
-					page.add(get(count));
-					count++;
-				}
-				else
-				{
-					break;
-				}
-			}
 		}
-	}
+			
+	}	
 	public int getMaxPageListing()
 	{
 		return fieldMaxPageListing;
