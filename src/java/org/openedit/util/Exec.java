@@ -181,6 +181,13 @@ public class Exec
 			log.error(ex);
 			result.setRunOk(false);
 			result.setReturnValue(1); //0 is success 1 is error
+			String error = result.getStandardError(); 
+			if(error == null)
+			{
+				error = "";
+			}
+			error = error + ex.toString();
+			result.setStandardError(error);
 		}
 		return result;
 	}
