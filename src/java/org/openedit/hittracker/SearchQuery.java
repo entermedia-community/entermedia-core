@@ -1620,5 +1620,21 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	{
 		fieldSecurityIds = inSecurityIds;
 	}
+
+	public Object getAggregation()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	public void setAggregation(Object inObject)
+	{
+		// TODO Auto-generated method stub
+	}
+	
+	
+	
+	
+	
 	
 }
