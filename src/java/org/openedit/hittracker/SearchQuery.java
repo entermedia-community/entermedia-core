@@ -32,7 +32,18 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 
 	protected boolean fieldAndTogether = true;
 	protected boolean fieldEndUserSearch = false;
+	protected String fieldSortLanguage = "en";
 	
+	public String getSortLanguage()
+	{
+		return fieldSortLanguage;
+	}
+
+	public void setSortLanguage(String inSortLanguage)
+	{
+		fieldSortLanguage = inSortLanguage;
+	}
+
 	public boolean isEndUserSearch()
 	{
 		return fieldEndUserSearch;
@@ -1631,7 +1642,8 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	{
 		// TODO Auto-generated method stub
 	}
-	
+
+
 	
 	
 	

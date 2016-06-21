@@ -49,12 +49,12 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	protected WebEventListener fieldWebEventListener;
 	protected boolean fieldFireEvents = false;
 	protected SearchQueryFilter fieldSearchQueryFilter;
-	
+
 	public SearchQueryFilter getSearchQueryFilter()
 	{
 		if (fieldSearchQueryFilter == null)
 		{
-			fieldSearchQueryFilter = (SearchQueryFilter)getModuleManager().getBean(getCatalogId(),"searchQueryFilter");
+			fieldSearchQueryFilter = (SearchQueryFilter) getModuleManager().getBean(getCatalogId(), "searchQueryFilter");
 		}
 		return fieldSearchQueryFilter;
 	}
@@ -228,7 +228,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				tracker.setSearchQuery(inQuery);
 				if (oldtracker != null)
 				{
-					 tracker.setPage(oldtracker.getPage());
+					tracker.setPage(oldtracker.getPage());
 				}
 				String hitsperpage = inPageRequest.getRequestParameter("hitsperpage");
 				if (hitsperpage == null)
@@ -725,30 +725,81 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				{
 					val = null;
 				}
+
 				if (operations.length <= i)
 				{
 					log.info("Cant search without operations");
 					return null;
 				}
 				String op = operations[i];
-
-				Term t = addTerm(search, detail, val, vals, op);
-				if (t == null)
+				if (!detail.isMultiLanguage())
 				{
-					t = addDate(inPageRequest, search, formater, detail, val, op, count.intValue());
+					Term t = addTerm(search, detail, val, vals, op);
 					if (t == null)
 					{
-						//						t = addSelect(inPageRequest, search, detail, op);
-						//						if (t == null)
-						//						{
-						t = addNumber(inPageRequest, search, detail, val, op);
+						t = addDate(inPageRequest, search, formater, detail, val, op, count.intValue());
 						if (t == null)
 						{
-							//This is for lobpicker and primaryproductpicker and maybe other ones
-							addPicker(inPageRequest, search, detail, val, op, count.intValue());
+							//						t = addSelect(inPageRequest, search, detail, op);
+							//						if (t == null)
+							//						{
+							t = addNumber(inPageRequest, search, detail, val, op);
+							if (t == null)
+							{
+								//This is for lobpicker and primaryproductpicker and maybe other ones
+								addPicker(inPageRequest, search, detail, val, op, count.intValue());
+							}
+							//						}
 						}
-						//						}
 					}
+				}
+				else
+				{
+					//Could still be some more values we need to add....
+					String[] language = inPageRequest.getRequestParameters(detail.getId() + ".language");
+					if (language != null)
+					{
+						for (int j = 0; j < language.length; j++)
+						{
+							String lang = language[j];
+							String langval = inPageRequest.getRequestParameter(detail.getId() + "." + lang);
+							if ("en".equals(lang) && langval == null)
+							{
+								langval = val;
+
+							}
+							if (langval != null)
+							{
+								if ("matches".equals(op) || "andgroup".equals(op))
+								{
+									search.addMatches(detail.getId() + "." + lang, langval);
+								}
+								else if ("exact".equals(op))
+								{
+									search.addExact(detail.getId() + "." + lang, langval);
+								}
+								else if ("startswith".equals(op))
+								{
+									search.addStartsWith(detail.getId() + "." + lang, langval);
+								}
+								else if ("contains".equals(op))
+								{
+									search.addContains(detail.getId() + "." + lang, langval);
+								}
+								else if ("not".equals(op))
+								{
+									search.addNot(detail.getId() + "." + lang, langval);
+								}
+								else if ("orsgroup".equals(op))
+								{
+									search.addOrsGroup(detail.getId() + "." + lang, langval);
+								}
+
+							}
+						}
+
+					}
+
 				}
 
 			}
@@ -1532,10 +1583,18 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	{
 		String sort = inReq.getRequestParameter("sortby");
 		HitTracker hits = loadHits(inReq);
-
+		
 		if (hits != null && sort != null)
 		{
 			SearchQuery group = hits.getSearchQuery();
+			String sortlanguage = inReq.getRequestParameter("sortlang");
+			if(sortlanguage != null){
+				group.setSortLanguage(sortlanguage);
+			} else{
+				group.setSortLanguage(inReq.getLanguage());
+				
+			}
+			
 			if (!sort.equals(group.getSortBy()))
 			{
 				group.setSortBy(sort);
@@ -2280,7 +2339,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				{
 
 					Object result = null;
-					
+
 					if (detail != null && detail.isMultiValue())
 					{
 						result = Arrays.asList(values);
@@ -2318,12 +2377,12 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 							}
 						}
 
-						else if (detail != null &&  detail.isMultiLanguage())
+						else if (detail != null && detail.isMultiLanguage())
 						{
-					
-							
+
 							String[] language = inReq.getRequestParameters(field + ".language");
-							if(language != null){
+							if (language != null)
+							{
 								LanguageMap map = (LanguageMap) data.getValue(detail.getId());
 								if (map == null)
 								{
@@ -2333,10 +2392,15 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 								{
 									String lang = language[j];
 									String langval = inReq.getRequestParameter(field + "." + lang);
-									map.setText(langval, lang);									
+									map.setText(langval, lang);
 								}
 								result = map;
+								if (val != null)
+								{
+									map.setText(val, "en");
+								}
 							}
+
 							if ("multilanguage".equals(language))
 							{
 								JsonSlurper parser = new JsonSlurper();
@@ -2351,7 +2415,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 
 					}
 					data.setValue(field, result);
-					
+
 				}
 				else
 				{
@@ -2423,7 +2487,6 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		return getSearcherManager().getLockManager(getCatalogId());
 	}
 
-	
 	@Override
 	public void restoreSettings()
 	{
