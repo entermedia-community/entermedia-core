@@ -799,6 +799,48 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 						}
 
 					}
+					else
+					{
+						if (val != null)
+						{
+
+							HitTracker languages = getSearcherManager().getList(getCatalogId(), "locale");
+							SearchQuery child = createSearchQuery();
+							child.setAndTogether(false);
+							for (Iterator iterator = languages.iterator(); iterator.hasNext();)
+							{
+								Data locale = (Data) iterator.next();
+								String lang = locale.getId();
+
+								if ("matches".equals(op) || "andgroup".equals(op))
+								{
+									child.addMatches(detail.getId() + "." + lang, val);
+								}
+								else if ("exact".equals(op))
+								{
+									child.addExact(detail.getId() + "." + lang, val);
+								}
+								else if ("startswith".equals(op))
+								{
+									child.addStartsWith(detail.getId() + "." + lang, val);
+								}
+								else if ("contains".equals(op))
+								{
+									child.addContains(detail.getId() + "." + lang, val);
+								}
+								else if ("not".equals(op))
+								{
+									child.addNot(detail.getId() + "." + lang, val);
+								}
+								else if ("orsgroup".equals(op))
+								{
+									child.addOrsGroup(detail.getId() + "." + lang, val);
+								}
+
+							}
+							search.addChildQuery(child);
+						}
+					}
 
 				}
 
@@ -1583,18 +1625,21 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	{
 		String sort = inReq.getRequestParameter("sortby");
 		HitTracker hits = loadHits(inReq);
-		
+
 		if (hits != null && sort != null)
 		{
 			SearchQuery group = hits.getSearchQuery();
 			String sortlanguage = inReq.getRequestParameter("sortlang");
-			if(sortlanguage != null){
+			if (sortlanguage != null)
+			{
 				group.setSortLanguage(sortlanguage);
-			} else{
-				group.setSortLanguage(inReq.getLanguage());
-				
 			}
-			
+			else
+			{
+				group.setSortLanguage(inReq.getLanguage());
+
+			}
+
 			if (!sort.equals(group.getSortBy()))
 			{
 				group.setSortBy(sort);
