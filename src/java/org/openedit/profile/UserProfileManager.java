@@ -227,7 +227,7 @@ public class UserProfileManager
 				for (Iterator iterator = found.iterator(); iterator.hasNext();)
 				{
 					Data data = (Data) iterator.next();
-					all.add(data.get("_parent"));
+					all.add(data.get("libraryid"));
 				}
 			}
 		}
