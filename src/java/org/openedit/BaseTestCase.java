@@ -74,15 +74,20 @@ public class BaseTestCase extends TestCase
 //		return fieldFixture;
 		return getStaticFixture();
 	}
-	public static TestFixture getStaticFixture()
+	public TestFixture getStaticFixture()
 	{
 		if (fieldStaticFixture == null)
 		{
 			fieldStaticFixture = new TestFixture();
+			oneTimeSetup();
 		}
 		return fieldStaticFixture;
 	}
 	
+	protected void oneTimeSetup() {
+		// TODO Auto-generated method stub
+		
+	}
 	protected void tearDown() throws Exception
 	{
 		super.tearDown();
