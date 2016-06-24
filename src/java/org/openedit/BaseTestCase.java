@@ -79,12 +79,17 @@ public class BaseTestCase extends TestCase
 		if (fieldStaticFixture == null)
 		{
 			fieldStaticFixture = new TestFixture();
-			oneTimeSetup();
+			try {
+				oneTimeSetup();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		return fieldStaticFixture;
 	}
 	
-	protected void oneTimeSetup() {
+	protected void oneTimeSetup() throws Exception {
 		// TODO Auto-generated method stub
 		
 	}
