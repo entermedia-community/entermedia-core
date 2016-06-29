@@ -2440,10 +2440,10 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 									map.setText(langval, lang);
 								}
 								result = map;
-								if (val != null)
-								{
-									map.setText(val, "en");
-								}
+//								if (val != null)
+//								{
+//									map.setText(val, "en");
+//								}
 							}
 
 							if ("multilanguage".equals(language))
