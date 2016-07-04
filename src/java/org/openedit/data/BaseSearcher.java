@@ -49,6 +49,28 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	protected WebEventListener fieldWebEventListener;
 	protected boolean fieldFireEvents = false;
 	protected SearchQueryFilter fieldSearchQueryFilter;
+	protected boolean fieldAllowRemoteDetails = false;
+	protected String fieldAlternativeIndex;
+
+	public String getAlternativeIndex()
+	{
+		return fieldAlternativeIndex;
+	}
+
+	public void setAlternativeIndex(String inAlternativeIndex)
+	{
+		fieldAlternativeIndex = inAlternativeIndex;
+	}
+	
+	public boolean isAllowRemoteDetails()
+	{
+		return fieldAllowRemoteDetails;
+	}
+
+	public void setAllowRemoteDetails(boolean inAllowRemoteDetails)
+	{
+		fieldAllowRemoteDetails = inAllowRemoteDetails;
+	}
 
 	public SearchQueryFilter getSearchQueryFilter()
 	{
@@ -1774,11 +1796,12 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		{
 			fieldPropertyDetailsArchive = (PropertyDetailsArchive) getSearcherManager().getModuleManager().getBean(getCatalogId(), "propertyDetailsArchive");
 		}
-		if (!fieldPropertyDetailsArchive.getCatalogId().equals(getCatalogId()))
+		if (!fieldPropertyDetailsArchive.getCatalogId().equals(getCatalogId()) && !isAllowRemoteDetails())
 		{
 			fieldPropertyDetailsArchive = (PropertyDetailsArchive) getSearcherManager().getModuleManager().getBean(getCatalogId(), "propertyDetailsArchive");
 			fieldPropertyDetailsArchive.setCatalogId(getCatalogId());
 		}
+		
 		return fieldPropertyDetailsArchive;
 	}
 
@@ -2428,7 +2451,24 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 							String[] language = inReq.getRequestParameters(field + ".language");
 							if (language != null)
 							{
-								LanguageMap map = (LanguageMap) data.getValue(detail.getId());
+								
+								
+								LanguageMap map = null;
+								Object oldval = data.getValue(detail.getId());
+								if(oldval != null){
+									if(oldval instanceof LanguageMap){
+										map = (LanguageMap) oldval;										
+									} else{
+										map = new LanguageMap();
+										map.setText((String) oldval, "en");
+
+									}
+									
+									 
+								}
+										
+										
+									 
 								if (map == null)
 								{
 									map = new LanguageMap();

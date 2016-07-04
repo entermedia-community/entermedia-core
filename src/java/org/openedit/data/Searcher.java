@@ -173,6 +173,12 @@ public interface Searcher
 	public void reloadSettings();
 	
 	public boolean initialize();
+
+	public void setAllowRemoteDetails(boolean inB);
+
+	public void setAlternativeIndex(String inAlternativeIndex);
+	
+	 
 	
 
 }

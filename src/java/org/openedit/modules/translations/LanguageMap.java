@@ -18,9 +18,6 @@ public class LanguageMap extends TreeMap
 	public String getText(String inLocale){
 		
 		String val = (String) get(inLocale);
-		if(val == null){
-			val =  (String) get("en");
-		}
 		return val;
 		
 		
