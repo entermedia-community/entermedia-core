@@ -2586,4 +2586,11 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 
 	}
 
+	@Override
+	public void putMappings()
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
 }

@@ -177,6 +177,8 @@ public interface Searcher
 	public void setAllowRemoteDetails(boolean inB);
 
 	public void setAlternativeIndex(String inAlternativeIndex);
+
+	public void putMappings();
 	
 	 
 	
