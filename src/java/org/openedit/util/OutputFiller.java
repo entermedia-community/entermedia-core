@@ -16,6 +16,17 @@ import java.io.Writer;
 public class OutputFiller
 {
 	protected int fieldBufferSize = 2048;  //2048 Seems to be 4% faster than 1024 for larger files 
+	protected long fieldMaxSize = -1;
+	
+	public long getMaxSize()
+	{
+		return fieldMaxSize;
+	}
+
+	public void setMaxSize(long inMaxSize)
+	{
+		fieldMaxSize = inMaxSize;
+	}
 
 	/**
 	 * InputFlusher constructor comment.
@@ -176,6 +187,7 @@ public class OutputFiller
 	{
 		byte[] bytes = new byte[getBufferSize()];
 
+		long totalread = 0;
 		int iRead = -1;
 
 		while (true)
@@ -185,8 +197,13 @@ public class OutputFiller
 			if (iRead != -1)
 			{
 				out.write(bytes, 0, iRead);
+				totalread = totalread + iRead;
 			}
 			else
+			{
+				break;
+			}
+			if( getMaxSize() > 0 && totalread > getMaxSize() )
 			{
 				break;
 			}
