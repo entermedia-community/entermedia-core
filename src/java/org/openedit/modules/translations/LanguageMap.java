@@ -1,5 +1,6 @@
 package org.openedit.modules.translations;
 
+import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -31,8 +32,18 @@ public class LanguageMap extends TreeMap
 	@Override
 	public String toString()
 	{
-		// TODO Auto-generated method stub
-	return getText("en");
+		StringBuffer values = new StringBuffer();
+		for (Iterator iterator = keySet().iterator(); iterator.hasNext();)
+		{
+			String key = (String) iterator.next();
+			values.append(get(key));
+			if( iterator.hasNext() )
+			{
+				values.append(" ");
+			}
+		}
+		return values.toString();
+		
 	}
 	
 	

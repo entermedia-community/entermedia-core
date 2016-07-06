@@ -13,6 +13,7 @@ import java.util.Map;
 
 import org.openedit.MultiValued;
 import org.openedit.OpenEditRuntimeException;
+import org.openedit.modules.translations.LanguageMap;
 import org.openedit.util.DateStorageUtil;
 
 public class ValuesMap extends HashMap
