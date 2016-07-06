@@ -179,6 +179,8 @@ public interface Searcher
 	public void setAlternativeIndex(String inAlternativeIndex);
 
 	public void putMappings();
+
+	public void reindexInternal();
 	
 	 
 	

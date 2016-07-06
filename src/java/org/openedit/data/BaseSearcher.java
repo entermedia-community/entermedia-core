@@ -2592,5 +2592,28 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		// TODO Auto-generated method stub
 		
 	}
-
+	public void reindexInternal() throws OpenEditException
+	{
+	
+				HitTracker allhits = getAllHits();
+				allhits.enableBulkOperations();
+				ArrayList tosave = new ArrayList();
+				for (Iterator iterator2 = allhits.iterator(); iterator2.hasNext();)
+				{
+					Data hit = (Data) iterator2.next();
+					Data real = (Data) loadData(hit);
+					tosave.add(real);
+					if(tosave.size() > 1000){
+						
+						tosave.clear();
+					}
+				}
+				saveAllData(tosave, null);
+				
+				
+			
+		
+		
+	}
+	
 }
