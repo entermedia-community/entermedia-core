@@ -448,5 +448,20 @@ public class PropertyDetails extends AbstractCollection
 			}
 		}
 		return list;
-	}	
+	}
+	
+	
+	public int getMultilanguageFieldCount(){
+		int count = 0;
+		for (Iterator iterator = getDetails().iterator(); iterator.hasNext();)
+		{
+			PropertyDetail detail = (PropertyDetail) iterator.next();
+			if(detail.isMultiLanguage()){
+				count++;
+			}
+			
+		}
+		return count;	
+		
+	}
 }
