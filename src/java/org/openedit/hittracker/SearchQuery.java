@@ -709,6 +709,27 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		{
 			return term.getValue();
 		}
+		if( hasChildren())
+		{
+			for (Iterator iterator = getChildren().iterator(); iterator.hasNext();)
+			{
+				SearchQuery child = (SearchQuery) iterator.next();
+				input = child.getInput(inKey);
+				if( input != null)
+				{
+					if (input instanceof String)
+					{
+						return (String) input;
+					}
+					else
+					{
+						String[] vals = (String[]) input;
+						return vals[0];
+					}
+				}
+			}
+		}	
+		
 		return null;
 	}
 

@@ -784,48 +784,51 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 						for (int j = 0; j < language.length; j++)
 						{
 							String lang = language[j];
-							String langval = inPageRequest.getRequestParameter(detail.getId() + "." + lang);
+							String lid = detail.getId() + "." + lang;
+							String langval = inPageRequest.getRequestParameter(lid);
+							if( langval == null)
+							{
+								langval = inPageRequest.getRequestParameter(detail.getId() + ".value");
+							}
 							if ("en".equals(lang) && langval == null)
 							{
 								langval = val;
-
 							}
 							if (langval != null)
 							{
 								if ("matches".equals(op) || "andgroup".equals(op))
 								{
-									search.addMatches(detail.getId() + "." + lang, langval);
+									search.addMatches(lid, langval);
 								}
 								else if ("exact".equals(op))
 								{
-									search.addExact(detail.getId() + "." + lang, langval);
+									search.addExact(lid, langval);
 								}
 								else if ("startswith".equals(op))
 								{
-									search.addStartsWith(detail.getId() + "." + lang, langval);
+									search.addStartsWith(lid, langval);
 								}
 								else if ("contains".equals(op))
 								{
-									search.addContains(detail.getId() + "." + lang, langval);
+									search.addContains(lid, langval);
 								}
 								else if ("not".equals(op))
 								{
-									search.addNot(detail.getId() + "." + lang, langval);
+									search.addNot(lid, langval);
 								}
 								else if ("orsgroup".equals(op))
 								{
-									search.addOrsGroup(detail.getId() + "." + lang, langval);
+									search.addOrsGroup(lid, langval);
 								}
-
+								search.setProperty(detail.getId(), langval);
+								search.setProperty(detail.getId() + ".language", lang);
 							}
 						}
-
 					}
 					else
-					{
+					{	//Why do we have similar code here?
 						if (val != null)
 						{
-
 							HitTracker languages = getSearcherManager().getList(getCatalogId(), "locale");
 							SearchQuery child = createSearchQuery();
 							child.setAndTogether(false);
@@ -834,31 +837,32 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 								Data locale = (Data) iterator.next();
 								String lang = locale.getId();
 
+								String lid = detail.getId() + "." + lang;
 								if ("matches".equals(op) || "andgroup".equals(op))
 								{
-									child.addMatches(detail.getId() + "." + lang, val);
+									child.addMatches(lid, val);
 								}
 								else if ("exact".equals(op))
 								{
-									child.addExact(detail.getId() + "." + lang, val);
+									child.addExact(lid, val);
 								}
 								else if ("startswith".equals(op))
 								{
-									child.addStartsWith(detail.getId() + "." + lang, val);
+									child.addStartsWith(lid, val);
 								}
 								else if ("contains".equals(op))
 								{
-									child.addContains(detail.getId() + "." + lang, val);
+									child.addContains(lid, val);
 								}
 								else if ("not".equals(op))
 								{
-									child.addNot(detail.getId() + "." + lang, val);
+									child.addNot(lid, val);
 								}
 								else if ("orsgroup".equals(op))
 								{
-									child.addOrsGroup(detail.getId() + "." + lang, val);
+									child.addOrsGroup(lid, val);
 								}
-
+								child.setProperty(lid, val);
 							}
 							search.addChildQuery(child);
 						}
