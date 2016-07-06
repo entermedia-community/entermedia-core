@@ -668,27 +668,26 @@ public abstract class HitTracker<T> implements Serializable, Collection
 	
 	public HitTracker getSelectedHitracker()
 	{
-		if( isAllSelected() )
-		{
-			return this;
-		}		
+//		if( isAllSelected() )
+//		{
+//			return this;
+//		}		
 		if( getSessionId().startsWith("selected") )
 		{
 			return this;
 		}
 
 		HitTracker selecteddata = getSearcher().search(getSearchQuery());
-/*		if( isAllSelected() )
+		if( isAllSelected() )
 		{
 			//rerun the search
 			selecteddata.selectAll();
 		}
 		else
 		{
-*/
 			selecteddata.setSelections(getSelections());
 			selecteddata.setShowOnlySelected(true);
-//		}
+		}
 //		else
 //		{
 //			ListHitTracker lhits = new ListHitTracker();	
