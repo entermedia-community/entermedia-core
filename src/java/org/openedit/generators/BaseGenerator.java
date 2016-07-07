@@ -102,6 +102,10 @@ public abstract class BaseGenerator implements Generator, Cloneable
 		{
 			return true;
 		}
+		if( inWrapped instanceof java.net.SocketTimeoutException )
+		{
+			return true;
+		}
 		if ("Closed".equals(inWrapped.getMessage()))
 		{
 			return true;
