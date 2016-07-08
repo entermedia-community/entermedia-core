@@ -735,6 +735,10 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				else if (val == null)
 				{
 					vals = inPageRequest.getRequestParameters(detail.getId() + ".values");
+					if (vals != null && vals.length == 1 && vals[0].length() == 0)
+					{
+						vals = null;
+					}
 
 					//					//This is dumb
 					//					String[] ors = inPageRequest.getRequestParameters(detail.getId() + ".orvalue");
