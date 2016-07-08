@@ -24,6 +24,7 @@ import org.openedit.data.PropertyDetail;
 import org.openedit.data.PropertyDetails;
 import org.openedit.data.Searcher;
 import org.openedit.data.SearcherManager;
+import org.openedit.util.DateStorageUtil;
 import org.openedit.util.GenericsUtil;
 
 public class SearchQuery extends BaseData implements Cloneable, Serializable, Comparable
@@ -187,106 +188,76 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		return false;
 	}
 
-	public Term addAfter(PropertyDetail inFieldId, Date inDate)
-	{
-		String date = getDateFormat().format(inDate);
-		final Date after = inDate;
-		Term term = new Term()
-		{
-			public String toQuery()
-			{
-				String fin = getDetail().getId() + ":[" + getValue() + " TO 99999999]";
-				return fin;
-			}
-		};
-		term.setDetail(inFieldId);
-		term.addParameter("afterDate", date);
-		term.setOperation("afterdate");
-		term.setValue(date);
-		addTermByDataType(term);
-		return term;
-	}
-
-	public Term addBefore(PropertyDetail inFieldId, Date inDate)
-	{
-		String date = getDateFormat().format(inDate);
-		final Date targetDate = inDate;
-		Term term = new Term()
-		{
-			public String toQuery()
-			{
-				String fin = getDetail().getId() + ":[00000000 TO " + getValue() + "]";
-				return fin;
-			}
-		};
-		term.setDetail(inFieldId);
-		term.addParameter("beforeDate", date);
-		term.setValue(date);
-		term.setOperation("beforedate");
-		addTermByDataType(term);
-		return term;
-	}
-	public Term addOrsGroup(PropertyDetail inDetail, final String[] inValues)
+	public Term addOrsGroup(PropertyDetail inField, String[] inValues)
 	{
 		Term term = new Term()
 		{
 			public String toQuery()
 			{
 				StringBuffer orString = new StringBuffer();
-				if (inValues.length > 0)
+				Object[] values = getValues();
+				if (values.length > 0)
 				{
 					orString.append("(");
-					for (int i = 0; i < inValues.length - 1; i++)
+					for (int i = 0; i < values.length - 1; i++)
 					{
-						if(inValues[i].length() > 0)
+						if(values[i].toString().length() > 0)
 						{
-							orString.append(inValues[i]);
+							orString.append(values[i]);
 							orString.append(" OR ");
 						}
 					}
-					orString.append(inValues[inValues.length - 1]);
+					orString.append(values[values.length - 1]);
 					orString.append(")");
 				}
 				return getDetail().getId() + ":" + orString.toString();
 			}
 		};
-		term.setDetail(inDetail);
+		term.setDetail(inField);
+		term.setId(inField.getId());
+		//term.setValue(inValue);
+		//String[] orwords = inValue.split("\\s+");
 		term.setValues(inValues);
 		term.setOperation("orgroup");
-		addTermByDataType(term);
+		getTerms().add(term);
 		return term;
 	}
-	public Term addOrsGroup(PropertyDetail inDetail, String inValue)
+	
+	public Term addOrsGroup(PropertyDetail inField, String inValue)
 	{
 		Term term = new Term()
 		{
 			public String toQuery()
 			{
 				StringBuffer orString = new StringBuffer();
-				String[] orwords = getValue().split("\\s");
-				if (orwords.length > 0)
+				Object[] values = getValues();
+				if (values.length > 0)
 				{
 					orString.append("(");
-					for (int i = 0; i < orwords.length - 1; i++)
+					for (int i = 0; i < values.length - 1; i++)
 					{
-						if(orwords[i].length() > 0)
+						if(values[i].toString().length() > 0)
 						{
-							orString.append(orwords[i]);
+							orString.append(values[i]);
 							orString.append(" OR ");
 						}
 					}
-					orString.append(orwords[orwords.length - 1]);
+					orString.append(values[values.length - 1]);
 					orString.append(")");
 				}
 				return getDetail().getId() + ":" + orString.toString();
 			}
 		};
-		term.setDetail(inDetail);
+		term.setDetail(inField);
+		term.setId(inField.getId());
 		term.setValue(inValue);
+		String[] orwords = inValue.split("\\s+");
+		term.setValues(orwords);
 		term.setOperation("orgroup");
-		addTermByDataType(term);
+		getTerms().add(term);
 		return term;
 	}
+	
 	public Term addAndGroup(PropertyDetail inDetail, final String[] inValues)
 	{
 		Term term = new Term()
@@ -318,36 +289,6 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		return term;
 	}
 
-	public Term addNots(PropertyDetail inDetail, String inNots)
-	{
-		Term term = new Term()
-		{
-			public String toQuery()
-			{
-				StringBuffer orString = new StringBuffer();
-				String[] notwords = getValue().split("\\s");
-				if (notwords.length > 0)
-				{
-					orString.append("(");
-					for (int i = 0; i < notwords.length - 1; i++)
-					{
-						if(notwords[i].length() > 0)
-						{
-							orString.append(" NOT " + notwords[i]);
-						}
-					}
-					orString.append(notwords[notwords.length - 1]);
-					orString.append(")");
-				}
-				return orString.toString();
-			}
-		};
-		term.setDetail(inDetail);
-		term.setValue(inNots);
-		term.setOperation("notgroup");
-		addTermByDataType(term);
-		return term;
-	}
 	
 	public Term addNots(String inId, String inNots)
 	{
@@ -464,22 +405,6 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		return data.getName();
 	}
 
-	public Term addExact(PropertyDetail inDetail, String inValue)
-	{
-		Term term = new Term()
-		{
-			public String toQuery()
-			{
-				return getDetail().getId() + ":\"" + getValue() + "\"";
-			}
-		};
-		term.setOperation("exact");
-		term.setDetail(inDetail);
-		term.setValue(inValue);
-		addTermByDataType(term);
-		return term;
-	}
-
 	public boolean isAndTogether()
 	{
 		return fieldAndTogether;
@@ -499,41 +424,6 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	{
 		addNot(inKey,inVal);
 		return this;
-	}
-
-	public Term addMatches(PropertyDetail inDetail, String inVal)
-	{
-		Term term = new Term()
-		{
-			public String toQuery()
-			{
-				if (getDetail().getId() != null)
-				{
-					return getDetail().getId() + ":" + getValue();
-				}
-				else
-				{
-					return getValue();
-				}
-			}
-
-			public Element toXml()
-			{
-				Element term = DocumentHelper.createElement("term");
-				term.addAttribute("id", getDetail().getId());
-				term.addAttribute("val", getValue());
-				term.addAttribute("op", "matches");
-				if (getParameter("op") != null)
-					term.addAttribute("realop", getParameter("op"));
-
-				return term;
-			}
-		};
-		term.setOperation("matches");
-		term.setDetail(inDetail);
-		term.setValue(inVal);
-		addTermByDataType(term);
-		return term;
 	}
 
 	public Term addContains(PropertyDetail inDetail, String inVal)
@@ -618,69 +508,6 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		}
 		return false;
 	}
-	public Term addNot(PropertyDetail inField, String inVal)
-	{
-		Term term = new Term()
-		{
-			public String toQuery()
-			{
-				return "-" + getDetail().getId() + ":" + getValue();
-			}
-
-			public Element toXml()
-			{
-				Element term = DocumentHelper.createElement("term");
-				term.addAttribute("id", getDetail().getId());
-				term.addAttribute("val", getValue());
-				term.addAttribute("op", "not");
-				if (getParameter("op") != null)
-					term.addAttribute("realop", getParameter("op"));
-
-				return term;
-			}
-		};
-		term.setOperation("not");
-		term.setDetail(inField);
-		term.setValue(inVal);
-		addTermByDataType(term);
-		return term;
-	}
-
-	public Term addStartsWith(PropertyDetail inField, String inVal)
-	{
-		if (!inVal.endsWith("*"))
-		{
-			inVal = inVal + "*";  //TODO: Remove this
-		}
-
-		Term term = new Term()
-		{
-			public String toQuery()
-			{
-				String val = getValue();
-				return val;
-
-			}
-
-			public Element toXml()
-			{
-				Element term = DocumentHelper.createElement("term");
-				term.addAttribute("id", getDetail().getId());
-				term.addAttribute("val", getValue());
-				term.addAttribute("op", "startswith");
-				if (getParameter("op") != null)
-					term.addAttribute("realop", getParameter("op"));
-				
-				return term;
-			}
-		};
-		term.setOperation("startswith");
-		term.setDetail(inField);
-		term.setValue(inVal);
-		addTermByDataType(term);
-		return term;
-	}
-
 	
 	/**
 	 * This is the user input (!= term.value)
@@ -874,46 +701,6 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 			}
 		}
 	}
-
-	public Term addGreaterThan(PropertyDetail inField, long inVal)
-	{
-		//Not supported
-		return null;
-	}
-
-	public Term addLessThan(PropertyDetail inField, long inVal)
-	{
-		// not supported
-		return null;
-	}
-
-	public Term addBetween(PropertyDetail inField, Date inAfter, Date inBefore)
-	{
-		Term term = new Term()
-		{
-			public String toQuery()
-			{
-				String fin = getDetail().getId() + ":[" + getParameter("afterDate") + " TO " + getParameter("beforeDate") + "]";
-				return fin;
-			}
-		};
-		
-		term.setValue(getDateFormat().format(inAfter) + " - " + getDateFormat().format(inBefore));
-		term.setDetail(inField);
-		term.addParameter("afterDate", getDateFormat().format(inAfter));
-		term.addParameter("beforeDate", getDateFormat().format(inBefore));
-		term.setOperation("betweendates");
-		addTermByDataType(term);
-		return term;
-	}
-
-	public Term addBetween(PropertyDetail inFieldId, long lowval, long highval)
-	{
-		// default
-		return null;
-	}
-
-
 	
 	public PropertyDetail getDetail(String inId)
 	{
@@ -1026,24 +813,12 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 
 	
 	
-	
-	public Term addAfter(String inString, Date inSearchDate)
-	{
-		PropertyDetail detail = createDetail(inString);
-		return addAfter(detail, inSearchDate);
-	}
-
 	public Term addExact(String inKey, String inValue)
 	{
 		PropertyDetail detail = createDetail(inKey);
 		return addExact(detail, inValue);
 	}
 
-	public Term addExact(PropertyDetail inField, long inParseInt)
-	{
-		String inString = String.valueOf(inParseInt);
-		return addExact(inField, inString);
-	}
 	
 	public Term addExact(PropertyDetail inField, double inParseInt)
 	{
@@ -1330,50 +1105,7 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		return query;
 	}
 
-	public String toQuery()
-	{
-		String op = " OR ";
-		if (isAndTogether())
-		{
-			op = "+";
-		}
-		StringBuffer done = new StringBuffer();
-		for (int i = 0; i < fieldTerms.size(); i++)
-		{
-			Term field = (Term) fieldTerms.get(i);
-			String q = field.toQuery();
-			if (i > 0 && !q.startsWith("+") && !q.startsWith("-"))
-			{
-				done.append(op);
-			}
-			done.append(q);
-			if (i + 1 < fieldTerms.size())
-			{
-				done.append(" ");
-			}
-		}
-		
-		if (getChildren().size() > 1)
-		{
-			for (Iterator iterator = getChildren().iterator(); iterator.hasNext();)
-			{
-				SearchQuery child = (SearchQuery) iterator.next();
-				String query = child.toQuery();
-				if (query.length() > 0)
-				{
-					done.append(" (");
-					done.append(query);
-					done.append(" )");	
-				}
-			}
-		}
-		else if (getChildren().size() == 1)
-		{
-			SearchQuery child = (SearchQuery)getChildren().get(0);
-			done.append(child.toQuery());
-		}
-		return done.toString();
-	}
+
 	public void setTerms(List inTerms)
 	{
 		fieldTerms = inTerms;
@@ -1444,12 +1176,6 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		PropertyDetail d = createDetail(string);
 		d.setId(string);
 		addBetween(d, longValue, longValue2);
-	}
-
-	public Term addBetween(PropertyDetail d, double longValue,
-			double longValue2) {
-		return null;
-		
 	}
 
 	public void addBefore(String inString, Date inDate) {
@@ -1663,6 +1389,464 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	{
 		// TODO Auto-generated method stub
 	}
+
+	public Term addAfter(String inString, Date inSearchDate)
+	{
+		PropertyDetail detail = getPropertyDetails().getDetail(inString);
+		if(detail == null)
+		{
+			detail = new PropertyDetail();
+			detail.setId(inString);
+			detail.setDataType("date");
+		}
+		return addAfter(detail, inSearchDate);
+	}
+	//public void addJoinFilter(SearchQuery filterQuery, String inFilterColumn, boolean inFilterHasMultiValues, String filterSearchType, String inResultsColumn)
+		//https://www.elastic.co/guide/en/elasticsearch/guide/current/parent-child-mapping.html
+		//https://www.elastic.co/guide/en/elasticsearch/guide/master/indexing-parent-child.html
+		//https://www.elastic.co/guide/en/elasticsearch/guide/master/has-child.html
+
+	public Term addAfter(PropertyDetail inFieldId, final Date inDate)
+	{
+		Term term = new Term()
+		{
+			public String toQuery()
+			{
+				//String date = DateTools.dateToString(inDate, Resolution.SECOND);
+				String fin = getDetail().getId() + ":[" + inDate + " TO 99999999999999]";
+				return fin;
+			}
+		};
+		term.setDetail(inFieldId);
+		String valueof= DateStorageUtil.getStorageUtil().formatForStorage(inDate);
+	
+		term.setValue(valueof);
+		term.setOperation("afterdate");
+		getTerms().add(term);
+		return term;
+	}
+
+	public Term addBetween(PropertyDetail inFieldId, final Date inAfter, final Date inBefore)
+	{
+		Term term = new Term()
+		{
+			public String toQuery()
+			{
+				String fin = getDetail().getId() + ":[" + inAfter + " TO " + inBefore + "]";
+				return fin;
+			}
+		};
+		String lowDate = getDateFormat().format(inAfter);
+		String highDate = getDateFormat().format(inBefore);
+		term.setValue(lowDate + " - " + highDate);
+		term.setDetail(inFieldId);
+		term.addParameter("afterDate", lowDate);
+		term.addParameter("beforeDate", highDate);
+		term.setOperation("betweendates");
+		getTerms().add(term);
+		return term;
+	}
+
+	public Term addBefore(PropertyDetail inField, final  Date inDate)
+	{
+		Term term = new Term()
+		{
+			public String toQuery()
+			{
+				String fin = getDetail().getId() + ":[00000000000000 TO " +inDate + "]";
+				return fin;
+			}
+		};
+		term.setOperation("beforedate");
+		term.setDetail(inField);
+	
+		String valueof= DateStorageUtil.getStorageUtil().formatForStorage(inDate);
+		term.setValue(valueof);
+	
+		getTerms().add(term);
+		return term;
+	}
+
+	public Term addMatches(PropertyDetail inField, String inValue)
+	{
+		Term term = new Term()
+		{
+			public String toQuery()
+			{
+				String inVal = getValue();
+				if( inVal != null && inVal.startsWith("'") && inVal.endsWith("'"))
+				{
+					inVal = inVal.replace('\'', '\"');
+				}
+	
+				if (getDetail().getId() != null)
+				{
+					return getDetail().getId() + ":(" + inVal + ")";
+				}
+				else
+				{
+					return inVal;
+				}
+			}
+		};
+		term.setOperation("matches");
+		term.setDetail(inField);
+		term.setValue(inValue);
+		addTerm(term);
+		return term;
+	}
+
+	public Term addStartsWith(PropertyDetail inField, String inVal)
+	{
+		Term term = new Term()
+		{
+			public String toQuery()
+			{
+				StringBuffer q = new StringBuffer();
+				q.append(getDetail().getId());
+				q.append(":(");
+	
+				if (getValue().startsWith("\""))
+				{
+					q.append(getValue());
+				}
+				else
+				{
+					String[] spaces = getValue().split("\\s+");
+					for (int i = 0; i < spaces.length; i++)
+					{
+						String chunk = spaces[i];
+						q.append(chunk);
+						if (chunk.indexOf('*') == -1)
+						{
+							q.append('*');
+						}
+						if (i + 1 < spaces.length)
+						{
+							q.append(' ');
+						}
+					}
+				}
+				q.append(")");
+				return q.toString();
+			}
+		};
+		term.setOperation("startswith");
+		term.setDetail(inField);
+		term.setValue(inVal);
+		addTerm(term);
+		return term;
+	}
+
+	public Term addNots(PropertyDetail inField, String inNots)
+	{
+		Term term = new Term()
+		{
+			public String toQuery()
+			{
+				StringBuffer orString = new StringBuffer();
+	
+				String[] notwords = getValue().split("\\s");
+				if (notwords.length > 0)
+				{
+					for (int i = 0; i < notwords.length; i++)
+					{
+						orString.append(" NOT " + notwords[i]);
+					}
+				}
+				return orString.toString();
+			}
+		};
+		term.setOperation("notgroup");
+		term.setDetail(inField);
+		term.setValue(inNots);
+		getTerms().add(term);
+		return term;
+	}
+
+	public Term addExact(PropertyDetail inField, String inValue)
+	{
+		if( inValue == null)
+		{
+			return null;
+		}
+		Term term = new Term()
+		{
+			public String toQuery()
+			{
+				String val = getValue();
+				if(val.startsWith("\""))
+				{
+					val = val.substring(1);
+				}
+				if(val.endsWith("\""))
+				{
+					val = val.substring(0,val.length()-2);
+				}
+				val = val.replace("\"", "\\\"");
+				return getDetail().getId() + ":\"" + val + "\"";
+			}
+		};
+		term.setOperation("exact");
+		term.setDetail(inField);
+		term.setValue(inValue);
+		addTerm(term);
+		return term;
+	}
+
+	public void addExact(String inValue)
+	{
+		Term term = new Term()
+		{
+			public String toQuery()
+			{
+				return "\"" + getValue() + "\"";
+			}
+		};
+	
+		term.setOperation("exact");
+		term.setValue(inValue);
+		addTerm(term);
+	
+	}
+
+	public Term addNot(PropertyDetail inField, String inVal)
+	{
+			Term term = new Term()
+			{
+				public String toQuery()
+				{
+					return "-" + getDetail().getId() + ":" + getValue();
+				}
+			};
+			term.setDetail(inField);
+			term.setValue(inVal);
+			term.setOperation("not");
+			getTerms().add(term);
+			return term;
+		}
+	/* is this used anyplace?
+		public void addCategoryFilter(List inRemaining, String inFriendly)
+		{
+			final List categories = inRemaining;
+			Term term = new Term()
+			{
+				public String toQuery()
+				{
+					return "-" + getId() + ":" + getValue() + "";
+				}
+	
+				public Element toXml()
+				{
+					Element term = DocumentHelper.createElement("term");
+					term.addAttribute("id", getId());
+					term.addAttribute("val", getValue());
+					term.addAttribute("op", "categoryfilter");
+	
+					for (Iterator iterator = categories.iterator(); iterator.hasNext();)
+					{
+						String category = (String) iterator.next();
+						Element cat = term.addElement("category");
+						cat.addAttribute("categoryid", category);
+					}
+	
+					return term;
+				}
+			};
+			term.setId("category");
+			StringBuffer all = new StringBuffer();
+			all.append("(");
+			for (Iterator iter = inRemaining.iterator(); iter.hasNext();)
+			{
+				String cat = (String) iter.next();
+				all.append(cat);
+				all.append(" ");
+			}
+			all.append(")");
+			term.setValue(all.toString());
+			addTerm(term);
+		}
+	*/
+
+	public Term addLessThan(PropertyDetail inFieldId, long val)
+	{
+		Term term = new Term()
+		{
+			public String toQuery()
+			{
+				return getValue();
+			}
+		};
+		term.setOperation("lessthannumber");
+		term.setDetail(inFieldId);
+		term.setValue(String.valueOf( val ) );
+		addTerm(term);
+		return term;
+	}
+
+	public Term addGreaterThan(PropertyDetail inFieldId, final long high)
+	{
+		Term term = new Term()
+		{
+			public String toQuery()
+			{
+				return getValue();
+			}
+	
+		};
+		term.setOperation("greaterthannumber");
+		term.setDetail(inFieldId);
+		term.setValue(String.valueOf( high) );
+		addTerm(term);
+		return term;
+	}
+
+	public Term addExact(PropertyDetail inField, long inParseInt)
+	{
+	
+		Term term = new Term()
+		{
+			public String toQuery()
+			{
+				return getValue();
+			}
+	
+		};
+		term.setOperation("exactnumber");
+		term.setDetail(inField);
+		term.setValue(String.valueOf(inParseInt));
+		addTerm(term);
+		return term;
+	
+	}
+
+	public Term addBetween(PropertyDetail inField, long lowval, long highval)
+	{
+		// lowval = pad(lowval);
+		// highval = pad(highval);
+		Term term = new Term()
+	
+		{
+			public String toQuery()
+			{
+				return getValue();
+			}
+	
+		};
+		term.setDetail(inField);
+		term.setOperation("betweennumbers");
+		term.addParameter("lowval", String.valueOf(  lowval ) );
+		term.addParameter("highval", String.valueOf(highval));
+		term.setValue(lowval  + " to "  + highval);
+		addTerm(term);
+		return term;
+	}
+
+	public Term addBetween(PropertyDetail inField, double lowval, double highval)
+	{
+		// lowval = pad(lowval);
+		// highval = pad(highval);
+		Term term = new Term()
+	
+		{
+			public String toQuery()
+			{
+				return getValue();
+			}
+	
+		};
+		term.setDetail(inField);
+		term.setOperation("betweennumbers");
+		term.addParameter("lowval", String.valueOf(  lowval ) );
+		term.addParameter("highval", String.valueOf(highval));
+		term.setValue(lowval  + " to "  + highval);
+		addTerm(term);
+		return term;
+	}
+
+	public String toQuery()
+	{
+			StringBuffer done = new StringBuffer();
+			String op = null;
+			if (isAndTogether())
+			{
+				op = "+";
+			}
+			else
+			{
+				op = " OR ";
+			}
+			if( getTerms().size() > 0)
+			{
+				
+				for (int i = 0; i < fieldTerms.size(); i++)
+				{
+					Term field = (Term) fieldTerms.get(i);
+					String q = field.toQuery();
+					if (i > 0 && !q.startsWith("+") && !q.startsWith("-"))
+					{
+						done.append(op);
+					}
+					done.append(q);
+					if (i + 1 < fieldTerms.size())
+					{
+						done.append(" ");
+					}
+				}
+	
+	//			if (!isAndTogether())
+	//			{
+	//				done.append(")");
+	//			}
+			}
+			if( fieldChildren != null && fieldChildren.size() > 0)
+			{
+				if( getTerms().size() > 0 )
+				{
+					
+				}
+				for (int j = 0; j < getChildren().size(); j++)
+				{
+					SearchQuery child = (SearchQuery) getChildren().get(j);
+					String query = child.toQuery();
+					boolean enclose = true;
+					if (query.startsWith("+") || query.startsWith("-"))
+						enclose = false;
+						
+					//&& !query.startsWith("+") && !query.startsWith("-")
+					if (j > 0 )
+					{
+						done.append(" ");
+						if( isAndTogether())
+						{
+							if (enclose)
+							{
+								done.append("+(");	
+							}
+						}
+						else
+						{
+							done.append("OR ");
+							if (enclose)
+							{
+								done.append("(");	
+							}
+						}
+					}
+					else if (enclose)
+					{
+						done.append("(");
+					}
+					done.append(query);
+					
+					if (enclose)
+					{
+						done.append(")");	
+					}
+				}
+			}
+			return done.toString();
+		}
 
 
 	
