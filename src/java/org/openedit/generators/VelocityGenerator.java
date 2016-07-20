@@ -146,7 +146,7 @@ public class VelocityGenerator extends BaseGenerator implements Generator
 		{
 			if( ignoreError(ioex) )
 			{
-				log.info("Browser canceled request");
+				log.debug("Browser canceled request");
 				return;
 			}
 			if (ioex instanceof OpenEditException)
