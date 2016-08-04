@@ -1442,6 +1442,15 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				{
 					Date before = formater.parse(beforeString);
 					Date after = formater.parse(afterString);
+					
+					Calendar c = new GregorianCalendar();
+
+					c.setTime(before);
+					 c.set(Calendar.HOUR_OF_DAY, 23);
+					    c.set(Calendar.MINUTE, 59);
+					    c.set(Calendar.SECOND, 59);
+					    c.set(Calendar.MILLISECOND, 999);
+					before = c.getTime();
 					t = search.addBetween(field, after, before);
 					search.setProperty(t.getId() + ".before", beforeString);
 					search.setProperty(t.getId() + ".after", afterString);
