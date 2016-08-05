@@ -6,6 +6,7 @@ import java.util.Map;
 import org.openedit.Data;
 import org.openedit.MultiValued;
 import org.openedit.OpenEditException;
+import org.openedit.modules.translations.LanguageMap;
 
 
 public class BaseData implements MultiValued, Comparable, Cloneable
@@ -43,6 +44,17 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 	public String getId() {
 		String name = get("id");
 		return name;
+	}
+	public String getName(String locale) 
+	{
+		Object name = getValue("name");
+		if( name instanceof LanguageMap)
+		{
+			LanguageMap values = (LanguageMap)name;
+			String val = values.getDefaultText(locale);
+			return val;
+		}
+		return (String)name;
 	}
 
 	public String getName() {

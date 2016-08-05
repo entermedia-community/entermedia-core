@@ -20,10 +20,17 @@ public class LanguageMap extends TreeMap
 		
 		String val = (String) get(inLocale);
 		return val;
-		
-		
 	}
 
+	public String getDefaultText(String inLocale)
+	{
+		String val = getText(inLocale);
+		if( val == null && (inLocale == null || !inLocale.equals("en") ) )
+		{
+			val = getText("en");
+		}
+		return val;
+	}
 	public void setText(String inVal, String inLocale)
 	{
 		put(inLocale, inVal); 
