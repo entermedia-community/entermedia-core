@@ -46,13 +46,12 @@ public class SearcherManager
 		Searcher searcher = (Searcher)getCache().get(id);
 		if( searcher == null )
 		{
-			String finalcatalogid = inCatalogId;
 			synchronized (this)
 			{
 				searcher = (Searcher)getCache().get(id);
 				if( searcher == null )
 				{
-					finalcatalogid = resolveCatalogId(inCatalogId, inFieldName);
+					String finalcatalogid = resolveCatalogId(inCatalogId, inFieldName);
 					if( !finalcatalogid.equals(inCatalogId))
 					{
 						searcher = (Searcher)getCache().get(finalcatalogid + "|" + inFieldName);
@@ -62,6 +61,8 @@ public class SearcherManager
 						}
 					}
 					//TODO: Look in the cache again for the target Searcher
+					boolean created = getNodeManager(finalcatalogid).connectCatalog(finalcatalogid);
+					
 					PropertyDetailsArchive newarchive = getPropertyDetailsArchive(finalcatalogid);
 //					if( inFieldName == null)
 //					{
@@ -75,7 +76,6 @@ public class SearcherManager
 					searcher.setPropertyDetailsArchive(newarchive);
 					searcher.setSearcherManager(this);
 					searcher.initialize();
-
 					if(log.isDebugEnabled())
 					{
 						log.debug("Created New Searcher: Catalog = " + searcher.getCatalogId() + "SearchType = " + searcher.getSearchType() + "Searcher = " + searcher.getClass() );
@@ -85,22 +85,22 @@ public class SearcherManager
 					{
 						getCache().put(finalcatalogid + "|" + inFieldName, searcher); //make sure we store both versions since they are the same searcher
 					}
+					if( id.equals("catalogsettings") )
+					{
+						Data defaultval = (Data)searcher.searchById("log_all_searches");
+						if( defaultval != null )
+						{
+							setShowSearchLogs(inCatalogId, Boolean.parseBoolean(defaultval.get("value")));
+						}
+					}
 				}
 			}
-			boolean created = getNodeManager(finalcatalogid).connectCatalog(finalcatalogid);
-			if( id.equals("catalogsettings") )
-			{
-				Data defaultval = (Data)searcher.searchById("log_all_searches");
-				if( defaultval != null )
-				{
-					setShowSearchLogs(inCatalogId, Boolean.parseBoolean(defaultval.get("value")));
-				}
-			}
-
 		}
 		//log.debug("return " + id + " " + searcher);
 		return searcher;
 	}
+
+	
 	protected NodeManager getNodeManager(String inFinalcatalogid)
 	{
 		try
