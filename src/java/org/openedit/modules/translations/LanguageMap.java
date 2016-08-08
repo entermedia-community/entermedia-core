@@ -39,6 +39,10 @@ public class LanguageMap extends TreeMap
 	@Override
 	public String toString()
 	{
+		if( size() == 1)
+		{
+			return (String)values().iterator().next();
+		}
 		StringBuffer values = new StringBuffer();
 		for (Iterator iterator = keySet().iterator(); iterator.hasNext();)
 		{
