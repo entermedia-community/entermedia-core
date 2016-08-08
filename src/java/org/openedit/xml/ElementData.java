@@ -13,12 +13,14 @@ import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.dom4j.Node;
 import org.dom4j.Text;
+import org.dom4j.tree.DefaultText;
 import org.openedit.MultiValued;
 import org.openedit.OpenEditException;
 import org.openedit.data.PropertyDetail;
 import org.openedit.data.PropertyDetails;
 import org.openedit.data.SaveableData;
 import org.openedit.data.SearchData;
+import org.openedit.modules.translations.LanguageMap;
 
 public class ElementData implements MultiValued, SaveableData, Comparable ,SearchData
 {
@@ -26,6 +28,7 @@ public class ElementData implements MultiValued, SaveableData, Comparable ,Searc
 	protected String fieldSourcePath;
 	protected String fieldVersion;
 	protected static final Pattern INVALIDSTUFF = Pattern.compile("[\'\"\n<>&]");  
+	protected PropertyDetails fieldPropertyDetails;
 	
 	public ElementData(Element inHit, PropertyDetails inPropertyDetails)
 	{
@@ -41,9 +44,6 @@ public class ElementData implements MultiValued, SaveableData, Comparable ,Searc
 		//setId(getSearchHit().getId());
 		setPropertyDetails(inPropertyDetails);
 	}
-	
-	
-protected PropertyDetails fieldPropertyDetails;
 	
 	public PropertyDetails getPropertyDetails()
 	{
@@ -87,25 +87,46 @@ protected PropertyDetails fieldPropertyDetails;
 	{
 		fieldElement = inElement;
 	}
+	@Override
+	public String get(String inId)
+	{
+		Object obj = getValue(inId);
+		if( obj == null)
+		{
+			return null;
+		}
+		return String.valueOf(obj);
+	}
 
 	/**
 	 * First we try the child node in case we have CDATA
 	 * Then we try the attributes
 	 */
-	public String get(String inId)
+	public Object getValue(String inId)
 	{
 		Element child = getElement().element(inId);
 		if( child != null)
 		{
 			return child.getText();
 		}
-		
 		if( inId.equals("name"))
 		{
 			String name = getElement().attributeValue(inId);
 			if( name == null)
 			{
-				name =getElement().getText();
+				LanguageMap map = new LanguageMap();
+				for (Iterator iterator = getElement().nodeIterator(); iterator.hasNext();)
+				{
+					Object object = (Object) iterator.next();
+					if( object instanceof DefaultText)
+					{
+						name = getElement().getText();
+						return name;
+					}
+					Element childlang = (Element)object;
+					map.put(childlang.attributeValue("id"),getElement().getText());
+				}
+				return map;
 			}
 			return name;
 		} else if(inId.equals(".version")){
@@ -118,18 +139,18 @@ protected PropertyDetails fieldPropertyDetails;
 		
 		String value =getElement().attributeValue(inId); 
 	
-				if( value == null && getPropertyDetails() != null)
+		if( value == null && getPropertyDetails() != null)
+		{
+			PropertyDetail detail = getPropertyDetails().getDetail(inId);
+			if( detail != null)
+			{
+				String legacy = detail.get("legacy");
+				if( legacy != null)
 				{
-					PropertyDetail detail = getPropertyDetails().getDetail(inId);
-					if( detail != null)
-					{
-						String legacy = detail.get("legacy");
-						if( legacy != null)
-						{
-							value = get(legacy);
-						}
-					}
+					value = get(legacy);
 				}
+			}
+		}
 				
 				
 		return value;
@@ -162,11 +183,11 @@ protected PropertyDetails fieldPropertyDetails;
 		getElement().addAttribute("id",inNewid);
 		
 	}
-	public void setProperty(String inId, String inValue)
+	public void setValue(String inId, Object inValue)
 	{
 		if(inId.equals(".version"))
 		{
-			setVersion(inValue);
+			setVersion(String.valueOf( inValue) );
 		}
 		else
 		{
@@ -183,6 +204,32 @@ protected PropertyDetails fieldPropertyDetails;
 							break;
 						}
 					}
+					Attribute attr = getElement().attribute(inId);
+					if( attr != null)
+					{
+						getElement().remove(attr);
+					}
+					if( inValue != null)
+					{
+						//save in XML format all the time
+						Element child = getElement().addElement(inId);
+						if( inValue instanceof Map)
+						{
+							//loop over languages
+							Map languages = (Map)inValue;
+							for (Iterator iterator = languages.keySet().iterator(); iterator.hasNext();)
+							{
+								String lang = (String) iterator.next();
+								String val = (String)languages.get(lang);
+								child.addElement("language").addAttribute("id",lang).addCDATA((String)val);
+							}
+						}
+						else
+						{
+							child.addCDATA((String)inValue);
+						}
+					}	
+					return;
 				}
 				//always check for a child
 				Element child = getElement().element(inId);
@@ -191,33 +238,35 @@ protected PropertyDetails fieldPropertyDetails;
 					//TODO: See if value changed?
 					getElement().remove(child);
 				}
-				
-				if( inValue == null || inValue.length() == 0)
+				if( inValue instanceof String)
 				{
-					Attribute attr = getElement().attribute(inId);
-					if( attr != null)
-					{
-						getElement().remove(attr);
-					}
-				}
-				else
-				{
-					if( INVALIDSTUFF.matcher(inValue).find() )
+					String val = (String)inValue;
+					if( val == null || val.length() == 0)
 					{
 						Attribute attr = getElement().attribute(inId);
 						if( attr != null)
 						{
 							getElement().remove(attr);
 						}
-						
-						getElement().addElement(inId).addCDATA(inValue);
 					}
 					else
 					{
-						getElement().addAttribute(inId,inValue);						
+						if( INVALIDSTUFF.matcher(val).find() )
+						{
+							Attribute attr = getElement().attribute(inId);
+							if( attr != null)
+							{
+								getElement().remove(attr);
+							}
+							
+							getElement().addElement(inId).addCDATA(val);
+						}
+						else
+						{
+							getElement().addAttribute(inId,val);						
+						}
 					}
-				}
-			//}
+				}	
 		}
 	}
 	public String getSourcePath()
@@ -332,14 +381,9 @@ protected PropertyDetails fieldPropertyDetails;
 	}
 	
 	@Override
-	public Object getValue(String inKey)
+	public void setProperty(String inKey, String inValue)
 	{
-		return get(inKey);
-	}
-	@Override
-	public void setValue(String inKey, Object inValue)
-	{
-		setProperty(inKey, String.valueOf(inValue));
+		setValue(inKey,inValue);
 	}
 
 
@@ -363,6 +407,22 @@ protected PropertyDetails fieldPropertyDetails;
 	@Override
 	public void removeValue(String inKey, Object inNewValue)
 	{
+		
+	}
+
+
+	@Override
+	public Map getSearchData()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public void setSearchData(Map inSearchHit)
+	{
+		// TODO Auto-generated method stub
 		
 	}
 	

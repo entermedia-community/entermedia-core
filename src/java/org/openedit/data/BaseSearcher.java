@@ -2477,15 +2477,9 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 										map = (LanguageMap) oldval;										
 									} else{
 										map = new LanguageMap();
-										map.setText((String) oldval, "en");
-
+										map.setText("en",(String) oldval);
 									}
-									
-									 
 								}
-										
-										
-									 
 								if (map == null)
 								{
 									map = new LanguageMap();
@@ -2494,7 +2488,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 								{
 									String lang = language[j];
 									String langval = inReq.getRequestParameter(field + "." + lang);
-									map.setText(langval, lang);
+									map.setText(lang,langval);
 								}
 								result = map;
 //								if (val != null)
