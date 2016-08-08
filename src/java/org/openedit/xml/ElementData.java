@@ -1,6 +1,5 @@
 package org.openedit.xml;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -19,8 +18,9 @@ import org.openedit.OpenEditException;
 import org.openedit.data.PropertyDetail;
 import org.openedit.data.PropertyDetails;
 import org.openedit.data.SaveableData;
+import org.openedit.data.SearchData;
 
-public class ElementData implements MultiValued, SaveableData, Comparable
+public class ElementData implements MultiValued, SaveableData, Comparable ,SearchData
 {
 	protected Element fieldElement;
 	protected String fieldSourcePath;
