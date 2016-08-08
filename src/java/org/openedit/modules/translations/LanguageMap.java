@@ -31,7 +31,7 @@ public class LanguageMap extends TreeMap
 		}
 		return val;
 	}
-	public void setText(String inVal, String inLocale)
+	public void setText(String inLocale, String inVal)
 	{
 		put(inLocale, inVal); 
 	}
