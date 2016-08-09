@@ -175,7 +175,12 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		}
 		if (!runsearch && tracker != null)
 		{
-			String clear = inPageRequest.getRequestParameter(getSearchType() + "clearselection");
+			String clear = inPageRequest.getRequestParameter(getSearchType() + "clearresults");
+			if (Boolean.parseBoolean(clear))
+			{
+				runsearch = true;
+			}
+			clear = inPageRequest.getRequestParameter(getSearchType() + "clearselection");
 			if (Boolean.parseBoolean(clear))
 			{
 				tracker.deselectAll();
