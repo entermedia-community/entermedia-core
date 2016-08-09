@@ -11,9 +11,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.openedit.Data;
 import org.openedit.MultiValued;
 import org.openedit.OpenEditRuntimeException;
-import org.openedit.modules.translations.LanguageMap;
 import org.openedit.util.DateStorageUtil;
 
 public class ValuesMap extends HashMap
@@ -187,8 +187,16 @@ public class ValuesMap extends HashMap
 			Collection existingvalues = (Collection)object;
 			for (Iterator iterator = existingvalues.iterator(); iterator.hasNext();)
 			{
-				String detail = (String) iterator.next();
-				values.append(detail);
+				Object detail = (Object) iterator.next();
+				if( detail instanceof Data)
+				{
+					Data data = (Data)detail;
+					values.append(data.getId());
+				}
+				else
+				{
+					values.append(String.valueOf( detail ) );
+				}
 				if( iterator.hasNext())
 				{
 					values.append("|");
