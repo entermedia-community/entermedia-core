@@ -243,5 +243,7 @@ public class FileItem extends ContentItem implements Data
 		}
 		return val;
 	}
-	
+	public String getName(String inLocale) {
+		return getName();
+	}
 }

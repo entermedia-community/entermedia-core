@@ -8,6 +8,8 @@ public interface Data
 	String getId();
 	void setId(String inNewid);
 	String getName();
+	String getName(String inLocale);
+
 	void setName(String inName);
 	//This is the place that the data originated from
 	void setSourcePath(String inSourcepath);

@@ -286,5 +286,7 @@ public class XmlFile implements Data
 	{
 		setProperty(inKey, String.valueOf(inValue));
 	}
-
+	public String getName(String inLocale) {
+		return getName();
+	}
 }

@@ -505,6 +505,8 @@ public class PropertyDetail implements Data, ViewItem, Comparable
 		return getText();
 	}
 	
+	
+	
 	public void setName(String inName)
 	{
 		setText(inName);
@@ -661,5 +663,10 @@ public class PropertyDetail implements Data, ViewItem, Comparable
 	public boolean isString()
 	{
 	return !(isBoolean() || isDate() || isNumber() );
+	}
+
+	@Override
+	public String getName(String inLocale) {
+		return getName();
 	}
 }

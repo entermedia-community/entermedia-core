@@ -919,4 +919,7 @@ public class Page implements Data, Comparable
 	{
 		setProperty(inKey, String.valueOf(inValue));
 	}
+	public String getName(String inLocale) {
+		return getName();
+	}
 }

@@ -233,4 +233,7 @@ public class BaseGroup extends FileSystemObject implements Group, Serializable, 
 	{
 		setProperty(inKey, String.valueOf(inValue));
 	}
+	public String getName(String inLocale) {
+		return getName();
+	}
 }

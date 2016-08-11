@@ -425,5 +425,7 @@ public class ElementData implements MultiValued, SaveableData, Comparable ,Searc
 		// TODO Auto-generated method stub
 		
 	}
-	
+	public String getName(String inLocale) {
+		return getName();
+	}
 }
