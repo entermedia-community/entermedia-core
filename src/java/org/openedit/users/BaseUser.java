@@ -438,6 +438,10 @@ public class BaseUser extends FileSystemObject implements User, Comparable
 		return toString();
 	}
 
+	public String getName(String inLocale){
+		return getName();
+	}
+	
 	public void setName(String inName)
 	{
 		//not editable
