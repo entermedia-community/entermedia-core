@@ -2465,6 +2465,10 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 								}
 								result = DateStorageUtil.getStorageUtil().parse(val, format);
 							}
+							else
+							{
+								result = DateStorageUtil.getStorageUtil().parseFromStorage(val);
+							}
 						}
 
 						else if (detail != null && detail.isMultiLanguage())
