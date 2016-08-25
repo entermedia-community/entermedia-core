@@ -73,6 +73,19 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	protected List<FilterNode> fieldFilters; 
 	protected Collection<String> fieldSecurityIds;
 	
+	protected int fieldHitsPerPage = 15;
+	
+	
+	public int getHitsPerPage()
+	{
+		return fieldHitsPerPage;
+	}
+
+	public void setHitsPerPage(int inHitsPerPage)
+	{
+		fieldHitsPerPage = inHitsPerPage;
+	}
+
 	public String getResultType()
 	{
 		return fieldResultType;

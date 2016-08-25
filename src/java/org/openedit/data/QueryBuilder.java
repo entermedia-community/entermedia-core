@@ -76,7 +76,11 @@ public class QueryBuilder
 	}
 	
 	
-	
+	public QueryBuilder hitsPerPage(int inHitsPerPage)
+	{
+		getQuery().setHitsPerPage(inHitsPerPage);
+		return this;
+	}
 	
 	
 	public QueryBuilder orgroup(String inKey, Collection<String> inIds)
@@ -112,8 +116,8 @@ public class QueryBuilder
 	}
 	public HitTracker search(WebPageRequest inContext, int inHitsPerPage)
 	{
+		getQuery().setHitsPerPage(inHitsPerPage);
 		HitTracker tracker = getSearcher().cachedSearch(inContext, getQuery());
-		tracker.setHitsPerPage(inHitsPerPage);
 		return tracker;
 	}
 	public HitTracker search()

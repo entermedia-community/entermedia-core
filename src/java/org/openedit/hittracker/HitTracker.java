@@ -201,6 +201,10 @@ public abstract class HitTracker<T> implements Serializable, Collection
 
 	public int getHitsPerPage()
 	{
+		if( fieldSearchQuery != null)
+		{
+			return getSearchQuery().getHitsPerPage();
+		}
 		return fieldHitsPerPage;
 	}
 

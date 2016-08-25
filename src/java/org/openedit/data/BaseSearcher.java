@@ -222,6 +222,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				inQuery.setSortBy(oldSort);
 			}
 		}
+		HitTracker oldtracker = null;
 		if (runsearch)
 		{
 			try
@@ -237,7 +238,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					String sort = inPageRequest.findValue("sortby");
 					inQuery.setSortBy(sort);
 				}
-				HitTracker oldtracker = tracker;
+				oldtracker = tracker;
 				if (oldtracker != null)
 				{
 					if (oldtracker.getSearchQuery().hasFilters())
@@ -250,13 +251,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					}
 				}
 				inQuery.setEndUserSearch(true);
-				inQuery = getSearchQueryFilter().attachFilter(inPageRequest, this, inQuery);
-				tracker = search(inQuery); //search here <----
-				tracker.setSearchQuery(inQuery);
-				if (oldtracker != null)
-				{
-					tracker.setPage(oldtracker.getPage());
-				}
+				
 				String hitsperpage = inPageRequest.getRequestParameter("hitsperpage");
 				if (hitsperpage == null)
 				{
@@ -266,18 +261,20 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				{
 					if (usersettings != null)
 					{
-						tracker.setHitsPerPage(usersettings.getHitsPerPageForSearchType(inQuery.getResultType()));
+						inQuery.setHitsPerPage(usersettings.getHitsPerPageForSearchType(inQuery.getResultType()));
 					}
 					else if (oldtracker != null)
 					{
-						tracker.setHitsPerPage(oldtracker.getHitsPerPage());
+						inQuery.setHitsPerPage(oldtracker.getHitsPerPage());
 					}
 				}
 				else
 				{
-					tracker.setHitsPerPage(Integer.parseInt(hitsperpage));
+					inQuery.setHitsPerPage(Integer.parseInt(hitsperpage));
 				}
-
+				inQuery = getSearchQueryFilter().attachFilter(inPageRequest, this, inQuery);
+				tracker = search(inQuery); //search here <----
+				tracker.setSearchQuery(inQuery);
 				if (oldtracker != null && oldtracker.hasSelections())
 				{
 					tracker.loadPreviousSelections(oldtracker);
@@ -346,6 +343,15 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					tracker.setPage(Integer.parseInt(pagenumber));
 				}
 			}
+			else if (oldtracker != null && oldtracker.getQuery().equals(inQuery))
+			{
+				if( tracker.size() > oldtracker.getPage() * tracker.getHitsPerPage() )
+				{
+					//Make sure it has not changed
+					tracker.setPage(oldtracker.getPage());
+				}	
+			}
+			
 			if (tracker.getHitsName() == null)
 			{
 				String hitsname = inPageRequest.findValue("hitsname");
