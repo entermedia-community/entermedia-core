@@ -590,7 +590,11 @@ public class BaseWebServer implements WebServer
 	
 	public void reloadMounts()
 	{
-		Page mounts = getPageManager().getPage("/WEB-INF/oemounts.xml",true);
+		Page mounts = getPageManager().getPage("/WEB-INF/data/oemounts.xml",true);
+		if( !mounts.exists() )
+		{
+			mounts = getPageManager().getPage("/WEB-INF/oemounts.xml",true);
+		}
 		getPageManager().getRepository().getRepositories().clear();
 		if( mounts.exists() )
 		{
@@ -770,9 +774,11 @@ public class BaseWebServer implements WebServer
 			}
 			
 		}
-		Page mountdata = getPageManager().getPage("/WEB-INF/oemounts.xml");
+		Page mountdata = getPageManager().getPage("/WEB-INF/data/oemounts.xml");
 		OutputStream out = getPageManager().saveToStream(mountdata);
 		new XmlUtil().saveXml(root, out, mountdata.getCharacterEncoding());
+		Page old = getPageManager().getPage("/WEB-INF/oemounts.xml");
+		getPageManager().removePage(old);
 		reloadMounts();
 	}
 }
