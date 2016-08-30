@@ -66,9 +66,9 @@ public class ExecutorManager implements Shutdownable
 				else if( inType.equals("conversions"))
 				{
 					int max =  Runtime.getRuntime().availableProcessors();
-					if( max > 20)
+					if( max > 10)
 					{
-						max = 15; //Disk IO gets crazy
+						max = 10; //Disk IO gets crazy
 					}
 					else if( max < 4)
 					{
