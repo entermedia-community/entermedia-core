@@ -5,7 +5,16 @@ public class Script
 	protected String fieldSrc;
 	protected String fieldId;
 	protected boolean fieldExternal;
+	protected String fieldPath;
 	
+	public String getPath()
+	{
+		return fieldPath;
+	}
+	public void setPath(String inPath)
+	{
+		fieldPath = inPath;
+	}
 	public boolean isExternal() {
 		return fieldExternal;
 	}

@@ -114,6 +114,7 @@ public class XConfToPageSettingsConverter
 		script.setSrc(inConfigElement.get("src"));
 		String external = inConfigElement.get("external");
 		script.setExternal(Boolean.parseBoolean(external));
+		script.setPath(inSettings.getPath());
 		return script;
 	}
 	protected Style createStyle(PageSettings inSettings, Configuration inConfigElement)
