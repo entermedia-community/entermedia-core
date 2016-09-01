@@ -580,6 +580,11 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	 */
 	public SearchQuery addStandardSearchTerms(WebPageRequest inPageRequest) throws OpenEditException
 	{
+		String type = inPageRequest.getRequestParameter("searchtype");
+		if( type != null && !type.equals(getSearchType()) )
+		{
+			return null;
+		}
 		SearchQuery search = addFields(inPageRequest);
 		search = addOrGroups(search, inPageRequest);
 
