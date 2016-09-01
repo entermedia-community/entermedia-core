@@ -86,7 +86,7 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		fieldHitsPerPage = inHitsPerPage;
 	}
 
-	public String getResultType()
+	public String getResultType()  //this is searchtype
 	{
 		return fieldResultType;
 	}

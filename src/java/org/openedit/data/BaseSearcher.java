@@ -409,7 +409,16 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 
 	public HitTracker loadHits(WebPageRequest inReq)
 	{
-		String id = inReq.findValue("hitssessionid");
+		String type = inReq.findValue("searchtype");
+		String id = null;
+		if( type != null )
+		{
+			id = inReq.findValue( type + "hitssessionid");
+		}
+		if( id == null)
+		{
+			id = inReq.findValue("hitssessionid");
+		}	
 		if (id != null)
 		{
 			HitTracker tracker = (HitTracker) inReq.getSessionValue(id);
