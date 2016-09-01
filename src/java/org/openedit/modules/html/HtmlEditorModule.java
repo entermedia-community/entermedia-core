@@ -38,7 +38,7 @@ public class HtmlEditorModule extends BaseEditorModule
 		if( session != null)
 		{
 			
-			inReq.putPageValue("viewcontent",  session.getWysiwygSourceVariable() );
+			//inReq.putPageValue("viewcontent",  session.getWysiwygSourceVariable() );
 	        //inReq.putPageValue("rawviewcontent", session.getWysiwygSource() );
 	        inReq.putPageValue("csspath", session.getCssPath() );
 	        inReq.putPageValue("editPage",session.getEditPage() );
@@ -83,8 +83,7 @@ public class HtmlEditorModule extends BaseEditorModule
 			return null;
 		}
 		EditorSession inEditorSession = new EditorSession();
-
-		String content = null;
+		inEditorSession.setPageManager(getPageManager());
 		Page editPage = getPageManager().getPage( editPath, true );
 		
 		boolean multipleLang = true;
@@ -112,35 +111,9 @@ public class HtmlEditorModule extends BaseEditorModule
 			editPath = rootdir + editPath;
 		}		
 		boolean useDraft = createDraft(editPage,inReq);
-		if ( useDraft)
-		{
-			editPath = PathUtilities.createDraftPath(editPath);
-			Page draft = getPageManager().getPage(editPath);			
-			if( draft.exists() )
-			{
-				//then use this content.
-				content = draft.getContent();
-			}
-			else
-			{
-				if( editPage.exists() )
-				{
-					content = editPage.getContent();
-				}
-			}
-		}
-		else if( editPage.exists() )
-		{
-			content = editPage.getContent();
-		}
-		if ( content == null)
-		{
-			content = "";
-		}
+		inEditorSession.setUseDraft(useDraft);
 		editPage = getPageManager().getPage(editPath, true); 
 		inEditorSession.setEditPage(editPage);
-		inEditorSession.setOriginalSource(content);
-		inEditorSession.setWorkingSource(content);		
 		String origUrl = inReq.getRequestParameter("origURL");
 		inEditorSession.setOriginalUrl(origUrl);
 		

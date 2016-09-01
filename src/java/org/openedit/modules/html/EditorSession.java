@@ -15,6 +15,9 @@ See the GNU Lesser General Public License for more details.
 package org.openedit.modules.html;
 
 import org.openedit.modules.edit.EditSession;
+import org.openedit.page.Page;
+import org.openedit.page.manage.PageManager;
+import org.openedit.util.PathUtilities;
 import org.openedit.util.URLUtilities;
 
 /**
@@ -35,7 +38,64 @@ public class EditorSession extends EditSession
 	protected String fieldWorkingSource;
 	protected String fieldDefaultCopy = "<p>Your copy here.</p>";
 	protected boolean fieldDocumentModified;
+	protected boolean fieldUseDraft;
+	
 
+	public boolean isUseDraft()
+	{
+		return fieldUseDraft;
+	}
+
+	public void setUseDraft(boolean inUseDraft)
+	{
+		fieldUseDraft = inUseDraft;
+	}
+
+	public PageManager getPageManager()
+	{
+		return fieldPageManager;
+	}
+	
+	protected String loadContent()
+	{
+		String content = null;
+		
+		if ( isUseDraft() )
+		{
+			String editPath = PathUtilities.createDraftPath(getEditPath());
+			Page draft = getPageManager().getPage(editPath);			
+			if( draft.exists() )
+			{
+				//then use this content.
+				content = draft.getContent();
+			}
+			else
+			{
+				if( getEditPage().exists() )
+				{
+					content = getEditPage().getContent();
+				}
+			}
+		}
+		else if( getEditPage().exists() )
+		{
+			content = getEditPage().getContent();
+		}
+		if ( content == null)
+		{
+			content = getDefaultCopy();
+		}
+		setOriginalSource(content);
+		setWorkingSource(content);
+		return content;
+	}
+
+	public void setPageManager(PageManager inPageManager)
+	{
+		fieldPageManager = inPageManager;
+	}
+	protected PageManager fieldPageManager;
+	
 	public String createVariable(String inCode)
 	{
 		final int MAX_LINE_LENGTH = 300;
@@ -239,7 +299,7 @@ public class EditorSession extends EditSession
 	{
 		if ( fieldOriginalSource == null )
 		{
-			fieldOriginalSource = getDefaultCopy();
+			loadContent();
 		}
 		return fieldOriginalSource;
 	}
@@ -262,7 +322,7 @@ public class EditorSession extends EditSession
 	{
 		if ( fieldWorkingSource == null )
 		{
-			fieldWorkingSource = getDefaultCopy();
+			loadContent();
 		}
 		return fieldWorkingSource;
 	}
