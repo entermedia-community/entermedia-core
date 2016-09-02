@@ -250,8 +250,16 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 						}
 					}
 				}
-				inQuery.setEndUserSearch(true);
-				
+				String endusersearch = inPageRequest.getContentProperty( getSearchType() + "endusersearch");
+				if( endusersearch == null )
+				{
+					inQuery.setEndUserSearch(true);
+				}
+				else
+				{
+					inQuery.setEndUserSearch(Boolean.parseBoolean(endusersearch));
+				}	
+
 				String hitsperpage = inPageRequest.getRequestParameter("hitsperpage");
 				if (hitsperpage == null)
 				{
@@ -682,7 +690,6 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			return null;
 		}
 		SearchQuery search = createSearchQuery();
-		search.setEndUserSearch(true);
 		String and = inPageRequest.getRequestParameter("querytype");
 		if (and != null)
 		{
@@ -710,7 +717,6 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		else
 		{
 			formater = getDefaultDateFormat(); // dateFormat = "MM/dd/yyyy";
-
 		}
 
 		Map valuecounter = new HashMap(fieldid.length);
