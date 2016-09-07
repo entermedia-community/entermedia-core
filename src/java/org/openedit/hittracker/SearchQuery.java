@@ -374,15 +374,16 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 				done.append(term.getValue());
 			}
 		}
-//		for (Iterator iterator = getChildren().iterator(); iterator.hasNext();)
-//		{
-//			SearchQuery query = (SearchQuery) iterator.next();
-//			if( done.length() > 0 )
-//			{
-//				done.append(op);
-//			}
-//			done.append(query.toFriendly());
-//		}
+		if( getSorts().size() > 0)
+		{
+			done.append(" sort ");
+			for (Iterator iterator = getSorts().iterator(); iterator.hasNext();)
+			{
+				String sort= (String) iterator.next();
+				done.append(sort);
+				done.append(" ");
+			}
+		}
 
 		return done.toString();
 	}
