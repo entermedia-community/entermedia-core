@@ -18,6 +18,7 @@ import org.openedit.util.DateStorageUtil;
 
 public class ValuesMap extends HashMap
 {
+	public static final Object NULLVALUE = new Object(); 
 	public ValuesMap()
 	{
 		super(5);
@@ -29,7 +30,7 @@ public class ValuesMap extends HashMap
 	public void removeValue(String inKey, Object inOldValue)
 	{
 		Object val = get(inKey);
-		if( val == null )
+		if( val == null || val == NULLVALUE)
 		{
 			return;
 		}
@@ -45,7 +46,8 @@ public class ValuesMap extends HashMap
 		}
 		else
 		{
-			remove(inKey);
+			//remove(inKey);
+			put( inKey, NULLVALUE);
 		}
 	}
 	public void addValue(String inKey, Object inNewValue)
@@ -71,12 +73,34 @@ public class ValuesMap extends HashMap
 			}
 			put(inKey, valuesa);
 		}
-		
+	}
+//	@Override
+//	public Object get(Object inKey)
+//	{
+//		Object val =  super.get(inKey);
+//		if( val == NULLVALUE)
+//		{
+//			val = null;
+//		}
+//		return val;
+//	}
+	@Override
+	public Object put(Object inArg0, Object inArg1)
+	{
+		if( inArg1 == null)
+		{
+			inArg1 = NULLVALUE;
+		}
+		return super.put(inArg0, inArg1);
 	}
 	
 	public Collection<String> getValues(String inPreference)
 	{
 		Object object = get(inPreference);
+		if( object == null || object == NULLVALUE)
+		{
+			return null;
+		}
 		if( object instanceof Collection)
 		{
 			return (Collection<String>)object;
@@ -107,12 +131,16 @@ public class ValuesMap extends HashMap
 	}
 	public boolean getBoolean(String inId)
 	{
-		String val = getString(inId);
-		if( val != null)
+		Object val = get(inId);
+		if( val == null || val == NULLVALUE)
 		{
-			return Boolean.parseBoolean(val);
+			return false;
 		}
-		return false;
+		if( val instanceof Boolean)
+		{
+			return (boolean)val;
+		}
+		return Boolean.valueOf(val.toString());
 		
 	}
 	
@@ -136,12 +164,27 @@ public class ValuesMap extends HashMap
 	}
 	public Date getDate(String inField)
 	{
-		return (Date)get(inField);
+		Object val = get(inField);
+		if( val == null || val == NULLVALUE)
+		{
+			return null;
+		}
+		if( val instanceof Date)
+		{
+			return (Date)val;
+		}
+		//??
+		Date date = DateStorageUtil.getStorageUtil().parseFromStorage((String)val);
+		return date;
 	}
 	
 	public Date getDate(String inField, String inDateFormat)
 	{
 		Object val = get(inField);
+		if( val == null || val == NULLVALUE)
+		{
+			return null;
+		}
 		if( val instanceof Date)
 		{
 			return (Date)val;
@@ -149,21 +192,14 @@ public class ValuesMap extends HashMap
 		String date = (String)val;
 		if (date != null)
 		{
-			SimpleDateFormat format = new SimpleDateFormat(inDateFormat);
-			try
-			{
-				return format.parse(date);
-			}
-			catch (ParseException e)
-			{
-				throw new OpenEditRuntimeException(e);
-			}
+			Date dateval = DateStorageUtil.getStorageUtil().parse((String)val, inDateFormat);
+			return dateval;
 		}
 		return null;
 	}
 	public String toString(Object object)
 	{
-		if (object == null) {
+		if (object == null || object == NULLVALUE) {
 			return null;
 		}
 		if (object instanceof String) {
