@@ -23,7 +23,7 @@ public abstract class HitTracker<T> implements Serializable, Collection
 	protected boolean fieldAllSelected;
 	protected Collection<String> fieldSelections;
 	protected int fieldPage = 1;
-	protected int fieldHitsPerPage = 15;
+	protected int fieldHitsPerPage = -1;
 	protected int fieldCurrentHit;
 	protected SearchQuery fieldSearchQuery;
 	protected boolean fieldUseRandom;
@@ -201,11 +201,15 @@ public abstract class HitTracker<T> implements Serializable, Collection
 
 	public int getHitsPerPage()
 	{
+		if( fieldHitsPerPage > -1)
+		{
+			return fieldHitsPerPage;
+		}
 		if( fieldSearchQuery != null)
 		{
 			return getSearchQuery().getHitsPerPage();
 		}
-		return fieldHitsPerPage;
+		return 15;
 	}
 
 	public void setHitsPerPage(int inHitsPerPage)
