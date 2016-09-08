@@ -136,20 +136,21 @@ public abstract class PathProcessor
 		{
 			return false;
 		}
-		if (getIncludeMatches() != null)
-		{
-			//String ext = PathUtilities.extractPageType(inItem.getPath());
-			String path =  inItem.getPath();
-			for (Iterator iterator = getIncludeMatches().iterator(); iterator.hasNext();)
-			{
-				String validExt = (String) iterator.next();
-				if (PathUtilities.match(path, validExt))
-				{
-					return true;
-				}
-			}
-			return false; //Include only specific files
-		}
+//let the mount deal with this
+//		if (getIncludeMatches() != null)
+//		{
+//			//String ext = PathUtilities.extractPageType(inItem.getPath());
+//			String path =  inItem.getPath();
+//			for (Iterator iterator = getIncludeMatches().iterator(); iterator.hasNext();)
+//			{
+//				String validExt = (String) iterator.next();
+//				if (PathUtilities.match(path, validExt))
+//				{
+//					return true;
+//				}
+//			}
+//			return false; //Include only specific files
+//		}
 		if (fieldExcludeMatches != null)
 		{
 			String path =  inItem.getPath();
@@ -172,17 +173,18 @@ public abstract class PathProcessor
 		{
 			return false;
 		}
-		if (fieldIncludeMatches != null)
-		{
-			for (Iterator iterator = getIncludeMatches().iterator(); iterator.hasNext();)
-			{
-				String match = (String) iterator.next();
-				if (PathUtilities.match(path, match))
-				{
-					return true;
-				}
-			}
-		}
+		//this is not neede 
+//		if (fieldIncludeMatches != null)
+//		{
+//			for (Iterator iterator = getIncludeMatches().iterator(); iterator.hasNext();)
+//			{
+//				String match = (String) iterator.next();
+//				if (PathUtilities.match(path, match))
+//				{
+//					return true;
+//				}
+//			}
+//		}
 		if (fieldExcludeMatches != null)
 		{
 			for (Iterator iterator = getExcludeMatches().iterator(); iterator.hasNext();)
