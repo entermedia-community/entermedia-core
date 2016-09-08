@@ -34,14 +34,19 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	protected boolean fieldAndTogether = true;
 	protected boolean fieldEndUserSearch = false;
 	protected String fieldSortLanguage = "en";
-	protected boolean fieldIncludeAggregations = true;
+	protected boolean fieldIncludeFacets = false;
+
 	
-	public boolean isIncludeAggregations() {
-		return fieldIncludeAggregations;
+	
+	
+	public boolean isIncludeFacets() {
+		//return fieldIncludeFacets;
+		return true;// This is for a performance boost, not quite working yet.
 	}
 
-	public void setIncludeAggregations(boolean inIncludeAggregations) {
-		fieldIncludeAggregations = inIncludeAggregations;
+	public void setIncludeFacets(boolean inIncludeAggregations) {
+		//fieldIncludeFacets = inIncludeAggregations;
+		
 	}
 
 	public String getSortLanguage()
