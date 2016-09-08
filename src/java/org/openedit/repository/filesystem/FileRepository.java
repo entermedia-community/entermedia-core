@@ -335,11 +335,10 @@ public class FileRepository extends  BaseRepository
 						folder = true;
 					}
 				}
-				
-				if( showChild(all[i]))
+				String path = inParent + "/" + PathUtilities.extractFileName(all[i]);				
+				if( showChild(path, folder))
 				{
-					String name = inParent + "/" + PathUtilities.extractFileName(all[i]);
-					children.add(name);
+					children.add(path);
 				}
 			}
 			return children;
