@@ -38,6 +38,11 @@ public class PropertyDetailsArchive {
 	protected SearcherManager fieldSearcherManager;
 	protected Map<String, View> fieldViewCache;
 	protected Map fieldPropertyDetails;
+	protected List fieldChildTables;
+	protected List fieldChildTableNames;
+	
+
+	
 
 	public SearcherManager getSearcherManager() {
 		return fieldSearcherManager;
@@ -379,10 +384,15 @@ public class PropertyDetailsArchive {
 			
 			// load any defaults - AFTER we have loaded all the existing stuff.
 			// don't overwrite anything that is here already.
+			
+			
+			
 			List paths = getPageManager()
 					.getChildrenPaths(
 							"/" + getCatalogId() + "/data/fields/" + inType
 									+ "/", true);
+			
+			paths.add("/" + getCatalogId() + "/data/fields/" + inType + ".xml");
 			for (Iterator iterator = paths.iterator(); iterator.hasNext();) {
 
 				String defaultfile = (String) iterator.next();
@@ -502,6 +512,20 @@ public class PropertyDetailsArchive {
 		if (inDetails.getPrefix() != null) {
 			root.addAttribute("prefix", inDetails.getPrefix());
 		}
+		
+		if (inDetails.getBeanName() != null) {
+			root.addAttribute("beanname", inDetails.getBeanName());
+		}
+		if (inDetails.getClassName() != null) {
+			root.addAttribute("classname", inDetails.getClassName());
+		}
+		
+		
+		
+		
+		
+		
+		
 		file.setRoot(root);
 		file.setElementName("property");
 
@@ -711,35 +735,53 @@ public class PropertyDetailsArchive {
 	}
 
 	public List findChildTables(){
-		List searchtypes = listSearchTypes();
-		ArrayList tables = new ArrayList();
-		for (Iterator iterator = searchtypes.iterator(); iterator.hasNext();)
+		if (fieldChildTables == null)
 		{
-			String type = (String) iterator.next();
-			PropertyDetails details = getPropertyDetailsCached(type);
-			PropertyDetail parent = details.getDetail("_parent");
-			if(parent != null){
-				tables.add(details);
+			fieldChildTables = new ArrayList();
+			List searchtypes = listSearchTypes();
+			for (Iterator iterator = searchtypes.iterator(); iterator.hasNext();)
+			{
+				String type = (String) iterator.next();
+				PropertyDetails details = getPropertyDetailsCached(type);
+				PropertyDetail parent = details.getDetail("_parent");
+				if(parent != null){
+					fieldChildTables.add(details);
+				}
+				
 			}
 			
-		}
-		return tables;
-		
+		 } 
+		 else{
+			 return fieldChildTables;
+		 }		
+	
+		return new ArrayList();
 	}
 	public List<String> findChildTablesNames(){
-		List searchtypes = listSearchTypes();
-		ArrayList tables = new ArrayList();
-		for (Iterator iterator = searchtypes.iterator(); iterator.hasNext();)
+		
+		
+		if (fieldChildTableNames == null)
 		{
-			String type = (String) iterator.next();
-			PropertyDetails details = getPropertyDetailsCached(type);
-			PropertyDetail parent = details.getDetail("_parent");
-			if(parent != null)
+			fieldChildTableNames = new ArrayList();
+			List searchtypes = listSearchTypes();
+			for (Iterator iterator = searchtypes.iterator(); iterator.hasNext();)
 			{
-				tables.add(type);
+				String type = (String) iterator.next();
+				PropertyDetails details = getPropertyDetailsCached(type);
+				PropertyDetail parent = details.getDetail("_parent");
+				if(parent != null)
+				{
+					fieldChildTableNames.add(type);
+				}
 			}
-		}
-		return tables;
+
+			return fieldChildTableNames;
+		 } 
+		 else{
+			 return fieldChildTableNames;
+		 }		
+	
+		
 		
 	}
 	

@@ -52,6 +52,26 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	protected boolean fieldAllowRemoteDetails = false;
 	protected String fieldAlternativeIndex;
 
+	
+	protected boolean fieldForceBulk = false;
+	
+	
+	
+	
+	
+
+	public boolean isForceBulk()
+	{
+		return fieldForceBulk;
+	}
+
+	public void setForceBulk(boolean inForceBulk)
+	{
+		fieldForceBulk = inForceBulk;
+	}
+
+	
+	
 	public String getAlternativeIndex()
 	{
 		return fieldAlternativeIndex;
@@ -2660,8 +2680,11 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					Data hit = (Data) iterator2.next();
 					Data real = (Data) loadData(hit);
 					tosave.add(real);
-					if(tosave.size() > 1000){
+					if(tosave.size() > 10000){
 						
+						
+						saveAllData(tosave, null);
+
 						tosave.clear();
 					}
 				}
