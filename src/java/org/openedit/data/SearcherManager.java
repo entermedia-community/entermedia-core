@@ -105,6 +105,7 @@ public class SearcherManager
 	{
 		try
 		{
+			//If this is failing you are missing the base/system/configuration folder
 			NodeManager manager = (NodeManager)getModuleManager().getBean(inFinalcatalogid,"nodeManager");
 			return manager;
 		}
