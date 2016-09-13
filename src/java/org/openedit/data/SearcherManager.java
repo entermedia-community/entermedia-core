@@ -577,4 +577,15 @@ public class SearcherManager
 	}
 
 	
+	public void resetAlternative(){
+		for (Iterator iterator = getCache().keySet().iterator(); iterator.hasNext();)
+		{
+			String key = (String) iterator.next();
+			Searcher toclear = (Searcher) getCache().get(key);
+			toclear.setAlternativeIndex(null);
+			
+		}
+	}
+	
+	
 }
