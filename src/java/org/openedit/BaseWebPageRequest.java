@@ -1218,7 +1218,12 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 	}
 	public String getDate(Date inDate)
 	{
-		
+		String format = getUserProfileValue("shortdateformat");
+		if( format != null)
+		{
+			String value = getLocaleManager().getDateStorageUtil().formatDateObj(inDate, format);
+			return value;
+		}
 		return getLocaleManager().formatDateForDisplay( inDate, getLocale());
 	}
 	
