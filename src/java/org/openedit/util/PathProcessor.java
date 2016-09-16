@@ -16,7 +16,7 @@ public abstract class PathProcessor
 	protected String fieldRootPath;
 	protected PageManager fieldPageManager;
 	protected long fieldExecCount;
-	protected List fieldIncludeExtensions;
+	protected List fieldIncludeMatches;
 	protected List fieldExcludeMatches;
 	protected boolean fieldRecursive = true;
 	
@@ -136,22 +136,21 @@ public abstract class PathProcessor
 		{
 			return false;
 		}
-		if (getIncludeExtensions() != null)
-		{
-			String ext = PathUtilities.extractPageType(inItem.getPath());
-			if( ext != null)
-			{
-				for (Iterator iterator = getIncludeExtensions().iterator(); iterator.hasNext();)
-				{
-					String validExt = (String) iterator.next();
-					if (validExt.equals(ext.toLowerCase()))
-					{
-						return true;
-					}
-				}
-			}
-			return false; //Include only specific files
-		}
+//let the mount deal with this
+//		if (getIncludeMatches() != null)
+//		{
+//			//String ext = PathUtilities.extractPageType(inItem.getPath());
+//			String path =  inItem.getPath();
+//			for (Iterator iterator = getIncludeMatches().iterator(); iterator.hasNext();)
+//			{
+//				String validExt = (String) iterator.next();
+//				if (PathUtilities.match(path, validExt))
+//				{
+//					return true;
+//				}
+//			}
+//			return false; //Include only specific files
+//		}
 		if (fieldExcludeMatches != null)
 		{
 			String path =  inItem.getPath();
@@ -174,6 +173,18 @@ public abstract class PathProcessor
 		{
 			return false;
 		}
+		//this is not neede 
+//		if (fieldIncludeMatches != null)
+//		{
+//			for (Iterator iterator = getIncludeMatches().iterator(); iterator.hasNext();)
+//			{
+//				String match = (String) iterator.next();
+//				if (PathUtilities.match(path, match))
+//				{
+//					return true;
+//				}
+//			}
+//		}
 		if (fieldExcludeMatches != null)
 		{
 			for (Iterator iterator = getExcludeMatches().iterator(); iterator.hasNext();)
@@ -275,21 +286,21 @@ public abstract class PathProcessor
 		fieldRecursive = inRecursive;
 	}
 
-	public List getIncludeExtensions()
+	public List getIncludeMatches()
 	{
-		return fieldIncludeExtensions;
+		return fieldIncludeMatches;
 	}
 
-	public void setIncludeExtensions(List inIncludeExtensions)
+	public void setIncludeMatches(List inIncludeExtensions)
 	{
-		fieldIncludeExtensions = inIncludeExtensions;
+		fieldIncludeMatches = inIncludeExtensions;
 	}
 
-	public void setIncludeExtensions(String inIncludeFilter)
+	public void setIncludeMatches(String inIncludeFilter)
 	{
 		if (inIncludeFilter != null && inIncludeFilter.length() > 0)
 		{
-			fieldIncludeExtensions = EmStringUtils.split(inIncludeFilter);
+			fieldIncludeMatches = EmStringUtils.split(inIncludeFilter);
 		}
 		
 	}

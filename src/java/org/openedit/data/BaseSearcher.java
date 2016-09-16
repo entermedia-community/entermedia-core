@@ -52,6 +52,26 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	protected boolean fieldAllowRemoteDetails = false;
 	protected String fieldAlternativeIndex;
 
+	
+	protected boolean fieldForceBulk = false;
+	
+	
+	
+	
+	
+
+	public boolean isForceBulk()
+	{
+		return fieldForceBulk;
+	}
+
+	public void setForceBulk(boolean inForceBulk)
+	{
+		fieldForceBulk = inForceBulk;
+	}
+
+	
+	
 	public String getAlternativeIndex()
 	{
 		return fieldAlternativeIndex;
@@ -602,14 +622,20 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		{
 			return null;
 		}
+		
 		SearchQuery search = addFields(inPageRequest);
 		search = addOrGroups(search, inPageRequest);
-
+		
 		if (search == null)
 		{
 			return null;
 		}
 		addShowOnly(inPageRequest, search);
+		boolean  includeaggregations = Boolean.parseBoolean(inPageRequest.findValue(getSearchType() + "includefacets"));
+		if(includeaggregations ){
+			search.setIncludeFacets(true);
+		}
+		
 		String resultype = inPageRequest.getRequestParameter("resulttype");
 		if (resultype == null)
 		{
@@ -2213,6 +2239,11 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	{
 		SearchQuery q = createSearchQuery();
 		q.addMatches("id", "*");
+		if(inReq != null){
+			boolean  includefacets = Boolean.parseBoolean(inReq.findValue(getSearchType() + "includefacets"));
+			q.setIncludeFacets(includefacets);
+			
+		}
 		if (inReq != null)
 		{
 			String sort = inReq.getRequestParameter("sortby");
@@ -2649,8 +2680,11 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					Data hit = (Data) iterator2.next();
 					Data real = (Data) loadData(hit);
 					tosave.add(real);
-					if(tosave.size() > 1000){
+					if(tosave.size() > 10000){
 						
+						
+						saveAllData(tosave, null);
+
 						tosave.clear();
 					}
 				}

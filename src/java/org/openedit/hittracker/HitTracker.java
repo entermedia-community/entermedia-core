@@ -201,16 +201,20 @@ public abstract class HitTracker<T> implements Serializable, Collection
 
 	public int getHitsPerPage()
 	{
-		if( fieldHitsPerPage == -1)
+		if( fieldHitsPerPage > -1)
+		{
+			return fieldHitsPerPage;
+		}
+		if( fieldSearchQuery != null)
 		{
 			return getSearchQuery().getHitsPerPage();
 		}
-		return fieldHitsPerPage;
+		return 15;
 	}
 
 	public void setHitsPerPage(int inHitsPerPage)
 	{
-		if (inHitsPerPage > 0 && inHitsPerPage != getHitsPerPage())
+		if (inHitsPerPage > 0 && inHitsPerPage != fieldHitsPerPage)
 		{
 			clear();
 			fieldHitsPerPage = inHitsPerPage;

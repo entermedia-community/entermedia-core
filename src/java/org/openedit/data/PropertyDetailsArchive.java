@@ -38,6 +38,11 @@ public class PropertyDetailsArchive {
 	protected SearcherManager fieldSearcherManager;
 	protected Map<String, View> fieldViewCache;
 	protected Map fieldPropertyDetails;
+	protected List fieldChildTables;
+	protected List fieldChildTableNames;
+	
+
+	
 
 	public SearcherManager getSearcherManager() {
 		return fieldSearcherManager;
@@ -379,10 +384,15 @@ public class PropertyDetailsArchive {
 			
 			// load any defaults - AFTER we have loaded all the existing stuff.
 			// don't overwrite anything that is here already.
+			
+			
+			
 			List paths = getPageManager()
 					.getChildrenPaths(
 							"/" + getCatalogId() + "/data/fields/" + inType
 									+ "/", true);
+			
+			paths.add("/" + getCatalogId() + "/data/fields/" + inType + ".xml");
 			for (Iterator iterator = paths.iterator(); iterator.hasNext();) {
 
 				String defaultfile = (String) iterator.next();
@@ -421,45 +431,63 @@ public class PropertyDetailsArchive {
 		return details;
 	}
 
-	public void savePropertyDetails(PropertyDetails inDetails, String inType,
+	
+	public void savePropertyDetail(PropertyDetail inDetail, String inType,
 			User inUser) {
+		
+		String path = "/WEB-INF/data/" + getCatalogId() + "/fields/" + inType
+				+ ".xml";
+		XmlFile settings = getXmlArchive().loadXmlFile(path);
+		if(!settings.isExist()){
+			settings = createDetailsFile(inType);
+		}
+		
+		Element targetdetail = settings.getElementById(inDetail.getId());
+		
+		if(targetdetail == null){
+			targetdetail = settings.addNewElement();
+					targetdetail.setName("property");
+			
+			
+		}
+		fillElement(getPropertyDetails(inType).getDefaults(), targetdetail, inDetail);
+
+		getXmlArchive().saveXml(settings, inUser);
+		clearCache();
+		
+		
+		
+		
+	}
+	
+	
+//	public void savePropertyDetails(PropertyDetails inDetails, String inType,
+//			User inUser) {
+//		XmlFile file = createDetailsFile(inDetails, inType);
+//
+//		for (Iterator iterator = inDetails.getDetails().iterator(); iterator
+//				.hasNext();) {
+//			PropertyDetail detail = (PropertyDetail) iterator.next();
+//			Element element = file.addNewElement();
+//			fillElement(inDetails.getDefaults(), element, detail);
+//		}
+//
+//		getXmlArchive().saveXml(file, inUser);
+//		clearCache();
+//	}
+
+	private XmlFile createDetailsFile(String inType) {
 		XmlFile file = new XmlFile();
 		String path = "/WEB-INF/data/" + getCatalogId() + "/fields/" + inType
 				+ ".xml";
 		file.setPath(path);
 		Element root = DocumentHelper.createElement("properties");
-		if (inDetails.getPrefix() != null) {
-			root.addAttribute("prefix", inDetails.getPrefix());
-		}
-		if (inDetails.getClassName() != null) {
-			root.addAttribute("class", inDetails.getClassName());
-		}
 		
-//		if (inDetails.getDependsOnText() != null) {
-//			root.addAttribute("dependson", inDetails.getDependsOnText());
-//		}
-		
-		if (inDetails.getBeanName() != null) {
-			root.addAttribute("beanname", inDetails.getBeanName());
-		}
-		
-		if (inDetails.isLazyInit()) {
-			root.addAttribute("lazy-init", "true");
-		}
 		
 		
 		file.setRoot(root);
 		file.setElementName("property");
-
-		for (Iterator iterator = inDetails.getDetails().iterator(); iterator
-				.hasNext();) {
-			PropertyDetail detail = (PropertyDetail) iterator.next();
-			Element element = file.addNewElement();
-			fillElement(inDetails.getDefaults(), element, detail);
-		}
-
-		getXmlArchive().saveXml(file, inUser);
-		clearCache();
+		return file;
 	}
 
 	protected Map<String, View> getViewCache() {
@@ -484,6 +512,20 @@ public class PropertyDetailsArchive {
 		if (inDetails.getPrefix() != null) {
 			root.addAttribute("prefix", inDetails.getPrefix());
 		}
+		
+		if (inDetails.getBeanName() != null) {
+			root.addAttribute("beanname", inDetails.getBeanName());
+		}
+		if (inDetails.getClassName() != null) {
+			root.addAttribute("classname", inDetails.getClassName());
+		}
+		
+		
+		
+		
+		
+		
+		
 		file.setRoot(root);
 		file.setElementName("property");
 
@@ -693,35 +735,53 @@ public class PropertyDetailsArchive {
 	}
 
 	public List findChildTables(){
-		List searchtypes = listSearchTypes();
-		ArrayList tables = new ArrayList();
-		for (Iterator iterator = searchtypes.iterator(); iterator.hasNext();)
+		if (fieldChildTables == null)
 		{
-			String type = (String) iterator.next();
-			PropertyDetails details = getPropertyDetailsCached(type);
-			PropertyDetail parent = details.getDetail("_parent");
-			if(parent != null){
-				tables.add(details);
+			fieldChildTables = new ArrayList();
+			List searchtypes = listSearchTypes();
+			for (Iterator iterator = searchtypes.iterator(); iterator.hasNext();)
+			{
+				String type = (String) iterator.next();
+				PropertyDetails details = getPropertyDetailsCached(type);
+				PropertyDetail parent = details.getDetail("_parent");
+				if(parent != null){
+					fieldChildTables.add(details);
+				}
+				
 			}
 			
-		}
-		return tables;
-		
+		 } 
+		 else{
+			 return fieldChildTables;
+		 }		
+	
+		return new ArrayList();
 	}
 	public List<String> findChildTablesNames(){
-		List searchtypes = listSearchTypes();
-		ArrayList tables = new ArrayList();
-		for (Iterator iterator = searchtypes.iterator(); iterator.hasNext();)
+		
+		
+		if (fieldChildTableNames == null)
 		{
-			String type = (String) iterator.next();
-			PropertyDetails details = getPropertyDetailsCached(type);
-			PropertyDetail parent = details.getDetail("_parent");
-			if(parent != null)
+			fieldChildTableNames = new ArrayList();
+			List searchtypes = listSearchTypes();
+			for (Iterator iterator = searchtypes.iterator(); iterator.hasNext();)
 			{
-				tables.add(type);
+				String type = (String) iterator.next();
+				PropertyDetails details = getPropertyDetailsCached(type);
+				PropertyDetail parent = details.getDetail("_parent");
+				if(parent != null)
+				{
+					fieldChildTableNames.add(type);
+				}
 			}
-		}
-		return tables;
+
+			return fieldChildTableNames;
+		 } 
+		 else{
+			 return fieldChildTableNames;
+		 }		
+	
+		
 		
 	}
 	
@@ -886,8 +946,7 @@ public class PropertyDetailsArchive {
 			targetdetails.removeDetail(inDetail);
 			detail.setSearchType(null);
 			targetdetails.addDetail(detail);			
-			savePropertyDetails(targetdetails, key, null);
-			
+			savePropertyDetail(detail, key, null);
 		}
 		return true;
 	}
@@ -899,8 +958,8 @@ public class PropertyDetailsArchive {
 		PropertyDetail  detail = details.getDetail(inDetail); 
 		detail.setId(inSearcher + inDetail);
 		detail.setProperty("legacy", inDetail);
-		
-		savePropertyDetails(details, inSearcher, null);
+		savePropertyDetail(detail, inSearcher, null);
+		//savePropertyDetails(details, inSearcher, null);
 		
 		//should we search and reset any list ids?
 		for (Iterator iterator = listSearchTypes().iterator(); iterator.hasNext();)
@@ -913,7 +972,7 @@ public class PropertyDetailsArchive {
 				PropertyDetail anotherdetail = (PropertyDetail) iterator2.next();
 				if(anotherdetail.isList() && inDetail.equals(anotherdetail.get("listid") ) ){
 					anotherdetail.setListId(detail.getId());
-					savePropertyDetails(searchdetails, inSearcher, null);
+					savePropertyDetail(anotherdetail, type, null);
 				}
 			}
 			
@@ -921,6 +980,31 @@ public class PropertyDetailsArchive {
 		}
 		
 		return true;
+	}
+
+	public void deletePropertyDetail(PropertyDetail inDetail, String inSearchtype, User inUser) {
+	
+		String path = "/WEB-INF/data/" + getCatalogId() + "/fields/" + inSearchtype
+				+ ".xml";
+		XmlFile settings = getXmlArchive().loadXmlFile(path);
+		if(!settings.isExist()){
+			return;
+		}
+		
+		Element targetdetail = settings.getElementById(inDetail.getId());
+		
+		if(targetdetail != null){
+			 settings.deleteElement(targetdetail);
+			
+			
+		}
+
+		getXmlArchive().saveXml(settings, inUser);
+		clearCache();
+		
+		
+		
+		
 	}
 	
 	

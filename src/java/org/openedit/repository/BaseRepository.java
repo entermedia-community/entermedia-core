@@ -1,9 +1,12 @@
 package org.openedit.repository;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
+import org.openedit.util.EmStringUtils;
 import org.openedit.util.PathUtilities;
 
 public abstract class BaseRepository implements Repository
@@ -132,16 +135,22 @@ public abstract class BaseRepository implements Repository
 		fieldFilterIn = inFilterIn;
 		if( fieldFilterIn != null)
 		{
-			fieldFilterIn = fieldFilterIn.toLowerCase();
-			String[] supported = fieldFilterIn.split("\\n");
-			for (int i = 0; i < supported.length; i++)
-			{
-				if( !supported[i].startsWith("*"))
-				{
-					supported[i] = "*." + supported[i];
-				}
-			}
-			setFilterInList(supported);
+			//fieldFilterIn = fieldFilterIn.toLowerCase();
+			//setFilterInList( EmStringUtils.split(inFilterIn).toArray() );
+			Collection supported = EmStringUtils.split(inFilterIn);
+			String[] vals = (String[])supported.toArray(new String[supported.size()]);
+//			int i = 0;
+//			for (Iterator iterator = supported.iterator(); iterator.hasNext();)
+//			{
+//				String type = (String) iterator.next();
+//				if( !type.startsWith("*"))
+//				{
+//					type = "*." + type;
+//				}
+//				vals[i] = type;
+//				i++;
+//			}
+			setFilterInList(vals);
 		}
 	}
 
@@ -181,8 +190,9 @@ public abstract class BaseRepository implements Repository
 		if( fieldFilterOut != null)
 		{
 			fieldFilterOut = fieldFilterOut.toLowerCase();
-			String[] supported = fieldFilterOut.split("\\s+"); // \s includes \n among others
-			setFilterOutList(supported);
+			Collection supported = EmStringUtils.split(fieldFilterOut);
+			//String[] supported = fieldFilterOut.split("\\s+"); // \s includes \n among others
+			setFilterOutList((String[])supported.toArray(new String[supported.size()]));
 		}
 	}
 	/**
@@ -301,42 +311,49 @@ public abstract class BaseRepository implements Repository
 	 * @param inPath This could be cached
 	 * @return
 	 */
-	public boolean showChild(String inPath)
+	public boolean showChild(String inPath, boolean isFolder)
 	{
-
 		// now check the extension TODO: Remove this since it is not used
-		if( getFilterIn() != null )
+		if( !isFolder && getFilterIn() != null )
 		{
-			String inExtension = PathUtilities.extractPageType(inPath);
-			if(  inExtension != null )
+			for( String filter: getFilterInList() )
 			{
-				inExtension = "." + inExtension.toLowerCase();
-				
-				for( String filter: getFilterInList() )
+				if(PathUtilities.match(inPath,filter))
 				{
-					if(PathUtilities.match(inExtension,filter))
+					if( isExcluded(inPath) )
 					{
-						return true;
+						return false;
 					}
+					return true;
 				}
-				return false;
 			}
+			return false;
 		}
 		
 		//now check the filter
+		if( isExcluded(inPath) )
+		{
+			return false;
+		}
+		
+		return true;
+	}
+
+
+	protected boolean isExcluded(String inPath)
+	{
 		if( getFilterOut() != null )
 		{
-			inPath = inPath.toLowerCase();
+			//inPath = inPath.toLowerCase();
 			for( String out: getFilterOutList() )
 			{
 				if(PathUtilities.match(inPath,out))
 				{
-					return false;
+					return true;
 				}
 			}
 		}
-		
-		return true;
+		return false;
 	}
  
 }

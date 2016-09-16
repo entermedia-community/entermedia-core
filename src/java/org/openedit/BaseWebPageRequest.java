@@ -1218,7 +1218,12 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 	}
 	public String getDate(Date inDate)
 	{
-		
+		String format = getUserProfileValue("shortdateformat");
+		if( format != null)
+		{
+			String value = getLocaleManager().getDateStorageUtil().formatDateObj(inDate, format);
+			return value;
+		}
 		return getLocaleManager().formatDateForDisplay( inDate, getLocale());
 	}
 	
@@ -1253,17 +1258,25 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 	
 	
 	
-	public String getDate(String inStorageFormat)
+	public String getDate(String inStoredDate)
 	{
-		return getLocaleManager().formatDateForDisplay( inStorageFormat, getLocale());
+		Date stored = getLocaleManager().getDateStorageUtil().parseFromStorage(inStoredDate);
+		return getDate(stored);
 	}
 	public String getDateTime(Date inDate)
 	{
+		String format = getUserProfileValue("datetimeformat");
+		if( format != null)
+		{
+			String value = getLocaleManager().getDateStorageUtil().formatDateObj(inDate, format);
+			return value;
+		}
 		return getLocaleManager().formatDateTimeForDisplay( inDate, getLocale());
 	}
-	public String getDateTime(String inStorageFormat)
+	public String getDateTime(String inStoredDate)
 	{
-		return getLocaleManager().formatDateTimeForDisplay( inStorageFormat, getLocale());
+		Date stored = getLocaleManager().getDateStorageUtil().parseFromStorage(inStoredDate);
+		return getDateTime(stored);
 	}
 	public String getText(String inKey)
 	{

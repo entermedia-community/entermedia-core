@@ -43,6 +43,33 @@ public class PropertyDetails extends AbstractCollection
 
 	
 	
+	public String getDependsOnText()
+	{
+		return fieldDependsOnText;
+	}
+
+	public void setDependsOnText(String inDependsOnText)
+	{
+		fieldDependsOnText = inDependsOnText;
+	}
+
+	public void setAllowDynamicFields(boolean inAllowDynamicFields)
+	{
+		if (getInputFile() != null && getInputFile().getRoot() != null)
+		{
+			if(inAllowDynamicFields){
+				getInputFile().getRoot().attributeValue("allowdynamicfields", "true");
+			} else{
+				getInputFile().getRoot().attributeValue("allowdynamicfields", "false");
+
+			}		
+			
+		}
+		
+		
+		fieldAllowDynamicFields = inAllowDynamicFields;
+	}
+
 	public boolean isAllowDynamicFields()
 	{
 		if (getInputFile() != null && getInputFile().getRoot() != null)
@@ -100,6 +127,10 @@ public class PropertyDetails extends AbstractCollection
 
 	public void setClassName(String inClassName)
 	{
+		if (getInputFile() != null && getInputFile().getRoot() != null){
+
+			getInputFile().getRoot().setAttributeValue("classname", inClassName);
+		}
 		fieldClassName = inClassName;
 	}
 
@@ -121,6 +152,13 @@ public class PropertyDetails extends AbstractCollection
 
 	public void setBeanName(String inBeanName)
 	{
+		
+		if (getInputFile() != null && getInputFile().getRoot() != null){
+
+			getInputFile().getRoot().setAttributeValue("beanname", inBeanName);
+		}
+		
+		
 		fieldBeanName = inBeanName;
 	}
 
@@ -148,6 +186,13 @@ public class PropertyDetails extends AbstractCollection
 
 	public void setRender(String inBeanName)
 	{
+		
+		if (getInputFile() != null && getInputFile().getRoot() != null)
+		{
+			 getInputFile().getRoot().setAttributeValue("tostring", inBeanName);
+		}
+		
+		
 		fieldToString = inBeanName;
 	}
 
@@ -223,7 +268,7 @@ public class PropertyDetails extends AbstractCollection
 		for (Iterator iter = getDetails().iterator(); iter.hasNext();)
 		{
 			PropertyDetail d = (PropertyDetail) iter.next();
-			if (d.isKeyword())
+			if (d.isKeyword() || d.getId() == "name")
 			{
 				list.add(d);
 			}
@@ -464,4 +509,18 @@ public class PropertyDetails extends AbstractCollection
 		return count;	
 		
 	}
+	
+	
+	public PropertyDetail findCurrentFromLegacy(String inId){
+		for (Iterator iterator = getDetails().iterator(); iterator.hasNext();)
+		{
+			PropertyDetail detail = (PropertyDetail) iterator.next();
+			if(inId.equals(detail.get("legacy"))){
+				return detail;
+			}
+		}
+		return null;
+	}
+	
+	
 }

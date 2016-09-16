@@ -133,7 +133,7 @@ public class BeanNameLoader
 			String type = file.getRoot().attributeValue("basedatatype");
 			if( type == null)
 			{
-				type = "lucene";
+				type = "elastic";
 			}
 			file = getXmlArchive().getXml("/system/configuration/" + type + ".xml");
 			field = file.getElementById(inBeanName);

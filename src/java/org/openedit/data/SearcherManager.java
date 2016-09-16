@@ -105,6 +105,7 @@ public class SearcherManager
 	{
 		try
 		{
+			//If this is failing you are missing the base/system/configuration folder
 			NodeManager manager = (NodeManager)getModuleManager().getBean(inFinalcatalogid,"nodeManager");
 			return manager;
 		}
@@ -575,5 +576,16 @@ public class SearcherManager
 		return types;
 	}
 
+	
+	public void resetAlternative(){
+		for (Iterator iterator = getCache().keySet().iterator(); iterator.hasNext();)
+		{
+			String key = (String) iterator.next();
+			Searcher toclear = (Searcher) getCache().get(key);
+			toclear.setAlternativeIndex(null);
+			
+		}
+	}
+	
 	
 }

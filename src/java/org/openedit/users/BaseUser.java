@@ -565,6 +565,10 @@ public class BaseUser extends FileSystemObject implements User, Comparable
 	@Override
 	public Object getValue(String inKey)
 	{
+		if(inKey.equals("enabled")){
+			return isEnabled();
+		}
+		
 		return get(inKey);
 	}
 	@Override

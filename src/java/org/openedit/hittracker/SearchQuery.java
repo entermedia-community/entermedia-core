@@ -34,7 +34,21 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	protected boolean fieldAndTogether = true;
 	protected boolean fieldEndUserSearch = false;
 	protected String fieldSortLanguage = "en";
+	protected boolean fieldIncludeFacets = false;
+
 	
+	
+	
+	public boolean isIncludeFacets() {
+		//return fieldIncludeFacets;
+		return true;// This is for a performance boost, not quite working yet.
+	}
+
+	public void setIncludeFacets(boolean inIncludeAggregations) {
+		//fieldIncludeFacets = inIncludeAggregations;
+		
+	}
+
 	public String getSortLanguage()
 	{
 		return fieldSortLanguage;
@@ -374,15 +388,16 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 				done.append(term.getValue());
 			}
 		}
-//		for (Iterator iterator = getChildren().iterator(); iterator.hasNext();)
-//		{
-//			SearchQuery query = (SearchQuery) iterator.next();
-//			if( done.length() > 0 )
-//			{
-//				done.append(op);
-//			}
-//			done.append(query.toFriendly());
-//		}
+		if( getSorts().size() > 0)
+		{
+			done.append(" sort ");
+			for (Iterator iterator = getSorts().iterator(); iterator.hasNext();)
+			{
+				String sort= (String) iterator.next();
+				done.append(sort);
+				done.append(" ");
+			}
+		}
 
 		return done.toString();
 	}

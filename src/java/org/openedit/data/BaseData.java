@@ -156,7 +156,6 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 	public Collection<String> getValues(String inPreference)
 	{
 		return getMap().getValues(inPreference);
-//		Object object = getValue(inPreference);
 //		if( object instanceof Collection)
 //		{
 //			return (Collection<String>)object;
@@ -183,7 +182,12 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 	}
 	public Object getValue(String inKey)
 	{
-		return getMap().get(inKey);
+		Object val = getMap().get(inKey);
+		if( val == ValuesMap.NULLVALUE)
+		{
+			return null;
+		}
+		return val;
 	}
 	public void setValue(String inKey, Object inValue)
 	{

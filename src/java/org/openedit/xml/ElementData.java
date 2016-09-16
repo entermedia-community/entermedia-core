@@ -195,14 +195,11 @@ public class ElementData implements MultiValued, SaveableData, Comparable ,Searc
 			//{
 				if( inId.equals("name"))
 				{
-					for (Iterator iterator = getElement().nodeIterator(); iterator.hasNext();)
+					List copy = getElement().elements(inId);
+					for (Iterator iterator = copy.iterator(); iterator.hasNext();)
 					{
-						Node type = (Node) iterator.next();
-						if( type instanceof Text)
-						{
-							getElement().remove(type);
-							break;
-						}
+						Element type = (Element) iterator.next();
+						getElement().remove(type);
 					}
 					Attribute attr = getElement().attribute(inId);
 					if( attr != null)
