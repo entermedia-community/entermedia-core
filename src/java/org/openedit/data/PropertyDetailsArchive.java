@@ -517,7 +517,7 @@ public class PropertyDetailsArchive {
 			root.addAttribute("beanname", inDetails.getBeanName());
 		}
 		if (inDetails.getClassName() != null) {
-			root.addAttribute("classname", inDetails.getClassName());
+			root.addAttribute("class", inDetails.getClassName());
 		}
 		
 		

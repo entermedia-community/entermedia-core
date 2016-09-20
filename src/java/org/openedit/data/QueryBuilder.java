@@ -156,4 +156,20 @@ public class QueryBuilder
 		getQuery().addMatches("id", "*");
 		return this;
 	}
+	
+	
+	public QueryBuilder before(String inKey, Date inValue){
+		getQuery().addBefore(inKey, inValue);
+		return this;
+	}
+	
+	public QueryBuilder after(String inKey, Date inValue){
+		getQuery().addAfter(inKey, inValue);
+		return this;
+	}
+	public QueryBuilder after(String inKey, Date start, Date end){
+		getQuery().addBetween(inKey, start, end);
+		return this;
+	}
+	
 }
