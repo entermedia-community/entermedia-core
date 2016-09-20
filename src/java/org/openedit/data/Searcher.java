@@ -183,8 +183,7 @@ public interface Searcher
 	public void reindexInternal();
 	
 	
-	
-	
+	public void saveData(Data inData);
 
 
 	public void setForceBulk(boolean inForceBulk);
