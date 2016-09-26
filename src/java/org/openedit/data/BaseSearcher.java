@@ -51,13 +51,10 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	protected SearchQueryFilter fieldSearchQueryFilter;
 	protected boolean fieldAllowRemoteDetails = false;
 	protected String fieldAlternativeIndex;
-
+	protected ModuleManager fieldModuleManager;
+	protected String fieldNewDataName;
 	
 	protected boolean fieldForceBulk = false;
-	
-	
-	
-	
 	
 
 	public boolean isForceBulk()
@@ -70,7 +67,6 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		fieldForceBulk = inForceBulk;
 	}
 
-	
 	
 	public String getAlternativeIndex()
 	{
@@ -113,8 +109,6 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		return false;
 	}
 
-	protected ModuleManager fieldModuleManager;
-
 	public ModuleManager getModuleManager()
 	{
 		return fieldModuleManager;
@@ -124,8 +118,6 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	{
 		fieldModuleManager = inModuleManager;
 	}
-
-	protected String fieldNewDataName;
 
 	public String getNewDataName()
 	{
@@ -2071,9 +2063,9 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	public Object searchByField(String inField, String inValue)
 	{
 		SearchQuery query = createSearchQuery();
+		query.setHitsPerPage(1);
 		query.addMatches(inField, inValue);
 		HitTracker hits = search(query);
-		hits.setHitsPerPage(1);
 		return hits.first();
 	}
 
@@ -2630,11 +2622,19 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	{
 		throw new OpenEditException("Save not implemented for " + getSearchType());
 	}
+//	public Data loadData(String inId)
+//	{
+//		
+//	}
 
 	@Override
 	public Data loadData(Data inHit)
 	{
-		if (inHit instanceof SaveableData)
+		if( inHit == null)
+		{
+			return null;
+		}
+		if (getNewDataName() == null && inHit instanceof SaveableData)
 		{
 			return inHit;
 		}

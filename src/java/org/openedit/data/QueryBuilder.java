@@ -171,5 +171,10 @@ public class QueryBuilder
 		getQuery().addBetween(inKey, start, end);
 		return this;
 	}
+	public QueryBuilder showFacets(boolean inB)
+	{
+		getQuery().setIncludeFacets(inB);
+		return this;
+	}
 	
 }
