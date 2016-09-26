@@ -35,18 +35,34 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	protected boolean fieldEndUserSearch = false;
 	protected String fieldSortLanguage = "en";
 	protected boolean fieldIncludeFacets = false;
+	protected List fieldExtraFacets;
+	
+	
+	
+	
+	public List getExtraFacets()
+	{
+	if (fieldExtraFacets == null)
+	{
+		fieldExtraFacets = new ArrayList();
+		
+	}
 
-	
-	
-	
+	return fieldExtraFacets;
+	}
+
+	public void setExtraFacets(List inExtraFacets)
+	{
+		fieldExtraFacets = inExtraFacets;
+	}
+
 	public boolean isIncludeFacets() {
 		//return fieldIncludeFacets;
 		return true;// This is for a performance boost, not quite working yet.
 	}
 
 	public void setIncludeFacets(boolean inIncludeAggregations) {
-		//fieldIncludeFacets = inIncludeAggregations;
-		
+		fieldIncludeFacets = inIncludeAggregations;		
 	}
 
 	public String getSortLanguage()
@@ -1877,7 +1893,12 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		}
 
 
-	
+	public void addAggregation(String inFacet){
+		
+		
+		getExtraFacets().add(inFacet);
+		setIncludeFacets(true);
+	}
 	
 	
 	
