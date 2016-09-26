@@ -176,5 +176,10 @@ public class QueryBuilder
 		getQuery().setIncludeFacets(inB);
 		return this;
 	}
+	public QueryBuilder addFacet(String inString)
+	{
+		getQuery().addAggregation(inString);
+		return this;
+	}
 	
 }
