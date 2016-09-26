@@ -131,15 +131,15 @@ public class FileRepository extends  BaseRepository
 		else
 		{
 			
-			destination = getFile( inDestination.getPath() );
 			if(inDestination.getPath().endsWith("/"))
 			{
-				destination.mkdirs();
-			}
+				destination = getFile( inDestination.getPath() + inSource.getName() );
+			}	
 			else
 			{
-				destination.getParentFile().mkdirs();
+				destination = getFile( inDestination.getPath());
 			}
+			destination.getParentFile().mkdirs();
 			try
 			{
 				getFileUtils().copyFiles( inSource.getInputStream(), new FileOutputStream(destination) );
