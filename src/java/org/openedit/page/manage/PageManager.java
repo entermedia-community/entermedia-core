@@ -540,7 +540,10 @@ public class PageManager
 	{
 		ReaderItem item = new ReaderItem(inPage.getPath(),inReader,inPage.getCharacterEncoding());
 		item.setMessage(inMessage);
-		item.setAuthor(inUser.getUserName());
+		if( inUser != null)
+		{
+			item.setAuthor(inUser.getUserName());
+		}	
 		inPage.setContentItem(item);
 		putPage(inPage);
 	}	
