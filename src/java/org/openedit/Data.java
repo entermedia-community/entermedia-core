@@ -1,6 +1,5 @@
 package org.openedit;
 
-import java.util.Collection;
 import java.util.Map;
 
 public interface Data

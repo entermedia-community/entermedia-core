@@ -171,16 +171,16 @@ public abstract class CompositeSearcher extends BaseSearcher
 		{
 			return getSearchersByCatalogIds(catalogids);
 		}
-		else if ( pref != null && pref.getCatalogs() != null)
-		{
-			catalogids = new String[pref.getCatalogs().size()];
-			for (int i = 0; i < pref.getCatalogs().size(); i++)
-			{
-				Data catalog = (Data)pref.getCatalogs().get(i);
-				catalogids[i] = catalog.getId();
-			}
-			return getSearchersByCatalogIds(catalogids);
-		}
+//		else if ( pref != null && pref.getCatalogs() != null)
+//		{
+//			catalogids = new String[pref.getCatalogs().size()];
+//			for (int i = 0; i < pref.getCatalogs().size(); i++)
+//			{
+//				Data catalog = (Data)pref.getCatalogs().get(i);
+//				catalogids[i] = catalog.getId();
+//			}
+//			return getSearchersByCatalogIds(catalogids);
+//		}
 		else
 		{
 			return getSearchers(); //Is this an OK default? Seems insecure
