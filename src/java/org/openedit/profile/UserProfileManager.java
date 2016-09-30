@@ -15,7 +15,7 @@ import org.openedit.OpenEditException;
 import org.openedit.WebPageRequest;
 import org.openedit.data.Searcher;
 import org.openedit.data.SearcherManager;
-import org.openedit.hittracker.SearchQuery;
+import org.openedit.hittracker.HitTracker;
 import org.openedit.users.Group;
 import org.openedit.users.User;
 import org.openedit.users.UserManager;
@@ -191,7 +191,42 @@ public class UserProfileManager
 	protected void loadLibraries(UserProfile inUserprofile, String inCatalogId)
 	{
 		Set<String> all = new HashSet<String>();
-		Searcher searcher = getSearcherManager().getSearcher(inCatalogId, "libraryusers");
+		Searcher searcher = getSearcherManager().getSearcher(inCatalogId, "category");
+
+		Collection groupids = new ArrayList();
+		if( inUserprofile == null || inUserprofile.getUser() == null)
+		{
+			groupids.add("anonymous");
+		}
+		else
+		{
+			for (Iterator iterator = inUserprofile.getUser().getGroups().iterator(); iterator.hasNext();)
+			{
+				Group group = (Group) iterator.next();
+				groupids.add(group.getId());
+			}
+		}
+		String roleid = null;
+		if( inUserprofile.getSettingsGroup() != null)
+		{
+			roleid = inUserprofile.getSettingsGroup().getId();
+		}
+		else
+		{
+			roleid = "anonymous";
+		}
+		HitTracker categories = searcher.query().or().
+			orgroup("viewgroups", groupids).
+			match("viewroles", roleid).
+			match("viewusers", inUserprofile.getUserId()).search();
+		
+		for (Iterator iterator = categories.iterator(); iterator.hasNext();)
+		{
+			Data data = (Data) iterator.next();
+			all.add(data.get("id"));
+		}
+		inUserprofile.setViewCategories(all);
+		/*
 		Collection found = searcher.fieldSearch("userid", inUserprofile.getUserId());
 
 		for (Iterator iterator = found.iterator(); iterator.hasNext();)
@@ -248,7 +283,8 @@ public class UserProfileManager
 			}
 		}
 		//Add in special adminstrator rights?
-		inUserprofile.setCombinedLibraries(all);
+		inUserprofile.setViewCategories(all);
+	*/	
 	}
 
 	public void saveUserProfile(UserProfile inUserProfile)

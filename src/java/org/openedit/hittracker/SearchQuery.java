@@ -1287,25 +1287,6 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		fieldFilter = inVal;
 	}
 
-	public Term addJoinFilter(PropertyDetail inField, String inValue)
-	{
-		return addJoinFilter( inField.getCatalogId(), inField.getId(), inField.getListId(), inValue, inField.getForeignKeyId());
-	}
-	
-	public Term addJoinFilter(String inCatalogId, String inType, String inFilterColumn, String inFilterValue, String inDataPath)
-	{
-		// TODO Auto-generated method stub
-		JoinFilter filter = new JoinFilter();
-		filter.addParameter("catalog", inCatalogId);
-		filter.addParameter("type", inType);
-		filter.addParameter("column", inFilterColumn);
-		filter.setValue(inFilterValue);
-		filter.addParameter("datapath", inDataPath);
-		filter.setOperation("searchjoin");
-		addTerm(filter);
-		return filter;
-	}
-
 	/**
 	 * Searching the parent table
 	 * A child depends on a parent but a parent does not depend on a child
@@ -1898,6 +1879,12 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		
 		getExtraFacets().add(inFacet);
 		setIncludeFacets(true);
+	}
+
+	public void addJoinIds(String inKey, Object inValue)
+	{
+		// TODO Auto-generated method stub
+		
 	}
 	
 	

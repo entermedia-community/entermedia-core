@@ -25,15 +25,14 @@ import org.openedit.xml.XmlArchive;
 
 public class UserProfile extends BaseData implements SaveableData
 {
+	protected User fieldUser;
 	protected String fieldCatalogId;
 	protected SearcherManager fieldSearcherManager;
 	protected MultiValued fieldSettingsGroup;
 	//	protected Map<String,String> fieldSettingsGroupPermissions;
 	protected Map fieldResultViews;
 	protected XmlArchive fieldXmlArchive;
-	protected HitTracker fieldCatalogs;
-	protected HitTracker fieldUploadCatalogs;
-	protected Collection fieldCombinedLibraries;
+	protected Collection fieldViewCategories;
 	protected Collection<Data> fieldModules;
 	protected Set fieldPermissions;
 
@@ -57,7 +56,6 @@ public class UserProfile extends BaseData implements SaveableData
 		fieldModules = inModules;
 	}
 
-	protected User fieldUser;
 
 	public User getUser()
 	{
@@ -356,23 +354,6 @@ public class UserProfile extends BaseData implements SaveableData
 		return out.toString();
 	}
 
-	/**
-	 * @deprecated Not used any more. Track permissions on an app basis
-	 * @return
-	 */
-	public HitTracker getCatalogs()
-	{
-		return fieldCatalogs;
-	}
-
-	/**
-	 * @deprecated Not used any more. Track permissions on an app basis
-	 * @return
-	 */
-	public void setCatalogs(HitTracker inCatalogs)
-	{
-		fieldCatalogs = inCatalogs;
-	}
 
 	public XmlArchive getXmlArchive()
 	{
@@ -466,60 +447,17 @@ public class UserProfile extends BaseData implements SaveableData
 		return view;
 	}
 
-	/**
-	 * @deprecated Not used any more. Track permissions on an app basis
-	 * @return
-	 */
-	public Data getLastCatalog()
-	{
-		String catid = get("lastcatalog");
-		if (getCatalogs() == null)
-		{
-			return null;
-		}
-		for (Iterator iterator = getCatalogs().iterator(); iterator.hasNext();)
-		{
-			Data cat = (Data) iterator.next();
-			if (catid == null || cat.getId().equals(catid))
-			{
-				return cat;
-			}
-		}
-		if (getCatalogs().size() > 0)
-		{
-			return (Data) getCatalogs().iterator().next();
-		}
-		return null;
-	}
 
-	/**
-	 * @deprecated Not used any more. Track permissions on an app basis
-	 * @return
-	 */
-	public HitTracker getUploadCatalogs()
+	public Collection<String> getViewCategories()
 	{
-		return fieldUploadCatalogs;
-	}
-
-	/**
-	 * @deprecated Not used any more. Track permissions on an app basis
-	 * @return
-	 */
-	public void setUploadCatalogs(HitTracker inUploadCatalogs)
-	{
-		fieldUploadCatalogs = inUploadCatalogs;
-	}
-
-	public Collection<String> getCombinedLibraries()
-	{
-		return fieldCombinedLibraries;
+		return fieldViewCategories;
 	}
 
 	public HitTracker getSelectedLibraries(WebPageRequest inReq)
 	{
 		Searcher librarySearcher = getSearcherManager().getSearcher(getCatalogId(), "library");
 		HitTracker tracker = librarySearcher.getAllHits();
-		tracker.setSelections(getCombinedLibraries());
+		tracker.setSelections(getViewCategories());
 		if (inReq.getUser() != null && inReq.getUser().isInGroup("administrators"))
 		{
 			tracker.selectAll();
@@ -529,9 +467,9 @@ public class UserProfile extends BaseData implements SaveableData
 
 	}
 
-	public void setCombinedLibraries(Collection<String> inCombinedLibraries)
+	public void setViewCategories(Collection<String> inCombinedLibraries)
 	{
-		fieldCombinedLibraries = inCombinedLibraries;
+		fieldViewCategories = inCombinedLibraries;
 	}
 
 	public Data getDefaultViewForModule(String inModuleId)

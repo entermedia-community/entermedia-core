@@ -181,5 +181,11 @@ public class QueryBuilder
 		getQuery().addAggregation(inString);
 		return this;
 	}
+	//This has a . in it
+	public QueryBuilder addJoin(String inKey, Object inValue)
+	{
+		getQuery().addJoinIds(inKey, inValue);
+		return this;
+	}
 	
 }
