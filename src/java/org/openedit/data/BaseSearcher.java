@@ -718,8 +718,6 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		}
 
 		String[] operations = inPageRequest.getRequestParameters("operation");
-		// String[] values = inPageRequest.getRequestParameters("value");
-		// check the new naming convention for values (fieldid.value)
 		if (operations == null)
 		{
 			return null;
@@ -743,189 +741,181 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			//String id = termids[i];
 
 			String field = fieldid[i];
-
 			PropertyDetail detail = getDetail(field, inPageRequest);
 
-			if (detail != null)
+			if (detail == null)
 			{
-				//the values are a counter. So each time we get a duplicate we inc the counter of values
+				continue;
+			}
+			//the values are a counter. So each time we get a duplicate we inc the counter of values
 
-				Integer count = (Integer) valuecounter.get(detail.getId());
-				if (count == null)
-				{
-					count = new Integer(0);
-				}
-				else
-				{
-					count = new Integer(count.intValue() + 1);
-				}
-				valuecounter.put(detail.getId(), count);
+			Integer count = (Integer) valuecounter.get(detail.getId());
+			if (count == null)
+			{
+				count = new Integer(0);
+			}
+			else
+			{
+				count = new Integer(count.intValue() + 1);
+			}
+			valuecounter.put(detail.getId(), count);
 
-				String[] vals = inPageRequest.getRequestParameters(detail.getId() + ".value");
-				String val = null;
+			String[] vals = inPageRequest.getRequestParameters(detail.getId() + ".value");
+			String val = null;
+			if (vals != null && vals.length == 1 && vals[0].length() == 0)
+			{
+				vals = null;
+			}
+
+			if (vals != null && vals.length > count.intValue())
+			{
+				val = vals[count.intValue()]; //We should not get array out of bounds
+			}
+			if (val == null || val.equals(""))
+			{
+				val = inPageRequest.getRequestParameter(field + ".value");
+			}
+			if (val != null && val.contains("|"))
+			{
+				vals = MultiValued.VALUEDELMITER.split(val);
+				val = null;
+			}
+			else if (val == null)
+			{
+				vals = inPageRequest.getRequestParameters(detail.getId() + ".values");
 				if (vals != null && vals.length == 1 && vals[0].length() == 0)
 				{
 					vals = null;
 				}
+			}
+			if ("".equals(val))
+			{
+				val = null;
+			}
 
-				if (vals != null && vals.length > count.intValue())
+			if (operations.length <= i)
+			{
+				log.info("Cant search without operations");
+				return null;
+			}
+			String op = operations[i];
+			if (!detail.isMultiLanguage())
+			{
+				Term t = addTerm(search, detail, val, vals, op);
+				if (t == null)
 				{
-					val = vals[count.intValue()]; //We should not get array out of bounds
-				}
-				if (val == null || val.equals(""))
-				{
-					val = inPageRequest.getRequestParameter(field + ".value");
-				}
-				if (val != null && val.contains("|"))
-				{
-					vals = MultiValued.VALUEDELMITER.split(val);
-					val = null;
-				}
-				else if (val == null)
-				{
-					vals = inPageRequest.getRequestParameters(detail.getId() + ".values");
-					if (vals != null && vals.length == 1 && vals[0].length() == 0)
-					{
-						vals = null;
-					}
-
-					//					//This is dumb
-					//					String[] ors = inPageRequest.getRequestParameters(detail.getId() + ".orvalue");
-					//					if (ors != null)
-					//					{
-					//						val = createOrValue(ors);
-					//					}
-				}
-				if ("".equals(val))
-				{
-					val = null;
-				}
-
-				if (operations.length <= i)
-				{
-					log.info("Cant search without operations");
-					return null;
-				}
-				String op = operations[i];
-				if (!detail.isMultiLanguage())
-				{
-					Term t = addTerm(search, detail, val, vals, op);
+					t = addDate(inPageRequest, search, formater, detail, val, op, count.intValue());
 					if (t == null)
 					{
-						t = addDate(inPageRequest, search, formater, detail, val, op, count.intValue());
+						t = addNumber(inPageRequest, search, detail, val, op);
 						if (t == null)
 						{
-							//						t = addSelect(inPageRequest, search, detail, op);
-							//						if (t == null)
-							//						{
-							t = addNumber(inPageRequest, search, detail, val, op);
-							if (t == null)
-							{
-								//This is for lobpicker and primaryproductpicker and maybe other ones
-								addPicker(inPageRequest, search, detail, val, op, count.intValue());
-							}
-							//						}
+							//This is for lobpicker and primaryproductpicker and maybe other ones
+							addPicker(inPageRequest, search, detail, val, op, count.intValue());
 						}
 					}
 				}
-				else
-				{
-					//Could still be some more values we need to add....
-					String[] language = inPageRequest.getRequestParameters(detail.getId() + ".language");
-					if (language != null)
-					{
-						for (int j = 0; j < language.length; j++)
-						{
-							String lang = language[j];
-							String lid = detail.getId() + "." + lang;
-							String langval = inPageRequest.getRequestParameter(lid);
-							if( langval == null)
-							{
-								langval = inPageRequest.getRequestParameter(detail.getId() + ".value");
-							}
-							if ("en".equals(lang) && langval == null)
-							{
-								langval = val;
-							}
-							if (langval != null)
-							{
-								if ("matches".equals(op) || "andgroup".equals(op))
-								{
-									search.addMatches(lid, langval);
-								}
-								else if ("exact".equals(op))
-								{
-									search.addExact(lid, langval);
-								}
-								else if ("startswith".equals(op))
-								{
-									search.addStartsWith(lid, langval);
-								}
-								else if ("contains".equals(op))
-								{
-									search.addContains(lid, langval);
-								}
-								else if ("not".equals(op))
-								{
-									search.addNot(lid, langval);
-								}
-								else if ("orsgroup".equals(op))
-								{
-									search.addOrsGroup(lid, langval);
-								}
-								search.setProperty(detail.getId(), langval);
-								search.setProperty(detail.getId() + ".language", lang);
-							}
-						}
-					}
-					else
-					{	//Why do we have similar code here?
-						if (val != null)
-						{
-							HitTracker languages = getSearcherManager().getList(getCatalogId(), "locale");
-							SearchQuery child = createSearchQuery();
-							child.setAndTogether(false);
-							for (Iterator iterator = languages.iterator(); iterator.hasNext();)
-							{
-								Data locale = (Data) iterator.next();
-								String lang = locale.getId();
-
-								String lid = detail.getId() + "." + lang;
-								if ("matches".equals(op) || "andgroup".equals(op))
-								{
-									child.addMatches(lid, val);
-								}
-								else if ("exact".equals(op))
-								{
-									child.addExact(lid, val);
-								}
-								else if ("startswith".equals(op))
-								{
-									child.addStartsWith(lid, val);
-								}
-								else if ("contains".equals(op))
-								{
-									child.addContains(lid, val);
-								}
-								else if ("not".equals(op))
-								{
-									child.addNot(lid, val);
-								}
-								else if ("orsgroup".equals(op))
-								{
-									child.addOrsGroup(lid, val);
-								}
-								child.setProperty(lid, val);
-							}
-							search.addChildQuery(child);
-						}
-					}
-
-				}
-
+			}
+			else
+			{
+				loadLanguageValues(inPageRequest, search, detail, val, op);
 			}
 		}
 		return search;
+	}
+
+	protected void loadLanguageValues(WebPageRequest inPageRequest, SearchQuery search, PropertyDetail detail, String val, String op)
+	{
+		//Could still be some more values we need to add....
+		String[] language = inPageRequest.getRequestParameters(detail.getId() + ".language");
+		if (language != null)
+		{
+			for (int j = 0; j < language.length; j++)
+			{
+				String lang = language[j];
+				String lid = detail.getId() + "." + lang;
+				String langval = inPageRequest.getRequestParameter(lid);
+				if( langval == null)
+				{
+					langval = inPageRequest.getRequestParameter(detail.getId() + ".value");
+				}
+				if ("en".equals(lang) && langval == null)
+				{
+					langval = val;
+				}
+				if (langval != null)
+				{
+					if ("matches".equals(op) || "andgroup".equals(op))
+					{
+						search.addMatches(lid, langval);
+					}
+					else if ("exact".equals(op))
+					{
+						search.addExact(lid, langval);
+					}
+					else if ("startswith".equals(op))
+					{
+						search.addStartsWith(lid, langval);
+					}
+					else if ("contains".equals(op))
+					{
+						search.addContains(lid, langval);
+					}
+					else if ("not".equals(op))
+					{
+						search.addNot(lid, langval);
+					}
+					else if ("orsgroup".equals(op))
+					{
+						search.addOrsGroup(lid, langval);
+					}
+					search.setProperty(detail.getId(), langval);
+					search.setProperty(detail.getId() + ".language", lang);
+				}
+			}
+		}
+		else
+		{	//Why do we have similar code here?
+			if (val != null)
+			{
+				HitTracker languages = getSearcherManager().getList(getCatalogId(), "locale");
+				SearchQuery child = createSearchQuery();
+				child.setAndTogether(false);
+				for (Iterator iterator = languages.iterator(); iterator.hasNext();)
+				{
+					Data locale = (Data) iterator.next();
+					String lang = locale.getId();
+
+					String lid = detail.getId() + "." + lang;
+					if ("matches".equals(op) || "andgroup".equals(op))
+					{
+						child.addMatches(lid, val);
+					}
+					else if ("exact".equals(op))
+					{
+						child.addExact(lid, val);
+					}
+					else if ("startswith".equals(op))
+					{
+						child.addStartsWith(lid, val);
+					}
+					else if ("contains".equals(op))
+					{
+						child.addContains(lid, val);
+					}
+					else if ("not".equals(op))
+					{
+						child.addNot(lid, val);
+					}
+					else if ("orsgroup".equals(op))
+					{
+						child.addOrsGroup(lid, val);
+					}
+					child.setProperty(lid, val);
+				}
+				search.addChildQuery(child);
+			}
+		}
 	}
 
 	public void addShowOnly(WebPageRequest inPageRequest, SearchQuery search)
@@ -1092,7 +1082,10 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		//		}
 		//		if (detail == null)
 		//		{
-		detail = getPropertyDetailsArchive().getDetail(getSearchType(), view, propertyid, inReq.getUserProfile()); //Add View.getDetail( API then make sure everyone get's a cached view object
+		if( !propertyid.contains("."))
+		{
+			detail = getPropertyDetailsArchive().getDetail(getSearchType(), view, propertyid, inReq.getUserProfile()); //Add View.getDetail( API then make sure everyone get's a cached view object
+		}	
 		//		}
 		//		if (detail == null)
 		//		{

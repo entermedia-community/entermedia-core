@@ -135,7 +135,11 @@ public class PropertyDetail implements Data, ViewItem, Comparable
 		String lid = get("listid");
 		if( lid == null)
 		{
-			return getId();
+			lid = getId();
+			if( lid.contains("."))
+			{
+				lid = lid.substring(lid.indexOf(".") + 1, lid.length());
+			}
 		}
 		return lid;
 	}

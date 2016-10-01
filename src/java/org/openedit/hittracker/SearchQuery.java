@@ -10,9 +10,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
@@ -213,7 +215,7 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		}
 	}
 
-	public List getTerms()
+	public List<Term> getTerms()
 	{
 		return fieldTerms;
 	}
@@ -230,7 +232,10 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		}
 		return false;
 	}
-
+	public Term addOrsGroup(PropertyDetail inField, Collection<String> inValues)
+	{
+		return addOrsGroup( inField,(String[])inValues.toArray(new String[inValues.size()]));
+	}
 	public Term addOrsGroup(PropertyDetail inField, String[] inValues)
 	{
 		Term term = new Term()
@@ -1881,10 +1886,33 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		setIncludeFacets(true);
 	}
 
-	public void addJoinIds(String inKey, Object inValue)
+	/**
+	 * Take a list of things and only OR the common ones
+	 * This can be called more than once
+	 * @param inKey
+	 * @param inIds
+	 */
+	public void appendOrGroup(PropertyDetail inKey, Collection<String> inIds)
 	{
-		// TODO Auto-generated method stub
-		
+		Term existing = getTermByDetailId(inKey.getId());
+		if( existing == null)
+		{
+			addOrsGroup(inKey, (String[])inIds.toArray(new String[inIds.size()]));			
+		}
+		else
+		{
+			Set existingvalues = new HashSet( Arrays.asList( existing.getValues() ) );
+			Set goodvalues = new HashSet();
+			
+			for (String id : inIds)
+			{
+				if( existingvalues.contains( id) )
+				{
+					goodvalues.add(id);
+				}
+			}
+			addOrsGroup(inKey, (String[])goodvalues.toArray(new String[goodvalues.size()]));			
+		}
 	}
 	
 	
