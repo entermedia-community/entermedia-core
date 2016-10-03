@@ -677,7 +677,12 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 		HttpSession session = getSession();
 		if ( session == null)
 		{
-			return getSessionValues().get(inKey);
+			Object found = getSessionValues().get(inKey);
+			if( found == null && getParent() != null)
+			{
+				return getParent().getSessionValue(inKey);
+			}
+			return found;
 		}
 		return session.getAttribute(inKey);
 	}

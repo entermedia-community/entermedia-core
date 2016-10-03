@@ -117,6 +117,17 @@ public class TestFixture
 		context.putPageValue( PageRequestKeys.PAGE, dynamicpage);
 		context.putPageValue( PageRequestKeys.CONTENT, dynamicpage);
 		context.putPageValue( PageRequestKeys.USER, getUserManager().getUser("admin"));
+
+		User admin = getUserManager().getUser("admin");
+		if ( admin != null )
+		{
+			context.putPageValue( PageRequestKeys.USER, admin );
+			String catid = dynamicpage.get("catalogid");
+			context.putSessionValue(catid + "user",admin);
+		}
+
+		
+
 		getEngine().createPageStreamer( dynamicpage,  context);
 
 		return context;
