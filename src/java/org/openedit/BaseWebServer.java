@@ -12,6 +12,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -24,7 +25,6 @@ import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.openedit.config.ScriptPathLoader;
 import org.openedit.di.BeanLoader;
-import org.openedit.di.Pojo;
 import org.openedit.page.Page;
 import org.openedit.page.manage.PageManager;
 import org.openedit.repository.Repository;
@@ -58,6 +58,19 @@ public class BaseWebServer implements WebServer
 	protected File fieldRootDirectory;
 	protected List fieldAllPlugIns;
 	protected String fieldNodeId;
+	protected Date fieldLastMountsReloaded ;
+	
+	
+	
+	public Date getLastMountsReloaded()
+	{
+		return fieldLastMountsReloaded;
+	}
+
+	public void setLastMountsReloaded(Date inLastMountsReloaded)
+	{
+		fieldLastMountsReloaded = inLastMountsReloaded;
+	}
 	XmlUtil xml = new XmlUtil();
 	
 	
@@ -588,8 +601,21 @@ public class BaseWebServer implements WebServer
 		}
 	}
 	
+	
+	public void checkMounts(){
+		Page mounts = getPageManager().getPage("/WEB-INF/data/oemounts.xml",true);
+		Date lastmod = mounts.getLastModified();
+		
+		if(getLastMountsReloaded() != null && lastmod.after(getLastMountsReloaded())){
+			reloadMounts();
+		}
+	}
+	
+	
+	
 	public void reloadMounts()
 	{
+		
 		Page mounts = getPageManager().getPage("/WEB-INF/data/oemounts.xml",true);
 		if( !mounts.exists() )
 		{
@@ -721,7 +747,7 @@ public class BaseWebServer implements WebServer
 		}
 		getPageManager().clearCache();
 		getPageManager().getRepository().sort();
-		
+		setLastMountsReloaded(new Date());
 	}
 	protected String getCleanRootPath(String append)
 	{

@@ -52,5 +52,7 @@ public interface WebServer
 	public void saveMounts(List inConfigs);
 
 	public String getNodeId();
+
+	public void checkMounts();
 	
 }
