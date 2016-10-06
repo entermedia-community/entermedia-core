@@ -107,7 +107,7 @@ public abstract class ContentItem
 		}
 		return 0;
 	}
-	protected void setLastModified(Date inDate)
+	public void setLastModified(Date inDate)
 	{
 		fieldLastModified = inDate;
 	}

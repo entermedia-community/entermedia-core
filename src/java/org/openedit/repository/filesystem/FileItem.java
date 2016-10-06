@@ -246,4 +246,12 @@ public class FileItem extends ContentItem implements Data
 	public String getName(String inLocale) {
 		return getName();
 	}
+	
+	
+	
+	public void setLastModified(Date inDate)
+	{
+		// TODO Auto-generated method stub
+		getFile().setLastModified(inDate.getTime());
+	}
 }
