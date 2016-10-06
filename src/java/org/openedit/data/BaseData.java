@@ -148,7 +148,7 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 	public int compareTo(Object inO) {
 		BaseData inData = (BaseData) inO;
 		if (getName() != null && inData.getName() != null) {
-			return getName().compareTo(inData.getName());
+			return getName().toLowerCase().compareTo(inData.getName().toLowerCase());
 		}
 		return 0;
 	}
