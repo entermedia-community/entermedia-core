@@ -2515,12 +2515,10 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 
 						else if (detail != null && detail.isMultiLanguage())
 						{
-
 							String[] language = inReq.getRequestParameters(field + ".language");
 							if (language != null)
 							{
-								
-								
+								//String[] langvalues = inReq.getRequestParameters(field + ".value");
 								LanguageMap map = null;
 								Object oldval = data.getValue(detail.getId());
 								if(oldval != null){
@@ -2535,11 +2533,23 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 								{
 									map = new LanguageMap();
 								}
+								//TODO: Clear out old values?
+								
+								//Load new values
 								for (int j = 0; j < language.length; j++)
 								{
 									String lang = language[j];
-									String langval = inReq.getRequestParameter(field + "." + lang);
-									map.setText(lang,langval);
+									String langval = inReq.getRequestParameter(field + ".language." + (j + 1));
+									if( langval == null)
+									{
+										langval = inReq.getRequestParameter(field + "." + lang); //legacy
+									}
+									if( langval != null)
+									{
+									//String langval = inReq.getRequestParameter(field + "." + lang);
+									//String langval = langvalues[j];
+										map.setText(lang,langval);
+									}
 								}
 								result = map;
 //								if (val != null)
