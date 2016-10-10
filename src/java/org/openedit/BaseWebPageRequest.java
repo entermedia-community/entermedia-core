@@ -647,6 +647,10 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 		if ( parameter == null && getRequest() != null)
 		{
 			parameter = getRequest().getParameterValues(inKey);
+			if(parameter == null)
+			{
+				parameter = getRequest().getParameterValues(inKey + "[]"); 			//jQuery.ajaxSettings.traditional = true;
+			}
 		}
 		if( parameter == null && getVariables().containsKey("_jsonRequest"))
 		{
