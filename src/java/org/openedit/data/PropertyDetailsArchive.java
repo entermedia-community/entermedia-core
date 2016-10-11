@@ -498,7 +498,7 @@ public class PropertyDetailsArchive
 			targetdetail.setName("property");
 
 		}
-		fillElement(getPropertyDetails(inType).getDefaults(), targetdetail, inDetail);
+		fillElement(targetdetail, inDetail);
 
 		getXmlArchive().saveXml(settings, inUser);
 		clearCache();
@@ -575,7 +575,7 @@ public class PropertyDetailsArchive
 		{
 			PropertyDetail detail = (PropertyDetail) iterator.next();
 			Element element = file.addNewElement();
-			fillElement(inDetails.getDefaults(), element, detail);
+			fillElement(element, detail);
 		}
 		getXmlArchive().saveXml(file, inUser);
 		clearCache();
@@ -631,7 +631,7 @@ public class PropertyDetailsArchive
 		details.setDetails(newdetails);
 	}
 
-	public void fillElement(Map defaults, Element element, PropertyDetail inDetail)
+	public void fillElement(Element element, PropertyDetail inDetail)
 	{
 		element.addAttribute("id", inDetail.getId());
 		element.addAttribute("externalid", inDetail.getExternalId());
@@ -642,21 +642,16 @@ public class PropertyDetailsArchive
 		}
 		if (inDetail.getText() != null)
 		{
+			//TODO: Add multi-language saves
 			element.setText(inDetail.getText());
 		}
 
-		if (inDetail.isIndex())
-			element.addAttribute("index", "true");
-		if (inDetail.isKeyword())
-			element.addAttribute("keyword", "true");
-		if (inDetail.isFilter())
-			element.addAttribute("filter", "true");
-		if (inDetail.isStored())
-			element.addAttribute("stored", "true");
-		if (inDetail.isEditable())
-			element.addAttribute("editable", "true");
-		if (inDetail.isSortable())
-			element.addAttribute("sortable", "true");
+		element.addAttribute("index", String.valueOf( inDetail.isIndex() ) );
+		element.addAttribute("keyword", String.valueOf( inDetail.isKeyword() ) );
+		element.addAttribute("filter", String.valueOf( inDetail.isFilter() ) );
+		element.addAttribute("stored", String.valueOf( inDetail.isStored() ) );
+		element.addAttribute("editable", String.valueOf( inDetail.isEditable() ) );
+		element.addAttribute("sortable", String.valueOf( inDetail.isSortable() ) );
 
 		String type = inDetail.getDataType();
 		if (type != null)
@@ -674,10 +669,10 @@ public class PropertyDetailsArchive
 		{
 			String key = (String) iterator.next();
 			String val = (String) inDetail.getProperties().get(key);
-			if (!val.equals(defaults.get(key)))
-			{
+//			if (!val.equals(defaults.get(key)))
+//			{
 				element.addAttribute(key, val);
-			}
+//			}
 		}
 	}
 

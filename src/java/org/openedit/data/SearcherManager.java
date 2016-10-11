@@ -119,7 +119,7 @@ public class SearcherManager
 		String inCatalogId = newarchive.getCatalogId();
 		Searcher searcher;
 		//Check the properites
-		PropertyDetails details = newarchive.getPropertyDetails(inFieldName);
+		PropertyDetails details = newarchive.getPropertyDetailsCached(inFieldName);
 		
 		String beanName = null;
 		if( getModuleManager().contains(inCatalogId,inFieldName + "Searcher") ) //this might be a lookup
