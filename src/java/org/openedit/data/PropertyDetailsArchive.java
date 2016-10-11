@@ -291,10 +291,12 @@ public class PropertyDetailsArchive
 								
 								PropertyDetails otherdetails = getPropertyDetails(type[0]);
 								PropertyDetail shareddetail = otherdetails.getDetail(type[1]);
-								PropertyDetail local = shareddetail.copy();
-								local.setId(vid);
-								
-								view.add(local);
+								if( shareddetail != null)
+								{
+									PropertyDetail local = shareddetail.copy();
+									local.setId(vid);
+									view.add(local);
+								}	
 							}
 							
 						}
