@@ -1117,7 +1117,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		{
 			return null;
 		}
-		if ((val != null && val.length() > 0))
+		if ((val != null && val.length() > 0 && (vals == null || vals.length <2)))
 		{
 			if ("matches".equals(op) || "andgroup".equals(op))
 			{
@@ -2675,6 +2675,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	public void reindexInternal() throws OpenEditException
 	{
 	
+				setForceBulk(true);
 				HitTracker allhits = getAllHits();
 				allhits.enableBulkOperations();
 				ArrayList tosave = new ArrayList();
@@ -2683,8 +2684,9 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					Data hit = (Data) iterator2.next();
 					Data real = (Data) loadData(hit);
 					tosave.add(real);
-					if(tosave.size() > 10000){
-						
+					if(tosave.size() > 50){
+						setForceBulk(true);
+
 						
 						saveAllData(tosave, null);
 
