@@ -32,6 +32,11 @@ public class ValuesMap extends HashMap
 	public Object getObject(String inKey)
 	{
 		Object obj = super.get(inKey);
+//TODO: Should we just do this here?
+//		if( obj == null || obj == NULLVALUE)
+//		{
+//			return null;
+//		}
 		return obj;
 	}
 	
