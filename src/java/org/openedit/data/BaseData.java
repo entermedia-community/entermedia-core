@@ -2,6 +2,7 @@ package org.openedit.data;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.Set;
 
 import org.openedit.Data;
 import org.openedit.MultiValued;
@@ -137,7 +138,7 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 		setProperty("sourcepath", inSourcepath);
 	}
 
-	public Map getProperties() 
+	public ValuesMap getProperties() 
 	{
 		return getMap();
 	}
@@ -182,7 +183,7 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 	}
 	public Object getValue(String inKey)
 	{
-		Object val = getMap().get(inKey);
+		Object val = getMap().getObject(inKey);
 		if( val == ValuesMap.NULLVALUE)
 		{
 			return null;
@@ -247,6 +248,10 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 	}
 
 	
-	
+	@Override
+	public Set keySet()
+	{
+		return getMap().keySet();
+	}
 	
 }

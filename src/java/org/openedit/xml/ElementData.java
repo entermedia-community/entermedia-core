@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.dom4j.Attribute;
@@ -404,7 +405,7 @@ public class ElementData implements MultiValued, SaveableData, Comparable ,Searc
 	@Override
 	public void removeValue(String inKey, Object inNewValue)
 	{
-		
+		throw new OpenEditException("Not implemented");
 	}
 
 
@@ -424,5 +425,12 @@ public class ElementData implements MultiValued, SaveableData, Comparable ,Searc
 	}
 	public String getName(String inLocale) {
 		return getName();
+	}
+	
+
+	@Override
+	public Set keySet()
+	{
+		return getProperties().keySet();
 	}
 }

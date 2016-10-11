@@ -1,8 +1,6 @@
 package org.openedit.data;
 
 import java.math.BigDecimal;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -13,7 +11,6 @@ import java.util.Map;
 
 import org.openedit.Data;
 import org.openedit.MultiValued;
-import org.openedit.OpenEditRuntimeException;
 import org.openedit.util.DateStorageUtil;
 
 public class ValuesMap extends HashMap
@@ -27,9 +24,25 @@ public class ValuesMap extends HashMap
 	{
 		putAll(inMap);
 	}
+	/**
+	 * Thinking to not override the nullvalue check here
+	 * @param inKey
+	 * @return
+	 */
+	public Object getObject(String inKey)
+	{
+		Object obj = super.get(inKey);
+		return obj;
+	}
+	
+	public Object get(String inKey)
+	{
+		return getString(inKey);
+	}
+	
 	public void removeValue(String inKey, Object inOldValue)
 	{
-		Object val = get(inKey);
+		Object val = getObject(inKey);
 		if( val == null || val == NULLVALUE)
 		{
 			return;
@@ -52,7 +65,7 @@ public class ValuesMap extends HashMap
 	}
 	public void addValue(String inKey, Object inNewValue)
 	{
-		Object values = get(inKey);
+		Object values = getObject(inKey);
 		if(values == null )
 		{
 			ArrayList valuesa = new ArrayList();
@@ -96,7 +109,7 @@ public class ValuesMap extends HashMap
 	
 	public Collection<String> getValues(String inPreference)
 	{
-		Object object = get(inPreference);
+		Object object = getObject(inPreference);
 		if( object == null || object == NULLVALUE)
 		{
 			return null;
@@ -105,7 +118,7 @@ public class ValuesMap extends HashMap
 		{
 			return (Collection<String>)object;
 		}
-		String val = (String)get(inPreference);
+		String val = (String)getObject(inPreference);
 		
 		if (val == null)
 		{
@@ -126,12 +139,12 @@ public class ValuesMap extends HashMap
 
 	public String getString(String inKey)
 	{
-		Object object = get(inKey);
+		Object object = getObject(inKey);
 		return toString(object);
 	}
 	public boolean getBoolean(String inId)
 	{
-		Object val = get(inId);
+		Object val = getObject(inId);
 		if( val == null || val == NULLVALUE)
 		{
 			return false;
@@ -164,7 +177,7 @@ public class ValuesMap extends HashMap
 	}
 	public Date getDate(String inField)
 	{
-		Object val = get(inField);
+		Object val = getObject(inField);
 		if( val == null || val == NULLVALUE)
 		{
 			return null;
@@ -180,7 +193,7 @@ public class ValuesMap extends HashMap
 	
 	public Date getDate(String inField, String inDateFormat)
 	{
-		Object val = get(inField);
+		Object val = getObject(inField);
 		if( val == null || val == NULLVALUE)
 		{
 			return null;
@@ -243,5 +256,22 @@ public class ValuesMap extends HashMap
 		return String.valueOf(object);
 	}
 
+	@Override
+	public void putAll(Map inArg0)
+	{
+		if( inArg0 instanceof ValuesMap)
+		{
+			ValuesMap map = (ValuesMap)inArg0;
+			for (Iterator iterator = map.keySet().iterator(); iterator.hasNext();)
+			{
+				String key = (String) iterator.next();
+				put( key, map.getObject(key));
+			}
+		}
+		else
+		{
+			super.putAll(inArg0);
+		}
+	}
 	
 }

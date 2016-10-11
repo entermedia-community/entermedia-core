@@ -9,9 +9,11 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import org.openedit.Data;
 import org.openedit.WebPageRequest;
+import org.openedit.modules.translations.LanguageMap;
 import org.openedit.page.manage.TextLabelManager;
 
 public class PropertyDetail implements Data, ViewItem, Comparable
@@ -22,7 +24,7 @@ public class PropertyDetail implements Data, ViewItem, Comparable
 	protected String fieldCatalogId;
 	protected String fieldView;
 	
-	protected String fieldText;
+	protected LanguageMap fieldText;
 	protected boolean fieldIndex; //this can be searched as a Lucene field
 	protected boolean fieldIsStored;
 	protected boolean fieldEditable = false;
@@ -214,9 +216,17 @@ public class PropertyDetail implements Data, ViewItem, Comparable
 	{
 		fieldDateFormat = inDateFormat;
 	}
-	public String getText()
+	public LanguageMap getLabelText()
 	{
 		return fieldText;
+	}
+	public String getText()
+	{
+		if( fieldText != null)
+		{
+			return fieldText.getDefaultText("en");
+		}
+		return null;
 	}
 
 	/**
@@ -226,10 +236,16 @@ public class PropertyDetail implements Data, ViewItem, Comparable
 	 */
 	public String getText( WebPageRequest inRequest )
 	{
-		String value = null;
-		if( getTextLabelManager() != null)
+		if( fieldText == null)
+		{
+			fieldText = new LanguageMap();
+		}
+		String locale =  inRequest.getLocale();
+		String value = fieldText.getText(locale);
+		if( value == null && getTextLabelManager() != null)
 		{
 			value = getTextLabelManager().getAutoText("/" + getCatalogId() + "/data/fields/", getText(), inRequest.getLocale());
+			fieldText.setText(locale, value);
 		}
 		if( value == null)
 		{
@@ -239,7 +255,11 @@ public class PropertyDetail implements Data, ViewItem, Comparable
 	}
 	public void setText(String inText)
 	{
-		fieldText = inText;
+		if( fieldText == null)
+		{
+			fieldText = new LanguageMap();
+		}
+		fieldText.setText("en", inText);
 	}
 	public boolean isKeyword()
 	{
@@ -672,5 +692,11 @@ public class PropertyDetail implements Data, ViewItem, Comparable
 	@Override
 	public String getName(String inLocale) {
 		return getName();
+	}
+
+	@Override
+	public Set keySet()
+	{
+		return getProperties().keySet();
 	}
 }

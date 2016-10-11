@@ -1,6 +1,9 @@
 package org.openedit;
 
 import java.util.Map;
+import java.util.Set;
+
+import org.openedit.data.ValuesMap;
 
 public interface Data
 {
@@ -22,10 +25,12 @@ public interface Data
 	
 	void setValue(String inKey, Object inValue);
 	
+	/** string values map */
 	Map getProperties();
-	void setProperties(Map inProperties);
 	
+	void setProperties(Map inObjects);
 	
+	Set keySet();
 
 
 }

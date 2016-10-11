@@ -88,7 +88,7 @@ public class MapPropertyContainer implements PropertyContainer
 	/**
 	 * @see org.openedit.users.User#put(java.util.Map)
 	 */
-	public void putAll(Map inProperties) throws UserManagerException
+	public void setProperties(Map inProperties) throws UserManagerException
 	{
 		for (Iterator iter = inProperties.entrySet().iterator(); iter.hasNext();)
 		{

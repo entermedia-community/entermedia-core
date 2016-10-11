@@ -89,7 +89,7 @@ public interface PropertyContainer extends Serializable
 	 *
 	 * @see #put(String, Object)
 	 */
-	void putAll(Map inProperties) throws UserManagerException;
+	void setProperties(Map inProperties) throws UserManagerException;
 
 	/**
 	 * Remove the given property from this object.  If no such property exists, this method will do

@@ -15,6 +15,7 @@ package org.openedit.users.filesystem;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -149,9 +150,9 @@ public abstract class FileSystemObject implements PropertyContainer, Serializabl
 	 *
 	 * @see #put(String, Object)
 	 */
-	public void putAll( Map inProperties ) throws UserManagerException
+	public void setProperties( Map inProperties ) throws UserManagerException
 	{
-		getPropertyContainer().putAll( inProperties );
+		getPropertyContainer().setProperties( inProperties );
 	}
 
 	/**
@@ -224,5 +225,10 @@ public abstract class FileSystemObject implements PropertyContainer, Serializabl
 		
 	}
 
+	@Override
+	public Set keySet()
+	{
+		return getProperties().keySet();
+	}
 	
 }

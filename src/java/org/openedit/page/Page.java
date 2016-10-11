@@ -922,4 +922,10 @@ public class Page implements Data, Comparable
 	public String getName(String inLocale) {
 		return getName();
 	}
+	@Override
+	public Set keySet()
+	{
+		return getProperties().keySet();
+	}
+
 }

@@ -289,4 +289,11 @@ public class XmlFile implements Data
 	public String getName(String inLocale) {
 		return getName();
 	}
+	
+	@Override
+	public Set keySet()
+	{
+		return getProperties().keySet();
+	}
+
 }

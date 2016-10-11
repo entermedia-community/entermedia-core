@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 
@@ -278,7 +279,7 @@ public class TextLabelManager
 	}
 	public String getAutoText(String inPath, String inKey, String inLocale)
 	{
-		if( inKey == null || inKey.length() == 0 )
+		if( inKey == null || inKey.length() < 2 )
 		{
 			return inKey;
 		}
@@ -290,9 +291,15 @@ public class TextLabelManager
 			Page page = getPageManager().getPage(inPath);
 			text = page.getProperty("text." + inKey,inLocale);
 		}
-		if( text == null)
+		if( text == null )
 		{
 			 text = autoTranslate(folder, inKey, inLocale);
+			 if( Character.isUpperCase( inKey.charAt(0)) )
+			 {
+				 Locale loc = getLocaleManager().getLocale(inLocale);
+				 String upper = text.substring(0,1).toUpperCase(loc);
+				 text = upper + text.substring(1);
+			 }
 		}
 		return text;
 		

@@ -16,6 +16,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -247,11 +248,16 @@ public class FileItem extends ContentItem implements Data
 		return getName();
 	}
 	
-	
-	
 	public void setLastModified(Date inDate)
 	{
 		// TODO Auto-generated method stub
 		getFile().setLastModified(inDate.getTime());
+	}
+	
+
+	@Override
+	public Set keySet()
+	{
+		return getProperties().keySet();
 	}
 }
