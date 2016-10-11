@@ -84,7 +84,7 @@ public class SearchQueryArchive
 		XmlFile file = getXmlArchive().getXml(path, "query");
 		Element root = inQuery.toXml();
 		Element inputs = root.addElement("inputs");
-		for (Iterator iterator = inQuery.getProperties().keySet().iterator(); iterator.hasNext();)
+		for (Iterator iterator = inQuery.keySet().iterator(); iterator.hasNext();)
 		{
 			String key = (String) iterator.next();
 			Collection values = inQuery.getInputs(key);

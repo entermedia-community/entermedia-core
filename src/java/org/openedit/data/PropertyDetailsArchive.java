@@ -668,7 +668,7 @@ public class PropertyDetailsArchive
 			element.addAttribute("viewtype", viewtype);
 		}
 
-		for (Iterator iterator = inDetail.getProperties().keySet().iterator(); iterator.hasNext();)
+		for (Iterator iterator = inDetail.keySet().iterator(); iterator.hasNext();)
 		{
 			String key = (String) iterator.next();
 			String val = (String) inDetail.getProperties().get(key);

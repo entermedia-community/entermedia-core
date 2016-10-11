@@ -214,10 +214,10 @@ public class XmlFolderSearcher extends XmlSearcher
 			data.setId(inData.getId());
 			data.setName(inData.getName());
 			data.setSourcePath(inData.getSourcePath());
-			for (Iterator iterator = inData.getProperties().keySet().iterator(); iterator.hasNext();)
+			for (Iterator iterator = inData.keySet().iterator(); iterator.hasNext();)
 			{
 				String key	= (String) iterator.next();
-				data.setProperty(key, inData.get(key));
+				data.setValue(key, inData.getValue(key));
 			}
 		}
 
