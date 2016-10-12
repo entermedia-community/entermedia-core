@@ -640,10 +640,19 @@ public class PropertyDetailsArchive
 		{
 			element.addAttribute("catalogid", inDetail.getCatalogId());
 		}
-		if (inDetail.getText() != null)
+		if (inDetail.getName() != null)
 		{
-			//TODO: Add multi-language saves
-			element.setText(inDetail.getText());
+
+			Element child = element.addElement("name");
+			Map languages = inDetail.getElementData().getLanguageMap("name");
+			for (Iterator iterator = languages.keySet().iterator(); iterator.hasNext();)
+			{
+				String lang = (String) iterator.next();
+				String val = (String)languages.get(lang);
+				child.addElement("language").addAttribute("id",lang).addCDATA((String)val);
+			}
+			
+		
 		}
 
 		element.addAttribute("index", String.valueOf( inDetail.isIndex() ) );
@@ -665,10 +674,10 @@ public class PropertyDetailsArchive
 			element.addAttribute("viewtype", viewtype);
 		}
 
-		for (Iterator iterator = inDetail.keySet().iterator(); iterator.hasNext();)
+		for (Iterator iterator = inDetail.getElementData().keySet().iterator(); iterator.hasNext();)
 		{
 			String key = (String) iterator.next();
-			String val = (String) inDetail.getProperties().get(key);
+			String val = (String) inDetail.get(key);
 //			if (!val.equals(defaults.get(key)))
 //			{
 				element.addAttribute(key, val);
@@ -682,8 +691,17 @@ public class PropertyDetailsArchive
 		String label = inElement.getTextTrim();
 		if (label != null && label.length() > 0)
 		{
-			inDetail.setText(label);
+			inDetail.setName(label);
+		} 
+		
+		else{
+			Element nameinfo = inElement.element("name");
+			//Override this later...to support overriding names in other languages.
+		
+			
 		}
+		
+		
 
 		// Set all the remaining attributes as properties
 		for (Iterator iterator = inElement.attributeIterator(); iterator.hasNext();)

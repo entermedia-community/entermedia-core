@@ -12,8 +12,6 @@ import java.util.regex.Pattern;
 import org.dom4j.Attribute;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
-import org.dom4j.Node;
-import org.dom4j.Text;
 import org.dom4j.tree.DefaultText;
 import org.openedit.MultiValued;
 import org.openedit.OpenEditException;
@@ -128,8 +126,13 @@ public class ElementData implements MultiValued, SaveableData, Comparable ,Searc
 					map.put(childlang.attributeValue("id"),getElement().getText());
 				}
 				return map;
+			} else
+			{
+				
+				
+				return name;	
 			}
-			return name;
+			
 		} else if(inId.equals(".version")){
 			return getVersion();//elastic search
 		}
@@ -177,7 +180,7 @@ public class ElementData implements MultiValued, SaveableData, Comparable ,Searc
 	}
 	public void setName(String inName)
 	{
-		setProperty("name",inName);
+		setValue("name",inName);
 	}
 	public void setId(String inNewid)
 	{
@@ -424,7 +427,7 @@ public class ElementData implements MultiValued, SaveableData, Comparable ,Searc
 		
 	}
 	public String getName(String inLocale) {
-		return getName();
+		return getLanguageMap(inLocale).getText(inLocale);
 	}
 	
 
@@ -432,5 +435,55 @@ public class ElementData implements MultiValued, SaveableData, Comparable ,Searc
 	public Set keySet()
 	{
 		return getProperties().keySet();
+	}
+
+
+	public boolean getBoolean(String inString)
+	{
+		Object obj = getValue(inString);
+		if(obj instanceof Boolean){
+			return (boolean) obj;
+		}
+		if(obj instanceof String){
+			return Boolean.parseBoolean((String) obj);	
+		}
+		return false;
+		
+	}
+
+
+	public LanguageMap getLanguageMap(String inString)
+	{
+		Object map = getValue(inString);
+		if(map instanceof LanguageMap){
+			return (LanguageMap) map;
+		}
+		else if(map == null){
+			return new LanguageMap();
+		}
+		else if(map instanceof String){
+			LanguageMap newmap = new LanguageMap();
+			newmap.setText("en", inString);
+			return newmap;
+		} else{
+			throw new OpenEditException("Cannot provide map for : " + inString + " Found: " + map.getClass());
+		}
+		
+		
+		
+		
+	}
+
+
+	public ElementData copy()
+	{
+		ElementData data = new ElementData();
+		for (Iterator iterator = keySet().iterator(); iterator.hasNext();)
+		{
+			String id = (String) iterator.next();
+			data.setValue(id, getValue(id));
+		}
+		data.setPropertyDetails(getPropertyDetails());
+		return data;
 	}
 }

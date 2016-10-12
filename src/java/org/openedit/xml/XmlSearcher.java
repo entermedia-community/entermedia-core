@@ -625,7 +625,7 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable
 			PropertyDetail id = new PropertyDetail();
 			id.setIndex(true);
 			id.setStored(true);
-			id.setText("Id");
+			id.setName("Id");
 			id.setId("id");
 			id.setEditable(true);
 			id.setIndex(true);
@@ -636,7 +636,7 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable
 			id = new PropertyDetail();
 			id.setIndex(true);
 			id.setStored(true);
-			id.setText("Name");
+			id.setName("Name");
 			id.setId("name");
 			id.setEditable(true);
 			details.addDetail(id);

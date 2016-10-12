@@ -103,7 +103,7 @@ public class TranslationSearcher extends XmlSearcher
 			PropertyDetail id = new PropertyDetail();
 			id.setIndex(true);
 			id.setStored(true);
-			id.setText("Id");
+			id.getName("Id");
 			id.setId("id");
 			id.setEditable(true);
 			details.addDetail(id);
@@ -111,7 +111,7 @@ public class TranslationSearcher extends XmlSearcher
 			id = new PropertyDetail();
 			id.setIndex(true);
 			id.setStored(true);
-			id.setText("Name");
+			id.getName("Name");
 			id.setId("name");
 			id.setEditable(true);
 			details.addDetail(id);

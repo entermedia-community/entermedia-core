@@ -375,7 +375,7 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 					{
 						done.append(op);
 					}
-					String q = detail.getText();
+					String q = detail.getName();
 					if(q == null){
 						q = detail.getName();
 						

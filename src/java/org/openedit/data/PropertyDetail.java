@@ -4,10 +4,6 @@
 package org.openedit.data;
 
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -15,28 +11,32 @@ import org.openedit.Data;
 import org.openedit.WebPageRequest;
 import org.openedit.modules.translations.LanguageMap;
 import org.openedit.page.manage.TextLabelManager;
+import org.openedit.xml.ElementData;
 
-public class PropertyDetail implements Data, ViewItem, Comparable
+public class PropertyDetail implements Data,  ViewItem, Comparable
 {
-	protected String fieldId;
-	protected String fieldExternalId;
-	protected String fieldExternalType;
+//	protected String fieldId;
+//	protected String fieldExternalId;
+//	protected String fieldExternalType;
 	protected String fieldCatalogId;
 	protected String fieldView;
-	
-	protected LanguageMap fieldText;
-	protected boolean fieldIndex; //this can be searched as a Lucene field
-	protected boolean fieldIsStored;
-	protected boolean fieldEditable = false;
-	protected boolean fieldFilter;  //This means export it to a list or something
-	protected boolean fieldSortable = false;
-	
-	protected boolean fieldKeyword; //this is added to the Keyword string
-	private String fieldDateFormatString;
-	protected String fieldDataType; //boolean, long, permission, etc...
+//	
+//	protected boolean fieldIndex; //this can be searched as a Lucene field
+//	protected boolean fieldIsStored;
+//	protected boolean fieldEditable = false;
+//	protected boolean fieldFilter;  //This means export it to a list or something
+//	protected boolean fieldSortable = false;
+//	
+	//protected boolean fieldKeyword; //this is added to the Keyword string
+	//private String fieldDateFormatString;
+	//protected String fieldDataType; //boolean, long, permission, etc...
 	protected DateFormat fieldDateFormat;
-	protected ValuesMap fieldProperties;
+	//protected ValuesMap fieldProperties;
 	protected TextLabelManager fieldTextLabelManager;
+	protected ElementData fieldElementData;
+	
+	
+	
 	
 	public PropertyDetail()
 	{
@@ -74,14 +74,7 @@ public class PropertyDetail implements Data, ViewItem, Comparable
 		fieldView = inView;
 	}
 
-	public ValuesMap getProperties()
-	{
-		if (fieldProperties == null)
-		{
-			fieldProperties = new ValuesMap();
-		}
-		return fieldProperties;
-	}
+
 	
 	public boolean isDataType(String inDataType)
 	{
@@ -190,159 +183,129 @@ public class PropertyDetail implements Data, ViewItem, Comparable
 	
 	public String getId()
 	{
-		return fieldId;
+		return get("id");
 	}
 	public void setId(String inId)
 	{
-		fieldId = inId;
+		setValue("id", inId);
 	}
 	public boolean isIndex()
 	{
-		return fieldIndex;
+		return getBoolean("index");
 	}
-	public void setIndex(boolean inIndex)
+	private boolean getBoolean(String inString)
 	{
-		fieldIndex = inIndex;
-	}
-	public DateFormat getDateFormat()
-	{
-		if (fieldDateFormat == null && getDateFormatString() != null)
-		{
-			fieldDateFormat = new SimpleDateFormat(getDateFormatString());
-		}
-		return fieldDateFormat;
-	}
-	public void setDateFormat(DateFormat inDateFormat)
-	{
-		fieldDateFormat = inDateFormat;
-	}
-	public LanguageMap getLabelText()
-	{
-		return fieldText;
-	}
-	public String getText()
-	{
-		if( fieldText != null)
-		{
-			return fieldText.getDefaultText("en");
-		}
-		return null;
+		return getElementData().getBoolean(inString);
 	}
 
-	/**
-	 * Create a translation file here: /catalogid/configuration/_text_es.txt
-	 * @param inRequest
-	 * @return
-	 */
+	public void setIndex(boolean inIndex)
+	{
+		setValue("index", inIndex);
+	}
+	
+//	public LanguageMap getLabelText()
+//	{
+//		return fieldText;
+//	}
+//	public String getText()
+//	{
+//		if( fieldText != null)
+//		{
+//			return fieldText.getDefaultText("en");
+//		}
+//		return null;
+//	}
+//
+//	/**
+//	 * Create a translation file here: /catalogid/configuration/_text_es.txt
+//	 * @param inRequest
+//	 * @return
+//	 */
 	public String getText( WebPageRequest inRequest )
 	{
-		if( fieldText == null)
-		{
-			fieldText = new LanguageMap();
-		}
 		String locale =  inRequest.getLocale();
-		String value = fieldText.getText(locale);
-		if( value == null && getTextLabelManager() != null)
-		{
-			value = getTextLabelManager().getAutoText("/" + getCatalogId() + "/data/fields/", getText(), inRequest.getLocale());
-			fieldText.setText(locale, value);
-		}
-		if( value == null)
-		{
-			value = getText();
-		}
-		return value;
+
+		return getName(locale);
+		
+		
 	}
-	public void setText(String inText)
-	{
-		if( fieldText == null)
-		{
-			fieldText = new LanguageMap();
-		}
-		fieldText.setText("en", inText);
-	}
+//	public void setText(String inText)
+//	{
+//		if( fieldText == null)
+//		{
+//			fieldText = new LanguageMap();
+//		}
+//		fieldText.setText("en", inText);
+//	}
 	public boolean isKeyword()
 	{
-		return fieldKeyword;
+		return getBoolean("keyword");
 	}
 	public void setKeyword(boolean inKeyword)
 	{
-		fieldKeyword = inKeyword;
+		setValue("keyword", inKeyword);
 	}
 	public boolean isStored()
 	{
-		return fieldIsStored;
+		return getBoolean("stored");
 	}
 	public void setStored( boolean inStored)
 	{
-		fieldIsStored = inStored;
+		setValue("keyword", inStored);
 	}
 	public boolean isEditable()
 	{
-		return fieldEditable;
+		return getBoolean("editable");
 	}
 	public void setEditable(boolean inEditable)
 	{
-		fieldEditable = inEditable;
+		setValue("editable", inEditable);
 	}
 	public String[] getExternalIds()
 	{
-		if( fieldExternalId != null)
+		String externalid = get("externalid");
+		
+		if( externalid != null)
 		{
-			return fieldExternalId.split(",");
+			return externalid.split(",");
 		}
 		return null;
 	}
 	public String getExternalId()
 	{
-		return fieldExternalId;
+		return get("externalid");
 	}
 	public void setExternalId(String inExternalId)
 	{
-		fieldExternalId = inExternalId;
+		setValue("externalid", inExternalId);
 	}
-//	public boolean isSearchable()
-//	{
-//		return fieldIsSearchable;
-//	}
-//	public void setSearchable(boolean inSearchable)
-//	{
-//		fieldIsSearchable = inSearchable;
-//	}
 	
 	public boolean isFilter()
 	{
 		// TODO Auto-generated method stub
-		return fieldFilter;
+		return getBoolean("filter");
 	}
 	public void setFilter(boolean inFilter)
 	{
-		fieldFilter = inFilter;
+		setValue("filter", inFilter);
 	}
 	public String getExternalType()
 	{
-		return fieldExternalType;
+		return get("externaltype");
 	}
 	public void setExternalType(String inExternalType)
 	{
-		fieldExternalType = inExternalType;
+		setValue("externaltype", inExternalType);
 	}
 	public boolean isRequired() 
 	{
-		return Boolean.parseBoolean(get("required"));
+		return getBoolean("required");
 	}
 	public void setRequired(boolean required) 
 	{
-		setProperty("required", Boolean.toString(required));
+		setValue("required", required);
 	}
-	public void setDateFormatString(String format) 
-	{
-		fieldDateFormatString = format;	
-	}
-	public String getDateFormatString()
-	{
-		return fieldDateFormatString;
-	}
+	
 	public String getCatalogId(String inDefault)
 	{
 		if( fieldCatalogId == null)
@@ -351,10 +314,12 @@ public class PropertyDetail implements Data, ViewItem, Comparable
 		}
 		return getCatalogId();
 	}
+	
 	public String getCatalogId()
 	{
 		return fieldCatalogId;
 	}
+	
 	public void setCatalogId(String inCatalogId)
 	{
 		fieldCatalogId = inCatalogId;
@@ -386,54 +351,10 @@ public class PropertyDetail implements Data, ViewItem, Comparable
 		}
 		else if ( inId.equals("text"))
 		{
-			return getText();
+			return getName();
 		}
-		else if ( inId.equals("externalid"))
-		{
-			return getExternalId();
-		}
-		else if ( inId.equals("stored"))
-		{
-			return String.valueOf(isStored());
-		}
-		else if ( inId.equals("index"))
-		{
-			return String.valueOf(isIndex());
-		}
-		else if ( inId.equals("keyword"))
-		{
-			return String.valueOf(isKeyword());
-		}
-		else if ( inId.equals("editable"))
-		{
-			return String.valueOf(isEditable());
-		}
-		else if ( inId.equals("sortable"))
-		{
-			return String.valueOf(isSortable());
-		}
-		else if ( inId.equals("filter"))
-		{
-			return String.valueOf(isFilter());
-		}
-		else if ( inId.equals("externaltype"))
-		{
-			return getExternalType();
-		}
-		else if ( inId.equals("format"))
-		{
-			return getDateFormatString();
-		}
-		else if (inId.equals("type"))
-		{
-			return getDataType();
-		}
-//		else if (inId.equals("viewtype"))
-//		{
-//			return getViewType();
-//		}
-
-		return (String)getProperties().get(inId);
+		
+		return getElementData().get(inId);
 	}
 	public void setProperty(String inId, String inValue)
 	{
@@ -448,7 +369,7 @@ public class PropertyDetail implements Data, ViewItem, Comparable
 		
 		else if ( inId.equals("text"))
 		{
-			setText(inValue);
+			setName(inValue);
 		}
 		else if ( inId.equals("externalid"))
 		{
@@ -495,10 +416,7 @@ public class PropertyDetail implements Data, ViewItem, Comparable
 		{
 			setExternalType(inValue);
 		}
-		else if ( inId.equals("format"))
-		{
-			setDateFormatString(inValue);
-		}
+		
 		else if ( inId.equals("type"))
 		{
 			setDataType(inValue);
@@ -513,49 +431,47 @@ public class PropertyDetail implements Data, ViewItem, Comparable
 		}
 		else
 		{
-			if(inValue == null)
-			{
-				getProperties().remove(inId);
-			}
-			else
-			{
-				getProperties().put(inId, inValue);
-			}
+			
+				setValue(inId, inValue);
+			
 		}
 	}
 	
 	public String getName()
 	{
-		return getText();
+		return getElementData().getName();
 	}
 	
 	
 	
 	public void setName(String inName)
 	{
-		setText(inName);
+		getElementData().getLanguageMap("name").setText("en", inName);
 	}
 
 	public PropertyDetail copy() 
 	{
 		PropertyDetail d = new PropertyDetail();
-		d.fieldCatalogId = fieldCatalogId;
-		d.fieldDateFormat = fieldDateFormat;
-		d.fieldDateFormatString = fieldDateFormatString;
-		d.fieldEditable = fieldEditable;
-		d.fieldExternalId = fieldExternalId;
-		d.fieldExternalType = fieldExternalType;
-		d.fieldFilter = fieldFilter;
-		d.fieldId = fieldId;
-		d.fieldIndex = fieldIndex;
-		d.fieldIsStored = fieldIsStored;
-		d.fieldKeyword = fieldKeyword;
-		d.fieldText = fieldText;
-		d.fieldDataType = fieldDataType;
-		d.fieldSortable = fieldSortable;
+		ElementData data = getElementData().copy();
+		d.setElementData(data);
+		
+		
+//		d.setValue("catalogid", getCatalogId());
+//			
+//		d.setValue("editable", isEditable());
+//		d.setValue("externalid",getExternalId());
+//		d.setValue("externaltype", getExternalType());
+//		d.setValue("filter",  = fieldFilter;
+//		d.setValue("id", = fieldId;
+//		d.setValue("index", = fieldIndex;
+//		d.setValue("stored", = fieldIsStored;
+//		d.setValue("keyword", = fieldKeyword;
+//		d.setValue("text", = fieldText;
+//		d.setValue("datatype", = fieldDataType;
+//		d.setValue("sortable", = fieldSortable;
 		d.fieldTextLabelManager = fieldTextLabelManager;
 		
-		d.getProperties().putAll(getProperties());
+	//	d.getProperties().putAll(getProperties());
 
 		return d;
 	}
@@ -601,20 +517,32 @@ public class PropertyDetail implements Data, ViewItem, Comparable
 		{
 			return false;
 		}
-		return fieldSortable;
+		return isSortable();
 	}
 	public boolean isSortable()
 	{
 		//Make most things sortable automtically
-		if( fieldSortable || isDataType("date") || isDataType("boolean") || isNumber() || "name".equals( getName() ) )
+		boolean  sortable = getElementData().getBoolean("sortable");
+		
+		if(  isDataType("date") || isDataType("boolean") || isNumber() || "name".equals( getName() ) )
 		{
 			return true;
 		}
-		return fieldSortable;
+		return sortable;
 	}
+	public ElementData getElementData()
+	{
+		return fieldElementData;
+	}
+
+	public void setElementData(ElementData inElementData)
+	{
+		fieldElementData = inElementData;
+	}
+
 	public void setSortable(boolean inSortable) 
 	{
-		fieldSortable = inSortable;
+		setValue("sortable",inSortable);
 	}
 	
 	public String getSortProperty()
@@ -634,29 +562,6 @@ public class PropertyDetail implements Data, ViewItem, Comparable
 			return true;
 		}
 		return false;
-	}
-	public void setValues(String inKey, Collection<String> inValues)
-	{
-		getProperties().put(inKey, inValues);
-	}
-
-	@Override
-	public Object getValue(String inKey)
-	{
-		return getProperties().get(inKey);
-	}
-
-	@Override
-	public void setValue(String inKey, Object inValue)
-	{
-		getProperties().put(inKey,inValue);		
-	}
-
-	@Override
-	public void setProperties(Map inProperties)
-	{
-		getProperties().putAll(inProperties);
-		
 	}
 
 	public boolean isMultiLanguage()
@@ -679,9 +584,20 @@ public class PropertyDetail implements Data, ViewItem, Comparable
 		}
 		return Boolean.valueOf( (String)found );
 	}
+	public Object getValue(String inId)
+	{
+		return getElementData().getValue(inId);
+	}
+
 	public void setAutoInclude(boolean inTrue)
 	{
-		setValue("autoinclude", String.valueOf(inTrue));
+		setValue("autoinclude", inTrue);
+	}
+
+	public void setValue(String inId, Object inValueOf)
+	{
+		getElementData().setValue(inId, inValueOf);
+		
 	}
 
 	public boolean isString()
@@ -689,14 +605,43 @@ public class PropertyDetail implements Data, ViewItem, Comparable
 	return !(isBoolean() || isDate() || isNumber() );
 	}
 
-	@Override
 	public String getName(String inLocale) {
-		return getName();
+		LanguageMap map = getElementData().getLanguageMap("name");
+			
+		String value = map.getText(inLocale);
+		
+		if( value == null && getTextLabelManager() != null)
+		{
+			value = getTextLabelManager().getAutoText("/" + getCatalogId() + "/data/fields/",getName(), inLocale);
+			map.setText(inLocale, value);
+		}
+		if( value == null)
+		{
+			value = getName();
+		}
+		return value;
+	}
+
+	
+
+	@Override
+	public Map getProperties()
+	{
+		return getElementData().getProperties();
+	}
+
+	@Override
+	public void setProperties(Map inProperties)
+	{
+		getElementData().setProperties(inProperties);
+		
 	}
 
 	@Override
 	public Set keySet()
 	{
-		return getProperties().keySet();
+		return getElementData().keySet();
 	}
+
+
 }
