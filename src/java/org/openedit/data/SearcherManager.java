@@ -57,6 +57,7 @@ public class SearcherManager
 						searcher = (Searcher)getCache().get(finalcatalogid + "|" + inFieldName);
 						if( searcher != null )
 						{
+							getCache().put(id, searcher); //make sure we store both versions since they are the same searcher
 							return searcher;
 						}
 					}
