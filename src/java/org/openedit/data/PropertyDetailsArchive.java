@@ -723,7 +723,7 @@ public class PropertyDetailsArchive
 		{
 			String key = (String) iterator.next();
 			String value = (String) defaults.get(key);
-			d.setProperty(key, value);
+			d.setValue(key, value);
 		}
 		String type = element.attributeValue("type");
 

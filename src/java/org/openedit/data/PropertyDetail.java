@@ -331,11 +331,8 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 	}
 	public String get(String inId)
 	{		
-		if( inId.equals("id"))
-		{
-			return getId();
-		}
-		else if ( inId.equals("boolean")
+		
+		if ( inId.equals("boolean")
 				|| inId.equals("number")
 				|| inId.equals("date")
 				|| inId.equals("file")
@@ -532,6 +529,12 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 	}
 	public ElementData getElementData()
 	{
+		if (fieldElementData == null)
+		{
+			fieldElementData = new ElementData();
+			
+		}
+
 		return fieldElementData;
 	}
 
