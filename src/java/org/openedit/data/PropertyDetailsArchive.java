@@ -24,6 +24,7 @@ import org.openedit.page.manage.TextLabelManager;
 import org.openedit.profile.UserProfile;
 import org.openedit.users.User;
 import org.openedit.util.PathUtilities;
+import org.openedit.xml.ElementData;
 import org.openedit.xml.XmlArchive;
 import org.openedit.xml.XmlFile;
 
@@ -718,27 +719,21 @@ public class PropertyDetailsArchive
 	protected PropertyDetail createDetail(Map defaults, Element element, String inType)
 	{
 		PropertyDetail d = new PropertyDetail();
+		d.setElementData(new ElementData(element));
 		d.setTextLabelManager(getTextLabelManager());
-		for (Iterator iterator = defaults.keySet().iterator(); iterator.hasNext();)
-		{
-			String key = (String) iterator.next();
-			String value = (String) defaults.get(key);
-			d.setValue(key, value);
-		}
+//		for (Iterator iterator = defaults.keySet().iterator(); iterator.hasNext();)
+//		{
+//			String key = (String) iterator.next();
+//			String value = (String) defaults.get(key);
+//			d.setValue(key, value);
+//		}
 		String type = element.attributeValue("type");
-
 		d.setDataType(type);
+//
+		//populateViewElements(element, d);
 
-		populateViewElements(element, d);
-
-		if (d.getCatalogId() == null)
-		{
-			d.setCatalogId(fieldCatalogId);
-		}
-		if (d.getSearchType() == null)
-		{
-			d.setSearchType(inType);
-		}
+		d.setCatalogId(getCatalogId());
+		d.setSearchType(inType);
 
 		if (d.isViewType("list") && d.getListId() == null)
 		{
