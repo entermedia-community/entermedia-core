@@ -696,7 +696,7 @@ public class PropertyDetailsArchive
 		} 
 		
 		else{
-			Element nameinfo = inElement.element("name");
+			//Element nameinfo = inElement.element("name");
 			//Override this later...to support overriding names in other languages.
 		
 			

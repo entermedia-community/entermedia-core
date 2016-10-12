@@ -113,26 +113,29 @@ public class ElementData implements MultiValued, SaveableData, Comparable ,Searc
 			String name = getElement().attributeValue(inId);
 			if( name == null)
 			{
-				LanguageMap map = new LanguageMap();
-				for (Iterator iterator = getElement().nodeIterator(); iterator.hasNext();)
+				name = getElement().getTextTrim();
+				if( name != null && name.isEmpty())
 				{
-					Object object = (Object) iterator.next();
-					if( object instanceof DefaultText)
-					{
-						name = getElement().getText();
-						return name;
-					}
-					Element childlang = (Element)object;
-					map.put(childlang.attributeValue("id"),getElement().getText());
+					name = null;
 				}
-				return map;
-			} else
-			{
-				
-				
-				return name;	
+				if( name == null)
+				{
+					LanguageMap map = new LanguageMap();
+					for (Iterator iterator = getElement().nodeIterator(); iterator.hasNext();)
+					{
+						Object object = (Object) iterator.next();
+						if( object instanceof DefaultText)
+						{
+							name = getElement().getText();
+							return name;
+						}
+						Element childlang = (Element)object;
+						map.put(childlang.attributeValue("id"),getElement().getText());
+					}
+					return map;
+				}	
 			}
-			
+			return name;	
 		} else if(inId.equals(".version")){
 			return getVersion();//elastic search
 		}
@@ -176,7 +179,7 @@ public class ElementData implements MultiValued, SaveableData, Comparable ,Searc
 	}
 	public String getName()
 	{
-		return toString();
+		return get("name");
 	}
 	public void setName(String inName)
 	{
@@ -282,7 +285,7 @@ public class ElementData implements MultiValued, SaveableData, Comparable ,Searc
 	{
 		
 		Map all = new HashMap();
-		//all.put("name", getName()); //would this cause problems when saving?
+		all.put("name", getName()); //would this cause problems when saving?
 		for (Iterator iterator = getAttributes().iterator(); iterator.hasNext();)
 		{
 			org.dom4j.Attribute attr = (org.dom4j.Attribute) iterator.next();
@@ -454,24 +457,21 @@ public class ElementData implements MultiValued, SaveableData, Comparable ,Searc
 
 	public LanguageMap getLanguageMap(String inString)
 	{
-		Object map = getValue(inString);
-		if(map instanceof LanguageMap){
-			return (LanguageMap) map;
+		Object val = getValue(inString);
+		if(val instanceof LanguageMap){
+			return (LanguageMap) val;
 		}
-		else if(map == null){
+		else if(val == null){
 			return new LanguageMap();
 		}
-		else if(map instanceof String){
+		else if(val instanceof String)
+		{
 			LanguageMap newmap = new LanguageMap();
-			newmap.setText("en", inString);
+			newmap.setText("en", (String)val);
 			return newmap;
 		} else{
-			throw new OpenEditException("Cannot provide map for : " + inString + " Found: " + map.getClass());
+			throw new OpenEditException("Cannot provide map for : " + inString + " Found: " + val.getClass());
 		}
-		
-		
-		
-		
 	}
 
 

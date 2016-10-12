@@ -614,10 +614,10 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 		LanguageMap map = getElementData().getLanguageMap("name");
 			
 		String value = map.getText(inLocale);
-		
 		if( value == null && getTextLabelManager() != null)
 		{
-			value = getTextLabelManager().getAutoText("/" + getCatalogId() + "/data/fields/",getName(), inLocale);
+			String name = getName();
+			value = getTextLabelManager().getAutoText("/" + getCatalogId() + "/data/fields/",name, inLocale);
 			map.setText(inLocale, value);
 		}
 		if( value == null)
