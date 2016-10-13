@@ -327,7 +327,7 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 	
 	public String toString()
 	{
-		return getId();
+		return getName();
 	}
 	public String get(String inId)
 	{		
@@ -523,7 +523,7 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 		//Make most things sortable automtically
 		boolean  sortable = getElementData().getBoolean("sortable");
 		
-		if(  isDataType("date") || isDataType("boolean") || isNumber() || "name".equals( getName() ) )
+		if(  isDataType("date") || isDataType("boolean") || isNumber() || "name".equals( getId() ) )
 		{
 			return true;
 		}

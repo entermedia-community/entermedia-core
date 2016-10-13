@@ -3,6 +3,7 @@ package org.openedit.xml;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -186,7 +187,9 @@ public class ElementData implements MultiValued, SaveableData, Comparable, Searc
 
 	public void setName(String inName)
 	{
-		setValue("name", inName);
+		LanguageMap map = getLanguageMap("name");
+		map.setText("en", inName);
+		setValue("name", map);
 	}
 
 	public void setId(String inNewid)
@@ -290,23 +293,19 @@ public class ElementData implements MultiValued, SaveableData, Comparable, Searc
 		fieldSourcePath = inSourcepath;
 	}
 
-	public Map getProperties()
+	public ValuesMap getProperties()
 	{
-
-		Map all = new HashMap();
-		all.put("name", getName()); //would this cause problems when saving?
-		for (Iterator iterator = getAttributes().iterator(); iterator.hasNext();)
+		ValuesMap map = new ValuesMap();
+		for (Iterator iterator = keySet().iterator(); iterator.hasNext();)
 		{
-			org.dom4j.Attribute attr = (org.dom4j.Attribute) iterator.next();
-			all.put(attr.getName(), attr.getValue());
+			String key = (String) iterator.next();
+			Object value = getValue(key);
+			if( value != null)
+			{
+				map.put(key,value);
+			}
 		}
-		for (Iterator iterator = getElement().elementIterator(); iterator.hasNext();)
-		{
-			Element child = (Element) iterator.next();
-			all.put(child.getName(), child.getText());
-		}
-
-		return all;
+		return map;
 	}
 
 	public List getAttributes()
@@ -321,7 +320,7 @@ public class ElementData implements MultiValued, SaveableData, Comparable, Searc
 
 	public String toString()
 	{
-		String name = get("name");
+		String name = getName();
 
 		if (name == null)
 		{
@@ -400,7 +399,14 @@ public class ElementData implements MultiValued, SaveableData, Comparable, Searc
 	@Override
 	public void setProperty(String inKey, String inValue)
 	{
-		setValue(inKey, inValue);
+		if( inKey.equals("name"))
+		{
+			setName(inValue);
+		}
+		else
+		{
+			setValue(inKey, inValue);
+		}
 	}
 
 	@Override
@@ -447,7 +453,20 @@ public class ElementData implements MultiValued, SaveableData, Comparable, Searc
 	@Override
 	public Set keySet()
 	{
-		return getProperties().keySet();
+		Set keys = new HashSet();
+		keys.add("name");
+		for (Iterator iterator = getAttributes().iterator(); iterator.hasNext();)
+		{
+			org.dom4j.Attribute attr = (org.dom4j.Attribute) iterator.next();
+			keys.add(attr.getName());
+		}
+		for (Iterator iterator = getElement().elementIterator(); iterator.hasNext();)
+		{
+			Element child = (Element) iterator.next();
+			keys.add(child.getName());
+		}
+
+		return keys;
 	}
 
 	public boolean getBoolean(String inString)
