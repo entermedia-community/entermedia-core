@@ -16,6 +16,7 @@ import org.openedit.Data;
 import org.openedit.ModuleManager;
 import org.openedit.OpenEditException;
 import org.openedit.OpenEditRuntimeException;
+import org.openedit.cache.CacheManager;
 import org.openedit.hittracker.HitTracker;
 import org.openedit.locks.LockManager;
 import org.openedit.node.NodeManager;
@@ -28,7 +29,21 @@ public class SearcherManager
 	protected ModuleManager fieldModuleManager;
 	protected Map fieldCache;
 	protected HashMap fieldShowLogs;
+	protected CacheManager fieldCacheManager;
 	
+	
+	public CacheManager getCacheManager()
+	{
+		return fieldCacheManager;
+	}
+
+
+	public void setCacheManager(CacheManager inCacheManager)
+	{
+		fieldCacheManager = inCacheManager;
+	}
+
+
 	//A fieldName can be product or orderstatus. If there is no orderstatus searcher then we use an XML lookup for this catalog. 
 	public Searcher getSearcher(String inCatalogId, String inFieldName)
 	{
@@ -356,6 +371,12 @@ public class SearcherManager
 		return getList(inDetail.getListCatalogId(), inDetail.getListId());
 	}
 
+	/**
+	 * TODO: Cache this list, check the indexid tho for local edits
+	 * @param inCatalogId
+	 * @param inFieldName
+	 * @return
+	 */
 	public HitTracker getList(String inCatalogId, String inFieldName)  
 	{
 		if( inFieldName == null)
@@ -364,8 +385,13 @@ public class SearcherManager
 		}
 		//If this is not my searcher type then use the manager to get the  correct search
 		Searcher searcher = getSearcher(inCatalogId, inFieldName);
-		HitTracker found = searcher.getAllHits();
-		found.setHitsPerPage(100);
+		HitTracker found = (HitTracker)getCacheManager().get("sm" + inCatalogId, inFieldName);
+		if( found == null || !searcher.getIndexId().equals(found.getIndexId()))
+		{
+			found = searcher.getAllHits();
+			found.setHitsPerPage(100);
+			getCacheManager().put("sm" + inCatalogId, inFieldName, found);
+		}	
 		return found;
 	}
 

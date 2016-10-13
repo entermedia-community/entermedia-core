@@ -12,38 +12,48 @@ import java.util.regex.Pattern;
 import org.dom4j.Attribute;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
-import org.dom4j.tree.DefaultText;
 import org.openedit.MultiValued;
 import org.openedit.OpenEditException;
 import org.openedit.data.PropertyDetail;
 import org.openedit.data.PropertyDetails;
 import org.openedit.data.SaveableData;
 import org.openedit.data.SearchData;
+import org.openedit.data.ValuesMap;
 import org.openedit.modules.translations.LanguageMap;
 
-public class ElementData implements MultiValued, SaveableData, Comparable ,SearchData
+public class ElementData implements MultiValued, SaveableData, Comparable, SearchData
 {
 	protected Element fieldElement;
 	protected String fieldSourcePath;
 	protected String fieldVersion;
-	protected static final Pattern INVALIDSTUFF = Pattern.compile("[\'\"\n<>&]");  
+	protected ValuesMap fieldMap;
+
+	protected ValuesMap getMap()
+	{
+		if (fieldMap == null)
+		{
+			fieldMap = new ValuesMap();
+		}
+		return fieldMap;
+	}
+
+	protected static final Pattern INVALIDSTUFF = Pattern.compile("[\'\"\n<>&]");
 	protected PropertyDetails fieldPropertyDetails;
-	
+
 	public ElementData(Element inHit, PropertyDetails inPropertyDetails)
 	{
 		setElement(inHit);
 		//setId(getSearchHit().getId());
 		setPropertyDetails(inPropertyDetails);
 	}
-	
-	
+
 	public ElementData(Object inHit, PropertyDetails inPropertyDetails)
 	{
-		setElement((Element)inHit);
+		setElement((Element) inHit);
 		//setId(getSearchHit().getId());
 		setPropertyDetails(inPropertyDetails);
 	}
-	
+
 	public PropertyDetails getPropertyDetails()
 	{
 		return fieldPropertyDetails;
@@ -53,26 +63,31 @@ public class ElementData implements MultiValued, SaveableData, Comparable ,Searc
 	{
 		fieldPropertyDetails = inPropertyDetails;
 	}
-	
-	
-	public String getVersion() {
+
+	public String getVersion()
+	{
 		return fieldVersion;
 	}
-	public void setVersion(String inVersion) {
+
+	public void setVersion(String inVersion)
+	{
 		fieldVersion = inVersion;
 	}
+
 	public ElementData()
 	{
 	}
+
 	public ElementData(Element inEl)
 	{
 		setElement(inEl);
 	}
+
 	public ElementData(Object inEl)
 	{
-		setElement((Element)inEl);
+		setElement((Element) inEl);
 	}
-	
+
 	public Element getElement()
 	{
 		if (fieldElement == null)
@@ -86,11 +101,12 @@ public class ElementData implements MultiValued, SaveableData, Comparable ,Searc
 	{
 		fieldElement = inElement;
 	}
+
 	@Override
 	public String get(String inId)
 	{
 		Object obj = getValue(inId);
-		if( obj == null)
+		if (obj == null)
 		{
 			return null;
 		}
@@ -98,253 +114,249 @@ public class ElementData implements MultiValued, SaveableData, Comparable ,Searc
 	}
 
 	/**
-	 * First we try the child node in case we have CDATA
-	 * Then we try the attributes
+	 * First we try the child node in case we have CDATA Then we try the
+	 * attributes
 	 */
 	public Object getValue(String inId)
 	{
-		Element child = getElement().element(inId);
-		if( child != null)
+		if (inId.equals("name"))
 		{
-			return child.getText();
+			return getLanguageMap(inId);
 		}
-		if( inId.equals("name"))
+		else if (inId.equals(".version"))
 		{
-			String name = getElement().attributeValue(inId);
-			if( name == null)
-			{
-				name = getElement().getTextTrim();
-				if( name != null && name.isEmpty())
-				{
-					name = null;
-				}
-				if( name == null)
-				{
-					LanguageMap map = new LanguageMap();
-					for (Iterator iterator = getElement().nodeIterator(); iterator.hasNext();)
-					{
-						Object object = (Object) iterator.next();
-						if( object instanceof DefaultText)
-						{
-							name = getElement().getText();
-							return name;
-						}
-						Element childlang = (Element)object;
-						map.put(childlang.attributeValue("id"),getElement().getText());
-					}
-					return map;
-				}	
-			}
-			return name;	
-		} else if(inId.equals(".version")){
 			return getVersion();//elastic search
 		}
-		else if( inId.equals("sourcepath"))
+		else if (inId.equals("sourcepath"))
 		{
 			return getSourcePath();
 		}
-		
-		String value =getElement().attributeValue(inId); 
-	
-		if( value == null && getPropertyDetails() != null)
+
+		String value = getElement().attributeValue(inId);
+
+		if (value == null && getPropertyDetails() != null)
 		{
 			PropertyDetail detail = getPropertyDetails().getDetail(inId);
-			if( detail != null)
+			if (detail != null)
 			{
 				String legacy = detail.get("legacy");
-				if( legacy != null)
+				if (legacy != null)
 				{
 					value = get(legacy);
 				}
 			}
 		}
-				
-				
+
+		if (value == null)
+		{
+			Element noderoot = getElement().element(inId);
+			if (noderoot != null)
+			{
+				value = noderoot.getTextTrim();
+				if (value == null || value.isEmpty())
+				{
+					value = null;
+				}
+			}
+		}
+
 		return value;
 	}
+
 	
 	public float getFloat(String inId)
 	{
 		String val = get(inId);
-		if( val != null)
+		if (val != null)
 		{
 			return Float.parseFloat(val);
 		}
 		return 0;
 	}
-	
+
 	public String getId()
 	{
 		return getElement().attributeValue("id");
 	}
+
 	public String getName()
 	{
-		return get("name");
+		return getLanguageMap("name").getDefaultText("en");
 	}
+
 	public void setName(String inName)
 	{
-		setValue("name",inName);
+		setValue("name", inName);
 	}
+
 	public void setId(String inNewid)
 	{
-		getElement().addAttribute("id",inNewid);
-		
+		getElement().addAttribute("id", inNewid);
+
 	}
+
 	public void setValue(String inId, Object inValue)
 	{
-		if(inId.equals(".version"))
+		if (inId.equals(".version"))
 		{
-			setVersion(String.valueOf( inValue) );
+			setVersion(String.valueOf(inValue));
 		}
 		else
 		{
 			//synchronized (getElement())  //TODO: Remove this now that we have proper locking?
 			//{
-				if( inId.equals("name"))
+			if (inId.equals("name"))
+			{
+				getMap().remove("name");
+				List copy = getElement().elements(inId);
+				for (Iterator iterator = copy.iterator(); iterator.hasNext();)
 				{
-					List copy = getElement().elements(inId);
-					for (Iterator iterator = copy.iterator(); iterator.hasNext();)
-					{
-						Element type = (Element) iterator.next();
-						getElement().remove(type);
-					}
-					Attribute attr = getElement().attribute(inId);
-					if( attr != null)
-					{
-						getElement().remove(attr);
-					}
-					if( inValue != null)
-					{
-						//save in XML format all the time
-						Element child = getElement().addElement(inId);
-						if( inValue instanceof Map)
-						{
-							//loop over languages
-							Map languages = (Map)inValue;
-							for (Iterator iterator = languages.keySet().iterator(); iterator.hasNext();)
-							{
-								String lang = (String) iterator.next();
-								String val = (String)languages.get(lang);
-								child.addElement("language").addAttribute("id",lang).addCDATA((String)val);
-							}
-						}
-						else
-						{
-							child.addCDATA((String)inValue);
-						}
-					}	
-					return;
+					Element type = (Element) iterator.next();
+					getElement().remove(type);
 				}
-				//always check for a child
-				Element child = getElement().element(inId);
-				if( child != null)
+				Attribute attr = getElement().attribute(inId);
+				if (attr != null)
 				{
-					//TODO: See if value changed?
-					getElement().remove(child);
+					getElement().remove(attr);
 				}
-				if( inValue instanceof String)
+				if (inValue != null)
 				{
-					String val = (String)inValue;
-					if( val == null || val.length() == 0)
+					//save in XML format all the time
+					Element child = getElement().addElement(inId);
+					if (inValue instanceof LanguageMap)
 					{
-						Attribute attr = getElement().attribute(inId);
-						if( attr != null)
+						//loop over languages
+						LanguageMap languages = (LanguageMap) inValue;
+						for (Iterator iterator = languages.keySet().iterator(); iterator.hasNext();)
 						{
-							getElement().remove(attr);
+							String lang = (String) iterator.next();
+							String val = (String) languages.get(lang);
+							child.addElement("language").addAttribute("id", lang).addCDATA((String) val);
 						}
 					}
 					else
 					{
-						if( INVALIDSTUFF.matcher(val).find() )
-						{
-							Attribute attr = getElement().attribute(inId);
-							if( attr != null)
-							{
-								getElement().remove(attr);
-							}
-							
-							getElement().addElement(inId).addCDATA(val);
-						}
-						else
-						{
-							getElement().addAttribute(inId,val);						
-						}
+						child.addCDATA((String) inValue);
 					}
-				}	
+				}
+				return;
+			}
+			//always check for a child
+			Element child = getElement().element(inId);
+			if (child != null)
+			{
+				//TODO: See if value changed?
+				getElement().remove(child);
+			}
+			if (inValue instanceof String)
+			{
+				String val = (String) inValue;
+				if (val == null || val.length() == 0)
+				{
+					Attribute attr = getElement().attribute(inId);
+					if (attr != null)
+					{
+						getElement().remove(attr);
+					}
+				}
+				else
+				{
+					if (INVALIDSTUFF.matcher(val).find())
+					{
+						Attribute attr = getElement().attribute(inId);
+						if (attr != null)
+						{
+							getElement().remove(attr);
+						}
+
+						getElement().addElement(inId).addCDATA(val);
+					}
+					else
+					{
+						getElement().addAttribute(inId, val);
+					}
+				}
+			}
 		}
 	}
+
 	public String getSourcePath()
 	{
 		return fieldSourcePath;
 	}
+
 	public void setSourcePath(String inSourcepath)
 	{
 		fieldSourcePath = inSourcepath;
 	}
-	public Map getProperties() 
+
+	public Map getProperties()
 	{
-		
+
 		Map all = new HashMap();
 		all.put("name", getName()); //would this cause problems when saving?
 		for (Iterator iterator = getAttributes().iterator(); iterator.hasNext();)
 		{
 			org.dom4j.Attribute attr = (org.dom4j.Attribute) iterator.next();
-			all.put(attr.getName(),attr.getValue() );
+			all.put(attr.getName(), attr.getValue());
 		}
 		for (Iterator iterator = getElement().elementIterator(); iterator.hasNext();)
 		{
 			Element child = (Element) iterator.next();
-			all.put(child.getName(),child.getText());
+			all.put(child.getName(), child.getText());
 		}
-		
+
 		return all;
 	}
+
 	public List getAttributes()
 	{
 		return getElement().attributes();
 	}
+
 	public int compareTo(Object inO)
 	{
 		return toString().compareTo(inO.toString());
 	}
+
 	public String toString()
 	{
-		String name =  get("name");
-		
-		if( name == null)
+		String name = get("name");
+
+		if (name == null)
 		{
 			name = getId();
 		}
-		
-		if( name == null)
+
+		if (name == null)
 		{
 			name = super.toString();
 		}
 		return name;
 	}
+
 	public void setProperties(Map inProperties)
 	{
 		//getProperties().putAll(inProperties);
 		for (Iterator iterator = inProperties.keySet().iterator(); iterator.hasNext();)
 		{
 			String key = (String) iterator.next();
-			if( key != null)
+			if (key != null)
 			{
-				setProperty(key,(String)inProperties.get(key));
+				setProperty(key, (String) inProperties.get(key));
 			}
 		}
 	}
-	
-	
+
 	public Collection<String> getValues(String inPreference)
 	{
 		String val = get(inPreference);
-		
+
 		if (val == null)
 			return null;
-		
+
 		String[] vals = null;
-		if( val.contains("|") )
+		if (val.contains("|"))
 		{
 			vals = VALUEDELMITER.split(val);
 		}
@@ -357,7 +369,7 @@ public class ElementData implements MultiValued, SaveableData, Comparable ,Searc
 		//if null check parent
 		return collection;
 	}
-	
+
 	public void setValues(String inKey, Collection<String> inValues)
 	{
 		StringBuffer values = new StringBuffer();
@@ -365,37 +377,37 @@ public class ElementData implements MultiValued, SaveableData, Comparable ,Searc
 		{
 			String detail = (String) iterator.next();
 			values.append(detail);
-			if( iterator.hasNext())
+			if (iterator.hasNext())
 			{
 				values.append(" | ");
 			}
 		}
-		setProperty(inKey,values.toString());
+		setProperty(inKey, values.toString());
 	}
+
 	public Object clone()
 	{
 		try
 		{
 			return super.clone();
 		}
-		catch ( Exception ex )
+		catch (Exception ex)
 		{
 			throw new OpenEditException(ex);
 		}
 	}
-	
+
 	@Override
 	public void setProperty(String inKey, String inValue)
 	{
-		setValue(inKey,inValue);
+		setValue(inKey, inValue);
 	}
-
 
 	@Override
 	public void addValue(String inKey, Object inNewValue)
 	{
 		String values = get(inKey);
-		if( values == null)
+		if (values == null)
 		{
 			values = "";
 		}
@@ -403,17 +415,15 @@ public class ElementData implements MultiValued, SaveableData, Comparable ,Searc
 		{
 			values = values + "|";
 		}
-		values = values + String.valueOf( inNewValue );
-		setProperty(inKey,values);
+		values = values + String.valueOf(inNewValue);
+		setProperty(inKey, values);
 	}
-
 
 	@Override
 	public void removeValue(String inKey, Object inNewValue)
 	{
 		throw new OpenEditException("Not implemented");
 	}
-
 
 	@Override
 	public Map getSearchData()
@@ -422,17 +432,17 @@ public class ElementData implements MultiValued, SaveableData, Comparable ,Searc
 		return null;
 	}
 
-
 	@Override
 	public void setSearchData(Map inSearchHit)
 	{
 		// TODO Auto-generated method stub
-		
+
 	}
-	public String getName(String inLocale) {
-		return getLanguageMap(inLocale).getText(inLocale);
+
+	public String getName(String inLocale)
+	{
+		return getLanguageMap("name").getText(inLocale);
 	}
-	
 
 	@Override
 	public Set keySet()
@@ -440,40 +450,64 @@ public class ElementData implements MultiValued, SaveableData, Comparable ,Searc
 		return getProperties().keySet();
 	}
 
-
 	public boolean getBoolean(String inString)
 	{
 		Object obj = getValue(inString);
-		if(obj instanceof Boolean){
+		if (obj instanceof Boolean)
+		{
 			return (boolean) obj;
 		}
-		if(obj instanceof String){
-			return Boolean.parseBoolean((String) obj);	
+		if (obj instanceof String)
+		{
+			return Boolean.parseBoolean((String) obj);
 		}
 		return false;
-		
+
 	}
 
-
-	public LanguageMap getLanguageMap(String inString)
+	public LanguageMap getLanguageMap(String inKey)
 	{
-		Object val = getValue(inString);
-		if(val instanceof LanguageMap){
-			return (LanguageMap) val;
-		}
-		else if(val == null){
-			return new LanguageMap();
-		}
-		else if(val instanceof String)
+		LanguageMap language = (LanguageMap)getMap().getObject(inKey);
+		if( language != null)
 		{
-			LanguageMap newmap = new LanguageMap();
-			newmap.setText("en", (String)val);
-			return newmap;
-		} else{
-			throw new OpenEditException("Cannot provide map for : " + inString + " Found: " + val.getClass());
+			return language;
 		}
+		LanguageMap map = new LanguageMap();
+		String name = getElement().attributeValue(inKey);
+		if( name == null)
+		{
+			if( !getElement().hasMixedContent() )
+			{
+				name = getElement().getTextTrim();
+			}	
+			else
+			{
+				name = null;
+			}
+			if( name != null && name.isEmpty())
+			{
+				name = null;
+			}
+			if( name == null)
+			{
+				Element langmaptop = getElement().element(inKey);
+				if( langmaptop != null)
+				{
+					for (Iterator iterator = langmaptop.elementIterator("language"); iterator.hasNext();)
+					{
+						Element childlang = (Element) iterator.next();
+						map.put(childlang.attributeValue("id"),childlang.getText());
+					}					
+				}	
+			}	
+		}
+		if( name != null)
+		{
+			map.setText("en", name);
+		}
+		getMap().put(inKey,map);
+		return map;
 	}
-
 
 	public ElementData copy()
 	{

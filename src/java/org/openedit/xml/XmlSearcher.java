@@ -29,6 +29,8 @@ import org.openedit.users.User;
 import org.openedit.util.DateStorageUtil;
 import org.openedit.util.PathUtilities;
 
+import sun.print.DocumentPropertiesUI;
+
 public class XmlSearcher extends BaseSearcher implements Shutdownable
 {
 	protected XmlArchive fieldXmlArchive;
@@ -337,6 +339,7 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable
 				{
 					if (passes(element, inQuery))
 					{
+						//log.info(element.asXML());
 						results.add(new ElementData(element, getPropertyDetails()));					
 					}
 				}
