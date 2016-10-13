@@ -492,22 +492,22 @@ public class ElementData implements MultiValued, SaveableData, Comparable, Searc
 			return language;
 		}
 		LanguageMap map = new LanguageMap();
-		String name = getElement().attributeValue(inKey);
-		if( name == null)
+		String textvalue = getElement().attributeValue(inKey);
+		if( textvalue == null)
 		{
 			if( !getElement().hasMixedContent() )
 			{
-				name = getElement().getTextTrim();
+				textvalue = getElement().getTextTrim();
 			}	
 			else
 			{
-				name = null;
+				textvalue = null;
 			}
-			if( name != null && name.isEmpty())
+			if( textvalue != null && textvalue.isEmpty())
 			{
-				name = null;
+				textvalue = null;
 			}
-			if( name == null)
+			if( textvalue == null)
 			{
 				Element langmaptop = getElement().element(inKey);
 				if( langmaptop != null)
@@ -517,12 +517,18 @@ public class ElementData implements MultiValued, SaveableData, Comparable, Searc
 						Element childlang = (Element) iterator.next();
 						map.put(childlang.attributeValue("id"),childlang.getText());
 					}					
+					if( map.isEmpty())
+					{
+						textvalue = langmaptop.getTextTrim();
+						if( textvalue != null && !textvalue.isEmpty())
+						map.put("en",textvalue);
+					}
 				}	
 			}	
 		}
-		if( name != null)
+		if( textvalue != null)
 		{
-			map.setText("en", name);
+			map.setText("en", textvalue);
 		}
 		getMap().put(inKey,map);
 		return map;
