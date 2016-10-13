@@ -710,7 +710,7 @@ public class PropertyDetailsArchive
 			Attribute attr = (Attribute) iterator.next();
 			String name = attr.getName();
 			String value = attr.getValue();
-			inDetail.setProperty(name, value);
+			inDetail.setValue(name, value);
 			// log.info("Read" + name + " " + value);
 		}
 
