@@ -2244,6 +2244,10 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		}
 		else
 		{
+			if(getDetail("name") != null )
+			{
+				q.addSortBy("name");
+			}	
 			return search(q);
 		}
 
