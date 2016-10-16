@@ -644,9 +644,13 @@ public class PropertyDetailsArchive
 		if (inDetail.getName() != null)
 		{
 			Element child = element.element("name");
-			if(child == null){
-			 child = element.addElement("name");
+			if(child != null){
+				element.remove(child);
 			}
+
+			
+			 child = element.addElement("name");
+			
 			Map languages = inDetail.getElementData().getLanguageMap("name");
 			for (Iterator iterator = languages.keySet().iterator(); iterator.hasNext();)
 			{
