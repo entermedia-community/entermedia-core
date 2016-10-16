@@ -643,8 +643,10 @@ public class PropertyDetailsArchive
 		}
 		if (inDetail.getName() != null)
 		{
-
-			Element child = element.addElement("name");
+			Element child = element.element("name");
+			if(child == null){
+			 child = element.addElement("name");
+			}
 			Map languages = inDetail.getElementData().getLanguageMap("name");
 			for (Iterator iterator = languages.keySet().iterator(); iterator.hasNext();)
 			{
@@ -679,10 +681,9 @@ public class PropertyDetailsArchive
 		{
 			String key = (String) iterator.next();
 			String val = (String) inDetail.get(key);
-//			if (!val.equals(defaults.get(key)))
-//			{
+			if(!"name".equals(key)){
 				element.addAttribute(key, val);
-//			}
+			}
 		}
 	}
 
