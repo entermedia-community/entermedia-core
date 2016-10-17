@@ -2,7 +2,6 @@ package org.openedit.xml;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -251,6 +250,17 @@ public class ElementData implements MultiValued, SaveableData, Comparable, Searc
 				//TODO: See if value changed?
 				getElement().remove(child);
 			}
+			if(inValue instanceof Boolean){
+				boolean val = (boolean) inValue;
+				if(val){
+					inValue = "true";
+				} else{
+					inValue = "false";
+				}
+			}
+		
+			
+			
 			if (inValue instanceof String)
 			{
 				String val = (String) inValue;
@@ -279,7 +289,8 @@ public class ElementData implements MultiValued, SaveableData, Comparable, Searc
 						getElement().addAttribute(inId, val);
 					}
 				}
-			}
+			} 
+		
 		}
 	}
 
