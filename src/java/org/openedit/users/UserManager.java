@@ -15,6 +15,7 @@ package org.openedit.users;
 import java.util.Collection;
 import java.util.List;
 
+import org.openedit.CatalogEnabled;
 import org.openedit.OpenEditException;
 import org.openedit.event.WebEventHandler;
 import org.openedit.hittracker.HitTracker;
@@ -28,7 +29,7 @@ import org.openedit.util.StringEncryption;
  *
  * @author Eric and Matt
  */
-public interface UserManager
+public interface UserManager extends CatalogEnabled
 {
 	
 	List getSystemPermissionGroups();

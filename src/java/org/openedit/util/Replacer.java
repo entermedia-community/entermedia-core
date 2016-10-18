@@ -6,11 +6,12 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import org.openedit.CatalogEnabled;
 import org.openedit.Data;
 import org.openedit.data.SearcherManager;
 
 
-public class Replacer
+public class Replacer implements CatalogEnabled
 {
 	protected SearcherManager fieldSearcherManager;
 	protected boolean fieldAlwaysReplace =  false;

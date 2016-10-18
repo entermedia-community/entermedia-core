@@ -15,6 +15,7 @@ import org.apache.commons.logging.LogFactory;
 import org.dom4j.Attribute;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
+import org.openedit.CatalogEnabled;
 import org.openedit.Data;
 import org.openedit.OpenEditException;
 import org.openedit.OpenEditRuntimeException;
@@ -28,7 +29,7 @@ import org.openedit.xml.ElementData;
 import org.openedit.xml.XmlArchive;
 import org.openedit.xml.XmlFile;
 
-public class PropertyDetailsArchive
+public class PropertyDetailsArchive implements CatalogEnabled
 {
 	private static final Log log = LogFactory.getLog(PropertyDetailsArchive.class);
 	protected XmlArchive fieldXmlArchive;

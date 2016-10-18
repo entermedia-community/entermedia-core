@@ -1,8 +1,10 @@
 package org.openedit.data;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Iterator;
 
 import org.openedit.Data;
 import org.openedit.WebPageRequest;
@@ -82,10 +84,36 @@ public class QueryBuilder
 		return this;
 	}
 	
-	
-	public QueryBuilder orgroup(String inKey, Collection<String> inIds)
+	/**
+	 * Pass in strings ids or Data objects
+	 * @param inKey
+	 * @param objects
+	 * @return
+	 */
+	public QueryBuilder orgroup(String inKey, Collection inDataCollection)
 	{
-		getQuery().addOrsGroup(inKey, inIds);
+		Iterator iter = inDataCollection.iterator();
+		if( iter.hasNext())
+		{
+			Object value = iter.next();
+			Collection ids = null;
+			if( value instanceof Data)
+			{
+				ids = new ArrayList(inDataCollection.size());
+				Data data = (Data) value;
+				ids.add(data.getId());
+				for (; iter.hasNext();)
+				{
+					data = (Data) iter.next();
+					ids.add(data.getId());
+				}
+			}
+			else
+			{
+				ids =  inDataCollection;
+			}
+			getQuery().addOrsGroup(inKey, ids);
+		}
 		return this;
 	}
 	public QueryBuilder orgroup(String inKey, String inOrs)

@@ -2,7 +2,9 @@ package org.openedit.locks;
 
 import java.util.Collection;
 
-public interface LockManager
+import org.openedit.CatalogEnabled;
+
+public interface LockManager extends CatalogEnabled
 {
 
 	public abstract Lock lock(String inPath, String inOwnerId);

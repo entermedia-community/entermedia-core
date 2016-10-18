@@ -10,6 +10,7 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openedit.CatalogEnabled;
 import org.openedit.Data;
 import org.openedit.MultiValued;
 import org.openedit.WebPageRequest;
@@ -23,7 +24,7 @@ import org.openedit.hittracker.SearchQuery;
 import org.openedit.users.User;
 import org.openedit.xml.XmlArchive;
 
-public class UserProfile extends BaseData implements SaveableData
+public class UserProfile extends BaseData implements SaveableData, CatalogEnabled
 {
 	protected User fieldUser;
 	protected String fieldCatalogId;

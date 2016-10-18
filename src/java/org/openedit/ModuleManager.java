@@ -289,12 +289,13 @@ public class ModuleManager implements BeanLoaderAware, ShutdownList
 		{
 			return loadBean(inCatalogId, inBeanName);
 		}
-		Object bean = getCatalogIdBeans().get(inCatalogId + "_" + inBeanName);
+		String id = inCatalogId + "_" + inBeanName;
+		Object bean = getCatalogIdBeans().get(id);
 		if( bean == null)
 		{
 			synchronized (this)
 			{
-				bean = getCatalogIdBeans().get(inCatalogId + "_" + inBeanName);
+				bean = getCatalogIdBeans().get(id);
 				if( bean != null)
 				{
 					return bean;
@@ -303,26 +304,36 @@ public class ModuleManager implements BeanLoaderAware, ShutdownList
 				
 				//if instanceof GroovyBean
 				//bean = bean.getProxy()
-				getCatalogIdBeans().put(inCatalogId + "_" + inBeanName, bean);
+				getCatalogIdBeans().put(id, bean);
 				
 			}
 		}
 		return bean;
 	}
 
-	private Object loadBean(String inCatalogId, String inBeanName) {
+	protected Object loadBean(String inCatalogId, String inBeanName) 
+	{
 		Object bean;
 		String beanName = resolveBean(inCatalogId, inBeanName);
 		bean = getBean(beanName);
-		try
+		
+		if( bean instanceof CatalogEnabled )
 		{
-			Method catalogSetter = bean.getClass().getMethod("setCatalogId", new Class[] {String.class});
-			catalogSetter.invoke(bean, new Object[] {inCatalogId});
+			((CatalogEnabled)bean).setCatalogId(inCatalogId);
 		}
-		catch (Exception e)
+		else  //legacy
 		{
-			//Could not set catalogId
-		}
+			try
+			{
+				Method catalogSetter = bean.getClass().getMethod("setCatalogId", new Class[] {String.class});
+				catalogSetter.invoke(bean, new Object[] {inCatalogId});
+				log.info("Class should implement CatalogEnabled " + beanName +  " " + bean.getClass().getCanonicalName()  );
+			}
+			catch (Exception e)
+			{
+				//Could not set catalogId
+			}
+		}	
 		if( bean != null && bean instanceof Shutdownable)
 		{
 			addForShutdown((Shutdownable)bean);

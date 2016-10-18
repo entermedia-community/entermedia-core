@@ -6,10 +6,11 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import org.openedit.CatalogEnabled;
 import org.openedit.WebPageRequest;
 import org.openedit.data.SearcherManager;
 
-public class PermissionManager
+public class PermissionManager implements CatalogEnabled
 {
 	protected PermissionSorter fieldPermissionSorter;
 	protected String fieldCatalogId;

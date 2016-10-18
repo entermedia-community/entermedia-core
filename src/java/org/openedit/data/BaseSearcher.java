@@ -2048,9 +2048,11 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 
 	public Data searchByQuery(SearchQuery inQuery)
 	{
+		inQuery.setHitsPerPage(1);
 		HitTracker hits = search(inQuery);
-		hits.setHitsPerPage(1);
-		return (Data) hits.first();
+		
+		Data data = loadData((Data) hits.first());
+		return data;
 	}
 
 	public Object searchByField(String inField, String inValue)
@@ -2089,7 +2091,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			BaseData data = new BaseData();
 			return data;
 		}
-		return (Data) getModuleManager().getBean(getNewDataName());
+		return (Data) getModuleManager().getBean(getCatalogId(),getNewDataName(),false);
 	}
 
 	/**

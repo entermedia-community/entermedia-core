@@ -30,6 +30,7 @@ import org.apache.commons.logging.LogFactory;
 import org.dom4j.Document;
 import org.dom4j.DocumentFactory;
 import org.dom4j.Element;
+import org.openedit.CatalogEnabled;
 import org.openedit.OpenEditException;
 import org.openedit.event.WebEvent;
 import org.openedit.event.WebEventHandler;
@@ -68,7 +69,7 @@ import org.openedit.xml.XmlFile;
  * @see #setGroupDirectory(File)
  * @see #load()
  */
-public class XmlUserArchive  {
+public class XmlUserArchive implements CatalogEnabled  {
 	protected String fieldCatalogId;
 
 	public String getCatalogId() {

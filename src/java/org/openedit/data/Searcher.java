@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.util.Collection;
 import java.util.List;
 
+import org.openedit.CatalogEnabled;
 import org.openedit.Data;
 import org.openedit.OpenEditException;
 import org.openedit.WebPageRequest;
@@ -12,11 +13,8 @@ import org.openedit.hittracker.SearchQuery;
 import org.openedit.profile.UserProfile;
 import org.openedit.users.User;
 
-public interface Searcher
+public interface Searcher extends CatalogEnabled
 {
-	
-	
-	
 	
 	public String nextId();
 	

@@ -18,6 +18,7 @@ import java.util.Set;
 
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
+import org.openedit.CatalogEnabled;
 import org.openedit.Data;
 import org.openedit.OpenEditException;
 import org.openedit.OpenEditRuntimeException;
@@ -29,7 +30,7 @@ import org.openedit.data.SearcherManager;
 import org.openedit.util.DateStorageUtil;
 import org.openedit.util.GenericsUtil;
 
-public class SearchQuery extends BaseData implements Cloneable, Serializable, Comparable
+public class SearchQuery extends BaseData implements Cloneable, Serializable, Comparable, CatalogEnabled
 {
 	protected transient List fieldTerms = new ArrayList();
 
