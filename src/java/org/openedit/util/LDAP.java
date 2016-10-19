@@ -80,10 +80,10 @@ public class LDAP
 		env.put(Context.INITIAL_CONTEXT_FACTORY,
 				"com.sun.jndi.ldap.LdapCtxFactory");
 
-		if (!inServerName.startsWith("ldap://"))
-		{
-			inServerName = "ldap://" + inServerName + "/";
-		}
+//		if (!inServerName.startsWith("ldap://"))
+//		{
+//			inServerName = "ldap://" + inServerName + "/";
+//		}
 		env.put(Context.PROVIDER_URL, inServerName);	
 		log.info("[LDAP] Connecting to " + inServerName);
 	}
