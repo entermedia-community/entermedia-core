@@ -8,6 +8,9 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openedit.Data;
+import org.openedit.data.Searcher;
+import org.openedit.data.SearcherManager;
 import org.openedit.users.User;
 import org.openedit.users.UserManagerException;
 import org.openedit.util.LDAP;
@@ -17,7 +20,18 @@ public class LdapAuthenticator extends BaseAuthenticator
 	private static final Log log = LogFactory.getLog(LdapAuthenticator.class);
 
 	protected Map fieldServers;
+	protected SearcherManager fieldSearcherManager;
 	
+	public SearcherManager getSearcherManager()
+	{
+		return fieldSearcherManager;
+	}
+
+	public void setSearcherManager(SearcherManager inSearcherManager)
+	{
+		fieldSearcherManager = inSearcherManager;
+	}
+
 	protected Map getServers()
 	{
 		if (fieldServers == null)
@@ -44,21 +58,20 @@ public class LdapAuthenticator extends BaseAuthenticator
 	{
 		User inUser = inAReq.getUser();
 
-        String ldapserver = (String)inUser.getProperty("ldapserver");
-        if( ldapserver == null)
-        {
-        	ldapserver = (String)inUser.getProperty("oe.ldapserver");	
-        }
-        
-        if( ldapserver == null)
+    	Data server = getSearcherManager().getData(inAReq.getCatalogId(), "catalogsettings", "ldapserver");
+        if( server == null || server.get("value") == null)
         {
         	return false;
         }
         
-        LDAP ldap = getServer(ldapserver);
+        LDAP ldap = getServer(server.get("value"));
 		
-		String inPassword= inAReq.getPassword();
-		ldap.authenticate(inUser, inPassword);
+        Data prefix = getSearcherManager().getData(inAReq.getCatalogId(), "catalogsettings", "ldapserverprefix");
+        Data postfix = getSearcherManager().getData(inAReq.getCatalogId(), "catalogsettings", "ldapserverpostfix");
+        
+		String inPassword = inAReq.getPassword();
+		
+		ldap.authenticate(prefix.get("value"),inUser.getUserName(), postfix.get("value"), inPassword);
 		
 		if (ldap.connect())
 		{

@@ -342,6 +342,7 @@ public class XmlUserArchive implements CatalogEnabled  {
 		AuthenticationRequest req = new AuthenticationRequest();
 		req.setUser(inUser);
 		req.setPassword(inPassword);
+		req.setCatalogId(getCatalogId());
 		return authenticate(req);
 	}
 

@@ -87,21 +87,25 @@ public class LDAP
 		env.put(Context.PROVIDER_URL, inServerName);	
 		log.info("[LDAP] Connecting to " + inServerName);
 	}
-
 	public void authenticate(User inUser, String inPassword)
 	{
-		StringBuffer dnbuffer = new StringBuffer();
-		String base = (String) inUser.getProperty("ldap_prefix");
-		if (base != null)
-		{
-			dnbuffer.append(base);
-		}
-		dnbuffer.append(inUser.getUserName());
+		String prefix = (String) inUser.getProperty("ldap_prefix");
 		String post = (String) inUser.getProperty("ldap_postfix");
-		if (post != null)
+		authenticate(prefix, inUser.getUserName(), post, inPassword);
+
+	}
+	public void authenticate(String prefix, String username, String postfix, String inPassword)
+	{
+		StringBuffer dnbuffer = new StringBuffer();
+		if (prefix != null)
+		{
+			dnbuffer.append(prefix);
+		}
+		dnbuffer.append(username);
+		if (postfix != null)
 		{
 			//dnbuffer.append(",");
-			dnbuffer.append(post);
+			dnbuffer.append(postfix);
 		}
 		//uid=%s,ou=People,dc=company,dc=com
 		// String base = "ou=People,dc=example,dc=com";

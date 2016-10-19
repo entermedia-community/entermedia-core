@@ -3,14 +3,24 @@ package org.openedit.users.authenticate;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.openedit.CatalogEnabled;
 import org.openedit.users.User;
 
-public class AuthenticationRequest
+public class AuthenticationRequest implements CatalogEnabled
 {
 	protected User fieldUser;
 	protected String fieldPassword;
 	protected Map fieldProperties;
+	protected String fieldCatalogId;
 	
+	public String getCatalogId()
+	{
+		return fieldCatalogId;
+	}
+	public void setCatalogId(String inCatalogId)
+	{
+		fieldCatalogId = inCatalogId;
+	}
 	public User getUser()
 	{
 		return fieldUser;
