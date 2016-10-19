@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.openedit.OpenEditException;
+import org.openedit.WebPageRequest;
 import org.openedit.data.SearcherManager;
 import org.openedit.event.WebEventHandler;
 import org.openedit.hittracker.HitTracker;
@@ -284,5 +285,25 @@ public class BaseUserManager implements UserManager
 
 		return getXmlUserArchive().listUserNames();
 	}
+
+	@Override
+	public AuthenticationRequest createAuthenticationRequest(WebPageRequest inReq, String password, User user)
+	{
+		AuthenticationRequest aReq = new AuthenticationRequest();
+		aReq.setUser(user);
+		aReq.setCatalogId(getCatalogId());
+		aReq.setPassword(password);
+
+		String domain = inReq.getRequestParameter("domain");
+		if (domain == null)
+		{
+			domain = inReq.getContentPage().get("authenticationdomain");
+		}
+		aReq.putProperty("authenticationdomain", domain);
+		String server = inReq.getPage().get("authenticationserver");
+		aReq.putProperty("authenticationserver", server);
+		return aReq;
+	}
+
 
 }

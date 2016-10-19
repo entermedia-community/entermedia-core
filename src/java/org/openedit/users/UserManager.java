@@ -17,6 +17,7 @@ import java.util.List;
 
 import org.openedit.CatalogEnabled;
 import org.openedit.OpenEditException;
+import org.openedit.WebPageRequest;
 import org.openedit.event.WebEventHandler;
 import org.openedit.hittracker.HitTracker;
 import org.openedit.users.authenticate.AuthenticationRequest;
@@ -208,5 +209,7 @@ public interface UserManager extends CatalogEnabled
 
 	UserSearcher getUserSearcher();
 	GroupSearcher getGroupSearcher();
+
+	AuthenticationRequest createAuthenticationRequest(WebPageRequest inReq, String inPassword, User inUser);
 	
 }
