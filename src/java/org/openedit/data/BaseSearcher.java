@@ -2571,6 +2571,10 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 								result = new LanguageMap(vals);
 							}
 						}
+						else if(detail != null && detail.isBoolean()){
+							result = Boolean.parseBoolean(val);
+						}
+						
 						else
 						{
 							result = val;
@@ -2580,8 +2584,14 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					data.setValue(field, result);
 
 				}
+				
+				
+				
 				else
 				{
+					if(detail != null && detail.isBoolean()){
+						data.setValue(field, false);
+					}
 					data.setValue(field, null);
 				}
 			}
