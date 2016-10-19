@@ -23,7 +23,7 @@ import org.openedit.Data;
  *
  * @author Eric Galluzzo
  */
-public interface Group extends PropertyContainer, Data, Comparable
+public interface Group extends Data, Comparable
 {
 	
 	/**
@@ -45,13 +45,6 @@ public interface Group extends PropertyContainer, Data, Comparable
 	String getId();
 
 	void setId(String inId);
-
-	/**
-	 * Retrieve the date/time at which this group was created.
-	 * 
-	 * @return  The creation date
-	 */
-	Date getCreationDate();
 
 	/**
 	 * Retrieve all the names of permissions that this group grants.
@@ -91,9 +84,5 @@ public interface Group extends PropertyContainer, Data, Comparable
 	 */
 	void removePermission(String inPermission) throws UserManagerException;
 
-	public PropertyContainer getPropertyContainer();
-	
-	public long getLastModified();
-	
 
 }

@@ -268,7 +268,7 @@ public class BaseEditorModule extends BaseModule
 			}
 			else
 			{
-				user.put("oe.edit.draftmode", "true");
+				user.setProperty("oe.edit.draftmode", "true");
 			}
 		}		
 		if( user.hasProperty("oe.edit.draftmode") )

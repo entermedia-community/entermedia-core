@@ -89,7 +89,7 @@ public class JaasAuthenticator extends BaseAuthenticator
 				else if (callbacks[ii] instanceof RealmCallback)
 				{
 					RealmCallback rcb = (RealmCallback) callbacks[ii];
-					String realm = fieldUser.getString("realm");
+					String realm = fieldUser.get("realm");
 					if( realm != null)
 					{
 						rcb.setText(realm);

@@ -12,7 +12,6 @@ See the GNU Lesser General Public License for more details.
 
 package org.openedit.users.filesystem;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -20,7 +19,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.dom4j.DocumentFactory;
 import org.dom4j.Element;
-import org.openedit.users.PropertyContainer;
+import org.openedit.data.ValuesMap;
 import org.openedit.users.UserManagerException;
 
 /**
@@ -31,109 +30,32 @@ import org.openedit.users.UserManagerException;
  * 
  * @author Dennis Brown
  */
-public class MapPropertyContainer implements PropertyContainer
+public class MapPropertyContainer  extends ValuesMap
 {
 	private static transient Log log;
 	private Log getLog()
 	{
 		if( log == null)
 		{
-			log =  LogFactory.getLog(FileSystemObject.class);
+			log =  LogFactory.getLog(MapPropertyContainer.class);
 		}
 		return log;
 	}
-	protected Map fieldProperties;
 
-	/**
-	 * Get all the properties on this user -- the real, live collection that is not read-only.
-	 *
-	 * @return Map
-	 */
-	protected Map getRealProperties()
-	{
-		if (fieldProperties == null)
-		{
-			fieldProperties = new HashMap();
-		}
-
-		return fieldProperties;
-	}
-
-	/**
-	 * @see org.openedit.users.User#getProperties()
-	 */
-	public Map getProperties()
-	{
-		return getRealProperties();
-	}
-
-	/**
-	 * @see org.openedit.users.User#get(java.lang.String)
-	 */
-	public String get(String inPropertyName)
-	{
-		return (String)getRealProperties().get(inPropertyName);
-	}
-
-	/**
-	 * @see org.openedit.users.User#put(java.lang.String, java.lang.Object)
-	 */
-	public void put(String inPropertyName, Object inPropertyValue)
-		throws UserManagerException
-	{
-		//validateProperty(inPropertyName, inPropertyValue);
-		getRealProperties().put(inPropertyName, inPropertyValue);
-	}
-
-	/**
-	 * @see org.openedit.users.User#put(java.util.Map)
-	 */
-	public void setProperties(Map inProperties) throws UserManagerException
-	{
-		for (Iterator iter = inProperties.entrySet().iterator(); iter.hasNext();)
-		{
-			Map.Entry entry = (Map.Entry) iter.next();
-			//validateProperty((String) entry.getKey(), entry.getValue());
-		}
-
-		getRealProperties().putAll(inProperties);
-	}
-
-	/**
-	 * @see org.openedit.users.User#remove(java.lang.String)
-	 */
-	public void remove(String inPropertyName) throws UserManagerException
-	{
-		getRealProperties().remove(inPropertyName);
-	}
-
-	/* (non-Javadoc)
-	 * @see org.openedit.users.PropertyContainer#removeAll(java.lang.String[])
-	 */
-	public void removeAll(String[] inProperties) throws UserManagerException
-	{
-		if (inProperties == null)
-		{
-			return;
-		}
-		for (int i = 0; i < inProperties.length; i++)
-		{
-			remove(inProperties[i]);
-		}
-	}
 
 	protected Element createPropertiesElement(String inElementName)
 	{
 		Element propertiesElem = DocumentFactory.getInstance().createElement(inElementName);
 
-		for (Iterator iter = getRealProperties().entrySet().iterator(); iter.hasNext();)
+		for (Iterator iter = keySet().iterator(); iter.hasNext();)
 		{
-			Map.Entry entry = (Map.Entry) iter.next();
-			if ( entry.getValue() != null)
+			String key = (String) iter.next();
+			if ( !"id".equals(key) && !"name".equals(key))
 			{
+				String value = (String)get(key);
 				Element propertyElem = propertiesElem.addElement("property");
-				propertyElem.addAttribute("name", entry.getKey().toString());
-				propertyElem.addAttribute("value", entry.getValue().toString());
+				propertyElem.addAttribute("name", key);
+				propertyElem.addAttribute("value", value);
 			}
 		}
 
@@ -148,8 +70,6 @@ public class MapPropertyContainer implements PropertyContainer
 	 */
 	protected void loadProperties(Element inPropertiesElement)
 	{
-		Map properties = new HashMap();
-
 		if (inPropertiesElement != null)
 		{
 			for (Iterator iter = inPropertiesElement.elementIterator(); iter.hasNext();)
@@ -166,13 +86,11 @@ public class MapPropertyContainer implements PropertyContainer
 						if(name.contains(".")){
 							name.replace(".", "_");
 						}
-						properties.put(name, value);
+						put(name, value);
 					}
 				}
 			}
 		}
-
-		fieldProperties = properties;
 	}
 
 	/**
@@ -207,45 +125,6 @@ public class MapPropertyContainer implements PropertyContainer
 		}
 
 		return true;
-	}
-
-
-	/* (non-javadoc)
-	 * @see org.openedit.users.PropertyContainer#getBoolean(java.lang.String)
-	 */
-	public boolean getBoolean(String inKey)
-	{
-		return Boolean.valueOf(getString(inKey)).booleanValue();
-	}
-
-	/* (non-javadoc)
-	 * @see org.openedit.users.PropertyContainer#getString(java.lang.String)
-	 */
-	public String getString(String inKey)
-	{
-		return (String)get(inKey);
-	}
-
-	/* (non-javadoc)
-	 * @see org.openedit.users.PropertyContainer#safePut(java.lang.String, java.lang.Object)
-	 */
-	public void safePut(String inPropertyName, Object inPropertyValue)
-	{
-		try
-		{
-			if ( inPropertyValue == null )
-			{
-				remove( inPropertyName );
-			}
-			else
-			{
-				put( inPropertyName, inPropertyValue );
-			}
-		}
-		catch ( UserManagerException ex)
-		{
-			getLog().error( ex );
-		}
 	}
 
 }

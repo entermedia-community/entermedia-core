@@ -19,11 +19,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeSet;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -32,24 +29,15 @@ import org.dom4j.DocumentFactory;
 import org.dom4j.Element;
 import org.openedit.CatalogEnabled;
 import org.openedit.OpenEditException;
-import org.openedit.event.WebEvent;
-import org.openedit.event.WebEventHandler;
 import org.openedit.hittracker.HitTracker;
 import org.openedit.hittracker.ListHitTracker;
 import org.openedit.page.Page;
 import org.openedit.page.manage.PageManager;
 import org.openedit.repository.ContentItem;
-import org.openedit.users.Authenticator;
-import org.openedit.users.DuplicateGroupException;
-import org.openedit.users.DuplicateUserException;
 import org.openedit.users.Group;
-import org.openedit.users.GroupComparator;
+import org.openedit.users.GroupSearcher;
 import org.openedit.users.User;
-import org.openedit.users.UserComparator;
 import org.openedit.users.UserManagerException;
-import org.openedit.users.UserNotEnabledException;
-import org.openedit.users.authenticate.AuthenticationRequest;
-import org.openedit.users.authenticate.PasswordGenerator;
 import org.openedit.util.DateStorageUtil;
 import org.openedit.util.IntCounter;
 import org.openedit.util.PathUtilities;
@@ -79,21 +67,21 @@ public class XmlUserArchive implements CatalogEnabled  {
 	public void setCatalogId(String inCatalogId) {
 		fieldCatalogId = inCatalogId;
 	}
-
+	public String nextId() {
+		int id = getUserIdCounter().incrementCount();
+		return String.valueOf(id);
+	}
+	
 	//protected String fieldGroupDirectory;
 	//protected String fieldUserDirectory;
 	protected IntCounter fieldUserIdCounter;
-	protected Map fieldGroupIdToGroupMap;
-	protected Map fieldUserNameToUserMap;
 	protected XmlArchive fieldXmlArchive;
 
 	protected long fieldLastEditTime;
-	protected Authenticator fieldAuthenticator;
 	protected StringEncryption fieldStringEncryption;
 
 	protected boolean fieldAllUsersLoaded = false;
 	protected PageManager fieldPageManager;
-	protected WebEventHandler fieldWebEventHandler;
 	protected PermissionsManager fieldPermissionsManager;
 	protected XmlUtil fieldXmlUtil;
 	private static final Log log = LogFactory
@@ -121,30 +109,13 @@ public class XmlUserArchive implements CatalogEnabled  {
 		return getPermissionsManager().getSystemPermissionGroups();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.openedit.users.filesystem.FileSystemUserLocator#getFileSystemUser
-	 * (String)
-	 */
-	public FileSystemUser getFileSystemUser(String inUserName)
-			throws UserManagerException {
-		return (FileSystemUser) getUser(inUserName);
-	}
-
 	/**
 	 * @see org.openedit.users.UserManager#getGroup(String)
 	 */
-	public Group getGroup(String inGroupId) {
-		Group group = (Group) getGroupIdToGroupMap().get(inGroupId);
+	public Group loadGroup(Group loadgroup) 
+	{
+		String inGroupId = loadgroup.getId();
 		File find = loadGroupFile(inGroupId);
-		if (group != null) {
-			if (group.getLastModified() == find.lastModified()) {
-				return group;
-			}
-
-		}
 		if (!find.exists()) {
 			ContentItem stub = getPageManager().getRepository().getStub(
 					"/WEB-INF/groups/" + inGroupId + ".xml");
@@ -153,17 +124,15 @@ public class XmlUserArchive implements CatalogEnabled  {
 		if (!find.exists()) {
 			return null;
 		}
-
-		if (group == null) {
-			// System.out.println("calling " + inGroupId + " " + hashCode() );
-			group = new FileSystemGroup();
-		}
-		FileSystemGroup loadgroup = (FileSystemGroup) group;
-		group = loadgroup;
-		loadgroup.setLastModified(find.lastModified());
-		getGroupIdToGroupMap().put(inGroupId, group);
+		//inGroup.setLastModified(find.lastModified());
 
 		Element root = getXmlUtil().getXml(find, "UTF-8");
+
+		MapPropertyContainer properties = new MapPropertyContainer();
+		Element props = root.element("properties");
+		properties.loadProperties(props);
+		loadgroup.setProperties(properties);
+
 		loadgroup.setId(root.attributeValue("id"));
 		if (loadgroup.getId() == null) {
 			loadgroup.setId(inGroupId);
@@ -180,10 +149,6 @@ public class XmlUserArchive implements CatalogEnabled  {
 				loadgroup.addPermission(type.getTextTrim());
 			}
 		}
-		MapPropertyContainer properties = new MapPropertyContainer();
-		Element props = root.element("properties");
-		properties.loadProperties(props);
-		loadgroup.setPropertyContainer(properties);
 
 		return loadgroup;
 
@@ -211,40 +176,9 @@ public class XmlUserArchive implements CatalogEnabled  {
 	/**
 	 * @see org.openedit.users.UserManager#getGroups()
 	 */
-	public HitTracker getGroups() {
+	public Collection getGroupIds() {
 		Collection ids = listGroupIds();
-		TreeSet treeSet = new java.util.TreeSet(new GroupComparator());
-		for (Iterator iterator = ids.iterator(); iterator.hasNext();) {
-			String id = (String) iterator.next();
-			treeSet.add(getGroup(id));
-		}
-		ListHitTracker list = new ListHitTracker(new ArrayList(treeSet));
-		list.setHitsName("groups");
-		list.setCatalogId(getCatalogId());
-		return list;
-	}
-
-	public Collection getGroupsSorted() {
-
-		TreeSet treeSet = new java.util.TreeSet(new GroupComparator());
-
-		treeSet.addAll(getGroups());
-
-		return treeSet;
-	}
-
-	/**
-	 * @see org.openedit.users.UserManager#getUser(String)
-	 */
-	public User getUser(String inUserName) {
-		if (inUserName == null) {
-			return null;
-		}
-		User user = (User) getUserNameToUserMap().get(inUserName);
-		if (user == null) {
-			user = loadUser(inUserName);
-		}
-		return user;
+		return ids;
 	}
 
 	/**
@@ -277,17 +211,10 @@ public class XmlUserArchive implements CatalogEnabled  {
 	/**
 	 * @see org.openedit.users.UserManager#getUsers()
 	 */
-	public HitTracker getUsers() {
+	public HitTracker getUserIds() {
 		List col = listUserNames();
-		HitTracker tracker = new ListHitTracker();
-		for (Iterator iterator = col.iterator(); iterator.hasNext();) {
-			String id = (String) iterator.next();
-			User user = getUser(id);
-			if (id != null) {
-				tracker.add(user);
-			}
-		}
-
+		HitTracker tracker = new ListHitTracker(col);
+		
 		return tracker;
 	}
 
@@ -334,100 +261,9 @@ public class XmlUserArchive implements CatalogEnabled  {
 	}
 
 	/**
-	 * Move this API to the UserManager
-	 * @see org.openedit.users.UserManager#authenticate(User, String)
-	 */
-	public boolean authenticate(User inUser, String inPassword)
-			throws UserManagerException {
-		AuthenticationRequest req = new AuthenticationRequest();
-		req.setUser(inUser);
-		req.setPassword(inPassword);
-		req.setCatalogId(getCatalogId());
-		return authenticate(req);
-	}
-
-	public boolean authenticate(AuthenticationRequest inReq)
-			throws UserManagerException {
-		User inUser = inReq.getUser();
-
-		if (!inUser.isEnabled()) {
-			throw new UserNotEnabledException();
-		}
-
-		boolean success = getAuthenticator().authenticate(inReq);
-		if (success) {
-			fireUserEvent(inUser, "login");
-		} else {
-			fireUserEvent(inUser, "invalidpassword");
-		}
-		return success;
-	}
-
-	/**
-	 * @see org.openedit.users.UserManager#createGroup(String)
-	 */
-	public Group createGroup(String inGroupId, String inGroupName)
-			throws UserManagerException {
-		if (getGroupIdToGroupMap().containsKey(inGroupId)) {
-			throw new DuplicateGroupException(
-					"A group already exists with the id \"" + inGroupId + "\"");
-		} else {
-			// File file = createGroupFile(inGroupName);
-			FileSystemGroup group = new FileSystemGroup();
-			group.setId(inGroupId);
-			group.setName(inGroupName);
-			getGroupIdToGroupMap().put(inGroupId, group);
-			saveGroup(group);
-			return group;
-		}
-	}
-
-	public Group createGroup(String inGroupId) throws UserManagerException {
-		return createGroup(inGroupId, inGroupId);
-	}
-
-	public Group createGroup() throws UserManagerException {
-		return new FileSystemGroup();
-	}
-
-	/**
-	 * @see org.openedit.users.UserManager#createUser(String, String)
-	 */
-	public User createUser(String inUserName, String inPassword)
-			throws UserManagerException {
-		if (inUserName == null) // when null then we are picking up the next
-								// user from the list. May be dup username
-		{
-			int id = getUserIdCounter().incrementCount();
-			inUserName = String.valueOf(id);
-			User user = getUser(inUserName);
-			if (user != null) {
-				return user;
-			}
-		} else if (getUser(inUserName) != null) {
-			throw new DuplicateUserException(
-					"A user already exists with the username \"" + inUserName
-							+ "\"");
-		}
-
-		if (inPassword == null || inPassword.length() <= 0) {
-			inPassword = new PasswordGenerator().generate();// Integer.toString((int)(100000
-															// +
-															// generator.nextDouble()
-															// * 899999D));
-		}
-		inPassword = encrypt(inPassword);
-
-		createUserFile(inUserName, inPassword);
-		User user = getUser(inUserName);
-		fireUserEvent(user, "add");
-		return user;
-	}
-
-	/**
 	 * May be subclassed
 	 */
-	public User loadUser(String inUserName) throws UserManagerException {
+	public User loadUser(User user, GroupSearcher inGroupSearcher) throws UserManagerException {
 		
 		ContentItem userfolder = getPageManager().getRepository().getStub(
 				getUserDirectory() + "/" );
@@ -436,7 +272,7 @@ public class XmlUserArchive implements CatalogEnabled  {
 			userfolderfile.mkdirs();
 
 		}
-		
+		String inUserName = user.getUserName();
 		File userFile = loadUserFile(inUserName);
 		if (!userFile.exists()) {
 			ContentItem stub = getPageManager().getRepository().getStub(
@@ -446,11 +282,11 @@ public class XmlUserArchive implements CatalogEnabled  {
 		if (!userFile.exists()) {
 			return null;
 		}
-
-		FileSystemUser user = new FileSystemUser();
-		user.setUserName(inUserName);
-
 		Element root = getXmlUtil().getXml(userFile, "UTF-8");
+
+		MapPropertyContainer container = new MapPropertyContainer();
+		container.loadProperties(root.element("properties"));
+		user.setProperties(container);
 
 		user.setEnabled(true);
 		// String enabled = root.attributeValue("enabled");
@@ -468,32 +304,20 @@ public class XmlUserArchive implements CatalogEnabled  {
 			user.setPassword(passwordElem.getText());
 		}
 
-		Element lastLoginElem = root.element("lastLogined-Time");
-		if (lastLoginElem != null) {
-			user.setLastLoginTime(lastLoginElem.getText());
-		}
+//		Element lastLoginElem = root.element("lastLogined-Time");
+//		if (lastLoginElem != null) {
+//			user.setLastLoginTime(lastLoginElem.getText());
+//		}
 
-		Element creationDateElem = root.element("creation-date");
-		if (creationDateElem != null) {
-			long time = Long.parseLong(creationDateElem.getText());
-			user.setCreationDate(new Date(time));
+		Collection groups = new ArrayList();
+		for (Iterator iter = root.elementIterator("group"); iter.hasNext();) 
+		{
+			Element groupid = (Element) iter.next();
+			Group group = inGroupSearcher.getGroup(groupid.attributeValue("id"));
+			groups.add(group);
 		}
-		MapPropertyContainer container = new MapPropertyContainer();
-		container.loadProperties(root.element("properties"));
-		user.setPropertyContainer(container);
-
-		for (Iterator iter = root.elementIterator("group"); iter.hasNext();) {
-			Element group = (Element) iter.next();
-			Group g = getGroup(group.attributeValue("id"));
-			if (g != null) {
-				user.addGroup(g);
-			} else {
-				log.error("Missing group " + group.attributeValue("id"));
-			}
-		}
-		// TODO :Replace with cache
-		getUserNameToUserMap().put(user.getUserName(), user);
-
+		user.setValue("groups", groups);
+		
 		return user;
 	}
 
@@ -501,14 +325,8 @@ public class XmlUserArchive implements CatalogEnabled  {
 	 * @see org.openedit.users.UserManager#deleteGroup(Group)
 	 */
 	public void deleteGroup(Group inGroup) throws UserManagerException {
-		for (Iterator iter = listUserNames().iterator(); iter.hasNext();) {
-			String username = (String) iter.next();
-			User user = getUser(username);
-			user.removeGroup(inGroup);
-		}
 		File file = loadGroupFile(inGroup.getId());
 		file.delete();
-		getGroupIdToGroupMap().remove(inGroup.getId());
 		Page item = getPageManager().getPage(
 				"/WEB-INF/groups/" + inGroup.getId() + ".xml");
 		getPageManager().removePage(item);
@@ -521,8 +339,6 @@ public class XmlUserArchive implements CatalogEnabled  {
 	public void deleteUser(User inUser) throws UserManagerException {
 		File file = loadUserFile(inUser.getUserName());
 		file.delete();
-		getUserNameToUserMap().remove(inUser.getUserName());
-		fireUserEvent(inUser, "delete");
 		// get rid of the old location too..
 
 		Page item = getPageManager().getPage(
@@ -548,36 +364,7 @@ public class XmlUserArchive implements CatalogEnabled  {
 		}
 	}
 
-	/**
-	 * Retrieve the map from group names to {@link FileSystemGroup}s.
-	 *
-	 * @return
-	 */
-	protected Map getGroupIdToGroupMap() {
-		if (fieldGroupIdToGroupMap == null) {
-			fieldGroupIdToGroupMap = new HashMap();
-		}
-
-		return fieldGroupIdToGroupMap;
-	}
-
-	/**
-	 * Returns the map from usernames to {@link FileSystemUser}s.
-	 *
-	 * @return Map
-	 */
-	protected Map getUserNameToUserMap() {
-		if (fieldUserNameToUserMap == null) {
-			fieldUserNameToUserMap = new HashMap();
-		}
-
-		return fieldUserNameToUserMap;
-	}
-
-	public void flush() {
-		getUserNameToUserMap().clear();
-	}
-
+	
 	public Collection listGroupIds() {
 		List ids = new ArrayList();
 		ContentItem item = getPageManager().getRepository().get(
@@ -714,44 +501,22 @@ public class XmlUserArchive implements CatalogEnabled  {
 		return file;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.openedit.users.UserManager#getUserByEmail(java.lang.String)
-	 */
-	public User getUserByEmail(String emailaddress) throws UserManagerException {
-		// check the cache first
-		for (Iterator iter = getUserNameToUserMap().values().iterator(); iter
-				.hasNext();) {
-			User element = (User) iter.next();
-			String email = element.getEmail();
-			if (email != null && email.equalsIgnoreCase(emailaddress)) {
-				return element;
+	public String encrypt(String inPassword) throws UserManagerException {
+		try {
+			if (inPassword.startsWith("DES:")) {
+				return inPassword;
 			}
+			// long encryptionKey = 7939805759879765L; encryptionKey++;
+			// StringEncryption encrypter = new StringEncryption(
+			// StringEncryption.DES_ENCRYPTION_SCHEME, encryptionKey + "42" +
+			// encryptionKey );
+			String encryptedString = getStringEncryption().encrypt(inPassword);
+			return encryptedString;
+		} catch (OpenEditException ex) {
+			throw new UserManagerException(ex);
 		}
-		// TODO: replace with UserSearch object that can be replaced with Lucene
-		// or JDBC
-		for (Iterator iter = listUserNames().iterator(); iter.hasNext();) {
-			String username = (String) iter.next();
-			User element = getUser(username);// require null pointer check here
-			if (element != null) {
-				String email = element.getEmail();
-				if (email != null && email.equalsIgnoreCase(emailaddress)) {
-					return element;
-				}
-			}
-		}
-		return null;
 	}
-
-	public boolean isAllUsersLoaded() {
-		return fieldAllUsersLoaded;
-	}
-
-	public void setAllUsersLoaded(boolean inAllUsersLoaded) {
-		fieldAllUsersLoaded = inAllUsersLoaded;
-	}
-
+	
 	public void saveUser(User user) throws UserManagerException {
 		if (user.isVirtual()) {
 			log.error("Cannot save virtual users: " + user.getUserName());
@@ -779,22 +544,14 @@ public class XmlUserArchive implements CatalogEnabled  {
 			user.setPassword(ps);
 			passwordElem.addCDATA(ps);
 		}
-		Element creationDateElem = userElem.addElement("creation-date");
-		if (user.getCreationDate() != null) {
-			creationDateElem.setText(String.valueOf(user.getCreationDate()
-					.getTime()));
-		} else {
-			creationDateElem
-					.setText(String.valueOf(System.currentTimeMillis()));
-		}
 
 		// Tuan add property lastLogined-Time
 		Element lastLoginTime = userElem.addElement("lastLogined-Time");
 		lastLoginTime.setText(DateStorageUtil.getStorageUtil()
 				.formatForStorage(new Date()));
 
-		MapPropertyContainer map = (MapPropertyContainer) user
-				.getPropertyContainer();
+		MapPropertyContainer map = new MapPropertyContainer();
+		map.putAll(user.getProperties());
 		if (map != null) {
 			Element propertiesElem = map.createPropertiesElement("properties");
 			userElem.add(propertiesElem);
@@ -813,8 +570,6 @@ public class XmlUserArchive implements CatalogEnabled  {
 			xfile.setRoot(doc.getRootElement());
 			xfile.setPath(getUserDirectory() + "/" + user.getUserName() + ".xml");
 			getXmlArchive().saveXml(xfile, null);
-	
-			getUserNameToUserMap().put(user.getUserName(), user);
 		}	
 	}
 
@@ -849,33 +604,16 @@ public class XmlUserArchive implements CatalogEnabled  {
 			permissionElem.setText(permission.toString());
 		}
 
-		MapPropertyContainer map = (MapPropertyContainer) inGroup
-				.getPropertyContainer();
+		MapPropertyContainer map =  new MapPropertyContainer();
+		map.putAll(inGroup.getProperties());
 		if (map != null) {
 			Element propertiesElem = map.createPropertiesElement("properties");
 			root.add(propertiesElem);
 		}
 		File file = loadGroupFile(inGroup.getId());
 		getXmlUtil().saveXml(doc, file);
-
-		getGroupIdToGroupMap().remove(inGroup.getId());
 	}
 
-	public String encrypt(String inPassword) throws UserManagerException {
-		try {
-			if (inPassword.startsWith("DES:")) {
-				return inPassword;
-			}
-			// long encryptionKey = 7939805759879765L; encryptionKey++;
-			// StringEncryption encrypter = new StringEncryption(
-			// StringEncryption.DES_ENCRYPTION_SCHEME, encryptionKey + "42" +
-			// encryptionKey );
-			String encryptedString = getStringEncryption().encrypt(inPassword);
-			return encryptedString;
-		} catch (OpenEditException ex) {
-			throw new UserManagerException(ex);
-		}
-	}
 
 	public IntCounter getUserIdCounter() {
 		if (fieldUserIdCounter == null) {
@@ -889,63 +627,6 @@ public class XmlUserArchive implements CatalogEnabled  {
 		}
 		return fieldUserIdCounter;
 	}
-
-	public HitTracker getUsersInGroup(String inGroupId) {
-		Group group = getGroup(inGroupId);
-		if (group == null) {
-			return null;
-		}
-		return getUsersInGroup(group);
-	}
-
-	// TODO: Replace with smart UserHitTracker that lazy loads
-	public HitTracker getUsersInGroup(Group inGroup) {
-		List all = new ArrayList();
-		for (Iterator iter = getUsers().getAllHits(); iter.hasNext();) {
-
-			User user = (User) iter.next();
-			if (user.isInGroup(inGroup)) {
-				all.add(user);
-			}
-		}
-		Collections.sort(all, new UserComparator());
-		HitTracker tracker = new ListHitTracker(all);
-		return tracker;
-	}
-
-	public Authenticator getAuthenticator() {
-		return fieldAuthenticator;
-	}
-
-	public void setAuthenticator(Authenticator inAuthenticator) {
-		fieldAuthenticator = inAuthenticator;
-	}
-
-	protected void fireUserEvent(User inUser, String inOperation) {
-		if (fieldWebEventHandler != null) {
-			WebEvent event = new WebEvent();
-			event.setOperation("authentication");
-			event.setSearchType("user");
-			event.setSource(this);
-			event.addDetail("details", inOperation);
-			event.setCatalogId(getCatalogId());
-			event.setUser(inUser);
-			getWebEventHandler().eventFired(event);
-		}
-	}
-
-	public void logout(User inUser) {
-		fireUserEvent(inUser, "logout");
-	}
-
-	protected WebEventHandler getWebEventHandler() {
-		return fieldWebEventHandler;
-	}
-
-	public void setWebEventHandler(WebEventHandler inListener) {
-		fieldWebEventHandler = inListener;
-	}
-
 	public PermissionsManager getPermissionsManager() {
 		if (fieldPermissionsManager == null) {
 			fieldPermissionsManager = new PermissionsManager();
@@ -968,33 +649,6 @@ public class XmlUserArchive implements CatalogEnabled  {
 
 	public void setXmlUtil(XmlUtil inXmlUtil) {
 		fieldXmlUtil = inXmlUtil;
-	}
-
-	public User createGuestUser(String inAccount, String inPassword,
-			String inGroupId) {
-
-		if (inAccount == null) // when null then we are picking up the next user
-								// from the list. May be dup username
-		{
-			int id = getUserIdCounter().incrementCount();
-			inAccount = String.valueOf(id);
-			// User user = getUser(inAccount);
-
-		}
-
-		FileSystemUser user = new FileSystemUser();
-		user.setCreationDate(new Date());
-		user.setUserName(inAccount);
-		user.setPassword(inPassword);
-		user.setVirtual(true);
-
-		Group group = getGroup(inGroupId);
-		if (group == null) {
-			log.error("No such auto login group " + inGroupId);
-		} else {
-			user.addGroup(group);
-		}
-		return user;
 	}
 
 	public StringEncryption getStringEncryption() {
@@ -1021,26 +675,6 @@ public class XmlUserArchive implements CatalogEnabled  {
 		return pw;
 	}
 
-	public String getScreenName(String inUserName) {
-		if (inUserName == null) {
-			return null;
-		}
-		User user = getUser(inUserName);
-		if (user != null) {
-			return user.getScreenName();
-		}
-		return inUserName;
-	}
-
-	public String nextId() {
-		int id = getUserIdCounter().incrementCount();
-		return String.valueOf(id);
-	}
 	
 	
-	public void clear(){
-		getUserNameToUserMap().clear();
-		getGroupIdToGroupMap().clear();
-		
-	}
 }

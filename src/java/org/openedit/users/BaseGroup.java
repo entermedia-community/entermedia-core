@@ -20,7 +20,7 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openedit.users.filesystem.FileSystemObject;
+import org.openedit.data.BaseData;
 
 /**
  * DOCUMENT ME!
@@ -28,7 +28,7 @@ import org.openedit.users.filesystem.FileSystemObject;
  * @author avery To change this generated comment edit the template variable "typecomment":
  * 		   Window>Preferences>Java>Templates.
  */
-public class BaseGroup extends FileSystemObject implements Group, Serializable, Comparable
+public class BaseGroup extends BaseData implements Group, Serializable, Comparable
 {	
 	protected long fieldLastModified;
 	
@@ -43,22 +43,11 @@ public class BaseGroup extends FileSystemObject implements Group, Serializable, 
 	}
 
 	protected Collection fieldPermissions;
-	protected String fieldName;
-	protected String fieldId;
 
 	public BaseGroup()
 	{
 	}
 
-	/**
-	 * @see org.openedit.users.Group#getName()
-	 */
-	public String getName()
-	{
-		if (fieldName == null)
-			return getId();
-		return fieldName;
-	}
 
 	/**
 	 * @see org.openedit.users.Group#getPermissions()
@@ -93,7 +82,7 @@ public class BaseGroup extends FileSystemObject implements Group, Serializable, 
 				return true;
 			}
 		}
-		String ok =  getPropertyContainer().getString( inPermission );
+		String ok =  getMap().getString( inPermission );
 
 		if (Boolean.parseBoolean(ok))
 		{
@@ -131,10 +120,6 @@ public class BaseGroup extends FileSystemObject implements Group, Serializable, 
 		return getName();
 	}
 
-	public void setName(String inGroupName)
-	{
-		fieldName = inGroupName;
-	}
 
 	public long getLastModified()
 	{
@@ -146,40 +131,6 @@ public class BaseGroup extends FileSystemObject implements Group, Serializable, 
 		fieldLastModified = inLastModified;
 	}
 
-	public String getId()
-	{
-		if( fieldId == null && fieldName != null && fieldName.length() != 0)
-		{
-			return getName();
-		}
-		return fieldId;
-	}
-
-	public void setId(String inId)
-	{
-		fieldId = inId;
-	}
-
-	public void setProperties(Map inProperties)
-	{
-		getProperties().putAll(inProperties);
-	}
-
-	public void setProperty(String inId, String inValue)
-	{
-		if( inId.equals("id"))
-		{
-			setId(inValue);
-		}
-		else if( inId.equals("name"))
-		{
-			setName(inValue);
-		}
-		else
-		{
-			put(inId,inValue);
-		}
-	}
 
 	public void setPermissions(Collection inPermissions)
 	{
@@ -187,19 +138,7 @@ public class BaseGroup extends FileSystemObject implements Group, Serializable, 
 		
 	}
 
-	public String get(String inPropertyName)
-	{
-		if( "id".equals(inPropertyName))
-		{
-			return getId();
-		}
-		else if ( "name".equals(inPropertyName))
-		{
-			return getName();
-		}
-		return super.get(inPropertyName);
-	}
-
+	
 	@Override
 	public int compareTo(Object g1) {
 		Group group = (Group) g1;
@@ -207,33 +146,21 @@ public class BaseGroup extends FileSystemObject implements Group, Serializable, 
 		return this.getName().compareToIgnoreCase(group.getName());
 	}
 	
-	
-	public void setValues(String inKey, Collection<String> inValues)
-	{
-		StringBuffer values = new StringBuffer();
-		for (Iterator iterator = inValues.iterator(); iterator.hasNext();)
-		{
-			String detail = (String) iterator.next();
-			values.append(detail);
-			if( iterator.hasNext())
-			{
-				values.append(" | ");
-			}
-		}
-		setProperty(inKey,values.toString());
-	}
+//	
+//	public void setValues(String inKey, Collection<String> inValues)
+//	{
+//		StringBuffer values = new StringBuffer();
+//		for (Iterator iterator = inValues.iterator(); iterator.hasNext();)
+//		{
+//			String detail = (String) iterator.next();
+//			values.append(detail);
+//			if( iterator.hasNext())
+//			{
+//				values.append(" | ");
+//			}
+//		}
+//		setProperty(inKey,values.toString());
+//	}
 
-	@Override
-	public Object getValue(String inKey)
-	{
-		return get(inKey);
-	}
-	@Override
-	public void setValue(String inKey, Object inValue)
-	{
-		setProperty(inKey, String.valueOf(inValue));
-	}
-	public String getName(String inLocale) {
-		return getName();
-	}
+	
 }

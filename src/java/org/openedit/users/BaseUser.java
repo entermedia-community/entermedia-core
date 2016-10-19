@@ -17,14 +17,13 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.openedit.MultiValued;
 import org.openedit.OpenEditRuntimeException;
-import org.openedit.users.filesystem.FileSystemObject;
-import org.openedit.util.DateStorageUtil;
+import org.openedit.data.BaseData;
 
 
 /**
@@ -32,68 +31,63 @@ import org.openedit.util.DateStorageUtil;
  *
  * @author Eric and Matt
  */
-public class BaseUser extends FileSystemObject implements User, Comparable
+public class BaseUser extends BaseData implements User, Comparable
 {
-	protected Collection fieldGroups;
-	protected String fieldPassword;
-	protected String fieldId;
-	protected boolean fieldVirtual;
-	protected String fieldLastLoginTime;
+	protected GroupSearcher fieldGroupSearcher;
 	
+	public GroupSearcher getGroupSearcher()
+	{
+		return fieldGroupSearcher;
+	}
+
+	public void setGroupSearcher(GroupSearcher inGroupSearcher)
+	{
+		fieldGroupSearcher = inGroupSearcher;
+	}
+
 	public BaseUser()
 	{
 		super();
 	}
 	
-	public void setLastLoginTime(String lastLoginTime) {
-		fieldLastLoginTime = lastLoginTime;
-		
-	}
-
-	public String getLastLoginTime() {
-		return fieldLastLoginTime;
-	}
 	
 	public String getEmail()
 	{
-		return getString(EMAIL_PROPERTY);
+		return get(EMAIL_PROPERTY);
 	}
 
 	public String getFirstName()
 	{
-		return getString(FIRST_NAME_PROPERTY);
+		return get(FIRST_NAME_PROPERTY);
 	}
 	public void setFirstName( String inName)
 	{
-		safePut( FIRST_NAME_PROPERTY, inName);
+		setProperty( FIRST_NAME_PROPERTY, inName);
 	}
 	/**
 	 * @see org.openedit.users.User#getGroups()
 	 */
 	public Collection getGroups()
 	{
-		if (fieldGroups == null)
-		{
-			fieldGroups = new HashSet(3);
-		}
-		return fieldGroups;
+		return (Collection)getValue("groups");
 	}
+
 	public void setGroups(Collection inGroups)
 	{
-		fieldGroups = inGroups;
+		setValue("groups",inGroups);
 	}
 	public String getLastName()
 	{
-		return getString(LAST_NAME_PROPERTY);
+		return get(LAST_NAME_PROPERTY);
 	}
 
 	public void setLastName( String inName)
 	{
-		safePut( LAST_NAME_PROPERTY, inName);
+		setProperty( LAST_NAME_PROPERTY, inName);
 	}
 	public void setEmail( String inEmail )
 	{
-		safePut(EMAIL_PROPERTY, inEmail);
+		setProperty(EMAIL_PROPERTY, inEmail);
 	}
 	/**
 	 * @see org.openedit.users.User#setPassword(String)
@@ -103,7 +97,7 @@ public class BaseUser extends FileSystemObject implements User, Comparable
 		if(inPassword == null){
 			return;
 		}
-		fieldPassword = inPassword;
+		setProperty("password",inPassword);
 	}
 
 	/**
@@ -145,10 +139,29 @@ public class BaseUser extends FileSystemObject implements User, Comparable
 		return out.toString();
 	}
 
+	public String get(String inPropertyName)
+	{
+		String value = super.get( inPropertyName );
+//		if( value == null ) //this might be a new user
+//		{
+//			for (Iterator iterator = getGroups().iterator(); iterator.hasNext();)
+//			{
+//				Group group = (Group) iterator.next();
+//				value = group.get(inPropertyName);
+//				if ( value != null)
+//				{
+//					return value;
+//				}
+//			}
+//		}
+		if ("".equals(value))
+			return null;
+		return value;
+	}
 	
 	public String getScreenName()
 	{
-		String sn = (String)getProperty("screenname");
+		String sn = (String)get("screenname");
 		
 		if (sn == null)
 		{
@@ -203,7 +216,7 @@ public class BaseUser extends FileSystemObject implements User, Comparable
 		}
 
 		//cburkey, seems like users may need custom permissions so I added this
-		String ok =  getPropertyContainer().getString( inPermission );
+		String ok =  get( inPermission );
 
 		if (Boolean.parseBoolean(ok))
 		{
@@ -212,73 +225,7 @@ public class BaseUser extends FileSystemObject implements User, Comparable
 
 		return false;
 	}
-	
-	public Object getProperty( String inPropertyName )
-	{
-		
-		Object value =  getPropertyContainer().get( inPropertyName );
-		if( value == null && fieldGroups != null) //this might be a new user
-		{
-			for (Iterator iterator = getGroups().iterator(); iterator.hasNext();)
-			{
-				Group group = (Group) iterator.next();
-				value = group.get(inPropertyName);
-				if ( value != null)
-				{
-					return value;
-				}
-			}
-		}
-		if ("".equals(value))
-			return null;
-		return value;
-	}
 
-	public String get(String inPropertyName)
-	{
-		if( "id".equals(inPropertyName))
-		{
-			return getId();
-		}
-		else if( "userName".equals(inPropertyName))
-		{
-			return getUserName();
-		}
-		else if( "password".equals(inPropertyName))
-		{
-			return getPassword();
-		}
-		else if( "name".equals(inPropertyName))
-		{
-			return getName();
-		}
-		else if( "screenname".equals(inPropertyName))
-		{
-			return getScreenName();
-		}
-		else if ("creationdate".equals(inPropertyName)){
-			return DateStorageUtil.getStorageUtil().formatForStorage(getCreationDate());
-		}
-		else if( "groups".equals(inPropertyName)){
-			StringBuffer groups = new StringBuffer();
-			for (Iterator iterator = getGroups().iterator(); iterator.hasNext();)
-			{
-				Group group = (Group) iterator.next();
-				groups.append(group.getId());
-				if( iterator.hasNext() )
-				{
-					groups.append(" | ");
-				}
-			}
-			if( groups.length() == 0)
-			{
-				return null;
-			}
-			return groups.toString();
-		}
-		return (String)getProperty(inPropertyName);
-	}
-	
 	public boolean hasProperty(String inName )
 	{
 		boolean has = getProperties().containsKey(inName);
@@ -318,7 +265,7 @@ public class BaseUser extends FileSystemObject implements User, Comparable
 	 */
 	public String getPassword()
 	{
-		return fieldPassword;
+		return get("password");
 	}
 
 	/**
@@ -365,14 +312,6 @@ public class BaseUser extends FileSystemObject implements User, Comparable
 		return getScreenName();
 	}
 
-	public void clearGroups()
-	{
-		if ( fieldGroups != null)
-		{
-			getGroups().clear();			
-		}
-	}
-
 	public boolean isInGroup(Group inGroup)
 	{
 		if( inGroup == null || inGroup.getId() == null)
@@ -414,42 +353,18 @@ public class BaseUser extends FileSystemObject implements User, Comparable
 	
 	public boolean isVirtual()
 	{
-		return fieldVirtual;
+		return getBoolean("virtual");
 	}
 
 	public void setVirtual(boolean inVirtual)
 	{
-		fieldVirtual = inVirtual;
+		setValue("virtual",inVirtual);
 	}
 
 	public int compareTo(Object arg0)
 	{
 		User user = (User)arg0;
 		return user.getShortDescription().compareTo(getShortDescription());
-	}
-
-	public String getId()
-	{
-		return fieldId;
-	}
-
-	public String getName()
-	{
-		return toString();
-	}
-
-	public String getName(String inLocale){
-		return getName();
-	}
-	
-	public void setName(String inName)
-	{
-		//not editable
-	}
-	
-	public void setId(String inNewid)
-	{
-		fieldId = inNewid;
 	}
 
 	public void setProperties(Map inProperties)
@@ -459,24 +374,44 @@ public class BaseUser extends FileSystemObject implements User, Comparable
 
 	public void setProperty(String inId, String inValue)
 	{
-		if("password".equals(inId)){
-			setPassword(inValue);
-			return;
+		if( inId.equals("groups"))
+		{
+			Collection groups = new ArrayList();
+			Collection<String> vals = parseList(inValue);
+			for(String groupid:vals)
+			{
+				Group group = getGroupSearcher().getGroup(inValue);
+				if( group != null)
+				{
+					groups.add( group );
+				}
+			}
+			setValue("groups",groups);
 		}
-		
-		if(inValue == null){
-			getPropertyContainer().remove(inId);
+		else
+		{
+			setValue(inId,inValue);
 		}
-		if(inId == null){
-			return;
+//		if("lastname".equals(inId.toLowerCase())){
+//			setLastName(inValue);
+//		}
+//		if("firstname".equals(inId.toLowerCase())){
+//			setFirstName(inValue);
+//		}
+	}
+
+	protected Collection parseList(String inValue)
+	{
+		String[] vals = null; 
+		if( inValue.contains("|") )
+		{
+			vals = MultiValued.VALUEDELMITER.split(inValue);
 		}
-		getPropertyContainer().put(inId, inValue);
-		if("lastname".equals(inId.toLowerCase())){
-			setLastName(inValue);
+		else
+		{
+			vals = new String[]{inValue};
 		}
-		if("firstname".equals(inId.toLowerCase())){
-			setFirstName(inValue);
-		}
+		return Arrays.asList(vals);
 	}
 
 	public boolean isEnabled() 
@@ -533,49 +468,13 @@ public class BaseUser extends FileSystemObject implements User, Comparable
 		}
 		return enabledgroups;
 	}
-	public Collection getValues(String inPreference)
-	{
-		String val = get(inPreference);
-		
-		if (val == null)
-			return null;
-		
-		String[] vals = val.split("\\s+");
 
-		Collection collection = Arrays.asList(vals);
-		//if null check parent
-		return collection;
-	}
-	
-	public void setValues(String inKey, Collection<String> inValues)
+	public void put(String inString, String inString2)
 	{
-		StringBuffer values = new StringBuffer();
-		for (Iterator iterator = inValues.iterator(); iterator.hasNext();)
-		{
-			String detail = (String) iterator.next();
-			values.append(detail);
-			if( iterator.hasNext())
-			{
-				values.append(" ");
-			}
-		}
-		setProperty(inKey,values.toString());
+		setValue(inString,inString2);
+		
 	}
 
-	@Override
-	public Object getValue(String inKey)
-	{
-		if(inKey.equals("enabled")){
-			return isEnabled();
-		}
-		
-		return get(inKey);
-	}
-	@Override
-	public void setValue(String inKey, Object inValue)
-	{
-		setProperty(inKey, String.valueOf(inValue));
-	}
 
 
 }

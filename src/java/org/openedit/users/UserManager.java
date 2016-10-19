@@ -33,8 +33,6 @@ import org.openedit.util.StringEncryption;
 public interface UserManager extends CatalogEnabled
 {
 	
-	List getSystemPermissionGroups();
-	
 	/**
 	 * Retrieve the group with the given name.
 	 *
@@ -100,7 +98,6 @@ public interface UserManager extends CatalogEnabled
 	 * @throws UserManagerException If the group could not be created for some reason
 	 */
 	Group createGroup() throws UserManagerException;
-	Group createGroup(String inGroupId) throws UserManagerException;
 	Group createGroup(String inGroupId, String inGroupName) throws UserManagerException;
 
 	/**
@@ -191,21 +188,11 @@ public interface UserManager extends CatalogEnabled
 	
 	public void logout(User inUser);
 
-	public PermissionsManager getPermissionsManager();
-
 	User createGuestUser(String inAccount, String inPassword, String inGroupname);
 	
 	public String getScreenName(String userName);
 	void flush();
 
-
-	public Collection listGroupIds();
-	
-	public String nextId();
-	
-	public User loadUser(String inId);
-
-	Collection listUserNames();
 
 	UserSearcher getUserSearcher();
 	GroupSearcher getGroupSearcher();

@@ -25,7 +25,7 @@ import org.openedit.Data;
  *
  * @author Eric and Matt
  */
-public interface User extends PropertyContainer, Data
+public interface User extends Data
 {
 	public static final String FIRST_NAME_PROPERTY = "firstName";
 	public static final String LAST_NAME_PROPERTY = "lastName";
@@ -60,13 +60,6 @@ public interface User extends PropertyContainer, Data
 	 * @return The user's email address, or <code>null</code> if the user has no last name
 	 */
 	String getEmail();
-	
-	/**
-	 * Retrieve the date/time at which this user was created.
-	 * 
-	 * @return  The creation date
-	 */
-	Date getCreationDate();
 	
 	/**
 	 * Set this user's first name.  This is a convenience method that is the
@@ -132,13 +125,6 @@ public interface User extends PropertyContainer, Data
 	String getUserName();
 	
 	
-	/*
-	 * @author: tuan nguyen
-	 * @purpose : for validation/ devalidation
-	 */
-	void setLastLoginTime(String lastLoginTime);
-	String getLastLoginTime();
-	
 	/**
 	 * Determines whethwer or not this user is allowed to login.
 	 * @return
@@ -172,15 +158,9 @@ public interface User extends PropertyContainer, Data
 
 	public void addGroup(Group inGroup);
 	
-	void clearGroups();
-
 	void removeGroup(Group inGroup);
 
 	boolean isInGroup(Group inGroup);
-	
-	Object getProperty(String inPropertyName);
-
-	public PropertyContainer getPropertyContainer();
 	
 	public boolean isVirtual();
 	public void setVirtual(boolean inVirtual);
@@ -189,5 +169,9 @@ public interface User extends PropertyContainer, Data
 	Map listAllProperties();
 
 	Collection getValues(String inString);
+
+	boolean getBoolean(String inString);
+
+	void setGroups(Collection inGroupslist);
 	
 }
