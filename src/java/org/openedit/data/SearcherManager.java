@@ -227,6 +227,7 @@ public class SearcherManager
 	public Collection getUniqueValues(Searcher inSearcher, HitTracker inHits, String inColumn, String startsWith)
 	{
 		Set	 results = new HashSet();
+		startsWith = startsWith.toLowerCase();
 		for (Iterator iterator = inHits.iterator(); iterator.hasNext();)
 		{
 			Data data = (Data) iterator.next();
