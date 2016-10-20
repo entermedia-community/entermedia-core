@@ -30,18 +30,6 @@ public class BaseUserManager implements UserManager
 		fieldAuthenticator = inAuthenticator;
 	}
 
-	protected CacheManager fieldCacheManager;
-	
-	public CacheManager getCacheManager()
-	{
-		return fieldCacheManager;
-	}
-
-	public void setCacheManager(CacheManager inCacheManager)
-	{
-		fieldCacheManager = inCacheManager;
-	}
-
 	protected WebEventHandler getWebEventHandler() 
 	{
 		return fieldWebEventHandler;
@@ -312,7 +300,6 @@ public class BaseUserManager implements UserManager
 	@Override
 	public void flush()
 	{
-		getCacheManager().clear("userManager");
 	}
 
 	@Override

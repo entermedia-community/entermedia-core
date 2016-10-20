@@ -116,6 +116,7 @@ public class XmlUserArchive implements CatalogEnabled  {
 	{
 		String inGroupId = loadgroup.getId();
 		File find = loadGroupFile(inGroupId);
+		log.info("Loading group xml: " + inGroupId);
 		if (!find.exists()) {
 			ContentItem stub = getPageManager().getRepository().getStub(
 					"/WEB-INF/groups/" + inGroupId + ".xml");
@@ -274,6 +275,7 @@ public class XmlUserArchive implements CatalogEnabled  {
 		}
 		String inUserName = user.getUserName();
 		File userFile = loadUserFile(inUserName);
+		log.info("Loading user xml: " + inUserName);
 		if (!userFile.exists()) {
 			ContentItem stub = getPageManager().getRepository().getStub(
 					"/WEB-INF/users/" + inUserName + ".xml");
