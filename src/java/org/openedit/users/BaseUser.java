@@ -116,7 +116,7 @@ public class BaseUser extends BaseData implements User, Comparable
 
 	public void setUserName( String inName)
 	{
-		setId( inName);
+		setId(inName);
 	}
 	
 	public String getShortDescription()

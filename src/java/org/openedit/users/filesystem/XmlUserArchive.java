@@ -532,7 +532,7 @@ public class XmlUserArchive implements CatalogEnabled  {
 		if (user.getUserName() == null) {
 			int id = getUserIdCounter().incrementCount();
 			String newid = String.valueOf(id);
-			user.setId(newid);
+			user.setUserName(newid);
 		}
 		Element userNameElem = userElem.addElement("user-name");
 		userNameElem.addCDATA(user.getUserName());
