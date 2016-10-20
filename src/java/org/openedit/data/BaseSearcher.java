@@ -2693,31 +2693,9 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	}
 	public void reindexInternal() throws OpenEditException
 	{
-	
-				setForceBulk(true);
-				HitTracker allhits = getAllHits();
-				allhits.enableBulkOperations();
-				ArrayList tosave = new ArrayList();
-				for (Iterator iterator2 = allhits.iterator(); iterator2.hasNext();)
-				{
-					Data hit = (Data) iterator2.next();
-					Data real = (Data) loadData(hit);
-					tosave.add(real);
-					if(tosave.size() > 50){
-						setForceBulk(true);
-
-						
-						saveAllData(tosave, null);
-
-						tosave.clear();
-					}
-				}
-				saveAllData(tosave, null);
-				
-				
-			
-		
-		
+		//do nothing?
+		throw new OpenEditException("Not implemented");
+		//reIndexAll();
 	}
 	
 }
