@@ -2061,7 +2061,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		query.setHitsPerPage(1);
 		query.addMatches(inField, inValue);
 		HitTracker hits = search(query);
-		return hits.first();
+		return loadData((Data)hits.first());
 	}
 
 	public HitTracker searchByIds(Collection<String> inIds)
@@ -2659,7 +2659,10 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		}
 		else
 		{
-			return (Data) searchById(inHit.getId());
+			Data data = (Data)createNewData();
+			data.setProperties(inHit.getProperties());
+			data.setId(inHit.getId());
+			return data;
 		}
 	}
 

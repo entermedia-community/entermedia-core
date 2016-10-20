@@ -21,6 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.dom4j.Element;
 import org.openedit.MultiValued;
 import org.openedit.OpenEditRuntimeException;
 import org.openedit.data.BaseData;
@@ -69,7 +70,12 @@ public class BaseUser extends BaseData implements User, Comparable
 	 */
 	public Collection getGroups()
 	{
-		return (Collection)getValue("groups");
+		Collection groups = (Collection)getValue("groups");
+		if( groups == null)
+		{
+			groups = Collections.emptyList();
+		}
+		return groups;
 	}
 
 	public void setGroups(Collection inGroups)
@@ -283,7 +289,7 @@ public class BaseUser extends BaseData implements User, Comparable
 			throw new OpenEditRuntimeException("Dont add null groups");
 		}
 		removeGroup(inGroup);
-		getGroups().add(inGroup);
+		addValue("groups",inGroup);
 	}
 
 	/**
@@ -296,15 +302,7 @@ public class BaseUser extends BaseData implements User, Comparable
 	 */
 	public void removeGroup(Group inGroup)
 	{
-		for (Iterator iterator = getGroups().iterator(); iterator.hasNext();)
-		{
-			Group group = (Group) iterator.next();
-			if( group.getId().equals(inGroup.getId()))
-			{
-				getGroups().remove(group);
-				return;
-			}
-		}
+		removeValue("groups",inGroup);
 	}
 
 	public String toString()
@@ -370,36 +368,43 @@ public class BaseUser extends BaseData implements User, Comparable
 	public void setProperties(Map inProperties)
 	{
 		getProperties().putAll(inProperties);
+		if( inProperties.containsKey("groups"))
+		{
+			setValue("groups", inProperties.get("groups"));
+		}
 	}
-
-	public void setProperty(String inId, String inValue)
+	@Override
+	public void setValue(String inKey, Object inValue)
 	{
-		if( inId.equals("groups"))
+		if( inKey.equals("groups"))
 		{
 			Collection groups = new ArrayList();
-			Collection<String> vals = parseList(inValue);
-			for(String groupid:vals)
+			Collection<String> vals = null;
+			if( inValue instanceof String)
 			{
-				Group group = getGroupSearcher().getGroup(inValue);
-				if( group != null)
+				inValue = parseList((String)inValue);				
+			}
+			Collection objects = (Collection)inValue;
+			for (Iterator iterator = objects.iterator(); iterator.hasNext();)
+			{
+				Object object = (Object) iterator.next();
+				if(object instanceof Group)
 				{
-					groups.add( group );
+					groups.add(object);
+				}
+				else
+				{
+					Group group = getGroupSearcher().getGroup((String)object);
+					if( group != null)
+					{
+						groups.add( group );
+					}
 				}
 			}
-			setValue("groups",groups);
+			inValue = groups;
 		}
-		else
-		{
-			setValue(inId,inValue);
-		}
-//		if("lastname".equals(inId.toLowerCase())){
-//			setLastName(inValue);
-//		}
-//		if("firstname".equals(inId.toLowerCase())){
-//			setFirstName(inValue);
-//		}
+		super.setValue(inKey, inValue);
 	}
-
 	protected Collection parseList(String inValue)
 	{
 		String[] vals = null; 
