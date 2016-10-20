@@ -2582,17 +2582,17 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 
 					}
 					data.setValue(field, result);
-
 				}
-				
-				
-				
 				else
 				{
-					if(detail != null && detail.isBoolean()){
+					if(detail != null && detail.isBoolean())
+					{
 						data.setValue(field, false);
 					}
-					data.setValue(field, null);
+					else
+					{
+						data.setValue(field, null);
+					}
 				}
 			}
 		}
