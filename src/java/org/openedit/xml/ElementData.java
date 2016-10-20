@@ -21,8 +21,6 @@ import org.openedit.data.SearchData;
 import org.openedit.data.ValuesMap;
 import org.openedit.modules.translations.LanguageMap;
 
-import groovy.json.internal.ValueMap;
-
 public class ElementData implements MultiValued, SaveableData, Comparable, SearchData
 {
 	protected Element fieldElement;
