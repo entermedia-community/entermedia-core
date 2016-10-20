@@ -21,6 +21,8 @@ import org.openedit.data.SearchData;
 import org.openedit.data.ValuesMap;
 import org.openedit.modules.translations.LanguageMap;
 
+import groovy.json.internal.ValueMap;
+
 public class ElementData implements MultiValued, SaveableData, Comparable, SearchData
 {
 	protected Element fieldElement;
@@ -347,13 +349,12 @@ public class ElementData implements MultiValued, SaveableData, Comparable, Searc
 
 	public void setProperties(Map inProperties)
 	{
-		//getProperties().putAll(inProperties);
 		for (Iterator iterator = inProperties.keySet().iterator(); iterator.hasNext();)
 		{
 			String key = (String) iterator.next();
 			if (key != null)
 			{
-				setProperty(key, (String) inProperties.get(key));
+				setValue(key, inProperties.get(key));
 			}
 		}
 	}
