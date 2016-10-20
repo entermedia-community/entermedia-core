@@ -35,13 +35,33 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 	}
 	public boolean getBoolean(String inId)
 	{
-		return getMap().getBoolean(inId);
+		Object val = getValue(inId);
+		if( val == null || val == ValuesMap.NULLVALUE)
+		{
+			return false;
+		}
+		if( val instanceof Boolean)
+		{
+			return (boolean)val;
+		}
+		return Boolean.valueOf(val.toString());
 	}
 	
 	public float getFloat(String inId)
 	{
-		return getMap().getFloat(inId);
+		Object val = getValue(inId);
+		if( val == null || val == ValuesMap.NULLVALUE)
+		{
+			return 0;
+		}
+		if( val instanceof Float)
+		{
+			return (float)val;
+		}
+		return Float.parseFloat(val.toString());
 	}
+	
+	
 	public String getId() {
 		String name = get("id");
 		return name;
