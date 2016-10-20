@@ -38,6 +38,7 @@ import org.openedit.users.Group;
 import org.openedit.users.GroupSearcher;
 import org.openedit.users.User;
 import org.openedit.users.UserManagerException;
+import org.openedit.users.authenticate.PasswordGenerator;
 import org.openedit.util.DateStorageUtil;
 import org.openedit.util.IntCounter;
 import org.openedit.util.PathUtilities;
@@ -538,14 +539,17 @@ public class XmlUserArchive implements CatalogEnabled  {
 
 		Element passwordElem = userElem.addElement("password");
 		//
-		if (user.getPassword() != null && !user.getPassword().equals("")) {
-			String ps = user.getPassword();
-			ps = encrypt(ps);
-			// password may have changed we should set it so it's not in plain
-			// text anymore.
-			user.setPassword(ps);
-			passwordElem.addCDATA(ps);
+		if (user.getPassword() == null || user.getPassword().isEmpty()) 
+		{
+			String tmppassword = new PasswordGenerator().generate();
+			user.setPassword(tmppassword);
 		}
+		String ps = user.getPassword();
+		ps = encrypt(ps);
+		// password may have changed we should set it so it's not in plain
+		// text anymore.
+		user.setPassword(ps);
+		passwordElem.addCDATA(ps);
 
 		// Tuan add property lastLogined-Time
 		Element lastLoginTime = userElem.addElement("lastLogined-Time");
