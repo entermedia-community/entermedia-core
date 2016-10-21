@@ -250,7 +250,8 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 					orString.append("(");
 					for (int i = 0; i < values.length - 1; i++)
 					{
-						if(values[i].toString().length() > 0)
+						Object val = values[i];
+						if(val != null && val.toString().length() > 0)
 						{
 							orString.append(values[i]);
 							orString.append(" OR ");

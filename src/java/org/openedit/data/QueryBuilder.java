@@ -101,12 +101,20 @@ public class QueryBuilder
 			{
 				ids = new ArrayList(inDataCollection.size());
 				Data data = (Data) value;
-				ids.add(data.getId());
-				for (; iter.hasNext();)
+				String id = data.getId();
+				if( id != null)
 				{
-					data = (Data) iter.next();
-					ids.add(data.getId());
-				}
+					ids.add(id);
+					for (; iter.hasNext();)
+					{
+						data = (Data) iter.next();
+						id = data.getId();
+						if( id != null)
+						{
+							ids.add(id);
+						}	
+					}
+				}	
 			}
 			else
 			{
