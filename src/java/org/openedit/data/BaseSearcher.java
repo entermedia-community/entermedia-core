@@ -1045,20 +1045,15 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		}
 	}
 
-	protected PropertyDetail getDetail(String inString, WebPageRequest inReq)
+	protected PropertyDetail getDetail(String inTermId, WebPageRequest inReq)
 	{
-		String searchtype = inReq.findValue("searchtype");
-		if (searchtype == null)
-		{
-			searchtype = getSearchType();
-		}
 
 		PropertyDetail detail = null;
 		String catalogid = null;
 		String view = null;
-		String[] splits = inString.split(BaseSearcher.delim);
+		String[] splits = inTermId.split(BaseSearcher.delim);
 
-		String propertyid = inString; //this is for backward compatability
+		String propertyid = inTermId; //this is for backward compatability
 		if (splits.length > 2)
 		{
 			catalogid = splits[0];
@@ -1071,6 +1066,12 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			return null;
 		}
 
+		String searchtype = inReq.getRequestParameter(propertyid + ".searchtype");
+		if (searchtype == null)
+		{
+			searchtype = getSearchType();
+		}
+		
 		if (catalogid == null)
 		{
 			catalogid = getCatalogId();
@@ -1082,10 +1083,14 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		//		}
 		//		if (detail == null)
 		//		{
-		if( !propertyid.contains("."))
+		if( searchtype.equals(getSearchType()))
 		{
-			detail = getPropertyDetailsArchive().getDetail(getSearchType(), view, propertyid, inReq.getUserProfile()); //Add View.getDetail( API then make sure everyone get's a cached view object
+			detail = getPropertyDetailsArchive().getDetail(searchtype, view, propertyid, inReq.getUserProfile()); 
 		}	
+		else
+		{
+			detail = getPropertyDetailsArchive().getPropertyDetailsCached(searchtype).getDetail(propertyid); 
+		}
 		//		}
 		//		if (detail == null)
 		//		{
@@ -1100,7 +1105,11 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			detail.setView(view);
 			detail.setCatalogId(catalogid);
 		}
-		detail.setSearchType(searchtype);
+		//Needed?
+//		if( detail.getSearchType() == null)
+//		{
+//			detail.setSearchType(searchtype);
+//		}
 
 		return detail;
 	}
@@ -1115,6 +1124,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		Term t = null;
 		if (detail.isDataType("number") || detail.isDataType("double") || detail.isDataType("float"))
 		{
+			//this is handled in else statement
 			return null;
 		}
 		if ((val != null && val.length() > 0 && (vals == null || vals.length <2)))

@@ -264,7 +264,6 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 			}
 		};
 		term.setDetail(inField);
-		term.setId(inField.getId());
 		//term.setValue(inValue);
 		//String[] orwords = inValue.split("\\s+");
 		term.setValues(inValues);
@@ -299,7 +298,6 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 			}
 		};
 		term.setDetail(inField);
-		term.setId(inField.getId());
 		inValue = inValue.replace(",", " ");
 		term.setValue(inValue);
 		String[] orwords = inValue.split("\\s+");

@@ -296,7 +296,6 @@ public class PropertyDetailsArchive implements CatalogEnabled
 								if( shareddetail != null)
 								{
 									PropertyDetail local = shareddetail.copy();
-									local.setId(vid);
 									view.add(local);
 								}	
 							}
