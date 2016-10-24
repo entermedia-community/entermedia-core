@@ -273,7 +273,7 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 			values.append(detail.getId());
 			if (iterator.hasNext())
 			{
-				values.append(" ");
+				values.append(" "); //TODO move to |
 			}
 		}
 		setProperty(inKey, values.toString());
