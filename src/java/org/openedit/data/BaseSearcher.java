@@ -2544,7 +2544,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				}
 				result = map;
 			}
-			else if(detail.isMultiValue())
+			else if(values != null && detail.isMultiValue())
 			{
 				result = Arrays.asList(values);
 			}
