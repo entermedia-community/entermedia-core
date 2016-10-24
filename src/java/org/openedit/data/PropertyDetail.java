@@ -168,17 +168,23 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 
 	public void setViewType(String inViewType)
 	{
-		setProperty("viewtype", inViewType);
+		setValue("viewtype", inViewType);
 	}
 	
 	public String getDataType()
 	{
-		return get("datatype");
+		String datatype = get("datatype"); 
+		if(datatype == null){
+			datatype=get("type");
+		}
+		return datatype;
+	
+	 
 	}
 	
 	public void setDataType(String inDataType)
 	{
-		setProperty("datatype", inDataType);
+		setValue("datatype", inDataType);
 	}
 	
 	public String getId()
@@ -340,6 +346,12 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 		{
 			return String.valueOf(inId.equals(getDataType()));
 		}
+
+
+		if(inId.equals("catalogid")){
+			return getCatalogId();
+		}
+		
 		else if (inId.equals("list")
 				|| inId.equals("html")
 				)
@@ -355,83 +367,12 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 	}
 	public void setProperty(String inId, String inValue)
 	{
-		if( inId.equals("id"))
-		{
-			setId(inValue);
-		}
-		else if ( inId.equals("boolean") && inValue.equalsIgnoreCase("true"))
-		{
-			setDataType("boolean");
-		}
-		
-		else if ( inId.equals("text"))
-		{
-			setName(inValue);
-		}
-		else if ( inId.equals("externalid"))
-		{
-			setExternalId(inValue);
-		}
-		else if ( inId.equals("stored"))
-		{
-			setStored(Boolean.parseBoolean(inValue));
-		}
-		else if ( inId.equals("index"))
-		{
-			setIndex(Boolean.parseBoolean(inValue));
-		}
-		else if ( inId.equals("keyword"))
-		{
-			setKeyword(Boolean.parseBoolean(inValue));
-		}
-		else if ( inId.equals("editable"))
-		{
-			setEditable(Boolean.parseBoolean(inValue));
-		}
-		else if ( inId.equals("sortable"))
-		{
-			setSortable(Boolean.parseBoolean(inValue));
-		}
-		else if ( inId.equals("filter"))
-		{
-			setFilter(Boolean.parseBoolean(inValue));
-		}
-		else if (( inId.equals("list")
-						|| inId.equals("html")) && inValue.equalsIgnoreCase("true")  
-				)
-		{
-			setViewType(inId);
-		}
-		else if (( inId.equals("number")
-						|| inId.equals("date")
-						|| inId.equals("file")) && inValue.equalsIgnoreCase("true")
-				)
-		{
-			setDataType(inId);
-		}
-		else if ( inId.equals("externaltype"))
-		{
-			setExternalType(inValue);
-		}
-		
-		else if ( inId.equals("type"))
-		{
-			setDataType(inValue);
-		}
-//		else if ( inId.equals("viewtype"))
-//		{
-//			setViewType(inValue);
-//		}
-		else if (inId.equals("catalogid"))
-		{
-			setCatalogId(inValue);
-		}
-		else
-		{
+	
+	
 			
 				setValue(inId, inValue);
 			
-		}
+	
 	}
 	
 	public String getName()

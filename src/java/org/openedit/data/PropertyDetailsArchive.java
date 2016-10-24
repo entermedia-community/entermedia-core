@@ -287,19 +287,19 @@ public class PropertyDetailsArchive implements CatalogEnabled
 						else
 						{
 							//find the detail
-							if(vid.contains("."))
+							if (vid.contains("."))
 							{
 								String[] type = vid.split("\\.");
-								
+
 								PropertyDetails otherdetails = getPropertyDetails(type[0]);
 								PropertyDetail shareddetail = otherdetails.getDetail(type[1]);
-								if( shareddetail != null)
+								if (shareddetail != null)
 								{
 									PropertyDetail local = shareddetail.copy();
 									view.add(local);
-								}	
+								}
 							}
-							
+
 						}
 					}
 				}
@@ -644,30 +644,29 @@ public class PropertyDetailsArchive implements CatalogEnabled
 		if (inDetail.getName() != null)
 		{
 			Element child = element.element("name");
-			if(child != null){
+			if (child != null)
+			{
 				element.remove(child);
 			}
 
-			
-			 child = element.addElement("name");
-			
+			child = element.addElement("name");
+
 			Map languages = inDetail.getElementData().getLanguageMap("name");
 			for (Iterator iterator = languages.keySet().iterator(); iterator.hasNext();)
 			{
 				String lang = (String) iterator.next();
-				String val = (String)languages.get(lang);
-				child.addElement("language").addAttribute("id",lang).addCDATA((String)val);
+				String val = (String) languages.get(lang);
+				child.addElement("language").addAttribute("id", lang).addCDATA((String) val);
 			}
-			
-		
+
 		}
 
-		element.addAttribute("index", String.valueOf( inDetail.isIndex() ) );
-		element.addAttribute("keyword", String.valueOf( inDetail.isKeyword() ) );
-		element.addAttribute("filter", String.valueOf( inDetail.isFilter() ) );
-		element.addAttribute("stored", String.valueOf( inDetail.isStored() ) );
-		element.addAttribute("editable", String.valueOf( inDetail.isEditable() ) );
-		element.addAttribute("sortable", String.valueOf( inDetail.isSortable() ) );
+		element.addAttribute("index", String.valueOf(inDetail.isIndex()));
+		element.addAttribute("keyword", String.valueOf(inDetail.isKeyword()));
+		element.addAttribute("filter", String.valueOf(inDetail.isFilter()));
+		element.addAttribute("stored", String.valueOf(inDetail.isStored()));
+		element.addAttribute("editable", String.valueOf(inDetail.isEditable()));
+		element.addAttribute("sortable", String.valueOf(inDetail.isSortable()));
 
 		String type = inDetail.getDataType();
 		if (type != null)
@@ -685,7 +684,8 @@ public class PropertyDetailsArchive implements CatalogEnabled
 		{
 			String key = (String) iterator.next();
 			String val = (String) inDetail.get(key);
-			if(!"name".equals(key)){
+			if (!"name".equals(key))
+			{
 				element.addAttribute(key, val);
 			}
 		}
@@ -698,16 +698,14 @@ public class PropertyDetailsArchive implements CatalogEnabled
 		if (label != null && label.length() > 0)
 		{
 			inDetail.setName(label);
-		} 
-		
-		else{
+		}
+
+		else
+		{
 			//Element nameinfo = inElement.element("name");
 			//Override this later...to support overriding names in other languages.
-		
-			
+
 		}
-		
-		
 
 		// Set all the remaining attributes as properties
 		for (Iterator iterator = inElement.attributeIterator(); iterator.hasNext();)
@@ -726,15 +724,14 @@ public class PropertyDetailsArchive implements CatalogEnabled
 		PropertyDetail d = new PropertyDetail();
 		d.setElementData(new ElementData(element));
 		d.setTextLabelManager(getTextLabelManager());
-//		for (Iterator iterator = defaults.keySet().iterator(); iterator.hasNext();)
-//		{
-//			String key = (String) iterator.next();
-//			String value = (String) defaults.get(key);
-//			d.setValue(key, value);
-//		}
-		String type = element.attributeValue("type");
-		d.setDataType(type);
-//
+		//		for (Iterator iterator = defaults.keySet().iterator(); iterator.hasNext();)
+		//		{
+		//			String key = (String) iterator.next();
+		//			String value = (String) defaults.get(key);
+		//			d.setValue(key, value);
+		//		}
+		
+		//
 		//populateViewElements(element, d);
 
 		d.setCatalogId(getCatalogId());
