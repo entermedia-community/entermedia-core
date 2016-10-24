@@ -207,39 +207,30 @@ public class ElementData implements MultiValued, SaveableData, Comparable, Searc
 		{
 			//synchronized (getElement())  //TODO: Remove this now that we have proper locking?
 			//{
+			if (inValue == null)
+			{
+				removeValues(inId);
+				return;
+			}
 			if (inId.equals("name"))
 			{
-				getMap().remove("name");
-				List copy = getElement().elements(inId);
-				for (Iterator iterator = copy.iterator(); iterator.hasNext();)
+				removeValues(inId);
+				//save in XML format all the time
+				Element child = getElement().addElement(inId);
+				if (inValue instanceof LanguageMap)
 				{
-					Element type = (Element) iterator.next();
-					getElement().remove(type);
-				}
-				Attribute attr = getElement().attribute(inId);
-				if (attr != null)
-				{
-					getElement().remove(attr);
-				}
-				if (inValue != null)
-				{
-					//save in XML format all the time
-					Element child = getElement().addElement(inId);
-					if (inValue instanceof LanguageMap)
+					//loop over languages
+					LanguageMap languages = (LanguageMap) inValue;
+					for (Iterator iterator = languages.keySet().iterator(); iterator.hasNext();)
 					{
-						//loop over languages
-						LanguageMap languages = (LanguageMap) inValue;
-						for (Iterator iterator = languages.keySet().iterator(); iterator.hasNext();)
-						{
-							String lang = (String) iterator.next();
-							String val = (String) languages.get(lang);
-							child.addElement("language").addAttribute("id", lang).addCDATA((String) val);
-						}
+						String lang = (String) iterator.next();
+						String val = (String) languages.get(lang);
+						child.addElement("language").addAttribute("id", lang).addCDATA((String) val);
 					}
-					else
-					{
-						child.addCDATA((String) inValue);
-					}
+				}
+				else
+				{
+					child.addCDATA((String) inValue);
 				}
 				return;
 			}
@@ -250,49 +241,52 @@ public class ElementData implements MultiValued, SaveableData, Comparable, Searc
 				//TODO: See if value changed?
 				getElement().remove(child);
 			}
-			if(inValue instanceof Boolean){
-				boolean val = (boolean) inValue;
-				if(val){
-					inValue = "true";
-				} else{
-					inValue = "false";
+			inValue = getMap().toString(inValue);
+
+			String val = (String) inValue;
+			if (val.isEmpty())
+			{
+				Attribute attr = getElement().attribute(inId);
+				if (attr != null)
+				{
+					getElement().remove(attr);
 				}
 			}
-		
-			
-			
-			if (inValue instanceof String)
+			else
 			{
-				String val = (String) inValue;
-				if (val == null || val.length() == 0)
+				if (INVALIDSTUFF.matcher(val).find())
 				{
 					Attribute attr = getElement().attribute(inId);
 					if (attr != null)
 					{
 						getElement().remove(attr);
 					}
+
+					getElement().addElement(inId).addCDATA(val);
 				}
 				else
 				{
-					if (INVALIDSTUFF.matcher(val).find())
-					{
-						Attribute attr = getElement().attribute(inId);
-						if (attr != null)
-						{
-							getElement().remove(attr);
-						}
-
-						getElement().addElement(inId).addCDATA(val);
-					}
-					else
-					{
-						getElement().addAttribute(inId, val);
-					}
+					getElement().addAttribute(inId, val);
 				}
-			} 
-		
+			}
 		}
 	}
+	protected void removeValues(String inId)
+	{
+		getMap().remove(inId);
+		List copy = getElement().elements(inId);
+		for (Iterator iterator = copy.iterator(); iterator.hasNext();)
+		{
+			Element type = (Element) iterator.next();
+			getElement().remove(type);
+		}
+		Attribute attr = getElement().attribute(inId);
+		if (attr != null)
+		{
+			getElement().remove(attr);
+		}
+	}
+	
 
 	public String getSourcePath()
 	{
