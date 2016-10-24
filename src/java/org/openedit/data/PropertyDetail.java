@@ -163,6 +163,10 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 	
 	public String getViewType()
 	{
+		String viewtype = get("rendertype");
+		if(viewtype != null){
+			return viewtype;
+		}
 		return get("viewtype");
 	}
 
