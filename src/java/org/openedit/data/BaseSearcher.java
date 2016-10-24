@@ -2471,139 +2471,128 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 
 	public Data updateData(WebPageRequest inReq, String[] fields, Data data)
 	{
-		if (fields != null)
+		if (fields == null)
 		{
-			for (int i = 0; i < fields.length; i++)
+			log.error("No fields " + data);
+			return null;
+		}
+		
+		for (int i = 0; i < fields.length; i++)
+		{
+			String field = fields[i];
+			PropertyDetail detail = getDetail(field);
+			if( detail == null )
 			{
-				String field = fields[i];
-				PropertyDetail detail = getDetail(field);
-
-				String[] values = inReq.getRequestParameters(field + ".values");
-				if (values == null)
-				{
-					values = inReq.getRequestParameters(field + ".value");
-				}
-				if (values != null)
-				{
-
-					Object result = null;
-
-					if (detail != null && detail.isMultiValue())
-					{
-						result = Arrays.asList(values);
+				log.error("No detail " + field);
+				continue;
+			}
+			
+			String[] values = inReq.getRequestParameters(field + ".values");
+			if (values == null)
+			{
+				values = inReq.getRequestParameters(field + ".value");
+			}
+			Object result = null;
+			
+			if ( detail.isMultiLanguage())
+			{
+				LanguageMap map = null;
+				Object oldval = data.getValue(detail.getId());
+				if(oldval != null){
+					if(oldval instanceof LanguageMap){
+						map = (LanguageMap) oldval;										
+					} else{
+						map = new LanguageMap();
+						map.setText("en",(String) oldval);
 					}
-					else if (values.length > 0)
-					{
-
-						String val = values[0];
-
-						if (detail != null && detail.isDate())
-						{
-
-							Date date = null;
-							String hour = inReq.getRequestParameter(field + ".hour");
-							String minute = inReq.getRequestParameter(field + ".minute");
-							if (hour != null && minute != null)
-							{
-								val = val + " " + hour + ":" + minute;
-								result = DateStorageUtil.getStorageUtil().parse(val, "yyyy-MM-dd HH:mm");
-
-							}
-							else if (val.length() == 10) //We assume US format or Storage Format
-							{
-
-								String format;
-								if (val.matches("[0-9]{2}/[0-9]{2}/[0-9]{4}"))
-								{
-									format = "MM/dd/yyyy";
-								}
-								else
-								{
-									format = "yyyy-MM-dd";
-								}
-								result = DateStorageUtil.getStorageUtil().parse(val, format);
-							}
-							else
-							{
-								result = DateStorageUtil.getStorageUtil().parseFromStorage(val);
-							}
-						}
-
-						else if (detail != null && detail.isMultiLanguage())
-						{
-							String[] language = inReq.getRequestParameters(field + ".language");
-							if (language != null)
-							{
-								//String[] langvalues = inReq.getRequestParameters(field + ".value");
-								LanguageMap map = null;
-								Object oldval = data.getValue(detail.getId());
-								if(oldval != null){
-									if(oldval instanceof LanguageMap){
-										map = (LanguageMap) oldval;										
-									} else{
-										map = new LanguageMap();
-										map.setText("en",(String) oldval);
-									}
-								}
-								if (map == null)
-								{
-									map = new LanguageMap();
-								}
-								//TODO: Clear out old values?
-								
-								//Load new values
-								for (int j = 0; j < language.length; j++)
-								{
-									String lang = language[j];
-									String langval = inReq.getRequestParameter(field + ".language." + (j + 1));
-									if( langval == null)
-									{
-										langval = inReq.getRequestParameter(field + "." + lang); //legacy
-									}
-									if( langval != null)
-									{
-									//String langval = inReq.getRequestParameter(field + "." + lang);
-									//String langval = langvalues[j];
-										map.setText(lang,langval);
-									}
-								}
-								result = map;
-//								if (val != null)
-//								{
-//									map.setText(val, "en");
-//								}
-							}
-
-							if ("multilanguage".equals(language))
-							{
-								JsonSlurper parser = new JsonSlurper();
-								Map vals = (Map) parser.parseText(val);
-								result = new LanguageMap(vals);
-							}
-						}
-						else if(detail != null && detail.isBoolean()){
-							result = Boolean.parseBoolean(val);
-						}
-						
-						else
-						{
-							result = val;
-						}
-
-					}
-					data.setValue(field, result);
 				}
-				else
+				if (map == null)
 				{
-					if(detail != null && detail.isBoolean())
+					map = new LanguageMap();
+				}
+				String[] language = inReq.getRequestParameters(field + ".language");
+				if( language != null)
+				{	
+					//Load new values
+					for (int j = 0; j < language.length; j++)
 					{
-						data.setValue(field, false);
+						String lang = language[j];
+						String langval = inReq.getRequestParameter(field + ".language." + (j + 1));
+						if( langval == null)
+						{
+							langval = inReq.getRequestParameter(field + "." + lang); //legacy
+						}
+						if( langval != null)
+						{
+							map.setText(lang,langval);
+						}
+					}
+				}	
+				else if( values != null && values.length > 0)
+				{
+					String val = values[0];
+					if ("multilanguage".equals(language))
+					{
+						JsonSlurper parser = new JsonSlurper();
+						Map vals = (Map) parser.parseText(val);
+						result = new LanguageMap(vals);
 					}
 					else
 					{
-						data.setValue(field, null);
+						map.setText("en",String.valueOf( val ) );
 					}
 				}
+				result = map;
+			}
+			else if(detail.isMultiValue())
+			{
+				result = Arrays.asList(values);
+			}
+			else if (values != null && values.length > 0)
+			{
+				String val = values[0];
+
+				if (detail != null && detail.isDate())
+				{
+					Date date = null;
+					String hour = inReq.getRequestParameter(field + ".hour");
+					String minute = inReq.getRequestParameter(field + ".minute");
+					if (hour != null && minute != null)
+					{
+						val = val + " " + hour + ":" + minute;
+						result = DateStorageUtil.getStorageUtil().parse(val, "yyyy-MM-dd HH:mm");
+
+					}
+					else if (val.length() == 10) //We assume US format or Storage Format
+					{
+						String format = "yyyy-MM-dd";
+						if (val.matches("[0-9]{2}/[0-9]{2}/[0-9]{4}"))
+						{
+							format = "MM/dd/yyyy";
+						}
+						result = DateStorageUtil.getStorageUtil().parse(val, format);
+					}
+					else
+					{
+						result = DateStorageUtil.getStorageUtil().parseFromStorage(val);
+					}
+				}
+				else if(detail != null && detail.isBoolean()){
+					result = Boolean.parseBoolean(val);
+				}
+				else
+				{
+					result = val;
+				}
+			}
+			
+			if( result == null && detail.isBoolean())
+			{
+				data.setValue(field, false);
+			}
+			else
+			{
+				data.setValue(field, result);
 			}
 		}
 
