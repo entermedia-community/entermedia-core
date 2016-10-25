@@ -207,9 +207,9 @@ public class QueryBuilder
 		getQuery().addBetween(inKey, start, end);
 		return this;
 	}
-	public QueryBuilder showFacets(boolean inB)
+	public QueryBuilder enduser(boolean inB)
 	{
-		getQuery().setIncludeFacets(inB);
+		getQuery().setEndUserSearch(inB);
 		return this;
 	}
 	public QueryBuilder addFacet(String inString)

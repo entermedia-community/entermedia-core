@@ -59,15 +59,7 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		fieldExtraFacets = inExtraFacets;
 	}
 
-	public boolean isIncludeFacets() {
-		//return fieldIncludeFacets;
-		return true;// This is for a performance boost, not quite working yet.
-	}
-
-	public void setIncludeFacets(boolean inIncludeAggregations) {
-		fieldIncludeFacets = inIncludeAggregations;		
-	}
-
+	
 	public String getSortLanguage()
 	{
 		return fieldSortLanguage;
@@ -1884,7 +1876,7 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		
 		
 		getExtraFacets().add(inFacet);
-		setIncludeFacets(true);
+		setEndUserSearch(true);
 	}
 
 	/**

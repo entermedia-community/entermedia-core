@@ -162,6 +162,20 @@ public class ValuesMap extends HashMap
 		
 	}
 	
+	
+	public Object getValue(String inId)
+	{
+		Object val = getObject(inId);
+		if( val == null || val == NULLVALUE)
+		{
+			return null;
+		}
+		return val;
+		
+	}
+	
+	
+	
 	public float getFloat(String inId)
 	{
 		String val = getString(inId);

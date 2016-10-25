@@ -262,7 +262,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 						}
 					}
 				}
-				String endusersearch = inPageRequest.getContentProperty( getSearchType() + "endusersearch");
+				String endusersearch = inPageRequest.findValue( getSearchType() + "endusersearch");
 				if( endusersearch == null )
 				{
 					inQuery.setEndUserSearch(true);
@@ -623,10 +623,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			return null;
 		}
 		addShowOnly(inPageRequest, search);
-		boolean  includeaggregations = Boolean.parseBoolean(inPageRequest.findValue(getSearchType() + "includefacets"));
-		if(includeaggregations ){
-			search.setIncludeFacets(true);
-		}
+		
 		
 		String resultype = inPageRequest.getRequestParameter("resulttype");
 		if (resultype == null)
@@ -2236,11 +2233,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	{
 		SearchQuery q = createSearchQuery();
 		q.addMatches("id", "*");
-		if(inReq != null){
-			boolean  includefacets = Boolean.parseBoolean(inReq.findValue(getSearchType() + "includefacets"));
-			q.setIncludeFacets(includefacets);
-			
-		}
+		
 		if (inReq != null)
 		{
 			String sort = inReq.getRequestParameter("sortby");

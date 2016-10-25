@@ -36,7 +36,7 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 	public boolean getBoolean(String inId)
 	{
 		Object val = getValue(inId);
-		if( val == null || val == ValuesMap.NULLVALUE)
+		if( val == null  )
 		{
 			return false;
 		}
@@ -50,7 +50,7 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 	public float getFloat(String inId)
 	{
 		Object val = getValue(inId);
-		if( val == null || val == ValuesMap.NULLVALUE)
+		if( val == null )
 		{
 			return 0;
 		}
@@ -203,11 +203,8 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 	}
 	public Object getValue(String inKey)
 	{
-		Object val = getMap().getObject(inKey);
-		if( val == ValuesMap.NULLVALUE)
-		{
-			return null;
-		}
+		Object val = getMap().getValue(inKey);
+		
 		return val;
 	}
 	public void setValue(String inKey, Object inValue)
