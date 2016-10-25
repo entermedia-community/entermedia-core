@@ -1055,6 +1055,8 @@ public class PropertyDetailsArchive implements CatalogEnabled
 		detail.setProperty("legacy", inDetail);
 		savePropertyDetail(detail, inSearcher, null);
 		//savePropertyDetails(details, inSearcher, null);
+		PropertyDetail old = details.getDetail(inDetail);
+		deletePropertyDetail(old, inSearcher, null);
 
 		//should we search and reset any list ids?
 		for (Iterator iterator = listSearchTypes().iterator(); iterator.hasNext();)
