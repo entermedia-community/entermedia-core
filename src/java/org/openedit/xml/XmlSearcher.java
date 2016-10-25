@@ -25,11 +25,10 @@ import org.openedit.hittracker.DataHitTracker;
 import org.openedit.hittracker.HitTracker;
 import org.openedit.hittracker.SearchQuery;
 import org.openedit.hittracker.Term;
+import org.openedit.repository.ContentItem;
 import org.openedit.users.User;
 import org.openedit.util.DateStorageUtil;
 import org.openedit.util.PathUtilities;
-
-import sun.print.DocumentPropertiesUI;
 
 public class XmlSearcher extends BaseSearcher implements Shutdownable
 {
@@ -652,18 +651,9 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable
 
 	public void deleteAll(User inUser)
 	{
-		HitTracker all = getAllHits();
-		XmlFile settings = getXmlFile();
-		for (Iterator iterator = all.iterator(); iterator.hasNext();)
-		{
-			Data object = (Data)iterator.next();
-			Element record = settings.getElementById(object.getId());
-			if( record != null)
-			{
-				settings.getRoot().remove(record);
-			}
-		}
-		getXmlArchive().saveXml(settings, inUser);
+		String path = "/WEB-INF/data/" + getCatalogId() + "/lists" + "/" + getSearchType() + ".xml";
+		ContentItem item = getXmlArchive().getPageManager().getRepository().getStub(path);
+		getXmlArchive().getPageManager().getRepository().remove(item);
 		clearIndex();
 	}
 	public void delete(Data inData, User inUser)
