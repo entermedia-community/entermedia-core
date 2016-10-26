@@ -317,7 +317,10 @@ public class XmlUserArchive implements CatalogEnabled  {
 		{
 			Element groupid = (Element) iter.next();
 			Group group = inGroupSearcher.getGroup(groupid.attributeValue("id"));
-			groups.add(group);
+			if( group != null)
+			{
+				groups.add(group);
+			}
 		}
 		user.setValue("groups", groups);
 		
