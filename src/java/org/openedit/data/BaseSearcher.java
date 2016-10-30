@@ -544,13 +544,8 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	{
 		SearchQuery query = createSearchQuery();
 
-		if (attr != null && value != null)
-		{
-			PropertyDetail detail = new PropertyDetail();
-			detail.setCatalogId(getCatalogId());
-			detail.setId(attr);
-			query.addExact(detail, value); //this is addMatches and not addExact so that we can handle wildcards
-		}
+		query.addExact(attr, value); //this is addMatches and not addExact so that we can handle wildcards
+		
 		if (orderby != null)
 		{
 			query.setSortBy(orderby);
