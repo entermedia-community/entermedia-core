@@ -233,6 +233,7 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 //	 */
 	public String getText( WebPageRequest inRequest )
 	{
+		
 		String locale =  inRequest.getLocale();
 
 		return getName(locale);
@@ -457,23 +458,37 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 	}
 	public boolean isExternalSort()
 	{
+		
 		if( isDataType("date") || isDataType("boolean") || isNumber() )
 		{
 			return false;
 		}
-		return isSortable();
+		return isAnalyzed();
 	}
-	public boolean isSortable()
+	public boolean isAnalyzed()
 	{
-		//Make most things sortable automtically
-		boolean  sortable = getElementData().getBoolean("sortable");
 		
-		if(  isDataType("date") || isDataType("boolean") || isNumber() || "name".equals( getId() ) )
-		{
-			return true;
+		if(getId().endsWith("id") || isList() || isMultiValue() ||  getId().contains("sourcepath") ){
+			return false;
 		}
-		return sortable;
+		
+			
+		if(isDataType("date") || isDataType("boolean") || isNumber() ) 
+		{
+			return false;
+		}
+		if("not_analyzed".equals(getValue("analyzer"))){
+			return false;
+		}
+		return true;
 	}
+	
+	
+	public boolean isSortable(){
+		return true;
+	}
+	
+	
 	public ElementData getElementData()
 	{
 		if (fieldElementData == null)
