@@ -4,6 +4,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.json.simple.JSONObject;
+
 public class LanguageMap extends TreeMap
 {
 
@@ -43,17 +45,21 @@ public class LanguageMap extends TreeMap
 		{
 			return (String)values().iterator().next();
 		}
-		StringBuffer values = new StringBuffer();
-		for (Iterator iterator = keySet().iterator(); iterator.hasNext();)
-		{
-			String key = (String) iterator.next();
-			values.append(get(key));
-			if( iterator.hasNext() )
-			{
-				values.append(" ");
-			}
-		}
-		return values.toString();
+		JSONObject json = new JSONObject();
+		json.putAll(this);
+//		StringBuffer values = new StringBuffer();
+//		for (Iterator iterator = keySet().iterator(); iterator.hasNext();)
+//		{
+//			String key = (String) iterator.next();
+//			values.append(key);
+//			values.append(":");
+//			values.append(get(key));
+//			if( iterator.hasNext() )
+//			{
+//				values.append(" ");
+//			}
+//		}
+		return json.toJSONString();
 		
 	}
 	
