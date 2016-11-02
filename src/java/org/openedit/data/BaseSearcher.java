@@ -2468,19 +2468,24 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		
 		for (int i = 0; i < fields.length; i++)
 		{
-			String field = fields[i];
-			PropertyDetail detail = getDetail(field);
+			PropertyDetail detail = getDetail(fields[i]);
 			if( detail == null )
 			{
-				log.error("No detail " + field);
+				log.error("No detail " + fields[i]);
 				continue;
 			}
+			String field = detail.getId();
 			
 			String[] values = inReq.getRequestParameters(field + ".values");
 			if (values == null)
 			{
+				values = inReq.getRequestParameters(fields[i] + ".value");
+			}
+			if (values == null)
+			{
 				values = inReq.getRequestParameters(field + ".value");
 			}
+			
 			Object result = null;
 			
 			if ( detail.isMultiLanguage())
@@ -2499,38 +2504,47 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				{
 					map = new LanguageMap();
 				}
-				String[] language = inReq.getRequestParameters(field + ".language");
-				if( language != null)
-				{	
-					//Load new values
-					for (int j = 0; j < language.length; j++)
-					{
-						String lang = language[j];
-						String langval = inReq.getRequestParameter(field + ".language." + (j + 1));
-						if( langval == null)
+				String term = fields[i];
+				if( values != null && values.length > 0 && term.contains("."))
+				{
+					String lang = term.substring(term.indexOf( ".") + 1);
+					map.setText(lang,values[0]);
+				}
+				else
+				{
+					String[] language = inReq.getRequestParameters(field + ".language");
+					if( language != null)
+					{	
+						//Load new values
+						for (int j = 0; j < language.length; j++)
 						{
-							langval = inReq.getRequestParameter(field + "." + lang); //legacy
+							String lang = language[j];
+							String langval = inReq.getRequestParameter(field + ".language." + (j + 1));
+							if( langval == null)
+							{
+								langval = inReq.getRequestParameter(field + "." + lang); //legacy
+							}
+							if( langval != null)
+							{
+								map.setText(lang,langval);
+							}
 						}
-						if( langval != null)
+					}	
+					else if( values != null && values.length > 0)
+					{
+						String val = values[0];
+						if ("multilanguage".equals(language))
 						{
-							map.setText(lang,langval);
+							JsonSlurper parser = new JsonSlurper();
+							Map vals = (Map) parser.parseText(val);
+							map.putAll(vals);
+						}
+						else
+						{
+							map.setText("en",String.valueOf( val ) );
 						}
 					}
 				}	
-				else if( values != null && values.length > 0)
-				{
-					String val = values[0];
-					if ("multilanguage".equals(language))
-					{
-						JsonSlurper parser = new JsonSlurper();
-						Map vals = (Map) parser.parseText(val);
-						result = new LanguageMap(vals);
-					}
-					else
-					{
-						map.setText("en",String.valueOf( val ) );
-					}
-				}
 				result = map;
 			}
 			else if(values != null && detail.isMultiValue())
