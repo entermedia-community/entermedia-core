@@ -1281,8 +1281,8 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		}
 		else if ("betweennumbers".equals(op))
 		{
-			String highval = inPageRequest.getRequestParameter(field + ".highval");
-			String lowval = inPageRequest.getRequestParameter(field + ".lowval");
+			String highval = inPageRequest.getRequestParameter(field.getId() + ".highval");
+			String lowval = inPageRequest.getRequestParameter(field.getId() + ".lowval");
 			t = addNumberRange(search, field, t, highval, lowval);
 		}
 
@@ -1332,7 +1332,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		Term t = null;
 		if ("multiselect".equals(op))
 		{
-			String param = field + ".value";
+			String param = field.getId() + ".value";
 
 			String[] select = inPageRequest.getRequestParameters(param);
 			if (select != null)
@@ -1349,7 +1349,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		}
 		else if ("picker".equals(op))
 		{
-			String param = field + ".value";
+			String param = field.getId() + ".value";
 
 			String[] select = inPageRequest.getRequestParameters(param);
 			if (select != null)
@@ -1444,8 +1444,8 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			}
 			else if ("betweendates".equals(op))
 			{
-				String[] beforeStrings = inPageRequest.getRequestParameters(field + ".before");
-				String[] afterStrings = inPageRequest.getRequestParameters(field + ".after");
+				String[] beforeStrings = inPageRequest.getRequestParameters(field.getId() + ".before");
+				String[] afterStrings = inPageRequest.getRequestParameters(field.getId() + ".after");
 
 				String beforeString = null, afterString = null;
 				if (beforeStrings != null && beforeStrings.length > count)
@@ -1455,14 +1455,14 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				}
 				if (beforeString == null)
 				{
-					beforeString = inPageRequest.getRequestParameter(field + ".before");
-					afterString = inPageRequest.getRequestParameter(field + ".after");
+					beforeString = inPageRequest.getRequestParameter(field.getId() + ".before");
+					afterString = inPageRequest.getRequestParameter(field.getId() + ".after");
 				}
-				if (beforeString.length() == 0)
+				if (beforeString != null && beforeString.length() == 0)
 				{
 					beforeString = null;
 				}
-				if (afterString.length() == 0)
+				if (afterString != null && afterString.length() == 0)
 				{
 					afterString = null;
 				}
@@ -1502,8 +1502,8 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			}
 			else if ("betweenages".equals(op))
 			{
-				String beforeString = inPageRequest.getRequestParameter(field + ".before");
-				String afterString = inPageRequest.getRequestParameter(field + ".after");
+				String beforeString = inPageRequest.getRequestParameter(field.getId() + ".before");
+				String afterString = inPageRequest.getRequestParameter(field.getId() + ".after");
 
 				if (beforeString == null && afterString == null)
 				{
