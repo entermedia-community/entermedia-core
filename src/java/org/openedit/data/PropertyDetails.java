@@ -334,6 +334,11 @@ public class PropertyDetails extends AbstractCollection
 		{
 			return null;
 		}
+		if( inId.contains("."))
+		{
+			inId = inId.split("\\.")[0];
+		}
+
 		PropertyDetail detail = getDetailsCached().get(inId);
 
 		return detail;

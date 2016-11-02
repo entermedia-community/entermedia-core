@@ -825,8 +825,9 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			for (int j = 0; j < language.length; j++)
 			{
 				String lang = language[j];
-				String lid = detail.getId() + "." + lang;
-				String langval = inPageRequest.getRequestParameter(lid);
+				String lid = detail.getId() + "_int." + lang;
+				String fieldid = detail.getId() + "." + lang;
+				String langval = inPageRequest.getRequestParameter(fieldid);
 				if( langval == null)
 				{
 					langval = inPageRequest.getRequestParameter(detail.getId() + ".value");
@@ -878,7 +879,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					Data locale = (Data) iterator.next();
 					String lang = locale.getId();
 
-					String lid = detail.getId() + "." + lang;
+					String lid = detail.getId() + "_int." + lang;
 					if ("matches".equals(op) || "andgroup".equals(op))
 					{
 						child.addMatches(lid, val);
@@ -1077,7 +1078,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		//		{
 		if( searchtype.equals(getSearchType()))
 		{
-			detail = getPropertyDetailsArchive().getDetail(searchtype, view, propertyid, inReq.getUserProfile()); 
+			detail = getPropertyDetailsArchive().getDetail(searchtype, view, propertyid, inReq.getUserProfile());
 		}	
 		else
 		{
