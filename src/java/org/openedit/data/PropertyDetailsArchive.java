@@ -284,23 +284,6 @@ public class PropertyDetailsArchive implements CatalogEnabled
 						{
 							view.add(detail);
 						}
-						else
-						{
-							//find the detail
-							if (vid.contains("."))
-							{
-								String[] type = vid.split("\\.");
-
-								PropertyDetails otherdetails = getPropertyDetails(type[0]);
-								PropertyDetail shareddetail = otherdetails.getDetail(type[1]);
-								if (shareddetail != null)
-								{
-									PropertyDetail local = shareddetail.copy();
-									view.add(local);
-								}
-							}
-
-						}
 					}
 				}
 			}
@@ -425,7 +408,7 @@ public class PropertyDetailsArchive implements CatalogEnabled
 				// This should not happen as well
 				settings = getXmlArchive().getXml(path);
 			}
-			details = new PropertyDetails(inType);
+			details = new PropertyDetails(this,inType);
 			if (settings.isExist())
 			{
 				setAllDetails(details, inType, settings.getRoot());
@@ -446,7 +429,7 @@ public class PropertyDetailsArchive implements CatalogEnabled
 				if (defaultfile.endsWith(".xml"))
 				{
 					XmlFile defaults = getXmlArchive().loadXmlFile(defaultfile);
-					PropertyDetails extras = new PropertyDetails(inType);
+					PropertyDetails extras = new PropertyDetails(this,inType);
 					setAllDetails(extras, inType, defaults.getRoot());
 					for (Iterator iterator2 = extras.iterator(); iterator2.hasNext();)
 					{

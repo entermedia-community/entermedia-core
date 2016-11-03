@@ -17,20 +17,9 @@ import org.openedit.xml.XmlFile;
 public class PropertyDetails extends AbstractCollection
 {
 	protected String fieldId;
-	
-	public String getId()
-	{
-		return fieldId;
-	}
-
-	public void setId(String inId)
-	{
-		fieldId = inId;
-	}
 
 	protected List fieldDetails;
 	protected Map fieldDetailsCached;
-
 	protected Map fieldExternalIdCache;
 	protected Map fieldDefaults;
 	protected XmlFile fieldInputFile;
@@ -40,8 +29,29 @@ public class PropertyDetails extends AbstractCollection
 	protected String fieldClassName;//The object type to create
 	protected String fieldDependsOnText;
 	protected boolean fieldAllowDynamicFields;;
-
+	protected PropertyDetailsArchive fieldArchive;
 	
+	
+	
+	public PropertyDetailsArchive getArchive()
+	{
+		return fieldArchive;
+	}
+
+	public void setArchive(PropertyDetailsArchive inArchive)
+	{
+		fieldArchive = inArchive;
+	}
+
+	public String getId()
+	{
+		return fieldId;
+	}
+
+	public void setId(String inId)
+	{
+		fieldId = inId;
+	}
 	
 	public String getDependsOnText()
 	{
@@ -89,8 +99,9 @@ public class PropertyDetails extends AbstractCollection
 	{
 		// TODO Auto-generated constructor stub
 	}
-	public PropertyDetails(String inId)
+	public PropertyDetails(PropertyDetailsArchive inArchive, String inId)
 	{
+		setArchive(inArchive);
 		setId(inId);
 	}
 	public Boolean isLazyInit()
@@ -336,7 +347,21 @@ public class PropertyDetails extends AbstractCollection
 		}
 		if( inId.contains("."))
 		{
-			inId = inId.split("\\.")[0];
+			String[] type = inId.split("\\.");
+			if( type[1].length() == 2) //language.en
+			{
+				inId = inId.split("\\.")[0];					
+			}
+			else
+			{
+				//Remote lookup
+				PropertyDetails otherdetails = getArchive().getPropertyDetailsCached(type[0]);
+				if( otherdetails != null)
+				{
+					PropertyDetail shareddetail = otherdetails.getDetail(type[1]);
+					return shareddetail;
+				}
+			}
 		}
 
 		PropertyDetail detail = getDetailsCached().get(inId);
