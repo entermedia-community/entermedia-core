@@ -2,6 +2,7 @@ package org.openedit.cache;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -133,4 +134,14 @@ public class CacheManager
 		}
 		cache.invalidateAll();
 	}
+	
+	public void clearAll(){
+		for (Iterator iterator = getCaches().keySet().iterator(); iterator.hasNext();)
+		{
+			String key = (String) iterator.next();
+			Cache cache = (Cache) getCaches().get(key); 
+			cache.invalidateAll();
+		}
+	}
+	
 }
