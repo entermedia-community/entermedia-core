@@ -533,7 +533,11 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 	{
 		return Boolean.parseBoolean(get("multilanguage"));
 	}
-
+	
+	public boolean isKeywordMap()
+	{
+		return isDataType("kwmap");
+	}
 	
 	public String getForeignKeyId()
 	{
