@@ -2533,7 +2533,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					else if( values != null && values.length > 0)
 					{
 						String val = values[0];
-						if ("multilanguage".equals(language))
+						if ("multilanguage".equals(language))  //Well, this will never work language is an array
 						{
 							JsonSlurper parser = new JsonSlurper();
 							Map vals = (Map) parser.parseText(val);

@@ -18,8 +18,12 @@ public class LanguageMap extends TreeMap
 	{
 	}
 
-	public String getText(String inLocale){
-		
+	public String getText(String inLocale)
+	{
+		if( inLocale == null)
+		{
+			return getText("en");
+		}
 		String val = (String) get(inLocale);
 		return val;
 	}
@@ -27,7 +31,7 @@ public class LanguageMap extends TreeMap
 	public String getDefaultText(String inLocale)
 	{
 		String val = getText(inLocale);
-		if( val == null && (inLocale == null || !inLocale.equals("en") ) )
+		if( val == null && inLocale != null && !inLocale.equals("en") )
 		{
 			val = getText("en");
 		}
@@ -45,23 +49,14 @@ public class LanguageMap extends TreeMap
 		{
 			return (String)values().iterator().next();
 		}
-		JSONObject json = new JSONObject();
-		json.putAll(this);
-//		StringBuffer values = new StringBuffer();
-//		for (Iterator iterator = keySet().iterator(); iterator.hasNext();)
-//		{
-//			String key = (String) iterator.next();
-//			values.append(key);
-//			values.append(":");
-//			values.append(get(key));
-//			if( iterator.hasNext() )
-//			{
-//				values.append(" ");
-//			}
-//		}
-		return json.toJSONString();
-		
+		return toJson();
 	}
-	
+
+	public String toJson()
+	{
+		JSONObject json = new JSONObject();
+		json.putAll(this);	
+		return json.toJSONString();
+	}
 	
 }

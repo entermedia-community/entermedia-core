@@ -112,6 +112,7 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 			}
 			catch ( Throwable ex)
 			{
+				log.error(ex);
 				putPageValue("_jsonRequest", new HashMap());
 				//throw new OpenEditException(ex);
 			}
