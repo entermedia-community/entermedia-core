@@ -118,7 +118,6 @@ public class BaseUser extends BaseData implements User, Comparable
 	{
 		setId(inName);
 	}
-	
 	public String getShortDescription()
 	{
 		StringBuffer out = new StringBuffer();
@@ -130,6 +129,11 @@ public class BaseUser extends BaseData implements User, Comparable
 		if ( getLastName() != null)
 		{
 			out.append(getLastName());
+			if( getUserName().length() < 8 && !Character.isDigit(getUserName().charAt(0) ) )
+			{
+				out.append( " - " );
+				out.append( getUserName() );
+			}
 		}
 		if( out.length() == 0)
 		{
@@ -163,6 +167,20 @@ public class BaseUser extends BaseData implements User, Comparable
 		if ("".equals(value))
 			return null;
 		return value;
+	}
+	
+	@Override
+	public Object getValue(String inKey)
+	{
+		if( "name".equals( inKey ) )
+		{
+			String val = getShortDescription();
+			if( val != null)
+			{
+				return val;
+			}
+		}
+		return super.getValue(inKey);
 	}
 	
 	public String getScreenName()
