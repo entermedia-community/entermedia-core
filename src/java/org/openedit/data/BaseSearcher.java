@@ -2469,12 +2469,12 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		for (int i = 0; i < fields.length; i++)
 		{
 			PropertyDetail detail = getDetail(fields[i]);
-			if( detail == null )
-			{
-				log.error("No detail " + fields[i]);
-				continue;
+			String field = null;
+			if(detail != null){
+				 field = detail.getId();
+			} else{
+				field = fields[i];
 			}
-			String field = detail.getId();
 			
 			String[] values = inReq.getRequestParameters(field + ".values");
 			if (values == null)
@@ -2485,6 +2485,19 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			{
 				values = inReq.getRequestParameters(field + ".value");
 			}
+			
+			
+			if( detail == null )
+			{
+				log.error("No detail " + fields[i]);
+				detail = new PropertyDetail();
+				detail.setId(field);				
+				//This way code relying on this setting values will still work
+				
+			}
+			
+			
+			
 			
 			Object result = null;
 			

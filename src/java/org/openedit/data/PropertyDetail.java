@@ -56,6 +56,9 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 
 	public String getSearchType()
 	{
+	
+		
+		
 		return fieldSearchType;
 	}
 
@@ -343,6 +346,9 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 	public String get(String inId)
 	{		
 		
+		if("searchtype".equals(inId)){
+			return getSearchType();
+		}
 		if ( inId.equals("boolean")
 				|| inId.equals("number")
 				|| inId.equals("date")
@@ -555,6 +561,9 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 	}
 	public Object getValue(String inId)
 	{
+		if("searchtype".equals(inId)){
+			return getSearchType();
+		}
 		return getElementData().getValue(inId);
 	}
 
