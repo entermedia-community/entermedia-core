@@ -240,7 +240,7 @@ public class TextLabelManager
 		}
 		catch( IOException ex)
 		{
-			throw new OpenEditException(ex);
+			log.error(ex);
 		}
 		
 	}

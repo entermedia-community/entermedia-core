@@ -384,7 +384,7 @@ public class PropertyDetailsArchive implements CatalogEnabled
 		{
 			String path = getConfigurationPath("/fields/" + inType + ".xml");
 
-			XmlFile settings = getXmlArchive().loadXmlFile(path); // checks time
+			XmlFile settings = getXmlArchive().getXml(path); // checks time
 																	// stamp.
 																	// returns
 																	// null if
@@ -412,7 +412,7 @@ public class PropertyDetailsArchive implements CatalogEnabled
 			details = new PropertyDetails(this,inType);
 			if (settings.isExist())
 			{
-				setAllDetails(details, inType, settings.getRoot());
+				setAllDetails(details, inType, settings.getContentItem().getPath(), settings.getRoot());
 				getViewLabels().clear();
 
 			}
@@ -431,7 +431,7 @@ public class PropertyDetailsArchive implements CatalogEnabled
 				{
 					XmlFile defaults = getXmlArchive().loadXmlFile(defaultfile);
 					PropertyDetails extras = new PropertyDetails(this,inType);
-					setAllDetails(extras, inType, defaults.getRoot());
+					setAllDetails(extras, inType, defaults.getContentItem().getPath(), defaults.getRoot());
 					for (Iterator iterator2 = extras.iterator(); iterator2.hasNext();)
 					{
 						PropertyDetail detail = (PropertyDetail) iterator2.next();
@@ -464,12 +464,25 @@ public class PropertyDetailsArchive implements CatalogEnabled
 		}
 		return details;
 	}
-
 	public void savePropertyDetail(PropertyDetail inDetail, String inType, User inUser)
 	{
-
 		String path = "/WEB-INF/data/" + getCatalogId() + "/fields/" + inType + ".xml";
-		XmlFile settings = getXmlArchive().loadXmlFile(path);
+		savePropertyDetail(inDetail,path,inType,inUser);
+	}
+	public void updatePropertyDetail(PropertyDetail inDetail, String inType, User inUser)
+	{
+		String path = inDetail.getInputFilePath();
+		if( path == null)
+		{
+			 path = "/WEB-INF/data/" + getCatalogId() + "/fields/" + inType + ".xml";
+		}
+		savePropertyDetail(inDetail,path,inType,inUser);
+
+	}
+	public void savePropertyDetail(PropertyDetail inDetail, String inPath, String inType, User inUser)
+	{
+
+		XmlFile settings = getXmlArchive().getXml(inPath);
 		if (!settings.isExist())
 		{
 			settings = createDetailsFile(inType);
@@ -591,7 +604,7 @@ public class PropertyDetailsArchive implements CatalogEnabled
 		return null;
 	}
 
-	public void setAllDetails(PropertyDetails details, String inType, Element root)
+	public void setAllDetails(PropertyDetails details, String inType, String inInputFile, Element root)
 	{
 		List newdetails = new ArrayList();
 		Map defaults = new HashMap();
@@ -608,7 +621,7 @@ public class PropertyDetailsArchive implements CatalogEnabled
 		{
 			Element element = (Element) iter.next();
 
-			PropertyDetail d = createDetail(defaults, element, inType);
+			PropertyDetail d = createDetail(defaults, inInputFile, element, inType);
 
 			newdetails.add(d);
 		}
@@ -703,11 +716,12 @@ public class PropertyDetailsArchive implements CatalogEnabled
 
 	}
 
-	protected PropertyDetail createDetail(Map defaults, Element element, String inType)
+	protected PropertyDetail createDetail(Map defaults, String inInputFile, Element element, String inType)
 	{
 		PropertyDetail d = new PropertyDetail();
 		d.setElementData(new ElementData(element));
 		d.setTextLabelManager(getTextLabelManager());
+		d.setInputFilePath(inInputFile);
 		//		for (Iterator iterator = defaults.keySet().iterator(); iterator.hasNext();)
 		//		{
 		//			String key = (String) iterator.next();
@@ -799,7 +813,7 @@ public class PropertyDetailsArchive implements CatalogEnabled
 	{
 		List fields = listFilesByFolderType("fields", false);
 		HashSet all = new HashSet(fields);
-		List lists = listFilesByFolderType("lists", true);
+		List lists = listFilesByFolderType("lists", false);
 		all.addAll(lists);
 		List sorted = new ArrayList(all);
 		Collections.sort(sorted);

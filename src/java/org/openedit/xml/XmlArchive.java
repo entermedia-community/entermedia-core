@@ -166,6 +166,7 @@ public class XmlArchive
 		element.setExist(found);
 		element.setElementName(inElementName);
 		element.setPath(path);
+		element.setContentItem(input);
 		element.setLastModified(input.lastModified().getTime());
 		element.setId(inId);
 

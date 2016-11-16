@@ -36,9 +36,20 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 	protected TextLabelManager fieldTextLabelManager;
 	protected ElementData fieldElementData;
 	
+	protected String fieldInputFilePath;
 	
 	
 	
+	public String getInputFilePath()
+	{
+		return fieldInputFilePath;
+	}
+
+	public void setInputFilePath(String inInputFilePath)
+	{
+		fieldInputFilePath = inInputFilePath;
+	}
+
 	public PropertyDetail()
 	{
 		
@@ -563,6 +574,10 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 	{
 		if("searchtype".equals(inId)){
 			return getSearchType();
+		}
+		if( "name".equals(inId))
+		{
+			return getElementData().getLanguageMap("name");
 		}
 		return getElementData().getValue(inId);
 	}
