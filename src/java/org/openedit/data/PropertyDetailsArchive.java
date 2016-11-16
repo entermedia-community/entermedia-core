@@ -23,6 +23,7 @@ import org.openedit.page.Page;
 import org.openedit.page.manage.PageManager;
 import org.openedit.page.manage.TextLabelManager;
 import org.openedit.profile.UserProfile;
+import org.openedit.repository.ContentItem;
 import org.openedit.users.User;
 import org.openedit.util.PathUtilities;
 import org.openedit.xml.ElementData;
@@ -727,32 +728,17 @@ public class PropertyDetailsArchive implements CatalogEnabled
 		return d;
 	}
 
-	protected List listFilesByFolderType(String inFolderType, boolean includeExtensions)
+	protected List listFilesByFolderType(String inFolderType, boolean subdirectories)
 	{
 		// lists, views, fields
-		List datapaths = getPageManager().getChildrenPaths("/WEB-INF/data/" + getCatalogId() + "/" + inFolderType);
 		String inPath = "/" + getCatalogId() + "/data/" + inFolderType + "/";
 		List basepaths = getPageManager().getChildrenPaths(inPath, true);
 
 		Set set = new HashSet();
-		for (Iterator iterator = basepaths.iterator(); iterator.hasNext();)
-		{
-			String path = (String) iterator.next();
-			path = PathUtilities.extractPageName(path);
-			if (!path.startsWith("_"))
-			{
-				set.add(path);
-			}
-		}
-		for (Iterator iterator = datapaths.iterator(); iterator.hasNext();)
-		{
-			String path = (String) iterator.next();
-			path = PathUtilities.extractPageName(path);
-			if (!path.startsWith("_"))
-			{
-				set.add(path);
-			}
-		}
+		addFolder(inPath, "", set, subdirectories);
+		String datapath = "/WEB-INF/data/" + getCatalogId() + "/" + inFolderType;
+		addFolder(datapath, "" ,set, subdirectories);
+		
 		// // We don't want this in a loop or to follow a chain.
 		List sorted = new ArrayList(set);
 		// if (includeExtensions)
@@ -775,10 +761,43 @@ public class PropertyDetailsArchive implements CatalogEnabled
 		return sorted;
 
 	}
+	
+	protected void addFolder(String inPath, String sub, Collection files, boolean subdirectories)
+	{
+		List children = getPageManager().getChildrenPaths(inPath, true);
+		for (Iterator iterator = children.iterator(); iterator.hasNext();)
+		{
+			String path = (String) iterator.next();
+
+			String type = sub;
+			if(type.length() > 0)
+			{
+				type = type  + "/" + PathUtilities.extractPageName(path);
+			}
+			else
+			{
+				type = PathUtilities.extractPageName(path);
+			}
+
+			ContentItem file = getPageManager().getRepository().getStub(path);
+			if( subdirectories && file.isFolder() )
+			{
+				addFolder(inPath + "/" + file.getName(), type, files, subdirectories);
+			}
+			else
+			{
+				if (!type.startsWith("_"))
+				{
+					files.add(type);
+				}
+			}	
+		}
+
+	}
 
 	public List listSearchTypes()
 	{
-		List fields = listFilesByFolderType("fields", true);
+		List fields = listFilesByFolderType("fields", false);
 		HashSet all = new HashSet(fields);
 		List lists = listFilesByFolderType("lists", true);
 		all.addAll(lists);
@@ -843,12 +862,12 @@ public class PropertyDetailsArchive implements CatalogEnabled
 
 	public List listViewTypes()
 	{
-		return listFilesByFolderType("views/", true);
+		return listFilesByFolderType("views/", false);
 	}
 
 	public List listViews(String inViewType)
 	{
-		return listFilesByFolderType("views/" + inViewType, true);
+		return listFilesByFolderType("views/" + inViewType, false);
 	}
 
 	public Data getView(String inType, String inView)
