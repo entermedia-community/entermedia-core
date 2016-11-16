@@ -644,6 +644,7 @@ public class PropertyDetailsArchive implements CatalogEnabled
 			if (child != null)
 			{
 				element.remove(child);
+				//Clean any other text?
 			}
 
 			child = element.addElement("name");
