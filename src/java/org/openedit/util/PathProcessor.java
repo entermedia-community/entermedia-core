@@ -84,7 +84,14 @@ public abstract class PathProcessor
 	
 	public void process(String inPath, User inUser)
 	{
-		process(getPageManager().getRepository().getStub(inPath), inUser);
+		ContentItem item = getPageManager().getRepository().getStub(inPath);
+		if( !item.exists() )
+		{
+		
+			log.info(inPath + " Did not exist");
+			return;
+		}
+		process(item, inUser);
 	}
 
 	public void process(String inPath)
@@ -196,6 +203,7 @@ public abstract class PathProcessor
 				}
 			}
 		}
+		
 		return true;
 	}
 

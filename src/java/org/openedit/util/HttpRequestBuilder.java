@@ -2,16 +2,24 @@ package org.openedit.util;
 
 import java.io.File;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.http.HttpEntity;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
+import org.apache.http.message.BasicNameValuePair;
 
 public class HttpRequestBuilder
 {
 	MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+	
 	Charset UTF8 = Charset.forName("UTF-8");
 	ContentType contentType = ContentType.create("text/plain", UTF8);
 	ContentType octectType = ContentType.create("application/octect-stream", UTF8);
@@ -33,4 +41,28 @@ public class HttpRequestBuilder
 	{
 		return builder.build();
 	}
+	
+	public HttpEntity build(Map <String, String> inMap){
+		
+		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+
+		for (Iterator iterator = inMap.keySet().iterator(); iterator.hasNext();)
+		{
+			String key = (String) iterator.next();
+			String val = inMap.get(key);
+			  nameValuePairs.add(new BasicNameValuePair(key, val));
+
+			
+		}
+		 return new UrlEncodedFormEntity(nameValuePairs, UTF8);
+
+		
+		
+	}
+	
+	
+	
+
+	
+	
 }
