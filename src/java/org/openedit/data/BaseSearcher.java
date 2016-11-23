@@ -2562,6 +2562,10 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			}
 			else if(values != null && detail.isMultiValue())
 			{
+				if( values.length == 1 && values[0].contains("|"))
+				{
+					values = MultiValued.VALUEDELMITER.split(values[0]);
+				}
 				result = Arrays.asList(values);
 			}
 			else if (values != null && values.length > 0)
