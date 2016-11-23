@@ -2705,10 +2705,10 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	}
 
 	@Override
-	public void putMappings()
+	public boolean putMappings()
 	{
 		// TODO Auto-generated method stub
-		
+		return false;
 	}
 	public void reindexInternal() throws OpenEditException
 	{

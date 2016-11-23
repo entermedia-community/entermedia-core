@@ -176,7 +176,7 @@ public interface Searcher extends CatalogEnabled
 
 	public void setAlternativeIndex(String inAlternativeIndex);
 
-	public void putMappings();
+	public boolean putMappings();
 
 	public void reindexInternal();
 	
