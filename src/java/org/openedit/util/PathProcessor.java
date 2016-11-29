@@ -143,21 +143,21 @@ public abstract class PathProcessor
 		{
 			return false;
 		}
-//let the mount deal with this
-//		if (getIncludeMatches() != null)
-//		{
-//			//String ext = PathUtilities.extractPageType(inItem.getPath());
-//			String path =  inItem.getPath();
-//			for (Iterator iterator = getIncludeMatches().iterator(); iterator.hasNext();)
-//			{
-//				String validExt = (String) iterator.next();
-//				if (PathUtilities.match(path, validExt))
-//				{
-//					return true;
-//				}
-//			}
-//			return false; //Include only specific files
-//		}
+//let the mount deal with this  - NO, this presumes there is a mount! there aren't always.
+		if (getIncludeMatches() != null)
+		{
+			//String ext = PathUtilities.extractPageType(inItem.getPath());
+			String path =  inItem.getPath();
+			for (Iterator iterator = getIncludeMatches().iterator(); iterator.hasNext();)
+			{
+				String validExt = (String) iterator.next();
+				if (PathUtilities.match(path, validExt))
+				{
+					return true;
+				}
+			}
+			return false; //Include only specific files
+		}
 		if (fieldExcludeMatches != null)
 		{
 			String path =  inItem.getPath();
