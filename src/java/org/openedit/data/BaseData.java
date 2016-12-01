@@ -1,6 +1,7 @@
 package org.openedit.data;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 
@@ -8,6 +9,7 @@ import org.openedit.Data;
 import org.openedit.MultiValued;
 import org.openedit.OpenEditException;
 import org.openedit.modules.translations.LanguageMap;
+import org.openedit.util.DateStorageUtil;
 
 
 public class BaseData implements MultiValued, Comparable, Cloneable
@@ -201,6 +203,23 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 //		//if null check parent
 //		return collection;
 	}
+	
+	public Date getDate(String inField)
+	{
+		Object date = getValue(inField);
+		if(date == null){
+			return null;
+		}
+
+		if(date instanceof Date){
+			return (Date) date;
+		}
+		
+		return DateStorageUtil.getStorageUtil().parseFromStorage((String)date);
+		
+		
+	}
+	
 	public Object getValue(String inKey)
 	{
 		Object val = getMap().getValue(inKey);
