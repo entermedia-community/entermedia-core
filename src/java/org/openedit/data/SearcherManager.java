@@ -416,6 +416,7 @@ public class SearcherManager
 		}
 		
 		getCache().clear();
+		getCacheManager().clearAll();
 	}
 	protected Map getCache()
 	{
