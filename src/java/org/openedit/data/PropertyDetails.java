@@ -5,7 +5,6 @@ package org.openedit.data;
 
 import java.util.AbstractCollection;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -355,9 +354,23 @@ public class PropertyDetails extends AbstractCollection
 			else
 			{
 				//Remote lookup
+				
+				PropertyDetail localinfo = getDetail(type[0]);
+				if(localinfo != null && localinfo.isList()){
+					PropertyDetails remotedetails = getArchive().getPropertyDetails(localinfo.getListId());
+					PropertyDetail shareddetail = remotedetails.getDetail(type[1]);
+					if(shareddetail != null){
+						return shareddetail;
+					}
+				}
+				
+				//By searchtype
+				
 				PropertyDetails otherdetails = getArchive().getPropertyDetailsCached(type[0]);
+							
 				if( otherdetails != null)
 				{
+					
 					PropertyDetail shareddetail = otherdetails.getDetail(type[1]);
 					return shareddetail;
 				}
