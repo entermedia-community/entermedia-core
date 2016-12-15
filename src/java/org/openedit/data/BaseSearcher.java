@@ -1801,6 +1801,14 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 						PropertyDetail detail = getDetail(parts[0].substring(1), inReq);
 						addTerm(query, detail, parts[1], "matches");
 					}
+					
+					else if (parts[0].startsWith("+"))
+					{
+						PropertyDetail detail = getDetail(parts[0].substring(1), inReq);
+						addTerm(query, detail, parts[1], "exact");
+					}
+					
+					
 					else
 					{
 						PropertyDetail detail = getDetail(parts[0], inReq);
