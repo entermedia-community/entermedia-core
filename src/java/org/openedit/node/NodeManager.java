@@ -23,4 +23,6 @@ public interface NodeManager
 	void deleteCatalog(String inId);
 	
 	public boolean reindexInternal(String inCatalogId);
+
+	void clear();
 }
