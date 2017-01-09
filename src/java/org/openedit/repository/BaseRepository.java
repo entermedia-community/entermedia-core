@@ -306,40 +306,6 @@ public abstract class BaseRepository implements Repository
 		return getPath() + getFilterOut();
 	}
 
-	/**
-	 * Checks for include filter (that makes it required) and exclude filter
-	 * @param inPath This could be cached
-	 * @return
-	 */
-	public boolean showChild(String inPath, boolean isFolder)
-	{
-		// now check the extension TODO: Remove this since it is not used
-		if( !isFolder && getFilterIn() != null )
-		{
-			for( String filter: getFilterInList() )
-			{
-				if(PathUtilities.match(inPath,filter))
-				{
-					if( isExcluded(inPath) )
-					{
-						return false;
-					}
-					return true;
-				}
-			}
-			return false;
-		}
-		
-		//now check the filter
-		if( isExcluded(inPath) )
-		{
-			return false;
-		}
-		
-		return true;
-	}
-
-
 	protected boolean isExcluded(String inPath)
 	{
 		if( getFilterOut() != null )

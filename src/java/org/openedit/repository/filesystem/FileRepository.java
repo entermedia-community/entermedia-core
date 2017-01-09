@@ -334,20 +334,12 @@ public class FileRepository extends  BaseRepository
 			List children = new ArrayList(all.length);
 			for (int i = 0; i < all.length; i++)
 			{
-				boolean folder= false;
-				if(PathUtilities.extractPageType(all[i]) == null)
-				{
-					File child = new File(file, all[i]);
-					if(folder || child.isDirectory())
-					{
-						folder = true;
-					}
-				}
 				String path = inParent + "/" + PathUtilities.extractFileName(all[i]);				
-				if( showChild(path, folder))
+				if( isExcluded(path) )
 				{
-					children.add(path);
-				}
+					continue;
+				}				
+				children.add(path);
 			}
 			return children;
 		}
