@@ -107,6 +107,8 @@ public class Replacer implements CatalogEnabled
 								localproperty = splits[0];
 							    foreigntable = splits[1];
 								object = inValues.get(localproperty);
+								value = value.substring(value.indexOf(":")+ 1);
+								dot = value.indexOf('.');
 							}
 						}
 						else

@@ -1,6 +1,7 @@
 package org.openedit.data;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -14,6 +15,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openedit.Data;
 import org.openedit.ModuleManager;
+import org.openedit.MultiValued;
 import org.openedit.OpenEditException;
 import org.openedit.OpenEditRuntimeException;
 import org.openedit.cache.CacheManager;
@@ -340,6 +342,16 @@ public class SearcherManager
 			return "";
 		}
 		return val; 
+	}
+	public Collection getValues(String inCatalogId, String inMask,Map inValues)
+	{
+		String value = getValue(inCatalogId,inMask,inValues);
+		if( value == null || value.isEmpty() )
+		{
+			return Collections.emptyList();
+		}
+		String[] values = MultiValued.VALUEDELMITER.split(value);
+		return Arrays.asList(values);
 	}
 	
 	public Replacer getReplacer(String inCatalogId)

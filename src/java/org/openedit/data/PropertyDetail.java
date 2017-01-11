@@ -356,36 +356,19 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 	}
 	public String get(String inId)
 	{		
-		
-		if("searchtype".equals(inId)){
-			return getSearchType();
-		}
-		if ( inId.equals("boolean")
-				|| inId.equals("number")
-				|| inId.equals("date")
-				|| inId.equals("file")
-				)
+		Object val = getValue(inId);
+		if( val == null)
 		{
-			return String.valueOf(inId.equals(getDataType()));
+			return null;
 		}
-
-
-		if(inId.equals("catalogid")){
-			return getCatalogId();
-		}
-		
-		else if (inId.equals("list")
-				|| inId.equals("html")
-				)
+		if( val instanceof String)
 		{
-			return String.valueOf(inId.equals(getViewType()));
+			return (String)val;
 		}
-		else if ( inId.equals("text"))
+		else
 		{
-			return getName();
+			return String.valueOf(val);
 		}
-		
-		return getElementData().get(inId);
 	}
 	public void setProperty(String inId, String inValue)
 	{
@@ -575,11 +558,47 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 		if("searchtype".equals(inId)){
 			return getSearchType();
 		}
+		if ( inId.equals("boolean")
+				|| inId.equals("number")
+				|| inId.equals("date")
+				|| inId.equals("file")
+				)
+		{
+			return String.valueOf(inId.equals(getDataType()));
+		}
+
+
+		if(inId.equals("catalogid")){
+			return getCatalogId();
+		}
+		
+		else if (inId.equals("list")
+				|| inId.equals("html")
+				)
+		{
+			return String.valueOf(inId.equals(getViewType()));
+		}
+		else if ( inId.equals("text"))
+		{
+			return getName();
+		}
 		if( "name".equals(inId))
 		{
 			return getElementData().getLanguageMap("name");
 		}
-		return getElementData().getValue(inId);
+		Object value = getElementData().getValue(inId);
+		if( value == null)
+		{
+			if( inId.equals("datatype"))
+			{
+				value = getElementData().getValue("type");
+			}
+			else if( inId.equals("render") )
+			{
+				value = getElementData().getValue("rendermask");
+			}
+		}
+		return value;
 	}
 
 	public void setAutoInclude(boolean inTrue)
