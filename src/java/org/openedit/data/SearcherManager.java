@@ -228,6 +228,9 @@ public class SearcherManager
 	}
 	public Collection getUniqueValues(Searcher inSearcher, HitTracker inHits, String inColumn, String startsWith)
 	{
+		if(inHits != null){
+			inHits.enableBulkOperations();
+		}
 		Set	 results = new HashSet();
 		startsWith = startsWith.toLowerCase();
 		for (Iterator iterator = inHits.iterator(); iterator.hasNext();)
