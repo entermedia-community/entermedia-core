@@ -387,7 +387,7 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 					{
 						done.append(":");
 					}
-					done.append(getFriendlyValue(term.getValue(), detail));
+					done.append(getFriendlyValue(term, detail));
 				}
 			}
 			else
@@ -414,6 +414,29 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		}
 
 		return done.toString();
+	}
+	public String getFriendlyValue(Term inTerm, PropertyDetail inDetail)
+	{
+		String value = inTerm.getValue();
+		if( value != null)
+		{
+			return getFriendlyValue(value, inDetail);
+		}
+		StringBuffer out = new StringBuffer();
+		Object[] values  = inTerm.getValues();
+		if(values != null)
+		{
+			for (int i = 0; i < values.length; i++)
+			{
+				Object val = values[i];
+				if( val instanceof String)
+				{
+					out.append( getFriendlyValue((String)val, inDetail) );
+					out.append(", " );
+				}
+			}
+		}
+		return out.toString();
 	}
 
 	/**

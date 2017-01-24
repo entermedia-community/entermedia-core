@@ -12,8 +12,13 @@ See the GNU Lesser General Public License for more details.
 
 package org.openedit.util.strainer;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.openedit.Data;
 import org.openedit.WebPageRequest;
+import org.openedit.data.SearcherManager;
+import org.openedit.util.Replacer;
 
 /**
  * Looks for a variable called $data for a property name with a certain value
@@ -22,8 +27,30 @@ import org.openedit.WebPageRequest;
 
 public class DataPropertyFilter extends BaseFilter
 {
+	protected String fieldBeanName;
+	public String getBeanName()
+	{
+		if( fieldBeanName == null)
+		{
+			return "data";
+		}
+		return fieldBeanName;
+	}
+	public void setBeanName(String inBeanName)
+	{
+		fieldBeanName = inBeanName;
+	}
 	protected String fieldPropertyName;
+	protected SearcherManager fieldSearcherManager;
 	
+	public SearcherManager getSearcherManager()
+	{
+		return fieldSearcherManager;
+	}
+	public void setSearcherManager(SearcherManager inSearcherManager)
+	{
+		fieldSearcherManager = inSearcherManager;
+	}
 	public DataPropertyFilter()
 	{
 		super();
@@ -41,7 +68,7 @@ public class DataPropertyFilter extends BaseFilter
 	{
 		WebPageRequest req = (WebPageRequest) inObj;
 
-		Data data = (Data)req.getPageValue("data");
+		Data data = (Data)req.getPageValue(getBeanName());
 
 		if (data == null)
 		{
@@ -52,14 +79,19 @@ public class DataPropertyFilter extends BaseFilter
 		{
 			return true;
 		}
-		if( value != null && value.equals(getValue()))
+		
+		String resolvedvalue = getValue();
+		//${context.getUserName()}
+		String catalogid = req.findValue("catalogid");
+		Replacer replacer = getSearcherManager().getReplacer(catalogid);
+		Map params = new HashMap();
+		params.put("context", req);
+		params.putAll(req.getPageMap());
+		resolvedvalue = replacer.replace(resolvedvalue, params);
+		if( value != null && value.equals(resolvedvalue))
 		{
 			return true;
 		}
-		
-		
-		
-		
 		return false;
 	}
 	public String toString()

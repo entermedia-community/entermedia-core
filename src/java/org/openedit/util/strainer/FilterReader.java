@@ -24,6 +24,7 @@ import javax.naming.ConfigurationException;
 import org.openedit.ModuleManager;
 import org.openedit.OpenEditException;
 import org.openedit.config.Configuration;
+import org.openedit.data.SearcherManager;
 
 /**
  * DOCUMENT ME!
@@ -196,8 +197,12 @@ public class FilterReader {
 			RefererFilter filter = new RefererFilter(target);
 			result = filter;
 		} else if (elemName.equals("dataproperty")) {
-			result = new DataPropertyFilter(inConfig.getAttribute("name"),
-					inConfig.getAttribute("value"));
+			DataPropertyFilter datafilter = new DataPropertyFilter(inConfig.getAttribute("name"),inConfig.getAttribute("value"));
+			String beanname = inConfig.getAttribute("beanname");
+			datafilter.setBeanName(beanname);
+			datafilter.setSearcherManager(getSearcherManager());
+			result = datafilter;
+					
 		} else if (elemName.equals("userproperty")) {
 			result = new UserPropertyFilter(inConfig.getAttribute("name"),
 					inConfig.getAttribute("value"));
@@ -219,6 +224,11 @@ public class FilterReader {
 		result.setConfiguration(inConfig);
 
 		return result;
+	}
+
+	protected SearcherManager getSearcherManager()
+	{
+		return (SearcherManager)getModuleManager().getBean("searcherManager");
 	}
 
 	/**

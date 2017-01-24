@@ -186,7 +186,7 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 
 	public void setViewType(String inViewType)
 	{
-		setValue("viewtype", inViewType);
+		setValue("viewtype", inViewType); //TODO: Move to rendertype
 	}
 	
 	public String getDataType()
@@ -567,7 +567,6 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 			return String.valueOf(inId.equals(getDataType()));
 		}
 
-
 		if(inId.equals("catalogid")){
 			return getCatalogId();
 		}
@@ -597,6 +596,12 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 			{
 				value = getElementData().getValue("rendermask");
 			}
+			else if( inId.equals("rendertype"))
+			{
+				value = getElementData().getValue("viewtype");
+			}
+
+
 		}
 		return value;
 	}
