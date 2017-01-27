@@ -1248,7 +1248,7 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		{
 			public String toQuery()
 			{
-				String fin = getDetail().getId() + inLocation;
+				String fin = getDetail().getId() + "location";
 				return fin;
 			}
 		};
