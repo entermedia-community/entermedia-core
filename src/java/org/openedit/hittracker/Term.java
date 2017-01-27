@@ -14,7 +14,20 @@ abstract public class Term {
 	protected String fieldOperation;
 	protected String fieldValue;
 	protected Object[] fieldValues;
+	protected Object fieldData;
 	
+	
+	
+	public Object getData()
+	{
+		return fieldData;
+	}
+
+	public void setData(Object inData)
+	{
+		fieldData = inData;
+	}
+
 	public Object[] getValues()
 	{
 //		if( fieldValues == null && fieldValue != null)

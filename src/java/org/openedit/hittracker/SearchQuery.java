@@ -43,6 +43,7 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	
 	
 	
+	
 	public List getExtraFacets()
 	{
 	if (fieldExtraFacets == null)
@@ -1231,6 +1232,35 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		addBetween(d, inNow, inNext);
 		
 	}
+	
+	
+	public void addGeoFilter(String inString, GeoFilter inLocation){
+		PropertyDetail d = createDetail(inString);
+		d.setId(inString);
+		addGeoFilter(d, inLocation);
+	}
+	
+	
+
+	public Term addGeoFilter(PropertyDetail inD, GeoFilter inLocation)
+	{
+		Term term = new Term()
+		{
+			public String toQuery()
+			{
+				String fin = getDetail().getId() + inLocation;
+				return fin;
+			}
+		};
+		term.setOperation("geofilter");
+		term.setDetail(inD);
+		term.setData(inLocation);
+		getTerms().add(term);
+
+		return term;
+		
+		
+	}
 
 	public void addBetween(String string, long longValue, long longValue2) {
 		PropertyDetail d = createDetail(string);
@@ -1930,6 +1960,10 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 			addOrsGroup(inKey, (String[])goodvalues.toArray(new String[goodvalues.size()]));			
 		}
 	}
+
+	
+
+	
 	
 	
 	

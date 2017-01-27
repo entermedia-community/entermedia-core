@@ -660,5 +660,10 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 		return getElementData().keySet();
 	}
 
+	public boolean isGeoPoint()
+	{
+		return "geo_point".equals(getDataType());
+	}
+
 
 }
