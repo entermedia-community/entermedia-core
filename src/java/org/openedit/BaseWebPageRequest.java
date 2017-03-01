@@ -285,7 +285,7 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 					{
 						combinedparams.put(ordering[i], allv[0]);
 					}
-					else
+					else if( allv.length > 0 && allv[0] != null && !allv[0].isEmpty())
 					{
 						combinedparams.put(ordering[i], allv);					
 					}
@@ -300,11 +300,11 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 					continue; //Skip if already in there
 				}
 				String[] allv = getRequest().getParameterValues(key);
-				if( allv != null && allv.length == 1)
+				if( allv != null && allv.length == 1 && allv[0] != null && !allv[0].isEmpty())
 				{
 					combinedparams.put(key, allv[0]);
 				}
-				else
+				else if( allv.length > 0 && allv[0] != null && !allv[0].isEmpty())
 				{
 					combinedparams.put(key, allv);					
 				}

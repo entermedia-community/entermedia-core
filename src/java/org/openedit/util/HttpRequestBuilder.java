@@ -26,6 +26,10 @@ public class HttpRequestBuilder
 
 	public void addPart(String inKey, String inValue)
 	{
+		if( inValue == null)
+		{
+			return;
+		}
 		builder.addPart(inKey,new StringBody(inValue,contentType));
 	}
 	public void addPart(String inKey, File file)
