@@ -529,5 +529,26 @@ public class FileUtils
 		return true;
 	}
 
+	public long sizeOf( File fname )
+	{
+		long size = 0;
+		if( fname.isDirectory() )
+		{
+			File[] children = fname.listFiles();
+			if( children != null)
+			{
+				for (int i = 0; i < children.length; i++)
+				{
+					size = size + sizeOf(children[i]);
+				}
+			}	
+		}
+		else
+		{
+			size = fname.length();
+		}
+		return size;
+	}
+
 	
 }
