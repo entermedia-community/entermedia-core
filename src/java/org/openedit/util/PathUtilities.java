@@ -540,6 +540,11 @@ public final class PathUtilities
 			start = start + 1;
 		}
 		String pageName = newpath.substring(start, newpath.length());
+		int params = pageName.lastIndexOf("?");
+		if( params > -1)
+		{
+			pageName = pageName.substring(0,params);
+		}
 
 		return pageName;
 	}
