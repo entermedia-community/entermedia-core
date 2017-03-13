@@ -382,7 +382,12 @@ public class PropertyDetailsArchive implements CatalogEnabled
 		PropertyDetails details = (PropertyDetails) getPropertyDetails().get(inType);
 		try
 		{
-			String path = getConfigurationPath("/fields/" + inType + ".xml");
+			//Always load up base file first if we can
+			
+			//String path =  "/" + getCatalogId() + "/data/fields/" + inType + ".xml";
+			String path = "/WEB-INF/data/" + getCatalogId() + "/fields/" + inType + ".xml";
+			
+//getConfigurationPath("/fields/" + inType + ".xml");
 
 			XmlFile settings = getXmlArchive().getXml(path); // checks time
 																	// stamp.
@@ -396,7 +401,7 @@ public class PropertyDetailsArchive implements CatalogEnabled
 			log.debug("Loading " + getCatalogId() + " " + inType);
 			settings = getXmlArchive().getXml(path);
 
-			if (!settings.isExist() && !path.contains("dataextensions"))
+			if (!settings.isExist())
 			{
 				if (inType.endsWith("Log"))
 				{
@@ -409,7 +414,19 @@ public class PropertyDetailsArchive implements CatalogEnabled
 				// This should not happen as well
 				settings = getXmlArchive().getXml(path);
 			}
+			
 			details = new PropertyDetails(this,inType);
+			
+			String basesetting =  "/" + getCatalogId() + "/data/fields/" + inType + ".xml";
+			XmlFile basesettings = getXmlArchive().getXml(basesetting);
+			if( basesettings.isExist() )
+			{
+				if( settings.getRoot().attributeValue("beanname") == null )
+				{
+					String beanname = basesettings.getRoot().attributeValue("beanname");
+					details.setBeanName(beanname);
+				}
+			}
 			if (settings.isExist())
 			{
 				setAllDetails(details, inType, settings.getContentItem().getPath(), settings.getRoot());
@@ -417,7 +434,7 @@ public class PropertyDetailsArchive implements CatalogEnabled
 
 			}
 
-			// load any defaults - AFTER we have loaded all the existing stuff.
+			// load any defaults by folder - AFTER we have loaded all the existing stuff.
 			// don't overwrite anything that is here already.
 
 			List paths = getPageManager().getChildrenPaths("/" + getCatalogId() + "/data/fields/" + inType + "/", true);
