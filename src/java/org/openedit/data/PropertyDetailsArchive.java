@@ -400,8 +400,12 @@ public class PropertyDetailsArchive implements CatalogEnabled
 			}
 			log.debug("Loading " + getCatalogId() + " " + inType);
 			settings = getXmlArchive().getXml(path);
+			details = new PropertyDetails(this,inType);
 
-			if (!settings.isExist())
+			String basesettings = "/" + getCatalogId() + "/data/fields/" + inType + ".xml";
+			XmlFile basesettingsdefaults = getXmlArchive().getXml(basesettings);
+
+			if (!settings.isExist() && !basesettingsdefaults.isExist() )
 			{
 				if (inType.endsWith("Log"))
 				{
@@ -414,19 +418,7 @@ public class PropertyDetailsArchive implements CatalogEnabled
 				// This should not happen as well
 				settings = getXmlArchive().getXml(path);
 			}
-			
-			details = new PropertyDetails(this,inType);
-			
-			String basesetting =  "/" + getCatalogId() + "/data/fields/" + inType + ".xml";
-			XmlFile basesettings = getXmlArchive().getXml(basesetting);
-			if( basesettings.isExist() )
-			{
-				if( settings.getRoot().attributeValue("beanname") == null )
-				{
-					String beanname = basesettings.getRoot().attributeValue("beanname");
-					details.setBeanName(beanname);
-				}
-			}
+
 			if (settings.isExist())
 			{
 				setAllDetails(details, inType, settings.getContentItem().getPath(), settings.getRoot());
@@ -434,19 +426,27 @@ public class PropertyDetailsArchive implements CatalogEnabled
 
 			}
 
+			if( details.getBeanName() == null && basesettingsdefaults.isExist() )
+			{
+				if( basesettingsdefaults.getRoot().attributeValue("beanname") != null )
+				{
+					String beanname = basesettingsdefaults.getRoot().attributeValue("beanname");
+					details.setBeanName(beanname);
+				}
+			}
+
 			// load any defaults by folder - AFTER we have loaded all the existing stuff.
 			// don't overwrite anything that is here already.
-
+			
+			
 			List paths = getPageManager().getChildrenPaths("/" + getCatalogId() + "/data/fields/" + inType + "/", true);
-
-			paths.add("/" + getCatalogId() + "/data/fields/" + inType + ".xml");
+			paths.add(basesettings); //Needed?
 			for (Iterator iterator = paths.iterator(); iterator.hasNext();)
 			{
-
 				String defaultfile = (String) iterator.next();
 				if (defaultfile.endsWith(".xml"))
 				{
-					XmlFile defaults = getXmlArchive().loadXmlFile(defaultfile);
+					XmlFile defaults = getXmlArchive().getXml(defaultfile);
 					PropertyDetails extras = new PropertyDetails(this,inType);
 					setAllDetails(extras, inType, defaults.getContentItem().getPath(), defaults.getRoot());
 					for (Iterator iterator2 = extras.iterator(); iterator2.hasNext();)
