@@ -619,6 +619,12 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		}
 		addShowOnly(inPageRequest, search);
 		
+		if (search.getSortBy() == null)
+		{
+			String sort = inPageRequest.findValue(type + "sortby");
+			search.setSortBy(sort);
+		}
+
 		
 		String resultype = inPageRequest.getRequestParameter("resulttype");
 		if (resultype == null)
