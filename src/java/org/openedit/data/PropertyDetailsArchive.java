@@ -423,11 +423,11 @@ public class PropertyDetailsArchive implements CatalogEnabled
 
 			if( basesettingsdefaults.isExist() )
 			{
-				String beanname = basesettingsdefaults.getRoot().attributeValue("beanname");
-				details.setBeanName(beanname);
-				details.setPrefix(basesettingsdefaults.getRoot().attributeValue("prefix"));
-				details.setClassName(basesettingsdefaults.getRoot().attributeValue("class"));
-				
+//				String beanname = basesettingsdefaults.getRoot().attributeValue("beanname");
+//				details.setBeanName(beanname);
+//				details.setPrefix(basesettingsdefaults.getRoot().attributeValue("prefix"));
+//				details.setClassName(basesettingsdefaults.getRoot().attributeValue("class"));
+				details.setBaseSettings(basesettingsdefaults);
 			}
 
 			// load any defaults by folder - AFTER we have loaded all the existing stuff.
@@ -564,19 +564,22 @@ public class PropertyDetailsArchive implements CatalogEnabled
 
 		file.setPath(path);
 		Element root = DocumentHelper.createElement("properties");
-//		if (inDetails.getPrefix() != null)
-//		{
-//			root.addAttribute("prefix", inDetails.getPrefix());
-//		}
-//
-//		if (inDetails.getBeanName() != null)
-//		{
-//			root.addAttribute("beanname", inDetails.getBeanName());
-//		}
-//		if (inDetails.getClassName() != null)
-//		{
-//			root.addAttribute("class", inDetails.getClassName());
-//		}
+		if( inDetails.getBaseSettings() == null) //The parent take precedence
+		{
+			if (inDetails.getPrefix() != null)
+			{
+				root.addAttribute("prefix", inDetails.getPrefix());
+			}
+	
+			if (inDetails.getBeanName() != null)
+			{
+				root.addAttribute("beanname", inDetails.getBeanName());
+			}
+			if (inDetails.getClassName() != null)
+			{
+				root.addAttribute("class", inDetails.getClassName());
+			}
+		}
 
 		file.setRoot(root);
 		file.setElementName("property");

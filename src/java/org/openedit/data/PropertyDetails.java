@@ -30,8 +30,19 @@ public class PropertyDetails extends AbstractCollection
 	protected boolean fieldAllowDynamicFields;;
 	protected PropertyDetailsArchive fieldArchive;
 	
+	protected XmlFile fieldBaseSettings;
 	
-	
+
+	public XmlFile getBaseSettings()
+	{
+		return fieldBaseSettings;
+	}
+
+	public void setBaseSettings(XmlFile inBaseSettings)
+	{
+		fieldBaseSettings = inBaseSettings;
+	}
+
 	public PropertyDetailsArchive getArchive()
 	{
 		return fieldArchive;
@@ -123,9 +134,13 @@ public class PropertyDetails extends AbstractCollection
 	{
 		if (fieldClassName == null)
 		{
-			if (getInputFile() != null && getInputFile().getRoot() != null)
+			if( fieldBaseSettings != null && getBaseSettings().getRoot() != null)
 			{
-				fieldClassName = getInputFile().getRoot().attributeValue("class");
+				return getBaseSettings().getRoot().attributeValue("class");
+			}
+			else if (getInputFile() != null && getInputFile().getRoot() != null)
+			{
+				return getInputFile().getRoot().attributeValue("class");
 			}
 			//			if( fieldBeanName == null )
 			//			{
@@ -137,10 +152,6 @@ public class PropertyDetails extends AbstractCollection
 
 	public void setClassName(String inClassName)
 	{
-		if (getInputFile() != null && getInputFile().getRoot() != null){
-
-			getInputFile().getRoot().setAttributeValue("classname", inClassName);
-		}
 		fieldClassName = inClassName;
 	}
 
@@ -148,9 +159,13 @@ public class PropertyDetails extends AbstractCollection
 	{
 		if (fieldBeanName == null)
 		{
-			if (getInputFile() != null && getInputFile().getRoot() != null)
+			if( fieldBaseSettings != null && getBaseSettings().getRoot() != null)
 			{
-				fieldBeanName = getInputFile().getRoot().attributeValue("beanname");
+				return getBaseSettings().getRoot().attributeValue("beanname");
+			}
+			else if (getInputFile() != null && getInputFile().getRoot() != null)
+			{
+				return getInputFile().getRoot().attributeValue("beanname");
 			}
 			//			if( fieldBeanName == null )
 			//			{
@@ -162,13 +177,6 @@ public class PropertyDetails extends AbstractCollection
 
 	public void setBeanName(String inBeanName)
 	{
-		
-		if (getInputFile() != null && getInputFile().getRoot() != null){
-
-			getInputFile().getRoot().setAttributeValue("beanname", inBeanName);
-		}
-		
-		
 		fieldBeanName = inBeanName;
 	}
 
@@ -511,7 +519,11 @@ public class PropertyDetails extends AbstractCollection
 	{
 		if (fieldPrefix == null)
 		{
-			if (getInputFile() != null && getInputFile().getRoot() != null)
+			if( fieldBaseSettings != null && getBaseSettings().getRoot() != null)
+			{
+				return getBaseSettings().getRoot().attributeValue("prefix");
+			}
+			else if (getInputFile() != null && getInputFile().getRoot() != null)
 			{
 				fieldPrefix = getInputFile().getRoot().attributeValue("prefix");
 			}
@@ -564,6 +576,6 @@ public class PropertyDetails extends AbstractCollection
 		}
 		return null;
 	}
-	
+
 	
 }
