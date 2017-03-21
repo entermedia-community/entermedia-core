@@ -828,12 +828,15 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		String[] language = inPageRequest.getRequestParameters(detail.getId() + ".language");
 		if (language != null)
 		{
+			LanguageMap map = new LanguageMap();
+			search.setValue(detail.getId(), map);
+			
 			for (int j = 0; j < language.length; j++)
 			{
 				String lang = language[j];
 				String lid = detail.getId() + "_int." + lang;
 				String fieldid = detail.getId() + "." + lang;
-				String langval = inPageRequest.getRequestParameter(fieldid);
+				String langval = inPageRequest.getRequestParameter(fieldid + ".value");
 				if( langval == null)
 				{
 					langval = inPageRequest.getRequestParameter(detail.getId() + ".value");
@@ -868,8 +871,9 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					{
 						search.addOrsGroup(lid, langval);
 					}
-					search.setProperty(detail.getId(), langval);
-					search.setProperty(detail.getId() + ".language", lang);
+//					search.setProperty(detail.getId(), langval);
+//					search.setProperty(detail.getId() + ".language", lang);
+					map.setText(lang, langval);
 				}
 			}
 		}
@@ -2546,15 +2550,12 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 						for (int j = 0; j < language.length; j++)
 						{
 							String lang = language[j];
-							String langval = inReq.getRequestParameter(field + ".language." + (j + 1));
+							String langval = inReq.getRequestParameter(field + "." + lang + ".value"); 
 							if( langval == null)
 							{
-								langval = inReq.getRequestParameter(field + "." + lang); //legacy
+								langval = inReq.getRequestParameter(field + ".language." + (j + 1)); //legacy
 							}
-							if( langval != null)
-							{
-								map.setText(lang,langval);
-							}
+							map.setText(lang,langval);
 						}
 					}	
 					else if( values != null && values.length > 0)

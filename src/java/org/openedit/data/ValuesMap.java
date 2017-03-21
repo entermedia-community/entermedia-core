@@ -123,7 +123,7 @@ public class ValuesMap extends HashMap
 		{
 			return (Collection<String>)object;
 		}
-		String val = (String)getObject(inPreference);
+		String val = getString(inPreference);
 		
 		if (val == null)
 		{
