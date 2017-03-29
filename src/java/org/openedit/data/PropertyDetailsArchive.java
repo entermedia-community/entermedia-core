@@ -466,7 +466,19 @@ public class PropertyDetailsArchive implements CatalogEnabled
 			throw new OpenEditRuntimeException(ex);
 		}
 	}
-
+	public PropertyDetail createDetail(String inId, String inName)
+	{
+		PropertyDetail detail = new PropertyDetail();
+		detail.setId(inId);
+		detail.setName(inName);
+		detail.setEditable(true);
+		detail.setIndex(true);
+		detail.setStored(true);
+		detail.setCatalogId(getCatalogId());
+		return detail;
+	}
+	
+	
 	public PropertyDetails getPropertyDetailsCached(String inType)
 	{
 		PropertyDetails details = (PropertyDetails) getPropertyDetails().get(inType);
