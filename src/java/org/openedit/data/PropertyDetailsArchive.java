@@ -468,13 +468,30 @@ public class PropertyDetailsArchive implements CatalogEnabled
 	}
 	public PropertyDetail createDetail(String inId, String inName)
 	{
-		PropertyDetail detail = new PropertyDetail();
-		detail.setId(inId);
-		detail.setName(inName);
-		detail.setEditable(true);
-		detail.setIndex(true);
-		detail.setStored(true);
-		detail.setCatalogId(getCatalogId());
+		PropertyDetail detail = null;
+		
+		Collection all = listSearchTypes();
+		for (Iterator iterator = all.iterator(); iterator.hasNext();) 
+		{
+			String type = (String) iterator.next();
+			PropertyDetails details = getPropertyDetailsCached(type);
+			detail = details.getDetail(inId);
+			if( detail != null)
+			{
+				detail = detail.copy();
+				break;
+			}
+		}
+		if( detail == null)
+		{
+			detail = new PropertyDetail();
+			detail.setId(inId);
+			detail.setName(inName);
+			detail.setEditable(true);
+			detail.setIndex(true);
+			detail.setStored(true);
+			detail.setCatalogId(getCatalogId());
+		}
 		return detail;
 	}
 	
