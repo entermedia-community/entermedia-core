@@ -1087,7 +1087,22 @@ public class PageSettings
 		}
 		prop.setValue(inValue);
 	}
-
+	public void addPathAction(PageAction inAction)
+	{
+		if( fieldPathActions == null)
+		{
+			fieldPathActions = new ArrayList();
+		}
+		fieldPathActions.add(inAction);
+	}
+	public void addPageAction(PageAction inAction)
+	{
+		if( fieldPageActions == null)
+		{
+			fieldPageActions = new ArrayList();
+		}
+		fieldPageActions.add(inAction);
+	}
 	public List getFieldPathActions()
 	{
 		return fieldPathActions;
