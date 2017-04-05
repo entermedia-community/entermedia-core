@@ -15,8 +15,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.print.attribute.standard.MediaPrintableArea;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.entermediadb.location.GeoCoder;
+import org.entermediadb.location.Position;
 import org.openedit.Data;
 import org.openedit.ModuleManager;
 import org.openedit.MultiValued;
@@ -25,6 +29,7 @@ import org.openedit.WebPageRequest;
 import org.openedit.config.Configuration;
 import org.openedit.event.WebEvent;
 import org.openedit.event.WebEventListener;
+import org.openedit.hittracker.GeoFilter;
 import org.openedit.hittracker.HitTracker;
 import org.openedit.hittracker.SearchQuery;
 import org.openedit.hittracker.Term;
@@ -808,8 +813,12 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 						t = addNumber(inPageRequest, search, detail, val, op);
 						if (t == null)
 						{
-							//This is for lobpicker and primaryproductpicker and maybe other ones
-							addPicker(inPageRequest, search, detail, val, op, count.intValue());
+							t = addPosition(inPageRequest, search, detail, val, op);
+							if (t == null)
+							{
+								//This is for lobpicker and primaryproductpicker and maybe other ones
+								addPicker(inPageRequest, search, detail, val, op, count.intValue());
+							}
 						}
 					}
 				}
@@ -1125,7 +1134,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	protected Term addTerm(SearchQuery search, PropertyDetail detail, String val, String[] vals, String op)
 	{
 		Term t = null;
-		if (detail.isDataType("number") || detail.isDataType("double") || detail.isDataType("float"))
+		if (detail.isDataType("number") || detail.isDataType("double") || detail.isDataType("float") || detail.isDataType("geo_point"))
 		{
 			//this is handled in else statement
 			return null;
@@ -2731,5 +2740,69 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		throw new OpenEditException("Not implemented");
 		//reIndexAll();
 	}
+	
+	public Term addPosition(WebPageRequest inReq, SearchQuery search, PropertyDetail field, String val, String op)
+	{
+		if (!field.isDataType("geo_point") || val == null || val.isEmpty() )
+		{
+			return null;
+		}
+		
+		String rangeString = inReq.getRequestParameter("maprange" + field.getId()); //distance in meters
+		if (rangeString == null)
+		{
+			rangeString = "5000000"; //default.  
+		}
+
+		//rangeString = rangeString + "000";
+		double range = Double.parseDouble(rangeString); //meters
+		range = range / 157253.2964;//convert to decimal degrees (FROM Meters)
+		Position p = (Position)getGeoCoder().findFirstPosition(val);
+		GeoFilter filter = new GeoFilter();
+
+		if( p != null)
+		{
+			Double latitude = p.getLatitude();
+			Double longitude = p.getLongitude();
+			filter.setLatitude(latitude);
+			filter.setLongitude(longitude);
+			filter.addParameter("formatted_address", p.getFormatedAddress());
+			filter.setCenter(p);
+		}
+		else
+		{
+			log.error("No location found " + search.hashCode() );
+			filter.addParameter("maperror","No results");
+			//filter.setCenter(p);
+		}
+
+		filter.setDistance(Long.parseLong( rangeString));
+		filter.setType("distance");
+		filter.setOperation("geofilter");
+		filter.setDetail(field);
+		filter.setValue(val);
+		Term term = search.addGeoFilter(field, filter);
+
+		return term;
+	}
+
+	public GeoCoder getGeoCoder()
+	{
+		GeoCoder coder = (GeoCoder)getModuleManager().getBean(getCatalogId(),"geoCoder");
+		coder.setGoogleKey(getConfigValue("google-maps-key"));
+		if( coder.getGoogleKey() == null)
+		{
+			log.error("No key set");
+		}
+		return coder;
+	}
+
+	public String getConfigValue(String inKey)
+	{
+		//look up values in db
+		return null;
+	}
+	
+	
 	
 }

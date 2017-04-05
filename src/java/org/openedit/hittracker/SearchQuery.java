@@ -41,7 +41,10 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	protected List fieldExtraFacets;
 	
 	
-	
+	public SearchQuery()
+	{
+		// TODO Auto-generated constructor stub
+	}
 	
 	
 	public List getExtraFacets()
@@ -1244,20 +1247,20 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 
 	public Term addGeoFilter(PropertyDetail inD, GeoFilter inLocation)
 	{
-		Term term = new Term()
-		{
-			public String toQuery()
-			{
-				String fin = getDetail().getId() + "location";
-				return fin;
-			}
-		};
-		term.setOperation("geofilter");
-		term.setDetail(inD);
-		term.setData(inLocation);
-		getTerms().add(term);
+//		Term term = new Term()
+//		{
+//			public String toQuery()
+//			{
+//				String fin = getDetail().getId() + "location";
+//				return fin;
+//			}
+//		};
+//		term.setOperation("geofilter");
+//		term.setDetail(inD);
+//		term.setData(inLocation);
+		getTerms().add(inLocation);
 
-		return term;
+		return inLocation;
 		
 		
 	}

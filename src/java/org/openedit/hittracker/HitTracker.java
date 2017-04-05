@@ -19,7 +19,6 @@ import org.openedit.util.DateStorageUtil;
 
 public abstract class HitTracker<T> implements Serializable, Collection, CatalogEnabled
 {
-
 	private static final Log log = LogFactory.getLog(HitTracker.class);
 	protected boolean fieldAllSelected;
 	protected Collection<String> fieldSelections;

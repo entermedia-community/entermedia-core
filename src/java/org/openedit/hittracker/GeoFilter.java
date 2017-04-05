@@ -1,22 +1,22 @@
 package org.openedit.hittracker;
 
-public class GeoFilter
+import org.entermediadb.location.Position;
+
+public class GeoFilter extends Term
 {
-	
-	
-	protected String fieldPropertyDetail;
 	protected double fieldLatitude;
 	protected double fieldLongitude;
 	protected String fieldType;
-	protected String fieldDistance;
+	protected long fieldDistance;
+	protected Position fieldCenter;
 	
-	public String getPropertyDetail()
+	public Position getCenter()
 	{
-		return fieldPropertyDetail;
+		return fieldCenter;
 	}
-	public void setPropertyDetail(String inPropertyDetail)
+	public void setCenter(Position inCenter)
 	{
-		fieldPropertyDetail = inPropertyDetail;
+		fieldCenter = inCenter;
 	}
 	public double getLatitude()
 	{
@@ -42,14 +42,19 @@ public class GeoFilter
 	{
 		fieldType = inType;
 	}
-	public String getDistance()
+	public long getDistance()
 	{
 		return fieldDistance;
 	}
-	public void setDistance(String inDistance)
+	public void setDistance(long inDistance)
 	{
 		fieldDistance = inDistance;
 	}
-
+	@Override
+	public String toQuery()
+	{
+		String fin = getDetail().getId() + "location = " + " " + getValue() + " within " + getDistance();
+		return fin;
+	}
 
 }
