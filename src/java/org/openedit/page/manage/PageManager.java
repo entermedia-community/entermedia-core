@@ -367,7 +367,8 @@ public class PageManager
 		inPage.getContentItem().setPath(inPage.getPath());
 		getRepository().remove( inPage.getContentItem() );
 		//getRepository().remove( inPage.getPageSettings().getXConf() );
-		getCacheManager().remove( CACHEID, inPage.getPath() );
+		//getCacheManager().remove( CACHEID, inPage.getPath() );
+		clearCache(inPage);
 		firePageRemoved( inPage );
 	}
 
