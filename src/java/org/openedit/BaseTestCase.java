@@ -25,7 +25,7 @@ import junit.framework.TestCase;
 
 
 /**
- * DOCUMENT ME!
+ * DOCUMENT ME!!
  *
  * @author cburkey
  */
