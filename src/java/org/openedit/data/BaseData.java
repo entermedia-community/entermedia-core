@@ -35,6 +35,20 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 		Object value = getValue(inId);
 		return getMap().toString(value);
 	}
+	public String getText(String inId, String inLocale) 
+	{
+		if( fieldMap == null)
+		{
+			return null;
+		}
+		Object value = getValue(inId);
+		if( value instanceof LanguageMap )
+		{
+			LanguageMap map = (LanguageMap)value;
+			return map.getText(inLocale);
+		}
+		return getMap().toString(value);
+	}
 	public boolean getBoolean(String inId)
 	{
 		Object val = getValue(inId);

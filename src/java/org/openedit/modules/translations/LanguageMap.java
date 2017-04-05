@@ -25,19 +25,18 @@ public class LanguageMap extends TreeMap
 			return getText("en");
 		}
 		String val = (String) get(inLocale);
-		if(val == null && inLocale.contains("_")){
+		if(val == null && inLocale.contains("_"))
+		{
 			String[] splits = inLocale.split("_");
-			if(splits.length == 3){
+			if(splits.length == 3)
+			{
 				val = (String) get(splits[0]+ "_" + splits[1]);
-			
 			}
-			if(val == null && splits.length == 2){
+			if(val == null && splits.length == 2)
+			{
 				val = (String) get(splits[0]);
 			}
-			
-			
 		}
-			
 		return val;
 	}
 
