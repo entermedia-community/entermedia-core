@@ -665,5 +665,11 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 		return "geo_point".equals(getDataType());
 	}
 
+	public boolean isBadge() 
+	{
+		String b = get("badge");
+		return Boolean.valueOf(b);
+	}
+
 
 }

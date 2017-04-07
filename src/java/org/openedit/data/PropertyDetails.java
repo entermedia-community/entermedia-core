@@ -307,6 +307,21 @@ public class PropertyDetails extends AbstractCollection
 		}
 		return list;
 	}
+	
+	public List findBadgesProperties()
+	{
+		List list = new ArrayList(getDetails().size());
+		for (Iterator iter = getDetails().iterator(); iter.hasNext();)
+		{
+			PropertyDetail d = (PropertyDetail) iter.next();
+			if (d.isBadge() )
+			{
+				list.add(d);
+			}
+		}
+		return list;
+	}
+
 
 	// public List findSearchProperties()
 	// {
