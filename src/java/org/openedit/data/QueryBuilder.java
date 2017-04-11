@@ -217,4 +217,9 @@ public class QueryBuilder
 		getQuery().addAggregation(inString);
 		return this;
 	}
+	public QueryBuilder notgroup(String inField, Collection inIds)
+	{
+		getQuery().addNots(inField, inIds);
+		return this;
+	}
 }

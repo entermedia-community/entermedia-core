@@ -667,7 +667,7 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 
 	public boolean isBadge() 
 	{
-		String b = get("badge");
+		String b = get("isbadge");
 		return Boolean.valueOf(b);
 	}
 

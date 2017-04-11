@@ -294,7 +294,7 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 			}
 		};
 		term.setDetail(inField);
-		inValue = inValue.replace(",", " ");
+		inValue = inValue.replace(",", " ").replace("|", " ");
 		term.setValue(inValue);
 		String[] orwords = inValue.split("\\s+");
 		term.setValues(orwords);
@@ -1636,6 +1636,7 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 				return orString.toString();
 			}
 		};
+		
 		term.setOperation("notgroup");
 		term.setDetail(inField);
 		term.setValue(inNots);
@@ -1962,6 +1963,29 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 			}
 			addOrsGroup(inKey, (String[])goodvalues.toArray(new String[goodvalues.size()]));			
 		}
+	}
+	public Term addNots(String inField, Collection inNotshown)
+	{
+		PropertyDetail detail = createDetail(inField);
+		return addNots(detail,inNotshown);
+	}
+	public Term addNots(PropertyDetail inField, Collection inNotshown)
+	{
+		String[] values = (String[])inNotshown.toArray(new String[inNotshown.size()]);
+		Term term = new Term()
+		{
+			public String toQuery()
+			{
+				StringBuffer orString = new StringBuffer();
+				orString.append(" NOT " + getValues().toString() );
+				return orString.toString();
+			}
+		};
+		term.setValues(values);
+		term.setOperation("notgroup");
+		term.setDetail(inField);
+		getTerms().add(term);
+		return term;
 	}
 
 	
