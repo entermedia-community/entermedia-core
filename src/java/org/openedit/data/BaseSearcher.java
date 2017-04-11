@@ -186,6 +186,11 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 
 		boolean runsearch = false;
 
+		String cache = inPageRequest.getRequestParameter("cache");
+		if(cache != null && !Boolean.parseBoolean("cache")){
+			runsearch = true;
+		}
+		
 		if (tracker == null)
 		{
 			runsearch = true;
