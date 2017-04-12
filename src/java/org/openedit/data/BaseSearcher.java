@@ -1413,7 +1413,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					cal.setTime(d);
 					cal.add(GregorianCalendar.DAY_OF_MONTH, 0 - len); // subtract
 					t = search.addBetween(field, cal.getTime(), d);
-					t.setOperation(op);
+					t.setOperation("betweendates");
 				}
 				else if (val != null && !"".equals(val))
 				{
