@@ -782,6 +782,19 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 	
 	public void removeSelection(String inId)
 	{
+		if( isAllSelected() )
+		{
+			setAllSelected(false);
+			getSelections().clear();
+			
+			//TODO: Get one page worth?
+			//add everything into the selections 
+			for (Iterator iterator = iterator(); iterator.hasNext();)
+			{
+				Data data = (Data) iterator.next();
+				getSelections().add(data.getId());
+			}
+		}
 		getSelections().remove(inId);
 	}
 
