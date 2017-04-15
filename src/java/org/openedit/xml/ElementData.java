@@ -2,6 +2,7 @@ package org.openedit.xml;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -20,6 +21,7 @@ import org.openedit.data.SaveableData;
 import org.openedit.data.SearchData;
 import org.openedit.data.ValuesMap;
 import org.openedit.modules.translations.LanguageMap;
+import org.openedit.util.DateStorageUtil;
 
 public class ElementData implements MultiValued, SaveableData, Comparable, SearchData
 {
@@ -548,5 +550,36 @@ public class ElementData implements MultiValued, SaveableData, Comparable, Searc
 		}
 		data.setPropertyDetails(getPropertyDetails());
 		return data;
+	}
+
+	@Override
+	public Date getDate(String inField)
+	{
+		Object date = getValue(inField);
+		if(date == null){
+			return null;
+		}
+
+		if(date instanceof Date){
+			return (Date) date;
+		}
+		
+		return DateStorageUtil.getStorageUtil().parseFromStorage((String)date);
+	}
+
+	@Override
+	public String getText(String inId, String inLocale) 
+	{
+		if( fieldMap == null)
+		{
+			return null;
+		}
+		Object value = getValue(inId);
+		if( value instanceof LanguageMap )
+		{
+			LanguageMap map = (LanguageMap)value;
+			return map.getText(inLocale);
+		}
+		return getMap().toString(value);
 	}
 }

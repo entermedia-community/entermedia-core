@@ -180,7 +180,9 @@ public class BaseOpenEditEngine implements OpenEditEngine
 		}
 
 	}
-
+/**
+ * @deprecated call RequestUtils.createPageStreamer
+ */
 	public PageStreamer createPageStreamer( Page inPage, WebPageRequest inPageRequest ) throws OpenEditException
 	{
 		PageStreamer pageStreamer = new PageStreamer();

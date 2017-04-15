@@ -22,8 +22,10 @@ import org.openedit.OpenEditRuntimeException;
 import org.openedit.WebPageRequest;
 import org.openedit.WebServer;
 import org.openedit.error.ErrorHandler;
+import org.openedit.generators.Output;
 import org.openedit.page.Page;
 import org.openedit.page.PageRequestKeys;
+import org.openedit.page.PageStreamer;
 import org.openedit.page.manage.PageManager;
 import org.openedit.profile.UserProfile;
 import org.openedit.users.User;
@@ -306,6 +308,24 @@ public class RequestUtils {
 
 		return context;
 	}
+	
+	public PageStreamer createPageStreamer( Page inPage, WebPageRequest inPageRequest ) throws OpenEditException
+	{
+		PageStreamer pageStreamer = new PageStreamer();
+		pageStreamer.setEngine( getWebServer().getOpenEditEngine() ); 
+		
+		Output out = new Output();
+		out.setWriter((Writer)inPageRequest.getPageValue(PageRequestKeys.OUTPUT_WRITER));
+		out.setStream((OutputStream)inPageRequest.getPageValue(PageRequestKeys.OUTPUT_STREAM));
+		
+		pageStreamer.setOutput(out);
+		pageStreamer.setWebPageRequest( inPageRequest);
+		inPageRequest.putPageStreamer(pageStreamer );
+		return pageStreamer;
+	}
+
+
+	
 	/* 
 	public String getRenderedPageContent(String inPath, WebPageRequest inReq, User inUser, URLUtilities util){
 		try
