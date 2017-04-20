@@ -585,6 +585,9 @@ public class PropertyDetails extends AbstractCollection
 		for (Iterator iterator = getDetails().iterator(); iterator.hasNext();)
 		{
 			PropertyDetail detail = (PropertyDetail) iterator.next();
+			if(inId == null){
+				return null;
+			}
 			if(inId.equals(detail.get("legacy"))){
 				return detail;
 			}
