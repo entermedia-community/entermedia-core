@@ -236,6 +236,7 @@ public class XmlUserArchive implements CatalogEnabled  {
 			for (int i = 0; i < files.length; i++) {
 				String username = PathUtilities.extractPageName(files[i]
 						.getName());
+				log.info("Found username: " + username );
 				all.add(username);
 			}
 		}
