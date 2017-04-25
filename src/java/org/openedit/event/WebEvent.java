@@ -13,6 +13,16 @@ public class WebEvent extends BaseData
 	protected Date fieldDate = new Date(); //defaults to "Right Now"
 	protected Object fieldSource;
 	protected User fieldUser;
+	protected boolean fieldCancelEvent;
+	
+	public boolean isCancelEvent()
+	{
+		return fieldCancelEvent;
+	}
+	public void setCancelEvent(boolean inCancelEvent)
+	{
+		fieldCancelEvent = inCancelEvent;
+	}
 	/**
 	 * Warning this may not be set. use getUserName to be sure
 	 * @return

@@ -12,7 +12,7 @@ import org.openedit.WebPageRequest;
 import org.openedit.cache.CacheManager;
 import org.openedit.data.SearcherManager;
 import org.openedit.event.WebEvent;
-import org.openedit.event.WebEventHandler;
+import org.openedit.event.EventManager;
 import org.openedit.hittracker.HitTracker;
 import org.openedit.users.authenticate.AuthenticationRequest;
 import org.openedit.util.StringEncryption;
@@ -23,16 +23,16 @@ public class BaseUserManager implements UserManager
 
 	protected String fieldCatalogId;
 	protected SearcherManager fieldSearcherManager;
-	protected WebEventHandler fieldWebEventHandler;
+	protected EventManager fieldEventManager;
 	protected Authenticator fieldAuthenticator;
 	public void setAuthenticator(Authenticator inAuthenticator)
 	{
 		fieldAuthenticator = inAuthenticator;
 	}
 
-	protected WebEventHandler getWebEventHandler() 
+	protected EventManager getEventManager() 
 	{
-		return fieldWebEventHandler;
+		return fieldEventManager;
 	}
 
 	public String getCatalogId()
@@ -268,9 +268,9 @@ public class BaseUserManager implements UserManager
 	}
 
 	@Override
-	public void setWebEventHandler(WebEventHandler inHandler)
+	public void setEventManager(EventManager inHandler)
 	{
-		fieldWebEventHandler = inHandler;
+		fieldEventManager = inHandler;
 	}
 
 	@Override
@@ -322,7 +322,7 @@ public class BaseUserManager implements UserManager
 	}
 
 	protected void fireUserEvent(User inUser, String inOperation) {
-		if (fieldWebEventHandler != null) {
+		if (fieldEventManager != null) {
 			WebEvent event = new WebEvent();
 			event.setOperation("authentication");
 			event.setSearchType("user");
@@ -330,7 +330,7 @@ public class BaseUserManager implements UserManager
 			event.addDetail("details", inOperation);
 			event.setCatalogId(getCatalogId());
 			event.setUser(inUser);
-			getWebEventHandler().eventFired(event);
+			getEventManager().fireEvent(event);
 		}
 	}
 

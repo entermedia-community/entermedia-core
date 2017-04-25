@@ -12,7 +12,7 @@ import org.openedit.ModuleManager;
 import org.openedit.OpenEditException;
 import org.openedit.WebPageRequest;
 import org.openedit.error.ErrorHandler;
-import org.openedit.event.WebEventHandler;
+import org.openedit.event.EventManager;
 import org.openedit.page.Page;
 import org.openedit.page.PageStreamer;
 import org.openedit.page.manage.PageManager;
@@ -72,6 +72,6 @@ public interface OpenEditEngine
      */
     public void shutdown();
 
-	public void setPageEventHandler(WebEventHandler inWebEventListener);
+	public void setPageEventHandler(EventManager inWebEventListener);
 
 }

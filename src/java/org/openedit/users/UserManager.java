@@ -18,7 +18,7 @@ import java.util.List;
 import org.openedit.CatalogEnabled;
 import org.openedit.OpenEditException;
 import org.openedit.WebPageRequest;
-import org.openedit.event.WebEventHandler;
+import org.openedit.event.EventManager;
 import org.openedit.hittracker.HitTracker;
 import org.openedit.users.authenticate.AuthenticationRequest;
 import org.openedit.users.filesystem.PermissionsManager;
@@ -184,7 +184,7 @@ public interface UserManager extends CatalogEnabled
 
 	public String decryptPassword( User inUser ) throws OpenEditException;
 	
-	public void setWebEventHandler( WebEventHandler inHandler);
+	public void setEventManager( EventManager inHandler);
 	
 	public void logout(User inUser);
 
