@@ -338,6 +338,10 @@ public final class PathUtilities
 		{
 			return requestPath.equalsIgnoreCase(wildcardPath);
 		}
+		else if( wildcardPath.length() == 1 && wildcardPath.charAt(0) == '*' )
+		{
+			return true;
+		}
 		else if( wildcardPath.charAt(0) == '*' && wildcardPath.charAt(wildcardPath.length()-1) == '*' )
 		{
 			String path = wildcardPath.substring(1,wildcardPath.length()-1);

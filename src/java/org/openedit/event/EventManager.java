@@ -75,7 +75,7 @@ public class EventManager
 				String bean = data.get("beanname"); 
 				WebEventListener listener = (WebEventListener)getSearcherManager().getModuleManager().getBean(inCatalogId, bean);
 				
-				Collection actionlist = (Collection)getSearcherManager().query(inCatalogId, "webeventlistenerfilter").match("webeventlistener", data.getId());
+				Collection actionlist = (Collection)getSearcherManager().query(inCatalogId, "webeventlistenerfilter").match("webeventlistener", data.getId()).search();
 
 				ListenerFilter actionfilter = new ListenerFilter();
 				actionfilter.setListener(listener);

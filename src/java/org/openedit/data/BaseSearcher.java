@@ -315,7 +315,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				{
 					WebEvent event = new WebEvent();
 					event.setSource(this);
-					event.setOperation(getSearchType() + "/search");
+					event.setOperation("search");
 					event.setSearchType(getSearchType());
 					event.setUser(inPageRequest.getUser());
 					event.setCatalogId(getCatalogId());
