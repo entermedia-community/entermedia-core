@@ -20,7 +20,7 @@ import org.openedit.OpenEditException;
 import org.openedit.Shutdownable;
 import org.openedit.WebPageRequest;
 import org.openedit.error.ErrorHandler;
-import org.openedit.event.WebEventHandler;
+import org.openedit.event.EventManager;
 import org.openedit.generators.Output;
 import org.openedit.page.Page;
 import org.openedit.page.PageRequestKeys;
@@ -38,7 +38,7 @@ public class BaseOpenEditEngine implements OpenEditEngine
 	protected ErrorHandler fieldErrorHandler;
 	protected String fieldVersion;
 	protected boolean fieldHideFolders = true;
-	protected WebEventHandler fieldPageEventHandler;
+	protected EventManager fieldPageEventHandler;
 	protected RequestUtils fieldRequestUtils;
 	
 	public void render( HttpServletRequest inRequest, HttpServletResponse inResponse ) throws IOException, OpenEditException 
@@ -348,7 +348,7 @@ public class BaseOpenEditEngine implements OpenEditEngine
 	}
 
 
-	public void setPageEventHandler(WebEventHandler inWebEventHandler)
+	public void setPageEventHandler(EventManager inWebEventHandler)
 	{
 		fieldPageEventHandler = inWebEventHandler;
 	}

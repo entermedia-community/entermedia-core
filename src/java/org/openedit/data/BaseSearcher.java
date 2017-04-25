@@ -28,7 +28,7 @@ import org.openedit.OpenEditException;
 import org.openedit.WebPageRequest;
 import org.openedit.config.Configuration;
 import org.openedit.event.WebEvent;
-import org.openedit.event.WebEventListener;
+import org.openedit.event.EventManager;
 import org.openedit.hittracker.GeoFilter;
 import org.openedit.hittracker.HitTracker;
 import org.openedit.hittracker.SearchQuery;
@@ -51,7 +51,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	protected static final String delim = ":";
 	protected PropertyDetailsArchive fieldPropertyDetailsArchive;
 	protected SearcherManager fieldSearcherManager;
-	protected WebEventListener fieldWebEventListener;
+	protected EventManager fieldEventManager;
 	protected boolean fieldFireEvents = false;
 	protected SearchQueryFilter fieldSearchQueryFilter;
 	protected boolean fieldAllowRemoteDetails = false;
@@ -1985,15 +1985,15 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 
 	protected void fireSearchEvent(WebEvent inEvent)
 	{
-		if (fieldWebEventListener != null)
+		if (fieldEventManager != null)
 		{
-			fieldWebEventListener.eventFired(inEvent);
+			fieldEventManager.fireEvent(inEvent);
 		}
 	}
 
-	protected WebEventListener getWebEventListener()
+	protected EventManager getEventManager()
 	{
-		return fieldWebEventListener;
+		return fieldEventManager;
 	}
 
 	/*
@@ -2016,9 +2016,9 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		fieldCatalogId = inCatalogId;
 	}
 
-	public void setWebEventListener(WebEventListener inWebEventListener)
+	public void setEventManager(EventManager inEventManager)
 	{
-		fieldWebEventListener = inWebEventListener;
+		fieldEventManager = inEventManager;
 	}
 
 	public List getProperties()
@@ -2362,7 +2362,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	protected void fireDataEditEvent(WebPageRequest inReq, Data object)
 	{
 
-		if (fieldWebEventListener == null)
+		if (fieldEventManager == null)
 		{
 			return;
 		}
@@ -2449,16 +2449,16 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			//aka "changes"
 			event.setProperty("details", changes.toString());
 			event.setUser(inReq.getUser());
-			getWebEventListener().eventFired(event);
+			getEventManager().fireEvent(event);
 		}
 	}
 
 	/*
-	 * public WebEventListener getWebEventListener() { return
-	 * fieldWebEventListener; }
+	 * public EventManager getEventManager() { return
+	 * fieldEventManager; }
 	 * 
-	 * public void setWebEventListener(WebEventListener inWebEventListener) {
-	 * fieldWebEventListener = inWebEventListener; }
+	 * public void setEventManager(EventManager inEventManager) {
+	 * fieldEventManager = inEventManager; }
 	 */
 	public void saveDetails(WebPageRequest inReq, String[] fields, Data data, String id)
 	{
