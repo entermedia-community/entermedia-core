@@ -2443,7 +2443,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			//			event.setProperty("assetname", asset.getName());
 			//			event.setProperty("changes", changes.toString());
 
-			event.setOperation(getSearchType() + "/edit");
+			event.setOperation("edit");
 			event.setSourcePath(object.getSourcePath());
 			event.setProperty("id", object.getId());
 			//aka "changes"
