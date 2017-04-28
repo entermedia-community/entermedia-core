@@ -270,10 +270,10 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 	{
 		setValue("keyword", inKeyword);
 	}
-	public boolean isStored()
-	{
-		return getBoolean("stored");
-	}
+//	public boolean isStored()
+//	{
+//		return getBoolean("stored");
+//	}
 	public void setStored( boolean inStored)
 	{
 		setValue("keyword", inStored);

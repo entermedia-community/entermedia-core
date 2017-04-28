@@ -94,15 +94,15 @@ public class PropertyDetailsArchive implements CatalogEnabled
 		return details.findIndexProperties();
 	}
 
-	public List getStoredProperties(String inType)
-	{
-		PropertyDetails details = getPropertyDetails(inType);
-		if (details == null)
-		{
-			return Collections.EMPTY_LIST;
-		}
-		return details.findStoredProperties();
-	}
+//	public List getStoredProperties(String inType)
+//	{
+//		PropertyDetails details = getPropertyDetails(inType);
+//		if (details == null)
+//		{
+//			return Collections.EMPTY_LIST;
+//		}
+//		return details.findStoredProperties();
+//	}
 
 	public String getConfigurationPath(String inPath)
 	{
@@ -700,15 +700,11 @@ public class PropertyDetailsArchive implements CatalogEnabled
 				String val = (String) languages.get(lang);
 				child.addElement("language").addAttribute("id", lang).addCDATA((String) val);
 			}
-
 		}
-
-		element.addAttribute("index", String.valueOf(inDetail.isIndex()));
-		element.addAttribute("keyword", String.valueOf(inDetail.isKeyword()));
-		element.addAttribute("filter", String.valueOf(inDetail.isFilter()));
-		element.addAttribute("stored", String.valueOf(inDetail.isStored()));
-		element.addAttribute("editable", String.valueOf(inDetail.isEditable()));
-		element.addAttribute("sortable", String.valueOf(inDetail.isSortable()));
+		saveBoolean(element, "index",inDetail.isIndex());
+		saveBoolean(element, "keyword",inDetail.isKeyword());
+		saveBoolean(element, "filter",inDetail.isFilter());
+		saveBoolean(element, "editable",inDetail.isEditable());
 
 		String type = inDetail.getDataType();
 		if (type != null)
@@ -730,6 +726,22 @@ public class PropertyDetailsArchive implements CatalogEnabled
 			{
 				element.addAttribute(key, val);
 			}
+		}
+	}
+
+	private void saveBoolean(Element inElement, String inId, boolean inIndex)
+	{
+		if( inIndex )
+		{
+			inElement.addAttribute("index", "true");
+		}
+		else
+		{
+			Attribute atr = inElement.attribute(inId);
+			if( atr != null)
+			{
+				inElement.remove(atr);
+			}	
 		}
 	}
 
