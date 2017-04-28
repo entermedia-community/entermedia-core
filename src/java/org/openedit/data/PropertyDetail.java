@@ -372,20 +372,13 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 	}
 	public void setProperty(String inId, String inValue)
 	{
-	
-	
-			
-				setValue(inId, inValue);
-			
-	
+		setValue(inId, inValue);
 	}
 	
 	public String getName()
 	{
 		return getElementData().getName();
 	}
-	
-	
 	
 	public void setName(String inName)
 	{

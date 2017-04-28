@@ -37,6 +37,12 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 	protected Collection<Data> fieldModules;
 	protected Set fieldPermissions;
 
+	private Integer getDefaultHitsPerPage() {
+		String result = this.fieldSearcherManager.getData(this.fieldCatalogId, "catalogsettings", "defaulthitsperpage").get("value");
+		if (result != null) return new Integer(result);
+		return 15;
+	}
+
 	public Set getPermissions()
 	{
 		return fieldPermissions;
@@ -402,12 +408,12 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 			value = get("modulehitsperpage");
 			if (value == null)
 			{
-				return 15;
+				return getDefaultHitsPerPage();
 			}
 		}
 		if ("null".equals(value))
 		{
-			return 15;
+			return getDefaultHitsPerPage();
 		}
 		return Integer.parseInt(value);
 	}

@@ -1295,7 +1295,6 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 	{
 		// TODO Auto-generated method stub
 		
-	}
-	
+	}	
 }
 
