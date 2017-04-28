@@ -2060,16 +2060,15 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		}
 		return details;
 	}
-
-//	public List getStoredProperties()
-//	{
-//		PropertyDetails details = getPropertyDetailsArchive().getPropertyDetailsCached(getSearchType());
-//		if (details == null)
-//		{
-//			return null;
-//		}
-//		return details.findStoredProperties();
-//	}
+	public List getStoredProperties()
+	{
+		PropertyDetails details = getPropertyDetailsArchive().getPropertyDetailsCached(getSearchType());
+		if (details == null)
+		{
+			return null;
+		}
+		return details.getDetails();
+	}
 
 	public List getKeywordProperties()
 	{
