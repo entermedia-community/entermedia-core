@@ -11,10 +11,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.openedit.xml.XmlFile;
 
 public class PropertyDetails extends AbstractCollection
 {
+	private static final Log log = LogFactory.getLog(PropertyDetails.class);
+
 	protected String fieldId;
 
 	protected List fieldDetails;
@@ -294,19 +298,19 @@ public class PropertyDetails extends AbstractCollection
 		return list;
 	}
 
-	public List findStoredProperties()
-	{
-		List list = new ArrayList(getDetails().size());
-		for (Iterator iter = getDetails().iterator(); iter.hasNext();)
-		{
-			PropertyDetail d = (PropertyDetail) iter.next();
-			if (d.isStored())
-			{
-				list.add(d);
-			}
-		}
-		return list;
-	}
+//	public List findStoredProperties()
+//	{
+//		List list = new ArrayList(getDetails().size());
+//		for (Iterator iter = getDetails().iterator(); iter.hasNext();)
+//		{
+//			PropertyDetail d = (PropertyDetail) iter.next();
+//			if (d.isStored())
+//			{
+//				list.add(d);
+//			}
+//		}
+//		return list;
+//	}
 	
 	public List findBadgesProperties()
 	{
@@ -372,12 +376,19 @@ public class PropertyDetails extends AbstractCollection
 			String[] type = inId.split("\\.");
 			if( type[1].length() == 2) //language.en
 			{
-				inId = inId.split("\\.")[0];					
+				inId = type[0];					
 			}
 			else
 			{
 				//Remote lookup
-				
+				//By searchtype
+				PropertyDetails otherdetails = getArchive().getPropertyDetailsCached(type[0]);
+				log.info("Loading " + inId );
+				if( otherdetails != null)
+				{
+					PropertyDetail shareddetail = otherdetails.getDetail(type[1]);
+					return shareddetail;
+				}
 				PropertyDetail localinfo = getDetail(type[0]);
 				if(localinfo != null && localinfo.isList()){
 					PropertyDetails remotedetails = getArchive().getPropertyDetails(localinfo.getListId());
@@ -385,17 +396,6 @@ public class PropertyDetails extends AbstractCollection
 					if(shareddetail != null){
 						return shareddetail;
 					}
-				}
-				
-				//By searchtype
-				
-				PropertyDetails otherdetails = getArchive().getPropertyDetailsCached(type[0]);
-							
-				if( otherdetails != null)
-				{
-					
-					PropertyDetail shareddetail = otherdetails.getDetail(type[1]);
-					return shareddetail;
 				}
 			}
 		}

@@ -576,15 +576,6 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable
 		}
 		return details.findIndexProperties();
 	}
-	public List getStoredProperties()
-	{
-		PropertyDetails details = getPropertyDetailsArchive().getPropertyDetailsCached(getSearchType());
-		if( details == null || details.size() == 0)
-		{
-			return getDefaultDetails().findStoredProperties();
-		}
-		return details.findStoredProperties();
-	}
 	
 	
 	public List getSearchProperties(User inUser)
@@ -592,7 +583,7 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable
 		List details = getDetailsForView(getSearchType() + "/" + getSearchType() + "search", inUser);
 		if (details == null || details.size() == 0)
 		{
-			return getDefaultDetails().findStoredProperties();
+			return getDefaultDetails().findIndexProperties();
 		}
 		return details;
 	}
