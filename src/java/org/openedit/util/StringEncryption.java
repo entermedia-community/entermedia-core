@@ -17,12 +17,15 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.openedit.OpenEditException;
 import org.openedit.OpenEditRuntimeException;
 import org.openedit.WebPageRequest;
 
 public class StringEncryption
 {
+	private static final Log log = LogFactory.getLog(StringEncryption.class);
 //	public static final String DESEDE_ENCRYPTION_SCHEME = "DESede";
 	public static final String DES_ENCRYPTION_SCHEME = "DES";
 	//public static final String DEFAULT_ENCRYPTION_KEY	= "This is a fairly long phrase used to encrypt";
@@ -199,7 +202,9 @@ public class StringEncryption
 		}
 		catch (Exception e)
 		{
-			throw new OpenEditException( e );
+			//throw new OpenEditException( e );
+			log.error(e);
+			return null;
 		}
 	}
 	

@@ -52,7 +52,7 @@ public class FileSystemAuthenticator extends BaseAuthenticator
 				else
 				{
 					String decryptedString = decrypt(password);
-						if ( decryptedString.equals(inPassword))
+						if ( decryptedString != null && decryptedString.equals(inPassword))
 						{
 							return true;
 						}
