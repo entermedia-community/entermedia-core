@@ -141,7 +141,39 @@ public class ValuesMap extends HashMap
 		Collection collection = Arrays.asList(vals);
 		return collection;
 	}
-
+	public Collection getObjects(String inPreference)
+	{
+		Object object = getObject(inPreference);
+		if( object == null || object == NULLVALUE)
+		{
+			return null;
+		}
+		if( object instanceof Collection)
+		{
+			return (Collection)object;
+		}
+		if( object instanceof String)
+		{
+			String val = String.valueOf( object );
+			String[] vals = null;
+			if( val.contains("|") )
+			{
+				vals = MultiValued.VALUEDELMITER.split(val);
+			}
+			else
+			{
+				vals = new String[]{val};
+			}
+			Collection collection = Arrays.asList(vals);
+			return collection;
+		}
+		else
+		{
+			Collection one = new ArrayList(1);
+			one.add(object);
+			return one;
+		}
+	}
 	public String getString(String inKey)
 	{
 		Object object = getObject(inKey);
