@@ -217,6 +217,22 @@ public class ValuesMap extends HashMap
 		}
 		return 0;
 	}
+
+	
+	public Double getDouble(String inId)
+	{
+		Object val = getObject(inId);
+		if( val != null)
+		{
+			if( val instanceof Double)
+			{
+				return (Double)val;
+			}
+			return Double.parseDouble(getString(inId));
+		}
+		return null;
+	}
+
 	public BigDecimal getBigDecimal(String inKey)
 	{
 		String val = getString(inKey);
