@@ -341,7 +341,7 @@ public class PropertyDetailsArchive implements CatalogEnabled
 					local.setView(inView);
 					local.setCatalogId(getCatalogId());
 					// local.setSearchType(getS)
-					populateViewElements(child, local);
+					local.populateViewElements(child);
 					return local;
 				}
 			}
@@ -745,36 +745,6 @@ public class PropertyDetailsArchive implements CatalogEnabled
 		}
 	}
 
-	protected void populateViewElements(Element inElement, PropertyDetail inDetail)
-	{
-
-		String label = inElement.getTextTrim();
-		if (label != null && label.length() > 0)
-		{
-			inDetail.setName(label);
-		}
-
-		else
-		{
-			//Element nameinfo = inElement.element("name");
-			//Override this later...to support overriding names in other languages.
-
-		}
-
-		// Set all the remaining attributes as properties
-		for (Iterator iterator = inElement.attributeIterator(); iterator.hasNext();)
-		{
-			Attribute attr = (Attribute) iterator.next();
-			String name = attr.getName();
-			if( !name.equals("id"))
-			{
-				String value = attr.getValue();
-				inDetail.setValue(name, value);
-			}
-			// log.info("Read" + name + " " + value);
-		}
-
-	}
 
 	protected PropertyDetail createDetail(Map defaults, String inInputFile, Element element, String inType)
 	{
@@ -999,7 +969,7 @@ public class PropertyDetailsArchive implements CatalogEnabled
 				{
 					PropertyDetail local = detail.copy();
 					local.setView(inViewName);
-					populateViewElements(elem, local);
+					local.populateViewElements(elem);
 					view.add(local);
 				}
 			}

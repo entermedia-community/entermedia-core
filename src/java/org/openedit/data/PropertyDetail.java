@@ -4,9 +4,15 @@
 package org.openedit.data;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.dom4j.Attribute;
+import org.dom4j.Element;
 import org.openedit.Data;
 import org.openedit.WebPageRequest;
 import org.openedit.modules.translations.LanguageMap;
@@ -37,6 +43,17 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 	protected ElementData fieldElementData;
 	
 	protected String fieldInputFilePath;
+	
+	
+	public List getObjectDetails() {
+		return fieldObjectDetails;
+	}
+
+	public void setObjectDetails(List inObjectDetails) {
+		fieldObjectDetails = inObjectDetails;
+	}
+
+	protected List fieldObjectDetails;
 	
 	
 	
@@ -199,6 +216,57 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 	
 	 
 	}
+	
+	
+	public void populateViewElements(Element inElement)
+	{
+		ArrayList childdetails = new ArrayList();
+
+		String label = inElement.getTextTrim();
+		if (label != null && label.length() > 0)
+		{
+			setName(label);
+		}
+
+		else
+		{
+			//Element nameinfo = inElement.element("name");
+			//Override this later...to support overriding names in other languages.
+
+		}
+
+		// Set all the remaining attributes as properties
+		for (Iterator iterator = inElement.attributeIterator(); iterator.hasNext();)
+		{
+			Attribute attr = (Attribute) iterator.next();
+			String name = attr.getName();
+			if( !name.equals("id"))
+			{
+				String value = attr.getValue();
+				setValue(name, value);
+			}
+			
+			
+			// log.info("Read" + name + " " + value);
+		}
+
+		if(isDataType("objectarray")){
+			for (Iterator iterator = inElement.elementIterator("property"); iterator.hasNext();) {
+				Element child = (Element) iterator.next();
+				ElementData data = new ElementData(child);
+				PropertyDetail detail = new PropertyDetail();
+				detail.setElementData(data);
+				childdetails.add(detail);
+			}
+		}
+		setObjectDetails(childdetails);
+	}
+
+	
+	
+	
+	
+	
 	
 	public void setDataType(String inDataType)
 	{
@@ -496,6 +564,7 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 	public void setElementData(ElementData inElementData)
 	{
 		fieldElementData = inElementData;
+		populateViewElements(inElementData.getElement());
 	}
 
 	public void setSortable(boolean inSortable) 
