@@ -174,4 +174,12 @@ public interface User extends Data
 
 	void setGroups(Collection inGroupslist);
 	
+	
+	public String getEnterMediaKey(); //Hash
+	
+
+
+	
+	
+	
 }

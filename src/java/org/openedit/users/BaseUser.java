@@ -498,6 +498,13 @@ public class BaseUser extends BaseData implements User, Comparable
 		
 	}
 
+	@Override
+	public String getEnterMediaKey()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 
 }
