@@ -181,7 +181,11 @@ public class UserProfileManager
 			}
 		}
 		userprofile.setModules(okmodules);
-
+		String lastviewedapp = userprofile.get("lastviewedapp");
+		if(lastviewedapp == null || !appid.equals(lastviewedapp)){
+			userprofile.setProperty("lastviewedapp", appid);
+			saveUserProfile(userprofile);
+		}
 		loadLibraries(userprofile, inCatalogId);
 
 		//Why do we do this? Seems like we already check this when we load up the profile above
