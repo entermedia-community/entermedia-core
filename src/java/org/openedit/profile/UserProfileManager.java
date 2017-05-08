@@ -137,11 +137,11 @@ public class UserProfileManager
 		userprofile.setCatalogId(inCatalogId);
 		String appid = inReq.findValue("applicationid");
 
-		String lastappid = userprofile.get("lastviewedapp");
-		if(lastappid == null || !lastappid.equals(inReq.findValue("applicationid"))){
-			userprofile.setValue("lastviewedapp", appid);
+		String preferedapp = userprofile.get("preferedapp");
+		if(preferedapp == null)
+		{
+			userprofile.setValue("preferedapp", appid);
 			saveUserProfile(userprofile);
-
 		}
 		
 		inReq.putSessionValue(id, userprofile);
