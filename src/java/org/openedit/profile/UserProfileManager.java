@@ -135,7 +135,15 @@ public class UserProfileManager
 		userprofile.setUser(user);
 		userprofile.setSourcePath(inUserName);
 		userprofile.setCatalogId(inCatalogId);
+		String appid = inReq.findValue("applicationid");
 
+		String lastappid = userprofile.get("lastviewedapp");
+		if(lastappid == null || !lastappid.equals(inReq.findValue("applicationid"))){
+			userprofile.setValue("lastviewedapp", appid);
+			saveUserProfile(userprofile);
+
+		}
+		
 		inReq.putSessionValue(id, userprofile);
 		inReq.putPageValue("userprofile", userprofile);
 
@@ -157,7 +165,6 @@ public class UserProfileManager
 //		userprofile.setCatalogs(new ListHitTracker(ok));
 //		userprofile.setUploadCatalogs(new ListHitTracker(ok));
 
-		String appid = inReq.findValue("applicationid");
 
 
 		Collection modules = getSearcherManager().getSearcher(inCatalogId, "module").query().match("id", "*").sort("name").search(inReq);
