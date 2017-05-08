@@ -151,7 +151,22 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 
 		return val;
 	}
-
+	
+	public Object getValue(String inKey)
+	{
+		Object val = super.getValue(inKey);
+		if( val != null)
+		{
+			return val;
+		}
+		if( inKey.equals("sendcollectionnotifications") || inKey.equals("sendapprovalnotifications") ||  inKey.equals("assethitsperpage") ||  inKey.equals("modulehitsperpage") )
+		{
+			//if we have a local value then user it. Otherwise use parent.
+			return getSettingsGroup().getValue(inKey);
+		}
+		return null;
+	}
+	
 	public Collection getValues(String inPreference)
 	{
 		String val = get(inPreference);
