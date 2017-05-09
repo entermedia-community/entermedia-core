@@ -185,6 +185,8 @@ public interface Searcher extends CatalogEnabled
 
 
 	public void setForceBulk(boolean inForceBulk);
+
+	public Object createValue(String inHeaderid, String inVal);
 	
 
 	 

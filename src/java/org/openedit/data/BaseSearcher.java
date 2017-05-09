@@ -15,8 +15,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.print.attribute.standard.MediaPrintableArea;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.entermediadb.location.GeoCoder;
@@ -27,8 +25,8 @@ import org.openedit.MultiValued;
 import org.openedit.OpenEditException;
 import org.openedit.WebPageRequest;
 import org.openedit.config.Configuration;
-import org.openedit.event.WebEvent;
 import org.openedit.event.EventManager;
+import org.openedit.event.WebEvent;
 import org.openedit.hittracker.GeoFilter;
 import org.openedit.hittracker.HitTracker;
 import org.openedit.hittracker.SearchQuery;
@@ -2806,6 +2804,48 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		//look up values in db
 		return null;
 	}
+	
+	
+	public Object createValue(String inDetailId, String inVal){
+		PropertyDetail detail = getDetail(inDetailId);
+		Object result = inVal;
+		if(detail == null){
+			return inVal;
+		}
+		if ( detail.isDate())
+		{	
+			try {
+				result = DateStorageUtil.getStorageUtil().parseFromStorage(inVal);
+			} catch (Exception e) {
+				log.info("Skipping bad date for " + inDetailId + "Val was " + inVal);
+			}
+		}
+			
+		else if(detail.isBoolean()){
+			result = Boolean.parseBoolean(inVal);
+		}
+		else if(detail.isMultiValue()){
+			String[] vals;
+			if( inVal.contains("|") )
+			{
+				vals = MultiValued.VALUEDELMITER.split(inVal);
+			}
+			else
+			{
+				vals = new String[]{inVal};
+			}
+			Collection collection = Arrays.asList(vals);
+			return collection;
+
+		}
+		else if(detail.isNumber()){
+			
+		}
+		
+		return result;
+	}
+
+	
 	
 	
 	
