@@ -45,11 +45,29 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 	protected String fieldInputFilePath;
 	
 	
-	public List getObjectDetails() {
+	public List getObjectDetails() 
+	{
+		if( fieldObjectDetails == null)
+		{
+			fieldObjectDetails = new ArrayList();
+			if(isDataType("objectarray"))
+			{
+				for (Iterator iterator = getElementData().getElement().elementIterator("property"); iterator.hasNext();) 
+				{
+					Element child = (Element) iterator.next();
+					ElementData data = new ElementData(child);
+					PropertyDetail detail = new PropertyDetail();
+					detail.setElementData(data);
+					detail.setCatalogId(getCatalogId());
+					fieldObjectDetails.add(detail);
+				}
+			}
+		}
 		return fieldObjectDetails;
 	}
 
-	public void setObjectDetails(List inObjectDetails) {
+	public void setObjectDetails(List inObjectDetails)
+	{
 		fieldObjectDetails = inObjectDetails;
 	}
 
@@ -220,8 +238,6 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 	
 	public void populateViewElements(Element inElement)
 	{
-		ArrayList childdetails = new ArrayList();
-
 		String label = inElement.getTextTrim();
 		if (label != null && label.length() > 0)
 		{
@@ -250,16 +266,6 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 			// log.info("Read" + name + " " + value);
 		}
 
-		if(isDataType("objectarray")){
-			for (Iterator iterator = inElement.elementIterator("property"); iterator.hasNext();) {
-				Element child = (Element) iterator.next();
-				ElementData data = new ElementData(child);
-				PropertyDetail detail = new PropertyDetail();
-				detail.setElementData(data);
-				childdetails.add(detail);
-			}
-		}
-		setObjectDetails(childdetails);
 	}
 
 	
@@ -564,7 +570,6 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 	public void setElementData(ElementData inElementData)
 	{
 		fieldElementData = inElementData;
-		populateViewElements(inElementData.getElement());
 	}
 
 	public void setSortable(boolean inSortable) 
