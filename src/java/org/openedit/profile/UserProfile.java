@@ -159,11 +159,15 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 		{
 			return val;
 		}
-		if( inKey.equals("sendcollectionnotifications") || inKey.equals("sendapprovalnotifications") ||  inKey.equals("assethitsperpage") ||  inKey.equals("modulehitsperpage") )
+		Data settings = getSettingsGroup();
+		if( settings != null)
 		{
-			//if we have a local value then user it. Otherwise use parent.
-			return getSettingsGroup().getValue(inKey);
-		}
+			if( inKey.equals("sendcollectionnotifications") || inKey.equals("sendapprovalnotifications") ||  inKey.equals("assethitsperpage") ||  inKey.equals("modulehitsperpage") )
+			{
+				//if we have a local value then user it. Otherwise use parent.
+				return settings.getValue(inKey);
+			}
+		}	
 		return null;
 	}
 	
