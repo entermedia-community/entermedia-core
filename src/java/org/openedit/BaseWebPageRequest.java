@@ -17,6 +17,7 @@ package org.openedit;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Reader;
+import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Collection;
 import java.util.Date;
@@ -44,6 +45,7 @@ import org.openedit.page.PageStreamer;
 import org.openedit.profile.UserProfile;
 import org.openedit.users.User;
 import org.openedit.util.LocaleManager;
+import org.openedit.util.OutputFiller;
 import org.openedit.util.PathUtilities;
 import org.openedit.util.SessionMap;
 import org.openedit.util.URLUtilities;
@@ -105,8 +107,13 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 			try
 			{
 				Reader reader = getRequest().getReader();
+				
 				if(reader != null){
 					jsonRequest = (Map)slurper.parse(reader); //this is real, the other way is just for t
+//					StringWriter st = new StringWriter();
+//					new OutputFiller().fill(reader, st);
+//					log.info(st.toString());
+//					jsonRequest = (Map)slurper.parseText(st.toString());
 					putPageValue("_jsonRequest", jsonRequest);
 				}
 			}
