@@ -134,7 +134,7 @@ public interface Searcher extends CatalogEnabled
 	public abstract void setSearchType(String inFieldName);
 
 	public abstract String getCatalogId();
-
+	
 	public abstract void setCatalogId(String inCatalogId);
 
 	public abstract void saveData(Data inData, User inUser);
@@ -187,6 +187,8 @@ public interface Searcher extends CatalogEnabled
 	public void setForceBulk(boolean inForceBulk);
 
 	public Object createValue(String inHeaderid, String inVal);
+
+	public void deleteAll(Collection inAssetconversions, User inUser);
 	
 
 	 

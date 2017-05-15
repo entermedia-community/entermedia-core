@@ -2845,7 +2845,16 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		return result;
 	}
 
-	
+	@Override
+	public void deleteAll(Collection inAssetconversions, User inUser)
+	{
+		for (Iterator iterator = inAssetconversions.iterator(); iterator.hasNext();)
+		{
+			Data data = (Data) iterator.next();
+			delete(data, inUser);
+		}
+
+	}
 	
 	
 	
