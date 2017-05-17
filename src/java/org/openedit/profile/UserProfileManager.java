@@ -60,9 +60,26 @@ public class UserProfileManager
 		{
 			inUserName = "anonymous";
 		}
-		UserProfile userprofile = null;
+		String appid = inReq.findValue("applicationid");
+		UserProfile userprofile = loadProfile(inReq, inCatalogId, appid, inUserName);
+
+		if( userprofile != null)
+		{
+			String lastviewedapp = userprofile.get("lastviewedapp");
+			if(lastviewedapp == null || !appid.equals(lastviewedapp))
+			{
+				userprofile.setProperty("lastviewedapp", appid);
+				saveUserProfile(userprofile);
+			}
+		}
+		return userprofile;
+	}
+
+	protected UserProfile loadProfile(WebPageRequest inReq, String inCatalogId, String appid, String inUserName)
+	{
 		String id = inCatalogId + "userprofile" + inUserName;
 
+		UserProfile userprofile;
 		if (inReq != null)
 		{
 			boolean reload = Boolean.parseBoolean(inReq.findValue("reloadprofile"));
@@ -135,14 +152,13 @@ public class UserProfileManager
 		userprofile.setUser(user);
 		userprofile.setSourcePath(inUserName);
 		userprofile.setCatalogId(inCatalogId);
-		String appid = inReq.findValue("applicationid");
 
-		String preferedapp = userprofile.get("preferedapp");
-		if(preferedapp == null)
-		{
-			userprofile.setValue("preferedapp", appid);
-			saveUserProfile(userprofile);
-		}
+//		String preferedapp = userprofile.get("preferedapp");
+//		if(preferedapp == null)
+//		{
+//			userprofile.setValue("preferedapp", appid);
+//			saveUserProfile(userprofile);
+//		}
 		
 		inReq.putSessionValue(id, userprofile);
 		inReq.putPageValue("userprofile", userprofile);
@@ -181,11 +197,6 @@ public class UserProfileManager
 			}
 		}
 		userprofile.setModules(okmodules);
-		String lastviewedapp = userprofile.get("lastviewedapp");
-		if(lastviewedapp == null || !appid.equals(lastviewedapp)){
-			userprofile.setProperty("lastviewedapp", appid);
-			saveUserProfile(userprofile);
-		}
 		loadLibraries(userprofile, inCatalogId);
 
 		//Why do we do this? Seems like we already check this when we load up the profile above
