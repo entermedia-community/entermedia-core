@@ -544,6 +544,8 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 		{
 			return false;
 		}
+		
+		//TODO: Use indextype instead of analyzer
 		if("not_analyzed".equals(getValue("analyzer"))){
 			return false;
 		}
