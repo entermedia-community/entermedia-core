@@ -183,6 +183,15 @@ public class OutputFiller
 			close(out);
 		}
 	}
+	public void fill(java.io.InputStream in, java.io.OutputStream out, boolean autoclose) throws java.io.IOException
+	{
+		fill(in,out);
+		if( autoclose)
+		{
+			FileUtils.safeClose(in);
+			FileUtils.safeClose(out);
+		}
+	}
 	public void fill(java.io.InputStream in, java.io.OutputStream out) throws java.io.IOException
 	{
 		byte[] bytes = new byte[getBufferSize()];
