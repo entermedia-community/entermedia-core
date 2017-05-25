@@ -128,7 +128,16 @@ public class FileGenerator extends BaseGenerator implements Generator
 					res.setStatus(HttpServletResponse.SC_PARTIAL_CONTENT);
 				}
 			}
-			
+			if( res != null)
+			{
+				String forcedownload = inContext.getRequestParameter("forcedownload");
+				if( Boolean.parseBoolean(forcedownload))
+				{
+					//filename = URLEncoder.encode(filename,content.getCharacterEncoding());
+					String filename = contentpage.getName().replace(";", "");
+					res.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
+				}	
+			}	
 			
 			long length = -1;
 			if ( res != null && !contentpage.isHtml() && !contentpage.isJson() && inContext.getContentPage() == contentpage  )
