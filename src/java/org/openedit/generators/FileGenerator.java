@@ -151,7 +151,7 @@ public class FileGenerator extends BaseGenerator implements Generator
 					if(length > 0 && length < Integer.MAX_VALUE)
 					{
 
-						res.setContentLength((int)length);
+						//res.setContentLength((int)length);
 					}	
 					else
 					{
@@ -168,6 +168,10 @@ public class FileGenerator extends BaseGenerator implements Generator
 			}
 			else
 			{
+				if( length > -1)
+				{
+					res.setContentLength((int)length);
+				}
 				InputStreamReader reader = null;
 				if ( contentpage.getCharacterEncoding() != null )
 				{
@@ -208,6 +212,10 @@ public class FileGenerator extends BaseGenerator implements Generator
 	
 	protected InputStream streamBinary(WebPageRequest inReq, Page inPage, InputStream in, long start, long end, long length, Output inOut) throws IOException
 	{
+		if( length > -1 && inReq.getResponse() != null)
+		{
+			inReq.getResponse().setContentLength((int)length);
+		}
 		OutputStream outs = inOut.getStream();
 		if( start > -1)
 		{
