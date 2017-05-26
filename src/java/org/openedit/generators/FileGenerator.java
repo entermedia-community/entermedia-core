@@ -131,12 +131,20 @@ public class FileGenerator extends BaseGenerator implements Generator
 			if( res != null)
 			{
 				String forcedownload = inContext.getRequestParameter("forcedownload");
+			
 				if( Boolean.parseBoolean(forcedownload))
 				{
 					//filename = URLEncoder.encode(filename,content.getCharacterEncoding());
-					String filename = contentpage.getName().replace(";", "");
-					res.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
-				}	
+
+					String downloadname = inContext.getRequestParameter("downloadname");
+					if (downloadname == null) {
+						downloadname = contentpage.getName();
+					}
+
+					downloadname = downloadname.replace(";", "");
+
+					res.setHeader("Content-Disposition", "attachment; filename=\"" + downloadname + "\"");
+				}
 			}	
 			
 			long length = -1;
