@@ -340,5 +340,20 @@ public class ValuesMap extends HashMap
 			super.putAll(inArg0);
 		}
 	}
+	public Long getLong(String inField)
+	{
+		Object val = getObject(inField);
+		if( val == null || val == NULLVALUE)
+		{
+			return null;
+		}
+		if( val instanceof Long)
+		{
+			return (Long)val;
+		}
+		long l = Long.parseLong(inField);
+		
+		return l;
+	}
 	
 }
