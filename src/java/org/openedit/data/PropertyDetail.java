@@ -222,6 +222,7 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 	public void setViewType(String inViewType)
 	{
 		setValue("viewtype", inViewType); //TODO: Move to rendertype
+		setValue("rendertype", inViewType); //TODO: Move to rendertype
 	}
 	
 	public String getDataType()
@@ -683,7 +684,10 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 	public void setValue(String inId, Object inValueOf)
 	{
 		getElementData().setValue(inId, inValueOf);
-		
+		if("rendertype".equals(inId)){
+			getElementData().setValue("viewtype", inValueOf);
+
+		}
 	}
 
 	public boolean isString()

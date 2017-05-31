@@ -706,6 +706,37 @@ public class PropertyDetailsArchive implements CatalogEnabled
 		saveBoolean(element, "filter",inDetail.isFilter());
 		saveBoolean(element, "editable",inDetail.isEditable());
 
+		
+		for (Iterator iterator = inDetail.getElementData().keySet().iterator(); iterator.hasNext();)
+		{
+			String key = (String) iterator.next();
+			String val = (String) inDetail.get(key);
+			if (!"name".equals(key))
+			{
+				element.addAttribute(key, val);
+			}
+		}
+		
+		ArrayList toremove = new ArrayList();
+		for (Iterator iterator = element.attributeIterator(); iterator.hasNext();) {
+			Attribute attr = (Attribute) iterator.next();
+			if(!inDetail.getElementData().keySet().contains(attr.getName())){
+				toremove.add(attr);
+			}
+			
+		}
+		
+		for (Iterator iterator = toremove.iterator(); iterator.hasNext();) {
+			Attribute attr = (Attribute) iterator.next();
+			element.remove(attr);
+		}
+		
+	
+		
+		
+		
+		
+		
 		String type = inDetail.getDataType();
 		if (type != null)
 		{
@@ -716,17 +747,42 @@ public class PropertyDetailsArchive implements CatalogEnabled
 		if (viewtype != null)
 		{
 			element.addAttribute("viewtype", viewtype);
+		} else{
+			Attribute viewattr = element.attribute("viewtype");
+			if(viewattr != null){
+				element.remove(viewattr);
+			}
+			 viewattr = element.attribute("rendertype");
+			if(viewattr != null){
+				element.remove(viewattr);
+			}
+			
+			
 		}
 
-		for (Iterator iterator = inDetail.getElementData().keySet().iterator(); iterator.hasNext();)
+		String datatype = inDetail.getDataType();
+		if (datatype != null)
 		{
-			String key = (String) iterator.next();
-			String val = (String) inDetail.get(key);
-			if (!"name".equals(key))
-			{
-				element.addAttribute(key, val);
-			}
+			element.addAttribute("datatype", datatype);
+		} else{
+			Attribute viewattr = element.attribute("datatype");
+			if(viewattr != null){
+				element.remove(viewattr);
+			}			
 		}
+		//Cleanup and standardize
+		
+		
+		
+		
+		
+		Attribute typeattr = element.attribute("type");
+		if(typeattr != null){
+			element.remove(typeattr);
+		}
+		
+		
+		
 	}
 
 	private void saveBoolean(Element inElement, String inId, boolean inIndex)
