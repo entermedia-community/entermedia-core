@@ -18,6 +18,9 @@ package org.openedit;
 
 import java.io.File;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.entermediadb.asset.BaseEnterMediaTest;
 import org.openedit.modules.BaseModule;
 import org.openedit.page.Page;
 
@@ -33,7 +36,7 @@ public class BaseTestCase extends TestCase
 {
 	protected  TestFixture fieldFixture;
 	protected  static TestFixture fieldStaticFixture;
-
+	private static final Log log = LogFactory.getLog(BaseTestCase.class);
 	/**
 	 * 
 	 */
@@ -80,6 +83,7 @@ public class BaseTestCase extends TestCase
 		{
 			fieldStaticFixture = new TestFixture();
 			try {
+				log.info("Initi one time " + getClass() );
 				oneTimeSetup();
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
