@@ -20,7 +20,6 @@ import java.io.File;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.entermediadb.asset.BaseEnterMediaTest;
 import org.openedit.modules.BaseModule;
 import org.openedit.page.Page;
 
