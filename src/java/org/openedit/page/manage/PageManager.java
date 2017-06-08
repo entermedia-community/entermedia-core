@@ -615,9 +615,16 @@ public class PageManager
 			while( settings != null)
 			{
 				String dirparent = PathUtilities.extractDirectoryPath(settings.getPath());
-				List morechildren = getRepository().getChildrenNames(dirparent );
-				all.addAll(morechildren);
-				settings = settings.getFallback();
+				if( dirparent.equals("/WEB-INF/base"))
+				{
+					settings = null; //Stop here
+				}
+				else
+				{
+					List morechildren = getRepository().getChildrenNames(dirparent );
+					all.addAll(morechildren);
+					settings = settings.getFallback();
+				}	
 			}
 		}
 		return all;
