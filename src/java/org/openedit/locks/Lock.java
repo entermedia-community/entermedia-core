@@ -59,7 +59,7 @@ public class Lock extends BaseData implements SaveableData
 
 	public boolean isLocked()
 	{
-		return Boolean.parseBoolean(get("locked"));
+		return getBoolean("locked");
 	}
 
 	public void setLocked(boolean isLocked)

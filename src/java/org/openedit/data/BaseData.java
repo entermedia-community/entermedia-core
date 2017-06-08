@@ -150,7 +150,7 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 			throw new OpenEditException(e);
 		}
 	}
-	protected ValuesMap getMap() 
+	public ValuesMap getMap() 
 	{
 		if (fieldMap == null) {
 			fieldMap = new ValuesMap();
