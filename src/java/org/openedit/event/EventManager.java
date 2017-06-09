@@ -94,5 +94,11 @@ public class EventManager
 		return list;
 	}
 
+	public void eventFired(WebEvent inEvent)
+	{
+		fireEvent(inEvent);//legacy
+		
+	}
+
 	
 }
