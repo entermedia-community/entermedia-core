@@ -16,6 +16,7 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openedit.OpenEditException;
 import org.openedit.repository.BaseRepository;
 import org.openedit.repository.ContentItem;
 import org.openedit.repository.OutputStreamItem;
@@ -323,25 +324,29 @@ public class FileRepository extends  BaseRepository
 
 	public List getChildrenNames(String inParent) throws RepositoryException
 	{
-		if( inParent.endsWith("/"))
-		{
-			inParent = inParent.substring(0,inParent.length() - 1);
-		}
-		File file = getFile( inParent );
-		String[] all = file.list();
-		if( all != null)
-		{
-			List children = new ArrayList(all.length);
-			for (int i = 0; i < all.length; i++)
+		try {
+			if( inParent.endsWith("/"))
 			{
-				String path = inParent + "/" + PathUtilities.extractFileName(all[i]);				
-				if( isExcluded(path) )
-				{
-					continue;
-				}				
-				children.add(path);
+				inParent = inParent.substring(0,inParent.length() - 1);
 			}
-			return children;
+			File file = getFile( inParent );
+			String[] all = file.list();
+			if( all != null)
+			{
+				List children = new ArrayList(all.length);
+				for (int i = 0; i < all.length; i++)
+				{
+					String path = inParent + "/" + PathUtilities.extractFileName(all[i]);				
+					if( isExcluded(path) )
+					{
+						continue;
+					}				
+					children.add(path);
+				}
+				return children;
+			}
+		} catch (Exception e) {
+			throw new OpenEditException("Error getting child names on:" + inParent ,e);
 		}
 		return Collections.EMPTY_LIST;
 	}
