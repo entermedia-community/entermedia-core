@@ -346,8 +346,8 @@ public class FileRepository extends  BaseRepository
 				return children;
 			}
 		} catch (StackOverflowError e) {
-			
-			throw new OpenEditException("Error getting child names on:" + inParent ,e);
+			log.info("BAD PATH WAS " + inParent);
+			throw new RuntimeException("Error getting child names on:" + inParent );
 		}
 		return Collections.EMPTY_LIST;
 	}
