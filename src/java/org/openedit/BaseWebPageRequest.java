@@ -36,6 +36,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.collections.map.ListOrderedMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openedit.data.BaseData;
 import org.openedit.generators.VariablePackage;
 import org.openedit.generators.VariableStore;
 import org.openedit.page.Page;
@@ -1372,6 +1373,14 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 	
 	public void setMethod(String inMethod){
 		//NOOP
+	}
+
+	@Override
+	public Data getData()
+	{
+		BaseData data = new BaseData();
+		data.setProperties(getParameterMap());
+		return data;
 	}
 
 }
