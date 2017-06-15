@@ -53,7 +53,7 @@ public class FilterNode extends BaseData
 				return Integer.parseInt(count);
 			}
 		}
-		return 0;
+		return -1;
 	}
 	
 	public FilterNode getChild(String inId)
