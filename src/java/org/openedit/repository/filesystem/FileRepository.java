@@ -345,7 +345,8 @@ public class FileRepository extends  BaseRepository
 				}
 				return children;
 			}
-		} catch (Exception e) {
+		} catch (StackOverflowError e) {
+			
 			throw new OpenEditException("Error getting child names on:" + inParent ,e);
 		}
 		return Collections.EMPTY_LIST;
