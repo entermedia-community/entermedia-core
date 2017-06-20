@@ -188,7 +188,7 @@ public interface Searcher extends CatalogEnabled
 
 	public Object createValue(String inHeaderid, String inVal);
 
-	public void deleteAll(Collection inAssetconversions, User inUser);
+	public void deleteAll(Collection toDelete, User inUser);
 	
 
 	 
