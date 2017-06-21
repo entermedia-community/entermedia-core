@@ -1889,40 +1889,18 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 				{
 					SearchQuery child = (SearchQuery) getChildren().get(j);
 					String query = child.toQuery();
-					boolean enclose = true;
-					if (query.startsWith("+") || query.startsWith("-"))
-						enclose = false;
-						
 					//&& !query.startsWith("+") && !query.startsWith("-")
-					if (j > 0 )
+					done.append(" ");
+					if( isAndTogether())
 					{
-						done.append(" ");
-						if( isAndTogether())
-						{
-							if (enclose)
-							{
-								done.append("+(");	
-							}
-						}
-						else
-						{
-							done.append("OR ");
-							if (enclose)
-							{
-								done.append("(");	
-							}
-						}
+						done.append("AND( ");	
 					}
-					else if (enclose)
+					else
 					{
-						done.append("(");
+						done.append("OR( ");
 					}
 					done.append(query);
-					
-					if (enclose)
-					{
-						done.append(")");	
-					}
+					done.append(" )");	
 				}
 			}
 			return done.toString();
@@ -1977,7 +1955,15 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 			public String toQuery()
 			{
 				StringBuffer orString = new StringBuffer();
-				orString.append(" NOT " + getValues().toString() );
+				orString.append(getDetail().getId() + " NOT = " );
+				for (int i = 0; i < getValues().length; i++)
+				{
+					if( i < 0)
+					{
+						orString.append("|");
+					}
+					orString.append(getValues()[i] );
+				}
 				return orString.toString();
 			}
 		};
