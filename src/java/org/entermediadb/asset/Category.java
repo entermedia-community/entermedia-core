@@ -130,5 +130,7 @@ public interface Category extends MultiValued
 
 	boolean hasLoadedParent();
 
+	boolean hasSelfCategory(Collection<Category> inViewcategories);
+
 
 }
