@@ -10,6 +10,7 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.entermediadb.asset.Category;
 import org.openedit.CatalogEnabled;
 import org.openedit.Data;
 import org.openedit.MultiValued;
@@ -466,7 +467,7 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 	}
 
 
-	public Collection<String> getViewCategories()
+	public Collection<Category> getViewCategories()
 	{
 		return fieldViewCategories;
 	}
@@ -485,7 +486,7 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 
 	}
 
-	public void setViewCategories(Collection<String> inCombinedLibraries)
+	public void setViewCategories(Collection<Category> inCombinedLibraries)
 	{
 		fieldViewCategories = inCombinedLibraries;
 	}

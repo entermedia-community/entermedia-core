@@ -1949,7 +1949,23 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	}
 	public Term addNots(PropertyDetail inField, Collection inNotshown)
 	{
-		String[] values = (String[])inNotshown.toArray(new String[inNotshown.size()]);
+		
+		String[] values =  new String[inNotshown.size()];
+		int i = 0;
+		for (Iterator iterator = inNotshown.iterator(); iterator.hasNext();)
+		{
+			Object object = (Object) iterator.next();
+			if( object instanceof Data)
+			{
+				values[i] = ((Data)object).getId();
+			}
+			else
+			{
+				values[i] = String.valueOf(object);
+			}
+			i++;
+		}
+		
 		Term term = new Term()
 		{
 			public String toQuery()

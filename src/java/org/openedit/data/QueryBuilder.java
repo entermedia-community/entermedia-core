@@ -10,6 +10,8 @@ import org.openedit.Data;
 import org.openedit.WebPageRequest;
 import org.openedit.hittracker.HitTracker;
 import org.openedit.hittracker.SearchQuery;
+import org.openedit.profile.UserProfile;
+import org.openedit.users.Group;
 
 public class QueryBuilder
 {
@@ -221,5 +223,36 @@ public class QueryBuilder
 	{
 		getQuery().addNots(inField, inIds);
 		return this;
+	}
+	
+	public QueryBuilder permissions(UserProfile inProfile)
+	{
+		Collection groupids = new ArrayList();
+		if( inProfile == null || inProfile.getUser() == null)
+		{
+			groupids.add("anonymous");
+		}
+		else
+		{
+			for (Iterator iterator = inProfile.getUser().getGroups().iterator(); iterator.hasNext();)
+			{
+				Group group = (Group) iterator.next();
+				groupids.add(group.getId());
+			}
+		}
+		String roleid = null;
+		if( inProfile.getSettingsGroup() != null)
+		{
+			roleid = inProfile.getSettingsGroup().getId();
+		}
+		else
+		{
+			roleid = "anonymous";
+		}
+			orgroup("viewgroups", groupids).
+			match("viewroles", roleid).
+			match("viewusers", inProfile.getUserId());
+		return this;
+		
 	}
 }
