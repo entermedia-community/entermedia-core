@@ -336,7 +336,8 @@ public class FileRepository extends  BaseRepository
 				List children = new ArrayList(all.length);
 				for (int i = 0; i < all.length; i++)
 				{
-					String path = inParent + "/" + PathUtilities.extractFileName(all[i]);				
+					String childpath = all[i];
+					String path = inParent + "/" + PathUtilities.extractFileName(childpath, false);				
 					if( isExcluded(path) )
 					{
 						continue;

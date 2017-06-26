@@ -520,6 +520,11 @@ public final class PathUtilities
 	 * @return
 	 */
 	public static String extractFileName(String path) {
+		return extractFileName(path, true);
+	
+	}
+
+	public static String extractFileName(String path, boolean removeparams) {
 
 		if ( path == null)
 		{
@@ -543,16 +548,21 @@ public final class PathUtilities
 		{
 			start = start + 1;
 		}
+		
 		String pageName = newpath.substring(start, newpath.length());
+		if(removeparams){
 		int params = pageName.lastIndexOf("?");
 		if( params > -1)
 		{
 			pageName = pageName.substring(0,params);
 		}
 
+		}
 		return pageName;
 	}
-
+	
+	
+	
 	public static String createDraftPath(String inPath)
 	{
 		if ( inPath != null)
