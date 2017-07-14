@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.openedit.MultiValued;
 
-public interface Category extends MultiValued
+public interface Category extends MultiValued, Comparable
 {
 
 	String getIndexId();
@@ -112,7 +112,7 @@ public interface Category extends MultiValued
 
 	String loadCategoryPath();
 
-	int compareTo(Category c2);
+	int compareTo(Object c2);
 
 	boolean refresh();
 
