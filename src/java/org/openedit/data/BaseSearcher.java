@@ -289,7 +289,8 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				{
 					if (usersettings != null)
 					{
-						inQuery.setHitsPerPage(usersettings.getHitsPerPageForSearchType(inQuery.getResultType()));
+						int count = usersettings.getHitsPerPageForSearchType(inQuery.getResultType());
+						inQuery.setHitsPerPage(count);
 					}
 					else if (oldtracker != null)
 					{

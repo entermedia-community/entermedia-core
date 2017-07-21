@@ -121,6 +121,10 @@ public class ElementData implements MultiValued, SaveableData, Comparable, Searc
 	 */
 	public Object getValue(String inId)
 	{
+		if( inId == null)
+		{
+			return null;
+		}
 		if (inId.equals("name"))
 		{
 			return getLanguageMap(inId);

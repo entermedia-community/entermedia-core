@@ -79,7 +79,7 @@ public class HtmlErrorHandler implements ErrorHandler
 						log.debug("Ignored:" + ex);
 					}
 				}
-				error.printStackTrace();
+				log.error(error);
 				String pathWithError = exception.getPathWithError();
 				if( pathWithError == null)
 				{
