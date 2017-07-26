@@ -272,6 +272,10 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 		setProperty("settingsgroup", inSettingsGroupId);
 	}
 
+	public void save()
+	{
+		save(null);
+	}
 	public void save(User inUser)
 	{
 		Searcher searcher = getSearcherManager().getSearcher(getCatalogId(), "userprofile");
