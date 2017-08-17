@@ -75,7 +75,11 @@ public class LdapAuthenticator extends BaseAuthenticator
 		
 		if (ldap.connect())
 		{
+			if(!inUser.isEnabled()){
 			inUser.setEnabled(true);
+			getSearcherManager().getSearcher(inAReq.getCatalogId(), "user").saveData(inUser);
+			}
+			
 			return true;
 		}
 		
