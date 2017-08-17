@@ -75,6 +75,7 @@ public class LdapAuthenticator extends BaseAuthenticator
 		
 		if (ldap.connect())
 		{
+			inUser.setEnabled(true);
 			return true;
 		}
 		
