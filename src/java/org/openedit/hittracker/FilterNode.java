@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.openedit.WebPageRequest;
 import org.openedit.data.BaseData;
+import org.openedit.data.PropertyDetail;
 import org.openedit.modules.translations.LanguageMap;
 
 public class FilterNode extends BaseData
@@ -12,8 +14,17 @@ public class FilterNode extends BaseData
 	
 	protected List fieldChildren;
 	protected boolean isSelected;
+	protected PropertyDetail fieldPropertyDetail;
 	
 	
+	public PropertyDetail getPropertyDetail()
+	{
+		return fieldPropertyDetail;
+	}
+	public void setPropertyDetail(PropertyDetail inPropertyDetail)
+	{
+		fieldPropertyDetail = inPropertyDetail;
+	}
 	public List getChildren()
 	{
 		if (fieldChildren == null)
@@ -83,6 +94,27 @@ public class FilterNode extends BaseData
 			}
 		}
 		return false;
+	}
+	
+	public String getText(WebPageRequest inReq)
+	{
+		String val = null;
+		if( getPropertyDetail() != null && getPropertyDetail().isBoolean())
+		{
+			if( getName().equals( "1" ) )
+			{
+				val = inReq.getText("True");
+			}
+			else
+			{
+				val = inReq.getText("False");
+			}
+		}
+		else
+		{
+			val = getName(inReq.getLocale());
+		}
+		return val;
 	}
 	
 	@Override
