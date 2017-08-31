@@ -1667,6 +1667,14 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 
 		String page = inPageRequest.getRequestParameter("page");
 		int totalPages = tracker.getTotalPages();
+		if( page == null)
+		{
+			if( Boolean.parseBoolean( inPageRequest.findValue("alwaysresetpage") ) )
+			{
+				page = "1";
+			}
+		}
+		
 		if (page != null)
 		{
 			int jumpToPage = Integer.parseInt(page);
