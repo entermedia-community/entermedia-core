@@ -64,7 +64,7 @@ public class LdapAuthenticator extends BaseAuthenticator
         	return false;
         }
         
-        LDAP ldap = getServer(server.get("value"));
+        LDAP ldap = new LDAP( server.get("value"));
 		
         Data prefix = getSearcherManager().getData(inAReq.getCatalogId(), "catalogsettings", "ldapserverprefix");
         Data postfix = getSearcherManager().getData(inAReq.getCatalogId(), "catalogsettings", "ldapserverpostfix");
@@ -75,9 +75,12 @@ public class LdapAuthenticator extends BaseAuthenticator
 		
 		if (ldap.connect())
 		{
-			if(!inUser.isEnabled()){
-			inUser.setEnabled(true);
-			getSearcherManager().getSearcher(inAReq.getCatalogId(), "user").saveData(inUser);
+			if(!inUser.isEnabled() || inUser.isVirtual())
+			{
+				inUser.setEnabled(true);
+				inUser.setVirtual(false);
+				
+				getSearcherManager().getSearcher(inAReq.getCatalogId(), "user").saveData(inUser);
 			}
 			
 			return true;

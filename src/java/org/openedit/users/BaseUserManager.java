@@ -287,6 +287,7 @@ public class BaseUserManager implements UserManager
 			user.setUserName(inAccount);
 			user.setPassword(inPassword);
 			user.setVirtual(true);
+			user.setEnabled(true);
 
 			Group group = getGroup(inGroupId);
 			if (group == null) {

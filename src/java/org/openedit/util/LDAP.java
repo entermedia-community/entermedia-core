@@ -110,7 +110,7 @@ public class LDAP
 		//uid=%s,ou=People,dc=company,dc=com
 		// String base = "ou=People,dc=example,dc=com";
 		// String dn = "uid=" + inUser.getUserName() + "," + base;
-
+		log.info("LDAP login: " + dnbuffer.toString());
 		getEnvironment().put(Context.SECURITY_PRINCIPAL, dnbuffer.toString());
 		getEnvironment().put(Context.SECURITY_CREDENTIALS, inPassword);
 
