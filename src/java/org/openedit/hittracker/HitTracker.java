@@ -80,7 +80,11 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 	{
 		return getSearchQuery().getResultType();
 	}
-	
+
+	public String getSearchType()
+	{
+		return getSearcher().getSearchType();
+	}
 	/*
 	public List getPartOfPageOfHits(int inStart, int inEnd) throws Exception
 	{
