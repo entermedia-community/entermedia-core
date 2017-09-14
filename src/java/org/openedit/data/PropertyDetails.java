@@ -479,6 +479,26 @@ public class PropertyDetails extends AbstractCollection
 		}
 		return properties;
 	}
+	
+
+	public PropertyDetail getDetailByProperty(String property, String value)
+	{
+		//TODO: Add a cache here. 
+
+		List properties = new ArrayList();
+		for (Iterator iter = getDetails().iterator(); iter.hasNext();)
+		{
+			PropertyDetail detail = (PropertyDetail) iter.next();
+			String val = detail.get(property);
+			if (value.equals(val))
+			{
+				return detail;
+			}
+		}
+		return null;
+	}
+	
+	
 
 	public List getDetailsByType(String property, String value)
 	{
