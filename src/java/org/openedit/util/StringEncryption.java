@@ -2,12 +2,15 @@ package org.openedit.util;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.KeySpec;
 import java.util.Properties;
 
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.Mac;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
@@ -19,9 +22,12 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openedit.Data;
 import org.openedit.OpenEditException;
 import org.openedit.OpenEditRuntimeException;
 import org.openedit.WebPageRequest;
+import org.openedit.data.Searcher;
+import org.openedit.data.SearcherManager;
 
 public class StringEncryption
 {
@@ -39,6 +45,18 @@ public class StringEncryption
 	protected File fieldRootDirectory;
 	protected String fieldSecretKeyName = "userpassword";
 	private static final String	UNICODE_FORMAT			= "UTF8";
+
+	protected SearcherManager fieldSearcherManager;
+	
+	public SearcherManager getSearcherManager()
+	{
+		return fieldSearcherManager;
+	}
+
+	public void setSearcherManager(SearcherManager inSearcherManager)
+	{
+		fieldSearcherManager = inSearcherManager;
+	}
 
 	public StringEncryption()
 	{
@@ -135,6 +153,10 @@ public class StringEncryption
 			}
 			if( fieldEncryptionKey == null)
 			{
+				fieldEncryptionKey = getEncryptionKey("autologincookiekey");  //7939805759879766427939805759879766
+			}
+			if( fieldEncryptionKey == null)
+			{
 				fieldEncryptionKey = DEFAULT_ENCRYPTION_KEY;
 			}
 		}
@@ -145,14 +167,12 @@ public class StringEncryption
 	{
 		if ( unencryptedString == null || unencryptedString.trim().length() == 0 )
 		{
-				throw new IllegalArgumentException(
-						"unencrypted string was null or empty" );
+				throw new IllegalArgumentException("unencrypted string was null or empty" );
 		}
 		try
 		{
 			byte[] cleartext = unencryptedString.getBytes( UNICODE_FORMAT );
 			Cipher cipher = getCipher(); //Not thread safe
-			cipher.init( Cipher.ENCRYPT_MODE, getSecretKey() );
 
 			byte[] ciphertext = cipher.doFinal( cleartext );
 
@@ -192,11 +212,7 @@ public class StringEncryption
 			{
 				encryptedString = encryptedString.substring(3);
 			}
-			Cipher cipher = getCipher();
-			cipher.init( Cipher.DECRYPT_MODE, getSecretKey() );
-			Base64 base64decoder = new Base64();
-			byte[] cleartext = base64decoder.decode( encryptedString.getBytes( UNICODE_FORMAT ) );
-			byte[] ciphertext = cipher.doFinal( cleartext );
+			byte[] ciphertext = decodeKey(encryptedString);
 
 			return bytes2String( ciphertext );
 		}
@@ -206,6 +222,27 @@ public class StringEncryption
 			log.error(e);
 			return null;
 		}
+	}
+
+	protected byte[] decodeKey(String encryptedString) throws Exception
+	{
+		Base64 base64decoder = new Base64();
+		byte[] cleartext = base64decoder.decode( encryptedString.getBytes( UNICODE_FORMAT ) );
+		Cipher cipher = getCipher();
+		byte[] ciphertext = null;
+		try
+		{
+			ciphertext = cipher.doFinal( cleartext );
+		}
+		catch (Exception ex)
+		{
+			Cipher oldCipher = Cipher.getInstance( DES_ENCRYPTION_SCHEME );
+			byte[] keyAsBytes = DEFAULT_ENCRYPTION_KEY.getBytes( UNICODE_FORMAT );
+			DESKeySpec oldSpec = new DESKeySpec( keyAsBytes );
+			oldCipher.init( Cipher.DECRYPT_MODE, getKeyFactory().generateSecret( oldSpec ) );
+			ciphertext = oldCipher.doFinal( cleartext );
+		}
+		return ciphertext;
 	}
 	
 	//This seems wrong. Only works for ASCII. Why not just use new String().getBytes()?
@@ -219,11 +256,19 @@ public class StringEncryption
 		return stringBuffer.toString();
 	}
 
-	public Cipher getCipher() throws Exception
+	public Cipher getCipher()
 	{
 		if( fieldCipher == null)
 		{
-			fieldCipher = Cipher.getInstance( DES_ENCRYPTION_SCHEME );
+			try
+			{
+				fieldCipher = Cipher.getInstance( DES_ENCRYPTION_SCHEME );
+				fieldCipher.init( Cipher.DECRYPT_MODE, getSecretKey() );
+			} 
+			catch ( Exception ex)
+			{
+				throw new OpenEditException(ex);
+			}
 		}
 		return fieldCipher;
 	}
@@ -361,6 +406,22 @@ public class StringEncryption
 		}
 		
 		return name;
+	}
+
+	public String getEncryptionKey(String inType)
+	{
+		if( fieldSearcherManager == null)
+		{
+			return null;
+		}
+		Searcher searcher = getSearcherManager().getSearcher("system", "systemsettings");
+		Data found = searcher.query().match("id", inType).searchOne();
+		String key = null;
+		if( found != null)
+		{
+			key = found.get("value");
+		}
+		return key;
 	}
 
 	
