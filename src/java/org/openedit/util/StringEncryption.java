@@ -40,7 +40,10 @@ public class StringEncryption
 	protected String fieldEncryptionKey;
 	protected KeySpec				fieldKeySpec;
 	protected SecretKeyFactory	fieldKeyFactory;
-	protected Cipher				fieldCipher;
+	
+	protected ThreadLocal<Cipher> fieldDecodePool = new ThreadLocal<Cipher>();
+	protected ThreadLocal<Cipher> fieldEncodePool = new ThreadLocal<Cipher>();
+	
 	protected SecretKey fieldSecretKey;
 	protected File fieldRootDirectory;
 	protected String fieldSecretKeyName = "userpassword";
@@ -62,6 +65,8 @@ public class StringEncryption
 	{
 	}
 	
+	
+	/*
 	public StringEncryption( String encryptionKey )
 	{
 		try
@@ -85,8 +90,8 @@ public class StringEncryption
 					"encryption key was less than 24 characters" );
 		fieldEncryptionKey = inEncryptionKey;
 		setKeySpec(null);
-		setCipher(null);
 	}
+	*/
 	
 	/**
 	 * Computes RFC 2104-compliant HMAC signature. * @param data The data to be
@@ -172,7 +177,7 @@ public class StringEncryption
 		try
 		{
 			byte[] cleartext = unencryptedString.getBytes( UNICODE_FORMAT );
-			Cipher cipher = getCipher(); //Not thread safe
+			Cipher cipher = getEncodeCipher(); //Not thread safe
 
 			byte[] ciphertext = cipher.doFinal( cleartext );
 
@@ -228,7 +233,7 @@ public class StringEncryption
 	{
 		Base64 base64decoder = new Base64();
 		byte[] cleartext = base64decoder.decode( encryptedString.getBytes( UNICODE_FORMAT ) );
-		Cipher cipher = getCipher();
+		Cipher cipher = getDecodeCipher();
 		byte[] ciphertext = null;
 		try
 		{
@@ -256,28 +261,41 @@ public class StringEncryption
 		return stringBuffer.toString();
 	}
 
-	public Cipher getCipher()
+	public Cipher getDecodeCipher()
 	{
-		if( fieldCipher == null)
+		try
 		{
-			try
-			{
-				fieldCipher = Cipher.getInstance( DES_ENCRYPTION_SCHEME );
-				fieldCipher.init( Cipher.DECRYPT_MODE, getSecretKey() );
-			} 
-			catch ( Exception ex)
-			{
-				throw new OpenEditException(ex);
-			}
+			Cipher w = fieldDecodePool.get();
+		    if(w == null) {
+				w = Cipher.getInstance( DES_ENCRYPTION_SCHEME );
+				w.init( Cipher.DECRYPT_MODE, getSecretKey() );
+				fieldDecodePool.set(w);		    	
+		    }
+		    return w; 
+		} 
+		catch ( Exception ex)
+		{
+			throw new OpenEditException(ex);
 		}
-		return fieldCipher;
 	}
 
-	public void setCipher(Cipher inCipher)
+	public Cipher getEncodeCipher()
 	{
-		fieldCipher = inCipher;
+		try
+		{
+			Cipher w = fieldEncodePool.get();
+		    if(w == null) {
+				w = Cipher.getInstance( DES_ENCRYPTION_SCHEME );
+				w.init( Cipher.ENCRYPT_MODE, getSecretKey() );
+				fieldEncodePool.set(w);		    	
+		    }
+		    return w; 
+		} 
+		catch ( Exception ex)
+		{
+			throw new OpenEditException(ex);
+		}
 	}
-
 	public SecretKeyFactory getKeyFactory() throws Exception
 	{
 		if( fieldKeyFactory == null)
