@@ -1301,6 +1301,15 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 		String text = getPage().getText(inKey, getLocale());
 		return text;
 	}
+	public String getText(Data inData)
+	{
+		if( inData == null)
+		{
+			return null;
+		}
+		String text = inData.getName( getLocale());
+		return text;
+	}
 	
 	public LocaleManager getLocaleManager()
 	{
