@@ -35,8 +35,21 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 	protected Map fieldResultViews;
 	protected XmlArchive fieldXmlArchive;
 	protected Collection fieldViewCategories;
+	protected Collection<String> fieldCollectionIds;
 	protected Collection<Data> fieldModules;
 	protected Set fieldPermissions;
+	protected String fieldIndexId;
+	
+
+	public String getIndexId()
+	{
+		return fieldIndexId;
+	}
+
+	public void setIndexId(String inIndexId)
+	{
+		fieldIndexId = inIndexId;
+	}
 
 	public Set getPermissions()
 	{
@@ -103,6 +116,16 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 	public String getUserId()
 	{
 		return getId();
+	}
+
+	public Collection<String> getCollectionIds()
+	{
+		return fieldCollectionIds;
+	}
+
+	public void setCollectionIds(Collection<String> inCollectionIds)
+	{
+		fieldCollectionIds = inCollectionIds;
 	}
 
 	public boolean isEnabled(String inPreference)

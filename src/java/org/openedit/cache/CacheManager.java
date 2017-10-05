@@ -39,13 +39,15 @@ public class CacheManager
 	{
 		Cache<String, Object> map = null;
 		
-		if(fieldExpiryTime == -1){
-			
-		map = CacheBuilder.newBuilder()
-				       .maximumSize(inTargetSize)
-//				       .expireAfterWrite(15, TimeUnit.MINUTES)
-				       .build();
-		} else{
+		if(fieldExpiryTime == -1)
+		{
+			map = CacheBuilder.newBuilder()
+					       .maximumSize(inTargetSize)
+	//				       .expireAfterWrite(15, TimeUnit.MINUTES)
+					       .build();
+		} 
+		else
+		{
 			map = CacheBuilder.newBuilder()
 				       .maximumSize(inTargetSize)
 				       .expireAfterWrite(fieldExpiryTime, TimeUnit.MINUTES)
