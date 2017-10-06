@@ -1392,4 +1392,15 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 		return data;
 	}
 
+	@Override
+	public boolean hasPermission(String inKey)
+	{
+		Object can = getPageValue("can" + inKey);
+		if( can != null)
+		{
+			return (Boolean)can;
+		}
+		return false;
+	}
+
 }

@@ -267,5 +267,7 @@ public interface WebPageRequest
 	public String getSiteUrl();
 	
 	public Data getData();
+
+	boolean hasPermission(String inString);
 	
 }

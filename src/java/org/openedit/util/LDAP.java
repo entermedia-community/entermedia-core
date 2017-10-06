@@ -142,7 +142,7 @@ public class LDAP
 			return false;
 		} catch (Exception e)
 		{
-			log.error(e);
+			log.error("Problem connecting with ldap " ,e);
 			return false;
 		}
 		return true;

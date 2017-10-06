@@ -195,8 +195,36 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 	
 	public Collection getValues(String inPreference)
 	{
-		String val = get(inPreference);
-
+		Object value = super.getValue(inPreference);
+		if( value instanceof Collection)
+		{
+			Collection col = (Collection) value;
+			if( !col.isEmpty() )
+			{
+				return col;
+			}
+		}
+		if (value == null && getSettingsGroup() != null)
+		{
+			value = getSettingsGroup().getValue(inPreference);
+		}
+		String val = null;
+		if( value instanceof Collection)
+		{
+			Collection col = (Collection) value;
+			if( !col.isEmpty() )
+			{
+				return col;
+			}
+		}
+		else if( value != null)
+		{
+			val = String.valueOf(value);
+		}
+		if( val == null)
+		{
+			val = get(inPreference);
+		}
 		if (val == null || val.trim().length() == 0)
 		{
 			return null;
