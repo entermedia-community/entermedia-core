@@ -67,14 +67,31 @@ public class LdapAuthenticator extends BaseAuthenticator
         LDAP ldap = new LDAP( server.get("value"));
 		
         Data prefix = getSearcherManager().getData(inAReq.getCatalogId(), "catalogsettings", "ldapserverprefix");
-        Data postfix = getSearcherManager().getData(inAReq.getCatalogId(), "catalogsettings", "ldapserverpostfix");
         
 		String inPassword = inAReq.getPassword();
 		
-		ldap.authenticate(prefix.get("value"),inUser.getUserName(), postfix.get("value"), inPassword);
+		String sprefix = null;
+		if( prefix == null)
+		{
+			sprefix = prefix.get("value");
+		}
+        Data postfix = getSearcherManager().getData(inAReq.getCatalogId(), "catalogsettings", "ldapserverpostfix");
+		String spostfix = null;
+		if( spostfix == null)
+		{
+			spostfix = postfix.get("value");
+		}
+		
+		ldap.authenticate(sprefix,inUser.getUserName(), spostfix, inPassword);
 		
 		if (ldap.connect())
 		{
+//	        Data usersearch = getSearcherManager().getData(inAReq.getCatalogId(), "catalogsettings", "ldapserverusersearch");
+//	        if( usersearch != null)
+//	        {
+//	        	ldap.search("userdetails", inUser.getUserName());
+//	        }
+			
 			if(!inUser.isEnabled() || inUser.isVirtual())
 			{
 				inUser.setEnabled(true);
