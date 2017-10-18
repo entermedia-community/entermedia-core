@@ -271,7 +271,7 @@ public class URLUtilities
 	 *
 	 * @see java.net.URLEncoder
 	 */
-	public String encode(String s)
+	public static String encode(String s)
 	{
 		if (s == null)
 		{
