@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface NodeManager
 {
-	Node getLocalNode();
+	//Node getLocalNode();
 
 	String getLocalNodeId();
 
