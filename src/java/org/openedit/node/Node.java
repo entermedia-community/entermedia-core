@@ -1,26 +1,38 @@
 package org.openedit.node;
 
-import java.io.File;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 
 import org.dom4j.Element;
-import org.openedit.data.BaseData;
-import org.openedit.util.Replacer;
+import org.openedit.xml.ElementData;
 
-public class Node extends BaseData
+public class Node extends ElementData
 {
 	public Node()
 	{
 
 	}
 	
-	
-	public String getSetting(String inId)
+	public Node(Element inVal)
 	{
-		return get(inId);
+		super(inVal);
 	}
 	
+	public String get(String inId)
+	{
+		String val = getElement().attributeValue(inId);
+		if( val == null)
+		{
+			for (Iterator iterator = getElement().elementIterator(); iterator.hasNext();)
+			{
+				Element ele = (Element)iterator.next();
+				if( inId.equals( ele.attributeValue("id") ) )
+				{
+					val = ele.getTextTrim();
+					break;
+				}
+			}
+		}
+		return val;
+	}
 	
 }
