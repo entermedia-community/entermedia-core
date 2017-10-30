@@ -118,15 +118,15 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 		return getId();
 	}
 
-	public Collection<String> getCollectionIds()
-	{
-		return fieldCollectionIds;
-	}
-
-	public void setCollectionIds(Collection<String> inCollectionIds)
-	{
-		fieldCollectionIds = inCollectionIds;
-	}
+//	public Collection<String> getCollectionIds()
+//	{
+//		return fieldCollectionIds;
+//	}
+//
+//	public void setCollectionIds(Collection<String> inCollectionIds)
+//	{
+//		fieldCollectionIds = inCollectionIds;
+//	}
 
 	public boolean isEnabled(String inPreference)
 	{
