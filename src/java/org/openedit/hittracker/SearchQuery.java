@@ -1528,18 +1528,19 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 
 	public Term addBefore(PropertyDetail inField, final  Date inDate)
 	{
+		final String valueof= DateStorageUtil.getStorageUtil().formatForStorage(inDate);
+
 		Term term = new Term()
 		{
 			public String toQuery()
 			{
-				String fin = getDetail().getId() + ":[00000000000000 TO " +inDate + "]";
+				String fin = getDetail().getId() + ":[00000000000000 TO " +valueof + "]";
 				return fin;
 			}
 		};
 		term.setOperation("beforedate");
 		term.setDetail(inField);
 	
-		String valueof= DateStorageUtil.getStorageUtil().formatForStorage(inDate);
 		term.setValue(valueof);
 	
 		getTerms().add(term);
