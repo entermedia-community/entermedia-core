@@ -351,7 +351,7 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 //	}
 	public void setStored( boolean inStored)
 	{
-		setValue("stored", inStored);
+		setValue("keyword", inStored);
 	}
 	public boolean isEditable()
 	{
