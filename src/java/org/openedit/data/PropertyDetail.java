@@ -535,8 +535,19 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 	}
 	public boolean isAnalyzed()
 	{
-		
-		if(getId().endsWith("id") || isList() || isMultiValue() ||  getId().contains("sourcepath") ){
+		String al = (String)getValue("analyzer");
+		if( al != null)
+		{
+			if( "not_analyzed".equals(al) )
+			{
+				return false;
+			}
+			else
+			{
+				return true;
+			}
+		}
+		if(isMultiLanguage() || getId().endsWith("id") || isList() || isMultiValue() ||  getId().contains("sourcepath") ){
 			return false;
 		}
 		
@@ -546,10 +557,6 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 			return false;
 		}
 		
-		//TODO: Use indextype instead of analyzer
-		if("not_analyzed".equals(getValue("analyzer"))){
-			return false;
-		}
 		return true;
 	}
 	
