@@ -17,9 +17,11 @@ import java.io.File;
 import java.io.StringWriter;
 import java.util.Map;
 
+import org.openedit.data.SearcherManager;
 import org.openedit.page.Page;
 import org.openedit.page.PageRequestKeys;
 import org.openedit.page.manage.PageManager;
+import org.openedit.profile.UserProfile;
 import org.openedit.servlet.OpenEditEngine;
 import org.openedit.users.User;
 import org.openedit.users.UserManager;
@@ -85,6 +87,9 @@ public class TestFixture
 		if ( admin != null )
 		{
 			context.putPageValue( PageRequestKeys.USER, admin );
+			SearcherManager manager = (SearcherManager)getModuleManager().getBean("searcherManager");
+			UserProfile profile = (UserProfile)manager.getData("entermedia/catalogs/testcatalog", "userprofile","admin");
+			context.putPageValue( "userprofile", profile );
 		}
 		context.putPageValue("username", "admin");
 
