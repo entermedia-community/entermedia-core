@@ -535,8 +535,38 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 	}
 	public boolean isAnalyzed()
 	{
+<<<<<<< entermedia9
 		
 		if(getId().endsWith("id") || isList() || isMultiValue() ||  getId().contains("sourcepath") ){
+=======
+		String al = (String)getValue("analyzer");
+		if( al != null)
+		{
+			if( "not_analyzed".equals(al) )
+			{
+				return false;
+			}
+			else
+			{
+				return true;
+			}
+		}
+		
+		String indextype = (String)getValue("indextype");
+		if( indextype != null)
+		{
+			if( "not_analyzed".equals(indextype) )
+			{
+				return false;
+			}
+			else
+			{
+				return true;
+			}
+		}
+
+		if(isMultiLanguage() || getId().endsWith("id") || isList() || isMultiValue() ||  getId().contains("sourcepath") ){
+>>>>>>> d347eda Index type check
 			return false;
 		}
 		
