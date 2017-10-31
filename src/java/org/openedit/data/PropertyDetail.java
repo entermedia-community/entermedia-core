@@ -547,6 +547,20 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 				return true;
 			}
 		}
+		
+		String indextype = (String)getValue("indextype");
+		if( indextype != null)
+		{
+			if( "not_analyzed".equals(indextype) )
+			{
+				return false;
+			}
+			else
+			{
+				return true;
+			}
+		}
+
 		if(isMultiLanguage() || getId().endsWith("id") || isList() || isMultiValue() ||  getId().contains("sourcepath") ){
 			return false;
 		}
