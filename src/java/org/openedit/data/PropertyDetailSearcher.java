@@ -12,7 +12,7 @@ import org.openedit.hittracker.ListHitTracker;
 import org.openedit.hittracker.SearchQuery;
 import org.openedit.users.User;
 
-public class PropertyDetailSearcher extends BaseSearcher
+public class PropertyDetailSearcher extends BaseSearcher implements NonExportable
 {
 
 	
