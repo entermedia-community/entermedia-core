@@ -69,6 +69,8 @@
       <include name="**"/>
     </javac>
   	<copy file="${src}/mimetypes.properties" tofile="${build}/mimetypes.properties"/>
+  	  	<copy file="${src}/log4j2.properties" tofile="${build}/log4j2.properties"/>
+
   </target>
     
   	<!-- 
