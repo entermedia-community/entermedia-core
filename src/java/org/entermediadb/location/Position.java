@@ -1,5 +1,7 @@
 package org.entermediadb.location;
 
+import java.util.Map;
+
 import org.dom4j.Element;
 
 //Copyright 2003 Princeton Board of Trustees.
@@ -51,8 +53,16 @@ public class Position {
 	 *            a <code>Position</code>
 	 */
 	public Position(Position p) {
-		latitude = p.latitude;
 		longitude = p.longitude;
+		latitude = p.latitude;
+	}
+
+	public Position(Map inValue)
+	{
+		Double lat = (Double)inValue.get("lat");
+		latitude = lat;
+		Double lon = (Double)inValue.get("lon");
+		longitude = lon;
 	}
 
 	/**
@@ -176,7 +186,7 @@ public class Position {
 	 * @return a string representation of this <code>Position</code>
 	 */
 	public String toString() {
-		return "(" + latitude + ", " + longitude + ")";
+		return "{lat: "+ latitude + ", lng: " +  longitude + "}";
 	}
 
 	public Double getAccuracy() {
