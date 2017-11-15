@@ -329,7 +329,8 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			{
 				String fullq = inQuery.toQuery();
 				inPageRequest.putPageValue("error", "Invalid search input. " + URLUtilities.xmlEscape(fullq));
-				log.error(ex + " on " + fullq, ex);
+				log.error(ex + " on " + fullq);
+				ex.printStackTrace();
 				inQuery.setProperty("error", "Invalid search " + URLUtilities.xmlEscape(fullq));
 				//					if( ex instanceof OpenEditException)
 				//					{

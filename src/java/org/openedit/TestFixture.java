@@ -92,7 +92,6 @@ public class TestFixture
 			context.putPageValue( "userprofile", profile );
 		}
 		context.putPageValue("username", "admin");
-		//context.putPageValue("userprofile", get);
 
 		//URLUtilities util = (URLUtilities) inContext.getPageValue( "url_util" );
 		context.putPageValue(PageRequestKeys.WEB_SERVER_PATH,"http://localhost:8080");

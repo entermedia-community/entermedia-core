@@ -10,9 +10,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/json-simple-1.1.1.jar"/>
 	<classpathentry exported="true" kind="con" path="GROOVY_DSL_SUPPORT"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-codec-1.7.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jcl-over-slf4j-1.7.18.jar"/>
-	<classpathentry kind="lib" path="lib/slf4j-api-1.7.18.jar"/>
-	<classpathentry kind="lib" path="lib/slf4j-simple-1.7.18.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/velocity-1.7-depem.jar"/>
 	<classpathentry kind="lib" path="lib/guava-18.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-logging-1.2.jar"/>
