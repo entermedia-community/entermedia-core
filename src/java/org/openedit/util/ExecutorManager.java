@@ -28,6 +28,7 @@ public class ExecutorManager implements Shutdownable
 	private static final Log log = LogFactory.getLog(ExecutorManager.class);
 	
 	protected Integer fieldMaxThreadCount = 10;
+	protected Integer fieldAvailableProcessors = null;
 	
 	public Integer getMaxThreadCount()
 	{
@@ -71,16 +72,7 @@ public class ExecutorManager implements Shutdownable
 				}
 				else if( inType.equals("conversions"))
 				{
-					int max =  Runtime.getRuntime().availableProcessors();
-					if( max > getMaxThreadCount())
-					{
-						max = getMaxThreadCount(); //Disk IO gets crazy
-					}
-					else if( max < 4)
-					{
-						max = 4;
-					}
-					max--;
+					int max = getAvailableProcessors();
 					exec =  createExecutor(max, max); //Max does not seem to work as advertised
 				}
 				else if( inType.equals("importing"))
@@ -91,6 +83,26 @@ public class ExecutorManager implements Shutdownable
 			}
 		}
 		return exec;
+	}
+
+
+	public int getAvailableProcessors()
+	{
+		if( fieldAvailableProcessors == null)
+		{
+			int max =  Runtime.getRuntime().availableProcessors();
+			if( max > getMaxThreadCount())
+			{
+				max = getMaxThreadCount(); //Disk IO gets crazy
+			}
+			else if( max < 4)
+			{
+				max = 4;
+			}
+			max--;
+			fieldAvailableProcessors = max;
+		}
+		return fieldAvailableProcessors;
 	}
 	public void execute(String inType, List<Runnable> inTasks)
 	{
