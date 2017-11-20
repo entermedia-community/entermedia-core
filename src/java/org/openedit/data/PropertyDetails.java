@@ -383,12 +383,12 @@ public class PropertyDetails extends AbstractCollection
 				//Remote lookup
 				//By searchtype
 				PropertyDetails otherdetails = getArchive().getPropertyDetailsCached(type[0]);
-				log.info("Loading " + inId );
 				if( otherdetails != null)
 				{
 					PropertyDetail shareddetail = otherdetails.getDetail(type[1]);
 					return shareddetail;
 				}
+				log.info("Loading " + inId );
 				PropertyDetail localinfo = getDetail(type[0]);
 				if(localinfo != null && localinfo.isList()){
 					PropertyDetails remotedetails = getArchive().getPropertyDetails(localinfo.getListId());
