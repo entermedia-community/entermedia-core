@@ -24,8 +24,7 @@ public class Lock extends BaseData implements SaveableData
 	}
 	public void setDate(Date inDate)
 	{
-		String date = DateStorageUtil.getStorageUtil().formatForStorage(inDate);
-		setProperty("date", date);
+		setValue("date", inDate);
 	}
 	public boolean isLockedBy(String inNodeId, String inOwnerId)
 	{
@@ -45,7 +44,7 @@ public class Lock extends BaseData implements SaveableData
 	}
 	public void setNodeId(String inId)
 	{
-		setProperty("nodeid", inId);
+		setValue("nodeid", inId);
 	}
 	public String getNodeId()
 	{
