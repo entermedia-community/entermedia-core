@@ -94,6 +94,10 @@ public class QueryBuilder
 	 */
 	public QueryBuilder orgroup(String inKey, Collection inDataCollection)
 	{
+		if( inDataCollection ==  null || inDataCollection.isEmpty())
+		{
+			return this;
+		}
 		Iterator iter = inDataCollection.iterator();
 		if( iter.hasNext())
 		{
@@ -221,6 +225,11 @@ public class QueryBuilder
 	}
 	public QueryBuilder notgroup(String inField, Collection inIds)
 	{
+		if( inIds ==  null || inIds.isEmpty())
+		{
+			return this;
+		}
+
 		getQuery().addNots(inField, inIds);
 		return this;
 	}

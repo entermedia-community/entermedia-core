@@ -425,19 +425,25 @@ public class StringEncryption
 		
 		return name;
 	}
-
+	
+	//TODO: Cache this
 	public String getEncryptionKey(String inType)
 	{
 		if( fieldSearcherManager == null)
 		{
 			return null;
 		}
-		Searcher searcher = getSearcherManager().getSearcher("system", "systemsettings");
-		Data found = searcher.query().match("id", inType).searchOne();
-		String key = null;
-		if( found != null)
+		String key = (String)getSearcherManager().getCacheManager().get("getEncryptionKey", inType);
+		if( key == null)
 		{
-			key = found.get("value");
+			Searcher searcher = getSearcherManager().getSearcher("system", "systemsettings");
+			Data found = searcher.query().match("id", inType).searchOne();
+			
+			if( found != null)
+			{
+				key = found.get("value");
+			}
+			getSearcherManager().getCacheManager().put("getEncryptionKey", inType, key);
 		}
 		return key;
 	}
