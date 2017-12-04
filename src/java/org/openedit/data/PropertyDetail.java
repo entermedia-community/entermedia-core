@@ -615,6 +615,17 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 		setValue("sortable",inSortable);
 	}
 	
+	public String getDefaultSort()
+	{
+		String sort = get("sort");
+		if( sort == null)
+		{
+			sort = "name";
+		}
+		return sort;
+	}
+	
+	
 	public String getSortProperty()
 	{
 		if( isExternalSort() )
