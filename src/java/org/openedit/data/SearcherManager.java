@@ -18,6 +18,7 @@ import org.openedit.ModuleManager;
 import org.openedit.MultiValued;
 import org.openedit.OpenEditException;
 import org.openedit.OpenEditRuntimeException;
+import org.openedit.WebPageRequest;
 import org.openedit.cache.CacheManager;
 import org.openedit.hittracker.HitTracker;
 import org.openedit.locks.LockManager;
@@ -293,7 +294,30 @@ public class SearcherManager
 		}
 		return val;
 	}
-	
+	public String getLabel(PropertyDetail inDetail, Data inData, String inLocale)
+	{
+		Searcher listsearcher = getSearcher(inDetail.getListCatalogId(),inDetail.getListId() );
+		String mask = listsearcher.getPropertyDetails().getRender();
+		String val = null;
+		if( mask != null)
+		{
+			val =  getValue(inDetail.getCatalogId(),mask,inData.getProperties());
+		}
+		else
+		{
+			String name = inData.getName(inLocale);
+			
+			if(name != null)
+			{
+				val = name;
+			}
+			else
+			{
+				val = inData.getId();
+			}
+		}
+		return val;
+	}
 	public String getLabel(PropertyDetail inDetail, Data inData)
 	{
 		if(inData == null){
