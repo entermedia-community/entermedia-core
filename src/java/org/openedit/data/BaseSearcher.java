@@ -2349,7 +2349,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			}
 			//TODO: Check for new sorting
 
-			if (runsearch || hasChanged(tracker))
+			if (runsearch || ( hasChanged(tracker) && !tracker.isUseServerCursor()))
 			{
 				int oldNum = tracker.getPage();
 				SearchQuery newQuery = tracker.getSearchQuery().copy();

@@ -65,6 +65,15 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 	protected void setAllSelected(boolean inSelectAll)
 	{
 		fieldAllSelected = inSelectAll;
+		
+		if(inSelectAll && !isUseServerCursor()) {
+			clear();
+			setUseServerCursor(inSelectAll);
+
+		} else {
+			setUseServerCursor(inSelectAll);
+		}
+
 	}
 
 	public boolean isShowOnlySelected()
@@ -844,14 +853,15 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 	public void selectAll()
 	{
 		
-		fieldAllSelected = true;
-
+		setAllSelected(true);
 	}
 
 	public void deselectAll()
 	{
 		getSelections().clear();
 		fieldAllSelected = false;
+		setUseServerCursor(false);
+
 	}
 	public String getFirstSelected()
 	{
