@@ -2,15 +2,13 @@ package org.openedit.util;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.KeySpec;
 import java.util.Properties;
 
-import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.Mac;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
@@ -24,7 +22,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openedit.Data;
 import org.openedit.OpenEditException;
-import org.openedit.OpenEditRuntimeException;
 import org.openedit.WebPageRequest;
 import org.openedit.data.Searcher;
 import org.openedit.data.SearcherManager;
@@ -37,6 +34,8 @@ public class StringEncryption
 	//public static final String DEFAULT_ENCRYPTION_KEY	= "This is a fairly long phrase used to encrypt";
 	public static final String DEFAULT_ENCRYPTION_KEY	= "7939805759879766427939805759879766";
 	
+	private final Charset UTF8_CHARSET = Charset.forName("UTF-8");
+	
 	protected String fieldEncryptionKey;
 	protected KeySpec				fieldKeySpec;
 	protected SecretKeyFactory	fieldKeyFactory;
@@ -47,7 +46,6 @@ public class StringEncryption
 	protected SecretKey fieldSecretKey;
 	protected File fieldRootDirectory;
 	protected String fieldSecretKeyName = "userpassword";
-	private static final String	UNICODE_FORMAT			= "UTF8";
 
 	protected SearcherManager fieldSearcherManager;
 	
@@ -111,20 +109,20 @@ public class StringEncryption
 		try
 		{
 			// get an hmac_sha1 key from the raw key bytes
-			SecretKeySpec signingKey = new SecretKeySpec(privatekey.getBytes(), HMAC_SHA1_ALGORITHM);
+			SecretKeySpec signingKey = new SecretKeySpec(privatekey.getBytes(UTF8_CHARSET), HMAC_SHA1_ALGORITHM);
 
 			// get an hmac_sha1 Mac instance and initialize with the signing key
 			Mac mac = Mac.getInstance(HMAC_SHA1_ALGORITHM);
 			mac.init(signingKey);
 
 			// compute the hmac on input data bytes
-			byte[] rawHmac = mac.doFinal(data.getBytes());
+			byte[] rawHmac = mac.doFinal(data.getBytes(UTF8_CHARSET));
 
 			// base64-encode the hmac
 			org.apache.commons.codec.binary.Base64 base64encoder = new org.apache.commons.codec.binary.Base64();
 			
 			result = base64encoder.encode(rawHmac);
-			return new String(result, "UTF8");
+			return new String(result, UTF8_CHARSET);
 		}
 		catch (Exception e)
 		{
@@ -176,13 +174,13 @@ public class StringEncryption
 		}
 		try
 		{
-			byte[] cleartext = unencryptedString.getBytes( UNICODE_FORMAT );
+			byte[] cleartext = unencryptedString.getBytes( UTF8_CHARSET );
 			Cipher cipher = getEncodeCipher(); //Not thread safe
 
 			byte[] ciphertext = cipher.doFinal( cleartext );
 
 			Base64 base64encoder = new Base64();
-			return "DES:" + new String( base64encoder.encode( ciphertext ), UNICODE_FORMAT );
+			return "DES:" + new String( base64encoder.encode( ciphertext ), UTF8_CHARSET );
 		}
 		catch (Exception e)
 		{
@@ -232,7 +230,7 @@ public class StringEncryption
 	protected byte[] decodeKey(String encryptedString) throws Exception
 	{
 		Base64 base64decoder = new Base64();
-		byte[] cleartext = base64decoder.decode( encryptedString.getBytes( UNICODE_FORMAT ) );
+		byte[] cleartext = base64decoder.decode( encryptedString.getBytes( UTF8_CHARSET ) );
 		Cipher cipher = getDecodeCipher();
 		byte[] ciphertext = null;
 		try
@@ -242,7 +240,7 @@ public class StringEncryption
 		catch (Exception ex)
 		{
 			Cipher oldCipher = Cipher.getInstance( DES_ENCRYPTION_SCHEME );
-			byte[] keyAsBytes = DEFAULT_ENCRYPTION_KEY.getBytes( UNICODE_FORMAT );
+			byte[] keyAsBytes = DEFAULT_ENCRYPTION_KEY.getBytes( UTF8_CHARSET );
 			DESKeySpec oldSpec = new DESKeySpec( keyAsBytes );
 			oldCipher.init( Cipher.DECRYPT_MODE, getKeyFactory().generateSecret( oldSpec ) );
 			ciphertext = oldCipher.doFinal( cleartext );
@@ -314,7 +312,7 @@ public class StringEncryption
 	{
 		if( fieldKeySpec == null)
 		{
-			byte[] keyAsBytes = getEncryptionKey().getBytes( UNICODE_FORMAT );
+			byte[] keyAsBytes = getEncryptionKey().getBytes( UTF8_CHARSET );
 
 			fieldKeySpec = new DESKeySpec( keyAsBytes );
 
