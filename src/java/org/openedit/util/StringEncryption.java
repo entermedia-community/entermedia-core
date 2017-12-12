@@ -104,12 +104,15 @@ public class StringEncryption
 	public String calculateRFC2104HMAC(String privatekey, String data)
 	{
 		String HMAC_SHA1_ALGORITHM = "HmacSHA1";
-
+		//key = percent-encode(consumer_secret)+'&'+percent-encode(token_secret)
+		//+ "&"
+		String key = privatekey + "&";  //No token
+		
 		byte[] result;
 		try
 		{
 			// get an hmac_sha1 key from the raw key bytes
-			SecretKeySpec signingKey = new SecretKeySpec(privatekey.getBytes(UTF8_CHARSET), HMAC_SHA1_ALGORITHM);
+			SecretKeySpec signingKey = new SecretKeySpec(key.getBytes(UTF8_CHARSET), HMAC_SHA1_ALGORITHM);
 
 			// get an hmac_sha1 Mac instance and initialize with the signing key
 			Mac mac = Mac.getInstance(HMAC_SHA1_ALGORITHM);
