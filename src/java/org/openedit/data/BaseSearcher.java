@@ -2748,7 +2748,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	public void reindexInternal() throws OpenEditException
 	{
 		//do nothing?
-		throw new OpenEditException("Not implemented");
+		throw new OpenEditException("Not implemented " + getSearchType() + " " + getClass().getName());
 		//reIndexAll();
 	}
 	
