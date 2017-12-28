@@ -180,6 +180,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			}
 			inQuery.setHitsName(hitsname);
 		}
+		
 		tracker = (HitTracker) inPageRequest.getSessionValue(inQuery.getSessionId());
 
 		boolean runsearch = false;
@@ -220,6 +221,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 
 			if (!runsearch && hasChanged(tracker))
 			{
+				//do we want to cache queries a little longer?
 				runsearch = true;
 			}
 			if (!runsearch && !inQuery.equals(tracker.getSearchQuery()))
@@ -2348,9 +2350,12 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				}
 			}
 			//TODO: Check for new sorting
-
-			if (runsearch || ( hasChanged(tracker) && !tracker.isUseServerCursor()))
+			if (runsearch || hasChanged(tracker) )
 			{
+				if( tracker.isAllSelected() || tracker.isUseServerCursor() )
+				{
+					return tracker; //Ignore the change because we are in a cursor and dont want new results
+				}
 				int oldNum = tracker.getPage();
 				SearchQuery newQuery = tracker.getSearchQuery().copy();
 				HitTracker tracker2 = cachedSearch(inReq, newQuery);
