@@ -71,13 +71,13 @@ public class LdapAuthenticator extends BaseAuthenticator
 		String inPassword = inAReq.getPassword();
 		
 		String sprefix = null;
-		if( prefix == null)
+		if( prefix != null)
 		{
 			sprefix = prefix.get("value");
 		}
         Data postfix = getSearcherManager().getData(inAReq.getCatalogId(), "catalogsettings", "ldapserverpostfix");
 		String spostfix = null;
-		if( spostfix == null)
+		if( spostfix != null)
 		{
 			spostfix = postfix.get("value");
 		}
