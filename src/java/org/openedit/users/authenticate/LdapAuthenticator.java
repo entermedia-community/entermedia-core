@@ -77,7 +77,7 @@ public class LdapAuthenticator extends BaseAuthenticator
 		}
         Data postfix = getSearcherManager().getData(inAReq.getCatalogId(), "catalogsettings", "ldapserverpostfix");
 		String spostfix = null;
-		if( spostfix != null)
+		if( postfix != null)
 		{
 			spostfix = postfix.get("value");
 		}
