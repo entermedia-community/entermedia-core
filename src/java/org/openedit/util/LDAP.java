@@ -77,15 +77,19 @@ public class LDAP
 	public void init(String inServerName)
 	{
 		Properties env = getEnvironment();
-		env.put(Context.INITIAL_CONTEXT_FACTORY,
-				"com.sun.jndi.ldap.LdapCtxFactory");
-
+		env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
 		if (!inServerName.startsWith("ldap"))
 		{
 			throw new OpenEditException("ldapserver value must start with ldap");
 		}
 		env.put(Context.PROVIDER_URL, inServerName);	
 		log.info("[LDAP] Connecting to " + inServerName);
+	}
+	public void setAuth(String mode) {
+		getEnvironment().put(Context.SECURITY_AUTHENTICATION, mode);
+	}
+	public void setDN(String dn){
+		getEnvironment().put(Context.SECURITY_PRINCIPAL, dn);
 	}
 	public void authenticate(User inUser, String inPassword)
 	{
@@ -107,11 +111,11 @@ public class LDAP
 			//dnbuffer.append(",");
 			dnbuffer.append(postfix);
 		}
-		//uid=%s,ou=People,dc=company,dc=com
-		// String base = "ou=People,dc=example,dc=com";
-		// String dn = "uid=" + inUser.getUserName() + "," + base;
 		log.info("LDAP login: " + dnbuffer.toString());
+		//Get domain fails with null on search if not set
+		setDomain(dnbuffer.toString()); //This should maybe set the env? instead of having the next line?
 		getEnvironment().put(Context.SECURITY_PRINCIPAL, dnbuffer.toString());
+		//Set the env password
 		getEnvironment().put(Context.SECURITY_CREDENTIALS, inPassword);
 
 	}
@@ -201,6 +205,8 @@ public class LDAP
 		{
 			query = "(" + searchby + "=" + value + ")";
 		}
+		//log.info("LDAP query = " + query);
+		//log.info("LDAP Domain = " + getDomain());
 		return search(getDomain(), query, getMaxLdapResults());
 	}			
 
