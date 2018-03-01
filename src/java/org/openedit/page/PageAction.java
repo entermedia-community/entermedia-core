@@ -111,6 +111,15 @@ public class PageAction
 		return null;
 	}
 
+	public String get(String inKey)
+	{
+		String val = getProperty(inKey);
+		if( val == null)
+		{
+			val = getChildValue(inKey);
+		}
+		return val;
+	}
 	public void setProperty(String inId, String inValue)
 	{
 		getConfig().setAttribute(inId, inValue);
