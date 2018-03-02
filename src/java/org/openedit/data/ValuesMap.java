@@ -351,7 +351,17 @@ public class ValuesMap extends HashMap
 		{
 			return (Long)val;
 		}
-		long l = Long.parseLong(inField);
+		if( val instanceof Integer)
+		{
+			return ((Integer)val).longValue();
+		}
+		if( val instanceof Double && inField.contains("timecode"))
+		{
+			Double d = (Double)val;
+			Long newval = Math.round( d * 1000d);
+			return newval;
+		}
+		long l = Long.parseLong(String.valueOf( val ));
 		
 		return l;
 	}
