@@ -521,4 +521,19 @@ public class FinalizedProcessBuilder {
 		}
 		return new FinalizedProcess(process, keepProcess, gobblers);
 	}
+	
+	public FinalizedProcess startPipe(ExecutorManager inManager) throws IOException 
+	{
+		processBuilder.redirectErrorStream(false);
+		Process process = processBuilder.start();
+
+		Set<StreamGobbler> gobblers = new HashSet<StreamGobbler>(2);
+		StreamGobbler errorGobbler = new StreamGobbler(process.getErrorStream(), gobbleErrorLogging);
+		errorGobbler.setErrorStream(true);
+		inManager.execute(errorGobbler);		
+		gobblers.add(errorGobbler);
+		
+		return new FinalizedProcess(process, keepProcess, gobblers);
+	}
+	
 }
