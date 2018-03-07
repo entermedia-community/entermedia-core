@@ -2719,10 +2719,17 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		else
 		{
 			Data data = (Data)createNewData();
-			data.setProperties(inHit.getProperties());
+			Map fields = inHit.getProperties();
+			fields = checkTypes(fields);
+			data.setProperties(fields);
 			data.setId(inHit.getId());
 			return data;
 		}
+	}
+
+	protected Map checkTypes(Map inFields)
+	{
+		return inFields;
 	}
 
 	public LockManager getLockManager()

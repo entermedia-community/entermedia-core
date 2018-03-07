@@ -43,6 +43,18 @@ public class PropertyDetailsArchive implements CatalogEnabled
 	protected Map fieldPropertyDetails;
 	protected List fieldChildTables;
 	protected List fieldChildTableNames;
+	protected String fieldSaveTo = "data"; //base,catalog,data
+	
+
+	public String getSaveTo()
+	{
+		return fieldSaveTo;
+	}
+
+	public void setSaveTo(String inSaveTo)
+	{
+		fieldSaveTo = inSaveTo;
+	}
 
 	public SearcherManager getSearcherManager()
 	{
@@ -104,46 +116,6 @@ public class PropertyDetailsArchive implements CatalogEnabled
 //		return details.findStoredProperties();
 //	}
 
-	public String getConfigurationPath(String inPath)
-	{
-		String path = "/WEB-INF/data/" + getCatalogId() + inPath;
-		if (!getPageManager().getRepository().doesExist(path))
-		{
-			path = "/" + getCatalogId() + "/data" + inPath;
-			// if (!getPageManager().getPage(path).exists())
-			// {
-			// /*
-			// // now check the extensions
-			// if (!(path.contains("dataextensions") ||
-			// path.contains("translation")))
-			// {
-			// HitTracker hits = getSearcherManager().getList(getCatalogId(),
-			// "dataextensions");
-			// for (Iterator iterator = hits.iterator(); iterator.hasNext();)
-			// {
-			// Data hit = (Data) iterator.next();
-			// String catalogid = hit.get("catalogid");
-			// String remotepath = "/" + catalogid + "/data/" + inPath;
-			// if (getPageManager().getPage(remotepath).exists())
-			// {
-			// return remotepath;
-			// }
-			// }
-			// }
-			// */
-			// // legacy support
-			// if (inPath.startsWith("/fields/"))
-			// {
-			// inPath = inPath.replace(".xml", "properties.xml");
-			// inPath = inPath.replace("/fields/", "/");
-			// }
-			// path = "/" + getCatalogId() + "/configuration" + inPath;
-			//
-			// }
-		}
-		return path;
-	}
-
 	/**
 	 * This returns a subset of the list of Detail's as found in
 	 * store/configuration/{inType}.xml The subset is determined by
@@ -189,7 +161,7 @@ public class PropertyDetailsArchive implements CatalogEnabled
 
 	protected XmlFile getViewXml(String inView)
 	{
-		String path = getConfigurationPath("/views/" + inView + ".xml");
+		String path = findConfigurationFile("/views/" + inView + ".xml");
 		XmlFile file = getXmlArchive().getXml(path);
 		return file;
 	}
@@ -312,23 +284,6 @@ public class PropertyDetailsArchive implements CatalogEnabled
 
 	protected PropertyDetail loadDetail(PropertyDetails propdetails, XmlFile inViewData, String inView, String inFieldName)
 	{
-		// String level = null;//
-		// if (inUser != null)
-		// {
-		// String level = (String) inUser.getProperty("datalevel");
-		// }
-		// XmlFile types = null;
-		// if (level != null)
-		// {
-		// String path = getConfigurationPath("/views/" + inView + level +
-		// ".xml");
-		// types = getXmlArchive().getXml(path);
-		// }
-		// if (types == null || !types.isExist())
-		// {
-		// String path = getConfigurationPath("/views/" + inView + ".xml");
-		// types = getXmlArchive().getXml(path);
-		// }
 		PropertyDetail detail = propdetails.getDetail(inFieldName);
 		if (inViewData.isExist())
 		{
@@ -386,7 +341,6 @@ public class PropertyDetailsArchive implements CatalogEnabled
 			
 			//String path =  "/" + getCatalogId() + "/data/fields/" + inType + ".xml";
 			String path = "/WEB-INF/data/" + getCatalogId() + "/fields/" + inType + ".xml";
-				//getConfigurationPath("/fields/" + inType + ".xml");
 
 			XmlFile settings = getXmlArchive().getXml(path); // checks time
 			if (details != null && details.getInputFile() == settings)
@@ -404,11 +358,11 @@ public class PropertyDetailsArchive implements CatalogEnabled
 			{
 				if (inType.endsWith("Log"))
 				{
-					path = getConfigurationPath("/fields/defaultLog.xml");
+					path = findConfigurationFile("/fields/defaultLog.xml");
 				}
 				else
 				{
-					path = getConfigurationPath("/fields/default.xml");
+					path = findConfigurationFile("/fields/default.xml");
 				}
 				// This should not happen as well
 				settings = getXmlArchive().getXml(path);
@@ -507,7 +461,7 @@ public class PropertyDetailsArchive implements CatalogEnabled
 	}
 	public void savePropertyDetail(PropertyDetail inDetail, String inType, User inUser)
 	{
-		String path = "/WEB-INF/data/" + getCatalogId() + "/fields/" + inType + ".xml";
+		String path = findSavePath() + "/fields/" + inType + ".xml";
 		savePropertyDetail(inDetail,path,inType,inUser);
 	}
 	public void updatePropertyDetail(PropertyDetail inDetail, String inType, User inUser)
@@ -515,7 +469,7 @@ public class PropertyDetailsArchive implements CatalogEnabled
 		String path = inDetail.getInputFilePath();
 		if( path == null)
 		{
-			 path = "/WEB-INF/data/" + getCatalogId() + "/fields/" + inType + ".xml";
+			 path = findSavePath() + "/fields/" + inType + ".xml";
 		}
 		savePropertyDetail(inDetail,path,inType,inUser);
 
@@ -562,7 +516,7 @@ public class PropertyDetailsArchive implements CatalogEnabled
 	private XmlFile createDetailsFile(String inType)
 	{
 		XmlFile file = new XmlFile();
-		String path = "/WEB-INF/data/" + getCatalogId() + "/fields/" + inType + ".xml";
+		String path = findSavePath() + "/fields/" + inType + ".xml";
 		file.setPath(path);
 		Element root = DocumentHelper.createElement("properties");
 
@@ -1033,9 +987,9 @@ public class PropertyDetailsArchive implements CatalogEnabled
 		return view;
 	}
 
-	public void saveView(String inCatalogId, View inView, User inUser)
+	public void saveView(View inView, User inUser)
 	{
-		XmlFile file = getXmlArchive().getXml("/WEB-INF/data/" + inCatalogId + "/views/" + inView.getId() + ".xml");
+		XmlFile file = getXmlArchive().getXml(findSavePath() + "/views/" + inView.getId() + ".xml");
 		file.clear();
 
 		Element root = file.getRoot();
@@ -1101,7 +1055,7 @@ public class PropertyDetailsArchive implements CatalogEnabled
 
 	public void clearCustomSettings(String inSearchType)
 	{
-		String path = getConfigurationPath("/fields/" + inSearchType + ".xml");
+		String path = findConfigurationFile("/fields/" + inSearchType + ".xml");
 		Page found = getPageManager().getPage(path);
 		getPageManager().removePage(found);
 
@@ -1184,7 +1138,7 @@ public class PropertyDetailsArchive implements CatalogEnabled
 	public void deletePropertyDetail(PropertyDetail inDetail, String inSearchtype, User inUser)
 	{
 
-		String path = "/WEB-INF/data/" + getCatalogId() + "/fields/" + inSearchtype + ".xml";
+		String path = findSavePath() + "/fields/" + inSearchtype + ".xml";
 		XmlFile settings = getXmlArchive().loadXmlFile(path);
 		if (!settings.isExist())
 		{
@@ -1202,6 +1156,30 @@ public class PropertyDetailsArchive implements CatalogEnabled
 		getXmlArchive().saveXml(settings, inUser);
 		clearCache();
 
+	}
+
+	public String findSavePath()
+	{
+		if( "base".equals( getSaveTo()))
+		{
+			return "/WEB-INF/base/entermedia/catalog/data/";
+		}	
+		if( "catalog".equals( getSaveTo()))
+		{
+			return "/" + getCatalogId() + "/data";
+		}	
+		return "/WEB-INF/data/" + getCatalogId();
+	}
+
+
+	public String findConfigurationFile(String inPath)
+	{
+		String path = "/WEB-INF/data/" + getCatalogId() + inPath;
+		if (!getPageManager().getRepository().doesExist(path))
+		{
+			path = "/" + getCatalogId() + "/data" + inPath;
+		}
+		return path;
 	}
 
 }
