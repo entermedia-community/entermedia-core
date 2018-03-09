@@ -2608,6 +2608,15 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				}
 				result = Arrays.asList(values);
 			}
+			else if(detail.isDataType("objectarray"))
+			{
+				//do nothing
+				//if( values instanceof String)
+				//{
+					//if ((String) values).startsWith("{")
+				//}
+				continue;
+			}
 			else if (values != null && values.length > 0)
 			{
 				String val = values[0];
