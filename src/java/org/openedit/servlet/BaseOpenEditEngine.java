@@ -158,6 +158,9 @@ public class BaseOpenEditEngine implements OpenEditEngine
 			if( !pageRequest.hasRedirected())
 			{
 				pageStreamer.render();
+				//The GzipFilter does a close() on it's content
+				//The FileGenerater sets a content length (Mostly)
+				//TODO: Put only one close() in here?
 			}
 		}
 		catch( Throwable e )
