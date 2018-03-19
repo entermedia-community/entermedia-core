@@ -24,6 +24,19 @@ public class HttpRequestBuilder
 	ContentType contentType = ContentType.create("text/plain", UTF8);
 	ContentType octectType = ContentType.create("application/octect-stream", UTF8);
 
+	
+	public void addPart(String inKey, String inValue, String inType)
+	{
+		if( inValue == null)
+		{
+			return;
+		}
+		ContentType type = ContentType.create(inType, UTF8);
+
+		builder.addPart(inKey,new StringBody(inValue, type));
+	}
+	
+	
 	public void addPart(String inKey, String inValue)
 	{
 		if( inValue == null)

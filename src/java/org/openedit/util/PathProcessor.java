@@ -86,9 +86,8 @@ public abstract class PathProcessor
 	{
 		ContentItem item = getPageManager().getRepository().getStub(inPath);
 		if( !item.exists() )
-		{
-		
-			log.info(inPath + " Did not exist");
+		{		
+			log.info(item.getAbsolutePath() + " Did not exist");
 			return;
 		}
 		process(item, inUser);

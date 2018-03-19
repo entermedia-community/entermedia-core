@@ -351,7 +351,7 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 //	}
 	public void setStored( boolean inStored)
 	{
-		setValue("keyword", inStored);
+		setValue("stored", inStored);
 	}
 	public boolean isEditable()
 	{
@@ -535,27 +535,15 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 	}
 	public boolean isAnalyzed()
 	{
-		
-		
-
-		
-
-		if(isMultiLanguage() || getId().endsWith("id") || isList() || isMultiValue() ||  getId().contains("sourcepath") ){
+		if( getId().endsWith("id") || isList() || isMultiValue() ||  getId().contains("sourcepath") ){
 
 			return false;
 		}
 		
-			
 		if(isDataType("date") || isDataType("boolean") || isNumber() ) 
 		{
 			return false;
 		}
-		
-		//TODO: Use indextype instead of analyzer
-		if("not_analyzed".equals(getValue("analyzer"))){
-			return false;
-		}
-		
 		
 		String al = (String)getValue("analyzer");
 		if( al != null)
@@ -614,6 +602,17 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 	{
 		setValue("sortable",inSortable);
 	}
+	
+	public String getDefaultSort()
+	{
+		String sort = get("sort");
+		if( sort == null)
+		{
+			sort = "name";
+		}
+		return sort;
+	}
+	
 	
 	public String getSortProperty()
 	{

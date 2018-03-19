@@ -4,6 +4,8 @@
 package org.openedit.util;
 
 import java.io.File;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -114,11 +116,7 @@ public class Exec
 	{
 		ArrayList<String> command = new ArrayList<String>();
 		//check for cached version
-		ExecCommand cachedCommand = (ExecCommand) fieldCachedCommands.get(inCommandKey);
-		if (cachedCommand == null)
-		{
-			cachedCommand = lookUpCommand(inCommandKey);
-		}
+		ExecCommand cachedCommand = findCommand(inCommandKey);
 		command.add(cachedCommand.inCommand);
 		if (inArgs != null && inArgs.size() > 0)
 		{
@@ -132,6 +130,16 @@ public class Exec
 		{
 			return runExec(command, inRootFolder, inSaveOutput, inTimeout);
 		}
+	}
+
+	protected ExecCommand findCommand(String inCommandKey)
+	{
+		ExecCommand cachedCommand = (ExecCommand) fieldCachedCommands.get(inCommandKey);
+		if (cachedCommand == null)
+		{
+			cachedCommand = lookUpCommand(inCommandKey);
+		}
+		return cachedCommand;
 	}
 	public ExecResult runExec(List<String> com, File inRunFrom, boolean inSaveOutput) throws OpenEditException
 	{
@@ -192,6 +200,54 @@ public class Exec
 		return result;
 	}
 
+	public ExecResult runExecStream(String inCommandKey, List<String> args, OutputStream inOutput, long inTimeout) throws OpenEditException
+	{
+		ExecCommand cachedCommand = findCommand(inCommandKey);
+		List com = new ArrayList(args.size() + 1);
+		com.add(cachedCommand.inCommand);
+		com.addAll(args);
+		log.info("Running: " + args); 
+
+		FinalizedProcessBuilder pb = new FinalizedProcessBuilder(com);
+
+		ExecResult result = new ExecResult();
+		try
+		{
+			FinalizedProcess process = pb.startPipe(getExecutorManager());
+			try
+			{
+				InputStream resultingdata = process.getInputStream();
+				int returnVal = process.waitFor(inTimeout);
+				getFiller().fill(resultingdata, inOutput);
+				if (returnVal == 0) 
+				{
+					result.setRunOk(true); 
+				} 
+				result.setReturnValue(returnVal);
+			}
+			finally
+			{
+				//Stream should be read in fully then it returns the code
+				process.close();
+			}
+		}
+		catch (Exception ex)
+		{
+			log.error(ex);
+			result.setRunOk(false);
+			result.setReturnValue(1); //0 is success 1 is error
+			String error = result.getStandardError(); 
+			if(error == null)
+			{
+				error = "";
+			}
+			error = error + ex.toString();
+			result.setStandardError(error);
+		}
+		return result;
+	}
+
+	
 	public String getXmlCommandsFilename()
 	{
 		return fieldXmlCommandsFilename;

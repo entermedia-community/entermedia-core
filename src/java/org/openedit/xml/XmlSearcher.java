@@ -407,7 +407,7 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable
 		try
 		{
 			String inName = getSearchType();
-			String path = getPropertyDetailsArchive().getConfigurationPath("/lists"
+			String path = getPropertyDetailsArchive().findConfigurationFile("/lists"
 				+ "/" + inName + ".xml");
 			//No sure why we do this. 
 			PropertyDetails details = getPropertyDetailsArchive().getPropertyDetailsCached(inName);

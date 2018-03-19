@@ -9,11 +9,11 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openedit.Data;
-import org.openedit.data.Searcher;
 import org.openedit.data.SearcherManager;
 import org.openedit.users.User;
 import org.openedit.users.UserManagerException;
 import org.openedit.util.LDAP;
+import org.openedit.util.NaiveTrustManager;
 
 public class LdapAuthenticator extends BaseAuthenticator
 {
@@ -71,17 +71,17 @@ public class LdapAuthenticator extends BaseAuthenticator
 		String inPassword = inAReq.getPassword();
 		
 		String sprefix = null;
-		if( prefix == null)
+		if( prefix != null)
 		{
 			sprefix = prefix.get("value");
 		}
         Data postfix = getSearcherManager().getData(inAReq.getCatalogId(), "catalogsettings", "ldapserverpostfix");
 		String spostfix = null;
-		if( spostfix == null)
+		if( spostfix != null)
 		{
 			spostfix = postfix.get("value");
 		}
-		
+		//NaiveTrustManager.disableHttps();
 		ldap.authenticate(sprefix,inUser.getUserName(), spostfix, inPassword);
 		
 		if (ldap.connect())

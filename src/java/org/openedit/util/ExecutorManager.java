@@ -73,7 +73,7 @@ public class ExecutorManager implements Shutdownable
 				else if( inType.equals("conversions"))
 				{
 					int max = getAvailableProcessors();
-					exec =  createExecutor(max, max); //Max does not seem to work as advertised
+					exec =  createExecutor(max, max);
 				}
 				else if( inType.equals("importing"))
 				{

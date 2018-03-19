@@ -64,6 +64,7 @@ public class GeoCoder
 		{
 			return all.iterator().next();
 		}
+		log.error("No positions found for " + lookupString);
 		return null;
 	}
 	public List getPositions(String lookupString)

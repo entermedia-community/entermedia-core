@@ -304,4 +304,17 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 		return getMap().keySet();
 	}
 	
+	protected Long toLong(Number inNumber)
+	{
+		if( inNumber instanceof Long)
+		{
+			return (Long)inNumber;
+		}
+		if( inNumber instanceof Integer)
+		{
+			return ((Integer)inNumber).longValue();
+		}
+		throw new OpenEditException("Number is not a valid Long");
+		
+	}
 }

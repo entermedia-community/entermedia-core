@@ -137,8 +137,11 @@ public class Translation
 		 
 		return createTranslationList(inProperties, inLocale);
 	}
-
 	public String webTranslate(String text, String inLocale)
+	{
+		return webTranslate(text,"en",inLocale);
+	}
+	public String webTranslate(String text, String sourcelang, String inLocale)
 	{
 		text.replace("$", "_");
 		if( inLocale.equals("de"))
@@ -163,7 +166,7 @@ public class Translation
 		
 		nvps.add(new BasicNameValuePair("key","AIzaSyD5Hjc70IgTTbcgZK5HSbtxMu2oTzTILps"));
 		nvps.add(new BasicNameValuePair("q", text));
-		nvps.add(new BasicNameValuePair("source", "en"));
+		nvps.add(new BasicNameValuePair("source", sourcelang));
 		nvps.add(new BasicNameValuePair("target", inLocale));
 //		nvps.add(new BasicNameValuePair("client", "t"));
 //		nvps.add(new BasicNameValuePair("text", text));

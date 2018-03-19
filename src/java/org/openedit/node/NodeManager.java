@@ -7,7 +7,7 @@ public interface NodeManager
 	Node getLocalNode();
 
 	String getLocalNodeId();
-
+	
 	String createDailySnapShot(String inCatalogId);
 
 	String createSnapShot(String inCatalogId);

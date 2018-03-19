@@ -1,16 +1,11 @@
 package org.openedit.node;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
-import org.dom4j.Element;
 import org.openedit.data.BaseData;
-import org.openedit.util.Replacer;
 
 public class Node extends BaseData
 {
+	public static final String PRIMARY = "primary";
+	
 	public Node()
 	{
 
@@ -22,5 +17,13 @@ public class Node extends BaseData
 		return get(inId);
 	}
 	
-	
+	public String getNodeType()
+	{
+		String nodetype = get("entermedia.nodetype");
+		if( nodetype == null)
+		{
+			nodetype = PRIMARY;
+		}
+		return nodetype;
+	}
 }

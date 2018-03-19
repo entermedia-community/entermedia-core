@@ -39,7 +39,8 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 	protected String fieldTempSessionId;
 	protected List<FilterNode> fieldFilterOptions;
 	protected boolean fieldUseServerCursor;
-
+	protected long fieldSearchTime;
+	
 	public void enableBulkOperations()
 	{
 		setUseServerCursor(true);
@@ -56,15 +57,25 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 	}
 	public HitTracker()
 	{
-
+		fieldSearchTime = System.currentTimeMillis();
 	}
 	public HitTracker(Searcher inSearcher)
 	{
+		this();
 		setSearcher(inSearcher);
 	}
 	protected void setAllSelected(boolean inSelectAll)
 	{
 		fieldAllSelected = inSelectAll;
+		
+		if(inSelectAll && !isUseServerCursor()) {
+			clear();
+			setUseServerCursor(inSelectAll);
+
+		} else {
+			setUseServerCursor(inSelectAll);
+		}
+
 	}
 
 	public boolean isShowOnlySelected()
@@ -844,14 +855,15 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 	public void selectAll()
 	{
 		
-		fieldAllSelected = true;
-
+		setAllSelected(true);
 	}
 
 	public void deselectAll()
 	{
 		getSelections().clear();
 		fieldAllSelected = false;
+		setUseServerCursor(false);
+
 	}
 	public String getFirstSelected()
 	{
@@ -1299,6 +1311,12 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 	{
 		// TODO Auto-generated method stub
 		
+	}
+	public boolean isRecentSearch()
+	{
+		long now = System.currentTimeMillis();
+		long min5 = 1000L*60l*5l;
+		return now - fieldSearchTime < min5;
 	}	
 }
 
