@@ -341,6 +341,50 @@ public class DateStorageUtil {
 	    return null; // Unknown format.
 	}
 	
-	
+	public Date substractDaysToDate(Date date, int days)
+	{
+		Calendar cal = null;
+		try
+		{
+			if (date == null)
+			{
+				return null;
+			}
+
+			cal = getCalendar(date);
+			cal.add(Calendar.DATE, - days);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			throw e;
+		}
+		return cal.getTime();
+	}
+
+	public Date addDaysToDate(Date date, int days)
+	{
+		Calendar cal = null;
+		try
+		{
+			if (date == null)
+			{
+				return null;
+			}
+			cal = getCalendar(date);
+			cal.add(Calendar.DATE, + days);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			throw e;
+		}
+		return cal.getTime();
+	}
+
+	public Date getToday()
+	{
+		return new Date();
+	}
 	
 }
