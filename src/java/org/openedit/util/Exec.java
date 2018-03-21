@@ -206,7 +206,7 @@ public class Exec
 		List com = new ArrayList(args.size() + 1);
 		com.add(cachedCommand.inCommand);
 		com.addAll(args);
-		log.info("Running: " + args); 
+		log.info("Running: " + com); 
 
 		FinalizedProcessBuilder pb = new FinalizedProcessBuilder(com);
 
