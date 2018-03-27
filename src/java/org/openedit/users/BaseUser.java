@@ -129,11 +129,11 @@ public class BaseUser extends BaseData implements User, Comparable
 		if ( getLastName() != null)
 		{
 			out.append(getLastName());
-			if( getUserName().length() < 8 && !Character.isDigit(getUserName().charAt(0) ) )
-			{
-				out.append( " - " );
-				out.append( getUserName() );
-			}
+//			if( getUserName().length() < 8 && !Character.isDigit(getUserName().charAt(0) ) )
+//			{
+//				out.append( " - " );
+//				out.append( getUserName() );
+//			} 
 		}
 		if( out.length() == 0)
 		{
