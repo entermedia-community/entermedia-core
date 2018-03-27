@@ -1,11 +1,14 @@
 package org.openedit.generators;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.Reader;
 
 import org.apache.commons.collections.ExtendedProperties;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.apache.velocity.runtime.resource.Resource;
 import org.apache.velocity.runtime.resource.loader.ResourceLoader;
+import org.apache.velocity.util.ExtProperties;
 import org.openedit.ModuleManager;
 import org.openedit.OpenEditException;
 import org.openedit.generators.filters.TextReaderFilter;
@@ -51,14 +54,15 @@ public class GeneratedResourceLoader extends ResourceLoader
 	 */
 	public void init(ExtendedProperties configuration)
 	{
-		if (log.isTraceEnabled())
+		//if (log.isTraceEnabled())
 		{
-			log.trace("FileResourceLoader : initialization starting.");
+		//	log.trace("FileResourceLoader : initialization starting.");
 		}
 	}
 
 	/**
 	 * Get an InputStream so that the Runtime can build a template with it.
+	 * @override
 	 * 
 	 * @param templateName
 	 *            name of template to get
@@ -165,6 +169,29 @@ public class GeneratedResourceLoader extends ResourceLoader
 	public void setPageManager(PageManager inPageManager)
 	{
 		fieldPageManager = inPageManager;
+	}
+
+	@Override
+	public Reader getResourceReader(String name, String encoding) throws ResourceNotFoundException
+	{
+		// TODO Auto-generated method stub
+		InputStream stream = getResourceStream(name);
+		try
+		{
+			return buildReader(stream,encoding);
+		}
+		catch (IOException e)
+		{
+			// TODO Auto-generated catch block
+			throw new OpenEditException(e);
+		}
+	}
+
+	@Override
+	public void init(ExtProperties inArg0)
+	{
+		// TODO Auto-generated method stub
+		
 	}
 
 }

@@ -9,15 +9,17 @@
 	<classpathentry exported="true" kind="lib" path="lib/dom4j-1.6.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/json-simple-1.1.1.jar"/>
 	<classpathentry exported="true" kind="con" path="GROOVY_DSL_SUPPORT"/>
-	<classpathentry exported="true" kind="lib" path="lib/commons-codec-1.7.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/velocity-1.7-depem.jar"/>
 	<classpathentry kind="lib" path="lib/guava-18.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-logging-1.2.jar"/>
-	<classpathentry kind="lib" path="lib/commons-codec-1.9.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/commons-codec-1.9.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/httpclient-4.5.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/httpcore-4.4.4.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/httpmime-4.5.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jaxen-1.1.jar"/>
 	<classpathentry exported="true" kind="con" path="GROOVY_SUPPORT"/>
+	<classpathentry kind="lib" path="lib/velocity-engine-core-2.0.jar" sourcepath="/home/shanti/Downloads/velocity-engine-core-2.0-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/slf4j-jdk14-1.7.25.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/slf4j-api-1.7.25.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/commons-lang3-3.7.jar"/>
 	<classpathentry kind="output" path="build"/>
 </classpath>

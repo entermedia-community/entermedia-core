@@ -170,8 +170,8 @@ public class VelocityGenerator extends BaseGenerator implements Generator
 		 */
 		//Map velocityProperties = new HashMap();
 		Properties velocityProperties = new Properties();
-		velocityProperties.put(RuntimeConstants.RUNTIME_LOG_LOGSYSTEM_CLASS,
-			"org.openedit.generators.VelocityLogger");
+//		velocityProperties.put(RuntimeConstants.RUNTIME_LOG_LOGSYSTEM_CLASS,
+//			"org.openedit.generators.VelocityLogger");
 
 		/*
 		 velocityProperties.put(
