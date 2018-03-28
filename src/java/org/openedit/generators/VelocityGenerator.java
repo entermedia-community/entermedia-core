@@ -212,6 +212,11 @@ public class VelocityGenerator extends BaseGenerator implements Generator
 		}
 		velocityProperties.put("file.resource.loader.description","OpenEdit File Resource Loader" );
 		velocityProperties.put("file.resource.loader.class","org.openedit.generators.GeneratedResourceLoader");
+		velocityProperties.put("userdirective","org.openedit.generators.IfNull" );
+		
+		//		velocityProperties.put("directive.foreach.counter.name","velocityCount"); //Does not work
+		//		velocityProperties.put("directive.foreach.counter.initial.value","1");
+		
 		
 //		file.resource.loader.cache=true
 //		file.resource.loader.modificationCheckInterval=60
