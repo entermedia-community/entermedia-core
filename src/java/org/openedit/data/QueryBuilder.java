@@ -218,6 +218,11 @@ public class QueryBuilder
 		getQuery().setEndUserSearch(inB);
 		return this;
 	}
+	public QueryBuilder id(String inId)
+	{
+		getQuery().addExact("id",inId);
+		return this;
+	}
 	public QueryBuilder addFacet(String inString)
 	{
 		getQuery().addAggregation(inString);
