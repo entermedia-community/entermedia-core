@@ -341,12 +341,12 @@ public class DateStorageUtil {
 	    return null; // Unknown format.
 	}
 	
-	public Date substractDaysToDate(Date date, int days)
+	public Date substractDaysToDate(Date date, Integer days)
 	{
 		Calendar cal = null;
 		try
 		{
-			if (date == null)
+			if (date == null || days == null)
 			{
 				return null;
 			}
@@ -362,12 +362,12 @@ public class DateStorageUtil {
 		return cal.getTime();
 	}
 
-	public Date addDaysToDate(Date date, int days)
+	public Date addDaysToDate(Date date, Integer days)
 	{
 		Calendar cal = null;
 		try
 		{
-			if (date == null)
+			if (date == null || days == null)
 			{
 				return null;
 			}
