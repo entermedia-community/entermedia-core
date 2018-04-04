@@ -98,6 +98,9 @@ public class BaseOpenEditEngine implements OpenEditEngine
 				}
 			}	
 		}
+		//inResponse.addHeader("Connection", "Keep-Alive");
+		//inResponse.addHeader("Keep-Alive", "timeout=60000");
+
 	    if ( page.isDynamic() )
 		{
 			inRequest.setCharacterEncoding( page.getCharacterEncoding() );
@@ -120,6 +123,10 @@ public class BaseOpenEditEngine implements OpenEditEngine
 			
 		}
 		beginRender(context);
+		if ( page.isDynamic() )
+		{
+			context.closeStreams(); 
+		}
 	}
 	
 	/**
