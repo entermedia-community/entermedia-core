@@ -123,10 +123,10 @@ public class BaseOpenEditEngine implements OpenEditEngine
 			
 		}
 		beginRender(context);
-		if ( page.isDynamic() )
-		{
+		//if ( page.isDynamic() )
+		//{
 			context.closeStreams(); 
-		}
+		//}
 	}
 	
 	/**
