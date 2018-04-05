@@ -269,5 +269,7 @@ public interface WebPageRequest
 	public Data getData();
 
 	boolean hasPermission(String inString);
+
+	void closeStreams();
 	
 }

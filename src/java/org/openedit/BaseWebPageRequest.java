@@ -45,6 +45,7 @@ import org.openedit.page.PageRequestKeys;
 import org.openedit.page.PageStreamer;
 import org.openedit.profile.UserProfile;
 import org.openedit.users.User;
+import org.openedit.util.FileUtils;
 import org.openedit.util.LocaleManager;
 import org.openedit.util.OutputFiller;
 import org.openedit.util.PathUtilities;
@@ -1401,6 +1402,17 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 			return (Boolean)can;
 		}
 		return false;
+	}
+
+	@Override
+	public void closeStreams()
+	{
+		Writer outputw = (Writer)getPageValue(PageRequestKeys.OUTPUT_WRITER);
+		FileUtils.safeClose( outputw );
+		
+		OutputStream outputs = (OutputStream)getPageValue(PageRequestKeys.OUTPUT_STREAM);
+		FileUtils.safeClose( outputs );
+
 	}
 
 }
