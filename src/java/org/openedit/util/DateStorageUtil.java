@@ -2,7 +2,9 @@ package org.openedit.util;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -439,4 +441,46 @@ public class DateStorageUtil
 		return new Date();
 	}
 
+	public Date getThisMonday()
+	{
+		Calendar c = Calendar.getInstance();
+		c.set(Calendar.HOUR_OF_DAY, 0);
+		c.set(Calendar.MINUTE, 0);
+		c.set(Calendar.SECOND, 0);
+		c.set(Calendar.MILLISECOND, 0);
+		c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+		return c.getTime();
+	}
+	public Date getThisMonday(String inDate)
+	{
+		Calendar c = Calendar.getInstance();
+		c.setTime(parseFromStorage(inDate));
+		c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+		return c.getTime();
+	}
+	public Collection getWeeks(int inCount)
+	{
+		Collection weeks = new ArrayList();
+		Calendar c = Calendar.getInstance();
+		c.set(Calendar.HOUR_OF_DAY, 0);
+		c.set(Calendar.MINUTE, 0);
+		c.set(Calendar.SECOND, 0);
+		c.set(Calendar.MILLISECOND, 0);
+		c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+		c.add(Calendar.DAY_OF_YEAR, inCount * -7);
+
+		for (int i = 0; i < inCount; i++)
+		{
+			weeks.add(c.getTime());
+			c.add(Calendar.DAY_OF_YEAR, 7);
+		}
+		for (int i = 0; i < inCount; i++)
+		{
+			weeks.add(c.getTime());
+			c.add(Calendar.DAY_OF_YEAR, 7);
+		}
+		return weeks;
+		
+	}
+	
 }
