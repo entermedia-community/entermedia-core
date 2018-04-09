@@ -615,5 +615,15 @@ public class PropertyDetails extends AbstractCollection
 		return null;
 	}
 
+	public PropertyDetail getLegacyDetail(String inPropid) {
+		for (Iterator iterator = getDetails().iterator(); iterator.hasNext();) {
+			PropertyDetail detail = (PropertyDetail) iterator.next();
+			if(inPropid.equals(detail.get("legacy"))) {
+				return detail;
+			}
+		}
+		return null;
+	}
+
 	
 }
