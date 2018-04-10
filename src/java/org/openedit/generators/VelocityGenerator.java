@@ -170,8 +170,8 @@ public class VelocityGenerator extends BaseGenerator implements Generator
 		 */
 		//Map velocityProperties = new HashMap();
 		Properties velocityProperties = new Properties();
-		velocityProperties.put(RuntimeConstants.RUNTIME_LOG_LOGSYSTEM_CLASS,
-			"org.openedit.generators.VelocityLogger");
+//		velocityProperties.put(RuntimeConstants.RUNTIME_LOG_LOGSYSTEM_CLASS,
+//			"org.openedit.generators.VelocityLogger");
 
 		/*
 		 velocityProperties.put(
@@ -212,6 +212,12 @@ public class VelocityGenerator extends BaseGenerator implements Generator
 		}
 		velocityProperties.put("file.resource.loader.description","OpenEdit File Resource Loader" );
 		velocityProperties.put("file.resource.loader.class","org.openedit.generators.GeneratedResourceLoader");
+		velocityProperties.put("userdirective","org.openedit.generators.IfNull" );
+		//velocityProperties.put("userdirective","org.openedit.generators.Label" );
+		
+		//		velocityProperties.put("directive.foreach.counter.name","velocityCount"); //Does not work
+		//		velocityProperties.put("directive.foreach.counter.initial.value","1");
+		
 		
 //		file.resource.loader.cache=true
 //		file.resource.loader.modificationCheckInterval=60

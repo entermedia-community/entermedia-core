@@ -12,6 +12,7 @@ import org.openedit.hittracker.HitTracker;
 import org.openedit.hittracker.SearchQuery;
 import org.openedit.profile.UserProfile;
 import org.openedit.users.Group;
+import org.openedit.util.DateStorageUtil;
 
 public class QueryBuilder
 {
@@ -199,6 +200,11 @@ public class QueryBuilder
 		return this;
 	}
 	
+	public QueryBuilder on(String inKey, Date inDate)
+	{
+		getQuery().addOn(inKey, inDate);
+		return this;
+	}
 	
 	public QueryBuilder before(String inKey, Date inValue){
 		getQuery().addBefore(inKey, inValue);
@@ -216,6 +222,11 @@ public class QueryBuilder
 	public QueryBuilder enduser(boolean inB)
 	{
 		getQuery().setEndUserSearch(inB);
+		return this;
+	}
+	public QueryBuilder id(String inId)
+	{
+		getQuery().addExact("id",inId);
 		return this;
 	}
 	public QueryBuilder addFacet(String inString)

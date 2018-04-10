@@ -646,6 +646,16 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 
 		String fireevent = inPageRequest.findValue("fireevent");
 		search.setFireSearchEvent(Boolean.parseBoolean(fireevent));
+		
+		String[] custom = inPageRequest.getRequestParameters("customproperty");
+		if( custom != null)
+		{
+			for (int i = 0; i < custom.length; i++)
+			{
+				String value = inPageRequest.getRequestParameter(custom[i] + ".value");
+				search.setProperty(custom[i], value);			
+			}
+		}
 		return search;
 	}
 

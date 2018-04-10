@@ -25,4 +25,6 @@ public interface NodeManager
 	public boolean reindexInternal(String inCatalogId);
 
 	void clear();
+	
+	public String getClusterHealth();
 }

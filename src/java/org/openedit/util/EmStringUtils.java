@@ -3,8 +3,6 @@ package org.openedit.util;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.commons.lang.text.StrTokenizer;
-
 public class EmStringUtils
 {
 	public static List<String> split(String inText)
@@ -26,4 +24,5 @@ public class EmStringUtils
 		return Arrays.asList(vals);
 		
 	}
+	
 }

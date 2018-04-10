@@ -1546,7 +1546,31 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		getTerms().add(term);
 		return term;
 	}
-
+	public Term addOn(String inField, final  Date inDate)
+	{
+		PropertyDetail detail = createDetail(inField);
+		return addOn(detail,inDate);
+	}
+	public Term addOn(PropertyDetail inField, final  Date inDate)
+	{
+		final String valueof= DateStorageUtil.getStorageUtil().formatForStorage(inDate);
+		Term term = new Term()
+		{
+			public String toQuery()
+			{
+				String fin = getDetail().getId() + ":[00000000000000 TO " +valueof + "]";
+				return fin;
+			}
+		};
+		term.setOperation("ondate");
+		term.setDetail(inField);
+	
+		term.setValue(valueof);
+	
+		getTerms().add(term);
+		return term;
+	}
+	
 	public Term addMatches(PropertyDetail inField, String inValue)
 	{
 		Term term = new Term()

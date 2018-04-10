@@ -17,7 +17,6 @@ package org.openedit;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Reader;
-import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Collection;
 import java.util.Date;
@@ -39,14 +38,15 @@ import org.apache.commons.logging.LogFactory;
 import org.openedit.data.BaseData;
 import org.openedit.generators.VariablePackage;
 import org.openedit.generators.VariableStore;
+import org.openedit.modules.translations.LanguageMap;
 import org.openedit.page.Page;
 import org.openedit.page.PageAction;
 import org.openedit.page.PageRequestKeys;
 import org.openedit.page.PageStreamer;
 import org.openedit.profile.UserProfile;
 import org.openedit.users.User;
+import org.openedit.util.FileUtils;
 import org.openedit.util.LocaleManager;
-import org.openedit.util.OutputFiller;
 import org.openedit.util.PathUtilities;
 import org.openedit.util.SessionMap;
 import org.openedit.util.URLUtilities;
@@ -1301,14 +1301,27 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 		String text = getPage().getText(inKey, getLocale());
 		return text;
 	}
-	public String getText(Data inData)
+	public String getText(Object inValue)
 	{
-		if( inData == null)
+		if( inValue == null)
 		{
 			return null;
 		}
-		String text = inData.getName( getLocale());
-		return text;
+		if( inValue instanceof Data)
+		{
+			String text = ((Data)inValue).getName( getLocale());
+			return text;
+		}
+		if( inValue instanceof LanguageMap)
+		{
+			LanguageMap map = (LanguageMap)inValue;
+			return map.getDefaultText(getLocale());
+		}
+		if( inValue instanceof String)
+		{	
+			return (String)inValue;
+		}
+		return String.valueOf(inValue);
 	}
 	
 	public LocaleManager getLocaleManager()
@@ -1401,6 +1414,37 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 			return (Boolean)can;
 		}
 		return false;
+	}
+	/**
+	 * On Tomcat there is no issue closing streams even when using Chunked Encoding or Keepalive
+	 */
+	@Override
+	public void closeStreams()
+	{
+		Writer outputw = (Writer)getPageValue(PageRequestKeys.OUTPUT_WRITER);
+		
+		if ( outputw != null)
+		{
+			try
+			{
+				outputw.close();
+			}
+			catch (IOException ex)
+			{ }
+		}
+		
+		OutputStream outputs = (OutputStream)getPageValue(PageRequestKeys.OUTPUT_STREAM);
+		
+		if ( outputs != null)
+		{
+			try
+			{
+				outputs.close();
+			}
+			catch (IOException ex)
+			{ }
+		}
+
 	}
 
 }

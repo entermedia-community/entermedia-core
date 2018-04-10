@@ -194,6 +194,10 @@ public class SearcherManager
 	public Searcher getSearcher(String inCatalogId, PropertyDetail inDetail)  
 	{
 		//We may get passed in an external catalog and field
+		if (inDetail == null)
+		{
+			return null;
+		}
 		String field = inDetail.getId();
 		if( inDetail.getExternalId() != null)
 		{
