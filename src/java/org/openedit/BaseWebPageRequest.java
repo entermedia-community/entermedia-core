@@ -1415,15 +1415,35 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 		}
 		return false;
 	}
-
+	/**
+	 * On Tomcat there is no issue closing streams even when using Chunked Encoding or Keepalive
+	 */
 	@Override
 	public void closeStreams()
 	{
 		Writer outputw = (Writer)getPageValue(PageRequestKeys.OUTPUT_WRITER);
-		FileUtils.safeClose( outputw );
+		
+		if ( outputw != null)
+		{
+			try
+			{
+				outputw.close();
+			}
+			catch (IOException ex)
+			{ }
+		}
 		
 		OutputStream outputs = (OutputStream)getPageValue(PageRequestKeys.OUTPUT_STREAM);
-		FileUtils.safeClose( outputs );
+		
+		if ( outputs != null)
+		{
+			try
+			{
+				outputs.close();
+			}
+			catch (IOException ex)
+			{ }
+		}
 
 	}
 
