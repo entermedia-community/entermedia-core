@@ -234,6 +234,10 @@ public class DateStorageUtil
 
 	public String formatForStorage(Date inDate)
 	{
+		if( inDate == null)
+		{
+			return null;
+		}
 		String storage = getStandardFormat().format(inDate);
 		return storage;
 	}
@@ -441,6 +445,10 @@ public class DateStorageUtil
 		return new Date();
 	}
 
+	public String getTodayForStorage()
+	{
+		return formatForStorage( new Date() );
+	}
 	public Date getThisMonday()
 	{
 		Calendar c = Calendar.getInstance();
