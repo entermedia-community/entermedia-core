@@ -37,6 +37,7 @@ import org.openedit.repository.ReaderItem;
 import org.openedit.repository.RepositoryException;
 import org.openedit.users.User;
 import org.openedit.util.PathUtilities;
+import org.openedit.util.ZipUtil;
 
 /**
  * The PageManager is a central access point for locating pages. Pages are
@@ -55,6 +56,8 @@ public class PageManager
 	protected CompoundRepository fieldRepository;
 	protected PageSettingsManager fieldSettingsManager;
 	private static final String CACHEID = PageManager.class.getName();
+	protected ZipUtil fieldZipUtil;
+	
 	public PageManager()
 	{
 		log.debug("create page manager instance");
@@ -629,4 +632,18 @@ public class PageManager
 		}
 		return all;
 	}
+	public ZipUtil getZipUtil()
+	{
+		if( fieldZipUtil == null)
+		{
+			fieldZipUtil = new ZipUtil();
+		}
+		return fieldZipUtil;
+	}
+	public void setZipUtil(ZipUtil inZipUtil)
+	{
+		fieldZipUtil = inZipUtil;
+	}
+	
+
 }
