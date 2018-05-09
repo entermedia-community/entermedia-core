@@ -514,6 +514,10 @@ public class PageStreamer
 	
 	public boolean canView(String inPath) throws OpenEditException
 	{
+		
+		if(inPath.contains("?")) {
+			inPath = inPath.substring(0,inPath.indexOf("?"));
+		}
 		Page linkpage = getPageManager().getPage(inPath,getWebPageRequest().getUser() != null); 
 		if (linkpage.exists() || Boolean.parseBoolean( linkpage.getProperty("virtual")))
 		{
