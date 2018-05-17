@@ -275,4 +275,8 @@ public class QueryBuilder
 		return this;
 		
 	}
+	public QueryBuilder ids(Collection<String> inAssetIds)
+	{
+		return orgroup("id",inAssetIds);
+	}
 }

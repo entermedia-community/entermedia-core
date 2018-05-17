@@ -1,6 +1,8 @@
 package org.openedit.node;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 public interface NodeManager
 {
@@ -27,4 +29,7 @@ public interface NodeManager
 	void clear();
 	
 	public String getClusterHealth();
+	
+	public Collection getRemoteNodeList(String inCatalog);
+	
 }

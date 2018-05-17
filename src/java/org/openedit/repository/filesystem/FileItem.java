@@ -40,6 +40,11 @@ public class FileItem extends ContentItem implements Data
 	public FileItem()
 	{
 	}
+	
+	public FileItem(File inFile)
+	{
+		setFile(inFile);
+	}
 	protected String getParentPath()
 	{
 		return PathUtilities.extractDirectoryPath( getPath() );
