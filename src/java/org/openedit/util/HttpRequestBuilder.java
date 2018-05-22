@@ -1,7 +1,6 @@
 package org.openedit.util;
 
 import java.io.File;
-import java.net.URI;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -15,6 +14,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
@@ -102,7 +102,7 @@ public class HttpRequestBuilder
 		
 	}
 	
-	public HttpResponse post(String inUrl, Map inParams)
+	public HttpResponse post(String inUrl, Map<String,String> inParams)
 	{
 		try
 		{
@@ -114,13 +114,8 @@ public class HttpRequestBuilder
 		            .build();
 	
 			HttpPost method = new HttpPost(inUrl);
-			
-			for (Iterator iterator = inParams.keySet().iterator(); iterator.hasNext();)
-			{
-				String type = (String) iterator.next();
-				addPart(type, (String)inParams.get(type));
-			}
-			method.setEntity(build());
+
+			method.setEntity(build(inParams));
 			HttpResponse response2 = client.execute(method);
 			return response2;
 		}
@@ -135,12 +130,13 @@ public class HttpRequestBuilder
 		fieldHttpClient = null;
 	}
 	
-	public HttpResponse sharedPost(URI inUrl, Map inParams)
+	public HttpResponse sharedPost(String path, Map<String,String> inParams)
 	{
 		try
 		{
-			HttpPost method = new HttpPost(inUrl);
+			HttpPost method = new HttpPost(path);
 			HttpResponse response2 = getSharedClient().execute(method);
+			method.setEntity(build(inParams));
 			return response2;
 		}
 		catch ( Exception ex )
@@ -153,7 +149,7 @@ public class HttpRequestBuilder
 	{
 		try
 		{
-			HttpPost method = new HttpPost(inUrl);
+			HttpGet method = new HttpGet(inUrl);
 			HttpResponse response2 = getSharedClient().execute(method);
 			return response2;
 		}
