@@ -1,6 +1,7 @@
 package org.openedit.util;
 
 import java.io.File;
+import java.net.URI;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -113,6 +114,13 @@ public class HttpRequestBuilder
 		            .build();
 	
 			HttpPost method = new HttpPost(inUrl);
+			
+			for (Iterator iterator = inParams.keySet().iterator(); iterator.hasNext();)
+			{
+				String type = (String) iterator.next();
+				addPart(type, (String)inParams.get(type));
+			}
+			method.setEntity(build());
 			HttpResponse response2 = client.execute(method);
 			return response2;
 		}
@@ -127,7 +135,7 @@ public class HttpRequestBuilder
 		fieldHttpClient = null;
 	}
 	
-	public HttpResponse sharedPost(String inUrl, Map inParams)
+	public HttpResponse sharedPost(URI inUrl, Map inParams)
 	{
 		try
 		{
