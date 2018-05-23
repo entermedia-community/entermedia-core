@@ -803,20 +803,21 @@ public class PageSettings
 		{
 			return inValue;
 		}
+		String edittext = inValue;
 		int start = 0;
-		while( (start = inValue.indexOf("${",start)) != -1)
+		while( (start = edittext.indexOf("${",start)) != -1)
 		{
-			int end = inValue.indexOf("}",start);
+			int end = edittext.indexOf("}",start);
 			if( end != -1)
 			{
-				String key = inValue.substring(start+2,end);
+				String key = edittext.substring(start+2,end);
 				Object variable = getProperty(key); //check for property
 				
 				if( variable != null)
 				{
 					String sub = variable.toString();
 					sub = replaceProperty(sub);
-					inValue = inValue.substring(0,start) + sub + inValue.substring(end+1);
+					edittext = edittext.substring(0,start) + sub + edittext.substring(end+1);
 					if(sub.length() <= end){
 						start = end-sub.length();
 					}else{
@@ -829,7 +830,7 @@ public class PageSettings
 		
 			
 		}
-		return inValue;
+		return edittext;
 	}
 	public boolean isOriginalyExistedContentPath()
 	{
