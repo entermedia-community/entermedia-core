@@ -2015,6 +2015,39 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		return term;
 	}
 
+
+	public Term addLessThan(PropertyDetail inField, double low) {
+		Term term = new Term()
+		{
+			public String toQuery()
+			{
+				return getValue();
+			}
+		};
+		term.setOperation("lessthannumber");
+		term.setDetail(inField);
+		term.setValue(String.valueOf( low ) );
+		addTerm(term);
+		return term;
+	}
+
+
+	public Term addGreaterThan(PropertyDetail inField, double high) {
+		Term term = new Term()
+		{
+			public String toQuery()
+			{
+				return getValue();
+			}
+	
+		};
+		term.setOperation("greaterthannumber");
+		term.setDetail(inField);
+		term.setValue(String.valueOf( high) );
+		addTerm(term);
+		return term;
+	}
+
 	
 
 	

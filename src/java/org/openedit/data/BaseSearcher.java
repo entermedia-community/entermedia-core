@@ -1275,10 +1275,13 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				t = search.addLessThan(field, Long.parseLong(val));
 			}
 
-			if ("equaltonumber".equals(op) || "matches".equals(op) || "startswith".equals(op))
+			if ( ("equaltonumber".equals(op) || "matches".equals(op) || "startswith".equals(op)) &&  !val.contains("-"))
 			{
 				if (field.isDataType("number") || field.isDataType("long"))
 				{
+					if(val.contains(".")) {
+						val = val.substring(0, val.indexOf("."));
+					}
 					t = search.addExact(field, Long.parseLong(val));
 				}
 				if (field.isDataType("double"))
@@ -1286,7 +1289,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					t = search.addExact(field, Double.parseDouble(val));
 				}
 			}
-			else if ("betweennumbers".equals(op))
+			else if ("betweennumbers".equals(op) || val.contains("-"))
 			{
 				String highval = null;
 				String lowval = null;
@@ -1327,17 +1330,35 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 
 	protected Term addNumberRange(SearchQuery search, PropertyDetail field, Term t, String highval, String lowval)
 	{
+		
 		if (highval != null && lowval == null)
 		{
-			t = search.addLessThan(field, Long.parseLong(highval));
+			if(field.isDataType("double")) {
+				t = search.addLessThan(field, Double.parseDouble(highval));
+
+			} else {
+				t = search.addLessThan(field, Long.parseLong(highval));
+
+			}
 		}
 		else if (highval == null && lowval != null)
 		{
-			t = search.addGreaterThan(field, Long.parseLong(lowval));
+			if(field.isDataType("double")) {
+				t = search.addGreaterThan(field, Double.parseDouble(lowval));
+
+			}else {
+				t = search.addGreaterThan(field, Long.parseLong(lowval));
+
+			}
 		}
 		else if (highval != null && lowval != null)
 		{
-			t = search.addBetween(field, Long.parseLong(lowval), Long.parseLong(highval));
+			if(field.isDataType("double")) {
+				t = search.addBetween(field, Double.parseDouble(lowval), Double.parseDouble(highval));
+			} else {
+				t = search.addBetween(field, Long.parseLong(lowval), Long.parseLong(highval));
+
+			}
 		}
 		return t;
 	}
