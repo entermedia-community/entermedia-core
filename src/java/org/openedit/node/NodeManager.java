@@ -9,6 +9,8 @@ public interface NodeManager
 	Node getLocalNode();
 
 	String getLocalNodeId();
+
+	String getLocalClusterId();
 	
 	String createDailySnapShot(String inCatalogId);
 
@@ -30,6 +32,6 @@ public interface NodeManager
 	
 	public String getClusterHealth();
 	
-	public Collection getRemoteNodeList(String inCatalog);
+	public Collection getRemoteEditClusters(String inCatalog);
 	
 }
