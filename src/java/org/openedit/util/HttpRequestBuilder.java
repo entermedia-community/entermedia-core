@@ -135,8 +135,8 @@ public class HttpRequestBuilder
 		try
 		{
 			HttpPost method = new HttpPost(path);
-			HttpResponse response2 = getSharedClient().execute(method);
 			method.setEntity(build(inParams));
+			HttpResponse response2 = getSharedClient().execute(method);
 			return response2;
 		}
 		catch ( Exception ex )
