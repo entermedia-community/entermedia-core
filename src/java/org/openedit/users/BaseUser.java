@@ -498,6 +498,31 @@ public class BaseUser extends BaseData implements User, Comparable
 		
 	}
 
+	public String getAnonNickName()
+	{
+		String firstpart = getFirstName();
+		if( firstpart == null)
+		{
+			firstpart = getUserName();
+		}
+		if( firstpart != null)
+		{
+			firstpart = firstpart.substring(0,1);
+			firstpart = firstpart.toUpperCase();
+		}
+		String secondpart = getLastName();
+		if( secondpart == null)
+		{
+			secondpart = getEmail();
+			if( secondpart != null )
+			{
+				int index = secondpart.indexOf("@");
+				secondpart = secondpart.substring(0, index);
+			}
+		}
+		return firstpart + " " + secondpart;
+	}
+	
 	@Override
 	public String getEnterMediaKey()
 	{
