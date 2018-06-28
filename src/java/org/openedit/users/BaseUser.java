@@ -519,7 +519,13 @@ public class BaseUser extends BaseData implements User, Comparable
 				int index = secondpart.indexOf("@");
 				secondpart = secondpart.substring(0, index);
 			}
-		}
+			if( secondpart != null && secondpart.length()>1)
+			{
+				String parts = secondpart.substring(0,1);
+				parts = parts.toUpperCase();
+				secondpart = parts + secondpart.substring(1);
+			}
+	}
 		return firstpart + " " + secondpart;
 	}
 	
