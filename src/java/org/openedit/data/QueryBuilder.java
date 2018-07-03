@@ -80,6 +80,14 @@ public class QueryBuilder
 		return this;
 	}
 	
+	public QueryBuilder after(String inKey, Date inValue){
+		getQuery().addAfter(inKey, inValue);
+		return this;
+	}
+	public QueryBuilder between(String inKey, Date start, Date end){
+		getQuery().addBetween(inKey, start, end);
+		return this;
+	}
 	
 	public QueryBuilder hitsPerPage(int inHitsPerPage)
 	{
@@ -211,14 +219,7 @@ public class QueryBuilder
 		return this;
 	}
 	
-	public QueryBuilder after(String inKey, Date inValue){
-		getQuery().addAfter(inKey, inValue);
-		return this;
-	}
-	public QueryBuilder after(String inKey, Date start, Date end){
-		getQuery().addBetween(inKey, start, end);
-		return this;
-	}
+
 	public QueryBuilder enduser(boolean inB)
 	{
 		getQuery().setEndUserSearch(inB);
