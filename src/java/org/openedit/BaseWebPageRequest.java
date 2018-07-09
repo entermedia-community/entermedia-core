@@ -36,6 +36,7 @@ import org.apache.commons.collections.map.ListOrderedMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openedit.data.BaseData;
+import org.openedit.data.SearcherManager;
 import org.openedit.generators.VariablePackage;
 import org.openedit.generators.VariableStore;
 import org.openedit.modules.translations.LanguageMap;
@@ -45,7 +46,6 @@ import org.openedit.page.PageRequestKeys;
 import org.openedit.page.PageStreamer;
 import org.openedit.profile.UserProfile;
 import org.openedit.users.User;
-import org.openedit.util.FileUtils;
 import org.openedit.util.LocaleManager;
 import org.openedit.util.PathUtilities;
 import org.openedit.util.SessionMap;
@@ -1295,6 +1295,19 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 	{
 		Date stored = getLocaleManager().getDateStorageUtil().parseFromStorage(inStoredDate);
 		return getDateTime(stored);
+	}
+	public String getDataText(String inDataType, String inId)
+	{
+		SearcherManager searcher = (SearcherManager)getPageValue("searcherManager");
+		String catalogid = findValue("catalogid");
+		Data data = searcher.getData(catalogid,inDataType, inId);
+		String label = null;
+		if( data != null)
+		{
+			label = data.getName(getLocale());
+		}
+		return label;
+		
 	}
 	public String getText(String inKey)
 	{

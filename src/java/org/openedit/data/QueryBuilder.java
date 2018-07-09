@@ -7,6 +7,7 @@ import java.util.GregorianCalendar;
 import java.util.Iterator;
 
 import org.openedit.Data;
+import org.openedit.OpenEditException;
 import org.openedit.WebPageRequest;
 import org.openedit.hittracker.HitTracker;
 import org.openedit.hittracker.SearchQuery;
@@ -183,6 +184,10 @@ public class QueryBuilder
 		return found;
 	}
 	public QueryBuilder exact(String inKey, String inValue) {
+		if( inValue == null)
+		{
+			throw new OpenEditException("Value is empty for " + inKey);
+		}
 		getQuery().addExact(inKey, inValue);
 		return this;
 	}

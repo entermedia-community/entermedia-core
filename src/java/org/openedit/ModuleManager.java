@@ -116,7 +116,7 @@ public class ModuleManager implements BeanLoaderAware, ShutdownList
 			}
 			else if ( inAction!=null)
 			{
-				throw new OpenEditException(cause,inAction.getPath() +"#" + inAction.getActionName());
+				throw new OpenEditException(cause,inAction.getPath() +"#" + inAction.getActionName() + " " + cause.toString());
 			}  
 			else
 			{
