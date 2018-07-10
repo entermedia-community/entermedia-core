@@ -2916,7 +2916,14 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		}
 
 	}
-	
+
+	public Data getViewData(String inViewPath)
+	{
+		String id = inViewPath.substring(inViewPath.lastIndexOf("/")+1);
+		Data found  = getSearcherManager().getData(getCatalogId(), "view",id);
+		return found;
+	}
+
 	
 	
 }
