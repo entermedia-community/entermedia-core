@@ -1246,6 +1246,14 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 	}
 	
 	
+	public String getSearchDate(String inDate) {
+		Date stored = getLocaleManager().getDateStorageUtil().parseFromStorage(inDate);
+		
+		String value = getLocaleManager().getDateStorageUtil().formatDateObj(stored, "yyyy-MM-dd");
+		return value;
+		
+	}
+	
 	public String getHours(String inDate)
 	{
 		if( inDate == null || inDate.length() == 0)
