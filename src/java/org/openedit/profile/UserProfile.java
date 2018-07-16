@@ -61,6 +61,19 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 		fieldPermissions = inPermissions;
 	}
 
+	public boolean hasModule(String inId)
+	{
+		for (Iterator iterator = getModules().iterator(); iterator.hasNext();)
+		{
+			Data data = (Data) iterator.next();
+			if( data.getId().equals(inId))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	public Collection<Data> getModules()
 	{
 		return fieldModules;
