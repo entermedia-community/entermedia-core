@@ -192,6 +192,16 @@ public class QueryBuilder
 		return this;
 	}
 	
+	
+	public QueryBuilder freeform(String inKey, String inValue) {
+		if( inValue == null)
+		{
+			throw new OpenEditException("Value is empty for " + inKey);
+		}
+		getQuery().addFreeFormQuery(inKey, inValue);
+		return this;
+	}
+	
 	public QueryBuilder startsWith(String inKey, String inValue) {
 		getQuery().addStartsWith(inKey, inValue);
 		return this;
@@ -206,6 +216,8 @@ public class QueryBuilder
 		getQuery().setAndTogether(true);
 		return this;
 	}
+	
+	
 	
 	public QueryBuilder all() 
 	{

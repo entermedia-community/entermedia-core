@@ -2048,6 +2048,13 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		return term;
 	}
 
+
+	public void addFreeFormQuery(String inKey, String inValue) {
+		PropertyDetail detail = createDetail(inKey);
+		addFreeFormQuery(detail, inValue);
+		
+	}
+
 	
 
 	
