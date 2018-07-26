@@ -640,9 +640,12 @@ public class SearcherManager
 			Searcher searcher = (Searcher) iterator.next();
 			if (searcher instanceof Reloadable)
 			{
-				searcher.reloadSettings();
-				
-				types.add(searcher.getSearchType());
+				if( !searcher.getSearchType().contains("$searcher.getSearchType()") )
+				{
+					searcher.reloadSettings();
+					
+					types.add(searcher.getSearchType());
+				}	
 			}
 		}
 		return types;

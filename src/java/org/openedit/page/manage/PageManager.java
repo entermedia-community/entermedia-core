@@ -644,6 +644,11 @@ public class PageManager
 	{
 		fieldZipUtil = inZipUtil;
 	}
+	public ContentItem getContent(String inPathToFile)
+	{
+		ContentItem item = getRepository().getStub(inPathToFile);
+		return item;
+	}
 	
 
 }
