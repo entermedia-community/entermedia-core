@@ -136,5 +136,17 @@ public class FilterNode extends BaseData
 		}
 		return val;
 	}
+	public void addChildToStart(FilterNode inChild)
+	{
+		if(getChildren().isEmpty())
+		{
+			getChildren().add(inChild);
+		}
+		else
+		{
+			getChildren().add(0,inChild);
+		}
+		
+	}
 	
 }
