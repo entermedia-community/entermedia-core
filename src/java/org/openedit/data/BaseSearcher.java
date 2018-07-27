@@ -1150,7 +1150,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	protected Term addTerm(SearchQuery search, PropertyDetail detail, String val, String[] vals, String op)
 	{
 		Term t = null;
-		if (detail.isDataType("number") || detail.isDataType("double") || detail.isDataType("float") || detail.isDataType("geo_point"))
+		if (detail.isDataType("number") || detail.isDataType("double") || detail.isDataType("float") || detail.isDataType("geo_point") || detail.isDate())
 		{
 			//this is handled in else statement
 			return null;
@@ -1481,7 +1481,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					search.setProperty(t.getId(), val);
 				}
 			}
-			else if ("equals".equals(op) && val != null && !"".equals(val))
+			else if ("equals".equals(op)  && val != null && !"".equals(val))
 			{
 				d = formater.parse(val);
 
@@ -2418,19 +2418,14 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		//		{
 		//			changes.append("MutliEdit->");
 		//		}
+		Data compare = createNewData();
+		updateData(inReq, fields, compare);
 		for (int i = 0; i < fields.length; i++)
 		{
 			String field = fields[i];
-			String value = inReq.getRequestParameter(field + ".value");
-			//			if (composite != null)
-			//			{
-			//				String compositeVal = composite.get(field);
-			//				if (compositeVal == value)
-			//				{
-			//					continue;
-			//				}
-			//			}
-			String oldval = object.get(field);
+			Object value = compare.getValue(field);
+		
+			Object oldval = object.getValue(field);
 
 			if (oldval == null)
 			{
@@ -2446,17 +2441,20 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				PropertyDetail detail = getDetail(field);
 				if (detail != null && detail.isList())
 				{
+					if(value instanceof String){
 					Searcher listSearcher = getSearcherManager().getListSearcher(detail);
-					Data data = (Data) listSearcher.searchById(oldval);
+					Data data = (Data) listSearcher.searchById((String) oldval);
 					if (data != null)
 					{
 						oldval = data.getName();
 					}
-					data = (Data) listSearcher.searchById(value);
+					data = (Data) listSearcher.searchById((String) value);
 					if (data != null)
 					{
 						value = data.getName();
 					}
+					}
+					
 
 				}
 				if (changes.length() > 0)
