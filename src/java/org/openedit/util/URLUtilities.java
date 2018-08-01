@@ -481,6 +481,13 @@ public class URLUtilities
 		{
 			return null;
 		}
+		//TODO: Deal with [ ] and 
+		/*
+		 *  gen-delims  = ":" / "/" / "?" / "#" / "[" / "]" / "@"
+
+      sub-delims  = "!" / "$" / "&" / "'" / "(" / ")"
+                  / "*" / "+" / "," / ";" / "="
+		 */
 		StringBuffer output = new StringBuffer(inStr.length() + 50);
 		for (int i = 0; i < inStr.length(); i++)
 		{

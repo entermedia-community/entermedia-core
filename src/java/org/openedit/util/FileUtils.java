@@ -31,6 +31,7 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openedit.OpenEditException;
 
 /**
  * Some file utility methods such as recursive delete.
@@ -246,16 +247,16 @@ public class FileUtils
 	 * @param inDest
 	 * @throws IOException
 	 */
-	public void move( String inSource, String inDest ) throws IOException
+	public void move( String inSource, String inDest ) 
 	{
 		move( new File( inSource), new File( inDest));
 	}
-	public void move( File inSource, File inDest ) throws IOException
+	public void move( File inSource, File inDest )
 	{
 		move(inSource, inDest, false);
 	}
 		
-	public void move(File inSource, File inDest, boolean inForce) throws IOException
+	public void move(File inSource, File inDest, boolean inForce) 
 	{
 		if (inSource.isDirectory())
 		{
@@ -295,7 +296,7 @@ public class FileUtils
 		}
 	}
 
-	protected void renameFile(File inSource, File inDest, boolean inForce) throws IOException
+	protected void renameFile(File inSource, File inDest, boolean inForce) 
 	{
 		if( !inSource.renameTo( inDest ) )
 		{
@@ -308,7 +309,7 @@ public class FileUtils
 				}
 				return;
 			}
-			throw new IOException("Could not move " + inSource.getPath() + " to " + inDest.getPath() + " file may already exist. Use forced=true");
+			throw new OpenEditException("Could not move " + inSource.getPath() + " to " + inDest.getPath() + " file may already exist. Use forced=true");
 		}
 		
 	}
@@ -337,7 +338,7 @@ public class FileUtils
 	{
 		copyFiles( new File( source ), new File( destination ) );
 	}
-	public void copyFiles( File source, File destination ) throws IOException
+	public void copyFiles( File source, File destination )
 	{
 		if (source.isDirectory())
 		{
@@ -364,7 +365,14 @@ public class FileUtils
 			else
 			{
 				destination.getParentFile().mkdirs();
-				fieldFiller.fill( source,destination );
+				try
+				{
+					fieldFiller.fill( source,destination );
+				}
+				catch (IOException e)
+				{
+					throw new OpenEditException(e);
+				}
 				destination.setLastModified(source.lastModified());
 			}
 		}
