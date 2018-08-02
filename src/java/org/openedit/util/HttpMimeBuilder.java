@@ -22,37 +22,14 @@ import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
-import org.openedit.OpenEditException;
-/**
- * @deprecated use HttpShareConnection and HttpMimeBuilder
- * @author shanti
- *
- */
-public class HttpRequestBuilder
+
+public class HttpMimeBuilder
 {
 	MultipartEntityBuilder builder = MultipartEntityBuilder.create();
 	
 	Charset UTF8 = Charset.forName("UTF-8");
 	ContentType contentType = ContentType.create("text/plain", UTF8);
 	ContentType octectType = ContentType.create("application/octect-stream", UTF8);
-
-	protected HttpClient fieldHttpClient;
-	
-	public HttpClient getSharedClient()
-	{
-		if (fieldHttpClient == null)
-		{
-			RequestConfig globalConfig = RequestConfig.custom()
-		            .setCookieSpec(CookieSpecs.DEFAULT)
-		            .build();
-			fieldHttpClient = HttpClients.custom()
-		            .setDefaultRequestConfig(globalConfig)
-		            .build();
-		}
-
-		return fieldHttpClient;
-	}
-
 
 	public void addPart(String inKey, String inValue, String inType)
 	{
@@ -88,25 +65,8 @@ public class HttpRequestBuilder
 		return builder.build();
 	}
 	
-	public HttpEntity build(Map <String, String> inMap){
-		
-		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-
-		for (Iterator iterator = inMap.keySet().iterator(); iterator.hasNext();)
-		{
-			String key = (String) iterator.next();
-			String val = inMap.get(key);
-			  nameValuePairs.add(new BasicNameValuePair(key, val));
-
-			
-		}
-		 return new UrlEncodedFormEntity(nameValuePairs, UTF8);
-
-		
-		
-	}
 	
-	public HttpResponse post(String inUrl, Map<String,String> inParams)
+	public HttpResponse post(String inUrl)
 	{
 		try
 		{
@@ -119,48 +79,15 @@ public class HttpRequestBuilder
 	
 			HttpPost method = new HttpPost(inUrl);
 
-			method.setEntity(build(inParams));
+			method.setEntity(builder.build());
 			HttpResponse response2 = client.execute(method);
 			return response2;
 		}
 		catch ( Exception ex )
 		{
-			throw new OpenEditException(ex);
+			throw new RuntimeException(ex);
 		}
 	}
 	
-	public void reset()
-	{
-		fieldHttpClient = null;
-	}
-	
-	public HttpResponse sharedPost(String path, Map<String,String> inParams)
-	{
-		try
-		{
-			HttpPost method = new HttpPost(path);
-			method.setEntity(build(inParams));
-			HttpResponse response2 = getSharedClient().execute(method);
-			return response2;
-		}
-		catch ( Exception ex )
-		{
-			throw new OpenEditException(ex);
-		}
-	}
 
-	public HttpResponse sharedConnection(String inUrl)
-	{
-		try
-		{
-			HttpGet method = new HttpGet(inUrl);
-			HttpResponse response2 = getSharedClient().execute(method);
-			return response2;
-		}
-		catch ( Exception ex )
-		{
-			throw new OpenEditException(ex);
-		}
-	}
-	
 }
