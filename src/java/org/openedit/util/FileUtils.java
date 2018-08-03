@@ -253,7 +253,7 @@ public class FileUtils
 	}
 	public void move( File inSource, File inDest )
 	{
-		move(inSource, inDest, false);
+		move(inSource, inDest, true);
 	}
 		
 	public void move(File inSource, File inDest, boolean inForce) 
@@ -309,7 +309,7 @@ public class FileUtils
 				}
 				return;
 			}
-			throw new OpenEditException("Could not move " + inSource.getPath() + " to " + inDest.getPath() + " file may already exist. Use forced=true");
+			throw new OpenEditException("Could not move " + inSource.getPath() + " to " + inDest.getPath() + " file may already exist or the folders are on different mounts.  Use forced=true");
 		}
 		
 	}
