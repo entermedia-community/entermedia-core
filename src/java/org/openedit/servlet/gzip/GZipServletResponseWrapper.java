@@ -1,4 +1,4 @@
-package com.openedit.servlet.gzip;
+package org.openedit.servlet.gzip;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
