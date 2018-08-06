@@ -1,4 +1,4 @@
-package org.openedit.servlet.gzip;
+package com.openedit.servlet.gzip;
 
 import java.io.IOException;
 
@@ -11,7 +11,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class GZipServletFilter implements Filter {
+public class GZipFilter implements Filter {
 
 	  @Override
 	  public void init(FilterConfig filterConfig) throws ServletException {
