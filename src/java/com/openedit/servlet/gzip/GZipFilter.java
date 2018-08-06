@@ -6,7 +6,7 @@ import org.openedit.servlet.gzip.GZipServletFilter;
  * @author shanti
  *
  */
-public class GZipFilter extends GZipServletFilter 
+public class GzipFilter extends GZipServletFilter 
 {
 
 
