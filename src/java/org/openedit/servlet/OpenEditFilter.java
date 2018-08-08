@@ -58,6 +58,7 @@ public class OpenEditFilter implements Filter
 		String path = request.getRequestURI();
 		if (path.startsWith("/entermedia/services/websocket")) 
 		{
+			request.getSession(true).setAttribute("moduleManager", getEngine().getModuleManager());  //This is needed so we can save the moduleManager
 			chain.doFilter(request, response); // Just continue chain.
 			return;
 		}
