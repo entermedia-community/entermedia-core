@@ -55,6 +55,9 @@ public interface Searcher extends CatalogEnabled
 	 * @param search
 	 * @return
 	 */
+	
+	public void addShowOnlyFilter(WebPageRequest inPageRequest, String querystring, SearchQuery search);
+
 
 	public abstract SearchQuery addActionFilters(WebPageRequest inReq, SearchQuery search);
 
