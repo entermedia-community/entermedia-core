@@ -300,6 +300,10 @@ public class SearcherManager
 	}
 	public String getLabel(PropertyDetail inDetail, Data inData, String inLocale)
 	{
+		if( inData == null)
+		{
+			return null;
+		}
 		Searcher listsearcher = getSearcher(inDetail.getListCatalogId(),inDetail.getListId() );
 		String mask = listsearcher.getPropertyDetails().getRender();
 		String val = null;
