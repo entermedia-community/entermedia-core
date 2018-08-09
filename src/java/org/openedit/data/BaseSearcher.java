@@ -2441,21 +2441,20 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				PropertyDetail detail = getDetail(field);
 				if (detail != null && detail.isList())
 				{
-					if(value instanceof String){
-					Searcher listSearcher = getSearcherManager().getListSearcher(detail);
-					Data data = (Data) listSearcher.searchById((String) oldval);
-					if (data != null)
+					if(value instanceof String && oldval instanceof String)
 					{
-						oldval = data.getName();
+						Searcher listSearcher = getSearcherManager().getListSearcher(detail);
+						Data data = (Data) listSearcher.searchById((String) oldval);
+						if (data != null)
+						{
+							oldval = data.getName();
+						}
+						data = (Data) listSearcher.searchById((String) value);
+						if (data != null)
+						{
+							value = data.getName();
+						}
 					}
-					data = (Data) listSearcher.searchById((String) value);
-					if (data != null)
-					{
-						value = data.getName();
-					}
-					}
-					
-
 				}
 				if (changes.length() > 0)
 				{
