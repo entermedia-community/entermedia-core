@@ -25,6 +25,7 @@ import org.openedit.OpenEditException;
 import org.openedit.WebPageRequest;
 import org.openedit.data.Searcher;
 import org.openedit.data.SearcherManager;
+import org.openedit.users.User;
 
 public class StringEncryption
 {
@@ -447,6 +448,13 @@ public class StringEncryption
 			getSearcherManager().getCacheManager().put("getEncryptionKey", inType, key);
 		}
 		return key;
+	}
+
+	public String getEnterMediaKey(User inUser)
+	{	
+		String md5 = getPasswordMd5(inUser.getPassword());
+		String value = inUser.getUserName() + "md542" + md5;
+		return value;
 	}
 
 	
