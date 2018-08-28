@@ -75,4 +75,23 @@ public class LanguageMap extends TreeMap
 		return json.toJSONString();
 	}
 	
+
+	@Override
+	public boolean isEmpty()
+	{
+	
+		for (Iterator iterator = keySet().iterator(); iterator.hasNext();)
+		{
+			String key = (String) iterator.next();
+			Object val = get(key);
+			if(val != null){
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
+	
+	
 }

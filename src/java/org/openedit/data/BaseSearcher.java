@@ -2427,16 +2427,16 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		
 			Object oldval = object.getValue(field);
 
-			if (oldval == null)
-			{
-				oldval = "";
+			if(value == null && oldval == null){
+				continue;
 			}
-			if (value == null)
-			{
-				value = "";
+			if(oldval == null && value instanceof LanguageMap){
+				if(((LanguageMap)value).isEmpty()){
+					continue;
+				}
 			}
 
-			if (!value.equals(oldval))
+			if (value != null && !value.equals(oldval))
 			{
 				PropertyDetail detail = getDetail(field);
 				if (detail != null && detail.isList())
@@ -2459,6 +2459,9 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				if (changes.length() > 0)
 				{
 					changes.append(", ");
+				}
+				if(oldval == null){
+					oldval = "Empty";
 				}
 				changes.append(field + ": " + oldval + " -> " + value);
 			}
@@ -2485,6 +2488,9 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			event.setOperation("edit");
 			event.setSourcePath(object.getSourcePath());
 			event.setProperty("id", object.getId());
+			event.setProperty(getSearchType() + "id", object.getId());
+
+			event.setProperty("sourcepath", object.getSourcePath());
 			//aka "changes"
 			event.setProperty("details", changes.toString());
 			event.setUser(inReq.getUser());
