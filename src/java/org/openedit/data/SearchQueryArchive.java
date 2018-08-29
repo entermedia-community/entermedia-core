@@ -254,7 +254,7 @@ public class SearchQueryArchive
 			}
 			if (t != null && realop != null)
 			{
-				t.addParameter("op", realop);
+				t.addValue("op", realop);
 			}
 		}
 		int count = 0;

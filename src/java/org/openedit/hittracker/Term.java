@@ -102,7 +102,7 @@ abstract public class Term {
 		for (Iterator iterator = getParameters().keySet().iterator(); iterator.hasNext();)
 		{
 			String key = (String) iterator.next();
-			term.addAttribute(key, getParameter(key));
+			term.addAttribute(key, (String) getValue(key));
 		}
 //		if (getParameter("op") != null)
 //			term.addAttribute("realop", getParameter("op"));
@@ -126,9 +126,9 @@ abstract public class Term {
 		this.fieldParameters = fieldParameters;
 	}
 
-	public String getParameter(String inKey)
+	public Object getValue(String inKey)
 	{
-		String val = (String) getParameters().get(inKey);
+		Object val =  getParameters().get(inKey);
 		if( val == null && "op".equals(inKey))
 		{
 			val = getOperation();
@@ -136,7 +136,7 @@ abstract public class Term {
 		return val;
 	}
 
-	public void addParameter(String inKey, String value)
+	public void addValue(String inKey, Object value)
 	{
 		getParameters().put(inKey, value);
 	}

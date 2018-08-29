@@ -118,8 +118,8 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable
 			Term term = (Term) iterator.next();
 			if("betweendates".equals(term.getOperation()))
 			{
-				Date before = inQuery.getDateFormat().parse(term.getParameter("lowDate"));
-				Date after = inQuery.getDateFormat().parse(term.getParameter("highDate"));
+				Date before =(Date) term.getValue("lowDate");
+				Date after = (Date) term.getValue("highDate");
 				String id = term.getDetail().getId();//effectivedate
 				String date = inElement.attributeValue(id);
 				if(date == null)
@@ -134,7 +134,7 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable
 			} 
 			else if("afterdate".equals(term.getOperation()))
 			{
-				Date after = inQuery.getDateFormat().parse(term.getParameter("highDate"));
+				Date after = inQuery.getDateFormat().parse((String) term.getValue("highDate"));
 				String id = term.getDetail().getId();//effectivedate
 				String date = inElement.attributeValue(id);
 				if(date == null)
@@ -149,7 +149,7 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable
 			}
 			else if("beforedate".equals(term.getOperation()))
 			{
-				String low = term.getParameter("beforeDate");
+				String low = (String) term.getValue("beforeDate");
 				Date before = null;
 				if( low != null)
 				{

@@ -1205,7 +1205,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		}
 		if (t != null)
 		{
-			t.addParameter("op", op);
+			t.addValue("op", op);
 		}
 		return t;
 	}
@@ -1315,7 +1315,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			if (t != null)
 			{
 				search.setProperty(t.getId(), val);
-				t.addParameter("op", op);
+				t.addValue("op", op);
 			}
 		}
 		else if ("betweennumbers".equals(op))
@@ -1495,7 +1495,8 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				Calendar c2 = new GregorianCalendar();
 				c2.setTime(c.getTime());
 				c2.add(Calendar.DAY_OF_YEAR, 1);
-
+				Date low = c.getTime();
+				Date high = c2.getTime();
 				t = search.addBetween(field, c.getTime(), c2.getTime());
 				search.setProperty(t.getId(), val);
 			}
@@ -1610,7 +1611,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		}
 		if (t != null)
 		{
-			t.addParameter("op", op); //TODO make these match with standard operations?
+			t.addValue("op", op); //TODO make these match with standard operations?
 		}
 		return t;
 	}
@@ -2832,13 +2833,13 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			Double longitude = p.getLongitude();
 			filter.setLatitude(latitude);
 			filter.setLongitude(longitude);
-			filter.addParameter("formatted_address", p.getFormatedAddress());
+			filter.addValue("formatted_address", p.getFormatedAddress());
 			filter.setCenter(p);
 		}
 		else
 		{
 			log.error("No location found " + search.hashCode() );
-			filter.addParameter("maperror","No results");
+			filter.addValue("maperror","No results");
 			//filter.setCenter(p);
 		}
 

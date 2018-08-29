@@ -5,19 +5,19 @@ public class JoinFilter extends Term
 	
 	public String getCatalog()
 	{
-		return getParameter("catalog");
+		return (String) getValue("catalog");
 	}
 	public String getColumnType()
 	{
-		return getParameter("type");
+		return (String) getValue("type");
 	}
 	public String getColumn()
 	{
-		return getParameter("column");
+		return (String) getValue("column");
 	}
 	public String getDataPath()
 	{
-		return getParameter("datapath");
+		return (String) getValue("datapath");
 	}
 	
 	@Override

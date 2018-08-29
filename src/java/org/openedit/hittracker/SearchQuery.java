@@ -517,8 +517,8 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 				term.addAttribute("id", getDetail().getId());
 				term.addAttribute("val", getValue());
 				term.addAttribute("op", "contains");
-				if (getParameter("op") != null)
-					term.addAttribute("realop", getParameter("op"));
+				if (getValue("op") != null)
+					term.addAttribute("realop", (String) getValue("op"));
 
 				return term;
 			}
@@ -719,8 +719,8 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 					term.addAttribute("id", getDetail().getId());
 					term.addAttribute("val", getValue());
 					term.addAttribute("op", "exact");
-					if (getParameter("op") != null)
-						term.addAttribute("realop", getParameter("op"));
+					if (getValue("op") != null)
+						term.addAttribute("realop", (String) getValue("op"));
 
 					return term;
 				}
@@ -1519,8 +1519,8 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		String highDate = getDateFormat().format(inBefore);
 		term.setValue(lowDate + " - " + highDate);
 		term.setDetail(inFieldId);
-		term.addParameter("afterDate", lowDate);
-		term.addParameter("beforeDate", highDate);
+		term.addValue("afterDate", inAfter);
+		term.addValue("beforeDate", inBefore);
 		term.setOperation("betweendates");
 		getTerms().add(term);
 		return term;
@@ -1840,8 +1840,8 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		};
 		term.setDetail(inField);
 		term.setOperation("betweennumbers");
-		term.addParameter("lowval", String.valueOf(  lowval ) );
-		term.addParameter("highval", String.valueOf(highval));
+		term.addValue("lowval",  lowval  );
+		term.addValue("highval", highval);
 		term.setValue(lowval  + " to "  + highval);
 		addTerm(term);
 		return term;
@@ -1862,8 +1862,8 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		};
 		term.setDetail(inField);
 		term.setOperation("betweennumbers");
-		term.addParameter("lowval", String.valueOf(  lowval ) );
-		term.addParameter("highval", String.valueOf(highval));
+		term.addValue("lowval",   lowval);
+		term.addValue("highval",highval);
 		term.setValue(lowval  + " to "  + highval);
 		addTerm(term);
 		return term;
