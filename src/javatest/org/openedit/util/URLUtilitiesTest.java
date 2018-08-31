@@ -29,4 +29,36 @@ public class URLUtilitiesTest extends BaseTestCase
         assertEquals("/include.jsp", path);
     }
 
+    public void testFullUrlEscape()
+    {
+    	String url = "https://user@somesite.com/this has space/You're & crazy/index.html";
+    	
+        String fixed = URLUtilities.urlEscape(url);
+        String good = "https://user@somesite.com/this%20has%20space/You%27re%20%26%20crazy/index.html";
+        assertEquals(good, fixed);
+    
+    }
+
+    public void testUrlPath()
+    {
+    	String url = "/this has space/You're & crazy/index.html?this=should&workd=work";
+    	
+        String fixed = URLUtilities.urlEscape(url);
+        String good = "/this%20has%20space/You%27re%20%26%20crazy/index.html?this=should&workd=work";
+        assertEquals(good, fixed);
+    
+    }
+
+    public void testUrlParams()
+    {
+    	String url = "https://user@somesite.com/this has space/You're & crazy/index.html?this=should&workd=work";
+    	
+        String fixed = URLUtilities.urlEscape(url);
+        String good = "https://user@somesite.com/this%20has%20space/You%27re%20%26%20crazy/index.html?this=should&workd=work";
+        assertEquals(good, fixed);
+    
+    }
+
+    
+    
 }

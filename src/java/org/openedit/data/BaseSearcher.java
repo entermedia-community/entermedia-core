@@ -1012,7 +1012,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			}
 		}
 	}
-
+/*
 	public void addUserProfileSearchFilters(WebPageRequest inReq, SearchQuery search)
 	{
 		if (inReq.getUserProfile() == null)
@@ -1072,7 +1072,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			}
 		}
 	}
-
+	*/
 	protected PropertyDetail getDetail(String inTermId, WebPageRequest inReq)
 	{
 

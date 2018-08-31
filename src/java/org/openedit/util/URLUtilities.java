@@ -283,6 +283,54 @@ public class URLUtilities
 		encoded = encoded.replace(" ", "%20");
 		return encoded;
 	}
+	public static String urlEscape(String completeurl)
+	{
+//		gen-delims  = ":"  "/"  "?"  "#"  "["  "]" "@"
+//	
+//			     sub-delims  = "!" / "$" / "&" / "'" / "(" / ")"
+//			                 / "*" / "+" / "," / ";" / "="
+		final String PATHVALUES = "!$&'()*+,;= "; //:?@[] \"%-.<>\\^_`{|}~";
+		
+		String http = null;
+		String urlpath = null;
+		String parameters = null;
+		if( completeurl.startsWith("/") )
+		{
+			urlpath = completeurl;
+		}
+		else
+		{
+			int slash = completeurl.indexOf("/",7);
+			http = completeurl.substring(0,slash);
+			urlpath = completeurl.substring(slash);
+		}
+		int quest = urlpath.indexOf("?");
+		if( quest > -1)
+		{
+			parameters = urlpath.substring(quest);
+			urlpath = urlpath.substring(0,quest);
+		}
+		
+	    StringBuilder result = new StringBuilder(urlpath);
+	    for (int i = urlpath.length() - 1; i >= 0; i--) {
+	        if (PATHVALUES.indexOf(urlpath.charAt(i)) != -1) {
+	            result.replace(i, i + 1, 
+	                    "%" + Integer.toHexString(urlpath.charAt(i)).toUpperCase());
+	        }
+	    }
+	    String finalurl = "";
+	    if( http != null)
+	    {
+	    	finalurl = http;
+	    }
+	    finalurl = finalurl + result.toString();
+	    if( parameters != null)
+	    {
+	    	finalurl = finalurl + parameters;
+	    }
+	    return finalurl;
+	}
+	
 	public String decode(String s)
 	{
 		if (s == null)
