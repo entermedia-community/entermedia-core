@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -1483,19 +1484,22 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			}
 			else if ("equals".equals(op)  && val != null && !"".equals(val))
 			{
+				formater.setTimeZone(TimeZone.getTimeZone("GMT"));
+
 				d = formater.parse(val);
-
 				Calendar c = new GregorianCalendar();
-
+				c.setTimeZone(TimeZone.getTimeZone("GMT"));
 				c.setTime(d);
 				c.set(Calendar.HOUR_OF_DAY, 0);
 				c.set(Calendar.MILLISECOND, 0);
 				c.set(Calendar.MINUTE, 0);
 
 				Calendar c2 = new GregorianCalendar();
-				c2.setTime(c.getTime());
+				c2.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+				c2.setTime(d);
 				c2.add(Calendar.DAY_OF_YEAR, 1);
-				c2.add(Calendar.MILLISECOND, -1);
+				
 				Date low = c.getTime();
 				Date high = c2.getTime();
 				t = search.addBetween(field, c.getTime(), c2.getTime());
