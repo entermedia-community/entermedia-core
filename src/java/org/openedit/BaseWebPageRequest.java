@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Enumeration;
@@ -27,6 +28,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
+import java.util.TimeZone;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -1248,8 +1250,9 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 	
 	public String getSearchDate(String inDate) {
 		Date stored = getLocaleManager().getDateStorageUtil().parseFromStorage(inDate);
-		
-		String value = getLocaleManager().getDateStorageUtil().formatDateObj(stored, "yyyy-MM-dd");
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		format.setTimeZone(TimeZone.getTimeZone("GMT"));
+		String value = format.format(stored);
 		return value;
 		
 	}

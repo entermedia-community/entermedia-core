@@ -1495,6 +1495,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				Calendar c2 = new GregorianCalendar();
 				c2.setTime(c.getTime());
 				c2.add(Calendar.DAY_OF_YEAR, 1);
+				c2.add(Calendar.MILLISECOND, -1);
 				Date low = c.getTime();
 				Date high = c2.getTime();
 				t = search.addBetween(field, c.getTime(), c2.getTime());
