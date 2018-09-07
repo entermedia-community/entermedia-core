@@ -140,7 +140,15 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 //	{
 //		fieldCollectionIds = inCollectionIds;
 //	}
-
+	public boolean isInRole(String inRole)
+	{
+		if( inRole.equals( get("settingsgroup")))
+		{
+			return true;					
+		}
+		return false;					
+	}
+	
 	public boolean isEnabled(String inPreference)
 	{
 		String val = get(inPreference);
