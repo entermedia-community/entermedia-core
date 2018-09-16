@@ -70,7 +70,7 @@ public class SearcherManager
 				if( searcher == null )
 				{
 					String finalcatalogid = resolveCatalogId(inCatalogId, inFieldName);
-					if( !finalcatalogid.equals(inCatalogId))
+					if(!finalcatalogid.equals(inCatalogId))
 					{
 						searcher = (Searcher)getCache().get(finalcatalogid + "|" + inFieldName);
 						if( searcher != null )
@@ -581,7 +581,7 @@ public class SearcherManager
 			return inCatalogId;
 		}
 		Data catalogdata = (Data)typeSearcher.searchById(inSearchType);
-		if(catalogdata != null)
+		if(catalogdata != null && catalogdata.get("catalogid") != null)
 		{
 			return catalogdata.get("catalogid");
 		}
