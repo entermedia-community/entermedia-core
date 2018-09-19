@@ -231,7 +231,20 @@ public class ScalingThreadPoolExecutor extends ThreadPoolExecutor {
     /**
      * number of threads that are actively executing tasks
      */
-    private final AtomicInteger activeCount = new AtomicInteger();
+	
+	protected List runningtasks = new ArrayList();
+	
+    public List getRunningTasks()
+	{
+		return runningtasks;
+	}
+
+	public void setRunningTasks(List inRunningtasks)
+	{
+		runningtasks = inRunningtasks;
+	}
+
+	private final AtomicInteger activeCount = new AtomicInteger();
 
     public ScalingThreadPoolExecutor(int corePoolSize, int maximumPoolSize,
                                      long keepAliveTime, TimeUnit unit, BlockingQueue<Runnable> workQueue, ThreadFactory threadFactory) {
@@ -245,11 +258,21 @@ public class ScalingThreadPoolExecutor extends ThreadPoolExecutor {
 
     @Override
     protected void beforeExecute(Thread t, Runnable r) {
+   
         activeCount.incrementAndGet();
     }
 
+    
+    @Override
+    public void execute(Runnable inCommand)
+    {
+    runningtasks.add(inCommand);
+    	super.execute(inCommand);
+    }
+    
     @Override
     protected void afterExecute(Runnable r, Throwable t) {
+    	runningtasks.remove(r);
         activeCount.decrementAndGet();
     }
 }

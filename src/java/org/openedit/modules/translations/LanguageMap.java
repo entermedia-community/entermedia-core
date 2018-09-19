@@ -61,7 +61,11 @@ public class LanguageMap extends TreeMap
 		{
 			return (String)values().iterator().next();
 		}
-		return toJson();
+		String json = toJson();
+		if(json != null){
+			return json;
+		} 
+		return "";		
 	}
 
 	public String toJson()
