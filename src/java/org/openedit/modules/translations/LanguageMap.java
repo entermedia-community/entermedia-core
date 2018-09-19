@@ -51,7 +51,14 @@ public class LanguageMap extends TreeMap
 	}
 	public void setText(String inLocale, String inVal)
 	{
-		put(inLocale, inVal); 
+		if( inVal == null)
+		{
+			remove(inLocale);
+		}
+		else
+		{
+			put(inLocale, inVal);
+		}
 	}
 	
 	@Override
