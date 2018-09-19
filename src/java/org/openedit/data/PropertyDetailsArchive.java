@@ -620,8 +620,8 @@ public class PropertyDetailsArchive implements CatalogEnabled
 			Element element = (Element) iter.next();
 
 			PropertyDetail d = createDetail(defaults, inInputFile, element, inType);
-
 			newdetails.add(d);
+			
 		}
 		// Collections.sort(newdetails);
 		details.setDetails(newdetails);

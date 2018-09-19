@@ -2269,7 +2269,9 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			String val = detail.get("internalfield");
 			if (val == null || val.equals("false"))
 			{
+				if(!detail.isDeleted()){
 				sublist.add(detail);
+				}
 			}
 		}
 		Collections.sort(sublist);

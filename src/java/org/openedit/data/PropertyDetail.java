@@ -778,5 +778,21 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 		return Boolean.valueOf(b);
 	}
 
+	public void setDeleted(boolean inB)
+	{
+		setValue("deleted", "true");
+		
+	}
+	
+	public boolean isDeleted() 
+	{
+		String b = get("deleted");
+		return Boolean.valueOf(b);
+	}
+	
+	
+	
+	
+
 
 }
