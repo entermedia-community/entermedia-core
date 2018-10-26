@@ -123,11 +123,17 @@ public class BaseOpenEditEngine implements OpenEditEngine
 		if( sitedata != null)
 		{
 			context.putPageValue("sitedata", sitedata);
-			page.setProperty("apphome", sitedata.getAppHome(applicationid));
+			if( applicationid != null)
+			{
+				page.setProperty("apphome", sitedata.getAppHome(applicationid));
+			}
 		}
-		else
+		else 
 		{
-			page.setProperty("apphome", "/" + applicationid);			
+			if( applicationid != null)
+			{
+				page.setProperty("apphome", "/" + applicationid);			
+			}
 		}
 		context.putPageValue("reloadpages", checkdates);
 		Page transpage = getPageManager().getPage(page,context);
