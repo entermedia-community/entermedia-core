@@ -119,6 +119,16 @@ public class BaseOpenEditEngine implements OpenEditEngine
 		}
 
 		WebPageRequest context = createWebPageRequest( page, inRequest, inResponse, util );
+		String applicationid = page.getProperty("applicationid");
+		if( sitedata != null)
+		{
+			context.putPageValue("sitedata", sitedata);
+			page.setProperty("apphome", sitedata.getAppHome(applicationid));
+		}
+		else
+		{
+			page.setProperty("apphome", "/" + applicationid);			
+		}
 		context.putPageValue("reloadpages", checkdates);
 		Page transpage = getPageManager().getPage(page,context);
 		if(! transpage.getPath().equals(page.getPath())){

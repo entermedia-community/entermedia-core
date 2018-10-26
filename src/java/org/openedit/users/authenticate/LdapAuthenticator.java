@@ -13,7 +13,6 @@ import org.openedit.data.SearcherManager;
 import org.openedit.users.User;
 import org.openedit.users.UserManagerException;
 import org.openedit.util.LDAP;
-import org.openedit.util.NaiveTrustManager;
 
 public class LdapAuthenticator extends BaseAuthenticator
 {

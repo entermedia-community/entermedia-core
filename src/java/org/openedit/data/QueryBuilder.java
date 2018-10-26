@@ -13,7 +13,6 @@ import org.openedit.hittracker.HitTracker;
 import org.openedit.hittracker.SearchQuery;
 import org.openedit.profile.UserProfile;
 import org.openedit.users.Group;
-import org.openedit.util.DateStorageUtil;
 
 public class QueryBuilder
 {

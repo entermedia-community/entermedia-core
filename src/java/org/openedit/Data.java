@@ -3,8 +3,6 @@ package org.openedit;
 import java.util.Map;
 import java.util.Set;
 
-import org.openedit.data.ValuesMap;
-
 public interface Data
 {
 	String getId();

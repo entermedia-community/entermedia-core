@@ -1,8 +1,5 @@
 package org.openedit.event;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 import org.openedit.util.PathUtilities;
 
 public class ListenerFilter

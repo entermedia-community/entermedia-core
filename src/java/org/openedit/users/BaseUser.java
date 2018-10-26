@@ -21,7 +21,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.dom4j.Element;
 import org.openedit.MultiValued;
 import org.openedit.OpenEditRuntimeException;
 import org.openedit.data.BaseData;

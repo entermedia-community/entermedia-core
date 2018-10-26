@@ -12,8 +12,6 @@ See the GNU Lesser General Public License for more details.
 
 package org.openedit.util.strainer;
 
-import java.util.Collection;
-
 import org.openedit.WebPageRequest;
 import org.openedit.profile.UserProfile;
 

@@ -13,14 +13,12 @@ See the GNU Lesser General Public License for more details.
 package org.openedit.users.filesystem;
 
 import java.util.Iterator;
-import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.dom4j.DocumentFactory;
 import org.dom4j.Element;
 import org.openedit.data.ValuesMap;
-import org.openedit.users.UserManagerException;
 
 /**
  * Implementation of the <code>PropertyContainer</code> interface that retains

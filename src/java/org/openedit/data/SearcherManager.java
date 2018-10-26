@@ -18,7 +18,6 @@ import org.openedit.ModuleManager;
 import org.openedit.MultiValued;
 import org.openedit.OpenEditException;
 import org.openedit.OpenEditRuntimeException;
-import org.openedit.WebPageRequest;
 import org.openedit.cache.CacheManager;
 import org.openedit.hittracker.HitTracker;
 import org.openedit.locks.LockManager;

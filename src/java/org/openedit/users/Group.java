@@ -13,7 +13,6 @@ See the GNU Lesser General Public License for more details.
 package org.openedit.users;
 
 import java.util.Collection;
-import java.util.Date;
 
 import org.openedit.Data;
 

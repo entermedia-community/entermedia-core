@@ -12,7 +12,6 @@ See the GNU Lesser General Public License for more details.
 
 package org.openedit.users;
 
-import java.util.Collection;
 import java.util.List;
 
 import org.openedit.CatalogEnabled;
@@ -21,7 +20,6 @@ import org.openedit.WebPageRequest;
 import org.openedit.event.EventManager;
 import org.openedit.hittracker.HitTracker;
 import org.openedit.users.authenticate.AuthenticationRequest;
-import org.openedit.users.filesystem.PermissionsManager;
 import org.openedit.util.StringEncryption;
 
 

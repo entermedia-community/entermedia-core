@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
@@ -47,6 +48,7 @@ import org.openedit.page.PageAction;
 import org.openedit.page.PageRequestKeys;
 import org.openedit.page.PageStreamer;
 import org.openedit.profile.UserProfile;
+import org.openedit.servlet.SiteData;
 import org.openedit.users.User;
 import org.openedit.util.LocaleManager;
 import org.openedit.util.PathUtilities;
@@ -1087,13 +1089,21 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 	public String findValue(String inName)
 	{
 		String name = null;
-		PageAction inAction = getCurrentAction();
-		if( inAction != null && inAction.getConfig() != null)
+		SiteData sitedata = (SiteData)getPageValue("sitedata");
+		if( sitedata != null)
 		{
-			name = inAction.getChildValue( inName );
-			if( name == null)
+			name = sitedata.getSiteParameter(inName);
+		}
+		if( name == null)
+		{
+			PageAction inAction = getCurrentAction();
+			if( inAction != null && inAction.getConfig() != null)
 			{
-				name = inAction.getProperty(inName);				
+				name = inAction.getChildValue( inName );
+				if( name == null)
+				{
+					name = inAction.getProperty(inName);				
+				}
 			}
 		}
 		//TODO: Change the order. The content should go first?
