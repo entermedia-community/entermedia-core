@@ -43,12 +43,16 @@ public class BaseOpenEditEngine implements OpenEditEngine
 	
 	public void render( HttpServletRequest inRequest, HttpServletResponse inResponse ) throws IOException, OpenEditException 
 	{
-		//inRequest.setCharacterEncoding( "UTF-8" );
 		checkEngineInit( inResponse );
 		//inRequest.setCharacterEncoding( "UTF-8" ); //This needs to be the first thing we do. Dont call getParameter
 	    URLUtilities util = new URLUtilities(inRequest, inResponse);
 
 	    String requestedPath = util.getOriginalPath();
+	    SiteData sitedata = getSiteManager().findSiteData(util.siteRoot());
+	    if(sitedata != null)
+	    {
+	    	requestedPath = sitedata.findAppPath(requestedPath);
+	    }
 	    boolean checkdates = false;
 		HttpSession session = inRequest.getSession(false);
 		if ( session != null)
@@ -273,6 +277,10 @@ public class BaseOpenEditEngine implements OpenEditEngine
 		fieldPageManager = pageManager;
 	}
 
+	public SiteManager getSiteManager()
+	{
+		return (SiteManager)getModuleManager().getBean("system","siteManager");
+	}
 	/**
      * @see org.openedit.servlet.OpenEditEngine#getWelcomePath()
      */
