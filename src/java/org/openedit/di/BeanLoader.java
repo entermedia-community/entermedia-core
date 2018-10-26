@@ -62,6 +62,8 @@ public class BeanLoader
 		return createObject( bean );
 	}
 	
+	
+	
 	private Object createObject(Pojo inBean)
 	{
 		synchronized (inBean)

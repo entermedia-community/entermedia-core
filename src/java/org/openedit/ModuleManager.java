@@ -351,6 +351,10 @@ public class ModuleManager implements BeanLoaderAware, ShutdownList
 		return (PageManager)getBean("pageManager");
 	}
 	
+	public boolean doesBeanExist(String inBeanName) {
+		return getBeanLoader().containsBean(inBeanName);
+	}
+	
 	public Object getBean( String inBeanName )
 	{
 		try
