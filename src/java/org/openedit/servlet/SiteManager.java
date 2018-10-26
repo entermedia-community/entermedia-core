@@ -7,7 +7,7 @@ public class SiteManager
 {
 	protected CacheManager fieldCacheManager;
 	protected SearcherManager fieldSearcherManager;
-	
+	protected SiteData NULLSITE = new SiteData();
 	public SearcherManager getSearcherManager()
 	{
 		return fieldSearcherManager;
@@ -30,7 +30,7 @@ public class SiteManager
 	
 	public String getDomain(String base) {
 		// string off start
-		String basestring = base.substring(base.lastIndexOf("//") + 1,
+		String basestring = base.substring(base.lastIndexOf("//") + 2,
 				base.length());
 		int port = basestring.indexOf(":");
 		if( port > -1)
@@ -39,7 +39,7 @@ public class SiteManager
 		}
 		
 		int nextslash = basestring.indexOf("/");
-		if( nextslash == -1)
+		if( nextslash > -1)
 		{
 			basestring = basestring.substring(0,nextslash);
 		}
@@ -53,8 +53,17 @@ public class SiteManager
 		SiteData found = (SiteData)getCacheManager().get("systemsitedata", domain);
 		if( found == null)
 		{
-			found = (SiteData)getSearcherManager().query("system", "site").exact("domain", domain ).searchOne();
+			found = (SiteData)getSearcherManager().query("system", "site").exact("domains", domain ).searchOne();
+			if(found == null)
+			{
+				found = NULLSITE;
+			}
+				
 			getCacheManager().put("systemsitedata", domain, found);
+		}
+		if( found == NULLSITE)
+		{
+			return null;
 		}
 		return found;
 	}

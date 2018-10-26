@@ -15,6 +15,10 @@ public class SiteData extends BaseData
 
 	public String findAppPath(String inRequestedPath)
 	{
+		if( inRequestedPath.startsWith("/manager"))
+		{
+			return inRequestedPath;
+		}
 		String apppath = get("rootpath");
 		return apppath + inRequestedPath;
 	}
