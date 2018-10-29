@@ -2935,6 +2935,11 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		return found;
 	}
 
-	
+	@Override
+	public void saveJson(Collection inJsonArray)
+	{
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

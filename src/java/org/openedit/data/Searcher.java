@@ -194,7 +194,5 @@ public interface Searcher extends CatalogEnabled
 	public void deleteAll(Collection toDelete, User inUser);
 	
 
-	 
-	
-
+	public void saveJson(Collection inJsonArray);
 }
