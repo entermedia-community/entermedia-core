@@ -295,7 +295,7 @@ public class BaseOpenEditEngine implements OpenEditEngine
 
 	public SiteManager getSiteManager()
 	{
-		return (SiteManager)getModuleManager().getBean("system","siteManager");
+		return (SiteManager)getModuleManager().getBean("system","virtualSiteManager");
 	}
 	/**
      * @see org.openedit.servlet.OpenEditEngine#getWelcomePath()
