@@ -208,7 +208,7 @@ public class PropertyDetailsArchive implements CatalogEnabled
 		View view = null;
 		if (id != null)
 		{
-			view = getViewCache().get(id);
+			view = getViewCache().get(id);  //TODO: Replace with standard CacheManager
 		}
 		if (view != null)
 		{

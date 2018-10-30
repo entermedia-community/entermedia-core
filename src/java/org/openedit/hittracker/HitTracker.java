@@ -1318,5 +1318,25 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 		long min5 = 1000L*60l*5l;
 		return now - fieldSearchTime < min5;
 	}	
+	
+	public HitTracker copy()
+	{
+		SearchQuery q = getSearchQuery().copy();
+		HitTracker selecteddata = getSearcher().search(q);
+		selecteddata.setHitsPerPage(getHitsPerPage());
+		return selecteddata;
+	}
+	
+	public void setHitsPerPageHeight(String pageHeight, int inRowHeight)
+	{
+		if( pageHeight == null)
+		{
+			return;
+		}
+		int height = Integer.parseInt(pageHeight);
+		double rows = (double)height / (double)inRowHeight;
+		int roundedup = (rows > (int) rows) ? (int) rows + 1 : (int) rows;
+		setHitsPerPage(roundedup);
+	}
 }
 
