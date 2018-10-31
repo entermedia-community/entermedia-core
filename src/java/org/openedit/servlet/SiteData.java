@@ -40,12 +40,14 @@ public class SiteData extends BaseData
 
 	public String getAppHome(String inApplicationid)
 	{
-		if( inApplicationid.startsWith("/manager") || inApplicationid.startsWith("/system") || inApplicationid.startsWith("/openedit")  )
+		String apppath = get("rootpath");
+		String id = apppath.substring(1);
+		if( !inApplicationid.startsWith(id))
 		{
 			return "/" + inApplicationid;
 		}
-		String apppath = get("rootpath");
+		
 		String dir = inApplicationid.substring(apppath.length() -1, inApplicationid.length());
-		return "/" + dir;
+		return dir;
 	}
 }
