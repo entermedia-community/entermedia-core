@@ -321,7 +321,7 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 		}
 		return (int) pages;
 	}
-
+	
 	public Integer nextPage()
 	{
 		int page = getPage() + 1;
@@ -1201,7 +1201,7 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 		fieldSearcher = inSearcher;
 	}
 
-	protected void setSessionId(String inSessionId)
+	public void setSessionId(String inSessionId)
 	{
 		fieldTempSessionId = inSessionId;
 	}
