@@ -1201,7 +1201,7 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 		fieldSearcher = inSearcher;
 	}
 
-	protected void setSessionId(String inSessionId)
+	public void setSessionId(String inSessionId)
 	{
 		fieldTempSessionId = inSessionId;
 	}
