@@ -321,7 +321,7 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 		}
 		return (int) pages;
 	}
-
+	
 	public Integer nextPage()
 	{
 		int page = getPage() + 1;
@@ -1337,6 +1337,32 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 		double rows = (double)height / (double)inRowHeight;
 		int roundedup = (rows > (int) rows) ? (int) rows + 1 : (int) rows;
 		setHitsPerPage(roundedup);
+	}
+	
+	public String idOnPreviousPage()
+	{
+		int page = getPage();
+		page = page - 1;
+		int index = 0;
+		if( page > 1)
+		{
+			index = (page - 1) * getHitsPerPage();
+		}
+		Data first = get(index);
+		return first.getId();
+		
+	}
+	public String idOnNextPage()
+	{
+		int page = getPage();
+		int index = page * getHitsPerPage();
+		if( index > size())
+		{
+			index = (getTotalPages() -1) * getHitsPerPage();
+		}
+		Data next = get(index);
+		return next.getId();
+		
 	}
 }
 
