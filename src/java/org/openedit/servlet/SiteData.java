@@ -37,7 +37,10 @@ public class SiteData extends BaseData
 		}
 		return getSiteParameters().get(inName);
 	}
-
+	public String getRootPath()
+	{
+		return get("rootpath");
+	}
 	public String getAppHome(String inApplicationid)
 	{
 		String apppath = get("rootpath");
