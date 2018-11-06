@@ -77,7 +77,11 @@ public class BaseOpenEditEngine implements OpenEditEngine
 	    Page page = getPageManager().getPage( requestedPath,checkdates);
 	    
 		//If link does not exists. Then put a real welcome page on there so that fallback will work
-	    boolean wasfolder = page.isFolder(); 
+	    boolean wasfolder = page.isFolder();
+		if(!wasfolder &&  util.requestPath().endsWith("/")) {
+			wasfolder = true;
+		}
+
 		if ( wasfolder )
 	    {
 	    	page = findWelcomePage(page, checkdates); 
@@ -121,6 +125,10 @@ public class BaseOpenEditEngine implements OpenEditEngine
 		}
 		else
 		{
+//			 if( util.requestPath().endsWith("/")) {
+//						
+//		    }
+		    	
 			String mime = page.getMimeType();
 			inResponse.setContentType( mime );
 		}
