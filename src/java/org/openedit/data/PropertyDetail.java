@@ -779,7 +779,7 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 
 	public void setDeleted(boolean inB)
 	{
-		setValue("deleted", "true");
+		setValue("deleted", inB);
 		
 	}
 	
