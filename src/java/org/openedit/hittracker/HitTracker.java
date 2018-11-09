@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -92,6 +93,18 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 		return getSearchQuery().getResultType();
 	}
 
+	public Data getRandomHit() {
+		int max = size();
+		if(max > 10000) {
+			max = 10000;
+		}
+		Random rand = new Random();
+		int  n = rand.nextInt(max);
+		return get(n);
+		
+	}
+	
+	
 	public String getSearchType()
 	{
 		return getSearcher().getSearchType();
