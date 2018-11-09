@@ -372,7 +372,12 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				}
 				else
 				{
-					tracker.setPage(Integer.parseInt(pagenumber));
+					try {
+						Integer pageInt = Integer.parseInt(pagenumber);
+						tracker.setPage(pageInt);
+					} catch (NumberFormatException e) {
+						log.error("Unable to parse pagenumber", e);
+					}
 				}
 			}
 			else if (oldtracker != null && oldtracker.getQuery().equals(inQuery))
