@@ -1361,20 +1361,54 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 		{
 			index = (page - 1) * getHitsPerPage();
 		}
-		Data first = get(index);
-		return first.getId();
+		if( size() > index)  // 1 > 0
+		{
+			Data first = get(index);
+			return first.getId();
+		}
+		else
+		{
+			return null;
+		}
+		
+	}
+	public String idOnThisPage()
+	{
+		int page = getPage();
+		int index = 0;
+		if ( page > 1)
+		{
+			page = page - 1;
+			index = page * getHitsPerPage();
+		}
+		if(!isEmpty() && size() > index ) // 100 > 99  index is 0 based
+		{
+			Data next = get(index);
+			return next.getId();
+		}
+		else
+		{
+			return null;
+		}
 		
 	}
 	public String idOnNextPage()
 	{
 		int page = getPage();
 		int index = page * getHitsPerPage();
-		if( index > size())
+//		if( index > size())
+//		{
+//			index = (getTotalPages() -1) * getHitsPerPage(); //this same page
+//		}
+		if(!isEmpty() && size() > index ) // 100 > 99  index is 0 based
 		{
-			index = (getTotalPages() -1) * getHitsPerPage();
+			Data next = get(index);
+			return next.getId();
 		}
-		Data next = get(index);
-		return next.getId();
+		else
+		{
+			return null;
+		}
 		
 	}
 }
