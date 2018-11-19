@@ -673,4 +673,13 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 		}
 		return permissions.contains(inPropertyName);
 	}
+
+	public boolean isInGroup(String inGroupId)
+	{
+		if( getUser() == null)
+		{
+			return false;
+		}
+		return getUser().isInGroup(inGroupId);
+	}
 }
