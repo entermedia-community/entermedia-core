@@ -32,6 +32,7 @@ import org.openedit.hittracker.GeoFilter;
 import org.openedit.hittracker.HitTracker;
 import org.openedit.hittracker.SearchQuery;
 import org.openedit.hittracker.Term;
+import org.openedit.hittracker.UserFilters;
 import org.openedit.locks.LockManager;
 import org.openedit.modules.translations.LanguageMap;
 import org.openedit.profile.UserProfile;
@@ -246,6 +247,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			}
 		}
 		HitTracker oldtracker = null;
+		
 		if (runsearch)
 		{
 			try
@@ -277,12 +279,25 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				if( endusersearch == null )
 				{
 					inQuery.setEndUserSearch(true);
+					
+					
 				}
 				else
 				{
 					inQuery.setEndUserSearch(Boolean.parseBoolean(endusersearch));
 				}	
 
+				if(inQuery.isEndUserSearch()) {
+					UserFilters filters = (UserFilters) inPageRequest.getSessionValue(getSearchType() + getCatalogId()+ "userFilters");
+					if(filters == null) {
+						filters = (UserFilters) getModuleManager().getBean(getCatalogId(), "userFilters", false);
+						filters.setUserProfile(usersettings);
+						inPageRequest.putSessionValue(getSearchType() + getCatalogId()+ "userFilters", filters);
+					}
+					inQuery.setUserFilters(filters);
+					
+				}
+				
 				String hitsperpage = inPageRequest.getRequestParameter("hitsperpage");
 				if (hitsperpage == null)
 				{
@@ -305,7 +320,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					inQuery.setHitsPerPage(Integer.parseInt(hitsperpage));
 				}
 				inQuery = getSearchQueryFilter().attachFilter(inPageRequest, this, inQuery);
-				tracker = search(inQuery); //search here <----
+				tracker = search(inQuery); //search here <----ge
 				tracker.setSearchQuery(inQuery);
 				if (oldtracker != null && oldtracker.hasSelections())
 				{

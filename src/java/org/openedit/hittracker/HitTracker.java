@@ -38,7 +38,11 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 	protected Searcher fieldSearcher;
 	protected boolean fieldShowOnlySelected;
 	protected String fieldTempSessionId;
+	
+	
+	
 	protected List<FilterNode> fieldFilterOptions;
+	
 	protected boolean fieldUseServerCursor;
 	protected long fieldSearchTime;
 	
@@ -1220,9 +1224,7 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 	}
 	public List<FilterNode> getFilterOptions()
 	{
-		if(fieldFilterOptions == null){
-			fieldFilterOptions = loadFacetsFromResults();
-		}
+			
 		return fieldFilterOptions;
 	
 	}
@@ -1230,11 +1232,7 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 		fieldFilterOptions = filters;
 	}
 
-	protected List loadFacetsFromResults() 
-	{
-		// TODO Auto-generated method stub
-		return new ArrayList(); //this is load code
-	}
+	
 
 	public FilterNode findFilterNode(String inType)
 	{

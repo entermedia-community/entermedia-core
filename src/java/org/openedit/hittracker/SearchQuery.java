@@ -39,8 +39,21 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	protected String fieldSortLanguage = "en";
 	protected boolean fieldIncludeFacets = false;
 	protected List fieldExtraFacets;
+	protected UserFilters fieldUserFilters;
 	
 	
+	public UserFilters getUserFilters()
+	{
+		return fieldUserFilters;
+	}
+
+
+	public void setUserFilters(UserFilters inUserFilters)
+	{
+		fieldUserFilters = inUserFilters;
+	}
+
+
 	public SearchQuery()
 	{
 		// TODO Auto-generated constructor stub
@@ -2053,6 +2066,16 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		PropertyDetail detail = createDetail(inKey);
 		addFreeFormQuery(detail, inValue);
 		
+	}
+
+
+	public String getMainInput()
+	{
+		String input = getInput("description");
+		if(input == null) {
+			input = "*";
+		}
+		return input;
 	}
 
 	
