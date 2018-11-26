@@ -164,6 +164,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			log.debug("checking: " + getCatalogId() + " " + inQuery.toFriendly());
 		}
 		addShowOnly(inPageRequest, inQuery);
+		String clear = inPageRequest.getRequestParameter(getSearchType() + "clearresults");
 
 		inPageRequest.putPageValue("searcher", this);
 		HitTracker tracker = null;
@@ -198,7 +199,6 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		}
 		if (!runsearch && tracker != null)
 		{
-			String clear = inPageRequest.getRequestParameter(getSearchType() + "clearresults");
 			if (Boolean.parseBoolean(clear))
 			{
 				runsearch = true;
@@ -209,6 +209,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				tracker.deselectAll();
 				tracker.setShowOnlySelected(false);
 				runsearch = true;
+				
 			}
 			else
 			{
@@ -286,7 +287,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				{
 					inQuery.setEndUserSearch(Boolean.parseBoolean(endusersearch));
 				}	
-
+				
 				if(inQuery.isEndUserSearch()) {
 					UserFilters filters = (UserFilters) inPageRequest.getSessionValue(getSearchType() + getCatalogId()+ "userFilters");
 					if(filters == null) {
@@ -321,6 +322,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				}
 				inQuery = getSearchQueryFilter().attachFilter(inPageRequest, this, inQuery);
 				tracker = search(inQuery); //search here <----ge
+				
 				tracker.setSearchQuery(inQuery);
 				if (oldtracker != null && oldtracker.hasSelections())
 				{
