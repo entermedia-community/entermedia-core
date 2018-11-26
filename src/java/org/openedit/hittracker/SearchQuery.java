@@ -39,28 +39,15 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	protected String fieldSortLanguage = "en";
 	protected boolean fieldIncludeFacets = false;
 	protected List fieldExtraFacets;
-	protected UserFilters fieldUserFilters;
 	
 	
-	public UserFilters getUserFilters()
-	{
-		return fieldUserFilters;
-	}
-
-
-	public void setUserFilters(UserFilters inUserFilters)
-	{
-		fieldUserFilters = inUserFilters;
-	}
-
-
 	public SearchQuery()
 	{
 		// TODO Auto-generated constructor stub
 	}
 	
 	
-	public List getExtraFacets()
+	public List getFacets()
 	{
 	if (fieldExtraFacets == null)
 	{
@@ -1948,7 +1935,7 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	public void addAggregation(String inFacet){
 		
 		
-		getExtraFacets().add(inFacet);
+		getFacets().add(inFacet);
 		setEndUserSearch(true);
 	}
 
