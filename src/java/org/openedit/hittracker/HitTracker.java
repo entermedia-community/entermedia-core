@@ -1412,8 +1412,8 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 	
 	public boolean isInputEquals(String inDetail,String inValue)
 	{
-		String input = getSearchQuery().getInput(inDetail);
-		if( inValue.equals(input))
+		Collection values = getSearchQuery().getInputs(inDetail);
+		if( values.contains(inValue))
 		{
 			return true;
 		}
