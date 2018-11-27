@@ -290,8 +290,13 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				String applydontshow = inPageRequest.findValue("applydontshow");
 				if(Boolean.parseBoolean(applydontshow)) 
 				{
-					if(inQuery.getFacets().isEmpty()) {
-						addFiltersFromView(inPageRequest, inQuery);
+					if(inQuery.getFacets().isEmpty()) 
+					{
+						List facets = getDetailsForView(getSearchType() + "/" + getSearchType() + "facets", inPageRequest.getUserProfile());
+						if( facets == null || facets.isEmpty() )
+						{
+							inQuery.setFacets(facets);
+						}
 					}
 				}
 				
@@ -679,39 +684,6 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			}
 		}
 		return search;
-	}
-
-	private void addFiltersFromView(WebPageRequest inPageRequest, SearchQuery inSearch)
-	{
-		
-		UserProfile profile = inPageRequest.getUserProfile();
-
-		List facets = getDetailsForView(getSearchType() + "/" + getSearchType() + "facets", profile);
-
-		if (facets != null && facets.size() > 0)
-		{
-			for (Iterator iterator = facets.iterator(); iterator.hasNext();)
-			{
-				PropertyDetail detail = (PropertyDetail) iterator.next();
-				
-				inSearch.getFacets().add(detail.getId());
-
-			}
-		}
-		else
-		{
-
-			for (Iterator iterator = getPropertyDetails().iterator(); iterator.hasNext();)
-			{
-				PropertyDetail detail = (PropertyDetail) iterator.next();
-				if (detail.isFilter())
-				{
-					inSearch.getFacets().add(detail.getId());
-
-				}
-			}
-		}
-
 	}
 
 	//	public void addFacets(WebPageRequest inReq, SearchQuery inSearch)

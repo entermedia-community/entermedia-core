@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
+import java.util.List;
 
 import org.openedit.Data;
 import org.openedit.OpenEditException;
@@ -251,6 +252,14 @@ public class QueryBuilder
 		getQuery().addAggregation(inString);
 		return this;
 	}
+	
+	public QueryBuilder facets(List<PropertyDetail> inFacets)
+	{
+		getQuery().setFacets(inFacets);
+		return this;
+	}
+
+	
 	public QueryBuilder notgroup(String inField, Collection inIds)
 	{
 		if( inIds ==  null || inIds.isEmpty())

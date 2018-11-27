@@ -27,6 +27,7 @@ import org.openedit.data.PropertyDetail;
 import org.openedit.data.PropertyDetails;
 import org.openedit.data.Searcher;
 import org.openedit.data.SearcherManager;
+import org.openedit.profile.UserProfile;
 import org.openedit.util.DateStorageUtil;
 import org.openedit.util.GenericsUtil;
 
@@ -1936,7 +1937,6 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		
 		
 		getFacets().add(inFacet);
-		setEndUserSearch(true);
 	}
 
 	/**
@@ -2068,9 +2068,23 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		return input;
 	}
 
-	
 
-	
+	public void setFacets(List<PropertyDetail> facets)
+	{
+		fieldExtraFacets = facets;
+//		//UserProfile profile = inPageRequest.getUserProfile();
+//		if (facets != null && facets.size() > 0)
+//		{
+//			for (Iterator iterator = facets.iterator(); iterator.hasNext();)
+//			{
+//				PropertyDetail detail = (PropertyDetail) iterator.next();
+//				
+//				getFacets().add(detail);
+//
+//			}
+//		}
+
+	}	
 	
 	
 	

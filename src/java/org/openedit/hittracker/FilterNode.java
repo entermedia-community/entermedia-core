@@ -148,5 +148,9 @@ public class FilterNode extends BaseData
 		}
 		
 	}
+	public boolean isEmpty()
+	{
+		return getChildren().isEmpty();
+	}
 	
 }
