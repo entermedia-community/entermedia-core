@@ -290,7 +290,9 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				String applydontshow = inPageRequest.findValue("applydontshow");
 				if(Boolean.parseBoolean(applydontshow)) 
 				{
-				addFiltersFromView(inPageRequest, inQuery);
+					if(inQuery.getFacets().isEmpty()) {
+						addFiltersFromView(inPageRequest, inQuery);
+					}
 				}
 				
 				
@@ -681,7 +683,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 
 	private void addFiltersFromView(WebPageRequest inPageRequest, SearchQuery inSearch)
 	{
-
+		
 		UserProfile profile = inPageRequest.getUserProfile();
 
 		List facets = getDetailsForView(getSearchType() + "/" + getSearchType() + "facets", profile);
@@ -691,6 +693,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			for (Iterator iterator = facets.iterator(); iterator.hasNext();)
 			{
 				PropertyDetail detail = (PropertyDetail) iterator.next();
+				
 				inSearch.getFacets().add(detail.getId());
 
 			}
