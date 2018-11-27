@@ -1935,8 +1935,12 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 
 	public void addAggregation(String inFacet){
 		
-		
-		getFacets().add(inFacet);
+		PropertyDetail detail = getDetail(inFacet);
+		if( detail == null)
+		{
+			throw new OpenEditException("No such field " + inFacet);
+		}
+		getFacets().add(detail);
 	}
 
 	/**
