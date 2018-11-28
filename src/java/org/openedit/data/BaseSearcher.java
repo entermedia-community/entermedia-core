@@ -293,7 +293,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					if(inQuery.getFacets().isEmpty()) 
 					{
 						List facets = getDetailsForView(getSearchType() + "/" + getSearchType() + "facets", inPageRequest.getUserProfile());
-						if( facets == null || facets.isEmpty() )
+						if(!( facets == null || facets.isEmpty()) )
 						{
 							inQuery.setFacets(facets);
 						}
