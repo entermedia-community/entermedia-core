@@ -1907,10 +1907,6 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 			}
 			if( fieldChildren != null && fieldChildren.size() > 0)
 			{
-				if( getTerms().size() > 0 )
-				{
-					
-				}
 				for (int j = 0; j < getChildren().size(); j++)
 				{
 					SearchQuery child = (SearchQuery) getChildren().get(j);
@@ -2058,16 +2054,36 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		addFreeFormQuery(detail, inValue);
 		
 	}
+	public boolean hasMainInput()
+	{
+		String input = getInput("description");
+		return input != null;
+	}
 
-
+	public boolean hasTermValue(String inDetailId, String inValue)
+	{
+		List terms = getTerms(inDetailId);
+		if( terms != null && !terms.isEmpty() )
+		{
+			for (Iterator iterator = terms.iterator(); iterator.hasNext();)
+			{
+				Term term = (Term) iterator.next();
+				if( term.containsValue(inValue) )
+				{
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 	public String getMainInput()
 	{
 		String input = getInput("description");
 		
 		if(input == null) {
-			if("*".equals(getInput("id"))){
+			//if("*".equals(getInput("id"))){
 				input = "*";
-			}
+			//}
 		}
 		return input;
 	}

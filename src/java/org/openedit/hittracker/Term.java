@@ -1,5 +1,8 @@
 package org.openedit.hittracker;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -36,12 +39,41 @@ abstract public class Term {
 //		}
 		return fieldValues;
 	}
-
+	public Collection getValueCollection()
+	{
+		if( fieldValues != null)
+		{
+			return Arrays.asList(fieldValues);
+		}
+		if( fieldValue != null)
+		{
+			return Arrays.asList(fieldValue);
+		}
+		return Collections.EMPTY_LIST;
+	}
 	public void setValues(Object[] inValues)
 	{
 		fieldValues = inValues;
 	}
 
+	public boolean containsValue(String inValue)
+	{
+		if( inValue.equals( fieldValue) )
+		{
+			return true;
+		}
+		if( getValues() != null)
+		{
+			for (int i = 0; i < getValues().length; i++)
+			{
+				if( inValue.equals( getValues()[i]) )
+				{
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 	protected Map fieldParameters;
 
 	public Map getParameters()
@@ -74,6 +106,10 @@ abstract public class Term {
 
 	public String getOperation()
 	{
+		if( fieldOperation == null)
+		{
+			return (String)getParameters().get("op");
+		}
 		return fieldOperation;
 	}
 

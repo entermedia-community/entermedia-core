@@ -12,8 +12,8 @@ public interface UserFilters
 	public UserProfile getUserProfile();
 
 	public void setUserProfile(UserProfile inUserProfile);
-	public List<FilterNode> getFilterOptions(Searcher inSearcher, SearchQuery inSearchQuery);
-	public Map<String,FilterNode> getFilterValues(Searcher inSearcher, SearchQuery inQuery);
+	public List<FilterNode> getFilterOptions(HitTracker inHits);
+	public Map<String,FilterNode> getFilterValues(HitTracker inHits);
 	public void clear(String inSearchType) ;
 	public void addFilterOptions(Searcher inSearcher, SearchQuery inQuery, List<FilterNode> inFilters);
 
