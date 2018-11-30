@@ -52,6 +52,13 @@ public class HttpMimeBuilder
 		FileBody fileBody = new FileBody(file, octectType, inName);
 		builder.addPart(inKey, fileBody);
 	}	
+
+	public void addPart(String inKey, File file,  ContentType inType)
+	{
+		FileBody fileBody = new FileBody(file, inType);
+		builder.addPart(inKey, fileBody);
+	}	
+	
 	public HttpEntity build()
 	{
 		return builder.build();
