@@ -194,9 +194,13 @@ public class Page implements Data, Comparable
 	
 	public List getStyles()
 	{
+		return getStyles(false);
+	}
+	public List getStyles(boolean folderonly)
+	{
 		if( isHtml() )
 		{
-			List styles =  getPageSettings().getStyles();
+			List styles =  getPageSettings().getStyles(folderonly);
 			//look for duplicate
 			List copy = new ArrayList(styles.size());
 			Set got = new HashSet(styles.size());
@@ -217,11 +221,11 @@ public class Page implements Data, Comparable
 		return null;
 	}
 
-	public List getScripts()
+	public List getScripts(boolean folderonly)
 	{
 		if( isHtml() )
 		{
-			List scripts =  getPageSettings().getScripts();
+			List scripts =  getPageSettings().getScripts(folderonly);
 			//look for duplicate
 			List copy = new ArrayList(scripts.size());
 			HashMap ids = new HashMap(scripts.size());
@@ -244,12 +248,20 @@ public class Page implements Data, Comparable
 		}
 		return null;
 	}
+	public List getScripts()
+	{
+		return getScripts(false);
+	}
 	public List getScriptPaths()
+	{
+		return getScriptPaths(false);
+	}
+	public List getScriptPaths(boolean folderonly)
 	{
 		List paths = (List)getCache().get("scriptPaths");
 		if( paths == null)
 		{
-			List scripts = getScripts();
+			List scripts = getScripts(folderonly);
 			if( scripts != null)
 			{
 				paths = new ArrayList(scripts.size());
@@ -265,10 +277,14 @@ public class Page implements Data, Comparable
 	}
 	public List getStylePaths()
 	{
+		return getStylePaths(false);
+	}
+	public List getStylePaths(boolean folderonly)
+	{
 		List paths = (List)getCache().get("stylePaths");
 		if( paths == null)
 		{
-			List styles = getStyles();
+			List styles = getStyles(folderonly);
 			if( styles != null)
 			{
 				paths = new ArrayList(styles.size());

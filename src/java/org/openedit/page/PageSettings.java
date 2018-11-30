@@ -273,13 +273,24 @@ public class PageSettings
 	}
 	public List getScripts()
 	{
+		return getScripts(false);
+	}
+	public List getScripts(boolean folderonly)
+	{
 		//add top level parents last
 		List finalList = new ArrayList();
 	
 		PageSettings parent = this;
 		PageSettings fallbackparent = getFallback();
+		
+		int parentcount = 0;
+		
 		while ( parent != null)
 		{
+			if( folderonly && parentcount > 1)
+			{
+				break;
+			}
 			if( parent.fieldScripts != null)
 			{
 				finalList.addAll(0,parent.fieldScripts);
@@ -301,21 +312,32 @@ public class PageSettings
 				{
 					fallbackparent = parent.getFallback();
 				}
-
 			}
 			parent = parent.getParent();
+			parentcount++;
 		}			
 		return finalList;
 	}
 	public List getStyles()
+	{
+		return getStyles(false);
+	}
+	public List getStyles(boolean folderonly)
 	{
 		//add top level parents last
 		List finalList = new ArrayList();
 	
 		PageSettings parent = this;
 		PageSettings fallbackparent = getFallback();
+		int parentcount = 0;
+		
 		while ( parent != null)
 		{
+			if( folderonly && parentcount > 1)
+			{
+				break;
+			}
+			
 			if( parent.fieldStyles != null)
 			{
 				finalList.addAll(0,parent.fieldStyles);
@@ -337,9 +359,9 @@ public class PageSettings
 				{
 					fallbackparent = parent.getFallback();
 				}
-
 			}
 			parent = parent.getParent();
+			parentcount++;
 		}			
 		return finalList;
 
