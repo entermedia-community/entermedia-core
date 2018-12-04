@@ -53,7 +53,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	protected SearcherManager fieldSearcherManager;
 	protected EventManager fieldEventManager;
 	protected boolean fieldFireEvents = false;
-	protected SearchQueryFilter fieldSearchQueryFilter;
+	protected SearchSecurity fieldSearchSecurity;
 	protected boolean fieldAllowRemoteDetails = false;
 	protected String fieldAlternativeIndex;
 	protected ModuleManager fieldModuleManager;
@@ -91,18 +91,18 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		fieldAllowRemoteDetails = inAllowRemoteDetails;
 	}
 
-	public SearchQueryFilter getSearchQueryFilter()
+	public SearchSecurity getSearchSecurity()
 	{
-		if (fieldSearchQueryFilter == null)
+		if (fieldSearchSecurity == null)
 		{
-			fieldSearchQueryFilter = (SearchQueryFilter) getModuleManager().getBean(getCatalogId(), "searchQueryFilter");
+			fieldSearchSecurity = (SearchSecurity) getModuleManager().getBean(getCatalogId(), "searchSecurity");
 		}
-		return fieldSearchQueryFilter;
+		return fieldSearchSecurity;
 	}
 
-	public void setSearchQueryFilter(SearchQueryFilter inScriptedSearchFilter)
+	public void setSearchSecurity(SearchSecurity inScriptedSearchFilter)
 	{
-		fieldSearchQueryFilter = inScriptedSearchFilter;
+		fieldSearchSecurity = inScriptedSearchFilter;
 	}
 
 	@Override
@@ -266,12 +266,25 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				oldtracker = tracker;
 				if (oldtracker != null)
 				{
+					//log.info("Old tracker " + oldtracker.getSearchQuery() + " has: "+ oldtracker.getSearchQuery().hasFilters() );
 					if (oldtracker.getSearchQuery().hasFilters())
 					{
 						String clearfilters = inPageRequest.getRequestParameter("clearfilters");
 						if (!Boolean.parseBoolean(clearfilters))
 						{
+							//This is the old way
 							inQuery.setFilters(oldtracker.getSearchQuery().getFilters());
+							
+							//This is the new way
+							for (Iterator iterator = oldtracker.getSearchQuery().getUserFilters().iterator(); iterator.hasNext();)
+							{
+								Term term = (Term) iterator.next();
+								//see if it's already in there
+								if( inQuery.getTermByDetailId(term.getDetail().getId()) == null )
+								{
+									inQuery.addTerm(term);
+								}
+							}
 						}
 					}
 				}
@@ -322,7 +335,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				{
 					inQuery.setHitsPerPage(Integer.parseInt(hitsperpage));
 				}
-				inQuery = getSearchQueryFilter().attachFilter(inPageRequest, this, inQuery);
+				inQuery = getSearchSecurity().attachSecurity(inPageRequest, this, inQuery);
 				tracker = search(inQuery); //search here <----ge
 
 				tracker.setSearchQuery(inQuery);
@@ -1816,6 +1829,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 
 		if (hits != null)
 		{
+			//Legacy stuff
 			String toadd = inReq.getRequestParameter("filtertype");
 			SearchQuery query = hits.getSearchQuery();
 			if (toadd != null)
@@ -1827,17 +1841,25 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			else
 			{
 				String toremove = inReq.getRequestParameter("removefilter");
-				String asterisk = "*";
-				if (toremove.equals(asterisk))
+				if( toremove != null)
 				{
-					query.clearFilters();
+					String asterisk = "*";
+					if (toremove.equals(asterisk))
+					{
+						query.clearFilters();
+					}
+					else
+					{
+						query.removeFilter(toremove);
+					}
 				}
-				else
-				{
-					query.removeFilter(toremove);
-				}
-
 			}
+			String removeterm = inReq.getRequestParameter("removeterm");
+			if( removeterm != null)
+			{
+				hits.getSearchQuery().removeTerm(removeterm);
+			}
+			
 			hits.invalidate(); // Causes the hits to
 			// be // reloaded
 			cachedSearch(inReq, query);

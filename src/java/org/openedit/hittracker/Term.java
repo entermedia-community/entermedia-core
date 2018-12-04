@@ -18,9 +18,18 @@ abstract public class Term {
 	protected String fieldValue;
 	protected Object[] fieldValues;
 	protected Object fieldData;
+	protected boolean fieldUserFilter;
 	
-	
-	
+	public boolean isUserFilter()
+	{
+		return fieldUserFilter;
+	}
+
+	public void setUserFilter(boolean inUserFilter)
+	{
+		fieldUserFilter = inUserFilter;
+	}
+
 	public Object getData()
 	{
 		return fieldData;

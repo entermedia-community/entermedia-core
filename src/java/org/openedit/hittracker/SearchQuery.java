@@ -1376,10 +1376,40 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		node.setName(toAddLabel);
 		getFilters().add(node);
 	}
+	
+
+	public Collection getUserFilters()
+	{
+		Collection filters = new  ArrayList();
+		for (Iterator iterator = getTerms().iterator(); iterator.hasNext();)
+		{
+			Term term = (Term) iterator.next();
+			if( term.isUserFilter())
+			{
+				filters.add(term);
+			}
+		}
+		return filters;
+	}	
+	
 	public boolean hasFilters()
 	{
+		for (Iterator iterator = getTerms().iterator(); iterator.hasNext();)
+		{
+			Term term = (Term) iterator.next();
+			if( term.isUserFilter())
+			{
+				return true;
+			}
+		}
+		
 		return fieldFilters != null && !fieldFilters.isEmpty();
 	}
+	/**
+	 * These are filters that get added as booleans
+	 * @deprecated dont use filters anymore, just flag a field as a user filter
+	 * @return
+	 */
 	public List<FilterNode> getFilters()
 	{
 		if( fieldFilters == null)
@@ -2104,9 +2134,5 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 //			}
 //		}
 
-	}	
-	
-	
-	
-	
+	}
 }
