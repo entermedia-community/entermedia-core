@@ -1069,6 +1069,9 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 		}
 		return null;
 	}
+	
+	
+	
 	public Object previousById(String inId){
 		int current = indexOfId(inId);
 		if(current != -1){
@@ -1112,6 +1115,18 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 		return -1;
 		
 	}
+	
+	
+	public int pageOfId(String inId)
+	{
+		int index= findRow("id",inId);
+		int hitsperpage = getHitsPerPage();
+		int pagenumb = index % hitsperpage;
+		return pagenumb;
+	}
+	
+	
+	
 
 	protected int findIdOnPage(String inId, int inPage)
 	{
