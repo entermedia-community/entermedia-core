@@ -471,7 +471,11 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	public HitTracker loadHits(WebPageRequest inReq, String hitsname) throws OpenEditException
 	{
 		HitTracker otracker = (HitTracker) inReq.getSessionValue(hitsname + getCatalogId());
-
+		
+		if (otracker == null)
+		{
+			otracker = (HitTracker) inReq.getSessionValue(hitsname + getSearchType() + getCatalogId());
+		}
 		if (otracker != null)
 		{
 			inReq.putPageValue(hitsname, otracker);
