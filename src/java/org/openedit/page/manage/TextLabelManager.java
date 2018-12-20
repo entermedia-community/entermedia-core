@@ -90,6 +90,10 @@ public class TextLabelManager
 	}
 	public String getTextFor(String inFolder, String english, String inLocale) 
 	{
+		if(!autoTranslateEnabled(inFolder, inLocale)) {
+			return english;
+		}
+		
 		if( english == null || english.length() == 0 )
 		{
 			return english;

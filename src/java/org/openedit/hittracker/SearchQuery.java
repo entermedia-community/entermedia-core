@@ -2135,4 +2135,34 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 //		}
 
 	}
+
+public boolean isFilterSelected(String type, String value) {
+		
+		for (FilterNode node: getFilters())
+		{
+			if(type.equals( node.getId() ) && value.equals(node.get("value")) )
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public ArrayList<FilterNode> getNodesForType(String inType)
+	{
+		ArrayList nodes = new ArrayList();
+		for (Iterator iterator = getFilters().iterator(); iterator.hasNext();)
+		{
+			FilterNode node = (FilterNode) iterator.next();
+			if(node.getId().equals(inType)) {
+				nodes.add(node);
+			}
+		}
+		return nodes;
+	}	
+	
+	
+
+
+
 }
