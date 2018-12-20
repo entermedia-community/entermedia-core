@@ -323,6 +323,10 @@ public class XmlUserArchive implements CatalogEnabled  {
 				groups.add(group);
 			}
 		}
+		Element lastlogin = root.element("lastLogined-Time");
+		if(lastlogin != null) {
+			user.setValue("lastlogin", DateStorageUtil.getStorageUtil().parseFromStorage(lastlogin.getText()));
+		}
 		user.setValue("groups", groups);
 		
 		return user;
@@ -557,6 +561,7 @@ public class XmlUserArchive implements CatalogEnabled  {
 
 		// Tuan add property lastLogined-Time
 		Element lastLoginTime = userElem.addElement("lastLogined-Time");
+		user.setValue("lastlogin", new Date());
 		lastLoginTime.setText(DateStorageUtil.getStorageUtil()
 				.formatForStorage(new Date()));
 

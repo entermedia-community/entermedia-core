@@ -2434,7 +2434,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		return tracker;
 	}
 
-	protected void fireDataEditEvent(WebPageRequest inReq, Data object)
+	public void fireDataEditEvent(WebPageRequest inReq, Data object)
 	{
 
 		if (fieldEventManager == null)
