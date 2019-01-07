@@ -666,7 +666,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		{
 			return null;
 		}
-
+		type = getSearchType();
 		SearchQuery search = addFields(inPageRequest);
 		search = addOrGroups(search, inPageRequest);
 
