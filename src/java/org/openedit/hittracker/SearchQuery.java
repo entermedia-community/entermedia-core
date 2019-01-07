@@ -703,6 +703,18 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		return fieldSorts;
 	}
 
+	public boolean isSortedBy(String inKey)
+	{
+		for (Iterator iterator = getSorts().iterator(); iterator.hasNext();)
+		{
+			String sort = (String) iterator.next();
+			if( inKey.contains(sort))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
 	public Term addQuery(PropertyDetail inId, String inFilter)
 	{
 		if (inFilter != null && inFilter.length() > 1)
