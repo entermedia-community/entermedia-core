@@ -40,7 +40,25 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	protected String fieldSortLanguage = "en";
 	protected boolean fieldIncludeFacets = false;
 	protected List fieldExtraFacets;
+	protected List fieldSorts;
+	protected Map fieldSuggestedSearches;
+
+	protected transient PropertyDetails fieldPropertyDetails;
+	protected transient SearcherManager fieldSearcherManager;
+	protected String fieldCatalogId;
+	protected List<String> fieldCatalogs;
+	protected transient DateFormat fieldDateFormat = new SimpleDateFormat("M/d/yyyy");
+	protected String fieldDescription;
+	protected List fieldChildren;
+	protected String fieldHitsName;
+	protected String fieldResultType; //This might be things like assets, albums, selection or search. Used by resulttype
+	protected boolean fieldFireSearchEvent = false;
+	protected boolean fieldFilter = false;
+	//protected List<ChildFilter> fieldChildrenFilters;
+	protected List<FilterNode> fieldFilters; 
+	protected Collection<String> fieldSecurityIds;
 	
+	protected int fieldHitsPerPage = 15;	
 	
 	public SearchQuery()
 	{
@@ -85,25 +103,7 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		fieldEndUserSearch = inEndUserSearch;
 	}
 
-	protected List fieldSorts;
-	protected Map fieldSuggestedSearches;
 
-	protected transient PropertyDetails fieldPropertyDetails;
-	protected transient SearcherManager fieldSearcherManager;
-	protected String fieldCatalogId;
-	protected List<String> fieldCatalogs;
-	protected transient DateFormat fieldDateFormat = new SimpleDateFormat("M/d/yyyy");
-	protected String fieldDescription;
-	protected List fieldChildren;
-	protected String fieldHitsName;
-	protected String fieldResultType; //This might be things like assets, albums, selection or search. Used by resulttype
-	protected boolean fieldFireSearchEvent = false;
-	protected boolean fieldFilter = false;
-	//protected List<ChildFilter> fieldChildrenFilters;
-	protected List<FilterNode> fieldFilters; 
-	protected Collection<String> fieldSecurityIds;
-	
-	protected int fieldHitsPerPage = 15;
 	
 	
 	public int getHitsPerPage()
@@ -708,7 +708,7 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		for (Iterator iterator = getSorts().iterator(); iterator.hasNext();)
 		{
 			String sort = (String) iterator.next();
-			if( inKey.contains(sort))
+			if( sort.contains( inKey))
 			{
 				return true;
 			}
@@ -1396,12 +1396,26 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		for (Iterator iterator = getTerms().iterator(); iterator.hasNext();)
 		{
 			Term term = (Term) iterator.next();
-			if( term.isUserFilter())
+			if( isUserFilter(term) )
 			{
 				filters.add(term);
 			}
 		}
 		return filters;
+	}
+
+
+	protected boolean isUserFilter(Term term)
+	{
+		if( term.isUserFilter() )
+		{
+			return true;
+		}
+		if( "asset".equals(getResultType()) && term.getDetail().getId().equals("description") )
+		{
+			return true;
+		}
+		return false;
 	}	
 	
 	public boolean hasFilters()
@@ -1409,7 +1423,7 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		for (Iterator iterator = getTerms().iterator(); iterator.hasNext();)
 		{
 			Term term = (Term) iterator.next();
-			if( term.isUserFilter())
+			if( isUserFilter(term) )
 			{
 				return true;
 			}

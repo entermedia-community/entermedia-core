@@ -553,15 +553,6 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		{
 			return null; // Noop
 		}
-		String sort = inReq.getRequestParameter("sortby");
-		if (sort == null)
-		{
-			sort = inReq.findValue("sortby");
-		}
-		if (sort != null)
-		{
-			search.setSortBy(sort);
-		}
 
 		HitTracker hits = cachedSearch(inReq, search);
 		return hits;
@@ -675,11 +666,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			return null;
 		}
 		addShowOnly(inPageRequest, search);
-		String sort = inPageRequest.findValue(type + "sortby");
-		if( sort != null)
-		{
-			search.setSortBy(sort);
-		}
+		addSorts(inPageRequest, search);
 
 		String resultype = inPageRequest.getRequestParameter("resulttype");
 		if (resultype == null)
@@ -701,6 +688,23 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			}
 		}
 		return search;
+	}
+
+	protected void addSorts(WebPageRequest inPageRequest, SearchQuery search)
+	{
+		String sort = inPageRequest.findValue(getSearchType() + "sortby");
+		if (sort == null)
+		{
+			sort = inPageRequest.getRequestParameter("sortby");
+		}
+		if (sort == null)
+		{
+			sort = inPageRequest.findValue("sortby");
+		}
+		if (sort != null)
+		{
+			search.setSortBy(sort);
+		}
 	}
 
 	//	public void addFacets(WebPageRequest inReq, SearchQuery inSearch)
