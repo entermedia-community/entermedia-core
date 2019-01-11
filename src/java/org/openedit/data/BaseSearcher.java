@@ -1845,6 +1845,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				String toaddvalue = inReq.getRequestParameter("filtervalue");
 				String toaddlabel = inReq.getRequestParameter("filterlabel");
 				query.addFilter(toadd, toaddvalue, toaddlabel);
+				hits.invalidate(); // Causes the hits to
 			}
 			else
 			{
@@ -1855,10 +1856,12 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					if (toremove.equals(asterisk))
 					{
 						query.clearFilters();
+						hits.invalidate(); // Causes the hits to
 					}
 					else
 					{
 						query.removeFilter(toremove);
+						hits.invalidate(); // Causes the hits to
 					}
 				}
 			}
@@ -1866,9 +1869,10 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			if( removeterm != null)
 			{
 				hits.getSearchQuery().removeTerm(removeterm);
+				hits.invalidate(); // Causes the hits to
 			}
 			
-			hits.invalidate(); // Causes the hits to
+			
 			// be // reloaded
 			cachedSearch(inReq, query);
 		}
