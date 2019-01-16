@@ -66,6 +66,23 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	}
 	
 	
+	public boolean isSortUp() {
+		if(getSortBy() == null) {
+			return false;
+			
+		}
+		if(getSortBy().endsWith("Up"))
+		{
+			return true;
+			
+		} 
+		else {
+			return false;
+		}
+		
+	}
+	
+	
 	public List getFacets()
 	{
 	if (fieldExtraFacets == null)

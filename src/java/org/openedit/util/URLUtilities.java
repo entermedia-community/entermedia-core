@@ -289,7 +289,7 @@ public class URLUtilities
 //	
 //			     sub-delims  = "!" / "$" / "&" / "'" / "(" / ")"
 //			                 / "*" / "+" / "," / ";" / "="
-		final String PATHVALUES = "!$&'()*+,;= "; //:?@[] \"%-.<>\\^_`{|}~";
+		final String PATHVALUES = ":/?#[]@"; //:?@[] \"%-.<>\\^_`{|}~";
 		
 		String http = null;
 		String urlpath = null;
