@@ -304,7 +304,7 @@ public class URLUtilities
 			http = completeurl.substring(0,slash);
 			urlpath = completeurl.substring(slash);
 		}
-		int quest = urlpath.indexOf("?");
+		int quest = urlpath.lastIndexOf("?");
 		if( quest > -1)
 		{
 			parameters = urlpath.substring(quest);
@@ -326,6 +326,7 @@ public class URLUtilities
 	    finalurl = finalurl + result.toString();
 	    if( parameters != null)
 	    {
+	    	
 	    	finalurl = finalurl + parameters;
 	    }
 	    return finalurl;
