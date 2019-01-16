@@ -34,7 +34,7 @@ public class URLUtilitiesTest extends BaseTestCase
     	String url = "https://user@somesite.com/this has space/You're & crazy/index.html?somejunk=bad, + % @ !  \\ //; stuff";
     	
         String fixed = URLUtilities.urlEscape(url);
-        String good = "https://user@somesite.com/this has space/You're & crazy/index.html?somejunk=bad, stuff";
+        String good = "https://user@somesite.com/this has space/You're & crazy/index.html?somejunk=bad%2C+%2B+%25+%40+%21++%5C+%2F%2F%3B+stuff";
         assertEquals(good, fixed);
     
     }
