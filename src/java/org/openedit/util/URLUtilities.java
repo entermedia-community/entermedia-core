@@ -59,10 +59,14 @@ See the GNU Lesser General Public License for more details.
 package org.openedit.util;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.security.cert.X509Certificate;
+import java.util.Arrays;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
@@ -79,6 +83,7 @@ import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.conn.BasicHttpClientConnectionManager;
+import org.openedit.OpenEditException;
 
 
 /**
@@ -283,55 +288,75 @@ public class URLUtilities
 		encoded = encoded.replace(" ", "%20");
 		return encoded;
 	}
-	public static String urlEscape(String completeurl)
+	private static String encodeParamVal(String value) {
+	    try
+		{
+			return URLEncoder.encode(value, "UTF-8");
+		}
+		catch (UnsupportedEncodingException e)
+		{
+			throw new OpenEditException(e);
+		}
+	}
+	public static String urlEscape(String rawurl)
 	{
 //		gen-delims  = ":"  "/"  "?"  "#"  "["  "]" "@"
 //	
 //			     sub-delims  = "!" / "$" / "&" / "'" / "(" / ")"
 //			                 / "*" / "+" / "," / ";" / "="
-		final String PATHVALUES = ":/?#[]@"; //:?@[] \"%-.<>\\^_`{|}~";
 		
-		String http = null;
-		String urlpath = null;
-		String parameters = null;
-		if( completeurl.startsWith("/") )
-		{
-			urlpath = completeurl;
-		}
-		else
-		{
-			int slash = completeurl.indexOf("/",7);
-			http = completeurl.substring(0,slash);
-			urlpath = completeurl.substring(slash);
-		}
-		int quest = urlpath.lastIndexOf("?");
-		if( quest > -1)
-		{
-			parameters = urlpath.substring(quest);
-			urlpath = urlpath.substring(0,quest);
-		}
-		
-	    StringBuilder result = new StringBuilder(urlpath);
-	    for (int i = urlpath.length() - 1; i >= 0; i--) {
-	        if (PATHVALUES.indexOf(urlpath.charAt(i)) != -1) {
+			String host = null;
+			String path = null;
+			String query = null;
+			if( rawurl.startsWith("/") )
+			{
+				path = rawurl;
+			}
+			else
+			{
+				int slash = rawurl.indexOf("/",8);
+				host = rawurl.substring(0,slash);
+				path = rawurl.substring(slash);
+			}
+			int quest = path.lastIndexOf("?");
+			if( quest > -1)
+			{
+				query = path.substring(quest + 1);
+				path = path.substring(0,quest);
+			}
+						
+			path = fixPath(path);
+			StringBuffer finalurl = new StringBuffer();
+			if( host != null )
+			{
+				finalurl.append( host);
+			}
+			finalurl.append(path);
+			if( query != null)
+			{
+				String decodedQuery = Arrays.stream(query.split("&"))
+					.map(param -> param.split("=")[0] + "=" + encodeParamVal(param.split("=")[1]))
+					.collect(Collectors.joining("&"));
+				finalurl.append("?" + decodedQuery);
+			}
+			return finalurl.toString();
+	 }
+	
+	private static String fixPath(String inPath)
+	{
+		// path = UriUtils.encodePath(path, "UTF-8");
+		final String PATHVALUES = ":?#[]@"; //:?@[] \"%-.<>\\^_`{|}~";
+
+	    StringBuilder result = new StringBuilder(inPath);
+	    for (int i = inPath.length() - 1; i >= 0; i--) {
+	        if (PATHVALUES.indexOf(inPath.charAt(i)) != -1) {
 	            result.replace(i, i + 1, 
-	                    "%" + Integer.toHexString(urlpath.charAt(i)).toUpperCase());
+	                    "%" + Integer.toHexString(inPath.charAt(i)).toUpperCase());
 	        }
 	    }
-	    String finalurl = "";
-	    if( http != null)
-	    {
-	    	finalurl = http;
-	    }
-	    finalurl = finalurl + result.toString();
-	    if( parameters != null)
-	    {
-	    	
-	    	finalurl = finalurl + parameters;
-	    }
-	    return finalurl;
+		return result.toString();
 	}
-	
+
 	public String decode(String s)
 	{
 		if (s == null)
