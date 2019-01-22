@@ -43,6 +43,13 @@ public class XMLConfiguration implements Configuration
 	{
 	}
 
+	public String getText()
+	{
+		return fieldText;
+	}
+
+	
+
 	public XMLConfiguration(String inName)
 	{
 		setName(inName);
@@ -373,4 +380,7 @@ public class XMLConfiguration implements Configuration
 		Element root = util.getXml(inReader, "UTF-8");
 		populate(root);
 	}
+	
+	
+	
 }

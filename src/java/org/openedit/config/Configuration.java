@@ -74,4 +74,6 @@ public  interface Configuration extends Serializable
 	public void setParent(Configuration inConfiguration);
 
 	public boolean hasChildren();
+
+	public String getText();
 }

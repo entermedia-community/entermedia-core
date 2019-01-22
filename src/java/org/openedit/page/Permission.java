@@ -1,10 +1,11 @@
 package org.openedit.page;
 
 import org.openedit.WebPageRequest;
+import org.openedit.data.BaseData;
 import org.openedit.util.PathUtilities;
 import org.openedit.util.strainer.Filter;
 
-public class Permission implements Comparable
+public class Permission extends BaseData implements Comparable 
 {
 	protected String fieldName;
 	protected Filter fieldRootFilter;
@@ -12,6 +13,9 @@ public class Permission implements Comparable
 	
 	public String getName()
 	{
+		if(fieldName == null) {
+			return getId();
+		}
 		return fieldName;
 	}
 
@@ -105,10 +109,10 @@ public class Permission implements Comparable
 			return "";
 		return getRootFilter().toString();
 	}
-	public String getId()
-	{
-		return PathUtilities.makeId(getName() + getPath());
-	}
+//	public String getId()
+//	{
+//		return PathUtilities.makeId(getName() + getPath());
+//	}
 	public boolean isFolder()
 	{
 		return getPath().endsWith("_site.xconf");

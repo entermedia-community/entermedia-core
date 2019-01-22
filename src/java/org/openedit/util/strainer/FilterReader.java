@@ -105,7 +105,7 @@ public class FilterReader {
 		if (inConfig == null) {
 			return null;
 		}
-
+		
 		// FIXME: Should make these into XML factories.
 		Filter result = null;
 		String elemName = inConfig.getName();

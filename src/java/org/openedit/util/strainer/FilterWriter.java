@@ -23,7 +23,6 @@ import org.openedit.config.Configuration;
 import org.openedit.page.Permission;
 
 public class FilterWriter {
-	protected ModuleManager fieldModuleManager;
 
 	public Configuration writeFilterCollection(Permission inPermission,
 			Configuration inParent) {
