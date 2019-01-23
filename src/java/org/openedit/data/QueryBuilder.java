@@ -19,6 +19,16 @@ public class QueryBuilder
 {
 	protected Searcher fieldSearcher;
 	protected SearchQuery fieldQuery;
+	protected boolean fieldIgnoreBlank = false;
+	
+	public boolean isIgnoreBlank()
+	{
+		return fieldIgnoreBlank;
+	}
+	public void setIgnoreBlank(boolean inIgnoreBlank)
+	{
+		fieldIgnoreBlank = inIgnoreBlank;
+	}
 	public Searcher getSearcher()
 	{
 		return fieldSearcher;
@@ -186,7 +196,10 @@ public class QueryBuilder
 	public QueryBuilder exact(String inKey, String inValue) {
 		if( inValue == null)
 		{
-			throw new OpenEditException("Value is empty for " + inKey);
+			if(!isIgnoreBlank()) {
+				throw new OpenEditException("Value is empty for " + inKey);
+			} 
+			else {return this;}
 		}
 		getQuery().addExact(inKey, inValue);
 		return this;
@@ -304,5 +317,10 @@ public class QueryBuilder
 	public QueryBuilder ids(Collection<String> inAssetIds)
 	{
 		return orgroup("id",inAssetIds);
+	}
+	public QueryBuilder ignoreEmpty()
+	{
+		setIgnoreBlank(true);
+		return  this;
 	}
 }
