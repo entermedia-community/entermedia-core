@@ -16,5 +16,6 @@ public interface UserFilters
 	public Map<String,FilterNode> getFilterValues(HitTracker inHits);
 	public void clear(String inSearchType);
 	public void flagUserFilters(HitTracker inHits);
+	public List getFilteredTerms(HitTracker inHits);
 
 }
