@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.Locale;
 
@@ -141,9 +142,15 @@ public class FileGenerator extends BaseGenerator implements Generator
 						downloadname = contentpage.getName();
 					}
 
-					downloadname = downloadname.replace(";", "");
-
-					res.setHeader("Content-Disposition", "attachment; filename=\"" + downloadname + "\"");
+					String fileName = URLEncoder.encode(downloadname, "UTF-8");
+					//fileName = URLDecoder.decode(fileName, "ISO8859_1");
+					//inReq.getResponse().setContentType("application/x-msdownload");
+				    
+					//fileName=fileName.replaceAll(";", "/;");
+					
+					//inReq.getResponse().setHeader("Content-Disposition: attachment; filename*=us-ascii'en-us'"+ fileName);
+					fileName.replace("\"", "/\"");
+					res.setHeader("Content-disposition", "attachment; filename*=utf-8''\""+ fileName +"\"");
 				}
 			}	
 			
