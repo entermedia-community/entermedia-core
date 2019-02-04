@@ -1160,6 +1160,12 @@ public class PropertyDetailsArchive implements CatalogEnabled
 
 	public String findSavePath()
 	{
+		Searcher catalogsettings = getSearcherManager().getSearcher(getCatalogId(), "catalogsettings");
+		Data savepath = (Data) catalogsettings.searchById("detailsavepath");
+		if(savepath != null) {
+			return savepath.get("value");
+		}
+		
 		if( "base".equals( getSaveTo()))
 		{
 			return "/WEB-INF/base/entermedia/catalog/data/";
@@ -1167,11 +1173,15 @@ public class PropertyDetailsArchive implements CatalogEnabled
 		if( "catalog".equals( getSaveTo()))
 		{
 			return "/" + getCatalogId() + "/data";
-		}	
+		}
+	
+		
+		
 		return "/WEB-INF/data/" + getCatalogId();
 	}
 
-
+	
+	
 	public String findConfigurationFile(String inPath)
 	{
 		String path = "/WEB-INF/data/" + getCatalogId() + inPath;
