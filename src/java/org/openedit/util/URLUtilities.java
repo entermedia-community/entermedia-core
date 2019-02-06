@@ -304,7 +304,9 @@ public class URLUtilities
 //	
 //			     sub-delims  = "!" / "$" / "&" / "'" / "(" / ")"
 //			                 / "*" / "+" / "," / ";" / "="
-		
+		if(rawurl  == null) {
+			return null;
+		}
 			String host = null;
 			String path = null;
 			String query = null;
