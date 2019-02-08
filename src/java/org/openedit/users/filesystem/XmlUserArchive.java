@@ -561,10 +561,13 @@ public class XmlUserArchive implements CatalogEnabled  {
 
 		// Tuan add property lastLogined-Time
 		Element lastLoginTime = userElem.addElement("lastLogined-Time");
-		user.setValue("lastlogin", new Date());
-		lastLoginTime.setText(DateStorageUtil.getStorageUtil()
-				.formatForStorage(new Date()));
-
+		Date current = (Date) user.getValue("lastlogin");
+		if(current != null) {
+		
+				user.setValue("lastlogin",current);
+				lastLoginTime.setText(DateStorageUtil.getStorageUtil()
+						.formatForStorage(current));
+		}
 		MapPropertyContainer map = new MapPropertyContainer();
 		map.putAll(user.getProperties());
 		if (map != null) {
