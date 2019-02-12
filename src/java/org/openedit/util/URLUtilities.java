@@ -317,8 +317,15 @@ public class URLUtilities
 			else
 			{
 				int slash = rawurl.indexOf("/",8);
-				host = rawurl.substring(0,slash);
-				path = rawurl.substring(slash);
+				if( slash > -1)
+				{
+					host = rawurl.substring(0,slash);
+					path = rawurl.substring(slash);
+				}
+				else
+				{
+					path = rawurl;
+				}
 			}
 			int quest = path.lastIndexOf("?");
 			if( quest > -1)
