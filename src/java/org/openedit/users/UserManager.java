@@ -196,5 +196,7 @@ public interface UserManager extends CatalogEnabled
 	GroupSearcher getGroupSearcher();
 
 	AuthenticationRequest createAuthenticationRequest(WebPageRequest inReq, String inPassword, User inUser);
+
+	public void fireUserEvent(User inUser, String inOperation) ;
 	
 }

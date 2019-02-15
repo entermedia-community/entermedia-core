@@ -321,7 +321,7 @@ public class BaseUserManager implements UserManager
 		return aReq;
 	}
 
-	protected void fireUserEvent(User inUser, String inOperation) {
+	public void fireUserEvent(User inUser, String inOperation) {
 		if (fieldEventManager != null) {
 			WebEvent event = new WebEvent();
 			event.setOperation("authentication");
@@ -330,6 +330,7 @@ public class BaseUserManager implements UserManager
 			event.addDetail("details", inOperation);
 			event.setCatalogId(getCatalogId());
 			event.setUser(inUser);
+			event.setProperty("userid", inUser.getId());
 			getEventManager().fireEvent(event);
 		}
 	}
