@@ -559,15 +559,16 @@ public class XmlUserArchive implements CatalogEnabled  {
 		user.setPassword(ps);
 		passwordElem.addCDATA(ps);
 
-		// Tuan add property lastLogined-Time
-		Element lastLoginTime = userElem.addElement("lastLogined-Time");
-		Date current = (Date) user.getValue("lastlogin");
-		if(current != null) {
-		
-				user.setValue("lastlogin",current);
-				lastLoginTime.setText(DateStorageUtil.getStorageUtil()
-						.formatForStorage(current));
-		}
+//		// Tuan add property lastLogined-Time
+//		Element lastLoginTime = userElem.addElement("lastLogined-Time");
+//		Object lastlogin = 
+//		Date current = (Date) user.getValue("lastlogin");
+//		if(current != null) {
+//		
+//				user.setValue("lastlogin",current);
+//				lastLoginTime.setText(DateStorageUtil.getStorageUtil()
+//						.formatForStorage(current));
+//		}
 		MapPropertyContainer map = new MapPropertyContainer();
 		map.putAll(user.getProperties());
 		if (map != null) {
