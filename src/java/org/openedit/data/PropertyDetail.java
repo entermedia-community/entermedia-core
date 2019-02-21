@@ -321,10 +321,14 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 //	 */
 	public String getText( WebPageRequest inRequest )
 	{
-		
-		String locale =  inRequest.getLocale();
+		if(Boolean.parseBoolean(inRequest.getPageProperty("auto_translate"))){
+			String locale =  inRequest.getLocale();
 
-		return getName(locale);
+			return getName(locale);
+		}
+		
+		return getName();
+		
 		
 		
 	}

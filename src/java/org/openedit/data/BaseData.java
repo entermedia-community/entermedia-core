@@ -8,6 +8,7 @@ import java.util.Set;
 import org.openedit.Data;
 import org.openedit.MultiValued;
 import org.openedit.OpenEditException;
+import org.openedit.WebPageRequest;
 import org.openedit.modules.translations.LanguageMap;
 import org.openedit.util.DateStorageUtil;
 
@@ -35,6 +36,18 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 		Object value = getValue(inId);
 		return getMap().toString(value);
 	}
+	
+	public String getText(String inId, WebPageRequest inContext) {
+		if(Boolean.parseBoolean(inContext.getPageProperty("auto_translate"))){
+			String locale =  inContext.getLocale();
+
+			return getText(inId, locale);
+		}
+		
+		return getText(inId, "en");
+	}
+	
+	
 	public String getText(String inId, String inLocale) 
 	{
 		if( fieldMap == null)
@@ -128,6 +141,10 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 		String name = get("id");
 		return name;
 	}
+	
+	
+	
+	
 	public String getName(String locale) 
 	{
 		Object name = getValue("name");
@@ -139,6 +156,18 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 		}
 		return (String)name;
 	}
+	
+	public String getName(WebPageRequest inReq) {
+		if(Boolean.parseBoolean(inReq.getPageProperty("auto_translate"))){
+			String locale =  inReq.getLocale();
+
+			return getName( locale);
+		}
+		return getName("en");
+	}
+	
+	
+	
 
 	public String getName() {
 		String name = get("name");
