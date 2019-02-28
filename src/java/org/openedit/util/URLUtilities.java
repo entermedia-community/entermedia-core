@@ -354,7 +354,7 @@ public class URLUtilities
 	private static String fixPath(String inPath)
 	{
 		// path = UriUtils.encodePath(path, "UTF-8");
-		final String PATHVALUES = ":?#[]@"; //:?@[] \"%-.<>\\^_`{|}~";
+		final String PATHVALUES = ":?#[]@ "; //:?@[] \"%-.<>\\^_`{|}~";
 
 	    StringBuilder result = new StringBuilder(inPath);
 	    for (int i = inPath.length() - 1; i >= 0; i--) {
