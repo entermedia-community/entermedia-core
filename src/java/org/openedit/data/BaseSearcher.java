@@ -1833,50 +1833,53 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 
 	public void updateFilters(WebPageRequest inReq) throws OpenEditException
 	{
-		HitTracker hits = loadHits(inReq);
+		//Legacy stuff
+		String toadd = inReq.getRequestParameter("filtertype");
+		String toremove = inReq.getRequestParameter("removefilter");
+		String removeterm = inReq.getRequestParameter("removeterm");
 
-		if (hits != null)
+		if( toadd != null || toremove != null || removeterm != null)
 		{
-			//Legacy stuff
-			String toadd = inReq.getRequestParameter("filtertype");
-			SearchQuery query = hits.getSearchQuery();
-			if (toadd != null)
+			HitTracker hits = loadHits(inReq);
+	
+			if (hits != null)
 			{
-				String toaddvalue = inReq.getRequestParameter("filtervalue");
-				String toaddlabel = inReq.getRequestParameter("filterlabel");
-				query.addFilter(toadd, toaddvalue, toaddlabel);
-				hits.invalidate(); // Causes the hits to
-			}
-			else
-			{
-				String toremove = inReq.getRequestParameter("removefilter");
-				if( toremove != null)
+				SearchQuery query = hits.getSearchQuery();
+				if (toadd != null)
 				{
-					String asterisk = "*";
-					if (toremove.equals(asterisk))
+					String toaddvalue = inReq.getRequestParameter("filtervalue");
+					String toaddlabel = inReq.getRequestParameter("filterlabel");
+					query.addFilter(toadd, toaddvalue, toaddlabel);
+					hits.invalidate(); // Causes the hits to
+				}
+				else
+				{
+					if( toremove != null)
 					{
-						query.clearFilters();
-						hits.invalidate(); // Causes the hits to
-					}
-					else
-					{
-						query.removeFilter(toremove);
-						hits.invalidate(); // Causes the hits to
+						String asterisk = "*";
+						if (toremove.equals(asterisk))
+						{
+							query.clearFilters();
+							hits.invalidate(); // Causes the hits to
+						}
+						else
+						{
+							query.removeFilter(toremove);
+							hits.invalidate(); // Causes the hits to
+						}
 					}
 				}
+				if( removeterm != null)
+				{
+					hits.getSearchQuery().removeTerm(removeterm);
+					hits.invalidate(); // Causes the hits to
+				}
+				
+				
+				// be // reloaded
+				cachedSearch(inReq, query);
 			}
-			String removeterm = inReq.getRequestParameter("removeterm");
-			if( removeterm != null)
-			{
-				hits.getSearchQuery().removeTerm(removeterm);
-				hits.invalidate(); // Causes the hits to
-			}
-			
-			
-			// be // reloaded
-			cachedSearch(inReq, query);
 		}
-
 	}
 
 	protected SearchQuery createSearchQuery(String inQueryString, WebPageRequest inPageRequest)
