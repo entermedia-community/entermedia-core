@@ -771,6 +771,7 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	public void removeTerm(Term inTerm)
 	{
 		getTerms().remove(inTerm);
+		setProperty(inTerm.getDetail().getId(), null);
 		for (Iterator iterator = getChildren().iterator(); iterator.hasNext();)
 		{
 			SearchQuery query = (SearchQuery) iterator.next();
