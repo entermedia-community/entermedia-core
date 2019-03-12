@@ -1,5 +1,6 @@
 package org.openedit.data;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
@@ -339,26 +340,20 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 	}
 	public void addValue(String inKey, Object inNewValue)
 	{
-		getMap().addValue(inKey, inNewValue);
-//		String val = get(inKey);
-//		if( val == null )
-//		{
-//			setValue(inKey, inNewValue);
-//		}
-//		else 
-//		{
-//			Collection values = getValues(inKey);
-//			if(values.contains(inNewValue))
-//			{
-//				return;
-//			}
-//			else
-//			{
-//				values = new ArrayList(values);
-//				values.add(inNewValue);
-//			}
-//			setValue(inKey, values);
-//		}
+		
+		Collection values = getValues(inKey);
+		if(values == null) 
+		{
+			values = new ArrayList();
+		}
+		
+		if(!values.contains(inNewValue)) 
+		{
+			values = new ArrayList(values);
+			values.add(inNewValue);			
+			setValue(inKey, values);
+		}
+			
 	}
 	public void removeValue(String inKey)
 	{
