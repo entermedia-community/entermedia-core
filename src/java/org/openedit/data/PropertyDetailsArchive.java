@@ -191,6 +191,9 @@ public class PropertyDetailsArchive implements CatalogEnabled
 
 	public View getView(PropertyDetails propdetails, String inView, UserProfile inProfile)
 	{
+	if(inView == null) {
+		return null;
+	}
 		String id = inView;
 		Collection values = null;
 		if (inProfile != null) // this is important since they may have created
