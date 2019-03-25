@@ -1728,6 +1728,9 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		}
 
 		String page = inPageRequest.getRequestParameter("page");
+		if("NaN".equals(page)) {
+			page = null;
+		}
 		int totalPages = tracker.getTotalPages();
 		if (page == null)
 		{

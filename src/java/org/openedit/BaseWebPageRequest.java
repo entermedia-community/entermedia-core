@@ -1431,8 +1431,14 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 		//NOOP
 	}
 
-	@Override
+	@Deprecated
 	public Data getData()
+	{
+		return getParameterData();
+	}
+	
+	
+	public Data getParameterData()
 	{
 		BaseData data = new BaseData();
 		data.setProperties(getParameterMap());
