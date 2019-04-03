@@ -499,6 +499,7 @@ public class URLUtilities
 
 		StringBuffer ctx = fieldRequest.getRequestURL();
 		String siteRoot = ctx.substring( 0, ctx.indexOf("/", 8) ); //8 comes from https://
+		log.info(siteRoot);
 		return siteRoot;
 	}
 	public static String xmlEscapeWithWrap(String inStr)
