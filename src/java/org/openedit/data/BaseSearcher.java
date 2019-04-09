@@ -862,7 +862,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 
 			if (operations.length <= i)
 			{
-				log.info("Cant search without operations");
+				log.info("Cant search without correct nunber of operations");
 				return null;
 			}
 			String op = operations[i];
