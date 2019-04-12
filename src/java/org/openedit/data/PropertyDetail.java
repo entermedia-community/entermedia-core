@@ -792,6 +792,12 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 		String b = get("deleted");
 		return Boolean.valueOf(b);
 	}
+
+	public boolean isHighlight()
+	{
+		String highlight = get("highlight");
+		return Boolean.valueOf(highlight);
+	}
 	
 	
 	
