@@ -5,11 +5,10 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.openedit.Data;
-
-import com.openedit.OpenEditException;
-import com.openedit.hittracker.HitTracker;
-import com.openedit.hittracker.SearchQuery;
-import com.openedit.users.User;
+import org.openedit.OpenEditException;
+import org.openedit.hittracker.HitTracker;
+import org.openedit.hittracker.SearchQuery;
+import org.openedit.users.User;
 
 public class FilteredTracker extends HitTracker
 {

@@ -16,17 +16,16 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.dom4j.Element;
+import org.openedit.ModuleManager;
+import org.openedit.hittracker.SearchQuery;
+import org.openedit.hittracker.Term;
+import org.openedit.page.Page;
+import org.openedit.page.manage.PageManager;
+import org.openedit.users.User;
+import org.openedit.users.UserManager;
+import org.openedit.util.PathUtilities;
 import org.openedit.xml.XmlArchive;
 import org.openedit.xml.XmlFile;
-
-import com.openedit.ModuleManager;
-import com.openedit.hittracker.SearchQuery;
-import com.openedit.hittracker.Term;
-import com.openedit.page.Page;
-import com.openedit.page.manage.PageManager;
-import com.openedit.users.User;
-import com.openedit.users.UserManager;
-import com.openedit.util.PathUtilities;
 
 public class SearchQueryArchive 
 {
@@ -85,7 +84,7 @@ public class SearchQueryArchive
 		XmlFile file = getXmlArchive().getXml(path, "query");
 		Element root = inQuery.toXml();
 		Element inputs = root.addElement("inputs");
-		for (Iterator iterator = inQuery.getProperties().keySet().iterator(); iterator.hasNext();)
+		for (Iterator iterator = inQuery.keySet().iterator(); iterator.hasNext();)
 		{
 			String key = (String) iterator.next();
 			Collection values = inQuery.getInputs(key);
@@ -255,7 +254,7 @@ public class SearchQueryArchive
 			}
 			if (t != null && realop != null)
 			{
-				t.addParameter("op", realop);
+				t.addValue("op", realop);
 			}
 		}
 		int count = 0;

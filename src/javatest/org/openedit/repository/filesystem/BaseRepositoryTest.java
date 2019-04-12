@@ -16,8 +16,12 @@ import junit.framework.TestCase;
 import org.openedit.repository.ContentItem;
 import org.openedit.repository.Repository;
 import org.openedit.repository.RepositoryException;
-
-import com.openedit.util.OutputFiller;
+import org.openedit.repository.filesystem.DirectoryTool;
+import org.openedit.repository.filesystem.FileItem;
+import org.openedit.repository.filesystem.StringItem;
+import org.openedit.repository.filesystem.VersionedRepository;
+import org.openedit.repository.filesystem.XmlVersionRepository;
+import org.openedit.util.OutputFiller;
 
 /**
  * @author Matthew Avery, mavery@einnovation.com

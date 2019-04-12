@@ -21,9 +21,8 @@ import org.openedit.repository.ContentItem;
 import org.openedit.repository.OutputStreamItem;
 import org.openedit.repository.Repository;
 import org.openedit.repository.RepositoryException;
-
-import com.openedit.util.FileUtils;
-import com.openedit.util.PathUtilities;
+import org.openedit.util.FileUtils;
+import org.openedit.util.PathUtilities;
 
 /**
  * @author cburkey
@@ -131,7 +130,15 @@ public class FileRepository extends  BaseRepository
 		}
 		else
 		{
-			destination = getFile( inDestination.getPath() );
+			
+			if(inDestination.getPath().endsWith("/"))
+			{
+				destination = getFile( inDestination.getPath() + inSource.getName() );
+			}	
+			else
+			{
+				destination = getFile( inDestination.getPath());
+			}
 			destination.getParentFile().mkdirs();
 			try
 			{
@@ -316,34 +323,31 @@ public class FileRepository extends  BaseRepository
 
 	public List getChildrenNames(String inParent) throws RepositoryException
 	{
-		if( inParent.endsWith("/"))
-		{
-			inParent = inParent.substring(0,inParent.length() - 1);
-		}
-		File file = getFile( inParent );
-		String[] all = file.list();
-		if( all != null)
-		{
-			List children = new ArrayList(all.length);
-			for (int i = 0; i < all.length; i++)
+		try {
+			if( inParent.endsWith("/"))
 			{
-				boolean folder= false;
-				if(PathUtilities.extractPageType(all[i]) == null)
-				{
-					File child = new File(file, all[i]);
-					if(folder || child.isDirectory())
-					{
-						folder = true;
-					}
-				}
-				
-				if( showChild(all[i]))
-				{
-					String name = inParent + "/" + PathUtilities.extractFileName(all[i]);
-					children.add(name);
-				}
+				inParent = inParent.substring(0,inParent.length() - 1);
 			}
-			return children;
+			File file = getFile( inParent );
+			String[] all = file.list();
+			if( all != null)
+			{
+				List children = new ArrayList(all.length);
+				for (int i = 0; i < all.length; i++)
+				{
+					String childpath = all[i];
+					String path = inParent + "/" + PathUtilities.extractFileName(childpath, false);				
+					if( isExcluded(path) )
+					{
+						continue;
+					}				
+					children.add(path);
+				}
+				return children;
+			}
+		} catch (StackOverflowError e) {
+			log.info("BAD PATH WAS " + inParent);
+			throw new RuntimeException("Error getting child names on:" + inParent );
 		}
 		return Collections.EMPTY_LIST;
 	}

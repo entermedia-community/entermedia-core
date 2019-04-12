@@ -12,23 +12,23 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
-import org.entermedia.cache.CacheManager;
 import org.openedit.Data;
+import org.openedit.OpenEditException;
+import org.openedit.OpenEditRuntimeException;
+import org.openedit.Shutdownable;
+import org.openedit.cache.CacheManager;
 import org.openedit.data.BaseData;
 import org.openedit.data.BaseSearcher;
 import org.openedit.data.PropertyDetail;
 import org.openedit.data.PropertyDetails;
+import org.openedit.hittracker.DataHitTracker;
+import org.openedit.hittracker.HitTracker;
+import org.openedit.hittracker.SearchQuery;
+import org.openedit.hittracker.Term;
+import org.openedit.repository.ContentItem;
+import org.openedit.users.User;
 import org.openedit.util.DateStorageUtil;
-
-import com.openedit.OpenEditException;
-import com.openedit.OpenEditRuntimeException;
-import com.openedit.Shutdownable;
-import com.openedit.hittracker.DataHitTracker;
-import com.openedit.hittracker.HitTracker;
-import com.openedit.hittracker.SearchQuery;
-import com.openedit.hittracker.Term;
-import com.openedit.users.User;
-import com.openedit.util.PathUtilities;
+import org.openedit.util.PathUtilities;
 
 public class XmlSearcher extends BaseSearcher implements Shutdownable
 {
@@ -38,7 +38,32 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable
 	protected CacheManager fieldCacheManager;
 	protected XmlFile fieldXmlFile;
 	protected long fieldEditCount = 0;
+	protected Boolean fieldLazyInit ;
 	
+	
+	
+	
+	
+
+	public boolean isLazyInit()
+	{
+		if (fieldLazyInit == null)
+		{
+			fieldLazyInit = getPropertyDetails().isLazyInit();
+			if(fieldLazyInit == null){
+				fieldLazyInit = false;
+			}
+			
+		}
+
+		return fieldLazyInit;
+	}
+
+	public void setLazyInit(boolean inLazyInit)
+	{
+		fieldLazyInit = inLazyInit;
+	}
+
 	public CacheManager getCacheManager()
 	{
 		if (fieldCacheManager == null)
@@ -93,8 +118,8 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable
 			Term term = (Term) iterator.next();
 			if("betweendates".equals(term.getOperation()))
 			{
-				Date before = inQuery.getDateFormat().parse(term.getParameter("lowDate"));
-				Date after = inQuery.getDateFormat().parse(term.getParameter("highDate"));
+				Date before =(Date) term.getValue("lowDate");
+				Date after = (Date) term.getValue("highDate");
 				String id = term.getDetail().getId();//effectivedate
 				String date = inElement.attributeValue(id);
 				if(date == null)
@@ -109,7 +134,7 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable
 			} 
 			else if("afterdate".equals(term.getOperation()))
 			{
-				Date after = inQuery.getDateFormat().parse(term.getParameter("highDate"));
+				Date after = inQuery.getDateFormat().parse((String) term.getValue("highDate"));
 				String id = term.getDetail().getId();//effectivedate
 				String date = inElement.attributeValue(id);
 				if(date == null)
@@ -124,7 +149,7 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable
 			}
 			else if("beforedate".equals(term.getOperation()))
 			{
-				String low = term.getParameter("beforeDate");
+				String low = (String) term.getValue("beforeDate");
 				Date before = null;
 				if( low != null)
 				{
@@ -313,7 +338,8 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable
 				{
 					if (passes(element, inQuery))
 					{
-						results.add(new ElementData(element));					
+						//log.info(element.asXML());
+						results.add(new ElementData(element, getPropertyDetails()));					
 					}
 				}
 				catch (ParseException e)
@@ -381,7 +407,7 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable
 		try
 		{
 			String inName = getSearchType();
-			String path = getPropertyDetailsArchive().getConfigurationPath("/lists"
+			String path = getPropertyDetailsArchive().findConfigurationFile("/lists"
 				+ "/" + inName + ".xml");
 			//No sure why we do this. 
 			PropertyDetails details = getPropertyDetailsArchive().getPropertyDetailsCached(inName);
@@ -456,14 +482,14 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable
 			element.clearContent();
 			element.setAttributes(null);
 			
-			ElementData data = new ElementData(element);
+			ElementData data = new ElementData(element, getPropertyDetails());
 			data.setId(inData.getId());
 			data.setName(inData.getName());
 			data.setSourcePath(inData.getSourcePath());
-			for (Iterator iterator = inData.getProperties().keySet().iterator(); iterator.hasNext();)
+			for (Iterator iterator = inData.keySet().iterator(); iterator.hasNext();)
 			{
 				String key	= (String) iterator.next();
-				data.setProperty(key, inData.get(key));
+				data.setValue(key, inData.getValue(key));
 			}
 		}
 		
@@ -538,7 +564,7 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable
 		XmlFile settings = getXmlFile();
 
 		Element newone = DocumentHelper.createElement(settings.getElementName());
-		ElementData data = new ElementData(newone);		
+		ElementData data = new ElementData(newone, getPropertyDetails());		
 		return data;
 	}
 	public List getIndexProperties()
@@ -550,15 +576,6 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable
 		}
 		return details.findIndexProperties();
 	}
-	public List getStoredProperties()
-	{
-		PropertyDetails details = getPropertyDetailsArchive().getPropertyDetailsCached(getSearchType());
-		if( details == null || details.size() == 0)
-		{
-			return getDefaultDetails().findStoredProperties();
-		}
-		return details.findStoredProperties();
-	}
 	
 	
 	public List getSearchProperties(User inUser)
@@ -566,7 +583,7 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable
 		List details = getDetailsForView(getSearchType() + "/" + getSearchType() + "search", inUser);
 		if (details == null || details.size() == 0)
 		{
-			return getDefaultDetails().findStoredProperties();
+			return getDefaultDetails().findIndexProperties();
 		}
 		return details;
 	}
@@ -597,11 +614,11 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable
 		if( fieldDefaultDetails == null)
 		{
 			//fake one
-			PropertyDetails details = new PropertyDetails();
+			PropertyDetails details = new PropertyDetails(getPropertyDetailsArchive(),getSearchType());
 			PropertyDetail id = new PropertyDetail();
 			id.setIndex(true);
 			id.setStored(true);
-			id.setText("Id");
+			id.setName("Id");
 			id.setId("id");
 			id.setEditable(true);
 			id.setIndex(true);
@@ -612,7 +629,7 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable
 			id = new PropertyDetail();
 			id.setIndex(true);
 			id.setStored(true);
-			id.setText("Name");
+			id.setName("Name");
 			id.setId("name");
 			id.setEditable(true);
 			details.addDetail(id);
@@ -625,23 +642,18 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable
 
 	public void deleteAll(User inUser)
 	{
-		HitTracker all = getAllHits();
-		XmlFile settings = getXmlFile();
-		for (Iterator iterator = all.iterator(); iterator.hasNext();)
-		{
-			Data object = (Data)iterator.next();
-			Element record = settings.getElementById(object.getId());
-			if( record != null)
-			{
-				settings.getRoot().remove(record);
-			}
-		}
-		getXmlArchive().saveXml(settings, inUser);
+		String path = "/WEB-INF/data/" + getCatalogId() + "/lists" + "/" + getSearchType() + ".xml";
+		ContentItem item = getXmlArchive().getPageManager().getRepository().getStub(path);
+		getXmlArchive().getPageManager().getRepository().remove(item);
 		clearIndex();
 	}
 	public void delete(Data inData, User inUser)
 	{
 		XmlFile settings = getXmlFile();
+		//TODO: Save this file to the data directory not the app
+		String path = "/WEB-INF/data/" + getCatalogId() + "/lists/" + getSearchType() + ".xml";
+		settings.setPath(path);
+		
 		Element record = settings.getElementById(inData.getId());
 		if( record != null)
 		{
@@ -664,6 +676,9 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable
 	{
 		clearIndex();
 	}
+	
+	
+	
 	
 }
 	

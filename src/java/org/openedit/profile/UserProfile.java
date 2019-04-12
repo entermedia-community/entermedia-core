@@ -3,37 +3,76 @@ package org.openedit.profile;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.entermediadb.asset.Category;
+import org.openedit.CatalogEnabled;
 import org.openedit.Data;
+import org.openedit.MultiValued;
+import org.openedit.WebPageRequest;
 import org.openedit.data.BaseData;
 import org.openedit.data.PropertyDetail;
 import org.openedit.data.SaveableData;
 import org.openedit.data.Searcher;
 import org.openedit.data.SearcherManager;
+import org.openedit.hittracker.HitTracker;
+import org.openedit.hittracker.SearchQuery;
+import org.openedit.users.User;
 import org.openedit.xml.XmlArchive;
 
-import com.openedit.WebPageRequest;
-import com.openedit.hittracker.HitTracker;
-import com.openedit.hittracker.SearchQuery;
-import com.openedit.users.User;
-
-public class UserProfile extends BaseData implements SaveableData
+public class UserProfile extends BaseData implements SaveableData, CatalogEnabled
 {
+	protected User fieldUser;
 	protected String fieldCatalogId;
 	protected SearcherManager fieldSearcherManager;
-	protected Data fieldSettingsGroup;
-//	protected Map<String,String> fieldSettingsGroupPermissions;
+	protected MultiValued fieldSettingsGroup;
+	//	protected Map<String,String> fieldSettingsGroupPermissions;
 	protected Map fieldResultViews;
 	protected XmlArchive fieldXmlArchive;
-	protected HitTracker fieldCatalogs;
-	protected HitTracker fieldUploadCatalogs;
-	protected Collection fieldCombinedLibraries;
+	protected Collection fieldViewCategories;
+	protected Collection<String> fieldCollectionIds;
 	protected Collection<Data> fieldModules;
+	protected Set fieldPermissions;
+	protected String fieldIndexId;
 	
+
+	public String getIndexId()
+	{
+		return fieldIndexId;
+	}
+
+	public void setIndexId(String inIndexId)
+	{
+		fieldIndexId = inIndexId;
+	}
+
+	public Set getPermissions()
+	{
+		return fieldPermissions;
+	}
+
+	public void setPermissions(Set inPermissions)
+	{
+		fieldPermissions = inPermissions;
+	}
+
+	public boolean hasModule(String inId)
+	{
+		for (Iterator iterator = getModules().iterator(); iterator.hasNext();)
+		{
+			Data data = (Data) iterator.next();
+			if( data.getId().equals(inId))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
 	
 	public Collection<Data> getModules()
 	{
@@ -45,13 +84,11 @@ public class UserProfile extends BaseData implements SaveableData
 		fieldModules = inModules;
 	}
 
-	protected User fieldUser;
 
 	public User getUser()
 	{
-	
 
-	return fieldUser;
+		return fieldUser;
 	}
 
 	public void setUser(User inUser)
@@ -94,44 +131,64 @@ public class UserProfile extends BaseData implements SaveableData
 		return getId();
 	}
 
+//	public Collection<String> getCollectionIds()
+//	{
+//		return fieldCollectionIds;
+//	}
+//
+//	public void setCollectionIds(Collection<String> inCollectionIds)
+//	{
+//		fieldCollectionIds = inCollectionIds;
+//	}
+	public boolean isInRole(String inRole)
+	{
+		if( inRole.equals( get("settingsgroup")))
+		{
+			return true;					
+		}
+		return false;					
+	}
+	
 	public boolean isEnabled(String inPreference)
 	{
 		String val = get(inPreference);
 		return Boolean.parseBoolean(val);
 	}
 
-//	@Override
-//	public String get(String inId) {
-//		// TODO Auto-generated method stub
-//		return getValue(inId);
-//	}
-//	
+	//	@Override
+	//	public String get(String inId) {
+	//		// TODO Auto-generated method stub
+	//		return getValue(inId);
+	//	}
+	//	
 	public String get(String inPreference)
 	{
 		if (inPreference == null)
 		{
 			return null;
 		}
-		
+
 		String val = super.get(inPreference);
-		if(val == null  && inPreference.equals("firstname")){
+		if (val == null && inPreference.equals("firstname"))
+		{
 			val = super.get("firstName");
 		}
-		
-		if(val == null && inPreference.equals("lastname")){
+
+		if (val == null && inPreference.equals("lastname"))
+		{
 			val = super.get("lastName");
 		}
-		
-//		
+
+		//		
 		if (val == null && getSettingsGroup() != null)
 		{
 			val = getSettingsGroup().get(inPreference);
 		}
-		
-//		if (val == null && getSettingsGroup() != null)
-//		{
-//			val = getSettingsGroupPermissions().get(inPreference);
-//		}		
+
+		//		if (val == null && getSettingsGroup() != null)
+		//		{
+		//			val = getSettingsGroupPermissions().get(inPreference);
+		//		}		
 		if (val == null && getUser() != null)
 		{
 			val = getUser().get(inPreference);
@@ -139,13 +196,56 @@ public class UserProfile extends BaseData implements SaveableData
 
 		return val;
 	}
-
 	
+	public Object getValue(String inKey)
+	{
+		Object val = super.getValue(inKey);
+		if( val != null)
+		{
+			return val;
+		}
+		if( inKey.equals("sendcollectionnotifications") || inKey.equals("sendapprovalnotifications") ||  inKey.equals("assethitsperpage") ||  inKey.equals("modulehitsperpage") )
+		{
+			if(getSettingsGroup() != null){
+			//if we have a local value then user it. Otherwise use parent.
+			return getSettingsGroup().getValue(inKey);
+			}
+		}
+		return null;
+	}
 	
 	public Collection getValues(String inPreference)
 	{
-		String val = get(inPreference);
-
+		Object value = super.getValue(inPreference);
+		if( value instanceof Collection)
+		{
+			Collection col = (Collection) value;
+			if( !col.isEmpty() )
+			{
+				return col;
+			}
+		}
+		if (value == null && getSettingsGroup() != null)
+		{
+			value = getSettingsGroup().getValue(inPreference);
+		}
+		String val = null;
+		if( value instanceof Collection)
+		{
+			Collection col = (Collection) value;
+			if( !col.isEmpty() )
+			{
+				return col;
+			}
+		}
+		else if( value != null)
+		{
+			val = String.valueOf(value);
+		}
+		if( val == null)
+		{
+			val = get(inPreference);
+		}
 		if (val == null || val.trim().length() == 0)
 		{
 			return null;
@@ -210,18 +310,31 @@ public class UserProfile extends BaseData implements SaveableData
 				groupid = "guest";
 			}
 			Searcher settingsGroupSearcher = getSearcherManager().getSearcher(getCatalogId(), "settingsgroup");
-			fieldSettingsGroup = (Data) settingsGroupSearcher.searchById(groupid);
+			fieldSettingsGroup = (MultiValued) settingsGroupSearcher.searchById(groupid);
 			if (fieldSettingsGroup == null && log.isDebugEnabled())
 			{
 				log.debug("No settings group defined");
 			}
-//			else
-//			{
-//				Searcher searcher = getSearcherManager().getSearcher(getCatalogId(),"settingsgrouppermissions");
-//				SearchQuery q = searcher.createSearchQuery();
-//				q.
-//				
-//			}
+			if (fieldSettingsGroup != null)
+			{
+				Collection permissions = fieldSettingsGroup.getValues("permissions");
+				if (permissions != null)
+				{
+					fieldPermissions = new HashSet(permissions);
+				}
+			}
+			else
+			{
+				fieldPermissions = new HashSet();
+			}
+
+			//			else
+			//			{
+			//				Searcher searcher = getSearcherManager().getSearcher(getCatalogId(),"settingsgrouppermissions");
+			//				SearchQuery q = searcher.createSearchQuery();
+			//				q.
+			//				
+			//			}
 		}
 		return fieldSettingsGroup;
 	}
@@ -231,6 +344,10 @@ public class UserProfile extends BaseData implements SaveableData
 		setProperty("settingsgroup", inSettingsGroupId);
 	}
 
+	public void save()
+	{
+		save(null);
+	}
 	public void save(User inUser)
 	{
 		Searcher searcher = getSearcherManager().getSearcher(getCatalogId(), "userprofile");
@@ -240,7 +357,8 @@ public class UserProfile extends BaseData implements SaveableData
 	public void setValuesFromDetails(String inKey, Collection<PropertyDetail> inValues)
 	{
 		StringBuffer values = new StringBuffer();
-		if(inValues == null){
+		if (inValues == null)
+		{
 			return;
 		}
 		for (Iterator iterator = inValues.iterator(); iterator.hasNext();)
@@ -249,7 +367,7 @@ public class UserProfile extends BaseData implements SaveableData
 			values.append(detail.getId());
 			if (iterator.hasNext())
 			{
-				values.append(" ");
+				values.append(" "); //TODO move to |
 			}
 		}
 		setProperty(inKey, values.toString());
@@ -302,55 +420,35 @@ public class UserProfile extends BaseData implements SaveableData
 	{
 
 		return getShortDescription();
-		
-		
-		
 
 	}
-	
-	
+
 	public String getShortDescription()
 	{
 		StringBuffer out = new StringBuffer();
-		if ( get("firstName") != null)
+		if (get("firstName") != null)
 		{
-			out.append( get("firstName") );
+			out.append(get("firstName"));
 			out.append(" ");
-		} 
-		if (  get("lastName") != null)
+		}
+		if (get("lastName") != null)
 		{
 			out.append(get("lastName"));
 		}
-		if( out.length() == 0)
+		if (out.length() == 0)
 		{
-			if( get("email") != null && Character.isDigit(getUserId().charAt(0) ) )
+			if (get("email") != null && Character.isDigit(getUserId().charAt(0)))
 			{
-				out.append( get("email") );
+				out.append(get("email"));
 			}
 			else
 			{
-				out.append( getUserId());
+				out.append(getUserId());
 			}
 		}
 		return out.toString();
 	}
-	/**
-	 * @deprecated Not used any more. Track permissions on an app basis
-	 * @return
-	 */
-	public HitTracker getCatalogs()
-	{
-		return fieldCatalogs;
-	}
 
-	/**
-	 * @deprecated Not used any more. Track permissions on an app basis
-	 * @return
-	 */
-	public void setCatalogs(HitTracker inCatalogs)
-	{
-		fieldCatalogs = inCatalogs;
-	}
 
 	public XmlArchive getXmlArchive()
 	{
@@ -389,7 +487,7 @@ public class UserProfile extends BaseData implements SaveableData
 		setProperty(inView, inPreference);
 	}
 
-	public int getHitsPerPageForSearchType(String inResultsView) throws Exception
+	public int getHitsPerPageForSearchType(String inResultsView)
 	{
 		String view = inResultsView + "hitsperpage";
 		String value = get(view);
@@ -401,7 +499,7 @@ public class UserProfile extends BaseData implements SaveableData
 				return 15;
 			}
 		}
-		if( "null".equals( value) )
+		if ("null".equals(value))
 		{
 			return 15;
 		}
@@ -443,77 +541,37 @@ public class UserProfile extends BaseData implements SaveableData
 		String view = get(inResultsView);
 		return view;
 	}
-	/**
-	 * @deprecated Not used any more. Track permissions on an app basis
-	 * @return
-	 */
-	public Data getLastCatalog()
-	{
-		String catid = get("lastcatalog");
-		if( getCatalogs() == null )
-		{
-			return null;
-		}
-		for (Iterator iterator = getCatalogs().iterator(); iterator.hasNext();)
-		{
-			Data cat = (Data) iterator.next();
-			if (catid == null || cat.getId().equals(catid))
-			{
-				return cat;
-			}
-		}
-		if (getCatalogs().size() > 0)
-		{
-			return (Data) getCatalogs().iterator().next();
-		}
-		return null;
-	}
-	/**
-	 * @deprecated Not used any more. Track permissions on an app basis
-	 * @return
-	 */
-	public HitTracker getUploadCatalogs()
-	{
-		return fieldUploadCatalogs;
-	}
 
-	/**
-	 * @deprecated Not used any more. Track permissions on an app basis
-	 * @return
-	 */
-	public void setUploadCatalogs(HitTracker inUploadCatalogs)
-	{
-		fieldUploadCatalogs = inUploadCatalogs;
-	}
 
-	public Collection<String> getCombinedLibraries()
+	public Collection<Category> getViewCategories()
 	{
-		return fieldCombinedLibraries;
+		return fieldViewCategories;
 	}
 
 	public HitTracker getSelectedLibraries(WebPageRequest inReq)
 	{
 		Searcher librarySearcher = getSearcherManager().getSearcher(getCatalogId(), "library");
 		HitTracker tracker = librarySearcher.getAllHits();
-		tracker.setSelections(getCombinedLibraries());
-		if( inReq.getUser() != null && inReq.getUser().isInGroup("administrators"))
+		tracker.setSelections(getViewCategories());
+		if (inReq.getUser() != null && inReq.getUser().isInGroup("administrators"))
 		{
 			tracker.selectAll();
 		}
 		//tracker.setShowOnlySelected(true);
 		return tracker;
-		
+
 	}
-	public void setCombinedLibraries(Collection<String> inCombinedLibraries)
+
+	public void setViewCategories(Collection<Category> inCombinedLibraries)
 	{
-		fieldCombinedLibraries = inCombinedLibraries;
+		fieldViewCategories = inCombinedLibraries;
 	}
 
 	public Data getDefaultViewForModule(String inModuleId)
 	{
 		Searcher viewSearcher = getSearcherManager().getSearcher(getCatalogId(), "view");
 		SearchQuery q = viewSearcher.createSearchQuery();
-		q.addMatches("module", inModuleId);
+		q.addMatches("moduleid", inModuleId);
 		q.addMatches("systemdefined", "false");
 		q.addSortBy("ordering");
 		HitTracker row = (HitTracker) viewSearcher.search(q);
@@ -571,24 +629,25 @@ public class UserProfile extends BaseData implements SaveableData
 				getUser().setPassword(inValue);
 			}
 		}
-		if(inId.equals("settingsgroup"))
+		if (inId.equals("settingsgroup"))
 		{
 			fieldSettingsGroup = null;
 		}
 		super.setProperty(inId, inValue);
 	}
-	
-//	public Map<String,String> getSettingsGroupPermissions() {
-//		return fieldSettingsGroupPermissions;
-//	}
-	
+
+	//	public Map<String,String> getSettingsGroupPermissions() {
+	//		return fieldSettingsGroupPermissions;
+	//	}
+
 	@Override
 	public String getName()
 	{
 		return toString();
-	}	
-		
-	public String getText(){
+	}
+
+	public String getText()
+	{
 		return toString();
 	}
 
@@ -600,6 +659,27 @@ public class UserProfile extends BaseData implements SaveableData
 		query.addMatches("type", inId);//needed?
 		HitTracker hits = facetsearcher.search(query);
 		return hits;
-		
+
+	}
+
+	public boolean hasPermission(String inPropertyName)
+	{
+		getSettingsGroup();
+
+		Set permissions = getPermissions();
+		if( permissions == null)
+		{
+			return false;
+		}
+		return permissions.contains(inPropertyName);
+	}
+
+	public boolean isInGroup(String inGroupId)
+	{
+		if( getUser() == null)
+		{
+			return false;
+		}
+		return getUser().isInGroup(inGroupId);
 	}
 }

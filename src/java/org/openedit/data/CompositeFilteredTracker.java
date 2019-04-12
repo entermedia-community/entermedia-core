@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.openedit.users.User;
+import org.openedit.users.User;
 
 public class CompositeFilteredTracker extends FilteredTracker
 {

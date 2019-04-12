@@ -8,12 +8,7 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import com.openedit.OpenEditException;
-import com.openedit.util.Exec;
-import com.openedit.util.ExecResult;
-import com.openedit.util.FileUtils;
-import com.openedit.util.PathUtilities;
+import org.openedit.OpenEditException;
 
 public class WindowsUtil
 {

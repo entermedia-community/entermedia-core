@@ -6,8 +6,7 @@ import java.util.List;
 
 import org.dom4j.Element;
 import org.openedit.Data;
-
-import com.openedit.hittracker.HitTracker;
+import org.openedit.hittracker.HitTracker;
 
 public class XmlHitTracker extends HitTracker
 {
@@ -34,7 +33,7 @@ public class XmlHitTracker extends HitTracker
 		{
 			return null;
 		}
-		return new ElementData(element);
+		return new ElementData(element, getSearcher().getPropertyDetails());
 	}
 	//Use getByID
 	public Object get(String inId) throws IOException
@@ -42,7 +41,7 @@ public class XmlHitTracker extends HitTracker
 		return getById(inId);
 	}
 
-	public Object getById(String inId)
+	public Data getById(String inId)
 	{
 		Element element = getXmlFile().getElementById(inId);
 		if( element == null)
@@ -82,7 +81,7 @@ public class XmlHitTracker extends HitTracker
 		{
 			return (Data)inHit;
 		}
-		return new ElementData(inHit);
+		return new ElementData(inHit, getSearcher().getPropertyDetails());
 	}
 	
 	public String getValue(Object inHit, String inString)

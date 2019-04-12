@@ -7,8 +7,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 
 import org.openedit.Data;
-
-import com.openedit.OpenEditException;
+import org.openedit.OpenEditException;
 
 /**
  * This is essentially a tree that may contain other View objects,
@@ -126,7 +125,7 @@ public class View extends ArrayList implements ViewItem
                 {
 		            public int compare(PropertyDetail f1, PropertyDetail f2)
 		            {
-		                return f1.getText().compareTo(f2.getText());
+		                return f1.getName().compareTo(f2.getName());
 		            }        
 		        }
 		);

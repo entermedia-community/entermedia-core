@@ -5,7 +5,7 @@ package org.openedit.repository.filesystem;
 
 import java.io.File;
 
-import com.openedit.util.FileUtils;
+import org.openedit.util.FileUtils;
 
 /**
  * @author Matthew Avery, mavery@einnovation.com

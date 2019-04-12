@@ -25,8 +25,6 @@ import java.io.InputStreamReader;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.openedit.util.ExecutorManager;
-
 /**
  * An object that consumes an {@link InputStream} on a daemon thread to prevent
  * the stream from blocking.
@@ -106,9 +104,9 @@ public class StreamGobbler implements Closeable, Runnable
 				{
 					writer.append(line);
 					writer.append('\n');
-					if (writer.length() > 100000) //Dont let this buffer get more than 100k of memory
+					if (writer.length() > 1000000) //Dont let this buffer get more than 100k of memory
 					{
-						String cut = writer.substring(writer.length() - 70000, writer.length());
+						String cut = writer.substring(writer.length() - 700000, writer.length());
 						writer = new StringBuffer(cut);
 					}
 				}

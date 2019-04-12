@@ -4,17 +4,18 @@ import java.text.DateFormat;
 import java.util.Collection;
 import java.util.List;
 
+import org.openedit.CatalogEnabled;
 import org.openedit.Data;
+import org.openedit.OpenEditException;
+import org.openedit.WebPageRequest;
+import org.openedit.hittracker.HitTracker;
+import org.openedit.hittracker.SearchQuery;
 import org.openedit.profile.UserProfile;
+import org.openedit.users.User;
 
-import com.openedit.OpenEditException;
-import com.openedit.WebPageRequest;
-import com.openedit.hittracker.HitTracker;
-import com.openedit.hittracker.SearchQuery;
-import com.openedit.users.User;
-
-public interface Searcher
+public interface Searcher extends CatalogEnabled
 {
+	
 	public String nextId();
 	
 	public abstract HitTracker cachedSearch(WebPageRequest inPageRequest, SearchQuery inQuery) throws OpenEditException;
@@ -54,6 +55,9 @@ public interface Searcher
 	 * @param search
 	 * @return
 	 */
+	
+	public void addShowOnlyFilter(WebPageRequest inPageRequest, String querystring, SearchQuery search);
+
 
 	public abstract SearchQuery addActionFilters(WebPageRequest inReq, SearchQuery search);
 
@@ -133,7 +137,7 @@ public interface Searcher
 	public abstract void setSearchType(String inFieldName);
 
 	public abstract String getCatalogId();
-
+	
 	public abstract void setCatalogId(String inCatalogId);
 
 	public abstract void saveData(Data inData, User inUser);
@@ -168,5 +172,27 @@ public interface Searcher
 	public void restoreSettings();
 	
 	public void reloadSettings();
+	
+	public boolean initialize();
 
+	public void setAllowRemoteDetails(boolean inB);
+
+	public void setAlternativeIndex(String inAlternativeIndex);
+
+	public boolean putMappings();
+
+	public void reindexInternal();
+	
+	
+	public void saveData(Data inData);
+
+
+	public void setForceBulk(boolean inForceBulk);
+
+	public Object createValue(String inHeaderid, String inVal);
+
+	public void deleteAll(Collection toDelete, User inUser);
+	
+
+	public void saveJson(Collection inJsonArray);
 }

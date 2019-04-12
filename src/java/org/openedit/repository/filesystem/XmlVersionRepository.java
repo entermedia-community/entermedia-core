@@ -16,9 +16,8 @@ import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 import org.openedit.repository.ContentItem;
 import org.openedit.repository.RepositoryException;
-
-import com.openedit.util.PathUtilities;
-import com.openedit.util.XmlUtil;
+import org.openedit.util.PathUtilities;
+import org.openedit.util.XmlUtil;
 
 /**
  * We need to move more stuff out of the Base Repository into here so that

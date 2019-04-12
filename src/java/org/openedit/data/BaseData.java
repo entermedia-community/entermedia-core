@@ -1,80 +1,174 @@
 package org.openedit.data;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import org.openedit.Data;
 import org.openedit.MultiValued;
+import org.openedit.OpenEditException;
+import org.openedit.WebPageRequest;
+import org.openedit.modules.translations.LanguageMap;
+import org.openedit.util.DateStorageUtil;
 
-import com.openedit.OpenEditException;
 
 public class BaseData implements MultiValued, Comparable, Cloneable
 {
 	public static final Data NULL = new BaseData(); 
 	
-	protected Map fieldMap;
+	protected ValuesMap fieldMap;
 
 	public BaseData() {
 	}
 
-	public BaseData(Map inMap) {
-		fieldMap = inMap;
+	public BaseData(Map inMap) 
+	{
+		fieldMap = new ValuesMap(inMap);
 	}
 
-	public String get(String inId) {
+	public String get(String inId) 
+	{
 		if( fieldMap == null)
 		{
 			return null;
 		}
-		Object object = getMap().get(inId);
-		if (object == null) {
+		Object value = getValue(inId);
+		return getMap().toString(value);
+	}
+	
+	public String getText(String inId, WebPageRequest inContext) {
+		if(Boolean.parseBoolean(inContext.getPageProperty("auto_translate"))){
+			String locale =  inContext.getLocale();
+
+			return getText(inId, locale);
+		}
+		
+		return getText(inId, "en");
+	}
+	
+	
+	public String getText(String inId, String inLocale) 
+	{
+		if( fieldMap == null)
+		{
 			return null;
 		}
-		if (object instanceof String) {
-			return (String) object;
+		Object value = getValue(inId);
+		if( value instanceof LanguageMap )
+		{
+			LanguageMap map = (LanguageMap)value;
+			return map.getText(inLocale);
 		}
-		if (object instanceof Date) {
-			return String.valueOf((Date) object);
-		}
-		if (object instanceof Boolean) {
-			return String.valueOf((Boolean) object);
-		}
-		if (object instanceof Integer) {
-			return String.valueOf((Integer) object);
-		}
-		if (object instanceof Float) {
-			return String.valueOf((Float) object);
-		}
-		return String.valueOf(object);
+		return getMap().toString(value);
 	}
 	public boolean getBoolean(String inId)
 	{
-		String val = get(inId);
-		if( val != null)
+		Object val = getValue(inId);
+		if( val == null  )
 		{
-			return Boolean.parseBoolean(val);
+			return false;
 		}
-		return false;
-		
+		if( val instanceof Boolean)
+		{
+			return (boolean)val;
+		}
+		return Boolean.valueOf(val.toString());
 	}
 	
 	public float getFloat(String inId)
 	{
-		String val = get(inId);
-		if( val != null)
+		Object val = getValue(inId);
+		if( val == null )
 		{
-			return Float.parseFloat(val);
+			return 0;
 		}
-		return 0;
+		if( val instanceof Float)
+		{
+			return (float)val;
+		}
+		return Float.parseFloat(val.toString());
 	}
+	
+	
+	public double getDouble(String inId)
+	{
+		Object val = getValue(inId);
+		if( val == null )
+		{
+			return 0;
+		}
+		if( val instanceof Double)
+		{
+			return (double)val;
+		}
+		return Double.parseDouble(val.toString());
+	}
+	
+	public long getLong(String inId)
+	{
+		Object val = getValue(inId);
+		if( val == null )
+		{
+			return 0;
+		}
+		if( val instanceof Long)
+		{
+			return (long)val;
+		}
+		return Long.parseLong(val.toString());
+	}
+	
+	
+	
+	
+	public int getInt(String inId)
+	{
+		Object val = getValue(inId);
+		if( val == null )
+		{
+			return 0;
+		}
+		if( val instanceof Integer)
+		{
+			return (int)val;
+		}
+		return Integer.parseInt(val.toString());
+	}
+	
+	
 	public String getId() {
 		String name = get("id");
 		return name;
 	}
+	
+	
+	
+	
+	public String getName(String locale) 
+	{
+		Object name = getValue("name");
+		if( name instanceof LanguageMap)
+		{
+			LanguageMap values = (LanguageMap)name;
+			String val = values.getDefaultText(locale);
+			return val;
+		}
+		return (String)name;
+	}
+	
+	public String getName(WebPageRequest inReq) {
+		if(Boolean.parseBoolean(inReq.getPageProperty("auto_translate"))){
+			String locale =  inReq.getLocale();
+
+			return getName( locale);
+		}
+		return getName("en");
+	}
+	
+	
+	
 
 	public String getName() {
 		String name = get("name");
@@ -95,14 +189,11 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 
 	public void setProperty(String inId, String inValue) 
 	{
-//		if ("id".equals(inId)) {
-//			setId(inValue);
-//			return;
-//		}
-		if (inValue == null) {
+		if (inValue == null) 
+		{
 			getMap().remove(inId);
 		} else {
-			getMap().put(inId, inValue);
+			setValue(inId, inValue);
 		}
 	}
 	/**
@@ -135,10 +226,10 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 			throw new OpenEditException(e);
 		}
 	}
-	protected Map getMap() 
+	public ValuesMap getMap() 
 	{
 		if (fieldMap == null) {
-			fieldMap = new HashMap(5);
+			fieldMap = new ValuesMap();
 		}
 		return fieldMap;
 	}
@@ -159,58 +250,141 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 		setProperty("sourcepath", inSourcepath);
 	}
 
-	public Map getProperties() 
+	public ValuesMap getProperties() 
 	{
 		return getMap();
 	}
-	public void setProperties(Map<String,String> inProperties)
+	public void setProperties(Map inProperties)
 	{
 		getMap().putAll(inProperties);
 	}
 	public int compareTo(Object inO) {
 		BaseData inData = (BaseData) inO;
 		if (getName() != null && inData.getName() != null) {
-			return getName().compareTo(inData.getName());
+			return getName().toLowerCase().compareTo(inData.getName().toLowerCase());
 		}
 		return 0;
 	}
 	
 	public Collection<String> getValues(String inPreference)
 	{
-		String val = get(inPreference);
-		
-		if (val == null)
-		{
+		return getMap().getValues(inPreference);
+//		if( object instanceof Collection)
+//		{
+//			return (Collection<String>)object;
+//		}
+//		String val = get(inPreference);
+//		
+//		if (val == null)
+//		{
+//			return null;
+//		}
+//		String[] vals = null;
+//		if( val.contains("|") )
+//		{
+//			vals = VALUEDELMITER.split(val);
+//		}
+//		else
+//		{
+//			vals = val.split("\\s+"); //legacy
+//		}
+//
+//		Collection collection = Arrays.asList(vals);
+//		//if null check parent
+//		return collection;
+	}
+	
+	public Date getDate(String inField)
+	{
+		Object date = getValue(inField);
+		if(date == null){
 			return null;
 		}
-		String[] vals = null;
-		if( val.contains("|") )
-		{
-			vals = VALUEDELMITER.split(val);
-		}
-		else
-		{
-			vals = val.split("\\s+"); //legacy
-		}
 
-		Collection collection = Arrays.asList(vals);
-		//if null check parent
-		return collection;
+		if(date instanceof Date){
+			return (Date) date;
+		}
+		
+		return DateStorageUtil.getStorageUtil().parseFromStorage((String)date);
+		
+		
 	}
 	
+	public Object getValue(String inKey)
+	{
+		Object val = getMap().getValue(inKey);
+		
+		return val;
+	}
+	public void setValue(String inKey, Object inValue)
+	{
+		getMap().put(inKey,inValue);
+	}
+	
+	/**
+	 * @deprecated use setValue
+	 */
 	public void setValues(String inKey, Collection<String> inValues)
 	{
-		StringBuffer values = new StringBuffer();
-		for (Iterator iterator = inValues.iterator(); iterator.hasNext();)
+//		StringBuffer values = new StringBuffer();
+//		for (Iterator iterator = inValues.iterator(); iterator.hasNext();)
+//		{
+//			String detail = (String) iterator.next();
+//			values.append(detail);
+//			if( iterator.hasNext())
+//			{
+//				values.append(" | ");
+//			}
+//		}
+		getMap().put(inKey, inValues);
+	}
+	public void addValue(String inKey, Object inNewValue)
+	{
+		
+		Collection values = getValues(inKey);
+		if(values == null) 
 		{
-			String detail = (String) iterator.next();
-			values.append(detail);
-			if( iterator.hasNext())
-			{
-				values.append(" | ");
-			}
+			values = new ArrayList();
 		}
-		setProperty(inKey,values.toString());
+		
+		if(!values.contains(inNewValue)) 
+		{
+			values = new ArrayList(values);
+			values.add(inNewValue);			
+			setValue(inKey, values);
+		}
+			
+	}
+	public void removeValue(String inKey)
+	{
+		getMap().remove(inKey);
+		
+	}
+
+	@Override
+	public void removeValue(String inKey, Object inOldValue)
+	{
+		getMap().removeValue(inKey, inOldValue);
+	}
+
+	
+	@Override
+	public Set keySet()
+	{
+		return getMap().keySet();
 	}
 	
+	protected Long toLong(Number inNumber)
+	{
+		if( inNumber instanceof Long)
+		{
+			return (Long)inNumber;
+		}
+		if( inNumber instanceof Integer)
+		{
+			return ((Integer)inNumber).longValue();
+		}
+		throw new OpenEditException("Number is not a valid Long");
+		
+	}
 }

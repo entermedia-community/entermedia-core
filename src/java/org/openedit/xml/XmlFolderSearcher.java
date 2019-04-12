@@ -2,7 +2,6 @@ package org.openedit.xml;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -12,13 +11,12 @@ import org.apache.commons.logging.LogFactory;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.openedit.Data;
-
-import com.openedit.OpenEditException;
-import com.openedit.OpenEditRuntimeException;
-import com.openedit.hittracker.HitTracker;
-import com.openedit.page.Page;
-import com.openedit.page.manage.PageManager;
-import com.openedit.users.User;
+import org.openedit.OpenEditException;
+import org.openedit.OpenEditRuntimeException;
+import org.openedit.hittracker.HitTracker;
+import org.openedit.page.Page;
+import org.openedit.page.manage.PageManager;
+import org.openedit.users.User;
 
 public class XmlFolderSearcher extends XmlSearcher
 {
@@ -212,14 +210,14 @@ public class XmlFolderSearcher extends XmlSearcher
 			element.clearContent();
 			element.setAttributes(null);
 			
-			ElementData data = new ElementData(element);
+			ElementData data = new ElementData(element, getPropertyDetails());
 			data.setId(inData.getId());
 			data.setName(inData.getName());
 			data.setSourcePath(inData.getSourcePath());
-			for (Iterator iterator = inData.getProperties().keySet().iterator(); iterator.hasNext();)
+			for (Iterator iterator = inData.keySet().iterator(); iterator.hasNext();)
 			{
 				String key	= (String) iterator.next();
-				data.setProperty(key, inData.get(key));
+				data.setValue(key, inData.getValue(key));
 			}
 		}
 

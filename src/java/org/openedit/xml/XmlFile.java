@@ -14,8 +14,8 @@ import java.util.Set;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.openedit.Data;
-
-import com.openedit.util.PathUtilities;
+import org.openedit.repository.ContentItem;
+import org.openedit.util.PathUtilities;
 
 public class XmlFile implements Data 
 {
@@ -27,7 +27,16 @@ public class XmlFile implements Data
 	protected Element fieldRoot;
 	protected List fieldAttributes;
 	protected boolean fieldExist;
+	protected ContentItem fieldContentItem;
 	
+	public ContentItem getContentItem()
+	{
+		return fieldContentItem;
+	}
+	public void setContentItem(ContentItem inContentItem)
+	{
+		fieldContentItem = inContentItem;
+	}
 	public String getPath()
 	{
 		return fieldPath;
@@ -255,12 +264,12 @@ public class XmlFile implements Data
 	{
 		setPath(inSourcepath);
 	}	
-	public void setProperties(Map<String,String> inProperties)
+	public void setProperties(Map inProperties)
 	{
 		for (Iterator iterator = inProperties.entrySet().iterator(); iterator.hasNext();)
 		{
 			String key = (String) iterator.next();
-			setProperty(key, inProperties.get(key));
+			setProperty(key, (String)inProperties.get(key));
 		}
 	}
 	public void setValues(String inKey, Collection<String> inValues)
@@ -277,4 +286,24 @@ public class XmlFile implements Data
 		}
 		setProperty(inKey,values.toString());
 	}
+	@Override
+	public Object getValue(String inKey)
+	{
+		return get(inKey);
+	}
+	@Override
+	public void setValue(String inKey, Object inValue)
+	{
+		setProperty(inKey, String.valueOf(inValue));
+	}
+	public String getName(String inLocale) {
+		return getName();
+	}
+	
+	@Override
+	public Set keySet()
+	{
+		return getProperties().keySet();
+	}
+
 }

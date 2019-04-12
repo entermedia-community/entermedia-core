@@ -16,14 +16,14 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openedit.Data;
 import org.openedit.repository.ContentItem;
 import org.openedit.repository.RepositoryException;
-
-import com.openedit.util.PathUtilities;
+import org.openedit.util.PathUtilities;
 
 /**
  * @author Matthew Avery, mavery@einnovation.com
@@ -39,6 +39,11 @@ public class FileItem extends ContentItem implements Data
 	 */
 	public FileItem()
 	{
+	}
+	
+	public FileItem(File inFile)
+	{
+		setFile(inFile);
 	}
 	protected String getParentPath()
 	{
@@ -176,7 +181,7 @@ public class FileItem extends ContentItem implements Data
 	{
 		throw new IllegalAccessError("Not implemented");
 	}
-	public void setProperties(Map<String, String> inProperties)
+	public void setProperties(Map inProperties)
 	{
 	}
 	
@@ -223,5 +228,41 @@ public class FileItem extends ContentItem implements Data
 			}
 		}
 		setProperty(inKey,values.toString());
+	}
+	@Override
+	public Object getValue(String inKey)
+	{
+		return get(inKey);
+	}
+	@Override
+	public void setValue(String inKey, Object inValue)
+	{
+		setProperty(inKey, String.valueOf(inValue));
+	}
+	@Override
+	public String toString()
+	{
+		String val = getPath();
+		if( val == null)
+		{
+			val = super.toString();
+		}
+		return val;
+	}
+	public String getName(String inLocale) {
+		return getName();
+	}
+	
+	public void setLastModified(Date inDate)
+	{
+		// TODO Auto-generated method stub
+		getFile().setLastModified(inDate.getTime());
+	}
+	
+
+	@Override
+	public Set keySet()
+	{
+		return getProperties().keySet();
 	}
 }

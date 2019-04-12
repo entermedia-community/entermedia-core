@@ -207,7 +207,7 @@ public class LocaleManager
 			return "";
 		}
 		Locale loc = getLocale(inLocale);
-		DateFormat format = SimpleDateFormat.getDateTimeInstance(SimpleDateFormat.SHORT, SimpleDateFormat.SHORT,loc);
+		DateFormat format = SimpleDateFormat.getDateTimeInstance(SimpleDateFormat.LONG, SimpleDateFormat.LONG,loc);
 		String formated = format.format(inDate);
 		return formated;
 	}

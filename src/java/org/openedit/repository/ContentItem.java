@@ -18,7 +18,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Date;
 
-import com.openedit.util.PathUtilities;
+import org.openedit.util.PathUtilities;
 
 /**
  * The ContentItem is a lot like a versioned network "file".
@@ -107,7 +107,7 @@ public abstract class ContentItem
 		}
 		return 0;
 	}
-	protected void setLastModified(Date inDate)
+	public void setLastModified(Date inDate)
 	{
 		fieldLastModified = inDate;
 	}

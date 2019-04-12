@@ -1,5 +1,6 @@
 package org.openedit.data;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -22,6 +23,7 @@ public interface CompositeData extends Data
 	public int size();
 	public void refresh();
 
+	public void setEditFields(Collection inFields);
 
 	public void saveChanges();
 	
