@@ -923,7 +923,9 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 	 */
 	public WebPageRequest copy()
 	{
-		return new BaseWebPageRequest(this);
+		BaseWebPageRequest copy = new BaseWebPageRequest(this);
+		copy.setLocaleManager(getLocaleManager());
+		return copy;
 	}
 
 	/* (non-javadoc)
@@ -1313,6 +1315,23 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 		}
 		return getLocaleManager().formatDateTimeForDisplay( inDate, getLocale());
 	}
+	public String getAge(Object inObj, String inLocale)
+	{
+		if( inObj == null)
+		{
+			return null;
+		}
+		Date inDate = null;
+		if( inObj instanceof Date)
+		{
+			inDate = (Date)inObj;
+		}
+		else
+		{
+			inDate = getLocaleManager().getDateStorageUtil().parseFromStorage((String)inObj);
+		}
+		return getLocaleManager().getAge(inDate, inLocale);
+	}
 	public String getDateTime(String inStoredDate)
 	{
 		Date stored = getLocaleManager().getDateStorageUtil().parseFromStorage(inStoredDate);
@@ -1361,10 +1380,6 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 	
 	public LocaleManager getLocaleManager()
 	{
-		if (fieldLocaleManager == null)
-		{
-			fieldLocaleManager = new LocaleManager();
-		}
 		return fieldLocaleManager;
 	}
 

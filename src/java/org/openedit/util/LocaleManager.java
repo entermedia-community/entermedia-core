@@ -10,11 +10,15 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import org.openedit.page.manage.TextLabelManager;
+
 public class LocaleManager
 {
 	protected Map fieldCache;
 	protected DateStorageUtil fieldDateStorageUtil;
-	
+	public LocaleManager()
+	{
+	}
 	public DateStorageUtil getDateStorageUtil()
 	{
 		if( fieldDateStorageUtil == null)
@@ -210,6 +214,51 @@ public class LocaleManager
 		DateFormat format = SimpleDateFormat.getDateTimeInstance(SimpleDateFormat.LONG, SimpleDateFormat.LONG,loc);
 		String formated = format.format(inDate);
 		return formated;
+	}
+	
+	public String getAge(Date inDate, String inLocale )
+	{
+		long diff = System.currentTimeMillis() - inDate.getTime();
+		String label = null;
+		long minute = (diff / (1000 * 60)) % 60;
+		long hour = (diff / (1000 * 60 * 60));
+		String time = null;
+		if( hour > 1)
+		{
+			//Now or minutes
+			if( minute < 1)
+			{
+				label = "Now";
+			}
+			else
+			{
+				label = "Minutes";
+				time = String.valueOf(minute);
+			}
+		}
+		else if( hour < 24)
+		{
+			label = "Hours";
+			time = String.valueOf( hour );
+		}
+		else
+		{
+			double days = (double)hour / 24d;
+			time = String.valueOf( days );
+			label = "Days";
+		}
+		String translated = getTextLabelManager().getAutoText("/system/data/","minutes", inLocale);
+		return time + " " + translated;
+	}
+	protected TextLabelManager fieldTextLabelManager;
+	public TextLabelManager getTextLabelManager()
+	{
+		return fieldTextLabelManager;
+	}
+
+	public void setTextLabelManager(TextLabelManager inTextLabelManager)
+	{
+		fieldTextLabelManager = inTextLabelManager;
 	}
 
 }
