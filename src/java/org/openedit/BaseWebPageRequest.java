@@ -1315,7 +1315,7 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 		}
 		return getLocaleManager().formatDateTimeForDisplay( inDate, getLocale());
 	}
-	public String getAge(Object inObj, String inLocale)
+	public String getAge(Object inObj)
 	{
 		if( inObj == null)
 		{
@@ -1330,7 +1330,7 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 		{
 			inDate = getLocaleManager().getDateStorageUtil().parseFromStorage((String)inObj);
 		}
-		return getLocaleManager().getAge(inDate, inLocale);
+		return getLocaleManager().getAge(inDate, getLocale());
 	}
 	public String getDateTime(String inStoredDate)
 	{
