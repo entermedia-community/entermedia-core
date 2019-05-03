@@ -935,6 +935,7 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 	{
 		BaseWebPageRequest req = new BaseWebPageRequest(this);
 		req.putProtectedPageValue(PageRequestKeys.PAGE,inPage);
+		req.setLocaleManager(getLocaleManager());
 		return req;
 	}
 
