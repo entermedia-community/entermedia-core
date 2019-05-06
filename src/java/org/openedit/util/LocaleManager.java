@@ -223,7 +223,7 @@ public class LocaleManager
 		long minute = (diff / (1000 * 60)) % 60;
 		long hour = (diff / (1000 * 60 * 60));
 		String time = null;
-		if( hour > 1)
+		if( hour < 1)
 		{
 			//Now or minutes
 			if( minute < 1)
@@ -244,11 +244,19 @@ public class LocaleManager
 		else
 		{
 			double days = (double)hour / 24d;
-			time = String.valueOf( days );
+			time = String.valueOf( (int) days );
 			label = "Days";
 		}
-		String translated = getTextLabelManager().getAutoText("/system/data/","minutes", inLocale);
-		return time + " " + translated;
+		String translated = getTextLabelManager().getAutoText("/system/data/",label, inLocale);
+		if (time != null ) 
+		{
+			return time + " " + translated;
+		}
+		else 
+		{
+			return translated;
+		}
+		
 	}
 	protected TextLabelManager fieldTextLabelManager;
 	public TextLabelManager getTextLabelManager()
