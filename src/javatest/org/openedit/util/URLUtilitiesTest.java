@@ -34,18 +34,18 @@ public class URLUtilitiesTest extends BaseTestCase
     	String url = "https://user@somesite.com/this has space/You're & crazy/index.html?somejunk=bad, + % @ !  \\ //; stuff";
     	
         String fixed = URLUtilities.urlEscape(url);
-        String good = "https://user@somesite.com/this has space/You're & crazy/index.html?somejunk=bad%2C+%2B+%25+%40+%21++%5C+%2F%2F%3B+stuff";
+        String good = "https://user@somesite.com/this%20has%20space/You're%20&%20crazy/index.html?somejunk=bad%2C+%2B+%25+%40+%21++%5C+%2F%2F%3B+stuff";
         assertEquals(good, fixed);
     
     }
 
     public void testUrlPath()
     {
-    	String url = "/this [has] space/You're & crazy/index.html?this=should&workd=work";
+    	String url = "/this [has] space/You're & crazy/index.html?this=should&workd=work&nothing=";
     	
         String fixed = URLUtilities.urlEscape(url);
        // String good = "/this%20has%20space/You%27re%20%26%20crazy/index.html?this=should&workd=work";
-        String good = "/this %5Bhas%5D space/You're & crazy/index.html?this=should&workd=work";
+        String good = "/this%20%5Bhas%5D%20space/You're%20&%20crazy/index.html?this=should&workd=work&nothing=";
         assertEquals(good, fixed);
     
     }
@@ -55,7 +55,7 @@ public class URLUtilitiesTest extends BaseTestCase
     	String url = "https://user@somesite.com/this [has] space/You're & crazy/index.html?this=should&workd=work";
     	
         String fixed = URLUtilities.urlEscape(url);
-        String good = "https://user@somesite.com/this %5Bhas%5D space/You're & crazy/index.html?this=should&workd=work";
+        String good = "https://user@somesite.com/this%20%5Bhas%5D%20space/You're%20&%20crazy/index.html?this=should&workd=work";
         assertEquals(good, fixed);
     
     }
