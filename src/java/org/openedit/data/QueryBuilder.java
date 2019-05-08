@@ -327,6 +327,8 @@ public class QueryBuilder
 	
 	public QueryBuilder attachSecurity(WebPageRequest inReq) {
 		if(inReq != null) {
+			getQuery().setEndUserSearch(true);
+
 			getSearcher().getSearchSecurity().attachSecurity(inReq, getSearcher(), getQuery());
 		}
 		return this;
