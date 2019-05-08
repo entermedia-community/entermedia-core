@@ -323,4 +323,14 @@ public class QueryBuilder
 		setIgnoreBlank(true);
 		return  this;
 	}
+	
+	
+	public QueryBuilder attachSecurity(WebPageRequest inReq) {
+		if(inReq != null) {
+			getSearcher().getSearchSecurity().attachSecurity(inReq, getSearcher(), getQuery());
+		}
+		return this;
+
+	}
+	
 }

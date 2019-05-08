@@ -195,4 +195,6 @@ public interface Searcher extends CatalogEnabled
 	
 
 	public void saveJson(Collection inJsonArray);
+	public SearchSecurity getSearchSecurity();
+
 }
