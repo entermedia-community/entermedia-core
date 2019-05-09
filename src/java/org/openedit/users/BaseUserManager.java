@@ -103,7 +103,8 @@ public class BaseUserManager implements UserManager
 		User inUser = inReq.getUser();
 
 		if (!inUser.isEnabled()) {
-			throw new UserNotEnabledException();
+			fireUserEvent(inUser, "disabled");
+			return false;
 		}
 
 		boolean success = getAuthenticator().authenticate(inReq);
