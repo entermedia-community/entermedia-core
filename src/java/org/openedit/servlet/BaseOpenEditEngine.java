@@ -207,12 +207,12 @@ public class BaseOpenEditEngine implements OpenEditEngine
 		}
 		catch( Throwable e )
 		{
-			log.error("Problem redering page",e);
-			//e.printStackTrace();
 			boolean ok = getErrorHandler().handleError( e, pageRequest );
 			
 			if(!ok )
 			{
+				log.error("Problem redering page",e);
+
 				if( e instanceof OpenEditException )
 				{
 					throw (OpenEditException )e;

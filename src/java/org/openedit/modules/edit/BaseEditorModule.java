@@ -19,6 +19,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openedit.OpenEditException;
 import org.openedit.WebPageRequest;
+import org.openedit.error.ContentNotAvailableException;
 import org.openedit.modules.BaseModule;
 import org.openedit.page.Page;
 import org.openedit.page.PageRequestKeys;
@@ -132,9 +133,6 @@ public class BaseEditorModule extends BaseModule
 				}
 		    	//Loop over the various starting pages. 
 		    	page = findWelcomePage(page); 
-	    	    URLUtilities util = new URLUtilities(inReq.getRequest(), inReq.getResponse());
-
-		   	    String requestedPath = util.getOriginalPath();
 		    	inReq.redirect(page.getPath() );
 				
 	    	}
@@ -164,17 +162,6 @@ public class BaseEditorModule extends BaseModule
 			}
 		}
 		
-		if ( !inReq.getPage().isHtml() )
-		{
-			HttpServletResponse response = inReq.getResponse();
-			if( response  != null)
-			{
-				response.sendError(HttpServletResponse.SC_NOT_FOUND);
-				inReq.setHasRedirected(true);
-				return;
-			}
-		}
-		
 		if ( inReq.getContentPage().getPath().equals( inReq.getPath()))
 		{
 			if ( inReq.getPage().isHtml() &&  inReq.isEditable() )
@@ -196,6 +183,11 @@ public class BaseEditorModule extends BaseModule
 			String errorpage = inReq.getContentPage().getProperty("error404"); //"/error404.html";
 			errorpage = errorpage !=null ? errorpage : ERROR404_HTML;
 			Page p404 = pageManager.getPage(errorpage);
+			if( !p404.exists() )
+			{
+				//p404 = pageManager.getPage("/system/error404page.html");
+				throw new ContentNotAvailableException("Content missing", inReq.getPath());
+			}
 			if ( p404.exists() )
 			{
 				HttpServletResponse response = inReq.getResponse();
@@ -206,17 +198,6 @@ public class BaseEditorModule extends BaseModule
 				inReq.putProtectedPageValue("content", p404);
 				//inReq.forward(p404.getPath());
 				return;
-			}
-			else
-			{
-				log.error( "Could not report full 404 error on: " + inReq.getPath() + ". Make sure the 404 error page exists " + p404.getPath());
-				//other users will get the standard file not found error
-				HttpServletResponse response = inReq.getResponse();
-				if( response != null)
-				{
-					response.sendError(HttpServletResponse.SC_NOT_FOUND);
-					inReq.setHasRedirected(true);
-				}
 			}
 		}
 		else
