@@ -92,6 +92,10 @@ public class BaseUser extends BaseData implements User, Comparable
 	}
 	public void setEmail( String inEmail )
 	{
+		if (inEmail != null)
+		{
+			inEmail.toLowerCase();
+		}
 		setProperty(EMAIL_PROPERTY, inEmail);
 	}
 	/**
