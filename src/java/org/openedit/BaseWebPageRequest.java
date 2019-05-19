@@ -120,7 +120,7 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 //					log.info(st.toString());
 //					jsonRequest = (Map)slurper.parseText(st.toString());
 					putPageValue("_jsonRequest", jsonRequest);
-					log.info("JSON REQUEST BODY was: " + jsonRequest);
+					//log.info("JSON REQUEST BODY was: " + jsonRequest);
 				}
 			}
 			catch ( Throwable ex)
