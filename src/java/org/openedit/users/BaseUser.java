@@ -503,6 +503,11 @@ public class BaseUser extends BaseData implements User, Comparable
 
 	public String getAnonNickName()
 	{
+		String sn = (String)get("screenname");
+		if( sn != null)
+		{
+			return sn;
+		}
 		String firstpart = getFirstName();
 		if( firstpart == null)
 		{
