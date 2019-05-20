@@ -80,10 +80,14 @@ public class BaseUserManager implements UserManager
 	@Override
 	public User getUser(String inUserName) throws UserManagerException
 	{
-
 		return getUserSearcher().getUser(inUserName);
 	}
-
+	
+	@Override
+	public User getUser(String inUserName, boolean inFromCache)
+	{
+		return getUserSearcher().getUser(inUserName,inFromCache);
+	}
 	@Override
 	public HitTracker getUsers()
 	{

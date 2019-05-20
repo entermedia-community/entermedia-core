@@ -8,6 +8,8 @@ import org.openedit.util.StringEncryption;
 
 public interface UserSearcher extends Searcher
 {
+	public abstract User getUser(String inAccount, boolean cached);
+
 	public abstract User getUser(String inAccount);
 
 	public abstract User getUserByEmail(String inEmail);

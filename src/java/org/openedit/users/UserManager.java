@@ -62,6 +62,8 @@ public interface UserManager extends CatalogEnabled
 	 */
 	User getUser(String inUserName) throws UserManagerException;
 
+	User getUser(String inUserName, boolean fromCache);
+
 	/**
 	 * Get all the users managed by this user manager.
 	 *
