@@ -107,7 +107,6 @@ public class BaseUserManager implements UserManager
 		User inUser = inReq.getUser();
 
 		if (!inUser.isEnabled()) {
-			fireUserEvent(inUser, "disabled");
 			return false;
 		}
 
@@ -336,6 +335,8 @@ public class BaseUserManager implements UserManager
 			event.setCatalogId(getCatalogId());
 			event.setUser(inUser);
 			event.setProperty("userid", inUser.getId());
+			event.setProperty("user", inUser.getId());
+
 			getEventManager().fireEvent(event);
 		}
 	}
