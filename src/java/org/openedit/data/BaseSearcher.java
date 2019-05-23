@@ -270,6 +270,8 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					if (oldtracker.getSearchQuery().hasFilters())
 					{
 						String clearfilters = inPageRequest.getRequestParameter("clearfilters");
+						String removeterm = inPageRequest.getRequestParameter("removeterm");
+						
 						if (!Boolean.parseBoolean(clearfilters))
 						{
 							//This is the old way
@@ -286,6 +288,11 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 								}
 							}
 						}
+						if(removeterm != null) {
+						inQuery.removeTerm(removeterm);
+						}
+						
+						
 					}
 				}
 				String endusersearch = inPageRequest.findValue(getSearchType() + "endusersearch");
