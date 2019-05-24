@@ -1378,6 +1378,10 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 		}
 		return String.valueOf(inValue);
 	}
+	public String formatedText(String inText) {
+		inText = inText.replaceAll("(\r\n|\n)", "<br />");
+		return inText;
+	}
 	
 	public LocaleManager getLocaleManager()
 	{
