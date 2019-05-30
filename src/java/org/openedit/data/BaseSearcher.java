@@ -20,6 +20,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.entermediadb.location.GeoCoder;
 import org.entermediadb.location.Position;
+import org.json.simple.JSONObject;
 import org.openedit.Data;
 import org.openedit.ModuleManager;
 import org.openedit.MultiValued;
@@ -32,7 +33,6 @@ import org.openedit.hittracker.GeoFilter;
 import org.openedit.hittracker.HitTracker;
 import org.openedit.hittracker.SearchQuery;
 import org.openedit.hittracker.Term;
-import org.openedit.hittracker.UserFilters;
 import org.openedit.locks.LockManager;
 import org.openedit.modules.translations.LanguageMap;
 import org.openedit.profile.UserProfile;
@@ -3006,5 +3006,11 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		// TODO Auto-generated method stub
 
 	}
+	
+	
+	public void saveJson(JSONObject object) {
+		
+	}
+	
 
 }

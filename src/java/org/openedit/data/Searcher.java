@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.util.Collection;
 import java.util.List;
 
+import org.json.simple.JSONObject;
 import org.openedit.CatalogEnabled;
 import org.openedit.Data;
 import org.openedit.OpenEditException;
@@ -196,5 +197,7 @@ public interface Searcher extends CatalogEnabled
 
 	public void saveJson(Collection inJsonArray);
 	public SearchSecurity getSearchSecurity();
+
+	public void saveJson(JSONObject inObject);
 
 }
