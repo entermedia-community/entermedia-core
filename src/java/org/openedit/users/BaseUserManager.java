@@ -86,6 +86,10 @@ public class BaseUserManager implements UserManager
 	@Override
 	public User getUser(String inUserName, boolean inFromCache)
 	{
+		if( inUserName == null)
+		{
+			return null;
+		}
 		return getUserSearcher().getUser(inUserName,inFromCache);
 	}
 	@Override
