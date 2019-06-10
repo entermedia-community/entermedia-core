@@ -199,5 +199,6 @@ public interface Searcher extends CatalogEnabled
 	public SearchSecurity getSearchSecurity();
 
 	public void saveJson(JSONObject inObject);
-
+    public TransactionLogger getTransactionLogger();
+    
 }
