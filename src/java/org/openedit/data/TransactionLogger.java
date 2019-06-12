@@ -41,10 +41,11 @@ public class TransactionLogger
 		event.setValue("searchtype", inSearchType);
 		event.setValue("dataid", inData.getId());
 		event.setValue("recordmodificationdate", new Date());
-		event.setValue("user", inUser);
+		if( inUser != null)
+		{
+			event.setValue("user", inUser);
+		}
 		searcher.saveData(event);
-		
-		
 		
 	}
 	
