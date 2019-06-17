@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.openedit.CatalogEnabled;
@@ -27,12 +29,13 @@ import org.openedit.data.PropertyDetail;
 import org.openedit.data.PropertyDetails;
 import org.openedit.data.Searcher;
 import org.openedit.data.SearcherManager;
-import org.openedit.profile.UserProfile;
 import org.openedit.util.DateStorageUtil;
 import org.openedit.util.GenericsUtil;
 
 public class SearchQuery extends BaseData implements Cloneable, Serializable, Comparable, CatalogEnabled
 {
+	private static final Log log = LogFactory.getLog(SearchQuery.class);
+
 	protected transient List fieldTerms = new ArrayList();
 
 	protected boolean fieldAndTogether = true;
@@ -770,7 +773,13 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 
 	public void removeTerm(Term inTerm)
 	{
+		if( inTerm == null)
+		{
+			log.error("inTerm was null");
+			return;
+		}
 		getTerms().remove(inTerm);
+		
 		setProperty(inTerm.getDetail().getId(), null);
 		for (Iterator iterator = getChildren().iterator(); iterator.hasNext();)
 		{
