@@ -837,9 +837,11 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			//the values are a counter. So each time we get a duplicate we inc the counter of values
 
 			Integer count = (Integer) valuecounter.get(detail.getId());
+			
+			
 			if (count == null)
 			{
-				count = new Integer(0);
+				count = 0;
 			}
 			else
 			{
