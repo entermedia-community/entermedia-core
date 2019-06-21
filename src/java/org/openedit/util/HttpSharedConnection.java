@@ -34,12 +34,13 @@ public class HttpSharedConnection
 		{
 			RequestConfig globalConfig = RequestConfig.custom()
 		            .setCookieSpec(CookieSpecs.DEFAULT)
+		            .setConnectTimeout(15 * 1000)
+		            .setSocketTimeout(120 * 1000)
 		            .build();
 			fieldHttpClient = HttpClients.custom()
 		            .setDefaultRequestConfig(globalConfig)
 		            .build();
 		}
-
 		return fieldHttpClient;
 	}
 
