@@ -91,7 +91,7 @@ public class SettingsGroupFilter extends BaseFilter
 	}
 	public String toString()
 	{
-		return "SettingsGroup= " + getGroupId();
+		return "Role= " + getGroupId();
 	}
 	public boolean equals(Object inObj)
 	{
