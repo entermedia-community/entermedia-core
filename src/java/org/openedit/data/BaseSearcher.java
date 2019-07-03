@@ -2605,6 +2605,10 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		{
 			fireDataEditEvent(inReq, data);
 			data = updateData(inReq, fields, data);
+			if( data.getId() == null && id != null)
+			{
+				data.setId(id);
+			}
 			saveData(data, inReq.getUser());
 		}
 		inReq.putPageValue("message", data.getId() + " is saved");

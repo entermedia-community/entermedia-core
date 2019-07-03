@@ -190,7 +190,10 @@ public class BaseUserManager implements UserManager
 	public User createUser(String inUserName, String inPassword) throws UserManagerException
 	{
 		User user = (User)getUserSearcher().createNewData();
-		user.setUserName(inUserName);
+		if( inUserName != null)
+		{
+			user.setUserName(inUserName);
+		}
 		user.setPassword(inPassword);
 		saveUser(user);
 		return user;
