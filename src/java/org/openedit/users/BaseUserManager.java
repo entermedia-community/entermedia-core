@@ -342,7 +342,7 @@ public class BaseUserManager implements UserManager
 			event.setCatalogId(getCatalogId());
 			event.setUser(inUser);
 			event.setProperty("userid", inUser.getId());
-			event.setProperty("user", inUser.getId());
+			//event.setProperty("user", inUser.getId());
 
 			getEventManager().fireEvent(event);
 		}
