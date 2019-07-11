@@ -3027,7 +3027,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	}
 	
 	
-	public void saveJson(JSONObject object) {
+	public void saveJson(String inId, JSONObject object) {
 		
 	}
 	
