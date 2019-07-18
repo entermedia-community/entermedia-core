@@ -17,7 +17,7 @@ import org.openedit.Data;
  * @author cburkey
  *
  */
-public class ListHitTracker extends HitTracker
+public class ListHitTracker<T> extends HitTracker
 {
 	protected List fieldList;
 	protected String fieldSessionId;
