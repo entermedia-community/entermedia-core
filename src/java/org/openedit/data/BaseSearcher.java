@@ -218,10 +218,12 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			clear = inPageRequest.getRequestParameter(getSearchType() + "clearselection");
 			if (Boolean.parseBoolean(clear))
 			{
-				tracker.deselectAll();
-				tracker.setShowOnlySelected(false);
-				runsearch = true;
-
+				if( tracker.hasSelections() )
+				{
+					tracker.deselectAll();
+					tracker.setShowOnlySelected(false);
+					runsearch = true;
+				}
 			}
 			else
 			{
@@ -229,8 +231,12 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 
 				if (showonly != null)
 				{
-					tracker.setShowOnlySelected(Boolean.parseBoolean(showonly));
-					runsearch = true;
+					boolean issshowonly = Boolean.parseBoolean(showonly);
+					if( issshowonly != tracker.isShowOnlySelected())
+					{
+						tracker.setShowOnlySelected(issshowonly );
+						runsearch = true;
+					}
 				}
 			}
 
@@ -282,7 +288,11 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					//log.info("Old tracker " + oldtracker.getSearchQuery() + " has: "+ oldtracker.getSearchQuery().hasFilters() );
 					if (oldtracker.getSearchQuery().hasFilters())
 					{
-						String clearfilters = inPageRequest.getRequestParameter("clearfilters");
+						String clearfilters = inPageRequest.getRequestParameter(getSearchType() + "clearfilters");
+						if(clearfilters == null )
+						{
+							clearfilters = inPageRequest.getRequestParameter("clearfilters");
+						}
 						String removeterm = inPageRequest.getRequestParameter("removeterm");
 						
 						if (!Boolean.parseBoolean(clearfilters))
@@ -407,7 +417,11 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					tracker.setHitsPerPage(Integer.parseInt(hitsperpage));
 				}
 			}
-			String pagenumber = inPageRequest.getRequestParameter("page");
+			String pagenumber = inPageRequest.getRequestParameter(getSearchType() + "page");
+			if( pagenumber == null)
+			{
+				pagenumber = inPageRequest.getRequestParameter("page");
+			}
 			if (pagenumber != null)
 			{
 				if ("next".equals(pagenumber))
@@ -1748,8 +1762,11 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				 * }
 				 */
 		}
-
-		String page = inPageRequest.getRequestParameter("page");
+		String page = inPageRequest.getRequestParameter(getSearchType() + "page");
+		if( page == null)
+		{
+			page = inPageRequest.getRequestParameter("page");
+		}
 		if("NaN".equals(page)) {
 			page = null;
 		}
