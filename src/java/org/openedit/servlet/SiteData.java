@@ -41,7 +41,7 @@ public class SiteData extends BaseData
 	{
 		return get("rootpath");
 	}
-	public String getAppHome(String inApplicationid)
+	public String getAppLink(String inApplicationid)
 	{
 		String apppath = get("rootpath");
 		String id = apppath.substring(1);

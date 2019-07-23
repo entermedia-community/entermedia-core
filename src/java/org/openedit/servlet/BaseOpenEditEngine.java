@@ -140,7 +140,7 @@ public class BaseOpenEditEngine implements OpenEditEngine
 			context.putPageValue("sitedata", sitedata);
 			if( applicationid != null)
 			{
-				page.setProperty("apphome", sitedata.getAppHome(applicationid));
+				page.setProperty("apphome", sitedata.getAppLink(applicationid));
 			}
 		}
 		else 
