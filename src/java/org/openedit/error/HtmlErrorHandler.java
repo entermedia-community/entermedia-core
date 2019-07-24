@@ -91,7 +91,6 @@ public class HtmlErrorHandler implements ErrorHandler
 						log.debug("Ignored:" + ex);
 					}
 				}
-				log.error(error);
 				String pathWithError = exception.getPathWithError();
 				if( pathWithError == null)
 				{
@@ -101,6 +100,7 @@ public class HtmlErrorHandler implements ErrorHandler
 				}
 				context.putPageValue("editPath", exception.getPathWithError());
 				context.putPageValue("oe-exception", exception); //must be a top level thing since we create a new context
+				log.error("error on "  + exception.getPathWithError(),error);
 				
 				//exception.getPathWithError()
 				//Page content = pages.getPage();
