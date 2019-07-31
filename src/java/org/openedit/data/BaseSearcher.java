@@ -2898,8 +2898,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	@Override
 	public boolean putMappings()
 	{
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	public void reindexInternal() throws OpenEditException
