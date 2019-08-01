@@ -289,7 +289,12 @@ public class DateStorageUtil
 		}
 		return diff;
 	}
-
+	public Date subtractFromNow(long millis)
+	{
+		long subtracted = System.currentTimeMillis() - millis;
+		Date newdate = new Date(subtracted);
+		return newdate;
+	}
 	public Calendar getCalendar(Date date)
 	{
 		Calendar cal = Calendar.getInstance(Locale.US);

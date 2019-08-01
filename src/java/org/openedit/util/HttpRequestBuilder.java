@@ -24,7 +24,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.openedit.OpenEditException;
 /**
- * @deprecated use HttpShareConnection and HttpMimeBuilder
+ * @deprecated use HttpSharedConnection or HttpMimeBuilder
  * @author shanti
  *
  */
