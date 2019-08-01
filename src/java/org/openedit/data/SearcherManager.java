@@ -47,7 +47,7 @@ public class SearcherManager
 
 	public Searcher getSearcher(String inCatalogId, String inSearchtypeid)
 	{
-		Searcher searcher = loadSearcher(inCatalogId,inSearchtypeid, false);
+		Searcher searcher = loadSearcher(inCatalogId,inSearchtypeid, true);
 		return searcher;
 	}
 
