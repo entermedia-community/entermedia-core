@@ -33,4 +33,7 @@ public interface NodeManager
 	
 	public Collection getRemoteEditClusters(String inCatalog);
 	
+	public void flushBulk();
+
+	
 }
