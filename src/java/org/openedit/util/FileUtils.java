@@ -557,6 +557,14 @@ public class FileUtils
 		}
 		return size;
 	}
+	
+	public static boolean isSameDate(long inOne, long inTwo)
+	{
+		long fixed1 = inOne/1000 * 1000;
+		long fixed2 = inTwo/1000 * 1000;
+		boolean same = fixed1 != fixed2;
+		return same;
+	}
 
 	
 }
