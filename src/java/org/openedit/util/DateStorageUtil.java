@@ -292,6 +292,10 @@ public class DateStorageUtil
 	public Date subtractFromNow(long millis)
 	{
 		long subtracted = System.currentTimeMillis() - millis;
+		if( subtracted < 1)
+		{
+			subtracted = 0;
+		}
 		Date newdate = new Date(subtracted);
 		return newdate;
 	}
