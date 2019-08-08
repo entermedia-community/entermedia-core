@@ -17,7 +17,6 @@ import org.openedit.Data;
 import org.openedit.ModuleManager;
 import org.openedit.MultiValued;
 import org.openedit.OpenEditException;
-import org.openedit.OpenEditRuntimeException;
 import org.openedit.cache.CacheManager;
 import org.openedit.hittracker.HitTracker;
 import org.openedit.locks.LockManager;
@@ -56,7 +55,7 @@ public class SearcherManager
 	{
 		if( inCatalogId == null)
 		{
-			throw new OpenEditRuntimeException("Catalog id is required");
+			throw new OpenEditException("Catalog id is required");
 		}
 		if ( inFieldName == null )
 		{
