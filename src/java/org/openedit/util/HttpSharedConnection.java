@@ -2,11 +2,17 @@ package org.openedit.util;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.net.ssl.SSLContext;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
@@ -19,30 +25,47 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.ssl.SSLContextBuilder;
+import org.openedit.OpenEditException;
 
-import jdk.internal.jline.internal.Log;
+
 
 public class HttpSharedConnection
 {
 	
+	private static final Log log = LogFactory.getLog(HttpSharedConnection.class);
+	
 	Charset UTF8 = Charset.forName("UTF-8");
 	ContentType contentType = ContentType.create("text/plain", UTF8);
 	ContentType octectType = ContentType.create("application/octect-stream", UTF8);
-
+	
 	protected HttpClient fieldHttpClient;
 	
 	public HttpClient getSharedClient()
 	{
 		if (fieldHttpClient == null)
 		{
-			RequestConfig globalConfig = RequestConfig.custom()
-		            .setCookieSpec(CookieSpecs.DEFAULT)
-		            .setConnectTimeout(15 * 1000)
-		            .setSocketTimeout(120 * 1000)
-		            .build();
-			fieldHttpClient = HttpClients.custom().useSystemProperties()
-		            .setDefaultRequestConfig(globalConfig)
-		            .build();
+
+			try {
+				SSLContext sslContext;
+				sslContext = SSLContextBuilder.create().useProtocol("TLSv1.2").build();
+				RequestConfig globalConfig = RequestConfig.custom()
+			            .setCookieSpec(CookieSpecs.DEFAULT)
+			            .setConnectTimeout(15 * 1000)
+			            .setSocketTimeout(120 * 1000)
+			            .build();
+				fieldHttpClient = HttpClients.custom().useSystemProperties()
+			            .setDefaultRequestConfig(globalConfig)
+			            .setSSLContext(sslContext)
+			            .build();
+			} catch ( Throwable e )
+			{
+				throw new OpenEditException(e);
+			}
+
+			
+		           
+			
 		}
 		return fieldHttpClient;
 	}
@@ -63,9 +86,9 @@ public class HttpSharedConnection
 			CloseableHttpResponse response2 = (CloseableHttpResponse)getSharedClient().execute(method);
 			return response2;
 		}
-		catch ( Exception ex )
+		catch ( Throwable e )
 		{
-			throw new RuntimeException(ex);
+			throw new OpenEditException(e);
 		}
 	}
 	public CloseableHttpResponse sharedPost(HttpPost inPost)
@@ -75,9 +98,9 @@ public class HttpSharedConnection
 			CloseableHttpResponse response2 = (CloseableHttpResponse)getSharedClient().execute(inPost);
 			return response2;
 		}
-		catch ( Exception ex )
+		catch ( Throwable e )
 		{
-			throw new RuntimeException(ex);
+			throw new OpenEditException(e);
 		}
 	}
 	public void release(CloseableHttpResponse response2)
@@ -93,7 +116,7 @@ public class HttpSharedConnection
 		}
 		catch (IOException e)
 		{
-			Log.error("Could not close" ,e);
+			log.error("Could not close" ,e);
 		}
 	}
 	public CloseableHttpResponse sharedGet(String inUrl)
