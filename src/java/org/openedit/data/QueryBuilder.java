@@ -334,5 +334,10 @@ public class QueryBuilder
 		return this;
 
 	}
-	
+
+	@Override
+	public String toString()
+	{
+		return getQuery().toQuery();
+	}
 }

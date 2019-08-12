@@ -1,5 +1,6 @@
 package org.openedit.util;
 
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -7,17 +8,19 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
+
+import jdk.internal.jline.internal.Log;
 
 public class HttpSharedConnection
 {
@@ -37,7 +40,7 @@ public class HttpSharedConnection
 		            .setConnectTimeout(15 * 1000)
 		            .setSocketTimeout(120 * 1000)
 		            .build();
-			fieldHttpClient = HttpClients.custom()
+			fieldHttpClient = HttpClients.custom().useSystemProperties()
 		            .setDefaultRequestConfig(globalConfig)
 		            .build();
 		}
@@ -51,13 +54,13 @@ public class HttpSharedConnection
 		fieldHttpClient = null;
 	}
 	
-	public HttpResponse sharedPost(String path, Map<String,String> inParams)
+	public CloseableHttpResponse sharedPost(String path, Map<String,String> inParams)
 	{
 		try
 		{
 			HttpPost method = new HttpPost(path);
 			method.setEntity(build(inParams));
-			HttpResponse response2 = getSharedClient().execute(method);
+			CloseableHttpResponse response2 = (CloseableHttpResponse)getSharedClient().execute(method);
 			return response2;
 		}
 		catch ( Exception ex )
@@ -65,13 +68,40 @@ public class HttpSharedConnection
 			throw new RuntimeException(ex);
 		}
 	}
+	public CloseableHttpResponse sharedPost(HttpPost inPost)
+	{
+		try
+		{
+			CloseableHttpResponse response2 = (CloseableHttpResponse)getSharedClient().execute(inPost);
+			return response2;
+		}
+		catch ( Exception ex )
+		{
+			throw new RuntimeException(ex);
+		}
+	}
+	public void release(CloseableHttpResponse response2)
+	{
+		if( response2 == null)
+		{
+			return;
+		}
 
-	public HttpResponse sharedGet(String inUrl)
+		try
+		{
+			response2.close();
+		}
+		catch (IOException e)
+		{
+			Log.error("Could not close" ,e);
+		}
+	}
+	public CloseableHttpResponse sharedGet(String inUrl)
 	{
 		try
 		{
 			HttpGet method = new HttpGet(inUrl);
-			HttpResponse response2 = getSharedClient().execute(method);
+			CloseableHttpResponse response2 = (CloseableHttpResponse) getSharedClient().execute(method);
 			return response2;
 		}
 		catch ( Exception ex )
