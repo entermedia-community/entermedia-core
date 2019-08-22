@@ -119,7 +119,7 @@ public class QueryBuilder
 			return this;
 		}
 		Iterator iter = inDataCollection.iterator();
-		if( iter.hasNext())
+		if( iter.hasNext())  //TODO: This code is terrible. Just loop over the list
 		{
 			Object value = iter.next();
 			Collection ids = null;

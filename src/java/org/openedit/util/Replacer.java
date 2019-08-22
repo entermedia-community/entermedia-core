@@ -60,7 +60,12 @@ public class Replacer implements CatalogEnabled
 		return replace(inCode, map);
 	}
 
-	
+	/**
+	 * ${localfield:listid.field} Use this format if your local field maps to a different table 
+	 * @param inCode
+	 * @param inValues
+	 * @return
+	 */
 	public String replace(String inCode, Map<String, Object> inValues)
 	{
 		if( inCode == null)

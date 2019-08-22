@@ -278,6 +278,10 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 	}
 	public void setPage(int inPageOneBased)
 	{
+		if( inPageOneBased == -1)
+		{
+			return;
+		}
 		if( fieldPage != inPageOneBased )
 		{
 			fieldCurrentPage = null;

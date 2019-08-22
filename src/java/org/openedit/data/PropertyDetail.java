@@ -580,8 +580,14 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 	}
 	
 	
-	public boolean isSortable(){
-		return true;
+	public boolean isSortable()
+	{
+//		if( !isList() )
+//		{
+			return true;
+//		}
+//		String sortable = (String)getValue("stored");
+//		return Boolean.parseBoolean(sortable);
 	}
 	
 	
