@@ -1123,7 +1123,7 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 		int index= findRow("id",inId);
 		int hitsperpage = getHitsPerPage();
 		int pagenumb = index / hitsperpage;
-		return pagenumb;
+		return pagenumb + 1;
 	}
 	
 	
