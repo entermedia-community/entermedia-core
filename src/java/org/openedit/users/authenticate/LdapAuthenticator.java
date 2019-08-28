@@ -81,7 +81,7 @@ public class LdapAuthenticator extends BaseAuthenticator
 			spostfix = postfix.get("value");
 		}
 		//NaiveTrustManager.disableHttps();
-		ldap.authenticate(sprefix,inUser.getUserName(), spostfix, inPassword);
+		ldap.authenticate(sprefix,inUser.getUserName().toLowerCase(), spostfix, inPassword);
 		
 		if (ldap.connect())
 		{
