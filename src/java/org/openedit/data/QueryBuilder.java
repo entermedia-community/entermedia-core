@@ -340,4 +340,10 @@ public class QueryBuilder
 	{
 		return getQuery().toQuery();
 	}
+	public QueryBuilder includeDescription()
+	{
+		getQuery().setIncludeDescription(true);
+		return this;
+		
+	}
 }

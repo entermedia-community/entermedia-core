@@ -60,7 +60,14 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	//protected List<ChildFilter> fieldChildrenFilters;
 	protected List<FilterNode> fieldFilters; 
 	protected Collection<String> fieldSecurityIds;
+	protected boolean fieldIncludeDescription = false;
 	
+	
+	public void setIncludeDescription(boolean inIncludeDescription)
+	{
+		fieldIncludeDescription = inIncludeDescription;
+	}
+
 	protected int fieldHitsPerPage = 15;	
 	
 	public SearchQuery()
@@ -2212,6 +2219,12 @@ public boolean isFilterSelected(String type, String value) {
 			}
 		}
 		return nodes;
+	}
+
+
+	public boolean isIncludeDescription()
+	{
+		return fieldIncludeDescription;
 	}	
 	
 	
