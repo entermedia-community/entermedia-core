@@ -5,9 +5,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -17,6 +19,7 @@ import org.openedit.OpenEditException;
 import org.openedit.data.PropertyDetail;
 import org.openedit.data.Searcher;
 import org.openedit.util.DateStorageUtil;
+
 
 public abstract class HitTracker<T> implements Serializable, Collection, CatalogEnabled
 {
@@ -1443,6 +1446,30 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 	public boolean isSortedBy(String inKey)
 	{
 		return getSearchQuery().isSortedBy(inKey);
+	}
+	
+	public boolean hasChanged(HitTracker inTracker) 
+	{
+		if (inTracker != null &&
+				inTracker.getQuery().equals(getQuery()) &&
+				inTracker.getIndexId().equals(getIndexId()) &&
+				inTracker.size() == size() &&
+				inTracker.isAllSelected() == isAllSelected() &&
+				inTracker.getSelectionSize() == getSelectionSize())
+		{
+			if (hasSelections()) 
+			{
+				Set selected = new HashSet(getSelections());
+				selected.removeAll(inTracker.getSelections());
+				if (selected.isEmpty())
+				{
+					return true;
+				}
+			} 
+			return false;
+			
+		}
+		return true;
 	}
 }
 

@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.openedit.Data;
+import org.openedit.hittracker.HitTracker;
 
 public interface CompositeData extends Data
 {
@@ -26,5 +27,7 @@ public interface CompositeData extends Data
 	public void setEditFields(Collection inFields);
 
 	public void saveChanges();
+	
+	public HitTracker getSelectedResults();
 	
 }

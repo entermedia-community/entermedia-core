@@ -192,13 +192,24 @@ public class BaseUserManager implements UserManager
 		User user = (User)getUserSearcher().createNewData();
 		if( inUserName != null)
 		{
-			user.setUserName(inUserName);
+			user.setUserName(cleanUsername(inUserName));
 		}
 		user.setPassword(inPassword);
 		saveUser(user);
 		return user;
 	}
-
+	
+	
+	public String cleanUsername(String inUserName) {
+		String cleanName = inUserName;
+		cleanName = cleanName.trim();
+		cleanName = cleanName.toLowerCase();
+		
+		cleanName = cleanName.replaceAll("[^A-Za-z0-9\\@\\-\\_\\.]", "");
+		cleanName = cleanName.replace(' ','_');
+	
+		return cleanName;
+	}
 	
 	@Override
 	public void deleteGroup(Group inGroup) throws UserManagerException
