@@ -38,7 +38,11 @@ public class ElementData implements MultiValued, SaveableData, Comparable, Searc
 		}
 		return fieldMap;
 	}
-
+	public Collection getObjects(String inField)
+	{
+		Collection values = (Collection)getValue(inField);
+		return values;
+	}
 	protected static final Pattern INVALIDSTUFF = Pattern.compile("[\'\"\n<>&]");
 	protected PropertyDetails fieldPropertyDetails;
 

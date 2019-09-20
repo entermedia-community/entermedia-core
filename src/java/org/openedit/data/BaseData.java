@@ -23,6 +23,14 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 	public BaseData() {
 	}
 
+	
+	public Collection getObjects(String inField)
+	{
+		Collection values = (Collection)getValue(inField);
+		return values;
+	}
+	
+	
 	public BaseData(Map inMap) 
 	{
 		fieldMap = new ValuesMap(inMap);

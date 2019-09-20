@@ -46,7 +46,11 @@ public class Page implements Data, Comparable
 	protected ContentItem fieldContentItem;
 	protected long fieldOriginalyModified;
 	protected Map fieldCache;
-	
+	public Collection getObjects(String inField)
+	{
+		Collection values = (Collection)getValue(inField);
+		return values;
+	}
 	public Page( String inPath, PageSettings inMetaData )
 	{
 		fieldPath = inPath;

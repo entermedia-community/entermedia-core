@@ -40,7 +40,11 @@ public class FileItem extends ContentItem implements Data
 	public FileItem()
 	{
 	}
-	
+	public Collection getObjects(String inField)
+	{
+		Collection values = (Collection)getValue(inField);
+		return values;
+	}
 	public FileItem(File inFile)
 	{
 		setFile(inFile);

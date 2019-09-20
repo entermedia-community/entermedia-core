@@ -37,6 +37,11 @@ public class XmlFile implements Data
 	{
 		fieldContentItem = inContentItem;
 	}
+	public Collection getObjects(String inField)
+	{
+		Collection values = (Collection)getValue(inField);
+		return values;
+	}
 	public String getPath()
 	{
 		return fieldPath;
