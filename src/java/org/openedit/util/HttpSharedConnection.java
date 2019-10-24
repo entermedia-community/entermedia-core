@@ -26,8 +26,9 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.openedit.OpenEditException;
 
-
-
+/**
+@deprecated moved package to server
+*/
 public class HttpSharedConnection
 {
 	
