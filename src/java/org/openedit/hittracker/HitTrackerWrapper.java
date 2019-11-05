@@ -454,17 +454,17 @@ public class HitTrackerWrapper extends HitTracker {
 		return fieldParentTracker.hasChanged(inTracker);
 	}
 
-	public Spliterator spliterator() {
-		return fieldParentTracker.spliterator();
-	}
+//	public Spliterator spliterator() {
+//		return fieldParentTracker.spliterator();
+//	}
 
-	public Stream stream() {
-		return fieldParentTracker.stream();
-	}
-
-	public Object[] toArray(IntFunction generator) {
-		return fieldParentTracker.toArray(generator);
-	}
+//	public Stream stream() {
+//		return fieldParentTracker.stream();
+//	}
+//
+//	public Object[] toArray(IntFunction generator) {
+//		return fieldParentTracker.toArray(generator);
+//	}
 
 	public String toString() {
 		return fieldParentTracker.toString();
