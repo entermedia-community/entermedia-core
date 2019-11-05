@@ -346,13 +346,13 @@ public class HitTrackerWrapper extends HitTracker {
 		return fieldParentTracker.retainAll(arg0);
 	}
 
-	public Object[] toArray() {
-		return fieldParentTracker.toArray();
-	}
-
-	public Object[] toArray(Object[] all) {
-		return fieldParentTracker.toArray(all);
-	}
+//	public Object[] toArray() {
+//		return fieldParentTracker.toArray();
+//	}
+//
+//	public Object[] toArray(Object[] all) {
+//		return fieldParentTracker.toArray(all);
+//	}
 
 	public Collection getSelectedHits() {
 		return fieldParentTracker.getSelectedHits();
