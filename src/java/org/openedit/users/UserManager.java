@@ -200,5 +200,7 @@ public interface UserManager extends CatalogEnabled
 	AuthenticationRequest createAuthenticationRequest(WebPageRequest inReq, String inPassword, User inUser);
 
 	public void fireUserEvent(User inUser, String inOperation) ;
+
+	String getEnterMediaKey(User user);
 	
 }
