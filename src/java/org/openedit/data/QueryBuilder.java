@@ -55,6 +55,14 @@ public class QueryBuilder
 		return this;
 	}
 	
+	public QueryBuilder andExact(String inId, Collection inValues)
+	{
+		String[] vals = (String[])inValues.toArray(new String[inValues.size()]);
+		getQuery().addAndGroup(inId,vals);
+		return this;
+	}
+	
+	
 	public QueryBuilder contains(String inId, String inValue)
 	{
 		getQuery().addContains(inId, inValue);
