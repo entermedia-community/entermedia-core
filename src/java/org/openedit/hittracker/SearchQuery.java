@@ -344,6 +344,12 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		getTerms().add(term);
 		return term;
 	}
+	public Term addAndGroup(String inDetailId, final String[] inValues)
+	{
+		PropertyDetail detail = createDetail(inDetailId);
+		detail.setId(inDetailId);
+		return addAndGroup(detail,inValues);
+	}
 	
 	public Term addAndGroup(PropertyDetail inDetail, final String[] inValues)
 	{
