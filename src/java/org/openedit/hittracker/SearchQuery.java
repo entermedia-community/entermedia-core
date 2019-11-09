@@ -61,8 +61,22 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	protected List<FilterNode> fieldFilters; 
 	protected Collection<String> fieldSecurityIds;
 	protected boolean fieldIncludeDescription = false;
+	protected boolean fieldIncludeDeleted = false;
 	
 	
+	
+	public boolean isIncludeDeleted()
+	{
+		return fieldIncludeDeleted;
+	}
+
+
+	public void setIncludeDeleted(boolean inIncludeDeleted)
+	{
+		fieldIncludeDeleted = inIncludeDeleted;
+	}
+
+
 	public void setIncludeDescription(boolean inIncludeDescription)
 	{
 		fieldIncludeDescription = inIncludeDescription;
