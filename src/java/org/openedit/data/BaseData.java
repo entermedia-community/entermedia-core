@@ -100,12 +100,12 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 	}
 	
 	
-	public double getDouble(String inId)
+	public Double getDouble(String inId)
 	{
 		Object val = getValue(inId);
 		if( val == null )
 		{
-			return 0;
+			return null;
 		}
 		if( val instanceof Double)
 		{
