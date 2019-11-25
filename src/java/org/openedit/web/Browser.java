@@ -16,6 +16,7 @@ import java.util.Locale;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 
 /**
@@ -194,14 +195,26 @@ public class Browser
 		{
 			return false;
 		}
-		String version  = getHttpServletRequest().getHeader("X-emappversion");
-		if( version == null)
+		HttpSession session = getHttpServletRequest().getSession(true);
+		String inApp = getHttpServletRequest().getParameter("eminapp");
+
+		if( inApp == null)
 		{
-			String inApp = getHttpServletRequest().getParameter("eminapp");
-			return Boolean.parseBoolean(inApp);
+			String version  = getHttpServletRequest().getHeader("X-emappversion");
+			if( version != null)
+			{
+				inApp = "true";
+			}
 		}
-		return version != null;
-		
+		if( inApp != null)
+		{
+			session.setAttribute("eminapp", inApp);			
+		}
+		else
+		{
+			inApp = (String)session.getAttribute("eminapp");
+		}
+		return Boolean.parseBoolean(inApp);
 	}
 	
 	protected void parseUserAgent()
