@@ -449,54 +449,57 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable
 		//If this element is manipulated then the instance is the same
 		//No need to read it ElementData data = (ElementData)inData;
 		XmlFile settings = getXmlFile();
-		String path = "/WEB-INF/data/" + getCatalogId() + "/lists" + "/" + getSearchType() + ".xml";
-
-		settings.setPath(path);
-
-		Element element = null;
-		if( inData.getId() == null)
+		synchronized (settings)
 		{
-			inData.setId( String.valueOf( new Date().getTime() ));
-		}
-		else
-		{
-			element = settings.getElementById(inData.getId());
-		}
-		if( element == null )
-		{
-			//New element
-			element = settings.getRoot().addElement(settings.getElementName());
-			element.addAttribute("id", inData.getId());
-		}
-		if( inData instanceof ElementData)
-		{
-			ElementData data = (ElementData)inData;
-			List attributes = data.getElement().attributes();
-			element.setAttributes(attributes);
-			//element.setText(inData.getName());
-			//existing row exists
-			element.setContent(data.getElement().content());
-		}
-		else
-		{
-			element.clearContent();
-			element.setAttributes(null);
-			
-			ElementData data = new ElementData(element, getPropertyDetails());
-			data.setId(inData.getId());
-			data.setName(inData.getName());
-			data.setSourcePath(inData.getSourcePath());
-			for (Iterator iterator = inData.keySet().iterator(); iterator.hasNext();)
+			String path = "/WEB-INF/data/" + getCatalogId() + "/lists" + "/" + getSearchType() + ".xml";
+	
+			settings.setPath(path);
+	
+			Element element = null;
+			if( inData.getId() == null)
 			{
-				String key	= (String) iterator.next();
-				data.setValue(key, inData.getValue(key));
+				inData.setId( String.valueOf( new Date().getTime() ));
 			}
+			else
+			{
+				element = settings.getElementById(inData.getId());
+			}
+			if( element == null )
+			{
+				//New element
+				element = settings.getRoot().addElement(settings.getElementName());
+				element.addAttribute("id", inData.getId());
+			}
+			if( inData instanceof ElementData)
+			{
+				ElementData data = (ElementData)inData;
+				List attributes = data.getElement().attributes();
+				element.setAttributes(attributes);
+				//element.setText(inData.getName());
+				//existing row exists
+				element.setContent(data.getElement().content());
+			}
+			else
+			{
+				element.clearContent();
+				element.setAttributes(null);
+				
+				ElementData data = new ElementData(element, getPropertyDetails());
+				data.setId(inData.getId());
+				data.setName(inData.getName());
+				data.setSourcePath(inData.getSourcePath());
+				for (Iterator iterator = inData.keySet().iterator(); iterator.hasNext();)
+				{
+					String key	= (String) iterator.next();
+					data.setValue(key, inData.getValue(key));
+				}
+			}
+			
+			log.info("Saved to "  + settings.getPath());
+			getXmlArchive().saveXml(settings, inUser);
+			
+			clearIndex();
 		}
-		
-		log.info("Saved to "  + settings.getPath());
-		getXmlArchive().saveXml(settings, inUser);
-		
-		clearIndex();
 		
 	}
 	
