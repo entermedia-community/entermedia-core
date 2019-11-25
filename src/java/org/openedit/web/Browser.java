@@ -187,6 +187,23 @@ public class Browser
 		fieldVersion = inVersion;
 	}
 
+	public boolean inApp()
+	{
+		//
+		if( fieldHttpServletRequest == null)
+		{
+			return false;
+		}
+		String version  = getHttpServletRequest().getHeader("X-emappversion");
+		if( version == null)
+		{
+			String inApp = getHttpServletRequest().getParameter("eminapp");
+			return Boolean.parseBoolean(inApp);
+		}
+		return version != null;
+		
+	}
+	
 	protected void parseUserAgent()
 	{
 		//Mozilla/5.0 (Windows; U; MSIE 7.0; Windows NT 6.0; en-US)
