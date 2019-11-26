@@ -38,6 +38,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.collections.map.ListOrderedMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.json.simple.parser.JSONParser;
 import org.openedit.data.BaseData;
 import org.openedit.data.SearcherManager;
 import org.openedit.generators.VariablePackage;
@@ -108,13 +109,13 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 		
 		if( jsonRequest == null && getRequest() != null)
 		{
-			JsonSlurper slurper = new JsonSlurper();
+			JSONParser parser = new JSONParser();
 			try
 			{
 				Reader reader = getRequest().getReader();
 				
 				if(reader != null){
-					jsonRequest = (Map)slurper.parse(reader); //this is real, the other way is just for t
+					jsonRequest = (Map)parser.parse(reader); //this is real, the other way is just for t
 //					StringWriter st = new StringWriter();
 //					new OutputFiller().fill(reader, st);
 //					log.info(st.toString());
