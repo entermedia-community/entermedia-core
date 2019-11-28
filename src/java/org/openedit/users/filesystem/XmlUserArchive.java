@@ -295,6 +295,7 @@ public class XmlUserArchive implements CatalogEnabled  {
 		{
 			user.setValue("creationdate", new Date(userFile.lastModified()) );
 		}
+		
 		user.setEnabled(true);  //TODO: How do we know this?
 		// String enabled = root.attributeValue("enabled");
 		// if (enabled != null && Boolean.parseBoolean(enabled) == false)
