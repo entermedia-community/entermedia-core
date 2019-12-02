@@ -591,6 +591,26 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 	{
 		return inHit.get(inString);
 	}
+	public Collection collectValues(String inString)
+	{
+		if( size() > 10000)
+		{
+			throw new OpenEditException("Cant get values across large data sets " + getQuery());
+		}
+		Set allvalues = new HashSet();
+		for (Iterator iterator = iterator(); iterator.hasNext();)
+		{
+			Data data = (Data) iterator.next();
+			Object value = data.getValue(inString);
+			if( value != null)
+			{
+				allvalues.add(value);
+			}
+			
+		}
+		return allvalues;
+	}
+	
 	//Use SearchResultsData.getValues
 //	public Collection getValues(Object inHit, String inString)
 //	{
