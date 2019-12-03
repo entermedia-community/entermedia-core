@@ -110,7 +110,12 @@ public class ElementData implements MultiValued, SaveableData, Comparable, Searc
 		{
 			return null;
 		}
-		return String.valueOf(obj);
+		if( !(obj instanceof String))
+		{
+			return getMap().toString(obj);
+		}
+
+		return (String)obj;
 	}
 
 	/**

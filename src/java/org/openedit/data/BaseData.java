@@ -25,13 +25,7 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 	public BaseData() {
 	}
 
-	
-	public Collection getValues(String inField)
-	{
-		Collection values = (Collection)getValue(inField);
-		return values;
-	}
-	
+
 	
 	public BaseData(Map inMap) 
 	{
@@ -279,29 +273,6 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 	public Collection<String> getValues(String inPreference)
 	{
 		return getMap().getValues(inPreference);
-//		if( object instanceof Collection)
-//		{
-//			return (Collection<String>)object;
-//		}
-//		String val = get(inPreference);
-//		
-//		if (val == null)
-//		{
-//			return null;
-//		}
-//		String[] vals = null;
-//		if( val.contains("|") )
-//		{
-//			vals = VALUEDELMITER.split(val);
-//		}
-//		else
-//		{
-//			vals = val.split("\\s+"); //legacy
-//		}
-//
-//		Collection collection = Arrays.asList(vals);
-//		//if null check parent
-//		return collection;
 	}
 	
 	public Date getDate(String inField)
