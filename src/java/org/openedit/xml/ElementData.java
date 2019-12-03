@@ -37,11 +37,6 @@ public class ElementData implements MultiValued, SaveableData, Comparable, Searc
 		}
 		return fieldMap;
 	}
-	public Collection getValues(String inField)
-	{
-		Collection values = (Collection)getValue(inField);
-		return values;
-	}
 	protected static final Pattern INVALIDSTUFF = Pattern.compile("[\'\"\n<>&]");
 	protected PropertyDetails fieldPropertyDetails;
 
@@ -361,13 +356,20 @@ public class ElementData implements MultiValued, SaveableData, Comparable, Searc
 		}
 	}
 
-	public Collection<String> getValues(String inPreference)
+	public Collection getValues(String inPreference)
 	{
+		
+		Object values = getValue(inPreference);
+		if( values != null && values instanceof Collection)
+		{
+			return (Collection)values;
+		}
 		String val = get(inPreference);
 
 		if (val == null)
+		{
 			return null;
-
+		}
 		String[] vals = null;
 		if (val.contains("|"))
 		{
