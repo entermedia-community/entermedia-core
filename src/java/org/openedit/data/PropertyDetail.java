@@ -85,7 +85,7 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 		fieldInputFilePath = inInputFilePath;
 	}
 	
-	public Collection getObjects(String inField)
+	public Collection getValues(String inField)
 	{
 		Collection values = (Collection)getValue(inField);
 		return values;

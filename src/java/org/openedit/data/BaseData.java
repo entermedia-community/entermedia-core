@@ -26,7 +26,7 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 	}
 
 	
-	public Collection getObjects(String inField)
+	public Collection getValues(String inField)
 	{
 		Collection values = (Collection)getValue(inField);
 		return values;

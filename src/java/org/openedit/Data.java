@@ -31,6 +31,6 @@ public interface Data
 	
 	Set keySet();
 
-	public Collection getObjects(String inField);
+	public Collection getValues(String inField);
 
 }

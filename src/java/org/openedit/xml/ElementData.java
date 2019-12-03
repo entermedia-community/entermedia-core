@@ -26,7 +26,6 @@ import org.openedit.util.DateStorageUtil;
 public class ElementData implements MultiValued, SaveableData, Comparable, SearchData
 {
 	protected Element fieldElement;
-	protected String fieldSourcePath;
 	protected String fieldVersion;
 	protected ValuesMap fieldMap;
 
@@ -38,7 +37,7 @@ public class ElementData implements MultiValued, SaveableData, Comparable, Searc
 		}
 		return fieldMap;
 	}
-	public Collection getObjects(String inField)
+	public Collection getValues(String inField)
 	{
 		Collection values = (Collection)getValue(inField);
 		return values;
@@ -300,12 +299,13 @@ public class ElementData implements MultiValued, SaveableData, Comparable, Searc
 
 	public String getSourcePath()
 	{
-		return fieldSourcePath;
+		String value = getElement().attributeValue("sourcepath");
+		return value;
 	}
 
 	public void setSourcePath(String inSourcepath)
 	{
-		fieldSourcePath = inSourcepath;
+		setValue("sourcepath", inSourcepath);
 	}
 
 	public ValuesMap getProperties()

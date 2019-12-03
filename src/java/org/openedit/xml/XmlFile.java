@@ -37,7 +37,7 @@ public class XmlFile implements Data
 	{
 		fieldContentItem = inContentItem;
 	}
-	public Collection getObjects(String inField)
+	public Collection getValues(String inField)
 	{
 		Collection values = (Collection)getValue(inField);
 		return values;
