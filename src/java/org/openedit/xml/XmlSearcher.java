@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -444,62 +445,60 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable
 		return query;
 	}
 
-	public void saveData(Data inData, User inUser)
+	public synchronized void saveData(Data inData, User inUser)
 	{
 		//If this element is manipulated then the instance is the same
 		//No need to read it ElementData data = (ElementData)inData;
 		XmlFile settings = getXmlFile();
-		synchronized (settings)
+		String path = "/WEB-INF/data/" + getCatalogId() + "/lists" + "/" + getSearchType() + ".xml";
+
+		settings.setPath(path);
+
+		Element element = null;
+		if( inData.getId() == null)
 		{
-			String path = "/WEB-INF/data/" + getCatalogId() + "/lists" + "/" + getSearchType() + ".xml";
-	
-			settings.setPath(path);
-	
-			Element element = null;
-			if( inData.getId() == null)
-			{
-				inData.setId( String.valueOf( new Date().getTime() ));
-			}
-			else
-			{
-				element = settings.getElementById(inData.getId());
-			}
-			if( element == null )
-			{
-				//New element
-				element = settings.getRoot().addElement(settings.getElementName());
-				element.addAttribute("id", inData.getId());
-			}
-			if( inData instanceof ElementData)
-			{
-				ElementData data = (ElementData)inData;
-				List attributes = data.getElement().attributes();
-				element.setAttributes(attributes);
-				//element.setText(inData.getName());
-				//existing row exists
-				element.setContent(data.getElement().content());
-			}
-			else
-			{
-				element.clearContent();
-				element.setAttributes(null);
-				
-				ElementData data = new ElementData(element, getPropertyDetails());
-				data.setId(inData.getId());
-				data.setName(inData.getName());
-				data.setSourcePath(inData.getSourcePath());
-				for (Iterator iterator = inData.keySet().iterator(); iterator.hasNext();)
-				{
-					String key	= (String) iterator.next();
-					data.setValue(key, inData.getValue(key));
-				}
-			}
-			
-			log.info("Saved to "  + settings.getPath());
-			getXmlArchive().saveXml(settings, inUser);
-			
-			clearIndex();
+			inData.setId( String.valueOf( new Date().getTime() ));
 		}
+		else
+		{
+			element = settings.getElementById(inData.getId());
+		}
+		if( element == null )
+		{
+			//New element
+			element = settings.getRoot().addElement(settings.getElementName());
+			element.addAttribute("id", inData.getId());
+		}
+		if( inData instanceof ElementData)
+		{
+			ElementData data = (ElementData)inData;
+			List attributes = data.getElement().attributes();
+			element.setAttributes(attributes);
+			//element.setText(inData.getName());
+			//existing row exists
+			element.setContent(data.getElement().content());
+		}
+		else
+		{
+			element.clearContent();
+			element.setAttributes(null);
+			
+			ElementData data = new ElementData(element, getPropertyDetails());
+			data.setId(inData.getId());
+			data.setName(inData.getName());
+			data.setSourcePath(inData.getSourcePath());
+			Set keys = inData.keySet();
+			for (Iterator iterator = inData.keySet().iterator(); iterator.hasNext();)
+			{
+				String key	= (String) iterator.next();
+				data.setValue(key, inData.getValue(key));
+			}
+		}
+		
+		log.info("Saved to "  + settings.getPath());
+		getXmlArchive().saveXml(settings, inUser);
+		
+		clearIndex();
 		
 	}
 	
