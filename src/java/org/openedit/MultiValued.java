@@ -18,6 +18,7 @@ public interface MultiValued extends Data
 	public String getText(String inId, String inLocale);
 	public boolean getBoolean(String inId);
 	public float getFloat(String inId);
+	public long getLong(String inId);
 	
 
 

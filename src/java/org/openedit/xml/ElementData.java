@@ -182,6 +182,15 @@ public class ElementData implements MultiValued, SaveableData, Comparable, Searc
 		}
 		return 0;
 	}
+	public long getLong(String inId)
+	{
+		String val = get(inId);
+		if (val != null)
+		{
+			return Long.parseLong(val);
+		}
+		return 0;
+	}
 
 	public String getId()
 	{
