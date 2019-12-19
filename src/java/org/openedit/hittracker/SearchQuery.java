@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.openedit.CatalogEnabled;
@@ -27,12 +29,13 @@ import org.openedit.data.PropertyDetail;
 import org.openedit.data.PropertyDetails;
 import org.openedit.data.Searcher;
 import org.openedit.data.SearcherManager;
-import org.openedit.profile.UserProfile;
 import org.openedit.util.DateStorageUtil;
 import org.openedit.util.GenericsUtil;
 
 public class SearchQuery extends BaseData implements Cloneable, Serializable, Comparable, CatalogEnabled
 {
+	private static final Log log = LogFactory.getLog(SearchQuery.class);
+
 	protected transient List fieldTerms = new ArrayList();
 
 	protected boolean fieldAndTogether = true;
@@ -57,7 +60,28 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	//protected List<ChildFilter> fieldChildrenFilters;
 	protected List<FilterNode> fieldFilters; 
 	protected Collection<String> fieldSecurityIds;
+	protected boolean fieldIncludeDescription = false;
+	protected boolean fieldIncludeDeleted = false;
 	
+	
+	
+	public boolean isIncludeDeleted()
+	{
+		return fieldIncludeDeleted;
+	}
+
+
+	public void setIncludeDeleted(boolean inIncludeDeleted)
+	{
+		fieldIncludeDeleted = inIncludeDeleted;
+	}
+
+
+	public void setIncludeDescription(boolean inIncludeDescription)
+	{
+		fieldIncludeDescription = inIncludeDescription;
+	}
+
 	protected int fieldHitsPerPage = 15;	
 	
 	public SearchQuery()
@@ -319,6 +343,12 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		term.setOperation("orgroup");
 		getTerms().add(term);
 		return term;
+	}
+	public Term addAndGroup(String inDetailId, final String[] inValues)
+	{
+		PropertyDetail detail = createDetail(inDetailId);
+		detail.setId(inDetailId);
+		return addAndGroup(detail,inValues);
 	}
 	
 	public Term addAndGroup(PropertyDetail inDetail, final String[] inValues)
@@ -770,7 +800,13 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 
 	public void removeTerm(Term inTerm)
 	{
+		if( inTerm == null)
+		{
+			log.error("inTerm was null");
+			return;
+		}
 		getTerms().remove(inTerm);
+		
 		setProperty(inTerm.getDetail().getId(), null);
 		for (Iterator iterator = getChildren().iterator(); iterator.hasNext();)
 		{
@@ -2203,6 +2239,12 @@ public boolean isFilterSelected(String type, String value) {
 			}
 		}
 		return nodes;
+	}
+
+
+	public boolean isIncludeDescription()
+	{
+		return fieldIncludeDescription;
 	}	
 	
 	

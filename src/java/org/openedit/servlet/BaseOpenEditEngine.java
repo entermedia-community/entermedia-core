@@ -140,7 +140,7 @@ public class BaseOpenEditEngine implements OpenEditEngine
 			context.putPageValue("sitedata", sitedata);
 			if( applicationid != null)
 			{
-				page.setProperty("apphome", sitedata.getAppHome(applicationid));
+				page.setProperty("apphome", sitedata.getAppLink(applicationid));
 			}
 		}
 		else 
@@ -207,12 +207,12 @@ public class BaseOpenEditEngine implements OpenEditEngine
 		}
 		catch( Throwable e )
 		{
-			log.error("Problem redering page",e);
-			//e.printStackTrace();
 			boolean ok = getErrorHandler().handleError( e, pageRequest );
 			
 			if(!ok )
 			{
+				log.error("Problem redering page",e);
+
 				if( e instanceof OpenEditException )
 				{
 					throw (OpenEditException )e;

@@ -12,12 +12,16 @@ See the GNU Lesser General Public License for more details.
 
 package org.openedit.users.filesystem;
 
+import java.util.Date;
 import java.util.Iterator;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.dom4j.DocumentFactory;
 import org.dom4j.Element;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.openedit.data.ValuesMap;
 
 /**
@@ -84,7 +88,24 @@ public class MapPropertyContainer  extends ValuesMap
 						if(name.contains(".")){
 							name.replace(".", "_");
 						}
-						put(name, value);
+						if( name.equals("emrecordstatus") )
+						{
+							JSONParser parser = new JSONParser();
+							Map values = null;
+							try
+							{
+								values = (Map)parser.parse(value);
+								put(name,values);
+							}
+							catch (ParseException e)
+							{
+								e.printStackTrace();
+							}
+						}
+						else
+						{
+							put(name, value);
+						}
 					}
 				}
 			}

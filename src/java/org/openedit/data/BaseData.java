@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.openedit.Data;
 import org.openedit.MultiValued;
 import org.openedit.OpenEditException;
@@ -23,6 +25,8 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 	public BaseData() {
 	}
 
+
+	
 	public BaseData(Map inMap) 
 	{
 		fieldMap = new ValuesMap(inMap);
@@ -92,12 +96,12 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 	}
 	
 	
-	public double getDouble(String inId)
+	public Double getDouble(String inId)
 	{
 		Object val = getValue(inId);
 		if( val == null )
 		{
-			return 0;
+			return null;
 		}
 		if( val instanceof Double)
 		{
@@ -269,29 +273,6 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 	public Collection<String> getValues(String inPreference)
 	{
 		return getMap().getValues(inPreference);
-//		if( object instanceof Collection)
-//		{
-//			return (Collection<String>)object;
-//		}
-//		String val = get(inPreference);
-//		
-//		if (val == null)
-//		{
-//			return null;
-//		}
-//		String[] vals = null;
-//		if( val.contains("|") )
-//		{
-//			vals = VALUEDELMITER.split(val);
-//		}
-//		else
-//		{
-//			vals = val.split("\\s+"); //legacy
-//		}
-//
-//		Collection collection = Arrays.asList(vals);
-//		//if null check parent
-//		return collection;
 	}
 	
 	public Date getDate(String inField)
@@ -318,6 +299,18 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 	}
 	public void setValue(String inKey, Object inValue)
 	{
+		if( inKey.equals("emrecordstatus") && inValue instanceof String)
+		{
+			try
+			{
+				JSONParser parser = new JSONParser();
+				inValue = (Map)parser.parse((String)inValue);
+			}
+			catch (ParseException e)
+			{
+				throw new OpenEditException(e);
+			}
+		}
 		getMap().put(inKey,inValue);
 	}
 	

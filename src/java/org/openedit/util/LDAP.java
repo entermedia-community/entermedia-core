@@ -91,7 +91,7 @@ public class LDAP
 	{
 		String prefix = (String) inUser.get("ldap_prefix");
 		String post = (String) inUser.get("ldap_postfix");
-		authenticate(prefix, inUser.getUserName(), post, inPassword);
+		authenticate(prefix, inUser.getUserName().toLowerCase(), post, inPassword);
 
 	}
 	public void authenticate(String prefix, String username, String postfix, String inPassword)

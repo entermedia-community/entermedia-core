@@ -242,6 +242,10 @@ public class PageStreamer
 	}
 	public void includeContent() throws OpenEditException
 	{
+		includeContent(getWebPageRequest());
+	}
+	public void includeContent(WebPageRequest inContext) throws OpenEditException
+	{
 		//if I am being called from an inner layout make sure I am at the top first
 		if ( getChildContentList().size() == 0)
 		{
@@ -250,7 +254,7 @@ public class PageStreamer
 			return;
 		}
 		Page topChild = (Page)getChildContentList().remove(0);
-		include( topChild , getWebPageRequest() );
+		include( topChild ,inContext );
 	}
 	public void include(Page inPage) throws OpenEditException
 	{

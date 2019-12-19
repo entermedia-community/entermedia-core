@@ -55,6 +55,14 @@ public class QueryBuilder
 		return this;
 	}
 	
+	public QueryBuilder andExact(String inId, Collection inValues)
+	{
+		String[] vals = (String[])inValues.toArray(new String[inValues.size()]);
+		getQuery().addAndGroup(inId,vals);
+		return this;
+	}
+	
+	
 	public QueryBuilder contains(String inId, String inValue)
 	{
 		getQuery().addContains(inId, inValue);
@@ -119,7 +127,7 @@ public class QueryBuilder
 			return this;
 		}
 		Iterator iter = inDataCollection.iterator();
-		if( iter.hasNext())
+		if( iter.hasNext())  //TODO: This code is terrible. Just loop over the list
 		{
 			Object value = iter.next();
 			Collection ids = null;
@@ -322,5 +330,28 @@ public class QueryBuilder
 	{
 		setIgnoreBlank(true);
 		return  this;
+	}
+	
+	
+	public QueryBuilder attachSecurity(WebPageRequest inReq) {
+		if(inReq != null) {
+			getQuery().setEndUserSearch(true);
+
+			getSearcher().getSearchSecurity().attachSecurity(inReq, getSearcher(), getQuery());
+		}
+		return this;
+
+	}
+
+	@Override
+	public String toString()
+	{
+		return getQuery().toQuery();
+	}
+	public QueryBuilder includeDescription()
+	{
+		getQuery().setIncludeDescription(true);
+		return this;
+		
 	}
 }

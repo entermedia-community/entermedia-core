@@ -12,6 +12,7 @@ See the GNU Lesser General Public License for more details.
 
 package org.openedit.error;
 
+import java.io.IOException;
 import java.io.Writer;
 
 import org.apache.commons.logging.Log;
@@ -53,12 +54,23 @@ public class HtmlErrorHandler implements ErrorHandler
 				{
 					exception = (OpenEditException)error;
 				}
+				Page content = context.getPage();
+
 				if( exception instanceof ContentNotAvailableException)
 				{
 					try
 					{
 						context.getResponse().setStatus(404);
-						return true;
+						String pathWithError = context.getPage().getPath();
+						context.putPageValue("errorpath", pathWithError);
+
+						String errorpagepath = content.getProperty("error404page");
+						
+						if (errorpagepath == null)
+						{
+							errorpagepath = "/system/error404page.html";
+						}
+						return renderErrorPage(context, errorpagepath);
 					}
 					catch( Exception ex)
 					{
@@ -79,7 +91,6 @@ public class HtmlErrorHandler implements ErrorHandler
 						log.debug("Ignored:" + ex);
 					}
 				}
-				log.error(error);
 				String pathWithError = exception.getPathWithError();
 				if( pathWithError == null)
 				{
@@ -89,33 +100,19 @@ public class HtmlErrorHandler implements ErrorHandler
 				}
 				context.putPageValue("editPath", exception.getPathWithError());
 				context.putPageValue("oe-exception", exception); //must be a top level thing since we create a new context
-				PageStreamer pages = (PageStreamer)context.getPageValue(PageRequestKeys.PAGES);
+				log.error("error on "  + exception.getPathWithError(),error);
 				
 				//exception.getPathWithError()
 				//Page content = pages.getPage();
-				Page content = context.getPage();
 				String errorpagepath = content.getProperty("errorpage");
-				
-				Page errorPage = null;
 				
 				if (errorpagepath == null)
 				{
 					errorpagepath = "/system/errorpage.html";
 				}
-				errorPage = pages.getPage(errorpagepath);
-				
-				if( !errorPage.exists() )
-				{
-					log.error("No error page found" + errorPage.getPath());
-					return false;
-				}
-				else
-				{
-					Writer out = context.getWriter();
-					errorPage.generate(context,new Output(out, null));
-					out.flush();
-				}
-			} catch ( Exception ex)
+				return renderErrorPage(context, errorpagepath);
+			} 
+			catch ( Exception ex)
 			{
 				//Do not throw an error here is it will be infinite
 				log.error( ex);
@@ -133,6 +130,30 @@ public class HtmlErrorHandler implements ErrorHandler
 			return true;
 		}
 		return false;
+	}
+
+
+	protected boolean renderErrorPage(WebPageRequest context, String errorpagepath) throws IOException
+	{
+		PageStreamer pages = (PageStreamer)context.getPageValue(PageRequestKeys.PAGES);
+
+		Page errorPage = pages.getPage(errorpagepath);
+		
+		if( !errorPage.exists() )
+		{
+			log.error("No error page found" + errorPage.getPath());
+			return false;
+		}
+		else
+		{
+			if( context.getResponse() != null)
+			{
+				context.getResponse().setContentType( "text/html; charset=UTF-8" );
+			}
+			pages.include( errorPage);
+			context.setHasRedirected(true);
+		}
+		return true;
 	}
 	
 

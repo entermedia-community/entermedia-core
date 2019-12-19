@@ -20,6 +20,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.entermediadb.location.GeoCoder;
 import org.entermediadb.location.Position;
+import org.json.simple.JSONObject;
 import org.openedit.Data;
 import org.openedit.ModuleManager;
 import org.openedit.MultiValued;
@@ -32,7 +33,6 @@ import org.openedit.hittracker.GeoFilter;
 import org.openedit.hittracker.HitTracker;
 import org.openedit.hittracker.SearchQuery;
 import org.openedit.hittracker.Term;
-import org.openedit.hittracker.UserFilters;
 import org.openedit.locks.LockManager;
 import org.openedit.modules.translations.LanguageMap;
 import org.openedit.profile.UserProfile;
@@ -58,6 +58,19 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	protected String fieldAlternativeIndex;
 	protected ModuleManager fieldModuleManager;
 	protected String fieldNewDataName;
+	protected TransactionLogger fieldTransactionLogger;
+	
+	public TransactionLogger getTransactionLogger()
+	{
+		if (fieldTransactionLogger == null)
+		{
+			fieldTransactionLogger = (TransactionLogger) getModuleManager().getBean(getCatalogId(), "transactionLogger");
+			
+		}
+
+		return fieldTransactionLogger;
+	}
+
 
 	protected boolean fieldForceBulk = false;
 
@@ -205,10 +218,12 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			clear = inPageRequest.getRequestParameter(getSearchType() + "clearselection");
 			if (Boolean.parseBoolean(clear))
 			{
-				tracker.deselectAll();
-				tracker.setShowOnlySelected(false);
-				runsearch = true;
-
+				if( tracker.hasSelections() )
+				{
+					tracker.deselectAll();
+					tracker.setShowOnlySelected(false);
+					runsearch = true;
+				}
 			}
 			else
 			{
@@ -216,8 +231,12 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 
 				if (showonly != null)
 				{
-					tracker.setShowOnlySelected(Boolean.parseBoolean(showonly));
-					runsearch = true;
+					boolean issshowonly = Boolean.parseBoolean(showonly);
+					if( issshowonly != tracker.isShowOnlySelected())
+					{
+						tracker.setShowOnlySelected(issshowonly );
+						runsearch = true;
+					}
 				}
 			}
 
@@ -269,7 +288,13 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					//log.info("Old tracker " + oldtracker.getSearchQuery() + " has: "+ oldtracker.getSearchQuery().hasFilters() );
 					if (oldtracker.getSearchQuery().hasFilters())
 					{
-						String clearfilters = inPageRequest.getRequestParameter("clearfilters");
+						String clearfilters = inPageRequest.getRequestParameter(getSearchType() + "clearfilters");
+						if(clearfilters == null )
+						{
+							clearfilters = inPageRequest.getRequestParameter("clearfilters");
+						}
+						String removeterm = inPageRequest.getRequestParameter("removeterm");
+						
 						if (!Boolean.parseBoolean(clearfilters))
 						{
 							//This is the old way
@@ -286,6 +311,11 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 								}
 							}
 						}
+						if(removeterm != null) {
+						inQuery.removeTerm(removeterm);
+						}
+						
+						
 					}
 				}
 				String endusersearch = inPageRequest.findValue(getSearchType() + "endusersearch");
@@ -387,7 +417,11 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					tracker.setHitsPerPage(Integer.parseInt(hitsperpage));
 				}
 			}
-			String pagenumber = inPageRequest.getRequestParameter("page");
+			String pagenumber = inPageRequest.getRequestParameter(getSearchType() + "page");
+			if( pagenumber == null)
+			{
+				pagenumber = inPageRequest.getRequestParameter("page");
+			}
 			if (pagenumber != null)
 			{
 				if ("next".equals(pagenumber))
@@ -817,9 +851,11 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			//the values are a counter. So each time we get a duplicate we inc the counter of values
 
 			Integer count = (Integer) valuecounter.get(detail.getId());
+			
+			
 			if (count == null)
 			{
-				count = new Integer(0);
+				count = 0;
 			}
 			else
 			{
@@ -1726,8 +1762,11 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				 * }
 				 */
 		}
-
-		String page = inPageRequest.getRequestParameter("page");
+		String page = inPageRequest.getRequestParameter(getSearchType() + "page");
+		if( page == null)
+		{
+			page = inPageRequest.getRequestParameter("page");
+		}
 		if("NaN".equals(page)) {
 			page = null;
 		}
@@ -2583,6 +2622,10 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		{
 			fireDataEditEvent(inReq, data);
 			data = updateData(inReq, fields, data);
+			if( data.getId() == null && id != null)
+			{
+				data.setId(id);
+			}
 			saveData(data, inReq.getUser());
 		}
 		inReq.putPageValue("message", data.getId() + " is saved");
@@ -2855,8 +2898,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	@Override
 	public boolean putMappings()
 	{
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	public void reindexInternal() throws OpenEditException
@@ -2999,5 +3041,14 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		// TODO Auto-generated method stub
 
 	}
+	
+	
+	public void saveJson(String inId, JSONObject object) {
+		
+	}
+	
 
+	
+	
+	
 }

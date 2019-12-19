@@ -1,9 +1,14 @@
 package org.openedit.page;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+
 import org.openedit.WebPageRequest;
 import org.openedit.data.BaseData;
 import org.openedit.util.PathUtilities;
 import org.openedit.util.strainer.Filter;
+import org.openedit.util.strainer.OrFilter;
 
 public class Permission extends BaseData implements Comparable 
 {
@@ -53,6 +58,32 @@ public class Permission extends BaseData implements Comparable
 		}
 		return thisnode;
 	}
+	
+	//Goes into the children
+	public String findTree(Filter inFilter)
+	{
+		StringBuffer tree = new StringBuffer();
+		tree.append("0");
+		Filter thisnode = getRootFilter();
+		if( thisnode != inFilter)
+		{
+			if( thisnode instanceof OrFilter)
+			{
+				OrFilter or = (OrFilter)thisnode;
+				for (int i = 0; i < or.getFilters().length; i++)
+				{
+					Filter myself = or.getFilters()[i];
+					if( myself == inFilter)
+					{
+						tree.append("/" + i);
+						break;
+					}				
+				}
+			}
+		}	
+		return tree.toString();
+	}
+	
 	//finds a parent node
 	public Filter findConditionParent(int[] inList)
 	{

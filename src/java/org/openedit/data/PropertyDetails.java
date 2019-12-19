@@ -33,7 +33,8 @@ public class PropertyDetails extends AbstractCollection
 	protected String fieldDependsOnText;
 	protected boolean fieldAllowDynamicFields;;
 	protected PropertyDetailsArchive fieldArchive;
-	
+	protected String fieldSearchTypes;//The tables to search for a multi-search
+
 	protected XmlFile fieldBaseSettings;
 	
 
@@ -623,6 +624,26 @@ public class PropertyDetails extends AbstractCollection
 			}
 		}
 		return null;
+	}
+
+	public String getSearchTypes()
+	{
+		if (fieldSearchTypes == null)
+		{
+			if( fieldBaseSettings != null && getBaseSettings().getRoot() != null)
+			{
+				return getBaseSettings().getRoot().attributeValue("searchtypes");
+			}
+			else if (getInputFile() != null && getInputFile().getRoot() != null)
+			{
+				return getInputFile().getRoot().attributeValue("searchtypes");
+			}
+			//			if( fieldBeanName == null )
+			//			{
+			//				fieldBeanName = "dynamicSearcher";
+			//			}
+		}
+		return fieldSearchTypes;
 	}
 
 	

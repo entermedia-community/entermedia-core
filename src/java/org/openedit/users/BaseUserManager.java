@@ -7,6 +7,7 @@ import java.util.TreeSet;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openedit.Data;
 import org.openedit.OpenEditException;
 import org.openedit.WebPageRequest;
 import org.openedit.data.SearcherManager;
@@ -24,6 +25,22 @@ public class BaseUserManager implements UserManager
 	protected SearcherManager fieldSearcherManager;
 	protected EventManager fieldEventManager;
 	protected Authenticator fieldAuthenticator;
+	protected Authenticator fieldTwoFactorAuthenticator;
+
+	public Authenticator getTwoFactorAuthenticator() {
+		if (fieldTwoFactorAuthenticator == null)
+		{
+			fieldTwoFactorAuthenticator = (Authenticator) getSearcherManager().getModuleManager().getBean(getCatalogId(), "twofactorAuthenticator");
+			
+		}
+
+		return fieldTwoFactorAuthenticator;
+	}
+
+	public void setTwoFactorAuthenticator(Authenticator fieldTwoFactorAuthenticator) {
+		this.fieldTwoFactorAuthenticator = fieldTwoFactorAuthenticator;
+	}
+
 	public void setAuthenticator(Authenticator inAuthenticator)
 	{
 		fieldAuthenticator = inAuthenticator;
@@ -64,6 +81,8 @@ public class BaseUserManager implements UserManager
 	{
 		return (UserSearcher)getSearcherManager().getSearcher(getCatalogId(), "user");
 	}
+	
+	
 
 	@Override
 	public Group getGroup(String inGroupId) throws UserManagerException
@@ -80,10 +99,18 @@ public class BaseUserManager implements UserManager
 	@Override
 	public User getUser(String inUserName) throws UserManagerException
 	{
-
 		return getUserSearcher().getUser(inUserName);
 	}
-
+	
+	@Override
+	public User getUser(String inUserName, boolean inFromCache)
+	{
+		if( inUserName == null)
+		{
+			return null;
+		}
+		return getUserSearcher().getUser(inUserName,inFromCache);
+	}
 	@Override
 	public HitTracker getUsers()
 	{
@@ -103,11 +130,19 @@ public class BaseUserManager implements UserManager
 		User inUser = inReq.getUser();
 
 		if (!inUser.isEnabled()) {
-			throw new UserNotEnabledException();
+			return false;
 		}
 
 		boolean success = getAuthenticator().authenticate(inReq);
 		if (success) {
+			if(isTwoFactorEnabled()) {
+				boolean twofactor = getTwoFactorAuthenticator().authenticate(inReq);
+				if(!twofactor) {
+				success = false;
+				}
+				return twofactor;
+			}
+			
 			fireUserEvent(inUser, "login");
 		} else {
 			fireUserEvent(inUser, "invalidpassword");
@@ -115,6 +150,16 @@ public class BaseUserManager implements UserManager
 		return success;
 	}
 
+
+	private boolean isTwoFactorEnabled() {
+		Data data = getSearcherManager().getData(getCatalogId(), "catalogsettings", "twofactorauthentication");
+		if(data != null) {
+			return Boolean.parseBoolean(data.get("value"));
+		}
+		else {
+			return false;
+		}
+	}
 
 	public Collection getGroupsSorted() {
 
@@ -182,12 +227,26 @@ public class BaseUserManager implements UserManager
 	public User createUser(String inUserName, String inPassword) throws UserManagerException
 	{
 		User user = (User)getUserSearcher().createNewData();
-		user.setUserName(inUserName);
+		if( inUserName != null)
+		{
+			user.setUserName(cleanUsername(inUserName));
+		}
 		user.setPassword(inPassword);
 		saveUser(user);
 		return user;
 	}
-
+	
+	
+	public String cleanUsername(String inUserName) {
+		String cleanName = inUserName;
+		cleanName = cleanName.trim();
+		cleanName = cleanName.toLowerCase();
+		
+		cleanName = cleanName.replaceAll("[^A-Za-z0-9\\@\\-\\_\\.]", "");
+		cleanName = cleanName.replace(' ','_');
+	
+		return cleanName;
+	}
 	
 	@Override
 	public void deleteGroup(Group inGroup) throws UserManagerException
@@ -315,6 +374,16 @@ public class BaseUserManager implements UserManager
 		{
 			domain = inReq.getContentPage().get("authenticationdomain");
 		}
+		String []fields = inReq.getRequestParameters("field");
+		if(fields != null) {
+		for (int i = 0; i < fields.length; i++) {
+			String key = fields[i];
+			String value = inReq.getRequestParameter(key + ".value");
+			if(value != null) {
+				aReq.setValue(key, value);
+			}
+		}
+		}
 		aReq.putProperty("authenticationdomain", domain);
 		String server = inReq.getPage().get("authenticationserver");
 		aReq.putProperty("authenticationserver", server);
@@ -331,8 +400,18 @@ public class BaseUserManager implements UserManager
 			event.setCatalogId(getCatalogId());
 			event.setUser(inUser);
 			event.setProperty("userid", inUser.getId());
+			//event.setProperty("user", inUser.getId());
+
 			getEventManager().fireEvent(event);
 		}
+	}
+
+	@Override
+	public String getEnterMediaKey(User user) 
+	{
+		String md5 = getStringEncryption().getPasswordMd5(user.getPassword());
+		String value = user.getUserName() + "md542" + md5;
+		return value;
 	}
 
 

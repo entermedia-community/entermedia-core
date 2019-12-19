@@ -5,9 +5,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -17,6 +19,7 @@ import org.openedit.OpenEditException;
 import org.openedit.data.PropertyDetail;
 import org.openedit.data.Searcher;
 import org.openedit.util.DateStorageUtil;
+
 
 public abstract class HitTracker<T> implements Serializable, Collection, CatalogEnabled
 {
@@ -278,6 +281,10 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 	}
 	public void setPage(int inPageOneBased)
 	{
+		if( inPageOneBased == -1)
+		{
+			return;
+		}
 		if( fieldPage != inPageOneBased )
 		{
 			fieldCurrentPage = null;
@@ -584,6 +591,26 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 	{
 		return inHit.get(inString);
 	}
+	public Collection collectValues(String inString)
+	{
+		if( size() > 10000)
+		{
+			throw new OpenEditException("Cant get values across large data sets " + getQuery());
+		}
+		Set allvalues = new HashSet();
+		for (Iterator iterator = iterator(); iterator.hasNext();)
+		{
+			Data data = (Data) iterator.next();
+			Object value = data.getValue(inString);
+			if( value != null)
+			{
+				allvalues.add(value);
+			}
+			
+		}
+		return allvalues;
+	}
+	
 	//Use SearchResultsData.getValues
 //	public Collection getValues(Object inHit, String inString)
 //	{
@@ -1123,7 +1150,7 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 		int index= findRow("id",inId);
 		int hitsperpage = getHitsPerPage();
 		int pagenumb = index / hitsperpage;
-		return pagenumb;
+		return pagenumb + 1;
 	}
 	
 	
@@ -1439,6 +1466,30 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 	public boolean isSortedBy(String inKey)
 	{
 		return getSearchQuery().isSortedBy(inKey);
+	}
+	
+	public boolean hasChanged(HitTracker inTracker) 
+	{
+		if (inTracker != null &&
+				inTracker.getQuery().equals(getQuery()) &&
+				inTracker.getIndexId().equals(getIndexId()) &&
+				inTracker.size() == size() &&
+				inTracker.isAllSelected() == isAllSelected() &&
+				inTracker.getSelectionSize() == getSelectionSize())
+		{
+			if (hasSelections()) 
+			{
+				Set selected = new HashSet(getSelections());
+				selected.removeAll(inTracker.getSelections());
+				if (selected.isEmpty())
+				{
+					return true;
+				}
+			} 
+			return false;
+			
+		}
+		return true;
 	}
 }
 

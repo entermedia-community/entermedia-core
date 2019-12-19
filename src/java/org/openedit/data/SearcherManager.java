@@ -17,7 +17,6 @@ import org.openedit.Data;
 import org.openedit.ModuleManager;
 import org.openedit.MultiValued;
 import org.openedit.OpenEditException;
-import org.openedit.OpenEditRuntimeException;
 import org.openedit.cache.CacheManager;
 import org.openedit.hittracker.HitTracker;
 import org.openedit.locks.LockManager;
@@ -45,13 +44,18 @@ public class SearcherManager
 		fieldCacheManager = inCacheManager;
 	}
 
+	public Searcher getSearcher(String inCatalogId, String inSearchtypeid)
+	{
+		Searcher searcher = loadSearcher(inCatalogId,inSearchtypeid, true);
+		return searcher;
+	}
 
 	//A fieldName can be product or orderstatus. If there is no orderstatus searcher then we use an XML lookup for this catalog. 
-	public Searcher getSearcher(String inCatalogId, String inFieldName)
+	public Searcher loadSearcher(String inCatalogId, String inFieldName,boolean init)
 	{
 		if( inCatalogId == null)
 		{
-			throw new OpenEditRuntimeException("Catalog id is required");
+			throw new OpenEditException("Catalog id is required");
 		}
 		if ( inFieldName == null )
 		{
@@ -78,22 +82,19 @@ public class SearcherManager
 							return searcher;
 						}
 					}
-					//TODO: Look in the cache again for the target Searcher
 					boolean created = getNodeManager(finalcatalogid).connectCatalog(finalcatalogid);
 					
 					PropertyDetailsArchive newarchive = getPropertyDetailsArchive(finalcatalogid);
-//					if( inFieldName == null)
-//					{
-//						return null;
-//					}
-					
 					searcher = loadSearcher(newarchive, inFieldName);
 					searcher.setCatalogId(finalcatalogid);
 					searcher.setSearchType(inFieldName); //This may be product or orderstatus
 					//set the data
 					searcher.setPropertyDetailsArchive(newarchive);
 					searcher.setSearcherManager(this);
-					searcher.initialize();
+					if( init )
+					{
+						searcher.initialize();
+					}
 					if(log.isDebugEnabled())
 					{
 						log.debug("Created New Searcher: Catalog = " + searcher.getCatalogId() + "SearchType = " + searcher.getSearchType() + "Searcher = " + searcher.getClass() );
@@ -664,6 +665,7 @@ public class SearcherManager
 			
 		}
 	}
+
 	
 	
 }

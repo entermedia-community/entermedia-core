@@ -13,6 +13,8 @@ import java.util.TimeZone;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.velocity.runtime.parser.node.MathUtils;
+import org.openedit.page.manage.TextLabelManager;
 
 public class DateStorageUtil
 {
@@ -287,7 +289,16 @@ public class DateStorageUtil
 		}
 		return diff;
 	}
-
+	public Date subtractFromNow(long millis)
+	{
+		long subtracted = System.currentTimeMillis() - millis;
+		if( subtracted < 1)
+		{
+			subtracted = 0;
+		}
+		Date newdate = new Date(subtracted);
+		return newdate;
+	}
 	public Calendar getCalendar(Date date)
 	{
 		Calendar cal = Calendar.getInstance(Locale.US);
@@ -491,4 +502,5 @@ public class DateStorageUtil
 		
 	}
 	
+
 }

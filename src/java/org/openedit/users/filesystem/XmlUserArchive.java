@@ -291,8 +291,12 @@ public class XmlUserArchive implements CatalogEnabled  {
 		MapPropertyContainer container = new MapPropertyContainer();
 		container.loadProperties(root.element("properties"));
 		user.setProperties(container);
-
-		user.setEnabled(true);
+		if( user.getValue("creationdate") == null)
+		{
+			user.setValue("creationdate", new Date(userFile.lastModified()) );
+		}
+		
+		user.setEnabled(true);  //TODO: How do we know this?
 		// String enabled = root.attributeValue("enabled");
 		// if (enabled != null && Boolean.parseBoolean(enabled) == false)
 		// {

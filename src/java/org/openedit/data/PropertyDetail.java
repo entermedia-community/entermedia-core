@@ -5,6 +5,7 @@ package org.openedit.data;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -82,6 +83,12 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 	public void setInputFilePath(String inInputFilePath)
 	{
 		fieldInputFilePath = inInputFilePath;
+	}
+	
+	public Collection getValues(String inField)
+	{
+		Collection values = (Collection)getValue(inField);
+		return values;
 	}
 
 	public PropertyDetail()
@@ -580,8 +587,14 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 	}
 	
 	
-	public boolean isSortable(){
-		return true;
+	public boolean isSortable()
+	{
+//		if( !isList() )
+//		{
+			return true;
+//		}
+//		String sortable = (String)getValue("stored");
+//		return Boolean.parseBoolean(sortable);
 	}
 	
 	

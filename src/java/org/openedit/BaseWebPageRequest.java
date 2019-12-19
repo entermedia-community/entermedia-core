@@ -38,6 +38,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.collections.map.ListOrderedMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.json.simple.parser.JSONParser;
 import org.openedit.data.BaseData;
 import org.openedit.data.SearcherManager;
 import org.openedit.generators.VariablePackage;
@@ -108,18 +109,19 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 		
 		if( jsonRequest == null && getRequest() != null)
 		{
-			JsonSlurper slurper = new JsonSlurper();
+			JSONParser parser = new JSONParser();
 			try
 			{
 				Reader reader = getRequest().getReader();
 				
 				if(reader != null){
-					jsonRequest = (Map)slurper.parse(reader); //this is real, the other way is just for t
+					jsonRequest = (Map)parser.parse(reader); //this is real, the other way is just for t
 //					StringWriter st = new StringWriter();
 //					new OutputFiller().fill(reader, st);
 //					log.info(st.toString());
 //					jsonRequest = (Map)slurper.parseText(st.toString());
 					putPageValue("_jsonRequest", jsonRequest);
+					//log.info("JSON REQUEST BODY was: " + jsonRequest);
 				}
 			}
 			catch ( Throwable ex)
@@ -922,7 +924,9 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 	 */
 	public WebPageRequest copy()
 	{
-		return new BaseWebPageRequest(this);
+		BaseWebPageRequest copy = new BaseWebPageRequest(this);
+		copy.setLocaleManager(getLocaleManager());
+		return copy;
 	}
 
 	/* (non-javadoc)
@@ -932,6 +936,7 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 	{
 		BaseWebPageRequest req = new BaseWebPageRequest(this);
 		req.putProtectedPageValue(PageRequestKeys.PAGE,inPage);
+		req.setLocaleManager(getLocaleManager());
 		return req;
 	}
 
@@ -1312,6 +1317,23 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 		}
 		return getLocaleManager().formatDateTimeForDisplay( inDate, getLocale());
 	}
+	public String getAge(Object inObj)
+	{
+		if( inObj == null)
+		{
+			return null;
+		}
+		Date inDate = null;
+		if( inObj instanceof Date)
+		{
+			inDate = (Date)inObj;
+		}
+		else
+		{
+			inDate = getLocaleManager().getDateStorageUtil().parseFromStorage((String)inObj);
+		}
+		return getLocaleManager().getAge(inDate, getLocale());
+	}
 	public String getDateTime(String inStoredDate)
 	{
 		Date stored = getLocaleManager().getDateStorageUtil().parseFromStorage(inStoredDate);
@@ -1360,10 +1382,6 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 	
 	public LocaleManager getLocaleManager()
 	{
-		if (fieldLocaleManager == null)
-		{
-			fieldLocaleManager = new LocaleManager();
-		}
 		return fieldLocaleManager;
 	}
 

@@ -343,10 +343,23 @@ public class URLUtilities
 			finalurl.append(path);
 			if( query != null)
 			{
-				String decodedQuery = Arrays.stream(query.split("&"))
-					.map(param -> param.split("=")[0] + "=" + encodeParamVal(param.split("=")[1]))
-					.collect(Collectors.joining("&"));
-				finalurl.append("?" + decodedQuery);
+				String[] params = query.split("&");
+				StringBuffer out = new StringBuffer();
+				for (int i = 0; i < params.length; i++)
+				{
+					String[] pair = params[i].split("=");
+					if( i > 0)
+					{
+						out.append("&");
+					}
+					out.append(pair[0]);
+					out.append("=");
+					if( pair.length > 1)
+					{
+						out.append(encodeParamVal(pair[1]));
+					}
+				}
+				finalurl.append("?" + out.toString());
 			}
 			return finalurl.toString();
 	 }
@@ -354,6 +367,8 @@ public class URLUtilities
 	private static String fixPath(String inPath)
 	{
 		// path = UriUtils.encodePath(path, "UTF-8");
+		
+		//Ian says we need spaces in here
 		final String PATHVALUES = ":?#[]@ "; //:?@[] \"%-.<>\\^_`{|}~";
 
 	    StringBuilder result = new StringBuilder(inPath);

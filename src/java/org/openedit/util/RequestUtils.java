@@ -215,7 +215,7 @@ public class RequestUtils {
 	public WebPageRequest createPageRequest(Page inPage, HttpServletRequest inRequest,
 			HttpServletResponse inResponse, User inUser, URLUtilities util) 
 	{
-		BaseWebPageRequest context = new BaseWebPageRequest();
+		BaseWebPageRequest context = (BaseWebPageRequest)getModuleManager().getBean("webPageRequest");
 		context.setLocaleManager(getLocaleManager());
 		context.putProtectedPageValue( PageRequestKeys.PAGE, inPage);
 		context.putProtectedPageValue(PageRequestKeys.CONTENT, inPage);			

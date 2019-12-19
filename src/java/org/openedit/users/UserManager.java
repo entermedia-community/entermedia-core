@@ -62,6 +62,8 @@ public interface UserManager extends CatalogEnabled
 	 */
 	User getUser(String inUserName) throws UserManagerException;
 
+	User getUser(String inUserName, boolean fromCache);
+
 	/**
 	 * Get all the users managed by this user manager.
 	 *
@@ -198,5 +200,7 @@ public interface UserManager extends CatalogEnabled
 	AuthenticationRequest createAuthenticationRequest(WebPageRequest inReq, String inPassword, User inUser);
 
 	public void fireUserEvent(User inUser, String inOperation) ;
+
+	String getEnterMediaKey(User user);
 	
 }

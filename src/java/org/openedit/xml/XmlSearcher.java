@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -444,7 +445,7 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable
 		return query;
 	}
 
-	public void saveData(Data inData, User inUser)
+	public synchronized void saveData(Data inData, User inUser)
 	{
 		//If this element is manipulated then the instance is the same
 		//No need to read it ElementData data = (ElementData)inData;
@@ -486,6 +487,7 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable
 			data.setId(inData.getId());
 			data.setName(inData.getName());
 			data.setSourcePath(inData.getSourcePath());
+			Set keys = inData.keySet();
 			for (Iterator iterator = inData.keySet().iterator(); iterator.hasNext();)
 			{
 				String key	= (String) iterator.next();

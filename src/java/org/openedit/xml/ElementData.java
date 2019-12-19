@@ -26,7 +26,6 @@ import org.openedit.util.DateStorageUtil;
 public class ElementData implements MultiValued, SaveableData, Comparable, SearchData
 {
 	protected Element fieldElement;
-	protected String fieldSourcePath;
 	protected String fieldVersion;
 	protected ValuesMap fieldMap;
 
@@ -38,7 +37,6 @@ public class ElementData implements MultiValued, SaveableData, Comparable, Searc
 		}
 		return fieldMap;
 	}
-
 	protected static final Pattern INVALIDSTUFF = Pattern.compile("[\'\"\n<>&]");
 	protected PropertyDetails fieldPropertyDetails;
 
@@ -112,7 +110,12 @@ public class ElementData implements MultiValued, SaveableData, Comparable, Searc
 		{
 			return null;
 		}
-		return String.valueOf(obj);
+		if( !(obj instanceof String))
+		{
+			return getMap().toString(obj);
+		}
+
+		return (String)obj;
 	}
 
 	/**
@@ -176,6 +179,15 @@ public class ElementData implements MultiValued, SaveableData, Comparable, Searc
 		if (val != null)
 		{
 			return Float.parseFloat(val);
+		}
+		return 0;
+	}
+	public long getLong(String inId)
+	{
+		String val = get(inId);
+		if (val != null)
+		{
+			return Long.parseLong(val);
 		}
 		return 0;
 	}
@@ -296,12 +308,13 @@ public class ElementData implements MultiValued, SaveableData, Comparable, Searc
 
 	public String getSourcePath()
 	{
-		return fieldSourcePath;
+		String value = getElement().attributeValue("sourcepath");
+		return value;
 	}
 
 	public void setSourcePath(String inSourcepath)
 	{
-		fieldSourcePath = inSourcepath;
+		setValue("sourcepath", inSourcepath);
 	}
 
 	public ValuesMap getProperties()
@@ -357,13 +370,20 @@ public class ElementData implements MultiValued, SaveableData, Comparable, Searc
 		}
 	}
 
-	public Collection<String> getValues(String inPreference)
+	public Collection getValues(String inPreference)
 	{
+		
+		Object values = getValue(inPreference);
+		if( values != null && values instanceof Collection)
+		{
+			return (Collection)values;
+		}
 		String val = get(inPreference);
 
 		if (val == null)
+		{
 			return null;
-
+		}
 		String[] vals = null;
 		if (val.contains("|"))
 		{

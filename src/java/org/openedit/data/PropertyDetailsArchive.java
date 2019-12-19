@@ -565,6 +565,10 @@ public class PropertyDetailsArchive implements CatalogEnabled
 			{
 				root.addAttribute("class", inDetails.getClassName());
 			}
+			if (inDetails.getSearchTypes() != null)
+			{
+				root.addAttribute("searchtypes", inDetails.getSearchTypes());
+			}
 		}
 
 		file.setRoot(root);
