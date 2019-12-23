@@ -58,20 +58,6 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	protected String fieldAlternativeIndex;
 	protected ModuleManager fieldModuleManager;
 	protected String fieldNewDataName;
-	protected TransactionLogger fieldTransactionLogger;
-	
-	public TransactionLogger getTransactionLogger()
-	{
-		if (fieldTransactionLogger == null)
-		{
-			fieldTransactionLogger = (TransactionLogger) getModuleManager().getBean(getCatalogId(), "transactionLogger");
-			
-		}
-
-		return fieldTransactionLogger;
-	}
-
-
 	protected boolean fieldForceBulk = false;
 
 	public boolean isForceBulk()

@@ -12,6 +12,7 @@ import com.google.common.cache.CacheBuilder;
 public class CacheManager
 {
 	public static final String NULLVALUE = new String();
+	public static final Object NULLOBJECT = new Object();
 	
 	protected Map<String,Cache> fieldCaches;
 	protected int fieldExpiryTime = -1;//minutes
