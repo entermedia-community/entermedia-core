@@ -94,7 +94,7 @@ public class QueryBuilder
 			date = 0 - date;
 		}
 		cal.add(GregorianCalendar.DAY_OF_MONTH, date);
-		getQuery().addBefore(inId, now);
+		getQuery().addBefore(inId, cal.getTime());
 		
 		return this;
 	}
