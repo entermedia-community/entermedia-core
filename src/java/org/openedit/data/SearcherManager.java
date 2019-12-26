@@ -410,7 +410,7 @@ public class SearcherManager
 			return null;
 		}
 		Data found = (Data)getCacheManager().get("sm-data" + inCatalogId, inSearchType + "/" + inId);
-		if( found == CacheManager.NULLOBJECT)
+		if( found == CacheManager.NULLDATA)
 		{
 			return null;
 		}
@@ -422,7 +422,7 @@ public class SearcherManager
 		Object data = searcher.searchById(inId);
 		if(data == null)
 		{
-			getCacheManager().put("sm-data" + inCatalogId, inSearchType + "/" + inId, CacheManager.NULLOBJECT);
+			getCacheManager().put("sm-data" + inCatalogId, inSearchType + "/" + inId, CacheManager.NULLDATA);
 			return null;
 		}
 		getCacheManager().put("sm-data" + inCatalogId, inSearchType + "/" + inId, data);
