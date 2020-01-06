@@ -403,6 +403,31 @@ public class SearcherManager
 		Object data = searcher.searchById(inId);
 		return (Data)data;
 	}
+	public Data getCachedData(String inCatalogId, String inSearchType, String inId)
+	{
+		if( inId == null)
+		{
+			return null;
+		}
+		Data found = (Data)getCacheManager().get("sm-data" + inCatalogId, inSearchType + "/" + inId);
+		if( found == CacheManager.NULLDATA)
+		{
+			return null;
+		}
+		if( found != null)
+		{
+			return found;
+		}
+		Searcher searcher = getSearcher(inCatalogId, inSearchType);
+		Object data = searcher.searchById(inId);
+		if(data == null)
+		{
+			getCacheManager().put("sm-data" + inCatalogId, inSearchType + "/" + inId, CacheManager.NULLDATA);
+			return null;
+		}
+		getCacheManager().put("sm-data" + inCatalogId, inSearchType + "/" + inId, data);
+		return (Data)data;
+	}
 	public Data getData(PropertyDetail inDetail, String inId)
 	{
 		if( inId == null)

@@ -134,17 +134,16 @@ public class BaseUserManager implements UserManager
 		}
 
 		boolean success = getAuthenticator().authenticate(inReq);
-		if (success) {
-			if(isTwoFactorEnabled()) {
-				boolean twofactor = getTwoFactorAuthenticator().authenticate(inReq);
-				if(!twofactor) {
-				success = false;
-				}
-				return twofactor;
-			}
-			
+		if (success && isTwoFactorEnabled()) 
+		{
+			success  = getTwoFactorAuthenticator().authenticate(inReq);
+		}
+		if (success) 
+		{
 			fireUserEvent(inUser, "login");
-		} else {
+		}
+		else 
+		{
 			fireUserEvent(inUser, "invalidpassword");
 		}
 		return success;
@@ -152,7 +151,7 @@ public class BaseUserManager implements UserManager
 
 
 	private boolean isTwoFactorEnabled() {
-		Data data = getSearcherManager().getData(getCatalogId(), "catalogsettings", "twofactorauthentication");
+		Data data = getSearcherManager().getCachedData(getCatalogId(), "catalogsettings", "twofactorauthentication");
 		if(data != null) {
 			return Boolean.parseBoolean(data.get("value"));
 		}

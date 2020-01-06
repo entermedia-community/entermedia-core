@@ -6,12 +6,16 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import org.openedit.Data;
+import org.openedit.data.BaseData;
+
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 
 public class CacheManager
 {
 	public static final String NULLVALUE = new String();
+	public static final Data NULLDATA = new BaseData();
 	
 	protected Map<String,Cache> fieldCaches;
 	protected int fieldExpiryTime = -1;//minutes
