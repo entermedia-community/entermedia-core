@@ -102,14 +102,8 @@ public class WebEvent extends BaseData
 	{
 		fieldDate = inDate;
 	}
-	public String getName()
-	{
-		return getSearchType();
-	}
-	public void setName(String inName)
-	{
-		setSearchType(inName);
-	}
+	
+	
 	public String getId()
 	{
 		return fieldId;
