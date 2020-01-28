@@ -982,6 +982,10 @@ public class PropertyDetailsArchive implements CatalogEnabled
 			{
 				String key = elem.attributeValue("id");
 				PropertyDetail detail = inDetails.getDetail(key);
+				if( detail.isDeleted())
+				{
+					continue;
+				}
 				if (detail != null)
 				{
 					PropertyDetail local = detail.copy();
