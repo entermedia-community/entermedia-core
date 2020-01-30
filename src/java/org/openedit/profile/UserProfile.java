@@ -503,7 +503,14 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 		{
 			return 15;
 		}
-		return Integer.parseInt(value);
+		try
+		{
+			return Integer.parseInt(value);			
+		}
+		catch (Exception ex)
+		{
+			return 15;
+		}
 	}
 
 	public void setHitsPerPageForSearchType(String inResultsView, int inHits)
