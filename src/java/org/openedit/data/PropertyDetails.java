@@ -277,7 +277,7 @@ public class PropertyDetails extends AbstractCollection
 		for (Iterator iter = getDetails().iterator(); iter.hasNext();)
 		{
 			PropertyDetail d = (PropertyDetail) iter.next();
-			if (d.isIndex())
+			if (d.isIndex()  && !d.isDeleted())
 			{
 				list.add(d);
 			}

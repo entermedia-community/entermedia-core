@@ -2180,7 +2180,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		{
 			return null;
 		}
-		return details.getDetails();
+		return details.findIndexProperties();
 	}
 
 	public List getKeywordProperties()
