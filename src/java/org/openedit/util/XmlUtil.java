@@ -78,6 +78,22 @@ public class XmlUtil
 			FileUtils.safeClose(inXmlReader);
 		}
 	}
+	public Element getXml(String inXml, String inEncode)
+	{
+		SAXReader reader = getReader();
+		try
+		{
+			reader.setEncoding(inEncode);
+			Document document = reader.read(inXml);
+			Element root = document.getRootElement();
+			return root;
+		}
+		catch ( Exception ex)
+		{
+			throw new OpenEditRuntimeException(ex.getMessage(), ex);
+		}
+	}
+	
 	public void saveXml(Element inRoot, Writer inWriter, String inEncoding)
 	{
 		if( inRoot.getDocument() != null)
