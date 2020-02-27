@@ -114,6 +114,22 @@ public class DateStorageUtil
 		double duration = (double) (current.getTime() - lastDateTime.getTime()) / PERIOD_OF_DAY;
 		return duration;
 	}
+	public Date parseFromObject(Object inStoredDate)
+	{
+		if( inStoredDate == null)
+		{
+			return null;
+		}
+		
+		if( inStoredDate instanceof String)
+		{
+			return parseFromStorage((String)inStoredDate);
+		}
+		else
+		{
+			return (Date)inStoredDate;
+		}
+	}
 
 	public Date parseFromStorage(String inStoredDate)
 	{
