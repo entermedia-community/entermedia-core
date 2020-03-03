@@ -3,6 +3,7 @@
  */
 package org.openedit.util;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -10,6 +11,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
+import java.io.StringReader;
 import java.io.Writer;
 import java.util.Iterator;
 
@@ -80,18 +82,9 @@ public class XmlUtil
 	}
 	public Element getXml(String inXml, String inEncode)
 	{
-		SAXReader reader = getReader();
-		try
-		{
-			reader.setEncoding(inEncode);
-			Document document = reader.read(inXml);
-			Element root = document.getRootElement();
-			return root;
-		}
-		catch ( Exception ex)
-		{
-			throw new OpenEditRuntimeException(ex.getMessage(), ex);
-		}
+		StringReader reader = new StringReader(inXml);
+		return getXml(reader,inEncode);
+
 	}
 	
 	public void saveXml(Element inRoot, Writer inWriter, String inEncoding)
