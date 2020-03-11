@@ -186,7 +186,7 @@ public class BaseEditorModule extends BaseModule
 			if( !p404.exists() )
 			{
 				//p404 = pageManager.getPage("/system/error404page.html");
-				throw new ContentNotAvailableException("Content missing", inReq.getPath());
+				throw new ContentNotAvailableException("Content missing " +  inReq.getPath(), inReq.getPath());
 			}
 			if ( p404.exists() )
 			{
