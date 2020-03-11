@@ -160,6 +160,21 @@ public class PropertyDetails extends AbstractCollection
 		fieldClassName = inClassName;
 	}
 
+	
+	public String getSettingValue(String inKey) {
+		if( fieldBaseSettings != null && getBaseSettings().getRoot() != null)
+		{
+			return getBaseSettings().getRoot().attributeValue(inKey);
+		}
+		else if (getInputFile() != null && getInputFile().getRoot() != null)
+		{
+			return getInputFile().getRoot().attributeValue(inKey);
+		}
+		
+		return null;
+	}
+	
+	
 	public String getBeanName()
 	{
 		if (fieldBeanName == null)
