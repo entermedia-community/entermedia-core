@@ -513,12 +513,13 @@ public class BaseUser extends BaseData implements User, Comparable
 		{
 			firstpart = getUserName();
 		}
-		if( firstpart != null)
-		{
-			firstpart = firstpart.substring(0,1);
-			firstpart = firstpart.toUpperCase();
-		}
 		String secondpart = getLastName();
+		if( secondpart != null)
+		{
+			secondpart = secondpart.substring(0,1);
+			secondpart = secondpart.toUpperCase();
+		}
+
 		if( secondpart == null)
 		{
 			secondpart = getEmail();

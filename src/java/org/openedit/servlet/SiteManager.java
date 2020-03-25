@@ -64,6 +64,7 @@ public class SiteManager
 			}
 			else
 			{
+				//This allows a domain to be associated with extra data
 				Collection hits = getSearcherManager().query("system", "siteparameters").exact("siteid", found.getId() ).search();
 				for (Iterator iterator = hits.iterator(); iterator.hasNext();)
 				{
