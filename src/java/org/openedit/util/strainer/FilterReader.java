@@ -197,7 +197,7 @@ public class FilterReader {
 			RefererFilter filter = new RefererFilter(target);
 			result = filter;
 		} else if (elemName.equals("dataproperty")) {
-			DataPropertyFilter datafilter = new DataPropertyFilter(inConfig.getAttribute("name"),inConfig.getAttribute("value"));
+			DataPropertyFilter datafilter = new DataPropertyFilter(inConfig.getAttribute("property"),inConfig.getAttribute("value"));
 			String beanname = inConfig.getAttribute("beanname");
 			datafilter.setBeanName(beanname);
 			datafilter.setSearcherManager(getSearcherManager());

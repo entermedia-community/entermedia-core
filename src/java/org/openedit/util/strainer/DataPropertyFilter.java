@@ -40,7 +40,6 @@ public class DataPropertyFilter extends BaseFilter
 	{
 		fieldBeanName = inBeanName;
 	}
-	protected String fieldPropertyName;
 	protected SearcherManager fieldSearcherManager;
 	
 	public SearcherManager getSearcherManager()
@@ -57,7 +56,7 @@ public class DataPropertyFilter extends BaseFilter
 	}
 	public DataPropertyFilter(String inPropertyName, String inValue)
 	{
-		setPropertyName(inPropertyName);
+		setProperty("property", inPropertyName);
 		setValue(inValue);
 	}
 
@@ -100,10 +99,10 @@ public class DataPropertyFilter extends BaseFilter
 	}
 	public String getPropertyName()
 	{
-		return fieldPropertyName;
+		return get("property");
 	}
 	public void setPropertyName(String inPropertyName)
 	{
-		fieldPropertyName = inPropertyName;
+		setProperty("property", inPropertyName);
 	}
 }

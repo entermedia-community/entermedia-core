@@ -99,9 +99,8 @@ public class FilterWriter {
 		} else if (elemName.equals("dataproperty")) {
 			DataPropertyFilter filter = (DataPropertyFilter) inFilter;
 			newChild.setAttribute("value", filter.getValue());
-			newChild.setAttribute("name", filter.getPropertyName());
+			newChild.setAttribute("property", filter.getPropertyName());
 		}
-
 		else if (elemName.equals("userproperty")) {
 			UserPropertyFilter filter = (UserPropertyFilter) inFilter;
 			newChild.setAttribute("value", filter.getValue());
