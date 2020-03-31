@@ -11,7 +11,16 @@ public class LanguageMap extends TreeMap
 
 	public LanguageMap(Map inVals)
 	{
-		super(inVals);
+		for (Iterator iterator = inVals.keySet().iterator(); iterator.hasNext();)
+		{
+			String key = (String) iterator.next();
+			String value = (String)inVals.get(key);
+			if( value == null || value.trim().isEmpty() )
+			{
+				continue;
+			}
+			put(key,value);
+		}
 	}
 	
 	public LanguageMap()
