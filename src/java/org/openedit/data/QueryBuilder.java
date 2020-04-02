@@ -201,6 +201,10 @@ public class QueryBuilder
 		Data found = getSearcher().searchByQuery(getQuery());
 		return found;
 	}
+	public QueryBuilder exact(String inKey, boolean inValue) 
+	{
+		return exact(inKey,String.valueOf(inValue));
+	}
 	public QueryBuilder exact(String inKey, String inValue) {
 		if( inValue == null)
 		{
