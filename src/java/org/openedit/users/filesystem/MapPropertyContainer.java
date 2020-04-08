@@ -90,17 +90,18 @@ public class MapPropertyContainer  extends ValuesMap
 						}
 						if( name.equals("emrecordstatus") )
 						{
-							JSONParser parser = new JSONParser();
-							Map values = null;
-							try
-							{
-								values = (Map)parser.parse(value);
-								put(name,values);
-							}
-							catch (ParseException e)
-							{
-								e.printStackTrace();
-							}
+//							JSONParser parser = new JSONParser();
+//							Map values = null;
+//							try
+//							{
+//								values = (Map)parser.parse(value);  //dates are not parsing for some reason
+//								put(name,values);
+//							}
+//							catch (Exception e)
+//							{
+//								//e.printStackTrace();
+//								log.error("record status invalid");
+//							}
 						}
 						else
 						{
