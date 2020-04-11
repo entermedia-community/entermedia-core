@@ -509,10 +509,6 @@ public class BaseUser extends BaseData implements User, Comparable
 			return sn;
 		}
 		String firstpart = getFirstName();
-		if( firstpart == null)
-		{
-			firstpart = getUserName();
-		}
 		String secondpart = getLastName();
 		if( secondpart != null)
 		{
@@ -520,7 +516,7 @@ public class BaseUser extends BaseData implements User, Comparable
 			secondpart = secondpart.toUpperCase();
 		}
 
-		if( secondpart == null)
+		if(firstpart == null && secondpart == null)
 		{
 			secondpart = getEmail();
 			if( secondpart != null )
@@ -534,7 +530,16 @@ public class BaseUser extends BaseData implements User, Comparable
 				parts = parts.toUpperCase();
 				secondpart = parts + secondpart.substring(1);
 			}
-	}
+			return secondpart;
+		}
+		if( secondpart == null)
+		{
+			return firstpart;
+		}
+		if( firstpart == null)
+		{
+			return secondpart;			
+		}
 		return firstpart + " " + secondpart;
 	}
 	
