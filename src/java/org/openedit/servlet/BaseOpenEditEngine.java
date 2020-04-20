@@ -135,19 +135,20 @@ public class BaseOpenEditEngine implements OpenEditEngine
 
 		WebPageRequest context = createWebPageRequest( page, inRequest, inResponse, util );
 		String applicationid = page.getProperty("applicationid");
+		
 		if( sitedata != null)
 		{
 			context.putPageValue("sitedata", sitedata);
 			if( applicationid != null)
 			{
-				page.setProperty("apphome", sitedata.getAppLink(applicationid));
+				page.setProperty("applink", sitedata.getAppLink(applicationid));
 			}
 		}
 		else 
 		{
 			if( applicationid != null)
 			{
-				page.setProperty("apphome", "/" + applicationid);			
+				page.setProperty("applink", "/" + applicationid);			
 			}
 		}
 		context.putPageValue("reloadpages", checkdates);
