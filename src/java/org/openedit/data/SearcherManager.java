@@ -300,7 +300,7 @@ public class SearcherManager
 	}
 	public String getLabel(PropertyDetail inDetail, Data inData, String inLocale)
 	{
-		if( inData == null)
+		if( inData == null || inDetail == null)
 		{
 			return null;
 		}
