@@ -59,7 +59,16 @@ public class URLUtilitiesTest extends BaseTestCase
         assertEquals(good, fixed);
     
     }
-
+    
+    public void testMessage()
+    {
+    	String url = "Hi Eye <br> <div> https://app.slack.com </div>";
+    	
+        String fixed = URLUtilities.escapeMessage(url);
+        String good = "Hi Eye <br> &lt;div&gt; <a href=\"https://app.slack.com\">https://app.slack.com</a> &lt;/div&gt;";
+        assertEquals(good, fixed);
+    
+    }
     
     
 }

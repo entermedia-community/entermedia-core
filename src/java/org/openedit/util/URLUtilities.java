@@ -59,14 +59,11 @@ See the GNU Lesser General Public License for more details.
 package org.openedit.util;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.security.cert.X509Certificate;
-import java.util.Arrays;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
@@ -841,4 +838,47 @@ public class URLUtilities
 	        } };
 	        return trustAllCerts;
 	    }
+	 
+	 private static final Pattern urlPattern = Pattern.compile(
+		        "(?:^|[\\W])((ht|f)tp(s?):\\/\\/|www\\.)"
+		                + "(([\\w\\-]+\\.){1,}?([\\w\\-.~]+\\/?)*"
+		                + "[\\p{Alnum}.,%_=?&#\\-+()\\[\\]\\*$~@!:/{};']*)",
+		        Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
+	 
+	 
+	public static String escapeMessage(String inMessage) {
+		if (inMessage == null) {
+			return null;
+		}
+		String escaped = URLUtilities.xmlEscape(inMessage);
+		escaped = escaped.replaceAll("&lt;br&gt;", "<br>");
+		escaped = escaped.replaceAll("&lt;i&gt;", "<i>");
+		escaped = escaped.replaceAll("&lt;/ir&gt;", "</i>");
+		escaped = escaped.replaceAll("&lt;b&gt;", "<b>");
+		escaped = escaped.replaceAll("&lt;/b&gt;", "</b>");
+
+		  Matcher m = urlPattern.matcher(escaped);
+		  StringBuffer sb = new StringBuffer(escaped.length());
+		  while (m.find()) {
+		   // String text = m.group(1);
+		    String text = m.group(0).trim();
+		    // ... possibly process 'text' ...
+		    StringBuffer link = new StringBuffer();
+		    
+		    link.append(" <a href=\"");
+		    link.append(text);
+		    link.append("\">");
+		    link.append(text);
+		    link.append("</a>");
+		    m.appendReplacement(sb, Matcher.quoteReplacement(link.toString()));
+		    
+		    
+		  }
+		  m.appendTail(sb);
+		  return sb.toString();
+			
+		
+	}
+		
+		
 }
