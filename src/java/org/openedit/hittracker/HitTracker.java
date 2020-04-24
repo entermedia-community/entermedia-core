@@ -345,6 +345,41 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 		}
 		return (int) pages;
 	}
+
+	//1 One based 
+	public Integer getPosition()
+	{
+		int totalpositions = getTotalPages();
+		//reverse sorted. So the first ones are the largest numbers
+		return totalpositions - getPage() + 1;
+	}
+	
+	//Reversed If we are on 3 previous would be 4
+	public Integer prevPosition()
+	{
+		int page = getPosition() + 1;
+		if (page > getTotalPages())
+		{
+			return null;
+		}
+		else
+		{
+			return page;
+		}
+	}
+	//Reversed If we are on 3 next would be 2
+	public Integer nextPosition()
+	{
+		int page = getPosition() - 1;
+		if (page < 1)
+		{
+			return null;
+		}
+		else
+		{
+			return page;
+		}
+	}
 	
 	public Integer nextPage()
 	{
@@ -355,7 +390,7 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 		}
 		else
 		{
-			return new Integer(page);
+			return page;
 		}
 	}
 
@@ -368,7 +403,7 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 		}
 		else
 		{
-			return new Integer(page);
+			return page;
 		}
 	}
 
@@ -379,7 +414,7 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 			return null;
 		}
 		int start = (getPage() - 1) * getHitsPerPage();
-		return new Integer(start + 1);
+		return (start + 1);
 	}
 
 	public Integer getPageEnd()
@@ -391,9 +426,9 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 		int start = getPage() * getHitsPerPage();
 		if (start > getTotal())
 		{
-			return new Integer(getTotal());
+			return getTotal();
 		}
-		return new Integer(start);
+		return start;
 
 	}
 
@@ -453,6 +488,38 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 		}
 		return hits;
 	}
+	/*
+	public List positionsBefore()
+	{
+		List<Integer> hits = linksBefore();
+		int totalpages = getTotalPages();
+		for (int i = 0; i < hits.size(); i++)
+		{
+			int page = hits.get(i);
+			int position =  totalpages - page + 1;
+			hits.set(i, position);
+		}
+		//Collections.reverse(hits);
+		return hits;
+	}
+	public List positionsAfter()
+	{
+		List<Integer> hits = linksAfter();
+		int totalpages = getTotalPages();
+		for (int i = 0; i < hits.size(); i++)
+		{
+			int page = hits.get(i);
+			int position =  totalpages - page + 1;
+			hits.set(i, position);
+		}
+		return hits;
+	}
+
+	*/
+	public int toPosition(int inPage)
+	{
+		return getTotalPages() - inPage + 1;
+	}
 
 	public List linksBefore()
 	{
@@ -469,7 +536,6 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 
 		return range.subList(0, i);
 	}
-
 	public List linksAfter()
 	{
 		if (getTotalPages() == getPage())

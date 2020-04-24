@@ -403,11 +403,10 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					tracker.setHitsPerPage(Integer.parseInt(hitsperpage));
 				}
 			}
-			String pagenumber = inPageRequest.getRequestParameter(getSearchType() + "page");
-			if( pagenumber == null)
-			{
-				pagenumber = inPageRequest.getRequestParameter("page");
-			}
+			int totalPages = tracker.getTotalPages();
+
+			String pagenumber = extractPageNumber(inPageRequest,totalPages);
+
 			if (pagenumber != null)
 			{
 				if ("next".equals(pagenumber))
@@ -1748,22 +1747,9 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				 * }
 				 */
 		}
-		String page = inPageRequest.getRequestParameter(getSearchType() + "page");
-		if( page == null)
-		{
-			page = inPageRequest.getRequestParameter("page");
-		}
-		if("NaN".equals(page)) {
-			page = null;
-		}
 		int totalPages = tracker.getTotalPages();
-		if (page == null)
-		{
-			if (Boolean.parseBoolean(inPageRequest.findValue("alwaysresetpage")))
-			{
-				page = "1";
-			}
-		}
+
+		String page = extractPageNumber(inPageRequest,totalPages);
 
 		if (page != null)
 		{
@@ -1802,6 +1788,47 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			}
 		}
 		return tracker;
+	}
+
+	protected String extractPageNumber(WebPageRequest inPageRequest, int totalPages)
+	{
+		String page = inPageRequest.getRequestParameter(getSearchType() + "page");
+		if( page == null)
+		{
+			page = inPageRequest.getRequestParameter("page");
+		}
+		if("NaN".equals(page)) 
+		{
+			page = null;
+		}
+		if (page == null)
+		{
+			String position = inPageRequest.getRequestParameter(getSearchType() + "pageposition");
+			if( position == null)
+			{
+				position = inPageRequest.getRequestParameter("pageposition");
+			}
+			if( position != null)
+			{
+				int positionint = Integer.parseInt(position);
+				int pageis = totalPages - positionint + 1;
+				if( pageis > totalPages)
+				{
+					pageis = totalPages;
+				}
+				if( pageis < 1)
+				{
+					pageis = 1;
+				}
+				page = String.valueOf(pageis);
+			}
+			
+		}
+		if (Boolean.parseBoolean(inPageRequest.findValue("alwaysresetpage")))
+		{
+			page = "1";
+		}
+		return page;
 	}
 
 	/**
