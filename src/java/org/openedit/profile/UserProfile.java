@@ -38,17 +38,17 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 	protected Collection<String> fieldCollectionIds;
 	protected Collection<Data> fieldModules;
 	protected Set fieldPermissions;
-	protected String fieldIndexId;
+	protected String fieldSettingsGroupIndexId;
 	
 
-	public String getIndexId()
+	public String getSettingsGroupIndexId()
 	{
-		return fieldIndexId;
+		return fieldSettingsGroupIndexId;
 	}
 
-	public void setIndexId(String inIndexId)
+	public void setSettingsGroupIndexId(String inIndexId)
 	{
-		fieldIndexId = inIndexId;
+		fieldSettingsGroupIndexId = inIndexId;
 	}
 
 	public Set getPermissions()
