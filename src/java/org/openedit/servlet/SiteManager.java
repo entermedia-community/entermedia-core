@@ -3,9 +3,12 @@ package org.openedit.servlet;
 import java.util.Collection;
 import java.util.Iterator;
 
-import org.openedit.Data;
+import org.openedit.MultiValued;
 import org.openedit.cache.CacheManager;
+import org.openedit.data.Searcher;
 import org.openedit.data.SearcherManager;
+import org.openedit.hittracker.HitTracker;
+import org.openedit.util.URLUtilities;
 
 public class SiteManager
 {
@@ -57,21 +60,41 @@ public class SiteManager
 		SiteData found = (SiteData)getCacheManager().get("systemsitedata", domain);
 		if( found == null)
 		{
-			found = (SiteData)getSearcherManager().query("system", "site").exact("domains", domain ).searchOne();
-			if(found == null)
+			Searcher searcher = getSearcherManager().getSearcher("system", "site");
+			HitTracker hits = searcher.query().all().search();
+			if(hits.isEmpty())
 			{
 				found = NULLSITE;
 			}
 			else
 			{
-				//This allows a domain to be associated with extra data
-				Collection hits = getSearcherManager().query("system", "siteparameters").exact("siteid", found.getId() ).search();
 				for (Iterator iterator = hits.iterator(); iterator.hasNext();)
 				{
-					Data data = (Data) iterator.next();
-					found.setSiteParameter(data.get("parametername"),data.get("parametervalue"));
+					MultiValued data = (MultiValued) iterator.next();
+					Collection domains = data.getValues("domains");
+					if( domains != null && !domains.isEmpty() )
+					{
+						for (Iterator iterator2 = domains.iterator(); iterator2.hasNext();)
+						{
+							String  tmpdomain = (String ) iterator2.next();
+							if( tmpdomain.endsWith(domain))  //*.oe.com .endswith oe.com
+							{
+								found = (SiteData)searcher.loadData(data);
+							}
+						}
+					}
 				}
 			}
+//			else  Needs to be keyed on a domain
+//			{
+//				//This allows a domain to be associated with extra data
+//				Collection hits = getSearcherManager().query("system", "siteparameters").exact("siteid", found.getId() ).search();
+//				for (Iterator iterator = hits.iterator(); iterator.hasNext();)
+//				{
+//					Data data = (Data) iterator.next();
+//					found.setSiteParameter(data.get("parametername"),data.get("parametervalue"));
+//				}
+//			}
 				
 			getCacheManager().put("systemsitedata", domain, found);
 		}
