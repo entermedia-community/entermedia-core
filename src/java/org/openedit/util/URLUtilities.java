@@ -880,5 +880,35 @@ public class URLUtilities
 		
 	}
 		
-		
+	public String getSubDomain()
+	{
+		return parseSubDomain(buildRoot());
+	}
+	public static String parseSubDomain(String base)
+	{
+			// string off start
+			String basestring = base.substring(base.lastIndexOf("//") + 2,
+					base.length());
+			int port = basestring.indexOf(":");
+			if( port > -1)
+			{
+				basestring = basestring.substring(0,port);
+			}
+			
+			int nextslash = basestring.indexOf("/");
+			if( nextslash > -1)
+			{
+				basestring = basestring.substring(0,nextslash);
+			}
+			basestring = basestring.toLowerCase();
+			//total Domain
+			String[] parts  = basestring.split("\\.");
+			if( parts.length < 3)
+			{
+				return null;
+			}
+			return parts[0];
+
+	}
+	
 }

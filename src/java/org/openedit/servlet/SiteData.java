@@ -53,4 +53,6 @@ public class SiteData extends BaseData
 		String dir = inApplicationid.substring(apppath.length() -1, inApplicationid.length());
 		return dir;
 	}
+	
+	
 }

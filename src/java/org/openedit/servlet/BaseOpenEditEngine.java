@@ -136,7 +136,7 @@ public class BaseOpenEditEngine implements OpenEditEngine
 		WebPageRequest context = createWebPageRequest( page, inRequest, inResponse, util );
 		String applicationid = page.getProperty("applicationid");
 		
-		if( sitedata != null)
+		if( sitedata != null)  //TODO: deprecated Dont do this anymore
 		{
 			context.putPageValue("sitedata", sitedata);
 			if( applicationid != null)
