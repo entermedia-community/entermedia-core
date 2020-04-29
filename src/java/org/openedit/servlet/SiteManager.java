@@ -77,7 +77,7 @@ public class SiteManager
 						for (Iterator iterator2 = domains.iterator(); iterator2.hasNext();)
 						{
 							String  tmpdomain = (String ) iterator2.next();
-							if( tmpdomain.endsWith(domain))  //*.oe.com .endswith oe.com
+							if( domain.endsWith(tmpdomain))  //*.oe.com .endswith oe.com
 							{
 								found = (SiteData)searcher.loadData(data);
 							}
