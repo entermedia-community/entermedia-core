@@ -879,7 +879,12 @@ public class URLUtilities
 			
 		
 	}
-		
+
+	public String getDomain()
+	{
+		return parseDomain(buildRoot());
+	}
+
 	public String getSubDomain()
 	{
 		return parseSubDomain(buildRoot());
@@ -887,20 +892,7 @@ public class URLUtilities
 	public static String parseSubDomain(String base)
 	{
 			// string off start
-			String basestring = base.substring(base.lastIndexOf("//") + 2,
-					base.length());
-			int port = basestring.indexOf(":");
-			if( port > -1)
-			{
-				basestring = basestring.substring(0,port);
-			}
-			
-			int nextslash = basestring.indexOf("/");
-			if( nextslash > -1)
-			{
-				basestring = basestring.substring(0,nextslash);
-			}
-			basestring = basestring.toLowerCase();
+			String basestring = parseDomain(base);
 			//total Domain
 			String[] parts  = basestring.split("\\.");
 			if( parts.length < 3)
@@ -909,6 +901,25 @@ public class URLUtilities
 			}
 			return parts[0];
 
+	}
+
+	protected static String parseDomain(String base)
+	{
+		String basestring = base.substring(base.lastIndexOf("//") + 2,
+				base.length());
+		int port = basestring.indexOf(":");
+		if( port > -1)
+		{
+			basestring = basestring.substring(0,port);
+		}
+		
+		int nextslash = basestring.indexOf("/");
+		if( nextslash > -1)
+		{
+			basestring = basestring.substring(0,nextslash);
+		}
+		basestring = basestring.toLowerCase();
+		return basestring;
 	}
 	
 }
