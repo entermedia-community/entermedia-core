@@ -61,7 +61,9 @@ package org.openedit.util;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.security.cert.X509Certificate;
+import java.util.Formatter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -304,7 +306,11 @@ public class URLUtilities
 		if(rawurl  == null) {
 			return null;
 		}
-			String host = null;
+		
+//		URI uri = URI.create(rawurl);
+//		String returned = uri.toExternalForm();
+//		return returned;
+		String host = null;
 			String path = null;
 			String query = null;
 			if( rawurl.startsWith("/") )
@@ -368,16 +374,67 @@ public class URLUtilities
 		//Ian says we need spaces in here
 		final String PATHVALUES = ":?#[]@ "; //:?@[] \"%-.<>\\^_`{|}~";
 
-	    StringBuilder result = new StringBuilder(inPath);
-	    for (int i = inPath.length() - 1; i >= 0; i--) {
-	        if (PATHVALUES.indexOf(inPath.charAt(i)) != -1) {
-	            result.replace(i, i + 1, 
-	                    "%" + Integer.toHexString(inPath.charAt(i)).toUpperCase());
+		
+//		byte[] encoded = inPath.getBytes("UTF-8");
+//		Integer.toHexString(encoded);
+//		
+		//Escaper 
+		//String result = UrlEscapers.urlPathSegmentEscaper().escape(inPath);
+	    StringBuilder result = new StringBuilder(inPath.length() +1);
+	   
+	    for(int i=0; i<inPath.length();++i) 
+	    {
+			char c = inPath.charAt(i);
+			
+	    	if(i < inPath.length()-1 && Character.isSurrogatePair(c, inPath.charAt(i+1))) 
+	    	{
+				// if so, the codepoint must be stored on a 32bit int as char is only 16bit
+				int codePoint = inPath.codePointAt(i);
+				// show the code point and the char
+				//System.out.println(String.format("%6d:%s", codePoint, new String(new int[]{codePoint}, 0, 1)));
+				byte[] allbytes = new String(new int[]{codePoint}, 0, 1).getBytes(StandardCharsets.UTF_8);
+				Formatter formatter = new Formatter();
+				for (byte b : allbytes) 
+				{
+	                formatter.format("%%%02X", b);
+	            }
+				result.append(formatter.toString());
+				++i;
+			}
+	    	else if ( c > 128)
+	    	{
+				byte[] allbytes = new String(new int[]{c}, 0, 1).getBytes(StandardCharsets.UTF_8);
+				Formatter formatter = new Formatter();
+				for (byte b : allbytes) 
+				{
+	                formatter.format("%%%02X", b);
+	            }
+				result.append(formatter.toString());
+	    	}
+	    	else if (PATHVALUES.indexOf(c) != -1 ) 
+	        { 
+	            result.append("%" + Integer.toHexString(c).toUpperCase());
 	        }
+	        else
+	        {
+	        	result.append(c);
+	    	}
 	    }
 		return result.toString();
 	}
-
+   public static String utf8encode(int codepoint) 
+   {
+	   	String inChar = new String(new int[]{codepoint}, 0, 1);
+        byte[] bytes = inChar.getBytes(StandardCharsets.UTF_8);
+        
+        Formatter formatter = new Formatter();
+        for (byte b : bytes) {
+            formatter.format("%%02X", b);
+        }
+        String encodedHex = formatter.toString().toUpperCase();
+        return encodedHex;
+        
+    }
 	public String decode(String s)
 	{
 		if (s == null)
