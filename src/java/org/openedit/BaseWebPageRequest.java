@@ -703,7 +703,15 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 			}
 			return found;
 		}
-		return session.getAttribute(inKey);
+		try
+		{
+			return session.getAttribute(inKey);
+		}
+		catch (Exception ex)
+		{
+			log.error("Could not get attribute " + inKey + " on " + getPath(),ex);
+			return null;
+		}
 	}
 
 	/* 
