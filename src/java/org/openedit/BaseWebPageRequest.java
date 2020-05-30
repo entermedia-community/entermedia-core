@@ -1340,7 +1340,7 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 	
 	public String getTimeOfDay(Date inDate)
 	{
-		String format = "hh:MMa";
+		String format = "hh:mma";
 		if( format != null)
 		{
 			String value = getLocaleManager().getDateStorageUtil().formatDateObj(inDate, format);
