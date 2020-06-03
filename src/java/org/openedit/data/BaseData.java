@@ -301,10 +301,16 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 	{
 		if( inKey.equals("emrecordstatus") && inValue instanceof String)
 		{
+			//Spreadsheet importing?
+			String val = (String)inValue;
+			if( val.trim().isEmpty())
+			{
+				return;
+			}
 			try
 			{
 				JSONParser parser = new JSONParser();
-				inValue = (Map)parser.parse((String)inValue);
+				inValue = (Map)parser.parse(val);
 			}
 			catch (ParseException e)
 			{

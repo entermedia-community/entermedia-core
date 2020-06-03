@@ -1,6 +1,7 @@
 package org.openedit.hittracker;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
@@ -24,6 +25,42 @@ public class FilterNode extends BaseData
 	public void setPropertyDetail(PropertyDetail inPropertyDetail)
 	{
 		fieldPropertyDetail = inPropertyDetail;
+	}
+	public List getChildrenByCount()
+	{
+		List sorted = new ArrayList(getChildren());
+		sorted.sort(new Comparator<FilterNode>()
+		{
+			@Override
+			public int compare(FilterNode inArg1, FilterNode inArg2)
+			{
+				String count1 = inArg1.get("count");
+				if( count1 != null)
+				{
+					int c1 = Integer.parseInt(count1);
+					String count2 = inArg2.get("count");
+					if( count2 == null)  //Needed?
+					{
+						return 1; //reversed
+					}
+					int c2 = Integer.parseInt(count2);
+					if( c1 > c2)
+					{
+						return -1;
+					}
+					else if( c1 < c2)
+					{
+						return 1;
+					}
+					else
+					{
+						return 0;
+					}
+				}
+				return 0;
+			}
+		});
+		return sorted;
 	}
 	public List getChildren()
 	{
