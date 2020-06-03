@@ -1325,6 +1325,37 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 		}
 		return getLocaleManager().formatDateTimeForDisplay( inDate, getLocale());
 	}
+	
+	
+	public String gateDate(String inFormat, String inDate) {
+		Date stored = getLocaleManager().getDateStorageUtil().parseFromStorage(inDate);
+		if( inFormat != null)
+		{
+			String value = getLocaleManager().getDateStorageUtil().formatDateObj(stored, inFormat);
+			return value;
+		}
+		return null;
+	}
+	
+	
+	public String getTimeOfDay(Date inDate)
+	{
+		String format = "hh:mma";
+		if( format != null)
+		{
+			String value = getLocaleManager().getDateStorageUtil().formatDateObj(inDate, format);
+			return value;
+		}
+		return getLocaleManager().formatDateTimeForDisplay( inDate, getLocale());
+	}
+	
+	
+	public String getTimeOfDay(String  inDate)
+	{		
+		Date stored = getLocaleManager().getDateStorageUtil().parseFromStorage(inDate);
+		return getTimeOfDay(stored);
+	}
+	
 	public String getAge(Object inObj)
 	{
 		if( inObj == null)
