@@ -89,6 +89,10 @@ public class Page implements Data, Comparable
 		{
 			return false;
 		}
+		if( getMimeType().equals("application/x-mpegURL") )
+		{
+			return false;
+		}
 		return true;
 		
 	}
