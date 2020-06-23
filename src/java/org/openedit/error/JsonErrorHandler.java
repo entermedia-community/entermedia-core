@@ -16,6 +16,7 @@ import java.io.Writer;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.json.simple.JSONObject;
 import org.openedit.OpenEditException;
 import org.openedit.WebPageRequest;
 import org.openedit.page.PageRequestKeys;
@@ -78,13 +79,14 @@ public class JsonErrorHandler implements ErrorHandler
 				}
 				context.putPageValue("editPath", exception.getPathWithError());
 				context.putPageValue("oe-exception", exception); //must be a top level thing since we create a new context
-				PageStreamer pages = (PageStreamer)context.getPageValue(PageRequestKeys.PAGES);
+				//PageStreamer pages = (PageStreamer)context.getPageValue(PageRequestKeys.PAGES);
 				
 				Writer out = context.getWriter();
 				out.append("{ \"reponse\": {\n");
 				out.append(" \"status\":\"error\",");				
-				out.append("{ \"path\":\"" + pathWithError + "\",");
-				out.append("{ \"details\":\"" + error + "\"");
+				out.append("\"path\":\"" + pathWithError + "\",");
+				String escaped = JSONObject.escape(error.getMessage());
+				out.append("\"details\":\"" + escaped + "\"");
 				out.append("\n}");
 				//error.printStackTrace( new PrintWriter( writer ) );
 				out.flush();
