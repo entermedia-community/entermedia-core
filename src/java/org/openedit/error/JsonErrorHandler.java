@@ -87,7 +87,7 @@ public class JsonErrorHandler implements ErrorHandler
 				out.append("\"path\":\"" + pathWithError + "\",");
 				String escaped = JSONObject.escape(error.getMessage());
 				out.append("\"details\":\"" + escaped + "\"");
-				out.append("\n}");
+				out.append(" \n}\n}");
 				//error.printStackTrace( new PrintWriter( writer ) );
 				out.flush();
 			} catch ( Exception ex)
