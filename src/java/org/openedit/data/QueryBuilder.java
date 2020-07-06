@@ -278,6 +278,13 @@ public class QueryBuilder
 		return this;
 	}
 	
+	public QueryBuilder facet(String inString)
+	{
+		return addFacet(inString);
+	}
+	
+	
+	
 	public QueryBuilder facets(List<PropertyDetail> inFacets)
 	{
 		getQuery().setFacets(inFacets);
