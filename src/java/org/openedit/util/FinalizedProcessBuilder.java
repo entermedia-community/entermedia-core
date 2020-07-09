@@ -527,6 +527,7 @@ public class FinalizedProcessBuilder {
 		processBuilder.redirectErrorStream(false);
 		Process process = processBuilder.start();
 
+		//This is error gobbling only
 		Set<StreamGobbler> gobblers = new HashSet<StreamGobbler>(2);
 		StreamGobbler errorGobbler = new StreamGobbler(process.getErrorStream(), gobbleErrorLogging);
 		errorGobbler.setErrorStream(true);

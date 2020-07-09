@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -31,7 +32,30 @@ public class Exec
 	protected OutputFiller fieldFiller;
 	protected Boolean fieldOnWindows;
 	protected ExecutorManager fieldExecutorManager;
+	protected Map fieldLongRunningProcesses;
+	
+	public RunningProcess getProcess(String inName)
+	{
+		RunningProcess process = (RunningProcess)getLongRunningProcesses().get(inName);
+		if( process  == null)
+		{
+			process = new RunningProcess();
+			process.setExecutorManager(getExecutorManager());
+			process.start(inName);
+			getLongRunningProcesses().put(inName,process);
+		}
+		return process;
+	}
+	
+	public Map getLongRunningProcesses()
+	{
+		if (fieldLongRunningProcesses == null)
+		{
+			fieldLongRunningProcesses = new HashMap();
+		}
 
+		return fieldLongRunningProcesses;
+	}
 	public ExecutorManager getExecutorManager()
 	{
 		if (fieldExecutorManager == null)
@@ -247,7 +271,7 @@ public class Exec
 		return result;
 	}
 
-	
+
 	public String getXmlCommandsFilename()
 	{
 		return fieldXmlCommandsFilename;
@@ -388,6 +412,9 @@ public class Exec
 		return cachedCommand;
 	}
 
+	
+	
+	
 	class ExecCommand
 	{
 		protected String inCommand;

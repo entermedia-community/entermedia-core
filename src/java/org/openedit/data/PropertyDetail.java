@@ -50,7 +50,7 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 		if( fieldObjectDetails == null)
 		{
 			fieldObjectDetails = new ArrayList();
-			if(isDataType("objectarray"))
+			if(isDataType("objectarray") || isDataType("nested"))
 			{
 				for (Iterator iterator = getElementData().getElement().elementIterator("property"); iterator.hasNext();) 
 				{

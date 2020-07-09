@@ -365,5 +365,14 @@ public class ValuesMap extends HashMap
 		
 		return l;
 	}
+	public boolean containsInValues(String inField, String inValue)
+	{
+		Collection values = getValues(inField);
+		if( values == null)
+		{
+			return false;
+		}
+		return values.contains(inValue);
+	}
 	
 }
