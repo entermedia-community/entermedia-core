@@ -386,4 +386,30 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 		throw new OpenEditException("Number is not a valid Long");
 		
 	}
+	
+	public String getAge()
+	{
+		Date createdon = getDate("creationdate");
+		if( createdon == null)
+		{
+			return null;
+		}
+		//MathUtils util = new MathUtils();
+		long diff = System.currentTimeMillis() - createdon.getTime();
+		
+		long minute = (diff / (1000 * 60)) % 60;
+		long hour = (diff / (1000 * 60 * 60));
+		String time = null;
+		if( hour > 24)
+		{
+			double days = (double)hour / 24d;
+			hour = hour % 24;
+			time = String.format("%2dd:%2dh:%2dm", (int)days,hour, minute);
+		}
+		else
+		{
+			time = String.format("%2dh:%02dm", hour, minute);
+		}
+		return time;
+	}
 }
