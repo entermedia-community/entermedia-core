@@ -398,21 +398,41 @@ public class PropertyDetails extends AbstractCollection
 			{
 				//Remote lookup
 				//By searchtype
-				PropertyDetails otherdetails = getArchive().getPropertyDetailsCached(type[0]);
-				if( otherdetails != null)
-				{
-					PropertyDetail shareddetail = otherdetails.getDetail(type[1]);
-					return shareddetail;
-				}
-				log.info("Loading " + inId );
+				//See if there is one local
 				PropertyDetail localinfo = getDetail(type[0]);
-				if(localinfo != null && localinfo.isList()){
-					PropertyDetails remotedetails = getArchive().getPropertyDetails(localinfo.getListId());
-					PropertyDetail shareddetail = remotedetails.getDetail(type[1]);
-					if(shareddetail != null){
+				if( localinfo == null)
+				{
+					PropertyDetails otherdetails = getArchive().getPropertyDetailsCached(type[0]);
+					if( otherdetails != null)
+					{
+						PropertyDetail shareddetail = otherdetails.getDetail(type[1]);
 						return shareddetail;
 					}
 				}
+				if(localinfo != null)
+				{
+					if( localinfo.isList() )
+					{
+						PropertyDetails remotedetails = getArchive().getPropertyDetails(localinfo.getListId());
+						PropertyDetail shareddetail = remotedetails.getDetail(type[1]);
+						if(shareddetail != null){
+							return shareddetail;
+						}
+					}
+					if( localinfo.isDataType("nested")|| localinfo.isDataType("objectarray"))
+					{
+						localinfo = localinfo.getChildDetail(type[1]);
+						if( localinfo != null)
+						{
+							PropertyDetail copy = localinfo.copy();
+							copy.setId(inId);
+							return copy;
+						}
+					}
+				}
+				//Object stuff
+				log.info("Loading " + inId );
+				
 			}
 		}
 

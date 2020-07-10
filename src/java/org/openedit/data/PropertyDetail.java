@@ -43,7 +43,19 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 	protected ElementData fieldElementData;
 	
 	protected String fieldInputFilePath;
-	
+
+	public PropertyDetail getChildDetail(String inKey)
+	{
+		for (Iterator iterator = getObjectDetails().iterator(); iterator.hasNext();)
+		{
+			PropertyDetail detail = (PropertyDetail) iterator.next();
+			if( detail.getId().equals(inKey))
+			{
+				return detail;
+			}
+		}
+		return null;
+	}
 	
 	public List getObjectDetails() 
 	{

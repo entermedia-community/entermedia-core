@@ -374,5 +374,4 @@ public class ValuesMap extends HashMap
 		}
 		return values.contains(inValue);
 	}
-	
 }
