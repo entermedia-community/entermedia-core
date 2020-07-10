@@ -75,7 +75,11 @@ public class RunningProcess
 			readfromprocess = new BufferedReader( new InputStreamReader(process.getInputStream(),"UTF-8") );
 			//int returnVal = process.waitFor();
 			streamcopy = new StreamCopyRunner(readfromprocess, getExecutorManager());
-			streamcopy.startCopy();
+			synchronized (streamcopy)
+			{
+				streamcopy.startCopy();
+				streamcopy.wait(2000);				
+			}
 		}
 		catch (Exception ex)
 		{

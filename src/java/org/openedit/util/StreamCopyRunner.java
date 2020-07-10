@@ -59,6 +59,10 @@ public class StreamCopyRunner implements Closeable, Runnable
 	@Override
 	public void run()
 	{
+		synchronized (this)
+		{
+			notify();
+		}
 		parentThread = Thread.currentThread();
 		savedoutbuffer = new StringBuffer();
 		String line = null;
