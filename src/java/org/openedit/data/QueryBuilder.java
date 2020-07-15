@@ -365,4 +365,9 @@ public class QueryBuilder
 		return this;
 		
 	}
+	public QueryBuilder terms(WebPageRequest inReq)
+	{
+		getSearcher().addStandardSearchTerms(inReq);
+		return this;
+	}
 }
