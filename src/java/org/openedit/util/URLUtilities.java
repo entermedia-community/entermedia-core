@@ -270,7 +270,7 @@ public class URLUtilities
 	 * Percent-encode the given String.  This method delegates to the URLEncoder.encode() method.
 	 *
 	 * @param s The String to encode
-	 *
+	 * @deprecated use urlEscape
 	 * @return The encoded String
 	 *
 	 * @see java.net.URLEncoder
@@ -372,7 +372,7 @@ public class URLUtilities
 		// path = UriUtils.encodePath(path, "UTF-8");
 		
 		//Ian says we need spaces in here
-		final String PATHVALUES = ":?#[]@ "; //:?@[] \"%-.<>\\^_`{|}~";
+		final String PATHVALUES = ":?#[]@+ "; //:?@[] \"%-.<>\\^_`{|}~";
 
 		
 //		byte[] encoded = inPath.getBytes("UTF-8");
