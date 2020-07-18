@@ -244,6 +244,17 @@ public class QueryBuilder
 	
 	
 	
+	public QueryBuilder missing(String inKey) {
+		getQuery().addMissing(inKey);
+		return this;
+	}
+	
+	public QueryBuilder exists(String inKey) {
+		getQuery().addExists(inKey);
+		return this;
+	}
+	
+	
 	public QueryBuilder all() 
 	{
 		getQuery().addMatches("id", "*");
