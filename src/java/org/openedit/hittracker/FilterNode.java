@@ -101,7 +101,7 @@ public class FilterNode extends BaseData
 				return Integer.parseInt(count);
 			}
 		}
-		return -1;
+		return 0;
 	}
 	
 	public FilterNode getChild(String inId)
