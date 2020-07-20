@@ -1544,4 +1544,43 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 
 	}
 
+	public String replaceProperty(String inValue)
+	{
+		if( inValue == null)
+		{
+			return inValue;
+		}
+		String edittext = inValue;
+		int start = 0;
+		while( (start = edittext.indexOf("${",start)) != -1)
+		{
+			int end = edittext.indexOf("}",start);
+			if( end != -1)
+			{
+				String key = edittext.substring(start+2,end);
+				Object variable = getRequestParameter(key); //check for property
+				if( variable == null)
+				{
+					variable = getPageValue(key);
+				}
+				if( variable != null)
+				{
+					String sub = variable.toString();
+					sub = replaceProperty(sub);
+					edittext = edittext.substring(0,start) + sub + edittext.substring(end+1);
+					if(sub.length() <= end){
+						start = end-sub.length();
+					}else{
+						start =  sub.length();
+					}
+				}else{
+					start = end;
+				}
+			}
+		
+			
+		}
+		return edittext;
+	}
+	
 }
