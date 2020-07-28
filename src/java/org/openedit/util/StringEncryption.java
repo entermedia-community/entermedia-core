@@ -29,6 +29,8 @@ import org.openedit.users.User;
 
 public class StringEncryption
 {
+	public static final String TIMESTAMP = "tstamp";
+
 	private static final Log log = LogFactory.getLog(StringEncryption.class);
 //	public static final String DESEDE_ENCRYPTION_SCHEME = "DESede";
 	public static final String DES_ENCRYPTION_SCHEME = "DES";
@@ -172,6 +174,10 @@ public class StringEncryption
 	
 	public synchronized String encrypt( String unencryptedString ) throws OpenEditException
 	{
+		if( unencryptedString.startsWith("DES:"))
+		{
+			return unencryptedString;
+		}
 		if ( unencryptedString == null || unencryptedString.trim().length() == 0 )
 		{
 				throw new IllegalArgumentException("unencrypted string was null or empty" );
@@ -210,7 +216,6 @@ public class StringEncryption
 
 		try
 		{
-			
 			if( encryptedString.startsWith("DES:"))
 			{
 				encryptedString = encryptedString.substring(4);
@@ -361,22 +366,29 @@ public class StringEncryption
 		return inPassword;
 	}
 
-	public String asMd5(String key) throws NoSuchAlgorithmException
+	public String asMd5(String key) 
 	{
-		MessageDigest digest = java.security.MessageDigest.getInstance("MD5");
-		digest.update(key.getBytes());
-		byte[] md5 = digest.digest();
-
-		StringBuffer hexString = new StringBuffer();
-		for (int i=0;i<md5.length;i++) 
+		try
 		{
-			if( md5[i] <= 16)
+			MessageDigest digest = java.security.MessageDigest.getInstance("MD5");
+			digest.update(key.getBytes());
+			byte[] md5 = digest.digest();
+	
+			StringBuffer hexString = new StringBuffer();
+			for (int i=0;i<md5.length;i++) 
 			{
-				hexString.append("0");
+				if( md5[i] <= 16)
+				{
+					hexString.append("0");
+				}	
+				hexString.append( Integer.toHexString(0xFF & md5[i]));
 			}
-			hexString.append( Integer.toHexString(0xFF & md5[i]));
+			return hexString.toString();
 		}
-		return hexString.toString();
+		catch (Exception ex)
+		{
+			throw new OpenEditException(ex);
+		}
 	}
 
 	public String getPasswordMd5(String inPassword) 

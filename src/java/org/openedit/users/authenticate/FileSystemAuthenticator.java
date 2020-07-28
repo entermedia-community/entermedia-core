@@ -3,6 +3,8 @@
  */
 package org.openedit.users.authenticate;
 
+import java.util.Date;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openedit.OpenEditException;
@@ -47,24 +49,50 @@ public class FileSystemAuthenticator extends BaseAuthenticator
 						//log.info("Encrypted passwords did not match. Should be:" + password  + " was:" + inPassword);
 						log.info("Could not log in " + inAReq.getUserName() + ", bad DES password");
 					}
-					return ok;
+					else
+					{
+						return true;
+					}
 				}
 				else
 				{
 					String decryptedString = decrypt(password);
-						if ( decryptedString != null && decryptedString.equals(inPassword))
-						{
-							return true;
-						}
-						log.info("Could not log in " + inAReq.getUserName() + ", bad password");
-						//log.debug("decryptedString" + decryptedString + " from " + password + " did not equal " + inPassword);
+					if ( decryptedString != null && decryptedString.equals(inPassword))
+					{
+						return true;
+					}
 				}
 			}
-			else if ( password.equals(inPassword))
+			
+			if ( password.equals(inPassword))
 			{
 				return true;
 			}
+			else if( inPassword.contains(StringEncryption.TIMESTAMP) ) //This is required 
+			{
+				//Maybe its an entermediakey with a timestamp
+//				String entermediakey = inReq.getUser().getId() + "md542" + passenc;
+//				String tsenc = encoder.encrypt(String.valueOf(new Date().getTime()));
+				//check the timestamp first
+				String time = inPassword.substring(inPassword.indexOf(StringEncryption.TIMESTAMP) + StringEncryption.TIMESTAMP.length());
+				String thetime = getStringEncryption().decrypt(time);
+				if( System.currentTimeMillis() - Long.parseLong(thetime) > 1000*60*60*24 )
+				{
+					log.info("Temporary Encrypted key had expired for user " + inAReq.getUserName() );
+					return false;
+				}
+				inPassword = inPassword.substring(0,inPassword.indexOf(StringEncryption.TIMESTAMP));
+
+				String md5pass = inPassword.substring(inPassword.indexOf("md542") + 5 );
+				String usermd5 = getStringEncryption().getPasswordMd5(password);
+				if ( usermd5.equals(md5pass))
+				{
+					return true;
+				}
+				log.info("Some ecryption issue " + usermd5 + " != " + md5pass);
+			}
 		}
+		log.info("Could not log in " + inAReq.getUserName() + ", bad password");
 		return false;
 	}
 
