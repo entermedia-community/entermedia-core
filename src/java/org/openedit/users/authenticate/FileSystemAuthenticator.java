@@ -3,11 +3,10 @@
  */
 package org.openedit.users.authenticate;
 
-import java.util.Date;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openedit.OpenEditException;
+import org.openedit.users.User;
 import org.openedit.users.UserManagerException;
 import org.openedit.util.StringEncryption;
 
@@ -74,22 +73,10 @@ public class FileSystemAuthenticator extends BaseAuthenticator
 //				String entermediakey = inReq.getUser().getId() + "md542" + passenc;
 //				String tsenc = encoder.encrypt(String.valueOf(new Date().getTime()));
 				//check the timestamp first
-				String time = inPassword.substring(inPassword.indexOf(StringEncryption.TIMESTAMP) + StringEncryption.TIMESTAMP.length());
-				String thetime = getStringEncryption().decrypt(time);
-				if( System.currentTimeMillis() - Long.parseLong(thetime) > 1000*60*60*24 )
-				{
-					log.info("Temporary Encrypted key had expired for user " + inAReq.getUserName() );
-					return false;
-				}
-				inPassword = inPassword.substring(0,inPassword.indexOf(StringEncryption.TIMESTAMP));
-
-				String md5pass = inPassword.substring(inPassword.indexOf("md542") + 5 );
-				String usermd5 = getStringEncryption().getPasswordMd5(password);
-				if ( usermd5.equals(md5pass))
+				if( getStringEncryption().verifyEnterMediaKey(inAReq.getUser(), password, inPassword) )
 				{
 					return true;
 				}
-				log.info("Some ecryption issue " + usermd5 + " != " + md5pass);
 			}
 		}
 		log.info("Could not log in " + inAReq.getUserName() + ", bad password");
