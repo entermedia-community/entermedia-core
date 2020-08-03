@@ -6,6 +6,7 @@ import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.KeySpec;
+import java.util.Date;
 import java.util.Properties;
 
 import javax.crypto.Cipher;
@@ -491,6 +492,20 @@ public class StringEncryption
 		return false;
 	}
 
-	
+
+	public String getTempEnterMediaKey(User user)
+	{
+		String passenc = getPasswordMd5(user.getPassword());
+		String entermediakey = user.getId() + "md542" + passenc;
+
+		String tsenc = encrypt(String.valueOf(new Date().getTime()));
+		if (tsenc.startsWith("DES:"))
+		{
+			tsenc = tsenc.substring("DES:".length());//kloog: remove DES: prefix since appended to URL
+		}
+		entermediakey = entermediakey + StringEncryption.TIMESTAMP + tsenc;
+		return entermediakey;
+	}
+
 	
 }
