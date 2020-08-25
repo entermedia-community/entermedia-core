@@ -1582,7 +1582,11 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 
 	public Term addAfter(String inString, Date inSearchDate)
 	{
-		PropertyDetail detail = getPropertyDetails().getDetail(inString);
+		PropertyDetail detail  = null;
+		if( getPropertyDetails() != null)
+		{
+			detail = getPropertyDetails().getDetail(inString);
+		}
 		if(detail == null)
 		{
 			detail = new PropertyDetail();
