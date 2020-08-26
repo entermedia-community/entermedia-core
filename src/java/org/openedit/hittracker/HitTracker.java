@@ -1558,7 +1558,7 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 		return true;
 	}
 	
-	public List getSuggestions()
+	public List<String> getSuggestions()
 	{
 		//Look over the description field that they are using. 
 		//Check all the agregations for any hits
