@@ -1557,5 +1557,41 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 		}
 		return true;
 	}
+	
+	public List getSuggestions()
+	{
+		//Look over the description field that they are using. 
+		//Check all the agregations for any hits
+		List<String> matches = new ArrayList();
+		Term term = getSearchQuery().getTermByDetailId("description");
+		if( term != null && term.getValue() != null)
+		{
+			List<FilterNode> options = getFilterOptions();
+			//check each child for matches
+			if( options != null)
+			{
+				String text = term.getValue().toLowerCase();
+				for (Iterator iterator = options.iterator(); iterator.hasNext();)
+				{
+					FilterNode filterNode = (FilterNode) iterator.next();
+					Collection values = filterNode.getChildren();
+					for (Iterator iterator2 = values.iterator(); iterator2.hasNext();)
+					{
+						FilterNode child = (FilterNode) iterator2.next();
+						String value = child.getName();
+						if( value.toLowerCase().startsWith( text) )
+						{
+							if( !matches.contains(value)) //TODO: Speed up with ordered hash
+							{
+								matches.add(value);
+							}
+						}
+					}
+				}
+			}
+		}
+		return matches;
+	}
+	
 }
 
