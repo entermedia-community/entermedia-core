@@ -2249,6 +2249,40 @@ public boolean isFilterSelected(String type, String value) {
 	public boolean isIncludeDescription()
 	{
 		return fieldIncludeDescription;
+	}
+
+
+	public void addMissing(String inKey)
+	{
+		PropertyDetail detail = createDetail(inKey);
+
+		Term term = new Term()
+		{
+			public String toQuery()
+			{
+				return getValue();
+			}
+		};
+		term.setOperation("missing");
+		term.setDetail(detail);
+		addTerm(term);
+		
+	}	
+	public void addExists(String inKey)
+	{
+		PropertyDetail detail = createDetail(inKey);
+
+		Term term = new Term()
+		{
+			public String toQuery()
+			{
+				return getValue();
+			}
+		};
+		term.setOperation("exists");
+		term.setDetail(detail);
+		addTerm(term);
+		
 	}	
 	
 	

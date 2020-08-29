@@ -244,6 +244,17 @@ public class QueryBuilder
 	
 	
 	
+	public QueryBuilder missing(String inKey) {
+		getQuery().addMissing(inKey);
+		return this;
+	}
+	
+	public QueryBuilder exists(String inKey) {
+		getQuery().addExists(inKey);
+		return this;
+	}
+	
+	
 	public QueryBuilder all() 
 	{
 		getQuery().addMatches("id", "*");
@@ -277,6 +288,13 @@ public class QueryBuilder
 		getQuery().addAggregation(inString);
 		return this;
 	}
+	
+	public QueryBuilder facet(String inString)
+	{
+		return addFacet(inString);
+	}
+	
+	
 	
 	public QueryBuilder facets(List<PropertyDetail> inFacets)
 	{
@@ -357,5 +375,10 @@ public class QueryBuilder
 		getQuery().setIncludeDescription(true);
 		return this;
 		
+	}
+	public QueryBuilder terms(WebPageRequest inReq)
+	{
+		getSearcher().addStandardSearchTerms(inReq);
+		return this;
 	}
 }
