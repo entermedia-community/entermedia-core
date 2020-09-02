@@ -10,6 +10,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -644,10 +646,66 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 		// All the ID's we can find
 		return null;
 	}
-
-	public String highlight(Object inDoc, String inField)
+	public String highlight(Object inHit, String inField)
 	{
-		return "Not implemented";
+		return null;
+	}
+	public String highlight(Object inHit, String inField, int cutoff)
+	{
+		//StringBuffer output = new StringBuffer();
+		String input = getInput("description");
+		String text = getValue(inHit, inField);
+		if( input == null)
+		{
+			//grab the start of the text?
+			//output.append(input);
+		}
+		else
+		{
+			int i = 2;
+			if( text.contains(input))
+			{
+				i++;
+			}
+
+			/**
+			 *  final String source = "FooBar";
+    final String target = "Foo";
+    final String replacement = "";
+    final String result = Pattern.compile(target, Pattern.LITERAL | Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE).matcher(source)
+.replaceAll(Matcher.quoteReplacement(replacement));
+			 */
+			
+			//TODO: go to the place in the doc
+			 Pattern p = Pattern.compile(input,
+			            Pattern.MULTILINE | Pattern.CASE_INSENSITIVE);
+			
+			 Matcher match = p.matcher(text);
+			
+			 String fixed = match.replaceAll("<em>$0</em>");
+			 
+			 int start = fixed.indexOf("<em>");
+			 if( start> -1)
+			 {
+				 start = start - cutoff/2;
+				 start = Math.max(0,start);
+				 //get the next space
+				 if( start > 0)
+				 {
+					 start = fixed.indexOf(" ",start); //Next space
+				 }
+				 
+				 int max = Math.min(start + cutoff,fixed.length());
+
+				 String finaltext = fixed.substring(start,max);
+				 return finaltext;
+			 }
+			 
+			 return null;
+		}
+		
+		return null;
+
 	}
 	public String getValue(Object inHit, String inString)
 	{
