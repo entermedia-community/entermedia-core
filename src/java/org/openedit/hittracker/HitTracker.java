@@ -648,35 +648,23 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 	}
 	public String highlight(Object inHit, String inField)
 	{
-		return null;
+		String input = getInput("description");
+		String text = getValue(inHit, inField);
+		if( text != null && input != null)
+		{
+			 Pattern p = Pattern.compile(input,Pattern.MULTILINE | Pattern.CASE_INSENSITIVE);
+			 Matcher match = p.matcher(text);
+			 text = match.replaceAll("<em>$0</em>");
+		}
+		return text;
 	}
 	public String highlight(Object inHit, String inField, int cutoff)
 	{
 		//StringBuffer output = new StringBuffer();
 		String input = getInput("description");
 		String text = getValue(inHit, inField);
-		if( input == null)
+		if( text != null && input != null)
 		{
-			//grab the start of the text?
-			//output.append(input);
-		}
-		else
-		{
-			int i = 2;
-			if( text.contains(input))
-			{
-				i++;
-			}
-
-			/**
-			 *  final String source = "FooBar";
-    final String target = "Foo";
-    final String replacement = "";
-    final String result = Pattern.compile(target, Pattern.LITERAL | Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE).matcher(source)
-.replaceAll(Matcher.quoteReplacement(replacement));
-			 */
-			
-			//TODO: go to the place in the doc
 			 Pattern p = Pattern.compile(input,
 			            Pattern.MULTILINE | Pattern.CASE_INSENSITIVE);
 			
@@ -700,7 +688,6 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 				 String finaltext = fixed.substring(start,max);
 				 return finaltext;
 			 }
-			 
 			 return null;
 		}
 		
