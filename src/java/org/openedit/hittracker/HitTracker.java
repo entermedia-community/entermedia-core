@@ -650,9 +650,10 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 	{
 		String input = getInput("description");
 		String text = getValue(inHit, inField);
-		if( text != null && input != null)
+		if( text != null && input != null && input.length() > 1) //avoid *
 		{
-			 Pattern p = Pattern.compile(input,Pattern.MULTILINE | Pattern.CASE_INSENSITIVE);
+			 String escaped = Pattern.quote(input);
+			 Pattern p = Pattern.compile(escaped,Pattern.MULTILINE | Pattern.CASE_INSENSITIVE);
 			 Matcher match = p.matcher(text);
 			 text = match.replaceAll("<em>$0</em>");
 		}
@@ -663,9 +664,10 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 		//StringBuffer output = new StringBuffer();
 		String input = getInput("description");
 		String text = getValue(inHit, inField);
-		if( text != null && input != null)
+		if( text != null && input != null && input.length() > 1)
 		{
-			 Pattern p = Pattern.compile(input,
+			 String escaped = Pattern.quote(input);
+			 Pattern p = Pattern.compile(escaped,
 			            Pattern.MULTILINE | Pattern.CASE_INSENSITIVE);
 			
 			 Matcher match = p.matcher(text);
