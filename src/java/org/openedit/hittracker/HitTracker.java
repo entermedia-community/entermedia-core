@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -44,8 +45,7 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 	protected boolean fieldShowOnlySelected;
 	protected String fieldTempSessionId;
 
-	
-	
+	protected Map<String,FilterNode> fieldUserFilterValues;
 	protected List<FilterNode> fieldFilterOptions;
 	
 	protected boolean fieldUseServerCursor;
@@ -1639,6 +1639,27 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 		}
 		return matches;
 	}
+
+	public FilterNode getUserFilterValue(String inId)
+	{
+		if( fieldUserFilterValues != null)
+		{
+			FilterNode node = getUserFilterValues().get(inId);
+			return node;
+		}
+		return null;
+	}
+	
+	
+	public Map<String, FilterNode> getUserFilterValues()
+	{
+		return fieldUserFilterValues;
+	}
+	public void setUserFilterValues(Map<String, FilterNode> inUserFilterValues)
+	{
+		fieldUserFilterValues = inUserFilterValues;
+	}
+
 	
 }
 
