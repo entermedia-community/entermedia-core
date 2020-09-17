@@ -42,7 +42,7 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	protected boolean fieldEndUserSearch = false;
 	protected String fieldSortLanguage = "en";
 	protected boolean fieldIncludeFacets = false;
-	protected List fieldExtraFacets;
+	protected List fieldUserFacets;
 	protected List fieldSorts;
 	protected Map fieldSuggestedSearches;
 
@@ -109,20 +109,31 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	
 	public List getFacets()
 	{
-	if (fieldExtraFacets == null)
+	if (fieldUserFacets == null)
 	{
-		fieldExtraFacets = new ArrayList();
+		fieldUserFacets = new ArrayList();
 		
 	}
 
-	return fieldExtraFacets;
+	return fieldUserFacets;
 	}
 
-	public void setExtraFacets(List inExtraFacets)
+	public void setFacets(List<PropertyDetail> facets)
 	{
-		fieldExtraFacets = inExtraFacets;
-	}
+		fieldUserFacets = facets;
+//		//UserProfile profile = inPageRequest.getUserProfile();
+//		if (facets != null && facets.size() > 0)
+//		{
+//			for (Iterator iterator = facets.iterator(); iterator.hasNext();)
+//			{
+//				PropertyDetail detail = (PropertyDetail) iterator.next();
+//				
+//				getFacets().add(detail);
+//
+//			}
+//		}
 
+	}
 	
 	public String getSortLanguage()
 	{
@@ -2202,23 +2213,6 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		return input;
 	}
 
-
-	public void setFacets(List<PropertyDetail> facets)
-	{
-		fieldExtraFacets = facets;
-//		//UserProfile profile = inPageRequest.getUserProfile();
-//		if (facets != null && facets.size() > 0)
-//		{
-//			for (Iterator iterator = facets.iterator(); iterator.hasNext();)
-//			{
-//				PropertyDetail detail = (PropertyDetail) iterator.next();
-//				
-//				getFacets().add(detail);
-//
-//			}
-//		}
-
-	}
 
 public boolean isFilterSelected(String type, String value) {
 		
