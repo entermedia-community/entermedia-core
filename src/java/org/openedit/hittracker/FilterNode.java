@@ -89,17 +89,22 @@ public class FilterNode extends BaseData
 		getChildren().add(inFilterNode);
 		
 	}
+	public int getCount()
+	{
+		String count = get("count");
+		if( count != null)
+		{
+			return Integer.parseInt(count);
+		}
+		return 0;
+	}
 	
 	public int getCount(String inId)
 	{
 		FilterNode child = getChild(inId);
 		if( child != null)
 		{
-			String count = child.get("count");
-			if( count != null)
-			{
-				return Integer.parseInt(count);
-			}
+			return child.getCount();
 		}
 		return 0;
 	}
