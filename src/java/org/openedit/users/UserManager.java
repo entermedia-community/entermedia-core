@@ -202,5 +202,7 @@ public interface UserManager extends CatalogEnabled
 	public void fireUserEvent(User inUser, String inOperation) ;
 
 	String getEnterMediaKey(User user);
+
+	void logIntoApp(WebPageRequest inReq,User inUser);
 	
 }

@@ -413,6 +413,18 @@ public class BaseUserManager implements UserManager
 		return value;
 	}
 
+	@Override
+	public void logIntoApp(WebPageRequest inReq, User inUser)
+	{
+		String md5 = getStringEncryption().getPasswordMd5(inUser.getPassword());
+		String value = inUser.getUserName() + "md542" + md5;
+		inReq.putPageValue("entermediakey", value); //TODO: Remove this, its slow
+		String catalogid = inReq.findValue("catalogid");
+		inReq.putSessionValue(catalogid + "user", inUser);
+		inReq.putPageValue("user", inUser);
+		
+	}
+
 
 
 }
