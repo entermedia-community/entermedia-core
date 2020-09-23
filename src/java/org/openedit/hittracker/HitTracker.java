@@ -1658,8 +1658,18 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 	public void setUserFilterValues(Map<String, FilterNode> inUserFilterValues)
 	{
 		fieldUserFilterValues = inUserFilterValues;
+//		if( fieldUserFilterValues != null)
+//		{
+//			log.info( fieldUserFilterValues.get("ibmsdl_source_type").getChildren() );
+//		}
 	}
 
+	@Override
+	public String toString()
+	{
+		
+		return "size:" + size() + " query: " + getSearchQuery().toQuery();
+	}
 	
 }
 

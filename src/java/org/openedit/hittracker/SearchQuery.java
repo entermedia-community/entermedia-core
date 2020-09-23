@@ -2204,12 +2204,6 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	public String getMainInput()
 	{
 		String input = getInput("description");
-		
-		if(input == null) {
-			//if("*".equals(getInput("id"))){
-				input = "*";
-			//}
-		}
 		return input;
 	}
 
