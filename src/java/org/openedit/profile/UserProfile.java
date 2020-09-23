@@ -496,12 +496,12 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 			value = get("modulehitsperpage");
 			if (value == null)
 			{
-				return 15;
+				return 16;
 			}
 		}
 		if ("null".equals(value))
 		{
-			return 15;
+			return 16;
 		}
 		try
 		{
@@ -509,7 +509,7 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 		}
 		catch (Exception ex)
 		{
-			return 15;
+			return 16;
 		}
 	}
 
