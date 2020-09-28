@@ -50,6 +50,11 @@ public class DateStorageUtil
 	{
 		return getDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 	}
+	public DateFormat getJsonSqlFormat()
+	{
+		return getDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+	}
+
 
 	protected DateFormat getExifFormat()
 	{
@@ -181,6 +186,10 @@ public class DateStorageUtil
 
 			if (inStoredDate.length() > 18)
 			{
+				if (inStoredDate.contains("T"))
+				{
+					return getJsonSqlFormat().parse(inStoredDate); //Also works for ElasticSearch
+				}
 				if (inStoredDate.contains("-"))
 				{
 					return getOldDashFormat().parse(inStoredDate);
