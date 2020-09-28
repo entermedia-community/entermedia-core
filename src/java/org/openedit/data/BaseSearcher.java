@@ -1,5 +1,6 @@
 package org.openedit.data;
 
+import java.io.Reader;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -21,6 +22,7 @@ import org.apache.commons.logging.LogFactory;
 import org.entermediadb.location.GeoCoder;
 import org.entermediadb.location.Position;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.openedit.Data;
 import org.openedit.ModuleManager;
 import org.openedit.MultiValued;
@@ -674,6 +676,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		String type = inPageRequest.getRequestParameter("searchtype");
 		if (type != null && !type.equals(getSearchType()))
 		{
+			log.error("Not searching the same type as we are " + type + " we are: " + getSearchType());
 			return null;
 		}
 		type = getSearchType();
@@ -787,6 +790,8 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 
 	protected SearchQuery addFields(WebPageRequest inPageRequest) throws OpenEditException
 	{
+		populateSearchFromJson(inPageRequest);
+
 		String[] fieldid = inPageRequest.getRequestParameters("field");
 
 		if (fieldid == null)
@@ -794,14 +799,17 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			return null;
 		}
 		SearchQuery search = createSearchQuery();
-		String and = inPageRequest.getRequestParameter("querytype");
-		if (and != null)
+		String type = inPageRequest.getRequestParameter("querytype");
+		if (type != null)
 		{
-			if ("or".equals(and))
+			if ("or".equals(type))
 			{
 				search.setAndTogether(false);
 			}
 		}
+//		else if( "json".equals(type) )
+//		{
+//		}
 
 		String[] operations = inPageRequest.getRequestParameters("operation");
 		if (operations == null)
@@ -914,6 +922,38 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			}
 		}
 		return search;
+	}
+
+	protected void populateSearchFromJson(WebPageRequest inPageRequest)
+	{
+		String json = inPageRequest.getRequestParameter(getSearchType() + "_jsonquery");
+		if( json != null)
+		{
+			JSONParser parser = new JSONParser();
+			try
+			{
+				 Map jsonRequest = (Map)parser.parse(json); //this is real, the other way is just for t
+				 
+				 //Loop over the fields and add them as values
+				 Collection fields = (Collection)jsonRequest.get("fields");
+				 for (Iterator iterator = fields.iterator(); iterator.hasNext();)
+	 			 {
+					Map field = (Map) iterator.next();
+					String name = (String)field.get("name");
+					inPageRequest.addRequestParameter("field", name);
+
+					String operation = (String)field.get("operation");
+					inPageRequest.addRequestParameter("operation", operation);
+					
+					String value = (String)field.get("value");
+					inPageRequest.addRequestParameter(name  + ".value", value);
+				}
+			}
+			catch ( Throwable ex)
+			{
+				log.error("Could not parse " +json , ex);
+			}
+		}
 	}
 
 	protected void loadLanguageValues(WebPageRequest inPageRequest, SearchQuery search, PropertyDetail detail, String val, String op)

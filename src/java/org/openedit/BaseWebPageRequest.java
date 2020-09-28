@@ -19,6 +19,8 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Enumeration;
@@ -26,7 +28,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
@@ -56,8 +57,6 @@ import org.openedit.util.PathUtilities;
 import org.openedit.util.SessionMap;
 import org.openedit.util.URLUtilities;
 import org.openedit.web.Browser;
-
-import groovy.json.JsonSlurper;
 
 /**
  * @author Matt Avery, mavery@einnovation.com
@@ -1581,6 +1580,23 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 			
 		}
 		return edittext;
+	}
+
+	@Override
+	public void addRequestParameter(String inKey, String inValue)
+	{
+		Collection values = null;
+		String[]  evalues = getRequestParameters(inKey);
+		if( evalues != null)
+		{
+			values = new ArrayList(Arrays.asList(evalues));
+		}
+		else
+		{
+			values = new ArrayList();
+		}
+		values.add(inValue);
+		setRequestParameter(inKey, (String[])values.toArray(new String[values.size()]));
 	}
 	
 }

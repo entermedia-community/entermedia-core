@@ -271,5 +271,7 @@ public interface WebPageRequest
 	boolean hasPermission(String inString);
 
 	void closeStreams();
+
+	void addRequestParameter(String inString, String inName);
 	
 }
