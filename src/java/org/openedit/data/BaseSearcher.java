@@ -947,7 +947,14 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					
 					String value = (String)field.get("value");
 					inPageRequest.addRequestParameter(name  + ".value", value);
-				}
+
+					String before = (String)field.get("beforeDate");
+					inPageRequest.addRequestParameter(name  + ".before", before);
+
+					String after = (String)field.get("afterDate");
+					inPageRequest.addRequestParameter(name  + ".after", after);
+
+	 			 }
 			}
 			catch ( Throwable ex)
 			{
