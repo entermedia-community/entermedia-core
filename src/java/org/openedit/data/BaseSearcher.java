@@ -1556,6 +1556,21 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					search.setProperty("datedirection" + field, op);
 				}
 			}
+			else if (op.equals("afterdate"))
+			{
+				String afterString = inPageRequest.getRequestParameter(field.getId() + ".after");
+				if( afterString == null)
+				{
+					afterString = val;
+				}
+				if( afterString != null)
+				{
+					Date after = formater.parse(afterString);
+					t = search.addAfter(field, after);
+					search.setProperty(t.getId() + ".after", afterString);
+					t.setOperation(op);				
+				}
+			}
 			else if (op.startsWith("after"))
 			{
 				if (op.length() > "after".length())
