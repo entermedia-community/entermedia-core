@@ -858,7 +858,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 
 			String[] vals = inPageRequest.getRequestParameters(detail.getId() + ".value");
 			String val = null;
-			if (vals != null && vals.length == 1 && vals[0].length() == 0)
+			if (vals != null && vals.length == 1 && vals[0] != null && vals[0].length() == 0)
 			{
 				vals = null;
 			}
@@ -948,6 +948,12 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					String value = (String)field.get("value");
 					inPageRequest.addRequestParameter(name  + ".value", value);
 
+					Collection values = (Collection)field.get("values");
+					if( values != null)
+					{
+						inPageRequest.setRequestParameter(name  + ".values", (String[])values.toArray(new String[values.size()]));
+					}
+					
 					String before = (String)field.get("beforeDate");
 					inPageRequest.addRequestParameter(name  + ".before", before);
 
