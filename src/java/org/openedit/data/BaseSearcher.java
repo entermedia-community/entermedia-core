@@ -1533,7 +1533,22 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		try
 		{
 			Date d = null;
-			if (op.startsWith("before"))
+			if (op.equals("beforedate"))
+			{
+				String beforeString = inPageRequest.getRequestParameter(field.getId() + ".before");
+				if( beforeString == null)
+				{
+					beforeString = val;
+				}
+				if( beforeString != null)
+				{
+					Date before = formater.parse(beforeString);
+					t = search.addBefore(field, before);
+					search.setProperty(t.getId() + ".before", beforeString);
+					t.setOperation(op);				
+				}
+			}
+			else if (op.startsWith("before"))
 			{
 				if (op.length() > "before".length())
 				{
