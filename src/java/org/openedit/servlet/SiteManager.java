@@ -57,6 +57,10 @@ public class SiteManager
 	public SiteData findSiteData(String inUrl)
 	{
 		String domain = getDomain(inUrl);
+		if( domain == null)
+		{
+			return null;
+		}
 		SiteData found = (SiteData)getCacheManager().get("systemsitedata", domain);
 		if( found == null)
 		{
@@ -95,7 +99,10 @@ public class SiteManager
 //					found.setSiteParameter(data.get("parametername"),data.get("parametervalue"));
 //				}
 //			}
-				
+			if( found == null)
+			{
+				found = NULLSITE;
+			}
 			getCacheManager().put("systemsitedata", domain, found);
 		}
 		if( found == NULLSITE)

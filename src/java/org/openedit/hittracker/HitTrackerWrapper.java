@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Spliterator;
 import java.util.function.Consumer;
 import java.util.function.IntFunction;
@@ -254,10 +255,7 @@ public class HitTrackerWrapper extends HitTracker {
 		return fieldParentTracker.findRow(inField, inValue);
 	}
 	*/
-	public List getFilterOptions() {
-		return fieldParentTracker.getFilterOptions();
-	}
-
+	
 	public FilterNode findFilterNode(String inType) {
 		return fieldParentTracker.findFilterNode(inType);
 	}
@@ -430,9 +428,7 @@ public class HitTrackerWrapper extends HitTracker {
 		fieldParentTracker.setSessionId(inSessionId);
 	}
 
-	public void setFilterOptions(List filters) {
-		fieldParentTracker.setFilterOptions(filters);
-	}
+
 	/*
 	public void setHitsPerPageHeight(String pageHeight, int inRowHeight) {
 		fieldParentTracker.setHitsPerPageHeight(pageHeight, inRowHeight);
@@ -501,5 +497,10 @@ public class HitTrackerWrapper extends HitTracker {
 		return getParent().getHitsName();
 	}
 
+	@Override
+	public Map getActualFilterValues()
+	{
+		return getParent().getActualFilterValues();
+	}
 
 }

@@ -1,6 +1,5 @@
 package org.openedit.data;
 
-import java.io.Reader;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -34,6 +33,7 @@ import org.openedit.event.WebEvent;
 import org.openedit.hittracker.GeoFilter;
 import org.openedit.hittracker.HitTracker;
 import org.openedit.hittracker.SearchQuery;
+import org.openedit.hittracker.SharedFilters;
 import org.openedit.hittracker.Term;
 import org.openedit.locks.LockManager;
 import org.openedit.modules.translations.LanguageMap;
@@ -299,37 +299,49 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 								}
 							}
 						}
-						if(removeterm != null) {
-						inQuery.removeTerm(removeterm);
+						if(removeterm != null) 
+						{
+							inQuery.removeTerm(removeterm);
 						}
-						
-						
+					}
+					else
+					{
+						String viewname = inPageRequest.findValue("runagregationview");
+
+						if( viewname != null)
+						{
+							List<PropertyDetail> details = getPropertyDetailsArchive().getView(  //assetadvancedfilter
+									getSearchType(), getSearchType() + "/" + getSearchType() + viewname, inPageRequest.getUserProfile());
+							for (Iterator iterator = details.iterator(); iterator.hasNext();)
+							{
+								PropertyDetail propertyDetail = (PropertyDetail) iterator.next();
+								inQuery.addAggregation(propertyDetail.getId());						
+							}
+						}
 					}
 				}
 				String endusersearch = inPageRequest.findValue(getSearchType() + "endusersearch");
 				if (endusersearch == null)
 				{
 					inQuery.setEndUserSearch(true);
-
-
 				}
 				else
 				{
 					inQuery.setEndUserSearch(Boolean.parseBoolean(endusersearch));
 				}
 
-				String applydontshow = inPageRequest.findValue("applydontshow");
-				if(Boolean.parseBoolean(applydontshow)) 
-				{
-					if(inQuery.getFacets().isEmpty()) 
-					{
-						List facets = getDetailsForView(getSearchType() + "/" + getSearchType() + "advancedfilter", inPageRequest.getUserProfile());
-						if(!( facets == null || facets.isEmpty()) )
-						{
-							inQuery.setFacets(facets);
-						}
-					}
-				}
+//				String applydontshow = inPageRequest.findValue("applydontshow");
+//				if(Boolean.parseBoolean(applydontshow)) 
+//				{
+//					if(inQuery.getFacets().isEmpty()) 
+//					{
+//						List facets = getDetailsForView(getSearchType() + "/" + getSearchType() + "advancedfilter", inPageRequest.getUserProfile());
+//						if(!( facets == null || facets.isEmpty()) )
+//						{
+//							inQuery.setFacets(facets);
+//						}
+//					}
+//				}
 				
 				
 				String hitsperpage = inPageRequest.getRequestParameter("hitsperpage");
@@ -354,15 +366,23 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					inQuery.setHitsPerPage(Integer.parseInt(hitsperpage));
 				}
 				inQuery = getSearchSecurity().attachSecurity(inPageRequest, this, inQuery);
-				tracker = search(inQuery); //search here <----ge
-
+				
+				tracker = search(inQuery); //search here <----!!!!!
 				tracker.setSearchQuery(inQuery);
 				if (oldtracker != null && oldtracker.hasSelections())
 				{
 					tracker.loadPreviousSelections(oldtracker);
 					tracker.setShowOnlySelected(oldtracker.isShowOnlySelected());
+					tracker.setSharedFilters(oldtracker.getSharedFilters());
 				}
 
+				if(tracker.getSharedFilters() == null)
+				{
+					SharedFilters filters = (SharedFilters) getModuleManager().getBean(getCatalogId(), "userFilters", false);
+					filters.setUserProfile(inPageRequest.getUserProfile());
+					tracker.setSharedFilters(filters);
+				}
+				
 				if (isFireEvents() && inQuery.isFireSearchEvent())
 				{
 					WebEvent event = new WebEvent();

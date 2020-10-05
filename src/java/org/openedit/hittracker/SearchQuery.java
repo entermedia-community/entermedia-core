@@ -42,7 +42,7 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	protected boolean fieldEndUserSearch = false;
 	protected String fieldSortLanguage = "en";
 	protected boolean fieldIncludeFacets = false;
-	protected List fieldUserFacets;
+	protected Collection<PropertyDetail> fieldUserFacets;
 	protected List fieldSorts;
 	protected Map fieldSuggestedSearches;
 
@@ -107,18 +107,17 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	}
 	
 	
-	public List getFacets()
+	public Collection<PropertyDetail> getFacets()
 	{
 	if (fieldUserFacets == null)
 	{
-		fieldUserFacets = new ArrayList();
-		
+		fieldUserFacets = new HashSet<PropertyDetail>();
 	}
 
 	return fieldUserFacets;
 	}
 
-	public void setFacets(List<PropertyDetail> facets)
+	public void setFacets(Collection<PropertyDetail> facets)
 	{
 		fieldUserFacets = facets;
 //		//UserProfile profile = inPageRequest.getUserProfile();

@@ -19,6 +19,7 @@ import org.apache.commons.logging.LogFactory;
 import org.openedit.CatalogEnabled;
 import org.openedit.Data;
 import org.openedit.OpenEditException;
+import org.openedit.WebPageRequest;
 import org.openedit.data.PropertyDetail;
 import org.openedit.data.Searcher;
 import org.openedit.util.DateStorageUtil;
@@ -44,9 +45,19 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 	protected Searcher fieldSearcher;
 	protected boolean fieldShowOnlySelected;
 	protected String fieldTempSessionId;
+	protected SharedFilters fieldSharedFilters;
+	
+	public SharedFilters getSharedFilters()
+	{
+		return fieldSharedFilters;
+	}
+	public void setSharedFilters(SharedFilters inSharedFilters)
+	{
+		fieldSharedFilters = inSharedFilters;
+	}
 
-	protected Map<String,FilterNode> fieldUserFilterValues;
-	protected List<FilterNode> fieldFilterOptions;
+
+	protected Map<String,FilterNode> fieldActualFilterValues; //What is actually from this search
 	
 	protected boolean fieldUseServerCursor;
 	protected long fieldSearchTime;
@@ -1378,21 +1389,10 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 	{
 		fieldTempSessionId = inSessionId;
 	}
-	public List<FilterNode> getFilterOptions()
-	{
-			
-		return fieldFilterOptions;
-	
-	}
-	public void setFilterOptions(List <FilterNode> filters){
-		fieldFilterOptions = filters;
-	}
-
-	
 
 	public FilterNode findFilterNode(String inType)
 	{
-		List <FilterNode> nodes = getFilterOptions();
+		Collection<FilterNode> nodes = getActualFilterValues().values();
 		if( nodes != null)
 		{
 			for (Iterator iterator = nodes.iterator(); iterator.hasNext();)
@@ -1613,7 +1613,7 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 		Term term = getSearchQuery().getTermByDetailId("description");
 		if( term != null && term.getValue() != null)
 		{
-			List<FilterNode> options = getFilterOptions();
+			Collection<FilterNode> options = getActualFilterValues().values();
 			//check each child for matches
 			if( options != null)
 			{
@@ -1640,30 +1640,43 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 		return matches;
 	}
 
-	public FilterNode getUserFilterValue(String inId)
+	public FilterNode findFilterValue(WebPageRequest inReq, String inId)
 	{
-		if( fieldUserFilterValues != null)
+		FilterNode found = null;
+		if( getActualFilterValues() != null && !getActualFilterValues().isEmpty() )
 		{
-			FilterNode node = getUserFilterValues().get(inId);
+			found = getActualFilterValue(inId); //we must be running a filter beyond just main input
+		}
+		if( found == null)
+		{
+			Map<String,FilterNode> values = getSharedFilters().getAllValues(getSearcher(), inReq); 
+			//getSharedFilters().flagUserFilters(this);
+			found = values.get(inId);   
+		}
+		return found;
+	}
+
+	public FilterNode getActualFilterValue(String inId)
+	{
+		if( fieldActualFilterValues != null)
+		{
+			FilterNode node = getActualFilterValues().get(inId);
 			return node;
 		}
 		return null;
 	}
 	
 	
-	public Map<String, FilterNode> getUserFilterValues()
+	public Map<String, FilterNode> getActualFilterValues()
 	{
-		return fieldUserFilterValues;
+		return fieldActualFilterValues;
 	}
-	public void setUserFilterValues(Map<String, FilterNode> inUserFilterValues)
+	public void setActualFilterValues(Map<String, FilterNode> inActualFilterValues)
 	{
-		fieldUserFilterValues = inUserFilterValues;
-//		if( fieldUserFilterValues != null)
-//		{
-//			log.info( fieldUserFilterValues.get("ibmsdl_source_type").getChildren() );
-//		}
+		fieldActualFilterValues = inActualFilterValues;
 	}
 
+	
 	@Override
 	public String toString()
 	{

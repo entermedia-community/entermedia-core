@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
-import java.util.List;
+import java.util.Set;
 
 import org.openedit.Data;
 import org.openedit.OpenEditException;
@@ -296,7 +296,7 @@ public class QueryBuilder
 	
 	
 	
-	public QueryBuilder facets(List<PropertyDetail> inFacets)
+	public QueryBuilder facets(Collection<PropertyDetail> inFacets)
 	{
 		getQuery().setFacets(inFacets);
 		return this;
