@@ -45,19 +45,8 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 	protected Searcher fieldSearcher;
 	protected boolean fieldShowOnlySelected;
 	protected String fieldTempSessionId;
-	protected SharedFilters fieldSharedFilters;
 	
-	public SharedFilters getSharedFilters()
-	{
-		return fieldSharedFilters;
-	}
-	public void setSharedFilters(SharedFilters inSharedFilters)
-	{
-		fieldSharedFilters = inSharedFilters;
-	}
-
-
-	protected Map<String,FilterNode> fieldActualFilterValues; //What is actually from this search
+	protected Map<String,FilterNode> fieldActiveFilterValues; //What is actually from this search
 	
 	protected boolean fieldUseServerCursor;
 	protected long fieldSearchTime;
@@ -1392,7 +1381,7 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 
 	public FilterNode findFilterNode(String inType)
 	{
-		Collection<FilterNode> nodes = getActualFilterValues().values();
+		Collection<FilterNode> nodes = getActiveFilterValues().values();
 		if( nodes != null)
 		{
 			for (Iterator iterator = nodes.iterator(); iterator.hasNext();)
@@ -1613,7 +1602,7 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 		Term term = getSearchQuery().getTermByDetailId("description");
 		if( term != null && term.getValue() != null)
 		{
-			Collection<FilterNode> options = getActualFilterValues().values();
+			Collection<FilterNode> options = getActiveFilterValues().values();
 			//check each child for matches
 			if( options != null)
 			{
@@ -1643,37 +1632,21 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 	public FilterNode findFilterValue(WebPageRequest inReq, String inId)
 	{
 		FilterNode found = null;
-		if( getActualFilterValues() != null && !getActualFilterValues().isEmpty() )
+		if( getActiveFilterValues() != null && !getActiveFilterValues().isEmpty() )
 		{
-			found = getActualFilterValue(inId); //we must be running a filter beyond just main input
-		}
-		if( found == null)
-		{
-			Map<String,FilterNode> values = getSharedFilters().getAllValues(getSearcher(), inReq); 
-			//getSharedFilters().flagUserFilters(this);
-			found = values.get(inId);   
+			found = getActiveFilterValues().get(inId); //we must be running a filter beyond just main input
 		}
 		return found;
 	}
 
-	public FilterNode getActualFilterValue(String inId)
-	{
-		if( fieldActualFilterValues != null)
-		{
-			FilterNode node = getActualFilterValues().get(inId);
-			return node;
-		}
-		return null;
-	}
 	
-	
-	public Map<String, FilterNode> getActualFilterValues()
+	public Map<String, FilterNode> getActiveFilterValues()
 	{
-		return fieldActualFilterValues;
+		return fieldActiveFilterValues;
 	}
-	public void setActualFilterValues(Map<String, FilterNode> inActualFilterValues)
+	public void setActiveFilterValues(Map<String, FilterNode> inActualFilterValues)
 	{
-		fieldActualFilterValues = inActualFilterValues;
+		fieldActiveFilterValues = inActualFilterValues;
 	}
 
 	

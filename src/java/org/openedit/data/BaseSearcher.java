@@ -30,10 +30,10 @@ import org.openedit.WebPageRequest;
 import org.openedit.config.Configuration;
 import org.openedit.event.EventManager;
 import org.openedit.event.WebEvent;
+import org.openedit.hittracker.FilterNode;
 import org.openedit.hittracker.GeoFilter;
 import org.openedit.hittracker.HitTracker;
 import org.openedit.hittracker.SearchQuery;
-import org.openedit.hittracker.SharedFilters;
 import org.openedit.hittracker.Term;
 import org.openedit.locks.LockManager;
 import org.openedit.modules.translations.LanguageMap;
@@ -187,7 +187,11 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 
 		boolean runsearch = false;
 
-		String cache = inPageRequest.getRequestParameter("cache");
+		String cache = inPageRequest.getRequestParameter(getSearchType() + "cache");
+		if( cache == null)
+		{
+			cache = inPageRequest.getRequestParameter("cache");
+		}	
 		if (cache != null && !Boolean.parseBoolean("cache"))
 		{
 			runsearch = true;
@@ -271,9 +275,44 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					inQuery.setSortBy(sort);
 				}
 				oldtracker = tracker;
+
+				Boolean keepfilter = Boolean.parseBoolean( inPageRequest.findValue("keeppreviousfilter") );
+
+//				if( !keepfilter)
+//				{
+//					//use the shared ones
+//					SharedFilters filters = (SharedFilters) getModuleManager().getBean(getCatalogId(), "userFilters", false);
+//					filters.setUserProfile(inPageRequest.getUserProfile());
+//					activefilters = filters.getAllValues(inPageRequest, this, inQuery.getMainInput() );
+//				}
+				//No old filter around, but user did not pass in a filter. Must use the shared one
+				if( keepfilter && oldtracker.getActiveFilterValues() != null)
+				{
+					//We will be keeping the old values down below
+				}
+				else
+				{
+					//This will load later
+					String filterby = inPageRequest.findValue("runfilterview"); //runagregationview
+					if( filterby == null)
+					{
+						filterby = "advancedfilter";
+					}
+					List<PropertyDetail> details = getPropertyDetailsArchive().getView(  //assetadvancedfilter
+							getSearchType(), getSearchType() + "/" + getSearchType() + filterby, inPageRequest.getUserProfile());
+					if( details != null)
+					{
+						for (Iterator iterator = details.iterator(); iterator.hasNext();)
+						{
+							PropertyDetail propertyDetail = (PropertyDetail) iterator.next();
+							inQuery.addAggregation(propertyDetail.getId());						
+						}
+					}
+				}
+
+				
 				if (oldtracker != null)
 				{
-					//log.info("Old tracker " + oldtracker.getSearchQuery() + " has: "+ oldtracker.getSearchQuery().hasFilters() );
 					if (oldtracker.getSearchQuery().hasFilters())
 					{
 						String clearfilters = inPageRequest.getRequestParameter(getSearchType() + "clearfilters");
@@ -302,21 +341,6 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 						if(removeterm != null) 
 						{
 							inQuery.removeTerm(removeterm);
-						}
-					}
-					else
-					{
-						String viewname = inPageRequest.findValue("runagregationview");
-
-						if( viewname != null)
-						{
-							List<PropertyDetail> details = getPropertyDetailsArchive().getView(  //assetadvancedfilter
-									getSearchType(), getSearchType() + "/" + getSearchType() + viewname, inPageRequest.getUserProfile());
-							for (Iterator iterator = details.iterator(); iterator.hasNext();)
-							{
-								PropertyDetail propertyDetail = (PropertyDetail) iterator.next();
-								inQuery.addAggregation(propertyDetail.getId());						
-							}
 						}
 					}
 				}
@@ -369,20 +393,19 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				
 				tracker = search(inQuery); //search here <----!!!!!
 				tracker.setSearchQuery(inQuery);
+
+				if( keepfilter &&  oldtracker.getActiveFilterValues() != null )
+				{
+					tracker.setActiveFilterValues(oldtracker.getActiveFilterValues());
+				}
+				
 				if (oldtracker != null && oldtracker.hasSelections())
 				{
 					tracker.loadPreviousSelections(oldtracker);
 					tracker.setShowOnlySelected(oldtracker.isShowOnlySelected());
-					tracker.setSharedFilters(oldtracker.getSharedFilters());
+					//tracker.setSharedFilters(oldtracker.getSharedFilters());
 				}
 
-				if(tracker.getSharedFilters() == null)
-				{
-					SharedFilters filters = (SharedFilters) getModuleManager().getBean(getCatalogId(), "userFilters", false);
-					filters.setUserProfile(inPageRequest.getUserProfile());
-					tracker.setSharedFilters(filters);
-				}
-				
 				if (isFireEvents() && inQuery.isFireSearchEvent())
 				{
 					WebEvent event = new WebEvent();

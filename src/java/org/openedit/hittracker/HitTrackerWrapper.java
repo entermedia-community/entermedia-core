@@ -498,9 +498,9 @@ public class HitTrackerWrapper extends HitTracker {
 	}
 
 	@Override
-	public Map getActualFilterValues()
+	public Map getActiveFilterValues()
 	{
-		return getParent().getActualFilterValues();
+		return getParent().getActiveFilterValues();
 	}
 
 }
