@@ -286,7 +286,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 //					activefilters = filters.getAllValues(inPageRequest, this, inQuery.getMainInput() );
 //				}
 				//No old filter around, but user did not pass in a filter. Must use the shared one
-				if( keepfilter && oldtracker.getActiveFilterValues() != null)
+				if( keepfilter && oldtracker != null && oldtracker.getActiveFilterValues() != null)
 				{
 					//We will be keeping the old values down below
 				}
@@ -394,7 +394,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				tracker = search(inQuery); //search here <----!!!!!
 				tracker.setSearchQuery(inQuery);
 
-				if( keepfilter &&  oldtracker.getActiveFilterValues() != null )
+				if( keepfilter &&  oldtracker != null && oldtracker.getActiveFilterValues() != null )
 				{
 					tracker.setActiveFilterValues(oldtracker.getActiveFilterValues());
 				}

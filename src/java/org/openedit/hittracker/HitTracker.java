@@ -1675,6 +1675,7 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 			Term term = getSearchQuery().getTermByDetailId(propertyDetail.getId());
 			if( term != null)
 			{
+				term.setUserFilter(true);
 				terms.add(term);
 			}
 		}
