@@ -1629,7 +1629,7 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 		return matches;
 	}
 
-	public FilterNode findFilterValue(WebPageRequest inReq, String inId)
+	public FilterNode findFilterValue(String inId)
 	{
 		FilterNode found = null;
 		if( getActiveFilterValues() != null && !getActiveFilterValues().isEmpty() )
@@ -1656,6 +1656,32 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 		
 		return "size:" + size() + " query: " + getSearchQuery().toQuery();
 	}
+
+	public List getFilteredTerms(WebPageRequest inReq, String inView)
+	{
+		List terms = new ArrayList();
+		
+		List<PropertyDetail> details = getSearcher().getPropertyDetailsArchive().getView(  //assetadvancedfilter
+				getSearchType(), getSearchType() + "/" + getSearchType() + inView, inReq.getUserProfile());
+
+		if( details == null)
+		{
+			return Collections.EMPTY_LIST;
+		}
+		
+		for (Iterator iterator = details.iterator(); iterator.hasNext();)
+		{
+			PropertyDetail propertyDetail = (PropertyDetail) iterator.next();
+			Term term = getSearchQuery().getTermByDetailId(propertyDetail.getId());
+			if( term != null)
+			{
+				terms.add(term);
+			}
+		}
+		return terms;
+	}
+	
+
 	
 }
 
