@@ -35,5 +35,7 @@ public interface NodeManager
 	
 	public void flushBulk();
 
+	void connectoToDatabase();
+
 	
 }
