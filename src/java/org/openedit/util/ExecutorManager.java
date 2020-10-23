@@ -2,6 +2,7 @@ package org.openedit.util;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -232,8 +233,9 @@ public class ScalingThreadPoolExecutor extends ThreadPoolExecutor {
      * number of threads that are actively executing tasks
      */
 	
-	protected List runningtasks = new ArrayList();
+	protected List runningtasks = Collections.synchronizedList(new ArrayList<String>());
 	
+	//TODO: Remove this, does not seem anyone calls it
     public List getRunningTasks()
 	{
 		return runningtasks;
@@ -266,7 +268,7 @@ public class ScalingThreadPoolExecutor extends ThreadPoolExecutor {
     @Override
     public void execute(Runnable inCommand)
     {
-    runningtasks.add(inCommand);
+    	runningtasks.add(inCommand);
     	super.execute(inCommand);
     }
     
