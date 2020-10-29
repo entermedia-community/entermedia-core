@@ -496,7 +496,10 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 				putPageValue("redirect", inUrl);
 				if (getResponse() != null)
 				{
-					getResponse().sendRedirect(inUrl);
+					//					getResponse().sendRedirect(inUrl);
+					getResponse().setStatus(HttpServletResponse.SC_MOVED_TEMPORARILY); 
+					getResponse().setHeader("Location", inUrl);
+					getResponse().flushBuffer();
 				}
 				else
 				{
