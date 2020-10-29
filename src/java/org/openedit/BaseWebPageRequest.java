@@ -492,7 +492,7 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 					}
 					inUrl = home + inUrl;
 				}
-				log.debug("Redirecting to: " + inUrl);
+				log.info("Redirecting to: " + inUrl);
 				putPageValue("redirect", inUrl);
 				if (getResponse() != null)
 				{
