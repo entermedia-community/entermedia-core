@@ -163,7 +163,7 @@ public class BaseWebServer implements WebServer
 //				getBeanLoader().load(custom.toURL(), custom.getAbsolutePath() );
 //			}
 			
-			File overrideFile = new File( getRootDirectory(), "/WEB-INF/pluginoverrides.xml" ); //TODO: Use a directory of files
+			File overrideFile = new File( getRootDirectory(), "/WEB-INF/pluginoverrides10.xml" ); //TODO: Use a directory of files
 			if( overrideFile.exists() )
 			{
 				getBeanLoader().load(overrideFile.toURL(), overrideFile.getAbsolutePath() );
