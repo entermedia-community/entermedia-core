@@ -2063,6 +2063,15 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		getFacets().add(detail);
 	}
 
+	public void addAggregation(PropertyDetail inDetail){
+		
+		if( inDetail == null)
+		{
+			throw new OpenEditException("No such field " + inDetail);
+		}
+		getFacets().add(inDetail);
+	}
+
 	/**
 	 * Take a list of things and only OR the common ones
 	 * This can be called more than once
