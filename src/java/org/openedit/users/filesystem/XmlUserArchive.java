@@ -542,7 +542,15 @@ public class XmlUserArchive implements CatalogEnabled  {
 		Element userElem = doc.addElement("user");
 		userElem.addAttribute("enabled", Boolean.toString(user.isEnabled()));
 		if (user.getUserName() == null) {
-			int id = getUserIdCounter().incrementCount();
+			int id = 0;
+			boolean doesexist = false;
+			do
+			{
+				id = getUserIdCounter().incrementCount();
+				doesexist = getPageManager().getRepository().doesExist(getUserDirectory() + "/" + user.getUserName() + ".xml");
+				
+			} while( !doesexist);
+			
 			String newid = String.valueOf(id);
 			user.setUserName(newid);
 		}

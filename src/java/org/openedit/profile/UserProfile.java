@@ -404,19 +404,25 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 
 	public void addValue(String inKey, String string)
 	{
-		String current = get(inKey);
+		Collection current = getValues(inKey);
+		if( current == null)
+		{
+			current = new ArrayList();
+		}
+		else
+		{
+			current = new ArrayList(current);
+		}
 		if (string != null)
 		{
 			string = string.trim();
 		}
-		if (current == null || current.length() == 0)
+		if( !current.contains(string) )
 		{
-			setProperty(inKey, string);
+			current.add(string);
 		}
-		else
-		{
-			setProperty(inKey, current + " " + string);
-		}
+		setValue(inKey, current);
+				
 	}
 
 	public void removeValue(String inKey, String string)
