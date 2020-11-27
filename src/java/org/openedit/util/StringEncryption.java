@@ -392,20 +392,7 @@ public class StringEncryption
 		}
 	}
 
-	public String getPasswordMd5(String inPassword) 
-	{
-		String password = decryptIfNeeded(inPassword);
-		try
-		{
-			String secret = getEncryptionKey() + password;
-			String hash = asMd5(secret); 
-			return hash;
-		}
-		catch( Exception ex)
-		{
-			throw new OpenEditException(ex);
-		}
-	}
+	
 	public void removeCookie(WebPageRequest inReq, String key)
 	{
 		HttpServletResponse res = inReq.getResponse();
@@ -463,13 +450,6 @@ public class StringEncryption
 		return key;
 	}
 
-	public String getEnterMediaKey(User inUser)
-	{	
-		String md5 = getPasswordMd5(inUser.getPassword());
-		String value = inUser.getUserName() + "md542" + md5;
-		return value;
-	}
-
 
 	public boolean verifyEnterMediaKey(User inUser, String password, String inTemporaryKey)
 	{
@@ -497,7 +477,21 @@ public class StringEncryption
 		return false;
 	}
 
-
+	public String getPasswordMd5(String inPassword) 
+	{
+		String password = decryptIfNeeded(inPassword);
+		try
+		{
+			String secret = getEncryptionKey() + password;
+			String hash = asMd5(secret); 
+			return hash;
+		}
+		catch( Exception ex)
+		{
+			throw new OpenEditException(ex);
+		}
+	}
+	
 	public String getTempEnterMediaKey(User user)
 	{
 		String passenc = getPasswordMd5(user.getPassword());
@@ -511,6 +505,16 @@ public class StringEncryption
 		entermediakey = entermediakey + StringEncryption.TIMESTAMP + tsenc;
 		return entermediakey;
 	}
+	
+
+	//TODO: Get rid of this option, always use expiring keys
+	public String getEnterMediaKey(User inUser)
+	{	
+		String md5 = getPasswordMd5(inUser.getPassword());
+		String value = inUser.getUserName() + "md542" + md5;
+		return value;
+	}
+
 
 	
 }

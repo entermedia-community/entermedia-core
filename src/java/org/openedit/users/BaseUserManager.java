@@ -408,9 +408,8 @@ public class BaseUserManager implements UserManager
 	@Override
 	public String getEnterMediaKey(User user) 
 	{
-		String md5 = getStringEncryption().getPasswordMd5(user.getPassword());
-		String value = user.getUserName() + "md542" + md5;
-		return value;
+		String tempkey = getStringEncryption().getTempEnterMediaKey(user);
+		return tempkey;
 	}
 
 	@Override
