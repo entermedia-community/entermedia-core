@@ -232,7 +232,7 @@ public class StringEncryption
 		catch (Exception e)
 		{
 			//throw new OpenEditException( e );
-			log.error(e);
+			log.error("Could not decrypt:" + encryptedString , e);
 			return null;
 		}
 	}
@@ -473,7 +473,12 @@ public class StringEncryption
 
 	public boolean verifyEnterMediaKey(User inUser, String password, String inTemporaryKey)
 	{
-		String time = inTemporaryKey.substring(inTemporaryKey.indexOf(StringEncryption.TIMESTAMP) + StringEncryption.TIMESTAMP.length());
+		int index = inTemporaryKey.indexOf(StringEncryption.TIMESTAMP);
+		if( index == -1)
+		{
+			throw new OpenEditException("Timestamp required");
+		}
+		String time = inTemporaryKey.substring(index + StringEncryption.TIMESTAMP.length());
 		String thetime = decrypt(time);
 		if( System.currentTimeMillis() - Long.parseLong(thetime) > 1000*60*60*24 )
 		{
