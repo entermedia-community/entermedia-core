@@ -973,26 +973,57 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	protected void populateSearchFromJson(WebPageRequest inPageRequest)
 	{
 		String json = inPageRequest.getRequestParameter(getSearchType() + "_jsonquery");
-		if( json != null)
+		Map jsonRequest = null;
+		if( json != null || inPageRequest.getJsonRequest() != null)
 		{
-			JSONParser parser = new JSONParser();
+			
 			try
 			{
-				 Map jsonRequest = (Map)parser.parse(json); //this is real, the other way is just for t
-				 
+				Collection fields = null;
+				if( json != null)
+				{
+					JSONParser parser = new JSONParser();
+					jsonRequest = (Map)parser.parse(json); //this is real, the other way is just for t
+					fields = (Collection)jsonRequest.get("fields");
+				}
+				else
+				{
+					jsonRequest = inPageRequest.getJsonRequest();
+					fields =  (Collection)((Map)jsonRequest.get("query")).get("terms");
+				}
+				if( jsonRequest == null)
+				{
+					return;
+				}
 				 //Loop over the fields and add them as values
-				 Collection fields = (Collection)jsonRequest.get("fields");
 				 for (Iterator iterator = fields.iterator(); iterator.hasNext();)
 	 			 {
 					Map field = (Map) iterator.next();
-					String name = (String)field.get("name");
-					inPageRequest.addRequestParameter("field", name);
+					String name = (String)field.get("field");
+					if( name == null )
+					{
+						name = (String)field.get("name"); //legacy
+					}
+					if( name != null)
+					{
+						inPageRequest.addRequestParameter("field", name);
+					}
 
 					String operation = (String)field.get("operation");
-					inPageRequest.addRequestParameter("operation", operation);
+					if( operation == null )
+					{
+						operation = (String)field.get("operator"); //legacy
+					}
 					
+					if( operation != null)
+					{
+						inPageRequest.addRequestParameter("operation", operation);
+					}
 					String value = (String)field.get("value");
-					inPageRequest.addRequestParameter(name  + ".value", value);
+					if( value != null)
+					{
+						inPageRequest.addRequestParameter(name  + ".value", value);
+					}
 
 					Collection values = (Collection)field.get("values");
 					if( values != null)

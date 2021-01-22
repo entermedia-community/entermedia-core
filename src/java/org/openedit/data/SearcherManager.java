@@ -82,6 +82,8 @@ public class SearcherManager
 							return searcher;
 						}
 					}
+					//TODO: Index name is assets_catalog_lists or assets_catalog_asset  
+					//TODO: Go read module.xml to see if this is its own index or not
 					boolean created = getNodeManager(finalcatalogid).connectCatalog(finalcatalogid);
 					
 					PropertyDetailsArchive newarchive = getPropertyDetailsArchive(finalcatalogid);
