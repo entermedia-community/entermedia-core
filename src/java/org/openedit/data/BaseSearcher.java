@@ -974,7 +974,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	{
 		String json = inPageRequest.getRequestParameter(getSearchType() + "_jsonquery");
 		Map jsonRequest = null;
-		if( json != null || inPageRequest.getJsonRequest() != null)
+		if( json != null )
 		{
 			
 			try
@@ -986,11 +986,11 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					jsonRequest = (Map)parser.parse(json); //this is real, the other way is just for t
 					fields = (Collection)jsonRequest.get("fields");
 				}
-				else
-				{
-					jsonRequest = inPageRequest.getJsonRequest();
-					fields =  (Collection)((Map)jsonRequest.get("query")).get("terms");
-				}
+//				else
+//				{
+//					jsonRequest = inPageRequest.getJsonRequest();
+//					fields =  (Collection)((Map)jsonRequest.get("query")).get("terms");
+//				}
 				if( jsonRequest == null)
 				{
 					return;
