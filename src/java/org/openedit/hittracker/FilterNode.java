@@ -111,6 +111,10 @@ public class FilterNode extends BaseData
 	
 	public FilterNode getChild(String inId)
 	{
+		if( inId == null)
+		{
+			return null;
+		}
 		for (Iterator iterator = getChildren().iterator(); iterator.hasNext();)
 		{
 			FilterNode child = (FilterNode) iterator.next();
