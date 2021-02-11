@@ -164,7 +164,9 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		}
 		addShowOnly(inPageRequest, inQuery);
 		String clear = inPageRequest.getRequestParameter(getSearchType() + "clearresults");
-
+		if (clear == null) {
+			clear = (String)inPageRequest.getPageValue(getSearchType() + "clearresults");
+		}
 		inPageRequest.putPageValue("searcher", this);
 		HitTracker tracker = null;
 
@@ -250,12 +252,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					runsearch = true;
 				}
 			}
-			//Move this code down
-			if (inQuery.getSortBy() == null)
-			{
-				String oldSort = tracker.getOrdering();
-				inQuery.setSortBy(oldSort);
-			}
+
 		}
 		HitTracker oldtracker = null;
 
@@ -263,6 +260,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		{
 			try
 			{
+				
 				UserProfile usersettings = (UserProfile) inPageRequest.getUserProfile();
 				if (usersettings != null && inQuery.getSortBy() == null)
 				{
@@ -272,6 +270,11 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				if (inQuery.getSortBy() == null)
 				{
 					String sort = inPageRequest.findValue("sortby");
+					inQuery.setSortBy(sort);
+				}
+				if (inQuery.getSortBy() == null)
+				{
+					String sort = inPageRequest.findValue(getSearchType()+"sortby");
 					inQuery.setSortBy(sort);
 				}
 				oldtracker = tracker;
@@ -760,14 +763,14 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 
 	protected void addSorts(WebPageRequest inPageRequest, SearchQuery search)
 	{
-		String sort = inPageRequest.findValue(getSearchType() + "sortby");
-		if (sort == null)
+		String	sort = inPageRequest.getRequestParameter("sortby");
+		if (sort == null && inPageRequest.getUserProfile()!=null)
 		{
-			sort = inPageRequest.getRequestParameter("sortby");
+			sort = inPageRequest.getUserProfile().get(getSearchType() +"sort");
 		}
 		if (sort == null)
 		{
-			sort = inPageRequest.findValue("sortby");
+			sort = inPageRequest.findValue(getSearchType() + "sortby");
 		}
 		if (sort != null)
 		{
