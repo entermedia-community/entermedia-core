@@ -216,6 +216,18 @@ public class QueryBuilder
 		getQuery().addExact(inKey, inValue);
 		return this;
 	}
+	public QueryBuilder exact(String inKey, Data inData) 
+	{
+		if( inData != null)
+		{
+			return exact(inKey,inData.getId());
+		}
+		else if(!isIgnoreBlank()) 
+		{
+				throw new OpenEditException("Value is empty for " + inKey);
+		}
+		return this;
+	}
 	
 	
 	public QueryBuilder freeform(String inKey, String inValue) {
