@@ -1,6 +1,7 @@
 package org.openedit.data;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -12,6 +13,7 @@ import org.openedit.OpenEditException;
 import org.openedit.WebPageRequest;
 import org.openedit.hittracker.HitTracker;
 import org.openedit.hittracker.SearchQuery;
+import org.openedit.hittracker.Term;
 import org.openedit.profile.UserProfile;
 import org.openedit.users.Group;
 
@@ -122,15 +124,26 @@ public class QueryBuilder
 	 */
 	public QueryBuilder orgroup(String inKey, Collection inDataCollection)
 	{
-		if( inDataCollection ==  null || inDataCollection.isEmpty())
+		String[] ids = extractIds(inDataCollection);
+		if( ids == null)
 		{
 			return this;
 		}
+		getQuery().addOrsGroup(inKey, Arrays.asList( ids ) );
+		return this;
+	}
+	
+	private String[] extractIds(Collection inDataCollection)
+	{
+		if( inDataCollection ==  null || inDataCollection.isEmpty())
+		{
+			return null;
+		}
+		Collection ids  = null;
 		Iterator iter = inDataCollection.iterator();
 		if( iter.hasNext())  //TODO: This code is terrible. Just loop over the list
 		{
 			Object value = iter.next();
-			Collection ids = null;
 			if( value instanceof Data)
 			{
 				ids = new ArrayList(inDataCollection.size());
@@ -154,10 +167,21 @@ public class QueryBuilder
 			{
 				ids =  inDataCollection;
 			}
-			getQuery().addOrsGroup(inKey, ids);
 		}
+		return (String[])ids.toArray(new String[ids.size()]);
+	}
+	public QueryBuilder andgroup(String inKey, Collection inDataCollection)
+	{
+		String[] ids = extractIds(inDataCollection);
+		if( ids == null)
+		{
+			return this;
+		}
+		getQuery().addAndGroup(inKey, ids);
 		return this;
 	}
+
+	
 	public QueryBuilder orgroup(String inKey, String inOrs)
 	{
 		getQuery().addOrsGroup(inKey, inOrs);
