@@ -460,20 +460,23 @@ public class StringEncryption
 		}
 		String time = inTemporaryKey.substring(index + StringEncryption.TIMESTAMP.length());
 		String thetime = decrypt(time);
-		if( System.currentTimeMillis() - Long.parseLong(thetime) > 1000*60*60*24 )
-		{
-			log.info("Temporary Encrypted key had expired for user " + inUser.getUserName() );
-			return false;
+		if (thetime!=null) {
+			if( System.currentTimeMillis() - Long.parseLong(thetime) > 1000*60*60*24 )
+			{
+				log.info("Temporary Encrypted key had expired for user " + inUser.getUserName() );
+				return false;
+			}
+			inTemporaryKey = inTemporaryKey.substring(0,inTemporaryKey.indexOf(StringEncryption.TIMESTAMP));
+	
+			String md5pass = inTemporaryKey.substring(inTemporaryKey.indexOf("md542") + 5 );
+			String usermd5 = getPasswordMd5(password);
+			if ( usermd5.equals(md5pass))
+			{
+				return true;
+			}
+			log.info("Some ecryption issue " + usermd5 + " != " + md5pass);
 		}
-		inTemporaryKey = inTemporaryKey.substring(0,inTemporaryKey.indexOf(StringEncryption.TIMESTAMP));
-
-		String md5pass = inTemporaryKey.substring(inTemporaryKey.indexOf("md542") + 5 );
-		String usermd5 = getPasswordMd5(password);
-		if ( usermd5.equals(md5pass))
-		{
-			return true;
-		}
-		log.info("Some ecryption issue " + usermd5 + " != " + md5pass);
+		log.info("Ecryption timestamp issue " + time + " | Key: "+ inTemporaryKey);
 		return false;
 	}
 
