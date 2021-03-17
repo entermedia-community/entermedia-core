@@ -350,16 +350,19 @@ public class URLUtilities
 				StringBuffer out = new StringBuffer();
 				for (int i = 0; i < params.length; i++)
 				{
-					String[] pair = params[i].split("=");
 					if( i > 0)
 					{
 						out.append("&");
 					}
-					out.append(pair[0]);
+					String valuepair =params[i]; 
+					int cutoff = valuepair.indexOf("=");
+					String key = valuepair.substring(0,cutoff);
+					out.append(key);
 					out.append("=");
-					if( pair.length > 1)
+					if( cutoff > 1)
 					{
-						out.append(encodeParamVal(pair[1]));
+						String value = valuepair.substring(cutoff + 1);
+						out.append(encodeParamVal(value));
 					}
 				}
 				finalurl.append("?" + out.toString());
