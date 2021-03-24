@@ -48,7 +48,9 @@ public class BaseOpenEditEngine implements OpenEditEngine
 	    URLUtilities util = new URLUtilities(inRequest, inResponse);
 
 	    String requestedPath = util.getOriginalPath();
-	    SiteData sitedata = getSiteManager().findSiteData(util.siteRoot());
+	    
+	    String siteUrl = util.siteRoot(); //The actual URL they are going to
+	    SiteData sitedata = getSiteManager().findSiteData(siteUrl);
 	    if(sitedata != null)
 	    {
 	    	if( requestedPath.startsWith(sitedata.getRootPath()) )

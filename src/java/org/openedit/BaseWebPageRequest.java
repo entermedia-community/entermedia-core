@@ -426,24 +426,7 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 	{
 		putPageValue(inKey, inValue);
 	}
-	public String getSiteRoot()
-	{
-		String site = (String)getPageValue("siteRoot");
-		if( site == null)
-		{
-			site = getContentProperty("siteRoot");
-		}
-		if( site == null && getRequest() != null)
-		{
-			StringBuffer ctx = getRequest().getRequestURL();
-			site = ctx.substring( 0, ctx.indexOf("/", 8) ); //8 comes from https://
-		}
-		else if ( site == null)
-		{
-			site = getRequestParameter("siteRoot");
-		}
-		return site;
-	}
+	
 	
 	public String getSiteUrl()
 	{
@@ -452,6 +435,12 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 		return url;
 	}
 	
+	public String getSiteRoot()
+	{
+		String siteRoot = (String)getPageValue("siteRoot");
+		return siteRoot;
+	}
+
 	public Object get(String inKey)
 	{
 		return getPageValue(inKey);
