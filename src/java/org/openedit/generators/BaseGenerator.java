@@ -78,7 +78,11 @@ public abstract class BaseGenerator implements Generator, Cloneable
             }
         } else {
             // This is a cross-domain request, add headers allowing access
-            httpResp.setHeader("Access-Control-Allow-Origin", origin);
+        	//if( user is logged in )
+        	//{
+            //httpResp.setHeader("Access-Control-Allow-Origin", origin);  //TODO: This is not secure at all. my JSESSION id is avilable to any site
+        	//}
+        	httpResp.setHeader("Access-Control-Allow-Origin", "*");  
             httpResp.setHeader("Access-Control-Allow-Methods", VALID_METHODS);
 
             String headers = httpReq.getHeader("Access-Control-Request-Headers");
