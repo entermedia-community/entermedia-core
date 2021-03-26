@@ -437,7 +437,7 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 	
 	public String getSiteRoot()
 	{
-		String siteRoot = (String)getPageValue("siteRoot");
+		String siteRoot = (String)getPageValue("siteroot");
 		return siteRoot;
 	}
 
