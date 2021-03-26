@@ -1171,11 +1171,11 @@ public class PropertyDetailsArchive implements CatalogEnabled
 
 	public String findSavePath()
 	{
-		Searcher catalogsettings = getSearcherManager().getSearcher(getCatalogId(), "catalogsettings");
-		Data savepath = (Data) catalogsettings.searchById("detailsavepath");
-		if(savepath != null) {
-			return savepath.get("value");
-		}
+//		Searcher catalogsettings = getSearcherManager().getSearcher(getCatalogId(), "catalogsettings");
+//		Data savepath = (Data) catalogsettings.searchById("detailsavepath");
+//		if(savepath != null) {
+//			return savepath.get("value");
+//		}
 		
 		if( "base".equals( getSaveTo()))
 		{
