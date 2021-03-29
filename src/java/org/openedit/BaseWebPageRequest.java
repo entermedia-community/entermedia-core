@@ -125,7 +125,7 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 			}
 			catch ( Throwable ex)
 			{
-				log.error("Could not parse json",ex);
+				log.error("Could not parse json " + getPathUrl(),ex);
 				putPageValue("_jsonRequest", new HashMap());
 				//throw new OpenEditException(ex);
 			}
