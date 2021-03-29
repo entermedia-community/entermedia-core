@@ -6,7 +6,16 @@ public class Script
 	protected String fieldId;
 	protected boolean fieldExternal;
 	protected String fieldPath;
+	protected boolean fieldCancel;
 	
+	public boolean isCancel()
+	{
+		return fieldCancel;
+	}
+	public void setCancel(boolean inCancel)
+	{
+		fieldCancel = inCancel;
+	}
 	public String getPath()
 	{
 		return fieldPath;

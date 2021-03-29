@@ -237,6 +237,7 @@ public class Page implements Data, Comparable
 			//look for duplicate
 			List copy = new ArrayList(scripts.size());
 			HashMap ids = new HashMap(scripts.size());
+			HashSet canceled = new HashSet();
 			for (Iterator iterator = scripts.iterator(); iterator.hasNext();)
 			{
 				Script script = (Script) iterator.next();
@@ -247,9 +248,20 @@ public class Page implements Data, Comparable
 				Script script = (Script) iterator.next();
 				Script goodone = (Script)ids.get(script.getId());
 				//goodone.setSrc(getPageSettings().replaceProperty(goodone.getSrc()));
+				if( canceled.contains( goodone.getId()) )
+				{
+					continue;
+				}
 				if( !copy.contains(goodone) )
 				{
-					copy.add(goodone);
+					if( goodone.isCancel() )
+					{
+						canceled.add(goodone.getId());
+					}
+					else
+					{
+						copy.add(goodone);
+					}
 				}
 			}
 			return copy;

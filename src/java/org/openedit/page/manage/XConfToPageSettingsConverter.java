@@ -105,13 +105,14 @@ public class XConfToPageSettingsConverter
 	protected Script createScript(PageSettings inSettings, Configuration inConfigElement)
 	{
 		String cancel = inConfigElement.get("cancel");
-		if(cancel != null && cancel.equals("true") )
-		{
-			return null;
-		}
+//		if(cancel != null && cancel.equals("true") )
+//		{
+//			return null;
+//		}
 		Script script = new Script();
 		script.setId(inConfigElement.get("id"));
 		script.setSrc(inConfigElement.get("src"));
+		script.setCancel(Boolean.parseBoolean(inConfigElement.get("cancel")));
 		String external = inConfigElement.get("external");
 		script.setExternal(Boolean.parseBoolean(external));
 		script.setPath(inSettings.getPath());
