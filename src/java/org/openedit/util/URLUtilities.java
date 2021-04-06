@@ -359,7 +359,7 @@ public class URLUtilities
 					String key = valuepair.substring(0,cutoff);
 					out.append(key);
 					out.append("=");
-					if( cutoff > 1)
+					if( cutoff >= 1)
 					{
 						String value = valuepair.substring(cutoff + 1);
 						out.append(encodeParamVal(value));
