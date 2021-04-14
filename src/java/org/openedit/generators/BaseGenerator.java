@@ -21,6 +21,7 @@ public abstract class BaseGenerator implements Generator, Cloneable
 	protected String fieldName;
 	private OutputFiller fieldOutputFiller;
 	public static String VALID_METHODS = "DELETE, HEAD, GET, OPTIONS, POST, PUT";
+	public static String VALID_HEADERS = "x-csrf-token,x-file-name,x-file-size,x-requested-with,cache-control,access-control-allow-credentials";
 
 	protected OutputFiller getOutputFiller()
 	{
@@ -72,6 +73,7 @@ public abstract class BaseGenerator implements Generator, Cloneable
         	 
             // Return standard response if OPTIONS request w/o Origin header
            if ("OPTIONS".equalsIgnoreCase(httpReq.getMethod())) {
+        	    httpResp.setHeader("Access-Control-Allow-Headers", VALID_HEADERS);
                 httpResp.setHeader("Allow", VALID_METHODS);
                 httpResp.setStatus(200);
                 return;
