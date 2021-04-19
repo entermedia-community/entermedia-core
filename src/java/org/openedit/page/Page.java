@@ -585,7 +585,11 @@ public class Page implements Data, Comparable
 //		return null;
 //	}
 	}
-
+	public void setInnerLayout( String innerLayout )
+	{
+		PageSettings parent = getPageSettings();
+		parent.setInnerLayout(innerLayout);
+	}
 	public String findInnerLayout()
 	{
 		String il = getInnerLayout();

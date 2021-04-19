@@ -370,7 +370,7 @@ public class URLUtilities
 			return finalurl.toString();
 	 }
 	
-	private static String fixPath(String inPath)
+	public static String fixPath(String inPath)
 	{
 		// path = UriUtils.encodePath(path, "UTF-8");
 		
@@ -404,6 +404,10 @@ public class URLUtilities
 				result.append(formatter.toString());
 				++i;
 			}
+	    	else if (PATHVALUES.indexOf(c) != -1 ) 
+	        { 
+	            result.append("%" + Integer.toHexString(c).toUpperCase());
+	        }
 	    	else if ( c > 128)
 	    	{
 				byte[] allbytes = new String(new int[]{c}, 0, 1).getBytes(StandardCharsets.UTF_8);
@@ -414,16 +418,22 @@ public class URLUtilities
 	            }
 				result.append(formatter.toString());
 	    	}
-	    	else if (PATHVALUES.indexOf(c) != -1 ) 
-	        { 
-	            result.append("%" + Integer.toHexString(c).toUpperCase());
-	        }
-	        else
+	    	else if ( c < 32)
 	        {
-	        	result.append(c);
+	    		//ASCII 0 to 31 ()
+	    		result.append('%');
+	    		result.append(toHex(c / 16));
+	    		result.append(toHex(c % 16));
+	    	}
+	    	else {
+	    		result.append(c);
 	    	}
 	    }
 		return result.toString();
+	}
+	private static char toHex(int ch)
+	{
+	    return (char)(ch < 10 ? '0' + ch : 'A' + ch - 10);
 	}
    public static String utf8encode(int codepoint) 
    {
