@@ -375,7 +375,7 @@ public class URLUtilities
 		// path = UriUtils.encodePath(path, "UTF-8");
 		
 		//Ian says we need spaces in here
-		final String PATHVALUES = ";:?#[]@+ \"\\^{|}<>~"; //:?@[] \"%-.<>\\^_`{|}~";
+		final String PATHVALUES = ";:?#[]@+ \"\\^{|}<>~`%"; //:?@[] \"%-.<>\\^_`{|}~";
 
 		
 //		byte[] encoded = inPath.getBytes("UTF-8");
