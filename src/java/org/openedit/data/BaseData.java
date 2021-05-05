@@ -389,7 +389,12 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 	
 	public String getAge()
 	{
-		Date createdon = getDate("creationdate");
+		return getAge("creationdate");
+	}
+	
+	public String getAge(String InDateField)
+	{
+		Date createdon = getDate(InDateField);
 		if( createdon == null)
 		{
 			return null;
@@ -404,7 +409,7 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 		{
 			double days = (double)hour / 24d;
 			hour = hour % 24;
-			time = String.format("%2dd:%2dh:%2dm", (int)days,hour, minute);
+			time = String.format("%2dd:%2dh:%2dm", (int)days, hour, minute);
 		}
 		else
 		{
@@ -412,4 +417,6 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 		}
 		return time;
 	}
+	
+	
 }
