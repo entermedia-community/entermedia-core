@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.openedit.Generator;
 import org.openedit.WebPageRequest;
+import org.openedit.users.User;
 import org.openedit.util.OutputFiller;
 
 /**
@@ -20,8 +21,6 @@ public abstract class BaseGenerator implements Generator, Cloneable
 {
 	protected String fieldName;
 	private OutputFiller fieldOutputFiller;
-	public static String VALID_METHODS = "DELETE, HEAD, GET, OPTIONS, POST, PUT";
-	public static String VALID_HEADERS = "x-csrf-token,x-file-name,x-file-size,x-requested-with,cache-control,access-control-allow-credentials";
 
 	protected OutputFiller getOutputFiller()
 	{
@@ -63,38 +62,52 @@ public abstract class BaseGenerator implements Generator, Cloneable
 		return inChild == this;
 	}
 
-	protected void checkCors(HttpServletRequest httpReq, HttpServletResponse httpResp)
-	{
-	      // No Origin header present means this is not a cross-domain request
-        String origin = httpReq.getHeader("Origin");
-         if (origin == null) 
-         {
-        	//Warning: Allows all domains
-        	 
-            // Return standard response if OPTIONS request w/o Origin header
-           if ("OPTIONS".equalsIgnoreCase(httpReq.getMethod())) {
-        	    httpResp.setHeader("Access-Control-Allow-Headers", VALID_HEADERS);
-                httpResp.setHeader("Allow", VALID_METHODS);
-                httpResp.setStatus(200);
-                return;
-            }
-        } else {
-            // This is a cross-domain request, add headers allowing access
-        	//if( user is logged in )
-        	//{
-            //httpResp.setHeader("Access-Control-Allow-Origin", origin);  //TODO: This is not secure at all. my JSESSION id is avilable to any site
-        	//}
-        	httpResp.setHeader("Access-Control-Allow-Origin", "*");  
-            httpResp.setHeader("Access-Control-Allow-Methods", VALID_METHODS);
-
-            String headers = httpReq.getHeader("Access-Control-Request-Headers");
-            if (headers != null)
-                httpResp.setHeader("Access-Control-Allow-Headers", headers);
-
-            // Allow caching cross-domain permission
-            httpResp.setHeader("Access-Control-Max-Age", "3600");
-        }
-	}
+//	protected void checkCors(HttpServletRequest httpReq, HttpServletResponse httpResp, User inUser)
+//	{
+//	      // No Origin header present means this is not a cross-domain request
+//        String origin = httpReq.getHeader("Origin");
+//         if (origin == null) 
+//         {
+// 			boolean isoptions = httpReq.getMethod().equals("OPTIONS");
+//
+//        	//Warning: Allows all domains
+// 			if (isoptions || inUser != null	)
+// 			{
+// 				if( origin != null)
+// 				{
+// 					httpResp.setHeader("Access-Control-Allow-Origin",origin);
+// 				}
+// 				else
+// 				{
+// 					httpResp.setHeader("Access-Control-Allow-Origin","*"); //This does nothing useful
+// 				}
+// 			}
+//        	 
+//            // Return standard response if OPTIONS request w/o Origin header
+//           if (isoptions)
+//           {
+//               httpResp.setHeader("Access-Control-Allow-Methods", VALID_METHODS);
+//        	   httpResp.setHeader("Access-Control-Allow-Headers", VALID_HEADERS);
+//        	   httpResp.setHeader("Access-Control-Allow-Credentials","true");
+//               httpResp.setStatus(200);
+//               return;
+//           }
+//        } else {
+//            // This is a cross-domain request, add headers allowing access
+//        	//if( user is logged in )
+//        	//{
+//            //httpResp.setHeader("Access-Control-Allow-Origin", origin);  //TODO: This is not secure at all. my JSESSION id is avilable to any site
+//        	//}
+//            httpResp.setHeader("Access-Control-Allow-Methods", VALID_METHODS);
+//
+//            String headers = httpReq.getHeader("Access-Control-Request-Headers");
+//            if (headers != null)
+//                httpResp.setHeader("Access-Control-Allow-Headers", headers);
+//
+//            // Allow caching cross-domain permission
+//            httpResp.setHeader("Access-Control-Max-Age", "3600");
+//        }
+//	}
 	
 	
 
