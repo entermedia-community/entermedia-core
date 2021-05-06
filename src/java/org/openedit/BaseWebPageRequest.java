@@ -855,7 +855,16 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 	 */
 	public boolean hasRedirected()
 	{
-		return fieldHasRedirected;
+		if( fieldHasRedirected)
+		{
+			return true;
+		}
+		if( fieldParent != null)
+		{
+			return fieldParent.hasRedirected();
+		}
+		return false;
+
 	}
 	public void setHasRedirected( boolean inBol)
 	{
@@ -1130,7 +1139,15 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 
 	public boolean hasCancelActions()
 	{
-		return fieldHasCancelActions;
+		if( fieldHasCancelActions)
+		{
+			return true;
+		}
+		if( fieldParent != null)
+		{
+			return fieldParent.hasCancelActions();
+		}
+		return false;
 	}
 
 	public void setCancelActions(boolean inB)
