@@ -461,7 +461,7 @@ public class StringEncryption
 		String time = inTemporaryKey.substring(index + StringEncryption.TIMESTAMP.length());
 		String thetime = decrypt(time);
 		if (thetime!=null) {
-			if( System.currentTimeMillis() - Long.parseLong(thetime) > 1000*60*60*24*30 )  //TODO: Use the content property or catalog setting
+			if(System.currentTimeMillis() - Long.parseLong(thetime) > 1000L*60L*60L*24L*30L )  //TODO: Use the content property or catalog setting
 			{
 				log.info("Temporary Encrypted key had expired. age is:" + thetime  + inUser.getUserName() );
 				return false;
