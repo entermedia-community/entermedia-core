@@ -68,29 +68,25 @@ public class ValuesMap extends HashMap
 			put( inKey, NULLVALUE);
 		}
 	}
-	public void addValue(String inKey, Object inNewValue)
+	public Collection addValue(String inKey, Object inNewValue)
 	{
-		Object values = getObject(inKey);
+		Collection values = getValues(inKey);
 		if(values == null )
 		{
 			ArrayList valuesa = new ArrayList();
 			valuesa.add(inNewValue);
+			put(inKey, valuesa);
 			values = valuesa;
-			put(inKey, values);
-		}
-		else if( !(values instanceof Collection ) )
-		{
-			put(inKey, inNewValue);
 		}
 		else
 		{
-			Collection valuesa = new ArrayList((Collection)values);
-			if( !valuesa.contains(inNewValue))
+			if( !values.contains(inNewValue))
 			{
-				valuesa.add(inNewValue);
+				values.add(inNewValue);
 			}
-			put(inKey, valuesa);
+			put(inKey, values);
 		}
+		return (Collection)values;
 	}
 //	@Override
 //	public Object get(Object inKey)
