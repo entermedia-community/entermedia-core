@@ -176,7 +176,7 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 	{
 		return isViewType("multiselect") 
 				|| isDataType("multi")
-				|| isViewType("tageditor") || isViewType("libraries") || getId().equals("category") || getId().equals("category-exact") || getId().equals("keywords");
+				|| isViewType("entity") || isViewType("tageditor") || isViewType("libraries") || getId().equals("category") || getId().equals("category-exact") || getId().equals("keywords");
 	}
 
 	public boolean isBoolean()
