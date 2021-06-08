@@ -370,4 +370,21 @@ public class ValuesMap extends HashMap
 		}
 		return values.contains(inValue);
 	}
+	public Integer getInteger(String inField)
+	{
+		Object val = getObject(inField);
+		if( val == null || val == NULLVALUE)
+		{
+			return 0;
+		}
+		if( val instanceof Long)
+		{
+			return Math.round((Long)val);
+		}
+		if( val instanceof Integer)
+		{
+			return ((Integer)val);
+		}
+		return Integer.parseInt((String)val);
+	}
 }
