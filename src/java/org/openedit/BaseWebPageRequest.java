@@ -1608,4 +1608,8 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 		setRequestParameter(inKey, (String[])values.toArray(new String[values.size()]));
 	}
 	
+	public String roundDouble(double val, int decimals) {
+	    return String.format("%.2"+"f", val);
+	}
+	
 }
