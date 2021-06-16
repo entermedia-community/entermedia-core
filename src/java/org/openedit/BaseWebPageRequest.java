@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -1278,6 +1279,13 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 		return getLocaleManager().formatDateForDisplay( inDate, getLocale());
 	}
 	
+	public String getDate(int inDate) {
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+			format.setTimeZone(TimeZone.getTimeZone("GMT"));			
+			Date date = new Date(inDate * 1000L);
+			return format.format(date);
+	}
+	
 	
 	public String getSearchDate(String inDate) {
 		Date stored = getLocaleManager().getDateStorageUtil().parseFromStorage(inDate);
@@ -1609,7 +1617,11 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 	}
 	
 	public String roundDouble(double val, int decimals) {
-	    return String.format("%.2"+"f", val);
+	    return String.format("%.2f", val);
+	}
+	
+	public String stripePriceToString(int price) {
+		return String.format("%.2f", price / 100d);
 	}
 	
 }
