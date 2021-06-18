@@ -1280,7 +1280,7 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 	}
 	
 	public String getDate(int inDate) {
-			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+			SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
 			format.setTimeZone(TimeZone.getTimeZone("GMT"));			
 			Date date = new Date(inDate * 1000L);
 			return format.format(date);
