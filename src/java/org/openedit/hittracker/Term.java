@@ -188,6 +188,6 @@ abstract public class Term {
 	
 	public String toString()
 	{
-		return getId() + " = '" + getValue() + "'";
+		return toQuery();
 	}
 }
