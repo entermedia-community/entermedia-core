@@ -218,6 +218,9 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 		{
 			return val;
 		}
+		if(inKey.equals("name")) {
+			return getName();
+		}
 		if( inKey.equals("sendcollectionnotifications") || inKey.equals("sendapprovalnotifications") ||  inKey.equals("assethitsperpage") ||  inKey.equals("modulehitsperpage") )
 		{
 			if(getSettingsGroup() != null){
