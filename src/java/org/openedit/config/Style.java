@@ -4,6 +4,7 @@ public class Style
 {
 	protected String fieldHref;
 	protected String fieldId;
+	protected boolean fieldCancel;
 	public String getHref()
 	{
 		return fieldHref;
@@ -27,5 +28,12 @@ public class Style
 	}
 	public void setExternal(Boolean fieldExternal) {
 		this.fieldExternal = fieldExternal;
+	}
+	public boolean isCancel() {
+		return fieldCancel;
+	}
+	public void setCancel(boolean inCancel)
+	{
+		fieldCancel = inCancel;
 	}
 }
