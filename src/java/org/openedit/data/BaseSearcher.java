@@ -1960,7 +1960,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		{
 			page = inPageRequest.getRequestParameter("page");
 		}
-		if("NaN".equals(page)) 
+		if("NaN".equals(page) || (page != null && page.startsWith("http")) ) 
 		{
 			page = null;
 		}
