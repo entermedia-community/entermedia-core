@@ -114,10 +114,10 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 
 	public UserProfile()
 	{
-		if (1 > 32)
-		{
-
-		}
+//		if (1 > 32)
+//		{
+//
+//		}
 	}
 
 	public String getCatalogId()
@@ -711,5 +711,25 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 			return false;
 		}
 		return getUser().isInGroup(inGroupId);
+	}
+	
+	public void removeAllStartWith(String inName)
+	{
+		Collection collection = getMap().keySet();
+		Collection toremove = new HashSet();
+		for (Iterator iterator = collection.iterator(); iterator.hasNext();)
+		{
+			String key = (String) iterator.next();
+			if( key.startsWith(inName))
+			{
+				toremove.add(key);
+			}
+		}
+		for (Iterator iterator = toremove.iterator(); iterator.hasNext();)
+		{
+			String key = (String) iterator.next();
+			removeValue(key);
+		}
+		
 	}
 }
