@@ -95,12 +95,14 @@ public class RunningProcess
 	{
 			try
 			{
-				log.info("Running " + fieldCommandName + " with:" + inToSendToProces);
+				long start = System.currentTimeMillis();
 				sendtoprocesswriter.write(inToSendToProces + "\n");
 				sendtoprocesswriter.flush();
 
 //				return null;
 				String returned = getStreamcopy().getNextResult(timeout);
+				long time = System.currentTimeMillis() - start;
+				log.info("ran " + fieldCommandName + " for " + time/1000L + " seconds:");
 				//log.info("Complete " + fieldCommandName + " with:" + inToSendToProces);
 				return returned;
 				//get the last result from the other thread?
