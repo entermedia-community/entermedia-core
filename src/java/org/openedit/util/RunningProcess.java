@@ -101,7 +101,7 @@ public class RunningProcess
 
 //				return null;
 				String returned = getStreamcopy().getNextResult(timeout);
-				log.info("Complete " + fieldCommandName + " with:" + inToSendToProces);
+				//log.info("Complete " + fieldCommandName + " with:" + inToSendToProces);
 				return returned;
 				//get the last result from the other thread?
 				
