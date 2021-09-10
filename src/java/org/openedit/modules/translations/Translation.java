@@ -23,6 +23,9 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.openedit.Data;
+import org.openedit.ModuleManager;
+import org.openedit.data.SearcherManager;
 import org.openedit.page.PageProperty;
 import org.openedit.util.URLUtilities;
 
@@ -32,6 +35,18 @@ public class Translation
 	protected List fieldLanguages;
 	protected String  fieldSelectedLang;
 	private static final Log log = LogFactory.getLog(Translation.class);
+	
+	protected ModuleManager fieldModuleManager;
+	
+	
+	public ModuleManager getModuleManager()
+	{
+		return fieldModuleManager;
+	}
+	public void setModuleManager(ModuleManager inModuleManager)
+	{
+		fieldModuleManager = inModuleManager;
+	}
 	public List getLanguages()
 	{
 		if (fieldLanguages == null)
@@ -164,7 +179,9 @@ public class Translation
 		
 		//https://www.googleapis.com/language/translate/v2?key=INSERT-YOUR-KEY&q=hello%20world&source=en&target=de
 		
-		nvps.add(new BasicNameValuePair("key","AIzaSyD5Hjc70IgTTbcgZK5HSbtxMu2oTzTILps"));
+		String key = lookUpKey();
+		
+		nvps.add(new BasicNameValuePair("key",key));
 		nvps.add(new BasicNameValuePair("q", text));
 		nvps.add(new BasicNameValuePair("source", sourcelang));
 		nvps.add(new BasicNameValuePair("target", inLocale));
@@ -231,6 +248,17 @@ public class Translation
 			e.printStackTrace();
 		}
 		return translated;
+	}
+    protected String lookUpKey()
+	{
+    	SearcherManager searchermanager = (SearcherManager)getModuleManager().getBean("system", "searcherManager");
+    	Data translatekey = searchermanager.getCachedData("system", "systemsettings", "translatekey");
+    	String key = "AIzaSyDOH0U9DIhnSrhhGlvCB6jD_orOjvVG5lw";// "AIzaSyD5Hjc70IgTTbcgZK5HSbtxMu2oTzTILps";
+    	if( translatekey  != null && translatekey.get("value") != null && !translatekey .get("value").isEmpty())
+    	{
+    		key = translatekey.get("value");
+    	}
+    	return key;
 	}
 	
 //	This method takes a map of page properties and returns a list containing triples of:
