@@ -78,7 +78,7 @@ public class RunningProcess
 			synchronized (streamcopy)
 			{
 				streamcopy.startCopy();
-				streamcopy.wait(2000);				
+				streamcopy.wait(2000);	//needed?			
 			}
 		}
 		catch (Exception ex)
@@ -91,11 +91,17 @@ public class RunningProcess
 	{
 		return runExecStream(inToSendToProces, -1);
 	}
-	public String runExecStream(String inToSendToProces, long timeout) throws OpenEditException
+	public synchronized String runExecStream(String inToSendToProces, long timeout) throws OpenEditException
 	{
 			try
 			{
 				long start = System.currentTimeMillis();
+				
+				if( inToSendToProces.contains("\n") && inToSendToProces.indexOf("\n") < inToSendToProces.length() - 1 )
+				{
+					throw new OpenEditException("Cannot contain new lines " + inToSendToProces);
+				}
+				
 				sendtoprocesswriter.write(inToSendToProces + "\n");
 				sendtoprocesswriter.flush();
 
