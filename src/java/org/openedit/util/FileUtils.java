@@ -513,6 +513,8 @@ public class FileUtils
 			fieldInvalidChars.add("%");
 			fieldInvalidChars.add("\u00a9");
 			fieldInvalidChars.add("\u2219");
+			fieldInvalidChars.add("[");
+			fieldInvalidChars.add("]");
 			
 		}
 		return fieldInvalidChars;
