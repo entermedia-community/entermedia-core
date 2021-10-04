@@ -228,6 +228,13 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 			return getSettingsGroup().getValue(inKey);
 			}
 		}
+		
+		if (val == null && getUser() != null)
+		{
+			val = getUser().getValue(inKey);
+		}
+		
+		
 		return null;
 	}
 	
