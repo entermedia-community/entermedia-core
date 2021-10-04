@@ -134,7 +134,7 @@ public class ValuesMap extends HashMap
 		{
 			vals = new String[]{val};
 		}
-		Collection collection = Arrays.asList(vals);
+		Collection collection = new ArrayList(Arrays.asList(vals)); //To make it editable
 		return collection;
 	}
 	public Collection getObjects(String inPreference)
@@ -160,7 +160,7 @@ public class ValuesMap extends HashMap
 			{
 				vals = new String[]{val};
 			}
-			Collection collection = Arrays.asList(vals);
+			Collection collection = new ArrayList(Arrays.asList(vals));
 			return collection;
 		}
 		else

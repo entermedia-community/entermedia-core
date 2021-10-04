@@ -78,7 +78,7 @@ public class RunningProcess
 			synchronized (streamcopy)
 			{
 				streamcopy.startCopy();
-				streamcopy.wait(2000);				
+				streamcopy.wait(2000);	//needed?			
 			}
 		}
 		catch (Exception ex)
@@ -91,17 +91,25 @@ public class RunningProcess
 	{
 		return runExecStream(inToSendToProces, -1);
 	}
-	public String runExecStream(String inToSendToProces, long timeout) throws OpenEditException
+	public synchronized String runExecStream(String inToSendToProces, long timeout) throws OpenEditException
 	{
 			try
 			{
-				log.info("Running " + fieldCommandName + " with:" + inToSendToProces);
+				long start = System.currentTimeMillis();
+				
+				if( inToSendToProces.contains("\n") && inToSendToProces.indexOf("\n") < inToSendToProces.length() - 1 )
+				{
+					throw new OpenEditException("Cannot contain new lines " + inToSendToProces);
+				}
+				
 				sendtoprocesswriter.write(inToSendToProces + "\n");
 				sendtoprocesswriter.flush();
 
 //				return null;
 				String returned = getStreamcopy().getNextResult(timeout);
-				log.info("Complete " + fieldCommandName + " with:" + inToSendToProces);
+				long time = System.currentTimeMillis() - start;
+				log.info("ran " + fieldCommandName + " for " + time/1000L + " seconds:");
+				//log.info("Complete " + fieldCommandName + " with:" + inToSendToProces);
 				return returned;
 				//get the last result from the other thread?
 				

@@ -862,24 +862,30 @@ public class URLUtilities
 		fieldRequest = inRequest;
 	}
 	
-	public static HttpClientBuilder createTrustingHttpClient() throws Exception {
+	public static HttpClientBuilder createTrustingHttpClient() {
 
-		  HttpClientBuilder builder = HttpClientBuilder.create();
-	        SSLContext sc = SSLContext.getInstance("SSL");
-	        sc.init(null, getTrustingManager(), new java.security.SecureRandom());
-		    SSLConnectionSocketFactory sslConnectionFactory = new SSLConnectionSocketFactory(sc, SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
-		    builder.setSSLSocketFactory(sslConnectionFactory);
-
-		    Registry<ConnectionSocketFactory> registry = RegistryBuilder.<ConnectionSocketFactory>create()
-		            .register("https", sslConnectionFactory)
-		            .build();
-
-		    HttpClientConnectionManager ccm = new BasicHttpClientConnectionManager(registry);
-
-		    builder.setConnectionManager(ccm);
-
-		    return builder;
-		
+		try
+		{
+			  HttpClientBuilder builder = HttpClientBuilder.create();
+		        SSLContext sc = SSLContext.getInstance("SSL");
+		        sc.init(null, getTrustingManager(), new java.security.SecureRandom());
+			    SSLConnectionSocketFactory sslConnectionFactory = new SSLConnectionSocketFactory(sc, SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+			    builder.setSSLSocketFactory(sslConnectionFactory);
+	
+			    Registry<ConnectionSocketFactory> registry = RegistryBuilder.<ConnectionSocketFactory>create()
+			            .register("https", sslConnectionFactory)
+			            .build();
+	
+			    HttpClientConnectionManager ccm = new BasicHttpClientConnectionManager(registry);
+	
+			    builder.setConnectionManager(ccm);
+	
+			    return builder;
+		}
+		catch( Exception ex)
+		{
+			throw new OpenEditException(ex);
+		}
 
 	        
 //	        ClientConnectionManager manager = httpClient.getConnectionManager();

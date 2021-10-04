@@ -101,7 +101,9 @@ public class StreamCopyRunner implements Closeable, Runnable
 	{
 		if( lastresult != null)
 		{
-			return lastresult;
+			String toreturn = lastresult;
+			lastresult = null;
+			return toreturn;
 		}
 		//log.info("getting next result.pre");
 		synchronized (StreamCopyRunner.this)

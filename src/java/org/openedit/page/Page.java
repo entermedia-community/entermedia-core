@@ -211,18 +211,34 @@ public class Page implements Data, Comparable
 			List styles =  getPageSettings().getStyles(folderonly);
 			//look for duplicate
 			List copy = new ArrayList(styles.size());
-			Set got = new HashSet(styles.size());
+			HashMap ids = new HashMap(styles.size());
+			//Set got = new HashSet(styles.size());
+			HashSet canceled = new HashSet();
 			for (Iterator iterator = styles.iterator(); iterator.hasNext();)
 			{
 				Style script = (Style) iterator.next();
-				
-				if( !got.contains(script.getId()) )
+				ids.put(script.getId(),script);
+			}
+			for (Iterator iterator = styles.iterator(); iterator.hasNext();)
+			{
+				Style script = (Style) iterator.next();
+				Style goodone = (Style)ids.get(script.getId());
+				if( canceled.contains( goodone.getId()) )
 				{
-					copy.add(script);
-					got.add(script.getId()); //no duplicates
-					//script.setHref($content.getPageSettings().replaceProperty(script.getHref()));
-
+					continue;
 				}
+				if( !copy.contains(goodone) )
+				{
+					if( goodone.isCancel() )
+					{
+						canceled.add(goodone.getId());
+					}
+					else
+					{
+						copy.add(goodone);
+					}
+				}
+
 			}
 			return copy;
 		}

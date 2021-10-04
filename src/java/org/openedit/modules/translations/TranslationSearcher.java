@@ -50,8 +50,7 @@ public class TranslationSearcher extends XmlSearcher
 	{
 		if (fieldTranslation == null)
 		{
-			fieldTranslation = new Translation();
-
+			fieldTranslation = (Translation)getModuleManager().getBean("translator");
 		}
 
 		return fieldTranslation;
