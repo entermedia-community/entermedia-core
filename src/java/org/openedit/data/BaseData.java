@@ -306,12 +306,10 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 	public Object getValue(String inKey)
 	{
 		Object val = getMap().getValue(inKey);
-		
-		if( val == null && inKey.equals("name"))
-		{
-			val = getMap().getValue(inKey  + "_int");
-		}
-		
+//		if( val == null && inKey.equals("name"))
+//		{
+//			val = getMap().getValue(inKey  + "_int");
+//		}
 		return val;
 	}
 	public void setValue(String inKey, Object inValue)
