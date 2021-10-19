@@ -34,11 +34,23 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 
 	public String get(String inId) 
 	{
-		if( fieldMap == null)
+		if( fieldMap == null || inId == null)
 		{
 			return null;
 		}
 		Object value = getValue(inId);
+		
+		if( value == null && inId.equals("name"))
+		{
+			value = getValue(inId + "_int");
+			if( value == null && value instanceof LanguageMap )
+			{
+				LanguageMap map = (LanguageMap) value;
+				String text =  map.getText("en");
+				return text;
+			}
+		}
+		
 		return getMap().toString(value);
 	}
 	
@@ -174,9 +186,9 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 	
 	
 
-	public String getName() {
-		String name = get("name");
-		return name;
+	public String getName() 
+	{
+		return get("name");
 	}
 
 	public void setName(String inName) {
@@ -294,7 +306,10 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 	public Object getValue(String inKey)
 	{
 		Object val = getMap().getValue(inKey);
-		
+//		if( val == null && inKey.equals("name"))
+//		{
+//			val = getMap().getValue(inKey  + "_int");
+//		}
 		return val;
 	}
 	public void setValue(String inKey, Object inValue)
