@@ -210,6 +210,9 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				runsearch = true;
 			}
 			clear = inPageRequest.getRequestParameter(getSearchType() + "clearselection");
+			if (clear == null) {
+				clear = (String)inPageRequest.findValue(getSearchType() + "clearselection");
+			}
 			if (Boolean.parseBoolean(clear))
 			{
 				if( tracker.hasSelections() )
@@ -326,6 +329,10 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 						{
 							clearfilters = inPageRequest.getRequestParameter("clearfilters");
 						}
+						if(clearfilters== null) {
+							clearfilters = (String) inPageRequest.findValue(getSearchType() + "clearfilters");
+						}
+						
 						String removeterm = inPageRequest.getRequestParameter("removeterm");
 						
 						if (!Boolean.parseBoolean(clearfilters))
@@ -480,7 +487,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					}
 					catch (NumberFormatException e)
 					{
-						log.error("Unable to parse pagenumber", e);
+						//log.error("Unable to parse pagenumber", e);
 					}
 				}
 			}
