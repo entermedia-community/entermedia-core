@@ -856,8 +856,11 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 		{
 			return this;
 		}
-
-		HitTracker selecteddata = getSearcher().search(getSearchQuery());
+		HitTracker selecteddata = null;
+		SearchQuery query = getSearchQuery();
+		if (query != null) {
+			selecteddata = getSearcher().search(query);
+		}
 	
 		if( isAllSelected() )
 		{
