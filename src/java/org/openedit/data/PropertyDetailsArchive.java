@@ -363,6 +363,10 @@ public class PropertyDetailsArchive implements CatalogEnabled
 				{
 					path = findConfigurationFile("/fields/defaultLog.xml");
 				}
+				else if (inType.startsWith("entity"))
+				{
+					path = findConfigurationFile("/fields/defaultEntity.xml");
+				}
 				else
 				{
 					path = findConfigurationFile("/fields/default.xml");

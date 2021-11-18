@@ -856,8 +856,11 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 		{
 			return this;
 		}
-
-		HitTracker selecteddata = getSearcher().search(getSearchQuery());
+		HitTracker selecteddata = null;
+		SearchQuery query = getSearchQuery();
+		if (query != null) {
+			selecteddata = getSearcher().search(query);
+		}
 	
 		if( isAllSelected() )
 		{
@@ -1381,15 +1384,18 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 
 	public FilterNode findFilterNode(String inType)
 	{
-		Collection<FilterNode> nodes = getActiveFilterValues().values();
-		if( nodes != null)
-		{
-			for (Iterator iterator = nodes.iterator(); iterator.hasNext();)
-			{
-				FilterNode filterNode = (FilterNode) iterator.next();
-				if( filterNode.getId().endsWith(inType))
+		Map<String, FilterNode> filters = getActiveFilterValues();
+		if (filters != null) {
+			Collection<FilterNode> nodes =filters.values();
+			if( nodes != null)
+			 {
+				for (Iterator iterator = nodes.iterator(); iterator.hasNext();)
 				{
-					return filterNode;
+					FilterNode filterNode = (FilterNode) iterator.next();
+					if( filterNode.getId().endsWith(inType))
+					{
+						return filterNode;
+					}
 				}
 			}
 		}
