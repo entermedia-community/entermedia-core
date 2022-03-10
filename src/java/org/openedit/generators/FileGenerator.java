@@ -300,7 +300,7 @@ public class FileGenerator extends BaseGenerator implements Generator
 		
 		if(  cache )
 		{
-			res.setDateHeader("Expires", now + (1000 * 60 * 60 * 24 )); //sec * min * hour * 48 Hours				
+			res.setDateHeader("Expires", now + (1000 * 60 * 60 * 24 * 30 * 6 )); //sec * min * hour * 48 Hours	 six months			
 		}
 		else
 		{
