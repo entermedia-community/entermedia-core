@@ -1,8 +1,10 @@
 package org.openedit.users;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 import java.util.TreeSet;
 
 import org.apache.commons.logging.Log;
@@ -10,6 +12,7 @@ import org.apache.commons.logging.LogFactory;
 import org.openedit.Data;
 import org.openedit.OpenEditException;
 import org.openedit.WebPageRequest;
+import org.openedit.data.Searcher;
 import org.openedit.data.SearcherManager;
 import org.openedit.event.EventManager;
 import org.openedit.event.WebEvent;
@@ -422,6 +425,23 @@ public class BaseUserManager implements UserManager
 		inReq.putSessionValue(catalogid + "user", inUser);
 		inReq.putPageValue("user", inUser);
 		
+	}
+
+	@Override
+	public String createNewTempLoginKey(String inUsername)
+	{
+		//Create a new one for this user
+		Searcher searcher = getSearcherManager().getSearcher("system", "templogincode");
+		Data data  = searcher.createNewData();
+		data.setValue("user",inUsername);
+		data.setValue("date",new Date());
+		
+		String key = String.valueOf(new Random().nextInt(999999));
+		data.setValue("securitycode",key);
+
+		searcher.saveData(data);
+		
+		return key;
 	}
 
 
