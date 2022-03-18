@@ -204,5 +204,7 @@ public interface UserManager extends CatalogEnabled
 	String getEnterMediaKey(User user);
 
 	void logIntoApp(WebPageRequest inReq,User inUser);
+
+	String createNewTempLoginKey(String inUsername);
 	
 }
