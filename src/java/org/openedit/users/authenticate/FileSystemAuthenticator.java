@@ -38,7 +38,7 @@ public class FileSystemAuthenticator extends BaseAuthenticator
 		{
 			String inPassword = inAReq.getPassword();
 			//Decrypt their stored password
-			if( password.startsWith("DES:"))
+			if(inPassword != null && password.startsWith("DES:"))
 			{
 				if ( inPassword.startsWith("DES:"))
 				{
@@ -67,7 +67,7 @@ public class FileSystemAuthenticator extends BaseAuthenticator
 			{
 				return true;
 			}
-			else if( inPassword.contains(StringEncryption.TIMESTAMP) ) //This is required 
+			else if( inPassword != null && inPassword.contains(StringEncryption.TIMESTAMP) ) //This is required 
 			{
 				//Maybe its an entermediakey with a timestamp
 //				String entermediakey = inReq.getUser().getId() + "md542" + passenc;
