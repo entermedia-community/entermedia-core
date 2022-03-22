@@ -205,6 +205,8 @@ public interface UserManager extends CatalogEnabled
 
 	void logIntoApp(WebPageRequest inReq,User inUser);
 
-	String createNewTempLoginKey(String inUsername);
+	String createNewTempLoginKey(String userid, String email, String first,String last);
+
+	User checkForNewUser(String inEmail, String inTemplogincode, String groupid);
 	
 }
