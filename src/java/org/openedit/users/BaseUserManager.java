@@ -1,5 +1,6 @@
 package org.openedit.users;
 
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
@@ -18,6 +19,7 @@ import org.openedit.event.EventManager;
 import org.openedit.event.WebEvent;
 import org.openedit.hittracker.HitTracker;
 import org.openedit.users.authenticate.AuthenticationRequest;
+import org.openedit.users.authenticate.PasswordGenerator;
 import org.openedit.util.StringEncryption;
 
 public class BaseUserManager implements UserManager
@@ -428,12 +430,20 @@ public class BaseUserManager implements UserManager
 	}
 
 	@Override
-	public String createNewTempLoginKey(String inUsername)
+	public String createNewTempLoginKey(String userid, String email, String first,String last)
 	{
 		//Create a new one for this user
 		Searcher searcher = getSearcherManager().getSearcher("system", "templogincode");
+		if( userid == null && first == null && last == null)
+		{
+			throw new OpenEditException("First or last name is required");
+		}
+		
 		Data data  = searcher.createNewData();
-		data.setValue("user",inUsername);
+		data.setValue("user",userid);
+		data.setValue("firstName",first);
+		data.setValue("lastName",last);
+		data.setValue("email",email);
 		data.setValue("date",new Date());
 		
 		String key = String.valueOf(new Random().nextInt(999999));
@@ -442,6 +452,46 @@ public class BaseUserManager implements UserManager
 		searcher.saveData(data);
 		
 		return key;
+	}
+
+	@Override
+	public User checkForNewUser(String inEmail, String inTemplogincode, String groupid)
+	{
+		Searcher searcher = getSearcherManager().getSearcher("system", "templogincode");
+		
+		Calendar cal  = Calendar.getInstance();
+		cal.add(Calendar.DAY_OF_YEAR, -5); //5 days
+		Date newerthan = cal.getTime();
+		Data found = searcher.query().exact("securitycode",inTemplogincode).after("date",newerthan).sort("date").searchOne();
+		if( found != null)
+		{
+			String email = found.get("email");
+			if( inEmail.equalsIgnoreCase(email))
+			{
+				//Must be valid user
+				String tmppassword = new PasswordGenerator().generate();
+				User user = createGuestUser(null, tmppassword, groupid);
+				user.setVirtual(false);
+				user.setEnabled(true);
+				user.setValue("firstName",found.get("firstName"));
+				user.setValue("lastName",found.get("lastName"));
+				user.setEmail(found.get("email"));
+				saveUser(user);
+				found.setValue("user",user.getId());
+				searcher.saveData(found);
+				log.info("Temporary user made for " + inEmail);
+				return user;
+			}
+			else
+			{
+				log.error("Invalid email " + inEmail);
+			}
+		}
+		else
+		{
+			log.error("User not found " + inEmail);
+		}
+		return null;
 	}
 
 
