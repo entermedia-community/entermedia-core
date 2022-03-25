@@ -434,7 +434,7 @@ public class BaseUserManager implements UserManager
 	{
 		//Create a new one for this user
 		Searcher searcher = getSearcherManager().getSearcher("system", "templogincode");
-		if( userid == null && first == null && last == null)
+		if( userid == null && (first == null || last == null))
 		{
 			throw new OpenEditException("First or last name is required");
 		}
