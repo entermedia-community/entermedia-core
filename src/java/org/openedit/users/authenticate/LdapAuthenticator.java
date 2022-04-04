@@ -62,27 +62,34 @@ public class LdapAuthenticator extends BaseAuthenticator
         {
         	return false;
         }
-        
-        LDAP ldap = new LDAP( server.get("value"));
-		
-        Data prefix = getSearcherManager().getData(inAReq.getCatalogId(), "catalogsettings", "ldapserverprefix");
-        
-		String inPassword = inAReq.getPassword();
-		
-		String sprefix = null;
-		if( prefix != null)
-		{
-			sprefix = prefix.get("value");
-		}
-        Data postfix = getSearcherManager().getData(inAReq.getCatalogId(), "catalogsettings", "ldapserverpostfix");
-		String spostfix = null;
-		if( spostfix != null)
-		{
-			spostfix = postfix.get("value");
-		}
-		//NaiveTrustManager.disableHttps();
-		ldap.authenticate(sprefix,inUser.getUserName().toLowerCase(), spostfix, inPassword);
-		
+        LDAP ldap = null;
+        try
+        {
+	        ldap = new LDAP( server.get("value"));
+			
+	        Data prefix = getSearcherManager().getData(inAReq.getCatalogId(), "catalogsettings", "ldapserverprefix");
+	        
+			String inPassword = inAReq.getPassword();
+			
+			String sprefix = null;
+			if( prefix != null)
+			{
+				sprefix = prefix.get("value");
+			}
+	        Data postfix = getSearcherManager().getData(inAReq.getCatalogId(), "catalogsettings", "ldapserverpostfix");
+			String spostfix = null;
+			if( spostfix != null)
+			{
+				spostfix = postfix.get("value");
+			}
+			//NaiveTrustManager.disableHttps();
+			ldap.authenticate(sprefix,inUser.getUserName().toLowerCase(), spostfix, inPassword);
+        }
+        catch( Throwable ex)
+        {
+        	log.error("Could not init LDAP " + server,ex);
+        	return false;
+        }
 		if (ldap.connect())
 		{
 //	        Data usersearch = getSearcherManager().getData(inAReq.getCatalogId(), "catalogsettings", "ldapserverusersearch");
