@@ -451,7 +451,7 @@ public class URLUtilities
         return encodedHex;
         
     }
-	public String decode(String s)
+	public static String decode(String s)
 	{
 		if (s == null)
 		{
@@ -460,6 +460,18 @@ public class URLUtilities
 
 		return URLDecoder.decode(s);
 	}
+	public static String decodePath(String s)
+	{
+		if (s == null)
+		{
+			return null;
+		}
+
+		String decoded = URLDecoder.decode(s);
+		return decoded;
+				
+	}
+
 
 	/**
 	 * Build an HTTP URL relative to the application context using the given path. This is a path

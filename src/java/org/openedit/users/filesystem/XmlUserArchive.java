@@ -547,7 +547,7 @@ public class XmlUserArchive implements CatalogEnabled  {
 			do
 			{
 				id = getUserIdCounter().incrementCount();
-				doesexist = getPageManager().getRepository().doesExist(getUserDirectory() + "/" + user.getUserName() + ".xml");
+				doesexist = getPageManager().getRepository().doesExist(getUserDirectory() + "/" + id + ".xml");
 				
 			} while( doesexist);
 			

@@ -67,6 +67,10 @@ public class LocaleManager
 		}
 
 		Locale locale = getLocale(inLocale);
+		if(locale == null)
+		{
+			return "en";
+		}
 		return locale.getLanguage();
 	}
 
