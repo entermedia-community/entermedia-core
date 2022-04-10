@@ -682,4 +682,19 @@ public class PropertyDetails extends AbstractCollection
 	}
 
 	
+	public String getBaseSetting(String inSetting) {
+		String val = null;
+		if( fieldBaseSettings != null && getBaseSettings().getRoot() != null)
+		{
+			val = getBaseSettings().getRoot().attributeValue(inSetting);
+		}
+		else if (getInputFile() != null && getInputFile().getRoot() != null)
+		{
+			val = getInputFile().getRoot().attributeValue(inSetting);
+		}
+		return val;
+		
+	}
+	
+	
 }

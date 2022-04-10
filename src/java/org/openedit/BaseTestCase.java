@@ -140,4 +140,12 @@ public class BaseTestCase extends TestCase
 	{
 		return getFixture().getModuleManager().getBean( inKey );
 	}
+	
+	protected Object getBean(String inCatalogId,  String inKey )
+	{
+		return getFixture().getModuleManager().getBean(inCatalogId,  inKey );
+	}
+	
+	
+	
 }
