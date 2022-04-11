@@ -348,7 +348,8 @@ public class BaseUserManager implements UserManager
 			user.setId(inAccount);
 			user.setUserName(inAccount);
 			user.setPassword(inPassword);
-			user.setVirtual(true);
+			//Virtual user causing issues with paypal
+			//user.setVirtual(true);
 			user.setEnabled(true);
 
 			Group group = getGroup(inGroupId);
