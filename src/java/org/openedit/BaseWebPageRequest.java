@@ -1625,4 +1625,8 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 		return String.format("%.2f", price / 100d);
 	}
 	
+	public String doubleToMoney(double val, int decimals) {
+	    return String.format("%,.2f", val);
+	}
+	
 }
