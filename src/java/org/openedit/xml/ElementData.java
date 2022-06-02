@@ -172,7 +172,26 @@ public class ElementData implements MultiValued, SaveableData, Comparable, Searc
 		return value;
 	}
 
-	
+	public Double getDouble(String inId)
+	{
+		String val = get(inId);
+		if (val != null)
+		{
+			return Double.parseDouble(val);
+		}
+		return 0D;
+	}
+
+	public int getInt(String inId)
+	{
+		String val = get(inId);
+		if (val != null)
+		{
+			return Integer.parseInt(val);
+		}
+		return 0;
+	}
+
 	public float getFloat(String inId)
 	{
 		String val = get(inId);
