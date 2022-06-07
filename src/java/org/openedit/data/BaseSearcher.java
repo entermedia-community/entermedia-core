@@ -3052,6 +3052,22 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			return data;
 		}
 	}
+	
+	@Override
+	public Data cloneData(Data inHit)
+	{
+		if (inHit == null)
+		{
+			return null;
+		}
+
+		Data data = (Data) createNewData();
+		Map fields = inHit.getProperties();
+		fields = checkTypes(fields);
+		data.setProperties(fields);
+		data.setId(null);
+		return data;
+	}
 
 	protected Map checkTypes(Map inFields)
 	{

@@ -151,6 +151,8 @@ public interface Searcher extends CatalogEnabled
 
 	public abstract void saveAllData(Collection<Data> inAll, User inUser);
 	
+	public abstract Data cloneData(Data inHit);
+	
 	public PropertyDetail getDetail(String inId);
 	
 	public void changeSort(WebPageRequest inReq);
@@ -201,5 +203,7 @@ public interface Searcher extends CatalogEnabled
 	public void saveJson(String inId, JSONObject inObject);
 
 	public Object getFulltext(Data inSearchHitData);
+
+	
     
 }
