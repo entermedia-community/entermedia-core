@@ -1012,5 +1012,12 @@ public class URLUtilities
 		basestring = basestring.toLowerCase();
 		return basestring;
 	}
+
+	public String dash(String inName)
+	{
+		String text = xmlEscape(inName);
+		text = text.replaceAll(" ","-").replaceAll("&amp;","-");
+		return text;
+	}
 	
 }
