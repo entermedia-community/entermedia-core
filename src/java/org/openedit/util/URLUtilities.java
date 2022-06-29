@@ -1013,7 +1013,7 @@ public class URLUtilities
 		return basestring;
 	}
 
-	public String dash(String inName)
+	public static String dash(String inName)
 	{
 		String text = xmlEscape(inName);
 		text = text.replaceAll(" ","-").replaceAll("&amp;","-");
