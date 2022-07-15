@@ -10,6 +10,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -32,7 +33,7 @@ public class ZipUtil {
 	protected List fieldExcludes;
 
 	protected OutputFiller filler = new OutputFiller();
-  
+
 	protected String fieldFindFileName;
 
 	protected boolean fieldExitOnFirstFind;
@@ -43,7 +44,7 @@ public class ZipUtil {
 	}
 
 	public void setFolderToStripOnZip(String inFolderToStripOnZip) {
-		
+
 		fieldFolderToStripOnZip = inFolderToStripOnZip.substring(1);
 	}
 
@@ -94,7 +95,13 @@ public class ZipUtil {
 		List unzippedFiles = null;
 		try {
 			in = new FileInputStream(inPage);
-			unzippedFiles = unzip(in, inDest);
+			try {
+				unzippedFiles = unzip(in, inDest, null);
+			} catch(Exception e) {
+				FileUtils.safeClose(in);
+				in = new FileInputStream(inPage);
+				unzippedFiles = unzip(in, inDest,null,"Cp437");
+			}
 		} finally {
 			FileUtils.safeClose(in);
 		}
@@ -104,32 +111,40 @@ public class ZipUtil {
 	public List unzip(InputStream inZip, File inDest) throws IOException {
 		return unzip(inZip, inDest, null);
 	}
+	
+	
+	public List unzip(InputStream inZip, File inDest, String inCutOffLeadingPath) throws IOException {
+		return unzip(inZip, inDest, inCutOffLeadingPath, null);
+	}
 
 	/**
 	 * Wow, this is hard to understand...
 	 * 
-	 * @param inZip
-	 *            -- The Zip InputStream entries have paths buried in them e.g.,
-	 *            data/subdir/file.txt
-	 * @param inDest
-	 *            -- The destination folder, e.g. /opt/appserver/webapp/ROOT
-	 * @param inPathSegment
-	 *            -- A path segment that might exist in the Zip entries, e.g.
-	 *            /data or data
-	 * @param inNewPathSegment
-	 *            -- A new path segment we want to use, e.g. /backup to make
-	 *            backup/subdir/file.txt
+	 * @param inZip            -- The Zip InputStream entries have paths buried in
+	 *                         them e.g., data/subdir/file.txt
+	 * @param inDest           -- The destination folder, e.g.
+	 *                         /opt/appserver/webapp/ROOT
+	 * @param inPathSegment    -- A path segment that might exist in the Zip
+	 *                         entries, e.g. /data or data
+	 * @param inNewPathSegment -- A new path segment we want to use, e.g. /backup to
+	 *                         make backup/subdir/file.txt
 	 * @throws IOException
 	 */
-	public List unzip(InputStream inZip, File inDest, String inCutOffLeadingPath)
-			throws IOException {
-		ZipInputStream unzip = new ZipInputStream(inZip);
+	public List unzip(InputStream inZip, File inDest, String inCutOffLeadingPath, String charset) throws IOException {
+		ZipInputStream unzip = null;
+		if(charset != null) {
+			 unzip = new ZipInputStream(inZip, Charset.forName(charset));	
+		}else {
+			 unzip = new ZipInputStream(inZip);
+		}
+		
+		
 		ZipEntry entry = unzip.getNextEntry();
+		
 		List unzippedFiles = new ArrayList();
 
 		while (entry != null) {
-			String entryPath = composeEntryPath(entry.getName(),
-					inCutOffLeadingPath);
+			String entryPath = composeEntryPath(entry.getName(), inCutOffLeadingPath);
 			if (fieldFindFileName != null) {
 				if (!PathUtilities.match(entry.getName(), fieldFindFileName)) // TODO
 				// :
@@ -166,8 +181,7 @@ public class ZipUtil {
 					FileUtils.safeClose(tout);
 				}
 				ufile.setLastModified(entry.getTime());
-				if( log.isDebugEnabled() )
-				{
+				if (log.isDebugEnabled()) {
 					log.debug(ufile.getAbsolutePath());
 				}
 				unzippedFiles.add(ufile);
@@ -197,17 +211,16 @@ public class ZipUtil {
 	 * 
 	 * String startingdir = inDir.getAbsolutePath(); if (
 	 * !startingdir.endsWith(File.separator)) { startingdir = startingdir +
-	 * File.separator; } if( inIncludePath.length() > 1) { inDir = new File(
-	 * inDir, inIncludePath); }
+	 * File.separator; } if( inIncludePath.length() > 1) { inDir = new File( inDir,
+	 * inIncludePath); }
 	 * 
 	 * ZipOutputStream finalZip = new ZipOutputStream(inToBrowser);
 	 * 
-	 * File[] children = inDir.listFiles(); if ( children != null) { for (int i
-	 * = 0; i < children.length; i++) { addToZip( children[i], startingdir,
-	 * finalZip); } } finalZip.close(); }
+	 * File[] children = inDir.listFiles(); if ( children != null) { for (int i = 0;
+	 * i < children.length; i++) { addToZip( children[i], startingdir, finalZip); }
+	 * } finalZip.close(); }
 	 */
-	public void addTozip(String inContent, String inName,
-			ZipOutputStream finalZip) throws IOException {
+	public void addTozip(String inContent, String inName, ZipOutputStream finalZip) throws IOException {
 		ZipEntry entry = new ZipEntry(inName);
 		entry.setSize(inContent.length());
 		entry.setTime(new Date().getTime());
@@ -216,23 +229,21 @@ public class ZipUtil {
 		finalZip.closeEntry();
 	}
 
-	public void addTozip(ContentItem inContent, String inName,
-			ZipOutputStream finalZip) throws IOException {
+	public void addTozip(ContentItem inContent, String inName, ZipOutputStream finalZip) throws IOException {
 		InputStream is = inContent.getInputStream();
 		if (is == null) {
-			log.error("Couldn't add file to zip: "
-					+ inContent.getAbsolutePath());
+			log.error("Couldn't add file to zip: " + inContent.getAbsolutePath());
 			return;
 		}
 		ZipEntry entry = null;
 		if (getFolderToStripOnZip() != null) {
-			if(inName.contains(getFolderToStripOnZip())){
+			if (inName.contains(getFolderToStripOnZip())) {
 				String stripped = inName.substring(getFolderToStripOnZip().length(), inName.length());
 				entry = new ZipEntry(stripped);
-			} else{
+			} else {
 				entry = new ZipEntry(inName);
 			}
-			
+
 		} else {
 
 			entry = new ZipEntry(inName);
@@ -249,8 +260,7 @@ public class ZipUtil {
 		finalZip.closeEntry();
 	}
 
-	public void zip(String inOpenEditPath, ZipOutputStream inStream,
-			boolean recursive) {
+	public void zip(String inOpenEditPath, ZipOutputStream inStream, boolean recursive) {
 		ZipProcessor zipper = new ZipProcessor();
 		zipper.setPageManager(getPageManager());
 		zipper.zipOutputStream = inStream;
@@ -263,15 +273,14 @@ public class ZipUtil {
 		zip(inOpenEditPath, inStream, true);
 	}
 
-	public void zipFile(String inOpenEditPath, OutputStream inToBrowser)
-			throws IOException, OpenEditException {
+	public void zipFile(String inOpenEditPath, OutputStream inToBrowser) throws IOException, OpenEditException {
 		ZipOutputStream finalZip = new ZipOutputStream(inToBrowser);
 		zip(inOpenEditPath, finalZip);
 		finalZip.close();
 	}
 
-	public void zipFiles(List inPaths, OutputStream inToBrowser,
-			boolean recursive) throws IOException, OpenEditException {
+	public void zipFiles(List inPaths, OutputStream inToBrowser, boolean recursive)
+			throws IOException, OpenEditException {
 		// TODO: inRelative isn't used. Fix up SyncToServer to not use it
 		ZipOutputStream finalZip = new ZipOutputStream(inToBrowser);
 		for (Iterator iterator = inPaths.iterator(); iterator.hasNext();) {
@@ -289,16 +298,14 @@ public class ZipUtil {
 
 	}
 
-	public void zipFiles(List inPaths, OutputStream inToBrowser)
-			throws IOException, OpenEditException {
+	public void zipFiles(List inPaths, OutputStream inToBrowser) throws IOException, OpenEditException {
 		zipFiles(inPaths, inToBrowser, true);
 	}
 
 	class ZipProcessor extends PathProcessor {
 		ZipOutputStream zipOutputStream;
 
-		public void processFile(ContentItem inContent, User inUser)
-				throws OpenEditException {
+		public void processFile(ContentItem inContent, User inUser) throws OpenEditException {
 			String path = inContent.getPath();
 			// if (inContent instanceof FileItem)
 			// {
@@ -320,10 +327,8 @@ public class ZipUtil {
 
 			try {
 				addTozip(inContent, path, zipOutputStream);
-			} catch (Exception e) 
-			{
-				if( e.getMessage().startsWith("duplicate"))
-				{
+			} catch (Exception e) {
+				if (e.getMessage().startsWith("duplicate")) {
 					return;
 				}
 				throw new OpenEditException(e);
@@ -394,16 +399,13 @@ public class ZipUtil {
 	/**
 	 * Unzips a GZIP file that contains only one file.
 	 * 
-	 * @param inSource
-	 *            The source GZIP file.
-	 * @param inDest
-	 *            destination file.
+	 * @param inSource The source GZIP file.
+	 * @param inDest   destination file.
 	 * @return true if destination file exists after uncompressing.
 	 * @throws IOException
 	 * @throws FileNotFoundException
 	 */
-	public boolean gunzip(File inSource, File inDest)
-			throws FileNotFoundException, IOException {
+	public boolean gunzip(File inSource, File inDest) throws FileNotFoundException, IOException {
 		if (inDest.exists())
 			inDest.delete();
 
