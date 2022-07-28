@@ -281,9 +281,10 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		}
 		return false;
 	}
-	public Term addOrsGroup(PropertyDetail inField, Collection<String> inValues)
+	public Term addOrsGroup(PropertyDetail inField, Collection inValues)
 	{
-		return addOrsGroup( inField,(String[])inValues.toArray(new String[inValues.size()]));
+		String[] ids = extractIds(inValues);
+		return addOrsGroup( inField,ids);
 	}
 	public Term addOrsGroup(PropertyDetail inField, String[] inValues)
 	{
@@ -944,10 +945,10 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		return addMatches(detail, value);
 	}
 
-	public Term addOrsGroup(String inString, Collection<String> values)
+	public Term addOrsGroup(String inString, Collection values)
 	{
 		PropertyDetail detail = createDetail(inString);
-		String[] array = values.toArray(new String[values.size()]);
+		String[] array = extractIds(values);
 		return addOrsGroup(detail, array);
 	}
 	
@@ -2283,6 +2284,43 @@ public boolean isFilterSelected(String type, String value) {
 	
 	
 
+	public String[] extractIds(Collection inDataCollection)
+	{
+		if( inDataCollection ==  null || inDataCollection.isEmpty())
+		{
+			return null;
+		}
+		Collection ids  = null;
+		Iterator iter = inDataCollection.iterator();
+		if( iter.hasNext())  //TODO: This code is terrible. Just loop over the list
+		{
+			Object value = iter.next();
+			if( value instanceof Data)
+			{
+				ids = new ArrayList(inDataCollection.size());
+				Data data = (Data) value;
+				String id = data.getId();
+				if( id != null)
+				{
+					ids.add(id);
+					for (; iter.hasNext();)
+					{
+						data = (Data) iter.next();
+						id = data.getId();
+						if( id != null)
+						{
+							ids.add(id);
+						}	
+					}
+				}	
+			}
+			else
+			{
+				ids =  inDataCollection;
+			}
+		}
+		return (String[])ids.toArray(new String[ids.size()]);
+	}
 
 
 }
