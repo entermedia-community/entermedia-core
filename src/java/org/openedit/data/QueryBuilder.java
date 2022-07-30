@@ -135,40 +135,7 @@ public class QueryBuilder
 	
 	private String[] extractIds(Collection inDataCollection)
 	{
-		if( inDataCollection ==  null || inDataCollection.isEmpty())
-		{
-			return null;
-		}
-		Collection ids  = null;
-		Iterator iter = inDataCollection.iterator();
-		if( iter.hasNext())  //TODO: This code is terrible. Just loop over the list
-		{
-			Object value = iter.next();
-			if( value instanceof Data)
-			{
-				ids = new ArrayList(inDataCollection.size());
-				Data data = (Data) value;
-				String id = data.getId();
-				if( id != null)
-				{
-					ids.add(id);
-					for (; iter.hasNext();)
-					{
-						data = (Data) iter.next();
-						id = data.getId();
-						if( id != null)
-						{
-							ids.add(id);
-						}	
-					}
-				}	
-			}
-			else
-			{
-				ids =  inDataCollection;
-			}
-		}
-		return (String[])ids.toArray(new String[ids.size()]);
+		return getQuery().extractIds(inDataCollection);
 	}
 	public QueryBuilder andgroup(String inKey, Collection inDataCollection)
 	{
