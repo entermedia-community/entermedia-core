@@ -744,6 +744,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		}
 		addShowOnly(inPageRequest, search);
 		addSorts(inPageRequest, search);
+		addAggregations(inPageRequest, search);
 
 		String resultype = inPageRequest.getRequestParameter("resulttype");
 		if (resultype == null)
@@ -765,6 +766,11 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			}
 		}
 		return search;
+	}
+
+	protected void addAggregations(WebPageRequest inPageRequest, SearchQuery inSearch) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	protected void addSorts(WebPageRequest inPageRequest, SearchQuery search)
