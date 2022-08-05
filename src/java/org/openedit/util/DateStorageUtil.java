@@ -36,6 +36,10 @@ public class DateStorageUtil
 		{
 			format = new SimpleDateFormat(inFormat);
 			format.setLenient(true);
+			if( inFormat.equals("yyyy-MM-dd'T'HH:mm:ss.SSSXXX"))
+			{
+				format.setTimeZone(TimeZone.getTimeZone("CET"));		
+			}
 			fieldDateFormats.put(inFormat, format);
 		}
 		return format;

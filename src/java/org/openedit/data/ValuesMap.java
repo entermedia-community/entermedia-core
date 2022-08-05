@@ -119,6 +119,13 @@ public class ValuesMap extends HashMap
 		{
 			return (Collection<String>)object;
 		}
+		if( object instanceof String[])
+		{
+			Collection<String> values = Arrays.asList((String[])object);
+			return values;
+		}
+		
+		
 		String val = getString(inPreference);
 		
 		if (val == null)
