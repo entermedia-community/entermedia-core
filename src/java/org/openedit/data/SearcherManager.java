@@ -693,6 +693,14 @@ public class SearcherManager
 		}
 	}
 
-	
+
+	public boolean isData(Object inVal)
+	{
+		if( inVal instanceof Data)
+		{
+			return true;
+		}
+		return false;
+	}
 	
 }
