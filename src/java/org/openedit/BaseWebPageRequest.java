@@ -106,8 +106,7 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 	public Map getJsonRequest()
 	{	
 		Map jsonRequest = (Map)getPageValue("_jsonRequest");
-		
-		if( jsonRequest == null && getRequest() != null)
+		if( jsonRequest == null && getRequest() != null && "POST".equalsIgnoreCase(getRequest().getMethod()))
 		{
 			JSONParser parser = new JSONParser();
 			try
