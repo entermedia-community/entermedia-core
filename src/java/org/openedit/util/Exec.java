@@ -182,7 +182,9 @@ public class Exec
 		if(isOnWindows()) 
 		{ 
 			pb.environment().put("HOME", inRunFrom.getAbsolutePath()); 
-		} 
+		}  else {
+			pb.directory(inRunFrom);
+		}
 		ExecResult result = new ExecResult();
 		try
 		{
