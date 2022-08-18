@@ -106,29 +106,33 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 	public Map getJsonRequest()
 	{	
 		Map jsonRequest = (Map)getPageValue("_jsonRequest");
-		if( jsonRequest == null && getRequest() != null && "POST".equalsIgnoreCase(getRequest().getMethod()))
+		if( jsonRequest == null && getRequest() != null)
 		{
-			JSONParser parser = new JSONParser();
-			try
+			String method = getRequest().getMethod();
+			if( "POST".equalsIgnoreCase(method) || "PUT".equalsIgnoreCase(method) )
 			{
-				Reader reader = getRequest().getReader();
-				
-				if(reader != null){
-					jsonRequest = (Map)parser.parse(reader); //this is real, the other way is just for t
-//					StringWriter st = new StringWriter();
-//					new OutputFiller().fill(reader, st);
-//					log.info(st.toString());
-//					jsonRequest = (Map)slurper.parseText(st.toString());
-					putPageValue("_jsonRequest", jsonRequest);
-					//log.info("JSON REQUEST BODY was: " + jsonRequest);
+				JSONParser parser = new JSONParser();
+				try
+				{
+					Reader reader = getRequest().getReader();
+					
+					if(reader != null){
+						jsonRequest = (Map)parser.parse(reader); //this is real, the other way is just for t
+	//					StringWriter st = new StringWriter();
+	//					new OutputFiller().fill(reader, st);
+	//					log.info(st.toString());
+	//					jsonRequest = (Map)slurper.parseText(st.toString());
+						putPageValue("_jsonRequest", jsonRequest);
+						//log.info("JSON REQUEST BODY was: " + jsonRequest);
+					}
 				}
-			}
-			catch ( Throwable ex)
-			{
-				log.error("Could not parse json " + getPathUrl(),ex);
-				jsonRequest = null;
-				putPageValue("_jsonRequest", jsonRequest);
-				//throw new OpenEditException(ex);
+				catch ( Throwable ex)
+				{
+					log.error("Could not parse json " + getPathUrl(),ex);
+					jsonRequest = null;
+					putPageValue("_jsonRequest", jsonRequest);
+					//throw new OpenEditException(ex);
+				}
 			}
 		}
 		
