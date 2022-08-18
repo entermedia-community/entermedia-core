@@ -239,6 +239,17 @@ public class BaseWebServer implements WebServer
         	log.error("Could not initiallize cleanly ", ex);
         }
 	}
+	
+	public PlugIn getPlugin(String inId) {
+		for (Iterator iterator = getAllPlugIns().iterator(); iterator.hasNext();) {
+			PlugIn plugin = (PlugIn) iterator.next();
+			if(plugin.getId() != null && plugin.getId().equals(inId)) {
+				return plugin;
+			}
+		}
+		return null;
+	}
+	
 	public List getAllPlugIns() 
 	{
 		if( fieldAllPlugIns == null)
@@ -298,11 +309,13 @@ public class BaseWebServer implements WebServer
 							}
 						}	
 					}
-				}
+				}				
 				fieldAllPlugIns.addAll(allplugins.values());
-				//NOW SORT!
-				DependentComparator compare = new DependentComparator();
-				Collections.sort(fieldAllPlugIns,compare);
+				for (Iterator iterator = fieldAllPlugIns.iterator(); iterator.hasNext();) {
+					PlugIn plugin = (PlugIn) iterator.next();
+					reloadDependants(plugin);
+				}				
+				fieldAllPlugIns = sortPlugins(fieldAllPlugIns);				
 			}
 			catch ( IOException ex)
 			{
@@ -311,6 +324,33 @@ public class BaseWebServer implements WebServer
 			
 		}
 		return fieldAllPlugIns;
+	}
+
+	protected List sortPlugins(List inAllPlugIns) {
+		ArrayList finallist = new ArrayList();
+
+		while(finallist.size() != inAllPlugIns.size()) {
+			
+			for (Iterator iterator = inAllPlugIns.iterator(); iterator.hasNext();) {
+				PlugIn plugin = (PlugIn) iterator.next();
+				if(finallist.contains(plugin)) {
+					continue;
+				}
+				if(plugin.getDependantPlugins().size() ==0) {
+					finallist.add(plugin);
+					continue;
+				}				
+				PlugIn dependson = (PlugIn) plugin.getDependantPlugins().get(0);				
+				if(finallist.contains(dependson)) {
+					int location = finallist.indexOf(dependson);
+					//insert after.
+					finallist.add(location+1, plugin);
+				}				
+			}			
+		}
+		return finallist;
+			
+		
 	}
 
 	protected PlugIn createPlugIn(File inScript)
@@ -328,10 +368,33 @@ public class BaseWebServer implements WebServer
 		plugin.setInstalled(true);
 		
 		Element root = xml.getXml(inScript, "utf-8");
-		plugin.dependsOn(root.attributeValue("dependson"));
 		plugin.setId(root.attributeValue("projectname"));
 		return plugin;
 	}
+	
+	protected void reloadDependants(PlugIn inPlugin) {
+		
+		try {
+			InputStream in = inPlugin.getPluginXml().openStream(); 
+			Element root = xml.getXml(in, "UTF-8");
+			String dependson = root.attributeValue("depends");
+			
+			if(dependson != null) {
+			
+					PlugIn parent = getPlugin(dependson);
+					if(parent != null) {
+						inPlugin.addDependant(parent);
+					}
+			
+				
+			}
+		} catch (IOException e) {
+			throw new OpenEditException(e);
+		}		
+		
+	}
+	
+	
 	private void populateDependants(Map inPlugins, Map inDepends)
 	{
 		for (Iterator iterator = inPlugins.values().iterator(); iterator.hasNext();)
@@ -582,24 +645,7 @@ public class BaseWebServer implements WebServer
 		fieldRootDirectory = inRoot;
 	}
 	
-	class DependentComparator implements Comparator
-	{
-		public int compare(Object arg0, Object arg1)
-		{
-			PlugIn plugin1 = (PlugIn)arg0;
-			PlugIn plugin2 = (PlugIn)arg1;
-			
-			if( plugin1.dependsOn( plugin2.getId()))
-			{
-				return 1;
-			}
-			if( plugin2.dependsOn( plugin1.getId()))
-			{
-				return -1;
-			}
-			return 0;
-		}
-	}
+	
 	
 	
 	public void checkMounts(){
