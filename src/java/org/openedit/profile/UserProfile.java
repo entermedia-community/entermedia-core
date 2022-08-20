@@ -412,6 +412,16 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 		setProperty(inKey, values.toString());
 	}
 
+	public boolean containsValue(String inKey, String inValue)
+	{
+		Collection current = getValues(inKey);
+		
+		if( current != null && current.contains(inValue))
+		{
+			return true;
+		}
+		return false;
+	}
 	public void addValue(String inKey, String string)
 	{
 		Collection current = getValues(inKey);
