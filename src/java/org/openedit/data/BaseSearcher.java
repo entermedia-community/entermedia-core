@@ -2922,13 +2922,35 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				}
 				result = map;
 			}
-			else if (values != null && detail.isMultiValue())
+			else if (detail.isMultiValue())
 			{
-				if (values.length == 1 && values[0].contains("|"))
+				if( values != null )
 				{
-					values = MultiValued.VALUEDELMITER.split(values[0]);
+					if (values.length == 1 && values[0].contains("|"))
+					{
+						values = MultiValued.VALUEDELMITER.split(values[0]);
+					}
+					result = Arrays.asList(values);
 				}
-				result = Arrays.asList(values);
+				else
+				{
+					Collection all = data.getValues(field);
+					if( all == null)
+					{
+						all = new ArrayList();
+					}
+					String toadd = inReq.getRequestParameter(field + ".add");
+					if( toadd != null)
+					{
+						all.add(toadd);
+					}
+					String toremove = inReq.getRequestParameter(field + ".remove");
+					if( toremove != null)
+					{
+						all.remove(toremove);
+					}
+					result = all;
+				}
 			}
 			else if (detail.isDataType("objectarray"))
 			{
