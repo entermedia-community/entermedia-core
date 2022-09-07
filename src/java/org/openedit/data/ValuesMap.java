@@ -9,9 +9,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.json.simple.JSONObject;
 import org.openedit.Data;
 import org.openedit.MultiValued;
 import org.openedit.util.DateStorageUtil;
+
+import jdk.nashorn.api.scripting.JSObject;
 
 public class ValuesMap extends HashMap
 {
@@ -322,6 +325,11 @@ public class ValuesMap extends HashMap
 				}
 			}
 			return values.toString();
+		}
+		if( object instanceof Map)
+		{
+			JSONObject values = new JSONObject((Map) object);
+			return values.toJSONString();
 		}
 		return String.valueOf(object);
 	}
