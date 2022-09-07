@@ -433,5 +433,15 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 		return time;
 	}
 	
-	
+
+	public boolean containsValue(String inKey, String inValue)
+	{
+		Collection current = getValues(inKey);
+		
+		if( current != null && current.contains(inValue))
+		{
+			return true;
+		}
+		return false;
+	}
 }
