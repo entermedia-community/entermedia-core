@@ -14,7 +14,6 @@ import org.openedit.Data;
 import org.openedit.MultiValued;
 import org.openedit.util.DateStorageUtil;
 
-import jdk.nashorn.api.scripting.JSObject;
 
 public class ValuesMap extends HashMap
 {
