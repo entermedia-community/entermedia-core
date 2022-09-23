@@ -597,7 +597,25 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 			}
 		}
 		
-		
+//		if ("description".equals(detail.getId()))
+	
+		if (isDataType("objectarray"))
+		{
+			return false;
+		}
+		else if (isDataType("nested"))
+		{
+			return false;
+		}
+
+		else if (isDataType("geo_point"))
+		{
+			return false;
+		}
+		else if (isList()) // Or multi valued?
+		{
+			return false;
+		}
 		
 		return true;
 	}
