@@ -596,6 +596,11 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 				return true;
 			}
 		}
+		if( isViewType("tageditor"))
+		{
+			return true;
+		}
+
 		
 //		if ("description".equals(detail.getId()))
 	
@@ -609,10 +614,6 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 		}
 
 		else if (isDataType("geo_point"))
-		{
-			return false;
-		}
-		else if (isList()) // Or multi valued?
 		{
 			return false;
 		}
