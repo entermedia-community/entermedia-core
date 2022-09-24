@@ -936,8 +936,11 @@ public class URLUtilities
 		                + "[\\p{Alnum}.,%_=?&#\\-+()\\[\\]\\*$~@!:/{};']*)",
 		        Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
 	 
-	 
 	public static String escapeMessage(String inMessage) {
+		return escapeMessage(inMessage,-1);
+	}
+	 
+	public static String escapeMessage(String inMessage, int maxchars) {
 		if (inMessage == null) {
 			return null;
 		}
@@ -962,10 +965,18 @@ public class URLUtilities
 		    link.append(text);
 		    link.append("</a>");
 		    m.appendReplacement(sb, Matcher.quoteReplacement(link.toString()));
-		    
-		    
 		  }
 		  m.appendTail(sb);
+		  
+		  if( maxchars > -1 && maxchars < sb.length())
+		  {
+			  String cutoff = sb.toString().substring(0,maxchars);
+			  if( cutoff.contains("<a ") && !cutoff.contains("</a>"))
+			  {
+				  cutoff = cutoff.replace("<a ", "<span ") + "</span>";
+			  }
+			  return cutoff + "...";
+		  }
 		  return sb.toString();
 			
 		
