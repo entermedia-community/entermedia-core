@@ -956,6 +956,11 @@ public class URLUtilities
 		  while (m.find()) {
 		   // String text = m.group(1);
 		    String text = m.group(0).trim();
+		    if( maxchars > -1 && maxchars < escaped.length() )  //Not gonna fit
+		    {
+		    	m.appendReplacement(sb,text);
+		    	continue;
+		    }
 		    // ... possibly process 'text' ...
 		    StringBuffer link = new StringBuffer();
 		    
@@ -971,10 +976,10 @@ public class URLUtilities
 		  if( maxchars > -1 && maxchars < sb.length())
 		  {
 			  String cutoff = sb.toString().substring(0,maxchars);
-			  if( cutoff.contains("<a ") && !cutoff.contains("</a>"))
-			  {
-				  cutoff = cutoff.replace("<a ", "<span ") + "</span>";
-			  }
+//			  if( cutoff.contains("<a ") && !cutoff.contains("</a>"))
+//			  {
+//				  cutoff = cutoff.replace("<a ", "") + " \"</span>";
+//			  }
 			  return cutoff + "...";
 		  }
 		  return sb.toString();
