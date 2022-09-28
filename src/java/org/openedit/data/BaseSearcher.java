@@ -388,6 +388,11 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				}
 				if (hitsperpage == null)
 				{
+					hitsperpage = inPageRequest.findValue(getSearchType()+ "hitsperpage");
+				}
+				
+				if (hitsperpage == null)
+				{
 					if (usersettings != null)
 					{
 						int count = usersettings.getHitsPerPageForSearchType(inQuery.getResultType());
