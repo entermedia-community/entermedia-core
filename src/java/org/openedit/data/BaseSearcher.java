@@ -1357,6 +1357,10 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			{
 				t = search.addNot(detail, val);
 			}
+			else if ("notgroup".equals(op))
+			{
+				t = search.addNots(detail, val);
+			}
 			else if ("orsgroup".equals(op))
 			{
 				t = search.addOrsGroup(detail, val);
@@ -2934,22 +2938,38 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				}
 				else
 				{
-					Collection all = data.getValues(field);
-					if( all == null)
-					{
-						all = new ArrayList();
-					}
 					String toadd = inReq.getRequestParameter(field + ".add");
-					if( toadd != null)
-					{
-						all.add(toadd);
-					}
 					String toremove = inReq.getRequestParameter(field + ".remove");
-					if( toremove != null)
+					
+					if( toadd != null || toremove != null)
 					{
-						all.remove(toremove);
+						Collection all = data.getValues(field);
+						if( all == null)
+						{
+							all = new ArrayList();
+						}
+						if( toadd != null)
+						{
+							all.add(toadd);
+						}
+						if( toremove != null)
+						{
+							all.remove(toremove);
+						}
+						result = all;
 					}
-					result = all;
+					else
+					{
+						String[] hasvalues = inReq.getRequestParameters(field + ".values");
+						if( hasvalues == null )
+						{
+							result = null;
+						}
+						else
+						{					
+							result = Arrays.asList( hasvalues);
+						}
+					}
 				}
 			}
 			else if (detail.isDataType("objectarray"))
