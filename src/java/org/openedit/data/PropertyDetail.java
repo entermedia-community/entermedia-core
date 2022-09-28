@@ -561,7 +561,7 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 	}
 	public boolean isAnalyzed()
 	{
-		if( getId() == null || getId().endsWith("id") || isList() || isMultiValue() ||  getId().contains("sourcepath") ){
+		if( getId() == null || isList() || isMultiValue() ||  getId().contains("sourcepath") ){
 
 			return false;
 		}
