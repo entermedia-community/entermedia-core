@@ -290,6 +290,24 @@ public class ValuesMap extends HashMap
 		if (object instanceof String) {
 			return (String) object;
 		}
+		if( object instanceof String[])
+		{
+			String[] vals = (String[])object;
+			if( vals.length == 1)
+			{
+				return vals[0];
+			}
+			StringBuffer buf = new StringBuffer();
+			for (int i = 0; i < vals.length; i++)
+			{
+				buf.append(vals[i]);
+				if( i + 1 < vals.length)
+				{
+					buf.append("|");
+				}
+			}
+			return buf.toString();
+		}
 		if (object instanceof Date) {
 			return DateStorageUtil.getStorageUtil().formatForStorage(((Date)object));
 		}
