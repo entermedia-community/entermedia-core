@@ -332,6 +332,11 @@ public class ValuesMap extends HashMap
 					Data data = (Data)detail;
 					values.append(data.getId());
 				}
+				else if( detail instanceof Map)
+				{
+					JSONObject json = new JSONObject((Map) detail);
+					values.append( json.toJSONString() );
+				}
 				else
 				{
 					values.append(String.valueOf( detail ) );
