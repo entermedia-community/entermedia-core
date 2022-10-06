@@ -177,7 +177,11 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 
 		if (inQuery.getHitsName() == null)
 		{
-			String hitsname = inPageRequest.findValue("hitsname");
+			String hitsname = inPageRequest.findValue(getSearchType() + "hitsname");
+			if (hitsname == null)
+			{
+				hitsname = inPageRequest.findValue( "hitsname");
+			}
 			if (hitsname == null)
 			{
 				hitsname = "hits";
