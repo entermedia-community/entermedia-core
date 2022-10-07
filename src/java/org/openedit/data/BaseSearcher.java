@@ -177,7 +177,11 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 
 		if (inQuery.getHitsName() == null)
 		{
-			String hitsname = inPageRequest.findValue("hitsname");
+			String hitsname = inPageRequest.findValue(getSearchType() + "hitsname");
+			if (hitsname == null)
+			{
+				hitsname = inPageRequest.findValue( "hitsname");
+			}
 			if (hitsname == null)
 			{
 				hitsname = "hits";
@@ -2931,6 +2935,10 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				}
 				result = map;
 			}
+			else if (detail.isDataType("nested") || detail.isDataType("objectarray"))
+			{
+				//TODO: Look for sub objects?
+			}
 			else if (detail.isMultiValue())
 			{
 				if( values != null )
@@ -3224,7 +3232,11 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	public Object createValue(String inDetailId, String inVal)
 	{
 		PropertyDetail detail = getDetail(inDetailId);
-		Object result = inVal;
+		if( inVal == null || inVal.isEmpty())
+		{
+			return null;
+		}
+		Object result = inVal;  //defaulted
 		if (detail == null)
 		{
 			return inVal;
@@ -3262,9 +3274,35 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		}
 		else if (detail.isNumber())
 		{
-
+			//make sure its a number?
 		}
-
+		else if( detail.isDataType("nested") && inVal.startsWith("{"))
+		{
+			JSONParser parser = new JSONParser();
+			try
+			{
+				String[] vals;
+				if (inVal.contains("|"))
+				{
+					vals = MultiValued.VALUEDELMITER.split(inVal);
+				}
+				else
+				{
+					vals = new String[] { inVal };
+				}
+				List all = new ArrayList(vals.length); 
+				for (int i = 0; i < vals.length; i++)
+				{
+					Object one = parser.parse(inVal);
+					all.add(one);
+				}
+				result = all;
+			}
+			catch (org.json.simple.parser.ParseException e)
+			{
+				log.error("Coudl not parse",e);
+			}
+		}
 		return result;
 	}
 

@@ -282,7 +282,11 @@ public class FileGenerator extends BaseGenerator implements Generator
 				try
 				{
 					Date old = getLastModFormat().parse(since);
-					if( !contentpage.getLastModified().after(old))
+					
+					long oldtime = old.getTime() / 1000;
+					long currenttime = contentpage.lastModified() / 1000;
+					
+					if( currenttime == oldtime)
 					{
 						//log.info("if since"  + since);
 						res.setStatus(HttpServletResponse.SC_NOT_MODIFIED);

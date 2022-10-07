@@ -11,10 +11,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
+import org.apache.commons.lang3.time.DateUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.velocity.runtime.parser.node.MathUtils;
-import org.openedit.page.manage.TextLabelManager;
 
 public class DateStorageUtil
 {
@@ -36,9 +35,9 @@ public class DateStorageUtil
 		{
 			format = new SimpleDateFormat(inFormat);
 			format.setLenient(true);
-			if( inFormat.equals("yyyy-MM-dd'T'HH:mm:ss.SSSXXX"))
+			if( inFormat.equals("yyyy-MM-dd'T'HH:mm:ss.SSSXXX") || inFormat.equals("yyyy-MM-dd'T'HH:mm:ss.SSSX") )
 			{
-				format.setTimeZone(TimeZone.getTimeZone("CET"));		
+				format.setTimeZone(TimeZone.getTimeZone("UTC"));		
 			}
 			fieldDateFormats.put(inFormat, format);
 		}
@@ -87,7 +86,7 @@ public class DateStorageUtil
 		if (fieldOldDashFormat == null)
 		{
 			fieldOldDashFormat = new SimpleDateFormat("yyyyMMddHHmmss");
-			fieldOldDashFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+			fieldOldDashFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
 			fieldOldDashFormat.setLenient(true);
 		}
 		return fieldOldDashFormat;
@@ -165,6 +164,15 @@ public class DateStorageUtil
 
 				if (inStoredDate.contains("T"))
 				{
+					if( inStoredDate.contains("+") || inStoredDate.contains("-"))
+					{
+//					    TemporalAccessor ta = DateTimeFormatter.ISO_INSTANT.parse(inStoredDate);
+//					    Instant i = Instant.from(ta);
+//					    Date d = Date.from(i);
+						Date d = getDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX").parse(inStoredDate);
+						return d;
+					}
+					//If its ends with Z then this is the time in UTC, no offset needed
 					return getJsonFormat().parse(inStoredDate); //Also works for ElasticSearch
 				}
 

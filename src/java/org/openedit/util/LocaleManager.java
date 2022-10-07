@@ -249,7 +249,11 @@ public class LocaleManager
 		{
 			double days = (double)hour / 24d;
 			time = String.valueOf( (int) days );
-			label = "Days";
+			label = "Day";
+			if( (int)days > 1)
+			{
+				label =  label + "s";
+			}
 		}
 		String translated = getTextLabelManager().getAutoText("/system/data/",label, inLocale);
 		if (time != null ) 
