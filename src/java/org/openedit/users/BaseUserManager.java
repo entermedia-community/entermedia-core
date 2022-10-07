@@ -495,6 +495,32 @@ public class BaseUserManager implements UserManager
 		return null;
 	}
 
+	
+	public User createTempUserFromEmail(String email)
+	{
+		
+		if (email != null) {
+			User user = getUserSearcher().getUserByEmail(email);
+			if (user == null )
+			{
+				Group guest = getGroupSearcher().getGroup("guest");
+				if (guest == null)
+				{
+					createGroup("guest", "Guest");
+				}
+				user = (User)getUserSearcher().createNewData();
+				//user = getUserManager(inReq).createGuestUser(null, null, "guest");
+				user.setEmail(email);
+				user.addGroup(guest);
+				String catalogid = getUserSearcher().getCatalogId();
+				user.setProperty("catalogid", catalogid);
+				saveUser(user);
+			}
+			return user;
+		}
+		return null;
+
+	}
 
 
 }

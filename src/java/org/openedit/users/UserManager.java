@@ -190,6 +190,8 @@ public interface UserManager extends CatalogEnabled
 
 	User createGuestUser(String inAccount, String inPassword, String inGroupname);
 	
+	public User createTempUserFromEmail(String email);
+	
 	public String getScreenName(String userName);
 	void flush();
 
