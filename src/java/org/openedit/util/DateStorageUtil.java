@@ -538,6 +538,20 @@ public class DateStorageUtil
 		return weeks;
 		
 	}
+
+	public boolean newerThan(Date inDate, Date inDate2)
+	{
+		if( inDate == null && inDate2 != null)
+		{
+			return false;
+		}
+		if( inDate != null && inDate2 == null)
+		{
+			return true;
+		}
+		int newer = inDate.compareTo(inDate2);
+		return newer == 1;
+	}
 	
 
 }
