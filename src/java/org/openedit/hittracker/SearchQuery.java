@@ -624,6 +624,15 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		if( inObj instanceof SearchQuery)
 		{
 			SearchQuery q = (SearchQuery)inObj;
+			Collection searchmodules = getValues("searchtypes");
+			if( searchmodules != null)
+			{
+				Collection searchmodules2 = q.getValues("searchtypes");
+				if( !searchmodules.equals(searchmodules2))
+				{
+					return false;
+				}
+			}
 			String one = q.toQuery();
 			if( one != null)
 			{
