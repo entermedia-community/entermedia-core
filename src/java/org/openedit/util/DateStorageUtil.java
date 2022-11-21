@@ -1,6 +1,7 @@
 package org.openedit.util;
 
 import java.text.DateFormat;
+import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -11,7 +12,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
-import org.apache.commons.lang3.time.DateUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -537,6 +537,27 @@ public class DateStorageUtil
 		}
 		return weeks;
 		
+	}
+
+	public boolean newerThan(Date inDate, Date inDate2)
+	{
+		if( inDate == null && inDate2 != null)
+		{
+			return false;
+		}
+		if( inDate != null && inDate2 == null)
+		{
+			return true;
+		}
+		int newer = inDate.compareTo(inDate2);
+		return newer == 1;
+	}
+	
+	public String getMonthName(Date date) {
+		Calendar c = Calendar.getInstance();
+		String[] mons = new DateFormatSymbols(Locale.US).getMonths();
+		int m = c.get(Calendar.MONTH);
+		return mons[m];
 	}
 	
 
