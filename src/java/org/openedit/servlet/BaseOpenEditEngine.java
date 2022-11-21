@@ -83,8 +83,9 @@ public class BaseOpenEditEngine implements OpenEditEngine
 		if(!wasfolder &&  util.requestPath().endsWith("/")) {
 			wasfolder = true;
 		}
+		String alternative = page.get("alternative_extension");
 
-		if ( wasfolder )
+		if ( wasfolder && alternative == null )
 	    {
 	    	page = findWelcomePage(page, checkdates); 
 			if( !util.requestPath().endsWith("/"))
@@ -108,10 +109,15 @@ public class BaseOpenEditEngine implements OpenEditEngine
 			}
 			else
 			{
-				String alternative = page.get("alternative_extension");
+				//String alternative = page.get("alternative_extension");
 				if(alternative != null)
 				{
-					page = getPageManager().getPage( requestedPath + "." + alternative,false);
+					if(wasfolder) {
+						page = getPageManager().getPage( requestedPath + "/index." + alternative,false);
+					} else {
+						page = getPageManager().getPage( requestedPath + "." + alternative,false);	
+					}
+					
 				}
 			}	
 		}
