@@ -167,8 +167,21 @@ public class BaseUser extends BaseData implements User, Comparable
 //				}
 //			}
 //		}
-		if ("".equals(value))
+		
+		if (value == null && inPropertyName.equals("firstname"))
+		{
+			value = super.get("firstName");
+		}
+
+		if (value == null && inPropertyName.equals("lastname"))
+		{
+			value = super.get("lastName");
+		}
+		
+		if (value != null && value.isEmpty())
+		{
 			return null;
+		}
 		return value;
 	}
 	

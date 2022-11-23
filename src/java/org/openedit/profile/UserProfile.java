@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -22,12 +23,14 @@ import org.openedit.data.Searcher;
 import org.openedit.data.SearcherManager;
 import org.openedit.hittracker.HitTracker;
 import org.openedit.hittracker.SearchQuery;
+import org.openedit.users.Group;
 import org.openedit.users.User;
+import org.openedit.users.UserManager;
+import org.openedit.users.UserManagerException;
 import org.openedit.xml.XmlArchive;
 
-public class UserProfile extends BaseData implements SaveableData, CatalogEnabled
+public class UserProfile extends BaseData implements SaveableData, CatalogEnabled, User
 {
-	protected User fieldUser;
 	protected String fieldCatalogId;
 	protected SearcherManager fieldSearcherManager;
 	protected MultiValued fieldSettingsGroup;
@@ -39,7 +42,17 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 	protected Collection<Data> fieldModules;
 	protected Set fieldPermissions;
 	protected String fieldSettingsGroupIndexId;
-	
+	protected UserManager fieldUserManager;
+
+	public UserManager getUserManager()
+	{
+		return fieldUserManager;
+	}
+
+	public void setUserManager(UserManager inUserManager)
+	{
+		fieldUserManager = inUserManager;
+	}
 
 	public String getSettingsGroupIndexId()
 	{
@@ -101,14 +114,11 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 
 	public User getUser()
 	{
-
-		return fieldUser;
+		User user = (User)getSearcherManager().getCachedData(getCatalogId(), "user",
+					super.get("userid"));
+		return user;
 	}
 
-	public void setUser(User inUser)
-	{
-		fieldUser = inUser;
-	}
 
 	private static final Log log = LogFactory.getLog(UserProfile.class);
 
@@ -183,15 +193,6 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 		}
 
 		String val = super.get(inPreference);
-		if (val == null && inPreference.equals("firstname"))
-		{
-			val = super.get("firstName");
-		}
-
-		if (val == null && inPreference.equals("lastname"))
-		{
-			val = super.get("lastName");
-		}
 
 		//		
 		if (val == null && getSettingsGroup() != null)
@@ -203,9 +204,13 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 		//		{
 		//			val = getSettingsGroupPermissions().get(inPreference);
 		//		}		
-		if (val == null && getUser() != null)
+		if (val == null && !inPreference.equals("userid"))
 		{
-			val = getUser().get(inPreference);
+			User user = getUser();
+			if( user != null)
+			{
+				val = getUser().get(inPreference);
+			}
 		}
 
 		return val;
@@ -229,11 +234,14 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 			}
 		}
 		
-		if (val == null && getUser() != null)
+		if (val == null && !inKey.equals("userid"))
 		{
-			val = getUser().getValue(inKey);
+			User user = getUser();
+			if( user != null)
+			{
+				val = getUser().getValue(inKey);
+			}
 		}
-		
 		
 		return null;
 	}
@@ -656,26 +664,7 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 
 	public void setProperty(String inId, String inValue)
 	{
-		if (getUser() != null)
-		{
-			if ("firstname".equalsIgnoreCase(inId))
-			{
-				getUser().setFirstName(inValue);
-			}
-			if ("lastname".equalsIgnoreCase(inId))
-			{
-				getUser().setLastName(inValue);
-
-			}
-			if ("email".equalsIgnoreCase(inId))
-			{
-				getUser().setEmail(inValue);
-			}
-			if ("password".equalsIgnoreCase(inId))
-			{
-				getUser().setPassword(inValue);
-			}
-		}
+		saveUserIfChanged(inId, inValue);
 		if (inId.equals("settingsgroup"))
 		{
 			fieldSettingsGroup = null;
@@ -683,9 +672,34 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 		super.setProperty(inId, inValue);
 	}
 
-	//	public Map<String,String> getSettingsGroupPermissions() {
-	//		return fieldSettingsGroupPermissions;
-	//	}
+	
+	@Override
+	public void setValue(String inId, Object inValue)
+	{ 
+		if (get("userid") != null)
+		{
+			String val = (String) String.valueOf( inValue );
+			saveUserIfChanged(inId, val);
+		}
+		super.setValue(inId, inValue);
+	}
+
+	protected void saveUserIfChanged(String inId, String val)
+	{
+		if ("lastName".equalsIgnoreCase(inId)
+				|| "firstName".equalsIgnoreCase(inId)
+				|| "email".equalsIgnoreCase(inId))
+		{
+			String oldvalue = getUser().get(inId);
+			if( oldvalue == null || !oldvalue.equals(val)) 
+			{
+				User user = getUser();
+				user.setValue(inId,val);
+				//getSearcherManager().getSearcher(getCatalogId(), "user").saveData(user);
+				//getUserManager().saveUser(user);
+			}
+		}
+	}	
 
 	@Override
 	public String getName()
@@ -749,4 +763,154 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 		}
 		
 	}
+
+	@Override
+	public String getFirstName()
+	{
+		return getUser().getFirstName();
+	}
+
+	@Override
+	public String getLastName()
+	{
+		return getUser().getLastName();
+	}
+
+	@Override
+	public String getEmail()
+	{
+		return getUser().getEmail();
+	}
+
+	@Override
+	public void setFirstName(String inFirstName)
+	{
+		getUser().setFirstName(inFirstName);
+	}
+
+	@Override
+	public void setLastName(String inLastName)
+	{
+		getUser().setLastName(inLastName);
+		
+	}
+
+	@Override
+	public void setEmail(String inEmail)
+	{
+		getUser().setEmail(inEmail);
+		
+	}
+
+	@Override
+	public Collection getGroups()
+	{
+		// TODO Auto-generated method stub
+		return getUser().getGroups();
+	}
+
+	@Override
+	public String getPassword()
+	{
+		return getUser().getPassword();
+	}
+
+	@Override
+	public void setPassword(String inPassword) throws UserManagerException
+	{
+		getUser().setPassword(inPassword);		
+	}
+
+	@Override
+	public String getUserName()
+	{
+		// TODO Auto-generated method stub
+		return getUser().getUserName();
+	}
+
+	@Override
+	public boolean isEnabled()
+	{
+		return getUser().isEnabled();
+	}
+
+	@Override
+	public void setEnabled(boolean inEnabled)
+	{
+		getUser().setEnabled(inEnabled);
+		
+	}
+
+	@Override
+	public boolean hasProperty(String inProperty)
+	{
+		return getUser().hasProperty(inProperty);
+	}
+	
+	@Override
+	public String getEnterMediaKey()
+	{
+		return getUser().getEnterMediaKey();
+	}
+
+	@Override
+	public void setUserName(String inUserName)
+	{
+		getUser().setUserName(inUserName);
+	}
+
+	@Override
+	public List listGroupPermissions()
+	{
+		return getUser().listGroupPermissions();
+	}
+
+	@Override
+	public void addGroup(Group inGroup)
+	{
+		getUser().addGroup(inGroup);		
+	}
+
+	@Override
+	public void removeGroup(Group inGroup)
+	{
+		getUser().removeGroup(inGroup);
+	}
+
+	@Override
+	public boolean isInGroup(Group inGroup)
+	{
+		return getUser().isInGroup(inGroup);
+	}
+
+	@Override
+	public boolean isVirtual()
+	{
+		return getUser().isVirtual();
+	}
+
+	@Override
+	public void setVirtual(boolean inVirtual)
+	{
+		getUser().setVirtual(inVirtual);
+	}
+
+	@Override
+	public String getScreenName()
+	{
+		return getUser().getScreenName();
+	}
+
+	@Override
+	public Map listAllProperties()
+	{
+		return getUser().listAllProperties();
+	}
+
+	@Override
+	public void setGroups(Collection inGroupslist)
+	{
+		getUser().setGroups(inGroupslist);
+	}
+	
 }
