@@ -612,10 +612,15 @@ public final class PathUtilities
 	}
 	public static String extractId( String inName, boolean inAllowUnderstores)
 	{
-		StringBuffer out = new StringBuffer(inName.length());
-		for (int i = 0; i < inName.length(); i++)
+		if( inName == null)
 		{
-			char c = inName.charAt(i);
+			return null;
+		}
+		String trim = inName.trim();
+		StringBuffer out = new StringBuffer(trim.length());
+		for (int i = 0; i < trim.length(); i++)
+		{
+			char c = trim.charAt(i);
 			if( Character.isLetterOrDigit(c) )
 			{
 					out.append(c);
@@ -641,6 +646,7 @@ public final class PathUtilities
 		result = result.replace('ó', 'o');
 		result = result.replace('ú', 'u');
 */
+
 		return result;
 	}
 
