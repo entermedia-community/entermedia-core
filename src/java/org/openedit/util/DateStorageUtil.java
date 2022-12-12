@@ -553,12 +553,7 @@ public class DateStorageUtil
 		return newer == 1;
 	}
 	
-	public String getMonthName(Date date) {
-		Calendar c = Calendar.getInstance();
-		String[] mons = new DateFormatSymbols(Locale.US).getMonths();
-		int m = c.get(Calendar.MONTH);
-		return mons[m];
-	}
+
 	
 
 }

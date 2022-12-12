@@ -1,8 +1,10 @@
 package org.openedit.util;
 
 import java.text.DateFormat;
+import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -275,6 +277,15 @@ public class LocaleManager
 	public void setTextLabelManager(TextLabelManager inTextLabelManager)
 	{
 		fieldTextLabelManager = inTextLabelManager;
+	}
+	
+	
+	public String getMonthName(Date date, String inLocale) {
+		Calendar c = Calendar.getInstance();
+		c.setTime(date);
+		String[] mons = new DateFormatSymbols(getLocale(inLocale)).getMonths();
+		int m = c.get(Calendar.MONTH);
+		return mons[m];
 	}
 
 }
