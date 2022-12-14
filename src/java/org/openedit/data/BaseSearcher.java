@@ -2953,6 +2953,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			else if (detail.isDataType("nested") || detail.isDataType("objectarray"))
 			{
 				//TODO: Look for sub objects?
+				continue;
 			}
 			else if (detail.isMultiValue())
 			{
