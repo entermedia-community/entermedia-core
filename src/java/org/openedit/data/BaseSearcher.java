@@ -165,7 +165,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		addShowOnly(inPageRequest, inQuery);
 		String clear = inPageRequest.getRequestParameter(getSearchType() + "clearresults");
 		if (clear == null) {
-			clear = (String)inPageRequest.getPageValue(getSearchType() + "clearresults");
+			clear = (String)inPageRequest.findValue(getSearchType() + "clearresults");
 		}
 		inPageRequest.putPageValue("searcher", this);
 		HitTracker tracker = null;
@@ -331,7 +331,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 						String clearfilters = inPageRequest.getRequestParameter(getSearchType() + "clearfilters");
 						if(clearfilters == null )
 						{
-							clearfilters = inPageRequest.getRequestParameter("clearfilters");
+							clearfilters = inPageRequest.findValue("clearfilters");
 						}
 						if(clearfilters== null) {
 							clearfilters = (String) inPageRequest.findValue(getSearchType() + "clearfilters");
