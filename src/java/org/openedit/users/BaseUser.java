@@ -124,6 +124,15 @@ public class BaseUser extends BaseData implements User, Comparable
 	public String getShortDescription()
 	{
 		StringBuffer out = new StringBuffer();
+		if( getLastName() != null && getFirstName() != null)
+		{
+			out.append(getFirstName().substring(0,1).toUpperCase());
+			out.append(".");
+			out.append(getLastName());
+			return out.toString();
+		}
+		
+		
 		if ( getFirstName() != null)
 		{
 			out.append( getFirstName() );
