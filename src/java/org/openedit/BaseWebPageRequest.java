@@ -111,6 +111,11 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 			String method = getRequest().getMethod();
 			if( "POST".equalsIgnoreCase(method) || "PUT".equalsIgnoreCase(method) )
 			{
+				String type = getRequest().getContentType();
+				if (type == null || !type.startsWith("application/json"))
+				{
+					return null;
+				}
 				JSONParser parser = new JSONParser();
 				try
 				{

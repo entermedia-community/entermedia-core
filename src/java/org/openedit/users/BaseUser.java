@@ -126,9 +126,9 @@ public class BaseUser extends BaseData implements User, Comparable
 		StringBuffer out = new StringBuffer();
 		if( getLastName() != null && getFirstName() != null)
 		{
-			out.append(getFirstName().substring(0,1).toUpperCase());
+			out.append(getFirstName());
 			out.append(".");
-			out.append(getLastName());
+			out.append(getLastName().substring(0,1).toUpperCase());
 			return out.toString();
 		}
 		
