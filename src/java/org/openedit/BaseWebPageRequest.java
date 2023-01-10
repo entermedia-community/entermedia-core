@@ -112,7 +112,7 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 			if( "POST".equalsIgnoreCase(method) || "PUT".equalsIgnoreCase(method) )
 			{
 				String type = getRequest().getContentType();
-				if (type == null || !type.startsWith("application/json"))
+				if (type == null || (!type.startsWith("application/json") && !type.startsWith("text/plain")))
 				{
 					return null;
 				}
