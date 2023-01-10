@@ -192,6 +192,14 @@ public class QueryBuilder
 		Data found = getSearcher().searchByQuery(getQuery());
 		return found;
 	}
+	public Data searchOne(WebPageRequest inContext)
+	{
+		//getQuery().toFriendly();
+		getQuery().setHitsPerPage(1);
+		HitTracker tracker = getSearcher().cachedSearch(inContext, getQuery());
+		Data found = (Data) tracker.first();
+		return found;
+	}
 	public QueryBuilder exact(String inKey, boolean inValue) 
 	{
 		return exact(inKey,String.valueOf(inValue));
