@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openedit.di.BeanLoader;
@@ -176,7 +177,7 @@ public class ModuleManager implements BeanLoaderAware, ShutdownList
 		List actions = inPage.getPathActions(); //a list of action sorted from lower pages up to the root
 		String method = inPageRequest.getMethod();
 		
-		List copy = condenseActions(method, actions );  //reverse the list with the root run first
+		List copy = condenseActions(inPage, method, actions );  //reverse the list with the root run first
 		for (Iterator iter = copy.iterator(); iter.hasNext();)
 		{
 			//TODO: Add mime type checks to speed this up
@@ -218,7 +219,7 @@ public class ModuleManager implements BeanLoaderAware, ShutdownList
 			}
 		}		
 	}
-	public List condenseActions(String method, List inActions)
+	public List condenseActions(Page inPage, String method, List inActions)
 	{
 		//remove any duplicates keeping the ones on the end first
 		if( inActions.size() < 2)
@@ -236,6 +237,16 @@ public class ModuleManager implements BeanLoaderAware, ShutdownList
 			if(targetmethod != null && !targetmethod.equals(method)){
 				continue;
 			}
+			
+			String mask = pageAction.getConfig().getAttribute("mask");
+			if(mask != null) {
+				String path = inPage.getPath();
+				boolean matches = FilenameUtils.wildcardMatch(path, mask);
+				if(!matches) {
+					continue;
+				}
+			}
+			
 			
 			String cancel = pageAction.getConfig().getAttribute("cancel");
 			if ( Boolean.parseBoolean(cancel) )

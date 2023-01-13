@@ -148,7 +148,7 @@ public class PageRequestTest extends BaseTestCase
 		String clas = action.getConfig().getAttribute("class");
 		assertEquals("java.sql.Date",clas);
 		ModuleManager manager = new ModuleManager();
-		List small = manager.condenseActions(null,actions);
+		List small = manager.condenseActions(page, null,actions);
 		assertEquals(1,small.size());
 		PageAction action2 = (PageAction)small.get(0); //now it moved up
 		String clas2 = action2.getConfig().getAttribute("class");
