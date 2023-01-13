@@ -281,11 +281,14 @@ public class LocaleManager
 	
 	
 	public String getMonthName(Date date, String inLocale) {
-		Calendar c = Calendar.getInstance();
-		c.setTime(date);
-		String[] mons = new DateFormatSymbols(getLocale(inLocale)).getMonths();
-		int m = c.get(Calendar.MONTH);
-		return mons[m];
+		if( date!= null) {
+			Calendar c = Calendar.getInstance();
+			c.setTime(date);
+			String[] mons = new DateFormatSymbols(getLocale(inLocale)).getMonths();
+			int m = c.get(Calendar.MONTH);
+			return mons[m];
+		}
+		return null;
 	}
 
 }
