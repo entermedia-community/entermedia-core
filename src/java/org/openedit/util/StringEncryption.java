@@ -497,6 +497,9 @@ public class StringEncryption
 	
 	public String getTempEnterMediaKey(User user)
 	{
+		if(user == null) {
+			return null;
+		}
 		String passenc = getPasswordMd5(user.getPassword());
 		String entermediakey = user.getId() + "md542" + passenc;
 
