@@ -1147,6 +1147,42 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 		return name;
 	}
 
+	public String findReqValue(String inName)
+	{
+		String name = getRequestParameter(inName);
+		
+		if( name == null )
+		{
+			SiteData sitedata = (SiteData)getPageValue("sitedata");
+			if( sitedata != null)
+			{
+				name = sitedata.getSiteParameter(inName);
+			}
+		}
+		if( name == null)
+		{
+			PageAction inAction = getCurrentAction();
+			if( inAction != null && inAction.getConfig() != null)
+			{
+				name = inAction.getChildValue( inName );
+				if( name == null)
+				{
+					name = inAction.getProperty(inName);				
+				}
+			}
+		}
+		if( name == null)
+		{
+			name = getContentPage().get(inName);
+		}
+		if( name == null)
+		{
+			name = getPage().get(inName);
+		}
+		name = getPage().getPageSettings().replaceProperty(name);
+		return name;
+	}
+
 	public boolean hasCancelActions()
 	{
 		if( fieldHasCancelActions)

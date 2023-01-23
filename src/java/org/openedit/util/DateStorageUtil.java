@@ -237,6 +237,10 @@ public class DateStorageUtil
 			{
 				return getLuceneFormat().parse(inStoredDate);
 			}
+			if (inStoredDate.length() == 10 && inStoredDate.indexOf("-") == 4)
+			{
+				return parse(inStoredDate,"yyyy-MM-dd");
+			}
 			if (inStoredDate.length() > 5)
 			{
 				return getOldShortStandardFormat().parse(inStoredDate);
