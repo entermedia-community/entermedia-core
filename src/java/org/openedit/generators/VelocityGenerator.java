@@ -136,7 +136,7 @@ public class VelocityGenerator extends BaseGenerator implements Generator
 				//ignore
 				return;
 			}
-			throw new OpenEditException(wrapped);
+			throw new OpenEditException(ex.getMessage() + " on " + inPage.getPath() , wrapped);
 		}
 		catch ( ParseErrorException pex )
 		{
@@ -153,7 +153,7 @@ public class VelocityGenerator extends BaseGenerator implements Generator
 			{
 				throw (OpenEditException) ioex;
 			}
-			throw new OpenEditException(ioex);
+			throw new OpenEditException(ioex.getMessage() + " on " + inPage.getPath(),ioex);
 		}
 	}
 
