@@ -3,7 +3,6 @@
  */
 package org.openedit.data;
 
-import java.util.AbstractCollection;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -15,7 +14,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openedit.xml.XmlFile;
 
-public class PropertyDetails extends AbstractCollection
+public class PropertyDetails extends ArrayList
 {
 	private static final Log log = LogFactory.getLog(PropertyDetails.class);
 
@@ -695,6 +694,7 @@ public class PropertyDetails extends AbstractCollection
 		return val;
 		
 	}
+
 	
 	
 }

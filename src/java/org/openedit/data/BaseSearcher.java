@@ -2555,19 +2555,19 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				}
 			}
 		}
-		Collections.sort(sublist);
+		Collections.sort(	sublist);
 		return sublist;
 	}
 	public Collection<PropertyDetail> getActivePropertyDetails()
 	{
 		PropertyDetails details = getPropertyDetails();
-		List<PropertyDetail> sublist = new ArrayList<PropertyDetail>(details.size());
+		PropertyDetails sublist = new PropertyDetails();
 		for (Iterator iterator = details.iterator(); iterator.hasNext();)
 		{
 			PropertyDetail detail = (PropertyDetail) iterator.next();
 				if (!detail.isDeleted())
 				{
-					sublist.add(detail);
+					sublist.addDetail(detail);
 				}
 		}
 		Collections.sort(sublist);
