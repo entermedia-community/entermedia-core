@@ -17,6 +17,7 @@ import org.openedit.Data;
 import org.openedit.MultiValued;
 import org.openedit.WebPageRequest;
 import org.openedit.data.BaseData;
+import org.openedit.data.EntityPermissions;
 import org.openedit.data.PropertyDetail;
 import org.openedit.data.SaveableData;
 import org.openedit.data.Searcher;
@@ -24,6 +25,7 @@ import org.openedit.data.SearcherManager;
 import org.openedit.hittracker.HitTracker;
 import org.openedit.hittracker.SearchQuery;
 import org.openedit.users.Group;
+import org.openedit.users.Permissions;
 import org.openedit.users.User;
 import org.openedit.users.UserManager;
 import org.openedit.users.UserManagerException;
@@ -40,13 +42,23 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 	protected Collection fieldViewCategories;
 	protected Collection<String> fieldCollectionIds;
 	protected Collection<Data> fieldModules;
-	protected Set fieldPermissions;
+	protected Permissions fieldPermissions;
 	protected String fieldSettingsGroupIndexId;
 	protected UserManager fieldUserManager;
+	protected EntityPermissions fieldEntityPermissions;
+	
+	public EntityPermissions getEntityPermissions() {
+		return fieldEntityPermissions;
+	}
+
+	public void setEntityPermissions(EntityPermissions inEntityPermissions) {
+		fieldEntityPermissions = inEntityPermissions;
+	}
 
 	public UserManager getUserManager()
 	{
 		return fieldUserManager;
+		
 	}
 
 	public void setUserManager(UserManager inUserManager)
@@ -64,15 +76,7 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 		fieldSettingsGroupIndexId = inIndexId;
 	}
 
-	public Set getPermissions()
-	{
-		return fieldPermissions;
-	}
-
-	public void setPermissions(Set inPermissions)
-	{
-		fieldPermissions = inPermissions;
-	}
+	
 
 	public boolean hasModule(String inId)
 	{
@@ -352,13 +356,11 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 				Collection permissions = fieldSettingsGroup.getValues("permissions");
 				if (permissions != null)
 				{
-					fieldPermissions = new HashSet(permissions);
+					getPermissions().setProfilePermissions(permissions);
+					
 				}
 			}
-			else
-			{
-				fieldPermissions = new HashSet();
-			}
+			
 
 			//			else
 			//			{
@@ -369,6 +371,20 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 			//			}
 		}
 		return fieldSettingsGroup;
+	}
+
+	public Permissions getPermissions() {
+		if (fieldPermissions == null) {
+			fieldPermissions = new Permissions();
+			fieldPermissions.setEntityPermissions(getEntityPermissions());
+			
+		}
+
+		return fieldPermissions;
+	}
+
+	public void setPermissions(Permissions inPermissions) {
+		fieldPermissions = inPermissions;
 	}
 
 	public void setSettingsGroup(String inSettingsGroupId)
@@ -727,13 +743,14 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 	{
 		getSettingsGroup();
 
-		Set permissions = getPermissions();
+		Permissions permissions = getPermissions();
 		if( permissions == null)
 		{
 			return false;
 		}
-		return permissions.contains(inPropertyName);
+		return permissions.can(inPropertyName);
 	}
+	
 
 	public boolean isInGroup(String inGroupId)
 	{

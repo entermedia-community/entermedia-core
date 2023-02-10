@@ -16,7 +16,7 @@ public class TranslationFilter extends TextReaderFilter
 	}
 	public StringBuffer replace(String inLastLine)
 	{
-		int bracket = inLastLine.indexOf("[[");
+		int bracket = inLastLine.indexOf("[[");  
 		if( bracket == -1)
 		{
 			return new StringBuffer(inLastLine);

@@ -32,6 +32,7 @@ public class ObjectArray
 	public void setMaps(Collection<ValuesMap> inMaps)
 	{
 		fieldValueMaps = inMaps;
+		
 	}
 	
 	
