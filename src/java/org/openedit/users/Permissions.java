@@ -30,8 +30,12 @@ public class Permissions {
 
 	public Boolean can(String inKey)
 	{
-		
+		if( getProfilePermissions() == null)
+		{
+			return false;
+		}
 		boolean can = getProfilePermissions().contains(inKey);
+		
 		return can;
 	}
 	

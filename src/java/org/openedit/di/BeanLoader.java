@@ -187,6 +187,10 @@ public class BeanLoader
 		}
 		catch (Throwable e)
 		{
+			if(e instanceof OpenEditException)
+			{
+				throw (OpenEditException)e;
+			}
 			throw new OpenEditException(e);
 		}
 	}

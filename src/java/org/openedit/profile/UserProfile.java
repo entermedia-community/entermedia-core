@@ -338,38 +338,6 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 
 	public Data getSettingsGroup()
 	{
-		if (fieldSettingsGroup == null && getCatalogId() != null)
-		{
-			String groupid = super.get("settingsgroup");
-			if (groupid == null)
-			{
-				groupid = "guest";
-			}
-			Searcher settingsGroupSearcher = getSearcherManager().getSearcher(getCatalogId(), "settingsgroup");
-			fieldSettingsGroup = (MultiValued) settingsGroupSearcher.searchById(groupid);
-			if (fieldSettingsGroup == null && log.isDebugEnabled())
-			{
-				log.debug("No settings group defined");
-			}
-			if (fieldSettingsGroup != null)
-			{
-				Collection permissions = fieldSettingsGroup.getValues("permissions");
-				if (permissions != null)
-				{
-					getPermissions().setProfilePermissions(permissions);
-					
-				}
-			}
-			
-
-			//			else
-			//			{
-			//				Searcher searcher = getSearcherManager().getSearcher(getCatalogId(),"settingsgrouppermissions");
-			//				SearchQuery q = searcher.createSearchQuery();
-			//				q.
-			//				
-			//			}
-		}
 		return fieldSettingsGroup;
 	}
 
@@ -928,6 +896,11 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 	public void setGroups(Collection inGroupslist)
 	{
 		getUser().setGroups(inGroupslist);
+	}
+
+	public void setSettingsGroup(Data inFieldSettingsGroup)
+	{
+		fieldSettingsGroup = (MultiValued)inFieldSettingsGroup;
 	}
 	
 }
