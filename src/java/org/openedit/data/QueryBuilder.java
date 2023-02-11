@@ -197,6 +197,9 @@ public class QueryBuilder
 		//getQuery().toFriendly();
 		getQuery().setHitsPerPage(1);
 		HitTracker tracker = getSearcher().cachedSearch(inContext, getQuery());
+		if(tracker == null) {
+			return null;
+		}
 		Data found = (Data) tracker.first();
 		return found;
 	}
