@@ -486,6 +486,19 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 		getElementData().getLanguageMap("name").setText("en", inName);
 	}
 
+	public void setName(LanguageMap inMap)
+	{
+		LanguageMap map = getElementData().getLanguageMap("name");
+			for (Iterator iterator = inMap.keySet().iterator(); iterator.hasNext();) {
+				String key = (String) iterator.next();
+				String val =inMap.getText(key);
+				map.setText(key, val);
+			}
+		
+	}
+
+	
+	
 	public PropertyDetail copy() 
 	{
 		PropertyDetail d = new PropertyDetail();
