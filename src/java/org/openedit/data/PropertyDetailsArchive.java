@@ -397,6 +397,9 @@ public class PropertyDetailsArchive implements CatalogEnabled
 			
 			List paths = getPageManager().getChildrenPaths("/" + getCatalogId() + "/data/fields/" + inType + "/", true);
 			paths.add(basesettings); //Needed?
+			List datapaths = getPageManager().getChildrenPaths("/WEB-INF/data/" + getCatalogId() + "/fields/" + inType + "/", true);
+			paths.addAll(datapaths);
+			
 			for (Iterator iterator = paths.iterator(); iterator.hasNext();)
 			{
 				String defaultfile = (String) iterator.next();
