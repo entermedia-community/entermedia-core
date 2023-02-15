@@ -96,7 +96,8 @@ public class PageValueFilter extends BaseFilter
 		Object compare = req.getPageValue(getProperty());
 		if( compare != null)
 		{
-			return getEquals().equalsIgnoreCase(String.valueOf(compare));
+			boolean val = getEquals().equalsIgnoreCase(String.valueOf(compare));
+			return val;
 		}
 		return false;
 	}
