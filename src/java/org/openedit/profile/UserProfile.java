@@ -674,14 +674,17 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 				|| "firstName".equalsIgnoreCase(inId)
 				|| "email".equalsIgnoreCase(inId))
 		{
-			String oldvalue = getUser().get(inId);
-			if( oldvalue == null || !oldvalue.equals(val)) 
-			{
-				User user = getUser();
-				user.setValue(inId,val);
-				//getSearcherManager().getSearcher(getCatalogId(), "user").saveData(user);
-				//getUserManager().saveUser(user);
+			User user = getUser();
+			if(user != null) {
+				String oldvalue = user.get(inId);
+				if( oldvalue == null || !oldvalue.equals(val)) 
+				{				
+					user.setValue(inId,val);
+					//getSearcherManager().getSearcher(getCatalogId(), "user").saveData(user);
+					//getUserManager().saveUser(user);
+				}
 			}
+			
 		}
 	}	
 
