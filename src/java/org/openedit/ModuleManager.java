@@ -378,6 +378,10 @@ public class ModuleManager implements BeanLoaderAware, ShutdownList
 			return bean;
 		} catch ( Exception ex)
 		{
+			if( ex instanceof OpenEditException )
+			{
+				throw (OpenEditException)ex;
+			}
 			throw new OpenEditException("Could not find bean named " + inBeanName, ex);
 		}
 	}
