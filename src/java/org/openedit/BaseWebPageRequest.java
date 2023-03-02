@@ -102,6 +102,22 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 	{
 	}
 
+	public Map configureFields() {
+		Map <String, Object>jsonRequest = getJsonRequest();
+
+		String[] fields = jsonRequest.keySet().toArray(new String[jsonRequest.size()]);
+		for (int i = 0; i < fields.length; i++) {
+			String field = fields[i];
+			String val = jsonRequest.get(field).toString();
+			setRequestParameter(field + ".value", val);
+		}
+		
+		setRequestParameter("field", fields);
+		return jsonRequest;
+
+	}
+	
+	
 	@Override
 	public Map getJsonRequest()
 	{	

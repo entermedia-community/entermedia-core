@@ -40,6 +40,8 @@ public interface WebPageRequest
 	HttpServletResponse getResponse();
 	
 	Map getJsonRequest();
+	Map configureFields();
+
 	
 	void setJsonRequest(Map inReq);
 	
