@@ -8,6 +8,7 @@ import java.util.StringTokenizer;
 
 import org.openedit.CatalogEnabled;
 import org.openedit.Data;
+import org.openedit.MultiValued;
 import org.openedit.data.SearcherManager;
 
 
@@ -142,10 +143,15 @@ public class Replacer implements CatalogEnabled
 							String[] pairs = value.split("\\.");
 							if( pairs.length > 2)
 							{
-								data = getData(pairs[0],pairs[1]);
-								variable = data.get(pairs[2]);
+								String otherId = data.get(pairs[1]);
+								otherId = MultiValued.VALUEDELMITER.split(otherId)[0];
+								data = getData(pairs[1], otherId);
+								if(data != null) 
+								{
+									variable = data.get(pairs[2]);
+								}
 							}
-							if( pairs.length > 1)
+							else if( pairs.length > 1)
 							{
 								variable = data.get(pairs[1]);
 							}
