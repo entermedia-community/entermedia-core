@@ -139,8 +139,17 @@ public class Replacer implements CatalogEnabled
 						if(object instanceof Data)
 						{
 							Data data = (Data)object;
-							String method = value.substring(dot+1);
-							variable = data.get(method);
+							String[] pairs = value.split("\\.");
+							if( pairs.length > 2)
+							{
+								data = getData(pairs[0],pairs[1]);
+								variable = data.get(pairs[2]);
+							}
+							if( pairs.length > 1)
+							{
+								variable = data.get(pairs[1]);
+							}
+
 						}
 					}
 				}
