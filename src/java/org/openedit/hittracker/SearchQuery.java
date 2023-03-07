@@ -971,6 +971,7 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	
 	public Term addExact(String inKey, String inValue)
 	{
+	
 		PropertyDetail detail = createDetail(inKey);
 		return addExact(detail, inValue);
 	}
@@ -1010,7 +1011,11 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 
 	protected PropertyDetail createDetail(String inId)
 	{
-		PropertyDetail detail = getDetail(inId);
+		PropertyDetail detail = null;
+		//If this contains a . we actually want to search on that.  Not the parent ID of an object.		
+		if(!inId.contains(".")) {
+			detail = getDetail(inId);
+		}
 		if( detail == null )
 		{
 			detail = new PropertyDetail();
