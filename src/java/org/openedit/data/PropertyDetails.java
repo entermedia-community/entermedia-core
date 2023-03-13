@@ -391,7 +391,10 @@ public class PropertyDetails extends ArrayList
 			String[] type = inId.split("\\.");
 			if( type[1].length() == 2) //language.en
 			{
-				inId = type[0];					
+				PropertyDetail localinfo = getDetail(type[0]);
+				if(!(localinfo.isDataType("nested")|| localinfo.isDataType("objectarray")) && localinfo.isMultiLanguage()){
+						inId = type[0];
+				}
 			}
 			else
 			{
