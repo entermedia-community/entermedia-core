@@ -1013,7 +1013,8 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	{
 		PropertyDetail detail = null;
 		//If this contains a . we actually want to search on that.  Not the parent ID of an object.		
-		if(!inId.contains(".")) {
+		//if(!inId.contains(".")) 
+		{
 			detail = getDetail(inId);
 		}
 		if( detail == null )
