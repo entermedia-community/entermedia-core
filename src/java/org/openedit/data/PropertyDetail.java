@@ -631,12 +631,12 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 		{
 			return false;
 		}
-		
+		/*
 		if( getId().contains("."))
 		{
 			return false;
 		}
-		
+		*/
 		return true;
 	}
 	
