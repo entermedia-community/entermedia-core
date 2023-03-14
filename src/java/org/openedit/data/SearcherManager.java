@@ -463,7 +463,20 @@ public class SearcherManager
 		HitTracker found = (HitTracker)getCacheManager().get("sm" + inCatalogId, inFieldName);
 		if( found == null || !searcher.getIndexId().equals(found.getIndexId()))
 		{
-			found = searcher.getAllHits();
+			String sortfield = null;
+			if( searcher.getPropertyDetails().getDetail("ordering") != null )
+			{
+				sortfield = "ordering";
+			}
+			else if( searcher.getPropertyDetails().getDetail("numberval") != null )
+			{
+				sortfield = "numberval";
+			}
+			else if( searcher.getPropertyDetails().getDetail("name") != null )
+			{
+				sortfield = "name";
+			}
+			found = searcher.query().all().sort(sortfield).search();
 			found.setHitsPerPage(100);
 			getCacheManager().put("sm" + inCatalogId, inFieldName, found);
 		}	

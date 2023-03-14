@@ -161,7 +161,10 @@ public class QueryBuilder
 	}
 	public QueryBuilder sort(String inId)
 	{
-		getQuery().addSortBy(inId);
+		if( inId != null)
+		{
+			getQuery().addSortBy(inId);
+		}
 		return this;
 	}
 	public QueryBuilder named(String inId)
