@@ -478,7 +478,7 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 		{
 			return getParent().getPageValue(inKey);
 		}
-		if( getParent() == null)
+		if( ret == null  && getParent() == null)
 		{
 			ret = getSessionValue(inKey);
 		}
