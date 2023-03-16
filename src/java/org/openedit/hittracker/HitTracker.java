@@ -520,7 +520,29 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 	*/
 	public int toPosition(int inPage)
 	{
-		return getTotalPages() - inPage + 1;
+		//String sorted = getSearchQuery().getSortBy();
+		int position = getTotalPages() - inPage + 1;
+//		if( sorted != null)
+//		{
+//			if( sorted.endsWith("Up"))
+//			{
+//				position = inPage;
+//			}
+//		}
+		return position;
+	}
+	public int toPositionLabel(int inPage)
+	{
+		String sorted = getSearchQuery().getSortBy();
+		int position = getTotalPages() - inPage + 1;
+		if( sorted != null)
+		{
+			if( sorted.endsWith("Up"))
+			{
+				position = inPage;
+			}
+		}
+		return position;
 	}
 
 	public List linksBefore()
