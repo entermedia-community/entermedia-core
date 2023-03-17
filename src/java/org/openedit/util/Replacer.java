@@ -144,11 +144,14 @@ public class Replacer implements CatalogEnabled
 							if( pairs.length > 2)
 							{
 								String otherId = data.get(pairs[1]);
-								otherId = MultiValued.VALUEDELMITER.split(otherId)[0];
-								data = getData(pairs[1], otherId);
-								if(data != null) 
+								if(otherId != null)
 								{
-									variable = data.get(pairs[2]);
+									otherId = MultiValued.VALUEDELMITER.split(otherId)[0];
+									data = getData(pairs[1], otherId);
+									if(data != null) 
+									{
+										variable = data.get(pairs[2]);
+									}
 								}
 							}
 							else if( pairs.length > 1)
