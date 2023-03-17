@@ -544,6 +544,33 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 		}
 		return position;
 	}
+	
+	public int getStartingPosition()
+	{
+		String sorted = getSearchQuery().getSortBy();
+		int position = getTotalPages();
+		if( sorted != null)
+		{
+			if( sorted.endsWith("Up"))
+			{
+				position = 1;
+			}
+		}
+		return position;
+	}
+	public int getEndingPosition()
+	{
+		String sorted = getSearchQuery().getSortBy();
+		int position = 1;
+		if( sorted != null)
+		{
+			if( sorted.endsWith("Up"))
+			{
+				position = getTotalPages();
+			}
+		}
+		return position;
+	}
 
 	public List linksBefore()
 	{
