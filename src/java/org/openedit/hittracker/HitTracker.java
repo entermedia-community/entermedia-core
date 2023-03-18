@@ -531,6 +531,15 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 //		}
 		return position;
 	}
+	public boolean isAscending()
+	{
+		String sorted = getSearchQuery().getSortBy();
+		if( sorted != null && sorted.endsWith("Up"))
+		{
+			return true;
+		}
+		return false;
+	}
 	public int toPositionLabel(int inPage)
 	{
 		String sorted = getSearchQuery().getSortBy();
@@ -1736,7 +1745,16 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 		}
 		return terms;
 	}
-	
+
+	public PositionRender getPositionRender()
+	{
+		PositionRender render = new PositionRender(isAscending());
+		render.setPageOneBased(getPage());
+		render.setHitsPerPage(getHitsPerPage());
+		render.setTotalPages(getTotalPages());
+		render.setSize(size());
+		return render;
+	}
 
 	
 }
