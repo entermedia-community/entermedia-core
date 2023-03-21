@@ -471,7 +471,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			}
 			int totalPages = tracker.getTotalPages();
 
-			String pagenumber = extractPageNumber(inPageRequest,totalPages);
+			String pagenumber = extractPageNumber(inPageRequest,tracker);
 
 			if (pagenumber != null)
 			{
@@ -1935,7 +1935,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		}
 		int totalPages = tracker.getTotalPages();
 
-		String page = extractPageNumber(inPageRequest,totalPages);
+		String page = extractPageNumber(inPageRequest,tracker);
 
 		if (page != null)
 		{
@@ -1976,7 +1976,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		return tracker;
 	}
 
-	protected String extractPageNumber(WebPageRequest inPageRequest, int totalPages)
+	protected String extractPageNumber(WebPageRequest inPageRequest, HitTracker inHits)
 	{
 		String page = inPageRequest.getRequestParameter(getSearchType() + "page");
 		if( page == null)
@@ -1997,6 +1997,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			if( position != null)
 			{
 				int positionint = Integer.parseInt(position);
+				int  totalPages = inHits.getTotalPages();
 				int pageis = totalPages - positionint + 1;
 				if( pageis > totalPages)
 				{
@@ -2005,6 +2006,10 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				if( pageis < 1)
 				{
 					pageis = 1;
+				}
+				if( inHits.isAscending() ) //So page 2 is actually 2 from the end
+				{
+					pageis = totalPages - pageis;
 				}
 				page = String.valueOf(pageis);
 			}
