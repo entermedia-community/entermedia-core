@@ -1997,21 +1997,37 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			if( position != null)
 			{
 				int positionint = Integer.parseInt(position);
-				int  totalPages = inHits.getTotalPages();
-				int pageis = totalPages - positionint + 1;
-				if( pageis > totalPages)
-				{
-					pageis = totalPages;
-				}
-				if( pageis < 1)
-				{
-					pageis = 1;
-				}
+				Integer  totalPages = inHits.getTotalPages();
+				
 				if( inHits.isAscending() ) //So page 2 is actually 2 from the end
 				{
-					pageis = totalPages - pageis;
+					if( positionint > totalPages)
+					{
+						page =  totalPages.toString();
+					}
+					else if( positionint < 1)
+					{
+						page =  "1";
+					}
+					else 
+					{
+						page = position;
+					}
 				}
-				page = String.valueOf(pageis);
+				else 
+				{
+					int pageis = totalPages - positionint + 1;
+					if( pageis > totalPages)
+					{
+						pageis = totalPages;
+					}
+					if( pageis < 1)
+					{
+						pageis = 1;
+					}
+					page = String.valueOf(pageis);
+				}
+				
 			}
 			
 		}
