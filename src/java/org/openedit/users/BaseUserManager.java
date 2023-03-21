@@ -292,6 +292,10 @@ public class BaseUserManager implements UserManager
 	@Override
 	public void saveUser(User inUser)
 	{
+		if( inUser.isVirtual())
+		{
+			throw new OpenEditException("Cannot save a virtual user " + inUser.getId());
+		}
 		getUserSearcher().saveData(inUser,null);
 	}
 
@@ -349,8 +353,8 @@ public class BaseUserManager implements UserManager
 			user.setUserName(inAccount);
 			user.setPassword(inPassword);
 			//Virtual user causing issues with paypal
-			//user.setVirtual(true);
-			user.setEnabled(true);
+			user.setVirtual(true);
+			user.setEnabled(false);
 
 			Group group = getGroup(inGroupId);
 			if (group == null) {
