@@ -35,20 +35,20 @@ public class EntityPermissions
 	public Map getEntityPermissions(String inEntityId)
 	{
 		Map permissions = getEntityPermissions().get(inEntityId);
-		if( permissions == null)
-		{
-			permissions = new HashMap();
-			getEntityPermissions().put(inEntityId,permissions);
-		}
 		return permissions;
 	}
 	
 	public void putPermission(String inEntityId, String inId, Object value)
 	{
-		Map permissions = getEntityPermissions(inEntityId);
 		if(value == null) {
 			//Don't include anything if the value isn't set at all in the database
 			return;
+		}
+		Map permissions = getEntityPermissions(inEntityId);
+		if( permissions == null)
+		{
+			permissions = new HashMap();
+			getEntityPermissions().put(inEntityId,permissions);
 		}
 		permissions.put(inId,Boolean.valueOf(value.toString()));
 	}
@@ -56,14 +56,14 @@ public class EntityPermissions
 	public Boolean can(String inEntityId, String inKey) 
 	{
 		Map<String,Boolean> permissions = getEntityPermissions(inEntityId);
-		if(permissions == null)
+		if( permissions == null)
 		{
 			return true;
 		}
 		Boolean can = permissions.get(inKey);
 		if( can == null)
 		{
-			return true;
+			return false;
 		}
 		return can;
 	}

@@ -343,9 +343,7 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 
 	public Permissions getPermissions() {
 		if (fieldPermissions == null) {
-			fieldPermissions = new Permissions();
-			fieldPermissions.setEntityPermissions(getEntityPermissions());
-			
+			fieldPermissions = new Permissions(this);
 		}
 
 		return fieldPermissions;
@@ -712,13 +710,7 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 
 	public boolean hasPermission(String inPropertyName)
 	{
-		getSettingsGroup();
-
 		Permissions permissions = getPermissions();
-		if( permissions == null)
-		{
-			return false;
-		}
 		return permissions.can(inPropertyName);
 	}
 	
