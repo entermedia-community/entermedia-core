@@ -392,7 +392,7 @@ public class PropertyDetails extends ArrayList
 			if( type[1].length() == 2) //language.en
 			{
 				PropertyDetail localinfo = getDetail(type[0]);
-				if(!(localinfo.isDataType("nested")|| localinfo.isDataType("objectarray")) && localinfo.isMultiLanguage()){
+				if(localinfo != null && !(localinfo.isDataType("nested")|| localinfo.isDataType("objectarray")) && localinfo.isMultiLanguage()){
 						inId = type[0];
 				}
 			}

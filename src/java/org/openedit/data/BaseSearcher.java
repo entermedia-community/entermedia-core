@@ -1466,7 +1466,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				t = search.addLessThan(field, Long.parseLong(val));
 			}
 
-			if (("equaltonumber".equals(op) || "matches".equals(op) || "startswith".equals(op)) && !val.contains("-"))
+			if (("equaltonumber".equals(op) || "exact".equals(op) || "matches".equals(op) || "startswith".equals(op)) && !val.contains("-"))
 			{
 				if (field.isDataType("number") || field.isDataType("long"))
 				{

@@ -294,7 +294,10 @@ public class Page implements Data, Comparable
 	}
 	public List getScriptPaths(boolean folderonly)
 	{
-		List paths = (List)getCache().get("scriptPaths");
+		List paths = null;
+		if(!folderonly) {
+			 paths = (List)getCache().get("scriptPaths");
+		}
 		if( paths == null)
 		{
 			List scripts = getScripts(folderonly);
@@ -306,7 +309,9 @@ public class Page implements Data, Comparable
 					Script script = (Script) iterator.next();
 					paths.add(getPageSettings().replaceProperty(script.getSrc()));
 				}
-				getCache().put("scriptPaths",paths);
+				if(!folderonly) {
+					getCache().put("scriptPaths",paths);
+				}
 			}
 		}
 		return paths;

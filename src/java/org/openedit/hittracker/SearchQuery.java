@@ -2272,7 +2272,7 @@ public boolean isFilterSelected(String type, String value) {
 		{
 			public String toQuery()
 			{
-				return getValue();
+				return getDetail().getId();
 			}
 		};
 		term.setOperation("missing");
@@ -2288,7 +2288,7 @@ public boolean isFilterSelected(String type, String value) {
 		{
 			public String toQuery()
 			{
-				return getValue();
+				return getDetail().getId();
 			}
 		};
 		term.setOperation("exists");
