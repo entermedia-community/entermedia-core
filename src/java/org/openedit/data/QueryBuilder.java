@@ -393,9 +393,15 @@ public class QueryBuilder
 		return this;
 		
 	}
-	public QueryBuilder terms(WebPageRequest inReq)
-	{
-		getSearcher().addStandardSearchTerms(inReq);
+	public QueryBuilder terms(WebPageRequest inReq) {
+		if (fieldQuery == null) {
+			
+			fieldQuery = getSearcher().addStandardSearchTerms(inReq);
+		} else {
+			//TODO:  Make a version that takes a query
+			throw new OpenEditException("Terms must be added first!");
+			
+		}
 		return this;
 	}
 }
