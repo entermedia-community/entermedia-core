@@ -14,27 +14,27 @@ public class EntityPermissions
 		fieldSettingsGroup = inSettingsGroup;
 	}
 
-	Map fieldEntityPermissions;
+	Map fieldPermissions;
 	
-	public Map<String,Map> getEntityPermissions()
+	public Map<String,Map> getPermissions()
 	{
-		if (fieldEntityPermissions == null)
+		if (fieldPermissions == null)
 		{
-			fieldEntityPermissions = new HashMap();
+			fieldPermissions = new HashMap();
 			
 		}
 
-		return fieldEntityPermissions;
+		return fieldPermissions;
 	}
 
-	public void setEntityPermissions(Map inEntityPermissions)
+	public void setPermissions(Map inEntityPermissions)
 	{
-		fieldEntityPermissions = inEntityPermissions;
+		fieldPermissions = inEntityPermissions;
 	}
 
-	public Map getEntityPermissions(String inEntityId)
+	public Map getPermissions(String inEntityId)
 	{
-		Map permissions = getEntityPermissions().get(inEntityId);
+		Map permissions = getPermissions().get(inEntityId);
 		return permissions;
 	}
 	
@@ -44,18 +44,18 @@ public class EntityPermissions
 			//Don't include anything if the value isn't set at all in the database
 			return;
 		}
-		Map permissions = getEntityPermissions(inEntityId);
+		Map permissions = getPermissions(inEntityId);
 		if( permissions == null)
 		{
 			permissions = new HashMap();
-			getEntityPermissions().put(inEntityId,permissions);
+			getPermissions().put(inEntityId,permissions);
 		}
 		permissions.put(inId,Boolean.valueOf(value.toString()));
 	}
 
 	public Boolean can(String inEntityId, String inKey) 
 	{
-		Map<String,Boolean> permissions = getEntityPermissions(inEntityId);
+		Map<String,Boolean> permissions = getPermissions(inEntityId);
 		if( permissions == null)
 		{
 			return true;
