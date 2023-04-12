@@ -1139,15 +1139,7 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 		}
 		if( name == null)
 		{
-			PageAction inAction = getCurrentAction();
-			if( inAction != null && inAction.getConfig() != null)
-			{
-				name = inAction.getChildValue( inName );
-				if( name == null)
-				{
-					name = inAction.getProperty(inName);				
-				}
-			}
+			name = findActionValue(inName);
 		}
 		//TODO: Change the order. The content should go first?
 		if( name == null)
@@ -1167,6 +1159,21 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 		return name;
 	}
 
+	public String findActionValue(String inName)
+	{
+		String name = null;
+		PageAction inAction = getCurrentAction();
+		if( inAction != null && inAction.getConfig() != null)
+		{
+			name = inAction.getChildValue( inName );
+			if( name == null)
+			{
+				name = inAction.getProperty(inName);				
+			}
+		}
+		return name;
+	}
+
 	public String findReqValue(String inName)
 	{
 		String name = getRequestParameter(inName);
@@ -1181,15 +1188,7 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 		}
 		if( name == null)
 		{
-			PageAction inAction = getCurrentAction();
-			if( inAction != null && inAction.getConfig() != null)
-			{
-				name = inAction.getChildValue( inName );
-				if( name == null)
-				{
-					name = inAction.getProperty(inName);				
-				}
-			}
+			name = findActionValue(inName);
 		}
 		if( name == null)
 		{
