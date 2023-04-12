@@ -262,7 +262,7 @@ public class FileGenerator extends BaseGenerator implements Generator
 	{
 		long now = System.currentTimeMillis();			
 		boolean cache = true;
-		String nocache = inContext.findReqValue("cache");
+		String nocache = inContext.findValue("cache");
 		if( nocache != null ) 
 		{
 			cache = Boolean.parseBoolean(nocache);

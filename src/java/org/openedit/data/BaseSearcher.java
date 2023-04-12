@@ -165,7 +165,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		addShowOnly(inPageRequest, inQuery);
 		String clear = inPageRequest.getRequestParameter(getSearchType() + "clearresults");
 		if (clear == null) {
-			clear = (String)inPageRequest.findReqValue(getSearchType() + "clearresults");
+			clear = (String)inPageRequest.findValue(getSearchType() + "clearresults");
 		}
 		inPageRequest.putPageValue("searcher", this);
 		HitTracker tracker = null;
@@ -177,10 +177,10 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 
 		if (inQuery.getHitsName() == null)
 		{
-			String hitsname = inPageRequest.findReqValue(getSearchType() + "hitsname");
+			String hitsname = inPageRequest.findValue(getSearchType() + "hitsname");
 			if (hitsname == null)
 			{
-				hitsname = inPageRequest.findReqValue( "hitsname");
+				hitsname = inPageRequest.findValue( "hitsname");
 			}
 			if (hitsname == null)
 			{
@@ -215,7 +215,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			}
 			clear = inPageRequest.getRequestParameter(getSearchType() + "clearselection");
 			if (clear == null) {
-				clear = (String)inPageRequest.findValue(getSearchType() + "clearselection");
+				clear = (String)inPageRequest.findPathValue(getSearchType() + "clearselection");
 			}
 			if (Boolean.parseBoolean(clear))
 			{
@@ -570,15 +570,15 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 
 	public HitTracker loadHits(WebPageRequest inReq)
 	{
-		String type = inReq.findValue("searchtype");
+		String type = inReq.findPathValue("searchtype");
 		String id = null;
 		if (type != null)
 		{
-			id = inReq.findReqValue(type + "hitssessionid");
+			id = inReq.findValue(type + "hitssessionid");
 		}
 		if (id == null)
 		{
-			id = inReq.findReqValue("hitssessionid");
+			id = inReq.findValue("hitssessionid");
 		}
 		if (id != null)
 		{
@@ -587,7 +587,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			if (tracker != null)
 			{
 				//TODO: Remove this code, is not a good policy
-				String hitsname = inReq.findReqValue("hitsname");
+				String hitsname = inReq.findValue("hitsname");
 				if (hitsname == null)
 				{
 					hitsname = tracker.getHitsName();
@@ -760,7 +760,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		}
 		search.setResultType(resultype);
 
-		String fireevent = inPageRequest.findReqValue("fireevent");
+		String fireevent = inPageRequest.findValue("fireevent");
 		search.setFireSearchEvent(Boolean.parseBoolean(fireevent));
 
 		String[] custom = inPageRequest.getRequestParameters("customproperty");
@@ -789,7 +789,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		}
 		if (sort == null)
 		{
-			sort = inPageRequest.findReqValue(getSearchType() + "sortby");
+			sort = inPageRequest.findValue(getSearchType() + "sortby");
 		}
 		if (sort != null)
 		{
@@ -1173,11 +1173,11 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		{
 			return;
 		}
-		String querystring = inPageRequest.findReqValue(getSearchType() + "showonly");
+		String querystring = inPageRequest.findValue(getSearchType() + "showonly");
 		if (querystring == null)
 		{
 			//Legacy check. Remove this line after Feb 15 2013
-			querystring = inPageRequest.findReqValue("showonly");
+			querystring = inPageRequest.findValue("showonly");
 		}
 		if (querystring != null)
 		{
@@ -2631,7 +2631,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			String sort = inReq.getRequestParameter("sortby");
 			if (sort == null)
 			{
-				sort = inReq.findReqValue("sortby");
+				sort = inReq.findValue("sortby");
 			}
 			if (sort != null)
 			{

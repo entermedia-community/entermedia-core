@@ -33,7 +33,7 @@ public abstract class BaseModule implements BeanLoaderAware, Secured
 
 //	public UserManager getUserManager(WebPageRequest inReq)
 //	{
-//		String catalogid = inReq.findValue("catalogid");
+//		String catalogid = inReq.findPathValue("catalogid");
 //		
 //		return (UserManager) getModuleManager().getBean(catalogid, "userManager");
 //		

@@ -1003,7 +1003,7 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 		User user = (User) getPageValue(USER);
 //		if( user == null)
 //		{
-//			String catalogid = findValue("catalogid");
+//			String catalogid = findPathValue("catalogid");
 //			user = (User) getSessionValue(catalogid + "user");
 //		}
 		return user;
@@ -1131,6 +1131,16 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 	}
 	public String findValue(String inName)
 	{
+		String name = findPathValue(inName);
+		if( name == null)
+		{
+			//TODO: use getPathValue for sensitive items 
+			name = getRequestParameter(inName);  //TODO: Be aware searchtype should not be loaded from request
+		}
+		return name;
+	}
+	public String findPathValue(String inName)
+	{
 		String name = null;
 		SiteData sitedata = (SiteData)getPageValue("sitedata");
 		if( sitedata != null)
@@ -1150,15 +1160,9 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 		{
 			name = getContentPage().get(inName);
 		}
-		if( name == null)
-		{
-			//TODO: Remove this for security reasons: searchtype 
-			name = getRequestParameter(inName);
-		}
 		name = getPage().getPageSettings().replaceProperty(name);
 		return name;
 	}
-
 	public String findActionValue(String inName)
 	{
 		String name = null;
@@ -1174,34 +1178,7 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 		return name;
 	}
 
-	public String findReqValue(String inName)
-	{
-		String name = getRequestParameter(inName);
-		
-		if( name == null )
-		{
-			SiteData sitedata = (SiteData)getPageValue("sitedata");
-			if( sitedata != null)
-			{
-				name = sitedata.getSiteParameter(inName);
-			}
-		}
-		if( name == null)
-		{
-			name = findActionValue(inName);
-		}
-		if( name == null)
-		{
-			name = getContentPage().get(inName);
-		}
-		if( name == null)
-		{
-			name = getPage().get(inName);
-		}
-		name = getPage().getPageSettings().replaceProperty(name);
-		return name;
-	}
-
+	
 	public boolean hasCancelActions()
 	{
 		if( fieldHasCancelActions)
@@ -1461,7 +1438,7 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 	public String getDataText(String inDataType, String inId)
 	{
 		SearcherManager searcher = (SearcherManager)getPageValue("searcherManager");
-		String catalogid = findValue("catalogid");
+		String catalogid = findPathValue("catalogid");
 		Data data = searcher.getData(catalogid,inDataType, inId);
 		String label = null;
 		if( data != null)

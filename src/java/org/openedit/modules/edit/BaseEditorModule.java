@@ -166,7 +166,7 @@ public class BaseEditorModule extends BaseModule
 		{
 			if ( inReq.getPage().isHtml() &&  inReq.isEditable() )
 			{
-				String path = inReq.findValue("404wizardpage");
+				String path = inReq.findPathValue("404wizardpage");
 				if( path == null)
 				{
 					path = "/system/nopagefound.html";
@@ -229,7 +229,7 @@ public class BaseEditorModule extends BaseModule
 			return false;
 		}
 		//check the .xconf and request parameters
-		prop = inReq.findReqValue("oe.edit.draftedits");
+		prop = inReq.findValue("oe.edit.draftedits");
 		if( prop != null && !Boolean.parseBoolean(prop))
 		{
 			return false;

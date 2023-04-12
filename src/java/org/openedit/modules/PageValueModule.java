@@ -31,7 +31,7 @@ public class PageValueModule extends BaseModule
 		}
 		else
 		{
-			String catalogid = inContext.findValue("catalogid");
+			String catalogid = inContext.findPathValue("catalogid");
 			Object bean = null;
 			if( catalogid == null)
 			{

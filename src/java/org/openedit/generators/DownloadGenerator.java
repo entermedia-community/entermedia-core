@@ -27,11 +27,11 @@ public class DownloadGenerator extends FileGenerator
 				return; //do nothing
 			}
 		}
-		String alternateRoot = inContext.findValue("downloadrootdirectory"); 
+		String alternateRoot = inContext.findPathValue("downloadrootdirectory"); 
 		if (alternateRoot != null && getPageManager() != null)
 		{
 			String path = contentpage.getPath().substring(alternateRoot.length());
-			String newpathprefix = inContext.findValue("newpathprefix"); 
+			String newpathprefix = inContext.findPathValue("newpathprefix"); 
 			if( newpathprefix != null)
 			{
 				path = newpathprefix + path;

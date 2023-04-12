@@ -81,7 +81,7 @@ public class DataPropertyFilter extends BaseFilter
 		
 		String resolvedvalue = getValue();
 		//${context.getUserName()}
-		String catalogid = req.findValue("catalogid");
+		String catalogid = req.findPathValue("catalogid");
 		Replacer replacer = getSearcherManager().getReplacer(catalogid);
 		Map params = new HashMap();
 		params.put("context", req);

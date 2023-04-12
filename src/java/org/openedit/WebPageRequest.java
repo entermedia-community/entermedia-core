@@ -76,11 +76,11 @@ public interface WebPageRequest
 	/**
 	 * Looks in the action, page and parameter for a value
 	 * @param inName
-	 * @deprecated use findReqValue
+	 *  
 	 * @return
 	 */
 	String findValue(String inName);
-	String findReqValue(String inName);
+	String findPathValue(String inName);
 	public String findActionValue(String inName);
 	
 	String getPageProperty(String inKey );
