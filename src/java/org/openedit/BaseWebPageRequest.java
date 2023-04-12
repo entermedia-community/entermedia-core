@@ -1152,7 +1152,7 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 		}
 		if( name == null)
 		{
-			//This should not be here. TODO: Create a new API called findReqValue() that gives this top priority
+			//TODO: Remove this for security reasons: searchtype 
 			name = getRequestParameter(inName);
 		}
 		name = getPage().getPageSettings().replaceProperty(name);

@@ -229,7 +229,7 @@ public class BaseEditorModule extends BaseModule
 			return false;
 		}
 		//check the .xconf and request parameters
-		prop = inReq.findValue("oe.edit.draftedits");
+		prop = inReq.findReqValue("oe.edit.draftedits");
 		if( prop != null && !Boolean.parseBoolean(prop))
 		{
 			return false;

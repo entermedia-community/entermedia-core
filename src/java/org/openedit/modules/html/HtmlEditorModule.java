@@ -189,10 +189,10 @@ public class HtmlEditorModule extends BaseEditorModule
 	
 	
 	public void loadEditor(WebPageRequest inReq){
-		String openeditid = inReq.findValue("openeditid");
+		String openeditid = inReq.findReqValue("openeditid");
 		inReq.putPageValue("openeditid", openeditid);
 		inReq.putPageValue("oehome", "/" + openeditid);
-		String linkedcatalog = inReq.findValue("linkedcatalog");
+		String linkedcatalog = inReq.findReqValue("linkedcatalog");
 		inReq.putPageValue("linkedcatalog", linkedcatalog);
 		
 	}
