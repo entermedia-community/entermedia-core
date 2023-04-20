@@ -1164,7 +1164,7 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 			String searchtypeFromRequest = getContentPage().get("searchtypeFromRequest");
 			if(Boolean.parseBoolean(searchtypeFromRequest)) {
 				name = getRequestParameter(inName);
-				if(name !=null && getSiteRoot().startsWith("http://")) //Localhost debug
+				if(name !=null && getSiteRoot()!= null && getSiteRoot().startsWith("http://")) //Localhost debug
 				{
 					log.info(inName + " Requestparameter called from: "+getPath());
 				}
