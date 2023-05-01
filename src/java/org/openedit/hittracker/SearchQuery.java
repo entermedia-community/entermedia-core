@@ -2085,7 +2085,9 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		{
 			throw new OpenEditException("No such field " + inDetail);
 		}
-		getFacets().add(inDetail);
+		Collection existing = getFacets();
+		existing.add(inDetail);
+		setFacets(existing);
 	}
 
 	/**

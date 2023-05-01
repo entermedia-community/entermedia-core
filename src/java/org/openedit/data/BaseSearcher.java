@@ -310,6 +310,12 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					}
 					List<PropertyDetail> details = getPropertyDetailsArchive().getView(  //assetadvancedfilter
 							getSearchType(), getSearchType() + "/" + getSearchType() + filterby, inPageRequest.getUserProfile());
+					if( details == null)
+					{
+						filterby = "advancedsearch";
+						details = getPropertyDetailsArchive().getView(  //assetadvancedfilter
+							getSearchType(), getSearchType() + "/" + getSearchType() + filterby, inPageRequest.getUserProfile());
+					}
 					if( details != null)
 					{
 						for (Iterator iterator = details.iterator(); iterator.hasNext();)
