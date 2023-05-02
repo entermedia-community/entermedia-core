@@ -1756,6 +1756,10 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 		return render;
 	}
 
-	
+	public double getSum(String inField, String inSummarizer)
+	{
+		
+		return -1;
+	}
 }
 
