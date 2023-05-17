@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.sound.sampled.TargetDataLine;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.entermediadb.asset.Category;
@@ -132,7 +134,12 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 						continue;
 					}
 				}
-				items.add(module);
+				Data entity = (Data)getSearcherManager().getCachedData(getCatalogId(), module.getId(), (String) value);
+				if (entity != null)
+				{
+					entity.setValue("moduleid", module.getId());
+					items.add(entity);
+				}
 			}
 		}
 		return items;
