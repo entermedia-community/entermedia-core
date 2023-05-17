@@ -119,6 +119,11 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 
 	public Collection<Data> getEntitiesInParent(Data inParentCategory)
 	{
+		
+		if (inParentCategory == null) {
+			return null;
+		}
+		
 		Collection<Data> items = new ArrayList();
 		for (Iterator iterator = getEntities().iterator(); iterator.hasNext();)
 		{
