@@ -117,6 +117,20 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 		return items;
 	}
 
+	public Collection<Data> getTopEntities()
+	{
+		Collection<Data> items = new ArrayList();
+		for (Iterator iterator = getModules().iterator(); iterator.hasNext();)
+		{
+			Data module = (Data) iterator.next();
+			if( Boolean.parseBoolean( module.get("isentity") ) && Boolean.parseBoolean( module.get("showonnav") ) )
+			{
+				items.add(module);
+			}
+		}
+		return items;
+	}
+
 	public Collection<Data> getEntitiesInParent(Data inParentCategory)
 	{
 		
