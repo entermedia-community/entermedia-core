@@ -131,7 +131,7 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 		return items;
 	}
 
-	public Collection<Data> getEntitiesInParent(Category inParentCategory)
+	public Collection<ModuleData> getEntitiesInParent(Category inParentCategory)
 	{
 		if (inParentCategory == null) {
 			return null;
@@ -158,12 +158,16 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 						}
 					}
 				}
-				Data entity = (Data)getSearcherManager().getCachedData(getCatalogId(), module.getId(), (String) value);
-				if (entity != null)
-				{
-					//entity.setValue("moduleid", module.getId());
-					items.add(new ModuleData(module.getId(),entity));
+				
+				else {
+					Data entity = (Data)getSearcherManager().getCachedData(getCatalogId(), module.getId(), (String) value);
+					if (entity != null)
+					{
+						//entity.setValue("moduleid", module.getId());
+						items.add(new ModuleData(module.getId(),entity));
+					}	
 				}
+				
 			}
 		}
 		return items;
