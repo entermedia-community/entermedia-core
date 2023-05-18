@@ -131,13 +131,13 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 		return items;
 	}
 
-	public Collection<Data> getEntitiesInParent(Data inParentCategory)
+	public Collection<ModuleData> getEntitiesInParent(Data inParentCategory)
 	{
 		if (inParentCategory == null) {
 			return null;
 		}
 		
-		Collection<Data> items = new ArrayList();
+		Collection<ModuleData> items = new ArrayList();
 		for (Iterator iterator = getEntities().iterator(); iterator.hasNext();)
 		{
 			Data module = (Data) iterator.next();
@@ -147,16 +147,22 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 				if( value instanceof Collection)
 				{
 					Collection all = (Collection) value;
-					if( !all.isEmpty())
+					for (Iterator iterator2 = all.iterator(); iterator2.hasNext();)
 					{
-						continue;
+						String item = (String) iterator2.next();
+						Data entity = (Data)getSearcherManager().getCachedData(getCatalogId(), module.getId(), item);
+						if (entity != null)
+						{
+							//entity.setValue("moduleid", module.getId());
+							items.add(new ModuleData(module.getId(),entity));
+						}
 					}
 				}
 				Data entity = (Data)getSearcherManager().getCachedData(getCatalogId(), module.getId(), (String) value);
 				if (entity != null)
 				{
-					entity.setValue("moduleid", module.getId());
-					items.add(entity);
+					//entity.setValue("moduleid", module.getId());
+					items.add(new ModuleData(module.getId(),entity));
 				}
 			}
 		}
