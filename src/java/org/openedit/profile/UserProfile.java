@@ -131,7 +131,7 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 		return items;
 	}
 
-	public Collection<ModuleData> getEntitiesInParent(Data inParentCategory)
+	public Collection<Data> getEntitiesInParent(Category inParentCategory)
 	{
 		if (inParentCategory == null) {
 			return null;
@@ -141,7 +141,7 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 		for (Iterator iterator = getEntities().iterator(); iterator.hasNext();)
 		{
 			Data module = (Data) iterator.next();
-			Object value = inParentCategory.get(module.getId());
+			Object value = inParentCategory.findValue(module.getId());
 			if( value != null)
 			{
 				if( value instanceof Collection)
