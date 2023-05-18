@@ -625,4 +625,15 @@ public class ElementData implements MultiValued, SaveableData, Comparable, Searc
 		}
 		return getMap().toString(value);
 	}
+
+	@Override
+	public boolean containsValue(String inKey, Object inNewValue)
+	{
+		Collection values = getValues(inKey);
+		if( values != null && values.contains(inNewValue))
+		{
+			return true;
+		}
+		return false;
+	}
 }

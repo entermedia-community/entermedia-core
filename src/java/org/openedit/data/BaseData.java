@@ -287,6 +287,10 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 	{
 		return getMap().getValues(inPreference);
 	}
+	public boolean hasValue(String inField, String inId)
+	{
+		return getMap().containsInValues(inField,inId);
+	}
 	
 	public Date getDate(String inField)
 	{
@@ -435,7 +439,7 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 	}
 	
 
-	public boolean containsValue(String inKey, String inValue)
+	public boolean containsValue(String inKey, Object inValue)
 	{
 		Collection current = getValues(inKey);
 		
@@ -445,4 +449,5 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 		}
 		return false;
 	}
+
 }

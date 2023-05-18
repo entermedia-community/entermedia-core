@@ -13,6 +13,7 @@ public interface MultiValued extends Data
 	//public void setValues(String inKey, Collection<String> inValues);
 	public void addValue(String inKey, Object inNewValue); //adds to an existing collection
 	public void removeValue(String inKey, Object inNewValue); 
+	public boolean containsValue(String inKey, Object inNewValue); 
 	
 	public Date getDate(String inField);
 	public String getText(String inId, String inLocale);
