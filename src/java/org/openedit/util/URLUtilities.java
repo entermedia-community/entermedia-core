@@ -983,10 +983,10 @@ public class URLUtilities
 			  }
 			  if( cutoff.contains("<"))
 			  {
-				for (int i = cutoff.length(); i < cutoff.length(); i--)
+				for (int i = cutoff.length()-1; i >= 0; i--)
 				{
 					//Loop from the end make sure we have > before any <
-					if( cutoff.charAt(i) == '>')
+					if( cutoff.charAt(i)  == '>')
 					{
 						break;
 					}
