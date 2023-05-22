@@ -976,10 +976,32 @@ public class URLUtilities
 		  if( maxchars > -1 && maxchars < sb.length())
 		  {
 			  String cutoff = sb.toString().substring(0,maxchars);
+			  String[] types = new String[]{"div","b","i","span","a"};
+			  for (int i = 0; i < types.length; i++)
+			  {
+				  cutoff = stripTags(cutoff, types[i]);
+			  }
+			  if( cutoff.contains("<"))
+			  {
+				for (int i = cutoff.length(); i < cutoff.length(); i--)
+				{
+					//Loop from the end make sure we have > before any <
+					if( cutoff.charAt(i) == '>')
+					{
+						break;
+					}
+					if( cutoff.charAt(i) == '<')
+					{
+						cutoff = cutoff + "/>";
+						break;
+					}
+				}
+			  }
 //			  if( cutoff.contains("<a ") && !cutoff.contains("</a>"))
 //			  {
 //				  cutoff = cutoff.replace("<a ", "") + " \"</span>";
 //			  }
+			  
 			  return cutoff + "...";
 		  }
 		  return sb.toString();
@@ -987,6 +1009,18 @@ public class URLUtilities
 		
 	}
 
+	public static String stripTags(String inHtml, String tag) 
+	{
+		String[] opentag = inHtml.split("<" + tag);
+		String[] closetag = inHtml.split("</" + tag);
+		
+		for (int i = 0; i < closetag.length - closetag.length; i++)
+		{
+			inHtml = inHtml + "</" + tag;
+		}
+		return inHtml;
+	}
+	
 	public String getDomain()
 	{
 		return parseDomain(buildRoot());
