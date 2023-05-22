@@ -177,20 +177,23 @@ public class XmlArchive
 	{
 				Page page = getPageManager().getPage(inFile.getPath(), false);
 		
-				ContentItem tmp = getPageManager().getRepository().getStub(inFile.getPath() + ".tmp.xml");
-				tmp.setMakeVersion(false);
-				getXmlUtil().saveXml(inFile.getRoot(), tmp.getOutputStream(),page.getCharacterEncoding());
-		
-				ContentItem xmlcontent = getPageManager().getRepository().getStub(inFile.getPath());
-				xmlcontent.setMakeVersion(false);
-				getPageManager().getRepository().remove(xmlcontent); //might be a little faster to remove it first
-				getPageManager().getRepository().move(tmp, xmlcontent);
-				getPageManager().firePageModified(page);
-				
-				xmlcontent = getPageManager().getRepository().getStub(inFile.getPath());
-				inFile.setLastModified(xmlcontent.getLastModified());
-				inFile.setExist(true);
-				//log.info("Save " + inFile.getPath());
+				synchronized (page)
+				{
+					ContentItem tmp = getPageManager().getRepository().getStub(inFile.getPath() + ".tmp.xml");
+					tmp.setMakeVersion(false);
+					getXmlUtil().saveXml(inFile.getRoot(), tmp.getOutputStream(),page.getCharacterEncoding());
+			
+					ContentItem xmlcontent = getPageManager().getRepository().getStub(inFile.getPath());
+					xmlcontent.setMakeVersion(false);
+					getPageManager().getRepository().remove(xmlcontent); //might be a little faster to remove it first
+					getPageManager().getRepository().move(tmp, xmlcontent);
+					getPageManager().firePageModified(page);
+					
+					xmlcontent = getPageManager().getRepository().getStub(inFile.getPath());
+					inFile.setLastModified(xmlcontent.getLastModified());
+					inFile.setExist(true);
+					log.info("Save " + inFile.getPath());
+				}
 	
 	}
 	
