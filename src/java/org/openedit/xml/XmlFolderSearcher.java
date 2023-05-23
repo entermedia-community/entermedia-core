@@ -180,74 +180,40 @@ public class XmlFolderSearcher extends XmlSearcher
 		String path = "/WEB-INF/data/" + getCatalogId() + "/lists"
 		+ "/" + getSearchType() + "/custom.xml";
 		XmlFile settings = getXmlArchive().getXml(path);
-		Element element = null;
-		if( inData.getId() == null)
-		{
-			inData.setId( String.valueOf( new Date().getTime() ));
-		}
-		else
-		{
-			element = settings.getElementById(inData.getId());
-		}
-		if( element == null )
-		{
-			//New element
-			element = settings.getRoot().addElement(settings.getElementName());
-			element.addAttribute("id", inData.getId());
-		}		
-		
-		if( inData instanceof ElementData)
-		{
-			ElementData data = (ElementData)inData;
-			List attributes = data.getElement().attributes();
-			element.setAttributes(attributes);
-			//element.setText(inData.getName());
-			//existing row exists
-			element.setContent(data.getElement().content());
-		}
-		else
-		{
-			element.clearContent();
-			element.setAttributes(null);
-			
-			ElementData data = new ElementData(element, getPropertyDetails());
-			data.setId(inData.getId());
-			data.setName(inData.getName());
-			data.setSourcePath(inData.getSourcePath());
-			for (Iterator iterator = inData.keySet().iterator(); iterator.hasNext();)
-			{
-				String key	= (String) iterator.next();
-				data.setValue(key, inData.getValue(key));
-			}
-		}
 
 		
-//		Element alreadyhere = settings.getElementById(data.getId());
-//		if( alreadyhere != null)
-//		{
-//			settings.getRoot().remove(alreadyhere);
-//		}
-//		data.getElement().setParent(null);
-//		settings.getRoot().add(data.getElement());
+		updateOrAddElement(settings, inData);
+
 		
-//		if( data.getId() == null)
-//		{
-//			//TODO: Use counter
-//			data.setId( String.valueOf( new Date().getTime() ));
-//		}
 		clearIndex();
 		log.info("Saved to "  + settings.getPath());
 		getXmlArchive().saveXml(settings, inUser);
 		
 	}
-	
+
+	public void saveAllData(Collection inAll, User inUser){
+		String path = "/WEB-INF/data/" + getCatalogId() + "/lists"
+				+ "/" + getSearchType() + "/custom.xml";
+		saveAllData(inAll, inUser, path);
+	}
+
 	public void saveAllData(Collection inAll, User inUser, String path)
 	{
+		//If this element is manipulated then the instance is the same
+		//No need to read it ElementData data = (ElementData)inData;
+		XmlFile settings = getXmlArchive().getXml(path);
+
 		for (Iterator iterator = inAll.iterator(); iterator.hasNext();)
 		{
 			Data data = (Data) iterator.next();
-			saveData(data,inUser,false);
+			data.setProperty("recordstatus", null);
+			updateOrAddElement(settings, data);
 		}
+		
+		
+		clearIndex();
+		log.info("Saved to "  + settings.getPath());
+		getXmlArchive().saveXml(settings, inUser);
 	}	
 	
 }

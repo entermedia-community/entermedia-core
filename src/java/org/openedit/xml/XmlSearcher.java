@@ -508,11 +508,26 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable
 		saveAllData(inAll, inUser, path);
 	}
 	
+	/**
+	 * This overrirdes everything in the xml file with custom one that was imported
+	 * @param inAll
+	 * @param inUser
+	 * @param path
+	 */
 	public void saveAllData(Collection inAll, User inUser, String path)
 	{
-		XmlFile settings = getXmlFile();
 		
-		settings.setPath(path);
+//		XmlFile settings = getXmlArchive().getXml(path);
+//
+//		for (Iterator iterator = inAll.iterator(); iterator.hasNext();)
+//		{
+//			Data data = (Data) iterator.next();
+//			data.setProperty("recordstatus", null);
+//			updateOrAddElement(settings, data);
+//		}
+//		
+		XmlFile settings = getXmlFile();
+		settings.setPath(path); //New custom path wins now
 		for (Iterator iterator = inAll.iterator(); iterator.hasNext();)
 		{
 			Data data = (Data) iterator.next();
@@ -680,6 +695,50 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable
 	}
 	
 	
+	protected void updateOrAddElement(XmlFile settings, Data inData)
+	{
+		Element element = null;
+		if( inData.getId() == null)
+		{
+			inData.setId( String.valueOf( new Date().getTime() ));
+		}
+		else
+		{
+			element = settings.getElementById(inData.getId());
+		}
+		if( element == null )
+		{
+			//New element
+			element = settings.getRoot().addElement(settings.getElementName());
+			element.addAttribute("id", inData.getId());
+		}		
+		
+		if( inData instanceof ElementData)
+		{
+			ElementData data = (ElementData)inData;
+			List attributes = data.getElement().attributes();
+			element.setAttributes(attributes);
+			//element.setText(inData.getName());
+			//existing row exists
+			element.setContent(data.getElement().content());
+		}
+		else
+		{
+			element.clearContent();
+			element.setAttributes(null);
+			
+			ElementData data = new ElementData(element, getPropertyDetails());
+			data.setId(inData.getId());
+			data.setName(inData.getName());
+			data.setSourcePath(inData.getSourcePath());
+			for (Iterator iterator = inData.keySet().iterator(); iterator.hasNext();)
+			{
+				String key	= (String) iterator.next();
+				data.setValue(key, inData.getValue(key));
+			}
+		}
+	}
+
 	
 	
 }
