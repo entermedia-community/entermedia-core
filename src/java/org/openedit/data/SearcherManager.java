@@ -715,5 +715,17 @@ public class SearcherManager
 		}
 		return false;
 	}
+
+	public Searcher getExistingSearcher(String inCatalogId, String inSearchType)
+	{
+		PropertyDetailsArchive archive = getPropertyDetailsArchive(inCatalogId);
+		List searchtypes = archive.getSearchTypes();
+		boolean found = searchtypes.contains(inSearchType);
+		if( found )
+		{
+			return getSearcher(inCatalogId, inSearchType);
+		}
+		return null;
+	}
 	
 }

@@ -44,7 +44,7 @@ public class PropertyDetailsArchive implements CatalogEnabled
 	protected List fieldChildTables;
 	protected List fieldChildTableNames;
 	protected String fieldSaveTo = "data"; //base,catalog,data
-	
+	protected List fieldSearchTypes;
 
 	public String getSaveTo()
 	{
@@ -549,6 +549,7 @@ public class PropertyDetailsArchive implements CatalogEnabled
 		getPropertyDetails().clear();
 		getViewCache().clear();
 		getViewLabels().clear();
+		fieldSearchTypes = null;
 	}
 
 	public void savePropertyDetails(PropertyDetails inDetails, String inType, User inUser, String path)
@@ -871,7 +872,16 @@ public class PropertyDetailsArchive implements CatalogEnabled
 		all.addAll(lists);
 		List sorted = new ArrayList(all);
 		Collections.sort(sorted);
-		return sorted;
+		fieldSearchTypes = sorted;
+		return fieldSearchTypes;
+	}
+	public List getSearchTypes()
+	{
+		if( fieldSearchTypes == null)
+		{
+			fieldSearchTypes = listSearchTypes();
+		}
+		return fieldSearchTypes;
 	}
 
 	public List findChildTables()
