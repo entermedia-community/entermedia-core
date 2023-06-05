@@ -394,14 +394,18 @@ public class QueryBuilder
 		
 	}
 	public QueryBuilder terms(WebPageRequest inReq) {
-		if (fieldQuery == null) {
-			
-			fieldQuery = getSearcher().addStandardSearchTerms(inReq);
-		} else {
-			//TODO:  Make a version that takes a query
-			throw new OpenEditException("Terms must be added first!");
-			
+		String fields[] = inReq.getRequestParameters("field");
+		if (fields != null) {
+			if (fieldQuery == null) {
+
+				fieldQuery = getSearcher().addStandardSearchTerms(inReq);
+			} else {
+				// TODO: Make a version that takes a query
+				throw new OpenEditException("Terms must be added first!");
+
+			}
 		}
 		return this;
+
 	}
 }
