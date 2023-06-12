@@ -1,6 +1,7 @@
 package org.openedit.profile;
 
 import org.openedit.Data;
+import org.openedit.MultiValued;
 
 public class ModuleData
 {
@@ -9,7 +10,7 @@ public class ModuleData
 	public ModuleData()
 	{
 	}
-	public ModuleData(String inId, Data inData)
+	public ModuleData(String inId, MultiValued inData)
 	{
 		setModuleId(inId);
 		setData(inData);
@@ -22,13 +23,13 @@ public class ModuleData
 	{
 		fieldModuleId = inModuleId;
 	}
-	public Data getData()
+	public MultiValued getData()
 	{
 		return fieldData;
 	}
-	public void setData(Data inData)
+	public void setData(MultiValued inData)
 	{
 		fieldData = inData;
 	}
-	protected Data fieldData;
+	protected MultiValued fieldData;
 }

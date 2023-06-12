@@ -150,7 +150,7 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 					for (Iterator iterator2 = all.iterator(); iterator2.hasNext();)
 					{
 						String item = (String) iterator2.next();
-						Data entity = (Data)getSearcherManager().getCachedData(getCatalogId(), module.getId(), item);
+						MultiValued entity = (MultiValued)getSearcherManager().getCachedData(getCatalogId(), module.getId(), item);
 						if (entity != null)
 						{
 							//entity.setValue("moduleid", module.getId());
@@ -160,7 +160,7 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 				}
 				
 				else {
-					Data entity = (Data)getSearcherManager().getCachedData(getCatalogId(), module.getId(), (String) value);
+					MultiValued entity = (MultiValued)getSearcherManager().getCachedData(getCatalogId(), module.getId(), (String) value);
 					if (entity != null)
 					{
 						//entity.setValue("moduleid", module.getId());
