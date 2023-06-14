@@ -221,7 +221,11 @@ public class SearcherManager
 		if(inParent == null || inDetail == null){
 			return null;
 		}
-		String mask = inDetail.get("render");
+		String mask = inDetail.get("rendermask");
+		if( mask == null )
+		{
+			mask = inDetail.get("mask"); //Legacy. Remove by 2023
+		}
 		String val = null;
 		if( mask != null)
 		{

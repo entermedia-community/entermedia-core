@@ -1,6 +1,7 @@
 package org.openedit.util;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -120,6 +121,14 @@ public class Replacer implements CatalogEnabled
 						else
 						{
 							object = inValues.get(objectname);  //${division.folder}
+						}
+						if( object instanceof Collection)
+						{
+							Collection col = (Collection)object;
+							if( !col.isEmpty())
+							{
+								object = col.iterator().next();
+							}
 						}
 						if( object instanceof String )
 						{
