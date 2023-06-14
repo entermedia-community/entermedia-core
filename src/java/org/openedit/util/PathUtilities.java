@@ -610,6 +610,40 @@ public final class PathUtilities
 	{
 		return extractId(inName,true);
 	}
+	
+	public static String dash( String inName)
+	{
+		if( inName == null)
+		{
+			return null;
+		}
+		String trim = inName.trim();
+		StringBuffer out = new StringBuffer(trim.length());
+		for (int i = 0; i < trim.length(); i++)
+		{
+			char c = trim.charAt(i);
+			if( Character.isLetterOrDigit(c) )
+			{
+					out.append(c);
+			}
+			else
+			{
+				 if( c == '_' )
+				 {
+					out.append(c);
+				 }
+				 else if( c == ' ')
+				 {
+					 out.append("-");
+				 }
+			}
+		}
+		String result = URLUtilities.escapeUtf8(out.toString());
+		result = result.replaceAll("&amp;","-");
+		return result;
+	}
+
+	
 	public static String extractId( String inName, boolean inAllowUnderstores)
 	{
 		if( inName == null)
@@ -639,13 +673,6 @@ public final class PathUtilities
 		}
 		String result = out.toString().toLowerCase();
 		result = URLUtilities.escapeUtf8(result);
-		//CVS fails to save this. Should use the HEX number
-		/*		result = result.replace('á', 'a');
-		result = result.replace('é', 'e');
-		result = result.replace('í', 'i');
-		result = result.replace('ó', 'o');
-		result = result.replace('ú', 'u');
-*/
 
 		return result;
 	}
