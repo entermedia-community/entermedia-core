@@ -1185,6 +1185,8 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 				name = inAction.getProperty(inName);				
 			}
 		}
+		name = getPage().getPageSettings().replaceProperty(name);
+
 		return name;
 	}
 
