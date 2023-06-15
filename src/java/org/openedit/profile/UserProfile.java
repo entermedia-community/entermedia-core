@@ -642,6 +642,19 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 		return fieldViewCategories;
 	}
 
+	public void addToViewCategories(Category inCat)
+	{
+		for (Iterator iterator = getViewCategories().iterator(); iterator.hasNext();)
+		{
+			Category cat = (Category) iterator.next();
+			if( cat.equals(inCat))
+			{
+				return;
+			}
+		}
+		getViewCategories().add(inCat);
+	}
+	
 	public HitTracker getSelectedLibraries(WebPageRequest inReq)
 	{
 		Searcher librarySearcher = getSearcherManager().getSearcher(getCatalogId(), "library");
