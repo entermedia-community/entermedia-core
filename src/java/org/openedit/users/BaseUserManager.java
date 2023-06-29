@@ -477,10 +477,17 @@ public class BaseUserManager implements UserManager
 				String tmppassword = new PasswordGenerator().generate();
 				User user = createGuestUser(null, tmppassword, groupid);
 				user.setVirtual(false);
-				user.setEnabled(true);
 				user.setValue("firstName",found.get("firstName"));
 				user.setValue("lastName",found.get("lastName"));
 				user.setEmail(found.get("email"));
+				
+				Boolean userenabled = true;
+				//disable new users on catalog settings?
+				Data data = getSearcherManager().getCachedData(getCatalogId(), "catalogsettings", "newuserautoenabled");
+				if(data != null) {
+					userenabled = Boolean.parseBoolean(data.get("value"));
+				}
+				user.setEnabled(userenabled);
 				saveUser(user);
 				found.setValue("user",user.getId());
 				searcher.saveData(found);
