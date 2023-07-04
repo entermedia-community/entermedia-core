@@ -158,11 +158,13 @@ public class Replacer implements CatalogEnabled
 								{
 									break;
 								}
-								Searcher searcher = getSearcherManager().getExistingSearcher(getCatalogId(), pairs[i]);
-								if( searcher == null)
-								{
-									variable = otherdatavalue;
-									break;
+								if (getSearcherManager() != null) {
+									Searcher searcher = getSearcherManager().getExistingSearcher(getCatalogId(), pairs[i]);
+									if( searcher == null)
+									{
+										variable = otherdatavalue;
+										break;
+									}
 								}
 								data = getData(pairs[i], otherdatavalue);
 								if( data == null)
