@@ -52,6 +52,7 @@ public class Replacer implements CatalogEnabled
 	{
 		Map<?,?> props = inValues.getProperties();
 		Map<String,Object> map = new HashMap<String,Object>();
+		map.put("data",inValues);
 		map.put("id",inValues.getId());
 		map.put("name",inValues.getName());
 		map.put("sourcepath", inValues.getSourcePath());
