@@ -158,12 +158,21 @@ public class Replacer implements CatalogEnabled
 								{
 									break;
 								}
-								Searcher searcher = getSearcherManager().getExistingSearcher(getCatalogId(), pairs[i]);
-								if( searcher == null)
+								
+								//TODO:  There are a bunch of places where we use a constructor for this bean.  Isn't there code like this 
+								//in getValue from SearcherManager?  Added nu
+								
+								if (getSearcherManager() != null)
 								{
-									variable = otherdatavalue;
-									break;
+									Searcher searcher = getSearcherManager().getExistingSearcher(getCatalogId(), pairs[i]);
+									if (searcher == null)
+									{
+										variable = otherdatavalue;
+										break;
+
+									}
 								}
+					
 								data = getData(pairs[i], otherdatavalue);
 								if( data == null)
 								{
