@@ -139,7 +139,7 @@ public class BaseUserManager implements UserManager
 		}
 
 		boolean success = getAuthenticator().authenticate(inReq);
-		if (success && isTwoFactorEnabled()) 
+		if (success && Boolean.parseBoolean(inReq.get("twofactorauthentication")) ) 
 		{
 			success  = getTwoFactorAuthenticator().authenticate(inReq);
 		}
@@ -155,14 +155,19 @@ public class BaseUserManager implements UserManager
 	}
 
 
-	private boolean isTwoFactorEnabled() {
-		Data data = getSearcherManager().getCachedData(getCatalogId(), "catalogsettings", "twofactorauthentication");
-		if(data != null) {
-			return Boolean.parseBoolean(data.get("value"));
+	private boolean isTwoFactorEnabled(WebPageRequest inReq)
+	{
+		//Check app first
+		String value = inReq.findPathValue("twofactorauthentication");
+		if( value == null)
+		{
+			Data data = getSearcherManager().getCachedData(getCatalogId(), "catalogsettings", "twofactorauthentication");
+			if(data != null) 
+			{
+				return Boolean.parseBoolean(data.get("value"));
+			}
 		}
-		else {
-			return false;
-		}
+		return Boolean.parseBoolean(value);
 	}
 
 	public Collection getGroupsSorted() {
@@ -394,6 +399,7 @@ public class BaseUserManager implements UserManager
 		}
 		}
 		aReq.putProperty("authenticationdomain", domain);
+		aReq.putProperty("twofactorauthentication",String.valueOf(isTwoFactorEnabled(inReq)));
 		String server = inReq.getPage().get("authenticationserver");
 		aReq.putProperty("authenticationserver", server);
 		return aReq;
