@@ -12,6 +12,7 @@ import java.util.Map;
 import org.json.simple.JSONObject;
 import org.openedit.Data;
 import org.openedit.MultiValued;
+import org.openedit.modules.translations.LanguageMap;
 import org.openedit.util.DateStorageUtil;
 
 
@@ -348,6 +349,11 @@ public class ValuesMap extends HashMap
 			}
 			return values.toString();
 		}
+		if( object instanceof LanguageMap)
+		{
+			LanguageMap lan = (LanguageMap)object;
+			return lan.getText(null);
+		}		
 		if( object instanceof Map)
 		{
 			JSONObject values = new JSONObject((Map) object);
