@@ -634,7 +634,8 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 		SearchQuery query = getSearchQuery();
 		if (query != null)
 		{
-			return query.getInput(inKey);
+			String value = query.getInput(inKey);
+			return value;
 		}
 		return null;
 	}
