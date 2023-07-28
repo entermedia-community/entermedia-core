@@ -330,7 +330,7 @@ public class URLUtilities
 					path = rawurl;
 				}
 			}
-			int quest = path.lastIndexOf("?");
+			int quest = path.indexOf("?");
 			if( quest > -1)
 			{
 				query = path.substring(quest + 1);
