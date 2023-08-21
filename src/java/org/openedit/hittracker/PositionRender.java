@@ -155,23 +155,11 @@ import org.apache.commons.logging.LogFactory;
 		public int toPosition(int inPage)
 		{
 			//String sorted = getSearchQuery().getSortBy();
-			int position = getTotalPages() - inPage + 1;
-//			if( sorted != null)
-//			{
-//				if( sorted.endsWith("Up"))
-//				{
-//					position = inPage;
-//				}
-//			}
-			return position;
-		}
-		public int toPositionLabel(int inPage)
-		{
-			int position = getTotalPages() - inPage + 1;
 			if( isAsending() )
 			{
-				position = inPage;
+				return inPage;
 			}
+			int position = getTotalPages() - inPage + 1;
 			return position;
 		}
 		

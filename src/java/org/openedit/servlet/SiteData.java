@@ -1,5 +1,6 @@
 package org.openedit.servlet;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,7 +19,16 @@ public class SiteData extends BaseData
 	{
 		getSiteParameters().put(inKey, inValue);
 	}
-	
+	public String getFirstDomain()
+	{
+		Collection values = getValues("domains");
+		if(values == null || values.isEmpty())
+		{
+			return null;
+		}
+		String first = (String)values.iterator().next();
+		return first;
+	}
 	public String findAppPath(String inRequestedPath)
 	{
 		if( inRequestedPath.startsWith("/manager") || inRequestedPath.startsWith("/system") || inRequestedPath.startsWith("/openedit")  )
@@ -26,6 +36,10 @@ public class SiteData extends BaseData
 			return inRequestedPath;
 		}
 		String apppath = get("rootpath");
+		if( inRequestedPath.startsWith(apppath))
+		{
+			return inRequestedPath;
+		}
 		return apppath + inRequestedPath;
 	}
 
