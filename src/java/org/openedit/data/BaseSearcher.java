@@ -1915,12 +1915,11 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	public HitTracker loadPageOfSearch(WebPageRequest inPageRequest) throws OpenEditException
 	{
 		HitTracker tracker = loadHits(inPageRequest);
-		UserProfile usersettings = (UserProfile) inPageRequest.getUserProfile();
-
 		if (tracker == null)
 		{
 			return null;
 		}
+		UserProfile usersettings = (UserProfile) inPageRequest.getUserProfile();
 		Searcher searcher = tracker.getSearcher();
 		// This is where we handle changing the number of hits per page
 		String hitsperpage = inPageRequest.getRequestParameter("hitsperpage");
