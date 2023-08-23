@@ -757,11 +757,21 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	{
 		if (inSortBy != null)
 		{
+			
+			for (Iterator iterator = getSorts().iterator(); iterator.hasNext();)
+			{
+				String sort = (String) iterator.next();
+				if( sort.contains( inSortBy))
+				{
+					return;
+				}
+			}
+
 			getSorts().add(inSortBy);
 		}
 	}
 
-	public List getSorts()
+	public List<String> getSorts()
 	{
 		if (fieldSorts == null)
 		{

@@ -53,14 +53,14 @@ public class BaseOpenEditEngine implements OpenEditEngine
 	    SiteData sitedata = getSiteManager().findSiteData(siteUrl);
 	    if(sitedata != null)
 	    {
-	    	if( requestedPath.startsWith(sitedata.getRootPath()) )
-	    	{
-	    		sitedata = null;
-	    	}
-	    	else
-	    	{
+//	    	if( !requestedPath.startsWith(sitedata.getRootPath()) )
+//	    	{
+//	    		sitedata = null;
+//	    	}
+//	    	else
+//	    	{
 	    		requestedPath = sitedata.findAppPath(requestedPath);
-	    	}
+//	    	}
 	    }
 	    boolean checkdates = false;
 		HttpSession session = inRequest.getSession(false);

@@ -207,6 +207,8 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		{
 			runsearch = true;
 		}
+		int startingpage = 1;
+
 		if (!runsearch && tracker != null)
 		{
 			if (Boolean.parseBoolean(clear))
@@ -240,11 +242,11 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					}
 				}
 			}
-
 			if (!runsearch && hasChanged(tracker))
 			{
 				//do we want to cache queries a little longer?
 				runsearch = true;
+				startingpage = tracker.getPage();
 			}
 			if (!runsearch && !inQuery.equals(tracker.getSearchQuery()))
 			{
@@ -389,8 +391,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 //						}
 //					}
 //				}
-				
-				
+
 				String hitsperpage = inPageRequest.getRequestParameter("hitsperpage");
 				if (hitsperpage == null)
 				{
@@ -400,26 +401,27 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				{
 					hitsperpage = inPageRequest.findValue(getSearchType()+ "hitsperpage");
 				}
-				
-				if (hitsperpage == null)
+
+				if( hitsperpage == null && oldtracker != null)
 				{
-					if (usersettings != null)
+					inQuery.setHitsPerPage(oldtracker.getHitsPerPage());
+				}
+				else
+				{
+					if (hitsperpage != null)
+					{
+						inQuery.setHitsPerPage(Integer.parseInt(hitsperpage));
+					}
+					else if (usersettings != null) 
 					{
 						int count = usersettings.getHitsPerPageForSearchType(inQuery.getResultType());
 						inQuery.setHitsPerPage(count);
 					}
-					else if (oldtracker != null)
-					{
-						inQuery.setHitsPerPage(oldtracker.getHitsPerPage());
-					}
-				}
-				else
-				{
-					inQuery.setHitsPerPage(Integer.parseInt(hitsperpage));
 				}
 				inQuery = getSearchSecurity().attachSecurity(inPageRequest, this, inQuery);
 				
 				tracker = search(inQuery); //search here <----!!!!!
+				tracker.setPage(startingpage);
 				tracker.setSearchQuery(inQuery);
 
 				if( keepfilter &&  oldtracker != null && oldtracker.getActiveFilterValues() != null )
@@ -527,12 +529,15 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					tracker.setHitsName("hits");
 				}
 			}
-			//We only want to reload this search if we are on the first page
+			//We only want to reload this search if we are on the first page and they are refreshing?
 			//This is because sometimes we are just clicking the next page link
-			if (!runsearch && tracker.getPage() == 1)
-			{
-				tracker.refresh();
-			}
+
+			//Why should we refresh anyways... We already checked for cache and it was fine 
+//			if (!runsearch && tracker.getPage() == 1)
+//			{
+//				tracker.refresh();
+//			}
+			
 			inPageRequest.putPageValue(tracker.getHitsName(), tracker);
 			inPageRequest.putSessionValue(tracker.getSessionId(), tracker);
 		}
@@ -1910,12 +1915,11 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	public HitTracker loadPageOfSearch(WebPageRequest inPageRequest) throws OpenEditException
 	{
 		HitTracker tracker = loadHits(inPageRequest);
-		UserProfile usersettings = (UserProfile) inPageRequest.getUserProfile();
-
 		if (tracker == null)
 		{
 			return null;
 		}
+		UserProfile usersettings = (UserProfile) inPageRequest.getUserProfile();
 		Searcher searcher = tracker.getSearcher();
 		// This is where we handle changing the number of hits per page
 		String hitsperpage = inPageRequest.getRequestParameter("hitsperpage");
@@ -2005,32 +2009,42 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				int positionint = Integer.parseInt(position);
 				Integer  totalPages = inHits.getTotalPages();
 				
-				if( inHits.isAscending() ) //So page 2 is actually 2 from the end
+				if( inHits.isAscending() ) //This is newsest stuff on left side. Label
 				{
-					if( positionint > totalPages)
-					{
-						page =  totalPages.toString();
-					}
-					else if( positionint < 1)
+					/*
+					When sorting Old-New Accending
+					pageposition = 1 = The odest stuff
+					pageposition = 100 = The newest stuff
+					1 2 3 ... 100
+					1 == page 1 of results
+
+					When sorting New-Old Descending
+					pageposition = 1 = The odest stuff
+					pageposition = 100 = The newest stuff
+					100 . . . 3 2 1
+					100 == page 1 of results
+					*/
+					if( positionint < 1)
 					{
 						page =  "1";
 					}
+					if( positionint > totalPages)
+					{
+						positionint =  totalPages;
+					}
 					else 
 					{
-						page = position;
+						page = String.valueOf(positionint);
 					}
 				}
 				else 
 				{
+					if( positionint > totalPages)
+					{
+						positionint = totalPages; //will never happen
+					}
 					int pageis = totalPages - positionint + 1;
-					if( pageis > totalPages)
-					{
-						pageis = totalPages;
-					}
-					if( pageis < 1)
-					{
-						pageis = 1;
-					}
+					
 					page = String.valueOf(pageis);
 				}
 				
