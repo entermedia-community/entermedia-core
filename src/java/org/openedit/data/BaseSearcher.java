@@ -2661,6 +2661,10 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			String sort = inReq.getRequestParameter("sortby");
 			if (sort == null)
 			{
+				sort = (String) inReq.getPageValue("sortby");
+			}
+			if (sort == null)
+			{
 				sort = inReq.findValue("sortby");
 			}
 			if (sort != null)
