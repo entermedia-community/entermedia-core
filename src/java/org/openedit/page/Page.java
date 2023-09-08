@@ -318,7 +318,8 @@ public class Page implements Data, Comparable
 	}
 	public List getStylePaths()
 	{
-		return getStylePaths(false);
+		List paths = getStylePaths(false);
+		return paths;
 	}
 	public List getStylePaths(boolean folderonly)
 	{
