@@ -409,6 +409,10 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				}
 				if (hitsperpage == null)
 				{
+					hitsperpage = (String) inPageRequest.getPageValue(getSearchType()+ "hitsperpage");
+				}
+				if (hitsperpage == null)
+				{
 					hitsperpage = inPageRequest.findValue(getSearchType()+ "hitsperpage");
 				}
 
@@ -482,6 +486,18 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			if (!runsearch)
 			{
 				String hitsperpage = inPageRequest.getRequestParameter("hitsperpage");
+				if (hitsperpage == null)
+				{
+					hitsperpage = inPageRequest.getPageProperty("hitsperpage");
+				}
+				if (hitsperpage == null)
+				{
+					hitsperpage = (String) inPageRequest.getPageValue(getSearchType()+ "hitsperpage");
+				}
+				if (hitsperpage == null)
+				{
+					hitsperpage = inPageRequest.findValue(getSearchType()+ "hitsperpage");
+				}
 				if (hitsperpage != null)
 				{
 					tracker.setHitsPerPage(Integer.parseInt(hitsperpage));
@@ -1935,9 +1951,18 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		String hitsperpage = inPageRequest.getRequestParameter("hitsperpage");
 		if (hitsperpage == null)
 		{
-
 			hitsperpage = inPageRequest.getPageProperty("hitsperpage");
-
+		}
+		if (hitsperpage == null)
+		{
+			Integer hitsperpageint = (Integer) inPageRequest.getPageValue(getSearchType()+ "hitsperpage");
+			if(hitsperpageint != null) {
+				hitsperpage = hitsperpageint.toString();
+			}
+		}
+		if (hitsperpage == null)
+		{
+			hitsperpage = inPageRequest.findValue(getSearchType()+ "hitsperpage");
 		}
 		if (tracker != null)
 		{
