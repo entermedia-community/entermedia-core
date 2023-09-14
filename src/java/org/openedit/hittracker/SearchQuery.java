@@ -2349,5 +2349,10 @@ public boolean isFilterSelected(String type, String value) {
 		return (String[])ids.toArray(new String[ids.size()]);
 	}
 
+	public void setSearchTypes(Collection<String> inTypes)
+	{
+		setValue("searchtypes",inTypes);
 
+	}
+	
 }
