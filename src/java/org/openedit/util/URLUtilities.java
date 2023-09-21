@@ -950,6 +950,8 @@ public class URLUtilities
 		escaped = escaped.replaceAll("&lt;/ir&gt;", "</i>");
 		escaped = escaped.replaceAll("&lt;b&gt;", "<b>");
 		escaped = escaped.replaceAll("&lt;/b&gt;", "</b>");
+		escaped = escaped.replaceAll("&lt;p&gt;", "<p>");
+		escaped = escaped.replaceAll("&lt;/p&gt;", "</p>");
 
 		  Matcher m = urlPattern.matcher(escaped);
 		  StringBuffer sb = new StringBuffer(escaped.length());

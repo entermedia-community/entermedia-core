@@ -162,10 +162,13 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		{
 			log.debug("checking: " + getCatalogId() + " " + inQuery.toFriendly());
 		}
+		
+		String searchtype = getSearchType();
+		
 		addShowOnly(inPageRequest, inQuery);
-		String clear = inPageRequest.getRequestParameter(getSearchType() + "clearresults");
+		String clear = inPageRequest.getRequestParameter(searchtype + "clearresults");
 		if (clear == null) {
-			clear = (String)inPageRequest.findValue(getSearchType() + "clearresults");
+			clear = (String)inPageRequest.findValue(searchtype + "clearresults");
 		}
 		inPageRequest.putPageValue("searcher", this);
 		HitTracker tracker = null;
@@ -177,7 +180,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 
 		if (inQuery.getHitsName() == null)
 		{
-			String hitsname = inPageRequest.findValue(getSearchType() + "hitsname");
+			String hitsname = inPageRequest.findValue(searchtype + "hitsname");
 			if (hitsname == null)
 			{
 				hitsname = inPageRequest.findValue( "hitsname");
@@ -193,7 +196,11 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 
 		boolean runsearch = false;
 
-		String cache = inPageRequest.getRequestParameter(getSearchType() + "cache");
+		String cache = inPageRequest.getRequestParameter(searchtype + "cache");
+		if( cache == null)
+		{
+			cache = inPageRequest.findValue(searchtype + "cache");
+		}
 		if( cache == null)
 		{
 			cache = inPageRequest.getRequestParameter("cache");
@@ -215,9 +222,9 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			{
 				runsearch = true;
 			}
-			clear = inPageRequest.getRequestParameter(getSearchType() + "clearselection");
+			clear = inPageRequest.getRequestParameter(searchtype + "clearselection");
 			if (clear == null) {
-				clear = (String)inPageRequest.findPathValue(getSearchType() + "clearselection");
+				clear = (String)inPageRequest.findPathValue(searchtype + "clearselection");
 			}
 			if (Boolean.parseBoolean(clear))
 			{
@@ -230,7 +237,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			}
 			else
 			{
-				String showonly = inPageRequest.getRequestParameter(getSearchType() + "showonlyselections");
+				String showonly = inPageRequest.getRequestParameter(searchtype + "showonlyselections");
 
 				if (showonly != null)
 				{
@@ -284,6 +291,9 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				if (inQuery.getSortBy() == null)
 				{
 					String sort = inPageRequest.findValue(getSearchType()+"sortby");
+					if(sort == null) {
+						sort = (String) inPageRequest.getPageValue(getSearchType()+"sortby");
+					}
 					inQuery.setSortBy(sort);
 				}
 				oldtracker = tracker;
@@ -399,6 +409,10 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				}
 				if (hitsperpage == null)
 				{
+					hitsperpage = (String) inPageRequest.getPageValue(getSearchType()+ "hitsperpage");
+				}
+				if (hitsperpage == null)
+				{
 					hitsperpage = inPageRequest.findValue(getSearchType()+ "hitsperpage");
 				}
 
@@ -472,6 +486,18 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			if (!runsearch)
 			{
 				String hitsperpage = inPageRequest.getRequestParameter("hitsperpage");
+				if (hitsperpage == null)
+				{
+					hitsperpage = inPageRequest.getPageProperty("hitsperpage");
+				}
+				if (hitsperpage == null)
+				{
+					hitsperpage = (String) inPageRequest.getPageValue(getSearchType()+ "hitsperpage");
+				}
+				if (hitsperpage == null)
+				{
+					hitsperpage = inPageRequest.findValue(getSearchType()+ "hitsperpage");
+				}
 				if (hitsperpage != null)
 				{
 					tracker.setHitsPerPage(Integer.parseInt(hitsperpage));
@@ -793,7 +819,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 
 	protected void addSorts(WebPageRequest inPageRequest, SearchQuery search)
 	{
-		String	sort = inPageRequest.getRequestParameter("sortby");
+		String	sort = inPageRequest.getRequestParameter(getSearchType() +"sortby");
 		if (sort == null && inPageRequest.getUserProfile()!=null)
 		{
 			sort = inPageRequest.getUserProfile().get(getSearchType() +"sort");
@@ -1925,9 +1951,18 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		String hitsperpage = inPageRequest.getRequestParameter("hitsperpage");
 		if (hitsperpage == null)
 		{
-
 			hitsperpage = inPageRequest.getPageProperty("hitsperpage");
-
+		}
+		if (hitsperpage == null)
+		{
+			Integer hitsperpageint = (Integer) inPageRequest.getPageValue(getSearchType()+ "hitsperpage");
+			if(hitsperpageint != null) {
+				hitsperpage = hitsperpageint.toString();
+			}
+		}
+		if (hitsperpage == null)
+		{
+			hitsperpage = inPageRequest.findValue(getSearchType()+ "hitsperpage");
 		}
 		if (tracker != null)
 		{
@@ -2649,6 +2684,10 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		if (inReq != null)
 		{
 			String sort = inReq.getRequestParameter("sortby");
+			if (sort == null)
+			{
+				sort = (String) inReq.getPageValue("sortby");
+			}
 			if (sort == null)
 			{
 				sort = inReq.findValue("sortby");
