@@ -698,6 +698,25 @@ public class PropertyDetails extends ArrayList
 		
 	}
 
+	public PropertyDetail getDetailByName(String inName)
+	{
+		PropertyDetail found = (PropertyDetail) getExternalIdCache().get(inName);
+		if (found == null)
+		{
+			for (Iterator iter = getDetails().iterator(); iter.hasNext();)
+			{
+				PropertyDetail detail = (PropertyDetail) iter.next();
+				if( detail.getName().equals(inName))
+				{
+					found = detail;
+					getExternalIdCache().put(inName, found);
+					break;
+				}
+			}
+		}
+		return found;
+	}
+
 	
 	
 }
