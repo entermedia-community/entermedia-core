@@ -409,15 +409,21 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				}
 				if (hitsperpage == null)
 				{
-					hitsperpage = (String) inPageRequest.getPageValue(getSearchType()+ "hitsperpage");
+					//hitsperpage = (String) inPageRequest.getPageValue(getSearchType()+ "hitsperpage");
 				}
 				if (hitsperpage == null)
 				{
 					hitsperpage = inPageRequest.findValue(getSearchType()+ "hitsperpage");
 				}
-
+				if (hitsperpage == null && usersettings != null) 
+				{
+					int count = usersettings.getHitsPerPageForSearchType(inQuery.getResultType(), inPageRequest);
+					hitsperpage = String.valueOf(count);
+				}
+				
 				if( hitsperpage == null && oldtracker != null)
 				{
+					//oldtracker may be different result type
 					inQuery.setHitsPerPage(oldtracker.getHitsPerPage());
 				}
 				else
@@ -426,11 +432,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					{
 						inQuery.setHitsPerPage(Integer.parseInt(hitsperpage));
 					}
-					else if (usersettings != null) 
-					{
-						int count = usersettings.getHitsPerPageForSearchType(inQuery.getResultType());
-						inQuery.setHitsPerPage(count);
-					}
+					
 				}
 				inQuery = getSearchSecurity().attachSecurity(inPageRequest, this, inQuery);
 				

@@ -573,10 +573,29 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 	{
 		setProperty(inView, inPreference);
 	}
+	
+	public int getHitsPerPageForSearchType(String inSearchtype, WebPageRequest inReq) {
+		String view = inSearchtype;
+		String resultview = inReq.getRequestParameter("resultview");
+		
+		if(resultview == null) {
+			resultview = get(view+"resultview");
+		}
+		if(resultview != null) {
+			view = resultview + view  + "hitsperpage";
+			String value = get(view);
+			if(value != null) {
+				return Integer.parseInt(value);
+			}
+		}
+		return getHitsPerPageForSearchType(inSearchtype);
+	}
+	
+	
 
-	public int getHitsPerPageForSearchType(String inResultsView)
+	public int getHitsPerPageForSearchType(String inSearchtype)
 	{
-		String view = inResultsView + "hitsperpage";
+		String view = inSearchtype + "hitsperpage";
 		String value = get(view);
 		if (value == null)
 		{
