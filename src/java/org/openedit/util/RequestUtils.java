@@ -283,10 +283,14 @@ public class RequestUtils {
 	
 				//TODO: Replace with Browser Action
 				//add in browser info
-				Browser browser = new Browser(inRequest.getHeader("User-Agent"));
-				browser.setHttpServletRequest(inRequest);
-				browser.setLocale( inRequest.getLocale() );
-				context.putProtectedPageValue(PageRequestKeys.BROWSER, browser);
+				if(inRequest != null) {
+					Browser browser = new Browser(inRequest.getHeader("User-Agent"));
+					browser.setHttpServletRequest(inRequest);
+					browser.setLocale( inRequest.getLocale() );
+					context.putProtectedPageValue(PageRequestKeys.BROWSER, browser);
+					}
+				
+			
 		
 				//Replaced with action PageValue.getLoader
 	//			SessionTool sessionTool = new SessionTool( context, getModuleManager() );
