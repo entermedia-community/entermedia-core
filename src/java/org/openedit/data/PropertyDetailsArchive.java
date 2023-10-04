@@ -626,7 +626,15 @@ public class PropertyDetailsArchive implements CatalogEnabled
 		{
 			Attribute attr = (Attribute) iterator.next();
 			String name = attr.getName();
+			if( name != null)
+			{
+				name = name.trim();
+			}
 			String value = attr.getValue();
+			if( value != null)
+			{
+				value = value.trim();
+			}
 			defaults.put(name, value);
 		}
 		details.setDefaults(defaults);

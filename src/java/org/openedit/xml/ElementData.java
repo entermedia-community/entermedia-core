@@ -552,7 +552,7 @@ public class ElementData implements MultiValued, SaveableData, Comparable, Searc
 			{
 				textvalue = null;
 			}
-			if( textvalue != null && textvalue.isEmpty())
+			if( textvalue != null && textvalue.trim().isEmpty())
 			{
 				textvalue = null;
 			}
@@ -564,7 +564,7 @@ public class ElementData implements MultiValued, SaveableData, Comparable, Searc
 					for (Iterator iterator = langmaptop.elementIterator("language"); iterator.hasNext();)
 					{
 						Element childlang = (Element) iterator.next();
-						map.put(childlang.attributeValue("id"),childlang.getText());
+						map.put(childlang.attributeValue("id"),childlang.getTextTrim());
 					}					
 					if( map.isEmpty())
 					{
