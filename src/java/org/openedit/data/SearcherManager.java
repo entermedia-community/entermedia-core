@@ -10,6 +10,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -247,6 +249,7 @@ public class SearcherManager
 		for (Iterator iterator = inHits.iterator(); iterator.hasNext();)
 		{
 			Data data = (Data) iterator.next();
+				//	We need a list of searchable (keyword fields)
 			Object obj = data.getValue(inColumn);
 			if( obj instanceof Collection)
 			{
@@ -263,9 +266,21 @@ public class SearcherManager
 			else
 			{
 				String val = (String) obj;
-				if( val.toLowerCase().startsWith(startsWith))
-				{
-					results.add( val);
+				if(val != null) {
+					/*if( val.toLowerCase().startsWith(startsWith))
+					{
+						results.add( val);
+					}*/
+					
+					//could break it by spaces but regex:
+				    Pattern pattern = Pattern.compile("(?i)\\b\\S*"+startsWith+"\\S*");
+				    Matcher matcher = pattern.matcher(val);
+
+				    while (matcher.find()) {
+				        //return matcher.group(1);
+				    	String output =  matcher.group(0);
+				    	results.add(output);
+				    }
 				}
 			}
 			if( results.size() > 100)

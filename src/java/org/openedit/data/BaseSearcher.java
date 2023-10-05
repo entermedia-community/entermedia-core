@@ -798,6 +798,11 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			resultype = getSearchType();
 		}
 		search.setResultType(resultype);
+		
+		String includeDescription = inPageRequest.findValue("includeDescription");
+		if(Boolean.parseBoolean(includeDescription)) {
+			search.setIncludeDescription(true);
+		}
 
 		String fireevent = inPageRequest.findValue("fireevent");
 		search.setFireSearchEvent(Boolean.parseBoolean(fireevent));
@@ -2698,6 +2703,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			{
 				q.setSortBy(sort);
 			}
+			
 			return cachedSearch(inReq, q);
 		}
 		else
