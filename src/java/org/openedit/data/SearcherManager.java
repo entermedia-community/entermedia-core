@@ -214,6 +214,28 @@ public class SearcherManager
 		//We may get passed in an external catalog and field
 		return getSearcher(inDetail.getListCatalogId(), inDetail.getListId() );
 	}
+	public String getDataLabel(Data inData,PropertyDetail inDetail)
+	{
+		if(inData == null || inDetail == null){
+			return null;
+		}
+		Object value = 	inData.get(inDetail.getId());
+		if( value == null)
+		{
+			return null;
+		}
+		if( inDetail.isList())
+		{
+			//Lookup the value
+			Data lookup = getCachedData(inDetail.getListCatalogId(), inDetail.getListId(), value.toString());
+			return lookup.getName();
+		}
+		else
+		{
+			return value.toString();
+		}
+		
+	}
 	public Object getListData(PropertyDetail inDetail, String inValue)
 	{
 		return getData(inDetail.getListCatalogId(), inDetail.getListId(), inValue);
