@@ -314,7 +314,7 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 	{
 		return getBoolean("index");
 	}
-	private boolean getBoolean(String inString)
+	public boolean getBoolean(String inString)
 	{
 		return getElementData().getBoolean(inString);
 	}

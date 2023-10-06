@@ -243,7 +243,12 @@ public class DateStorageUtil
 			}
 			if (inStoredDate.length() > 5)
 			{
-				return getOldShortStandardFormat().parse(inStoredDate);
+				Date old = getOldShortStandardFormat().parse(inStoredDate);
+				if( old.getYear() < 100)
+				{
+					old.setYear(old.getYear()  + 2000);
+				}
+				return old;
 			}
 
 		}
