@@ -241,11 +241,16 @@ public class DateStorageUtil
 			{
 				return parse(inStoredDate,"yyyy-MM-dd");
 			}
-			if (inStoredDate.length() > 5)
+			String format = determineDateFormat(inStoredDate);
+			if( format != null)
 			{
-				return getOldShortStandardFormat().parse(inStoredDate);
+				Date old = parse(inStoredDate,format);
+				if( old.getYear() < 100)
+				{
+					old.setYear(old.getYear()  + 2000);
+				}
+				return old;
 			}
-
 		}
 		catch (Exception ex)
 		{
@@ -397,6 +402,7 @@ public class DateStorageUtil
 			put("^\\d{4}-\\d{1,2}-\\d{1,2}$", "yyyy-MM-dd");
 			put("^\\d{1,2}/\\d{1,2}/\\d{4}$", "MM/dd/yyyy");
 			put("^\\d{4}/\\d{1,2}/\\d{1,2}$", "yyyy/MM/dd");
+			put("^\\d{4}\\.\\d{1,2}\\.\\d{1,2}$", "yyyy.MM.dd");
 			put("^\\d{1,2}\\s[a-z]{3}\\s\\d{4}$", "dd MMM yyyy");
 			put("^\\d{1,2}\\s[a-z]{4,}\\s\\d{4}$", "dd MMMM yyyy");
 			put("^\\d{12}$", "yyyyMMddHHmm");
