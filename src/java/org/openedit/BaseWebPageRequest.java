@@ -1166,7 +1166,7 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 				name = getRequestParameter(inName);
 				if(name !=null && getSiteRoot()!= null && getSiteRoot().startsWith("http://")) //Localhost debug
 				{
-					log.info(inName + " Requestparameter called from: "+getPath());
+					//log.info(inName + " Requestparameter called from: "+getPath());
 				}
 			}
 		}
