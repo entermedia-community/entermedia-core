@@ -477,8 +477,7 @@ public class SearcherManager
 		{
 			return null;
 		}
-		Searcher searcher = getSearcher(inDetail.getListCatalogId(), inDetail.getListId());
-		Object data = searcher.searchById(inId);
+		Data data = getCachedData(inDetail.getListCatalogId(), inDetail.getListId(), inId);
 		return (Data)data;
 	}
 
