@@ -240,6 +240,12 @@ public class SearcherManager
 	{
 		return getData(inDetail.getListCatalogId(), inDetail.getListId(), inValue);
 	}
+	public String getValue(Searcher inSearcher, Data inParent, String inField)
+	{
+		PropertyDetail detail = inSearcher.getDetail(inField);
+		String val = getValue(inParent,detail);
+		return val;
+	}
 	public String getValue(Data inParent,PropertyDetail inDetail)
 	{
 		if(inParent == null || inDetail == null){
