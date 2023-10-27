@@ -2354,5 +2354,33 @@ public boolean isFilterSelected(String type, String value) {
 		setValue("searchtypes",inTypes);
 
 	}
+
+
+	public boolean equalTerms(SearchQuery inSearchQuery)
+	{
+		if( inSearchQuery == this )
+		{
+			return true;
+		}
+		SearchQuery q = (SearchQuery)inSearchQuery;
+		Collection searchmodules = getValues("searchtypes");
+		if( searchmodules != null)
+		{
+			Collection searchmodules2 = q.getValues("searchtypes");
+			if( !searchmodules.equals(searchmodules2))
+			{
+				return false;
+			}
+		}
+		String one = q.toQuery();
+		if( one != null)
+		{
+			if( !one.equals(toQuery() ) )
+			{
+				return false;
+			}
+		}
+		return true;
+	}
 	
 }

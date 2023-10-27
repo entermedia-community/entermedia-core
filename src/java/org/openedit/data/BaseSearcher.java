@@ -205,7 +205,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		{
 			cache = inPageRequest.getRequestParameter("cache");
 		}	
-		if (cache != null && !Boolean.parseBoolean("cache"))
+		if (cache != null && !Boolean.parseBoolean(cache))
 		{
 			runsearch = true;
 		}
@@ -255,7 +255,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				runsearch = true;
 				startingpage = tracker.getPage();
 			}
-			if (!runsearch && !inQuery.equals(tracker.getSearchQuery()))
+			if (!runsearch && !inQuery.equalTerms(tracker.getSearchQuery()))
 			{
 				runsearch = true;
 			}
