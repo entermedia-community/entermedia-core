@@ -45,6 +45,7 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 	protected Searcher fieldSearcher;
 	protected boolean fieldShowOnlySelected;
 	protected String fieldTempSessionId;
+	public static final Pattern WORDS = Pattern.compile("[a-zA-Z\\d]+");
 	
 	protected Map<String,FilterNode> fieldActiveFilterValues; //What is actually from this search
 	
@@ -725,31 +726,59 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 		String text = getValue(inHit, inField);
 		if( text != null && input != null && input.length() > 1)
 		{
-			 String escaped = Pattern.quote(input);
-			 Pattern p = Pattern.compile(escaped,
-			            Pattern.MULTILINE | Pattern.CASE_INSENSITIVE);
-			
-			 Matcher match = p.matcher(text);
-			
-			 String fixed = match.replaceAll("<em>$0</em>");
-			 
-			 int start = fixed.indexOf("<em>");
-			 if( start> -1)
-			 {
-				 start = start - cutoff/2;
-				 start = Math.max(0,start);
-				 //get the next space
-				 if( start > 0)
-				 {
-					 start = fixed.indexOf(" ",start); //Next space
+			//TODO: loop over words
+			Matcher m = WORDS.matcher(input);
+		    Matcher mnext = WORDS.matcher(input);
+		    mnext.find();
+			int foundchars = 50;
+			StringBuffer out = new StringBuffer();
+			String ending = null;
+			while( m.find() && foundchars > 0 )
+			{
+				String searchfor = m.group();
+				int start = text.toLowerCase().indexOf(searchfor.toLowerCase());
+				if( start > -1)
+				{
+					if( out.length() == 0)
+					{
+						int cutstart = start - cutoff/2;
+						cutstart = Math.max(0,cutstart);
+						out.append( text.substring(cutstart,start));
+					}
+					else
+					{
+						//out.append("...");
+					}
+					out.append("<em>");
+					out.append(searchfor);
+					out.append("</em> ");
+					
+					 //get the next space
+					 if( start > 0)
+					 {
+						 start = text.indexOf(" ",start); //Next space
+					 }
+					 int max = Math.min(start + searchfor.length() + cutoff/2,text.length());
+					 ending= text.substring(start + searchfor.length(),max);
+					 if( mnext.find() )
+					 {
+						 if( !ending.toLowerCase().contains(mnext.group().toLowerCase()) )
+						 {
+							 out.append(ending);
+						 }
+					 }
 				 }
-				 
-				 int max = Math.min(start + cutoff,fixed.length());
+			}
+			if( !out.toString().endsWith(ending) )
+			{
+				out.append(ending);
+			}
 
-				 String finaltext = fixed.substring(start,max);
-				 return finaltext;
-			 }
-			 return null;
+			if( out.length() > 0)
+			{
+				return out.toString();
+			}
+			return null;
 		}
 		
 		return null;
