@@ -730,10 +730,11 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 			Matcher m = WORDS.matcher(input);
 		    Matcher mnext = WORDS.matcher(input);
 		    mnext.find();
-			int foundchars = 50;
+			int foundchars = 0;
+			int maxchars = 52;
 			StringBuffer out = new StringBuffer();
 			String ending = null;
-			while( m.find() && foundchars > 0 )
+			while( m.find() && foundchars < maxchars )
 			{
 				String searchfor = m.group();
 				int start = text.toLowerCase().indexOf(searchfor.toLowerCase());
@@ -743,23 +744,28 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 					{
 						int cutstart = start - cutoff/2;
 						cutstart = Math.max(0,cutstart);
+						if(cutstart > 0) {
+							out.append("...");
+						}
 						out.append( text.substring(cutstart,start));
 					}
 					else
 					{
 						//out.append("...");
 					}
-					out.append("<em>");
+					out.append("<b>");
 					out.append(searchfor);
-					out.append("</em> ");
+					out.append("</b>");
 					
 					 //get the next space
-					 if( start > 0)
+					int startspace = 0;
+					 //if( start > 0) ////
+					if( out.length() > 0)
 					 {
-						 start = text.indexOf(" ",start); //Next space
+						 startspace = text.indexOf(" ",start); //Next space
 					 }
-					 int max = Math.min(start + searchfor.length() + cutoff/2,text.length());
-					 ending= text.substring(start + searchfor.length(),max);
+					 int max = Math.min(start + searchfor.length() + startspace, text.length());
+					 ending= text.substring(start + searchfor.length() ,max);
 					 if( mnext.find() )
 					 {
 						 if( !ending.toLowerCase().contains(mnext.group().toLowerCase()) )
@@ -768,10 +774,14 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 						 }
 					 }
 				 }
+				foundchars = out.length();
 			}
-			if( !out.toString().endsWith(ending) )
+			if( out != null && !out.toString().endsWith(ending) )
 			{
 				out.append(ending);
+				if(text.length() > 0) {
+					out.append("...");
+				}
 			}
 
 			if( out.length() > 0)
