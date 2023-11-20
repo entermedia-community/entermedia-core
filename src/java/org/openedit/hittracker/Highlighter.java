@@ -38,13 +38,18 @@ public class Highlighter
 							if (start > 0)
 							{
 								String part1 = parsedkeywords[i].substring(0, start);
-								out.append(part1);
+								int startcutoff = Math.min(cutoff, part1.length());
+								String result = part1.substring(part1.length() - startcutoff,part1.length());
+								out.append(result);
+								
 							}
 							out.append("<b>");
 							out.append(searchfor);
 							out.append("</b>");
 							String partend = parsedkeywords[i].substring(start + searchfor.length(), parsedkeywords[i].length());
-							out.append(partend);
+							int endcutoff = Math.min(cutoff, partend.length());
+							String result = partend.substring(0,endcutoff);
+							out.append(result);
 						}
 						else
 						{
