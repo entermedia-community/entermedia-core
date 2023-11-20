@@ -18,6 +18,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openedit.CatalogEnabled;
 import org.openedit.Data;
+import org.openedit.MultiValued;
 import org.openedit.OpenEditException;
 import org.openedit.WebPageRequest;
 import org.openedit.data.PropertyDetail;
@@ -708,90 +709,16 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 	}
 	public String highlight(Object inHit, String inField)
 	{
-		String input = getInput("description");
-		String text = getValue(inHit, inField);
-		if( text != null && input != null && input.length() > 1) //avoid *
-		{
-			 String escaped = Pattern.quote(input);
-			 Pattern p = Pattern.compile(escaped,Pattern.MULTILINE | Pattern.CASE_INSENSITIVE);
-			 Matcher match = p.matcher(text);
-			 text = match.replaceAll("<em>$0</em>");
-		}
-		return text;
+		String highlight = highlight(inHit,inField,50, true);
+		return highlight;
 	}
-	public String highlight(Object inHit, String inField, int cutoff)
+	public String highlight(Object inHit, String inField, int cutoff, boolean addhtml)
 	{
 		//StringBuffer output = new StringBuffer();
 		String input = getInput("description");
 		String text = getValue(inHit, inField);
-		if( text != null && input != null && input.length() > 1)
-		{
-			//TODO: loop over words
-			Matcher m = WORDS.matcher(input);
-		    Matcher mnext = WORDS.matcher(input);
-		    mnext.find();
-			int foundchars = 0;
-			int maxchars = 52;
-			StringBuffer out = new StringBuffer();
-			String ending = null;
-			while( m.find() && foundchars < maxchars )
-			{
-				String searchfor = m.group();
-				int start = text.toLowerCase().indexOf(searchfor.toLowerCase());
-				if( start > -1)
-				{
-					if( out.length() == 0)
-					{
-						int cutstart = start - cutoff/2;
-						cutstart = Math.max(0,cutstart);
-						if(cutstart > 0) {
-							out.append("...");
-						}
-						out.append( text.substring(cutstart,start));
-					}
-					else
-					{
-						//out.append("...");
-					}
-					out.append("<b>");
-					out.append(searchfor);
-					out.append("</b>");
-					
-					 //get the next space
-					int startspace = 0;
-					 //if( start > 0) ////
-					if( out.length() > 0)
-					 {
-						 startspace = text.indexOf(" ",start); //Next space
-					 }
-					 int max = Math.min(start + searchfor.length() + startspace, text.length());
-					 ending= text.substring(start + searchfor.length() ,max);
-					 if( mnext.find() )
-					 {
-						 if( !ending.toLowerCase().contains(mnext.group().toLowerCase()) )
-						 {
-							 out.append(ending);
-						 }
-					 }
-				 }
-				foundchars = out.length();
-			}
-			if( out != null && !out.toString().endsWith(ending) )
-			{
-				out.append(ending);
-				if(text.length() > 0) {
-					out.append("...");
-				}
-			}
-
-			if( out.length() > 0)
-			{
-				return out.toString();
-			}
-			return null;
-		}
-		
-		return null;
+		String out = new Highlighter().highlight(input, text, cutoff, addhtml);
+		return out;
 
 	}
 	public String getValue(Object inHit, String inString)
