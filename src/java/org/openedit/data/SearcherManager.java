@@ -301,7 +301,7 @@ public class SearcherManager
 					}*/
 					
 					//could break it by spaces but regex:
-				    Pattern pattern = Pattern.compile("(?i)\\b\\S*"+startsWith+"\\S*");
+				   /* Pattern pattern = Pattern.compile("(?i)\\b\\S*"+startsWith+"\\S*");
 				    Matcher matcher = pattern.matcher(val);
 
 				    while (matcher.find()) {
@@ -309,6 +309,14 @@ public class SearcherManager
 				    	String output =  matcher.group(0);
 				    	results.add(output);
 				    }
+				    */
+					String[] valStrings = MultiValued.VALUEDELMITER.split(val);
+					for (int i = 0; i < valStrings.length; i++) {
+						if( valStrings[i].toLowerCase().startsWith(startsWith.toLowerCase()))
+						{
+							results.add( valStrings[i]);
+						}
+					}
 				}
 			}
 			if( results.size() > 100)
