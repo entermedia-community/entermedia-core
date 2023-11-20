@@ -24,7 +24,10 @@ public class Highlighter
 			while (m.find())
 			{
 				String searchfor = m.group();
-
+				if( searchfor.equalsIgnoreCase("or") || searchfor.equalsIgnoreCase("and") || searchfor.equalsIgnoreCase("not"))
+				{
+					continue;
+				}
 				for (int i = 0; i < parsedkeywordslower.length; i++)
 				{
 					int start = parsedkeywordslower[i].indexOf(searchfor.toLowerCase());
