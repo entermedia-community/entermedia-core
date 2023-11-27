@@ -181,7 +181,7 @@ import org.apache.commons.logging.LogFactory;
 				}
 			return position;
 		}
-		public List linkRange()
+		public List pageRange()
 		{
 			int totalPages = getTotalPages();
 			int page = getPage();
@@ -220,43 +220,68 @@ import org.apache.commons.logging.LogFactory;
 			return hits;
 		}
 
-		public List linksBefore()
+		public List pagesBefore(List pagerange)
 		{
-			List range = linkRange();
 			int i = 0;
-			for (; i < range.size(); i++)
+			int page = getPage();
+			for (; i < pagerange.size(); i++)
 			{
-				Integer in = (Integer) range.get(i);
-				if (in.intValue() >= getPage())
+				Integer in = (Integer) pagerange.get(i);
+				if (in.intValue() >= page)
 				{
 					break;
-				}
+				}	
 			}
 
-			return range.subList(0, i);
+			return pagerange.subList(0, i);
+		}
+		public List linksBefore()
+		{
+			List range = pageRange();
+			return pagesBefore(range);
 		}
 		public List linksAfter()
+		{
+			List pagerange = pageRange();
+			return pagesAfter(pagerange);
+		}
+		
+		public List pagesAfter(List pagerange)
 		{
 			if (getTotalPages() == getPage())
 			{
 				return Collections.EMPTY_LIST;
 			}
-			List range = linkRange();
-			if (range.size() == 1) // Only one hit
+			if (pagerange.size() == 1) // Only one hit
 			{
 				return Collections.EMPTY_LIST;
 			}
-			int start = 0;
-			for (int i = 0; i < range.size(); i++)
-			{
-				Integer in = (Integer) range.get(i);
-				if (in.intValue() > getPage())
-				{
-					start = i;
-					break;
-				}
-			}
-			return range.subList(start, range.size());
+			List before = pagesBefore(pagerange);
+			List after = pagerange.subList(before.size() + 1, pagerange.size());
+			return after;
+//			int i = 0;
+//			int position = getPosition();
+//			for (; i < range.size(); i++)
+//			{
+//				Integer in = (Integer) range.get(i);
+//				if( isAsending())
+//				{
+//					if (in.intValue() >= position)
+//					{
+//						break;
+//					}
+//				}
+//				else
+//				{
+//					if (in.intValue() < position)
+//					{
+//						break;
+//					}					
+//				}
+//				
+//			}
+			
+			//return range.subList(i, range.size());
 
 		}
 
@@ -271,6 +296,27 @@ import org.apache.commons.logging.LogFactory;
 				return getTotalPages() - getPage() + 1;
 			}
 		}
-			
-	}
-
+	
+		public Links links()
+		{
+			Links links = new Links();
+			links.setCurrentPosition(getPosition());
+			List pagerange = pageRange();
+			if( isAsending())  //Normal pagination
+			{
+				links.setBefore(pagesBefore(pagerange));
+				links.setAfter(pagesAfter(pagerange));
+			}
+			else //Flip these and sort reverse
+			{			
+				List before = pagesAfter(pagerange);
+				Collections.reverse(before);
+				links.setBefore(before);
+				
+				List after = pagesBefore(pagerange);
+				Collections.reverse(after);
+				links.setAfter(after);
+			}
+			return links;
+		}
+}
