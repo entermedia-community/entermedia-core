@@ -9,6 +9,4 @@ public interface SearchData {
 
 	public void setSearchData(Map inSearchHit);
 	
-	
-
 }

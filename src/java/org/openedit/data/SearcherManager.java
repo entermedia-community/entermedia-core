@@ -460,13 +460,22 @@ public class SearcherManager
 		Object data = searcher.searchById(inId);
 		return (Data)data;
 	}
+	
+	protected CacheManager getCacheManager(String inCatalogId)
+	{
+		CacheManager aCacheManager = (CacheManager)getModuleManager().getBean(inCatalogId, "cacheManager",true);
+		return aCacheManager;
+	}
+	
 	public Data getCachedData(String inCatalogId, String inSearchType, String inId)
 	{
 		if( inId == null)
 		{
 			return null;
 		}
-		Data found = (Data)getCacheManager().get("sm-data" + inCatalogId, inSearchType + "/" + inId);
+		//TODO: Use a CacheManaget per catalog
+		
+		Data found = (Data)getCacheManager(inCatalogId).get("data" + inSearchType,inId);
 		if( found == CacheManager.NULLDATA)
 		{
 			return null;
@@ -479,10 +488,10 @@ public class SearcherManager
 		Object data = searcher.searchById(inId);
 		if(data == null)
 		{
-			getCacheManager().put("sm-data" + inCatalogId, inSearchType + "/" + inId, CacheManager.NULLDATA);
+			getCacheManager(inCatalogId).put("sm-data" + inCatalogId, inSearchType + "/" + inId, CacheManager.NULLDATA);
 			return null;
 		}
-		getCacheManager().put("sm-data" + inCatalogId, inSearchType + "/" + inId, data);
+		getCacheManager(inCatalogId).put("sm-data" + inCatalogId, inSearchType + "/" + inId, data);
 		return (Data)data;
 	}
 	public Data getData(PropertyDetail inDetail, String inId)

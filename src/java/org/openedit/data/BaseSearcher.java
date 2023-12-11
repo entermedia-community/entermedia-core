@@ -27,10 +27,10 @@ import org.openedit.ModuleManager;
 import org.openedit.MultiValued;
 import org.openedit.OpenEditException;
 import org.openedit.WebPageRequest;
+import org.openedit.cache.CacheManager;
 import org.openedit.config.Configuration;
 import org.openedit.event.EventManager;
 import org.openedit.event.WebEvent;
-import org.openedit.hittracker.FilterNode;
 import org.openedit.hittracker.GeoFilter;
 import org.openedit.hittracker.HitTracker;
 import org.openedit.hittracker.SearchQuery;
@@ -61,6 +61,22 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	protected ModuleManager fieldModuleManager;
 	protected String fieldNewDataName;
 	protected boolean fieldForceBulk = false;
+
+	protected CacheManager fieldCacheManager;
+
+	public CacheManager getCacheManager()
+	{
+		if( fieldCacheManager == null)
+		{
+			fieldCacheManager = (CacheManager)getModuleManager().getBean(getCatalogId(), "cacheManager",true);
+		}
+		return fieldCacheManager;
+	}
+
+	public void setCacheManager(CacheManager inCacheManager)
+	{
+		fieldCacheManager = inCacheManager;
+	}
 
 	public boolean isForceBulk()
 	{
@@ -2716,16 +2732,6 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		}
 
 	}
-
-	public void saveCompositeData(CompositeData inData, User inUser)
-	{
-		for (Iterator iterator = inData.iterator(); iterator.hasNext();)
-		{
-			Data data = (Data) iterator.next();
-			saveData(data, inUser);
-		}
-	}
-
 	public String lookupValue(String val, WebPageRequest inReq, Data data)
 	{
 		String value = inReq.getRequestParameter(val);
@@ -2793,146 +2799,6 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		return tracker;
 	}
 
-	public void fireDataEditEvent(WebPageRequest inReq, Data object)
-	{
-
-		if (fieldEventManager == null)
-		{
-			return;
-		}
-		StringBuffer changes = new StringBuffer();
-		String[] fields = inReq.getRequestParameters("field");
-		if (fields == null)
-		{
-			return;
-		}
-		//		if (composite != null)
-		//		{
-		//			changes.append("MutliEdit->");
-		//		}
-		Data compare = createNewData();
-		updateData(inReq, fields, compare);
-		for (int i = 0; i < fields.length; i++)
-		{
-			String field = fields[i];
-			Object value = compare.getValue(field);
-
-			Object oldval = object.getValue(field);
-
-			if (value == null && oldval == null)
-			{
-				continue;
-			}
-			if (oldval == null && value instanceof LanguageMap)
-			{
-				if (((LanguageMap) value).isEmpty())
-				{
-					continue;
-				}
-			}
-
-			if (value != null && !value.equals(oldval))
-			{
-				PropertyDetail detail = getDetail(field);
-				if (detail != null && detail.isList())
-				{
-					if (value instanceof String && oldval instanceof String)
-					{
-						Searcher listSearcher = getSearcherManager().getListSearcher(detail);
-						Data data = (Data) listSearcher.searchById((String) oldval);
-						if (data != null)
-						{
-							oldval = data.getName();
-						}
-						data = (Data) listSearcher.searchById((String) value);
-						if (data != null)
-						{
-							value = data.getName();
-						}
-					}
-				}
-				if (changes.length() > 0)
-				{
-					changes.append(", ");
-				}
-				if (oldval == null)
-				{
-					oldval = "Empty";
-				}
-				changes.append(field + ": " + oldval + " -> " + value);
-			}
-		}
-
-		if (changes.length() > 0)
-		{
-			WebEvent event = new WebEvent();
-			event.setCatalogId(getCatalogId());
-			String type = getSearchType();
-			event.setSearchType(type);
-			event.setSource(this);
-			//assetedit
-
-			//			event.setSearchType("assetedit");
-			//			event.setSource(this);
-			//			event.setOperation("assetedit");
-			//			event.setSourcePath(asset.getSourcePath());
-
-			//			event.setProperty("assetid", asset.getId());
-			//			event.setProperty("assetname", asset.getName());
-			//			event.setProperty("changes", changes.toString());
-
-			event.setOperation("edit");
-			event.setSourcePath(object.getSourcePath());
-			event.setProperty("id", object.getId());
-			event.setProperty(getSearchType() + "id", object.getId());
-
-			event.setProperty("sourcepath", object.getSourcePath());
-			//aka "changes"
-			event.setProperty("details", changes.toString());
-			event.setUser(inReq.getUser());
-			getEventManager().fireEvent(event);
-		}
-	}
-
-	/*
-	 * public EventManager getEventManager() { return fieldEventManager; }
-	 * 
-	 * public void setEventManager(EventManager inEventManager) {
-	 * fieldEventManager = inEventManager; }
-	 */
-	public void saveDetails(WebPageRequest inReq, String[] fields, Data data, String id)
-	{
-		//		// This might be a productid of multiple products. We need to create
-		//		// lots of data objects
-		//		if (id != null && id.startsWith("multiedit:"))
-		//		{
-		//			data = (Data) inReq.getSessionValue(id);
-		//		}
-		//
-		if (data instanceof CompositeData)
-		{
-			CompositeData target = (CompositeData) data;
-			for (Iterator iterator = target.iterator(); iterator.hasNext();)
-			{
-				Data real = (Data) iterator.next();
-				fireDataEditEvent(inReq, real);
-				data = updateData(inReq, fields, real);
-				saveData(real, inReq.getUser());
-			}
-		}
-		else
-		{
-			fireDataEditEvent(inReq, data);
-			data = updateData(inReq, fields, data);
-			if( data.getId() == null && id != null)
-			{
-				data.setId(id);
-			}
-			saveData(data, inReq.getUser());
-		}
-		inReq.putPageValue("message", data.getId() + " is saved");
-		inReq.putPageValue("data", data);
-	}
 
 	public Data updateData(WebPageRequest inReq, String[] fields, Data data)
 	{
@@ -3141,6 +3007,10 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			}
 			else
 			{
+//				if( result != null && result instanceof String && result.toString().trim().isEmpty())
+//				{
+//					result = null;
+//				}
 				data.setValue(field, result);
 			}
 		}
@@ -3149,6 +3019,44 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 
 	}
 
+	
+	/*
+	 * public EventManager getEventManager() { return fieldEventManager; }
+	 * 
+	 * public void setEventManager(EventManager inEventManager) {
+	 * fieldEventManager = inEventManager; }
+	 */
+	public void saveDetails(WebPageRequest inReq, String[] fields, Data data, String id)
+	{
+		if (data instanceof CompositeData)
+		{
+//			CompositeData target = (CompositeData) data;
+//			for (Iterator iterator = target.iterator(); iterator.hasNext();)
+//			{
+//				Data real = (Data) iterator.next();
+//				fireDataEditEvent(inReq, real);
+//				data = updateData(inReq, fields, real);
+//				saveData(real, inReq.getUser());
+//			}
+			throw new OpenEditException("Must call DataEditModule.saveData");
+		}
+		
+		getEventManager().fireDataEditEvent(inReq, this, data);
+		updateData(inReq, fields, data);
+		if( data.getId() == null && id != null)
+		{
+			data.setId(id);
+		}
+		saveData(data);
+		getEventManager().fireDataSavedEvent(inReq, this, data);
+		getCacheManager().remove("data" + getSearchType(), data.getId());
+		inReq.setRequestParameter("id", data.getId());
+		inReq.setRequestParameter("id.value", data.getId());
+
+		inReq.putPageValue("message", data.getId() + " is saved");
+		inReq.putPageValue("data", data);
+	}
+	
 	public String nextId()
 	{
 		throw new IllegalAccessError("nextId Not implemented");
@@ -3444,7 +3352,67 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	{
 		return null;
 	}
-	
+
+	public Data loadData(WebPageRequest inReq,String dataid)
+	{
+		Data data = null;
+		
+		if (dataid.startsWith("multiedit"))
+		{
+			CompositeData compositeasset = (CompositeData) inReq.getSessionValue(dataid);
+			String hitssessionid = dataid.substring("multiedit".length() + 1);
+			HitTracker hits = (HitTracker) inReq.getSessionValue(hitssessionid);
+			if (compositeasset!= null && !compositeasset.getSelectedResults().hasChanged(hits)) 
+			{
+				data = compositeasset;
+			}
+
+			if (data == null)
+			{
+				if (hits == null)
+				{
+					log.error("Could not find " + hitssessionid);
+					return null;
+				}
+				CompositeData composite = new BaseCompositeData(this,getEventManager(), hits);
+				composite.setId(dataid);
+				data = composite;
+				inReq.putSessionValue(dataid, data);
+			}
+		}
+		else
+		{
+			data = loadData(dataid);
+		}
+		return data;
+
+	}
+
+	public Data loadData(String inDataid)
+	{
+		Data data = (Data)searchById(inDataid);
+		data = loadData(data);
+		return null;
+	}
+
+	public Data loadCachedData(String inId)
+	{
+		if( inId == null)
+		{
+			return null;
+		}
+		Data data = (Data)getCacheManager().get("data" + getSearchType(), inId);
+		if( data == null && inId != null)
+		{
+			data = (Data)searchById(inId);
+			if( data != null)
+			{
+				getCacheManager().put("data" + getSearchType(), inId, data);
+			}
+		}
+		return data;
+	}
+
 	
 	
 }

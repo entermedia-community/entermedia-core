@@ -71,7 +71,13 @@ public interface Searcher extends CatalogEnabled
 
 	public Object searchById(String inId);
 
+	public Data loadCachedData(String inId);
+
 	public Data loadData(Data inHit);
+	
+	public Data loadData(WebPageRequest inReq,String inDataid);
+
+	public Data loadData(String inId);
 	
 	public Object searchByField(String inField,String inValue);
 
@@ -159,8 +165,6 @@ public interface Searcher extends CatalogEnabled
 	
 	public void addChildQuery(WebPageRequest inReq);
 
-	public abstract void saveDetails(WebPageRequest inReq, String[] fields,	Data data, String id);
-
 	/**
 	 * @deprecated use searchByQuery
 	 * @param inQ
@@ -204,6 +208,5 @@ public interface Searcher extends CatalogEnabled
 
 	public Object getFulltext(Data inSearchHitData);
 
-	
     
 }
