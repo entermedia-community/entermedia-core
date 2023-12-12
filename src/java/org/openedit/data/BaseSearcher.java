@@ -3377,7 +3377,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					log.error("Could not find " + hitssessionid);
 					return null;
 				}
-				CompositeData composite = new BaseCompositeData(this,getEventManager(), hits);
+				CompositeData composite = createCompositeData(hits);
 				composite.setId(dataid);
 				data = composite;
 				inReq.putSessionValue(dataid, data);
@@ -3391,11 +3391,16 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 
 	}
 
+	protected BaseCompositeData createCompositeData(HitTracker hits)
+	{
+		return new BaseCompositeData(this,getEventManager(), hits);
+	}
+
 	public Data loadData(String inDataid)
 	{
 		Data data = (Data)searchById(inDataid);
 		data = loadData(data);
-		return null;
+		return data;
 	}
 
 	public Data loadCachedData(String inId)

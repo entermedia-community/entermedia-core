@@ -2,9 +2,11 @@ package org.openedit.data;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
@@ -33,6 +35,7 @@ public class BaseCompositeData extends BaseData implements Data, CompositeData
 	protected String fieldId;
 	protected Collection fieldEditFields;
 	protected EventManager fieldEventManager;
+	protected Map<String, Object> commonValues = new HashMap();
 	
 	protected EventManager getEventManager()
 	{
@@ -50,6 +53,10 @@ public class BaseCompositeData extends BaseData implements Data, CompositeData
 	{
 		fieldEditFields = inEditFields;
 	}	
+	public BaseCompositeData()
+	{
+		
+	}
 	public BaseCompositeData(Searcher inSearcher,EventManager inManager, HitTracker inHits)
 	{
 		setSearcher(inSearcher);
@@ -226,58 +233,87 @@ public class BaseCompositeData extends BaseData implements Data, CompositeData
 		
 		return null;
 	}
-	protected String getValueFromResults(String inKey) 
+	protected Object getValueFromResults(String inKey) 
 	{
-		String val = ((Data)getSelectedResults().first()).get(inKey);
-		//Object objectval = ((Data)getSelectedResults().first()).get(inKey);
-		for (Iterator iterator = getSelectedResults().iterator(); iterator.hasNext();)
-		{
-			Data data = (Data) iterator.next();
-			String dataval = data.get(inKey);
-			if( val == null )
+			Object val = commonValues.get(inKey);
+			if (val != null)
 			{
-				if( val != dataval )
-				{
-					val = "";
-					break;
-				}
+				return val;
 			}
-			else if (val.length() > 0 && !val.equals(dataval))
+			Iterator iterator = getSelectedResults().iterator();
+			if (!iterator.hasNext())
 			{
-				//Maybe just out of order?
-				boolean multi = isMulti(inKey);
-				
-				if( dataval != null && multi )
+				return null;
+			}
+			Data firstrow = (Data) iterator.next();
+			String text = firstrow.get(inKey);
+			while (iterator.hasNext())
+			{
+				Data data = (Data) iterator.next();
+				String dataval = data.get(inKey);
+				if (text == null)
 				{
-					String[] vals = VALUEDELMITER.split(val);
-					val = "";
-					for (int i = 0; i < vals.length; i++) 
+					if (text != dataval)
 					{
-						if( dataval.contains(vals[i]) ) //vals are in an array
+						text = "";
+						break;
+					}
+				}
+				else if (text.length() > 0 && !text.equals(dataval))
+				{
+					//Maybe just out of order?
+					boolean multi = isMulti(inKey);
+
+					if (dataval != null && multi)
+					{
+						String[] vals = VALUEDELMITER.split(text);
+						text = "";
+						for (int i = 0; i < vals.length; i++)
 						{
-							if( val.length() == 0 )
+							if (dataval.contains(vals[i])) //vals are in an array
 							{
-								val = vals[i];
-							}
-							else
-							{
-								val = val + " | " + vals[i];
+								if (text.length() == 0)
+								{
+									text = vals[i];
+								}
+								else
+								{
+									text = text + " | " + vals[i];
+								}
 							}
 						}
 					}
-				}
-				else
-				{
-					val = "";
-					break;
+					else
+					{
+						text = "";
+						break;
+					}
+
 				}
 			}
-		}
-		if(	val == null )
-		{
-			val = "";
-		}
-		return val;
+			if (text == null)
+			{
+				text = "";
+			}
+			val = text;
+
+			if (text != null && !text.isEmpty())
+			{
+
+				PropertyDetail detail = getPropertyDetails().getDetail(inKey);
+				if (detail.isMultiLanguage())
+				{
+					Object currentval = firstrow.getValue(inKey);
+
+					if (currentval instanceof LanguageMap)
+					{
+						val = currentval;
+					}
+				}
+			}
+
+			commonValues.put(inKey, val);
+			return val;
 	}
 	public void setProperty(String inKey, String inValue)
 	{
@@ -461,7 +497,7 @@ public class BaseCompositeData extends BaseData implements Data, CompositeData
 		inLoaded.setValue(inKey, inValue);
 
 	}
-	protected void saveAll(WebPageRequest inReq, List<Data> tosave)
+	protected void saveAll(WebPageRequest inReq, Collection<Data> tosave)
 	{
 		getSearcher().saveAllData( tosave, null);
 		for(Data savedata:tosave)
@@ -477,7 +513,7 @@ public class BaseCompositeData extends BaseData implements Data, CompositeData
 	 * @param existing Ones that are already on the asset
 	 * @param old Ones that need to be removed?
 	 */
-	protected void saveMultiValues(MultiValued asset, String key, Set added, Set existing, Set previousCommonOnes) 
+	protected void saveMultiValues(MultiValued asset, String key, Collection added, Collection existing, Collection previousCommonOnes) 
 	{
 		
 		HashSet set = new HashSet();
@@ -593,12 +629,15 @@ public class BaseCompositeData extends BaseData implements Data, CompositeData
 		getPropertiesSet().clear();
 		
 	}
+
 	@Override
-	public Collection<String> getValues(String inPreference) {
-		String currentlist =getValueFromResults(inPreference); 
+	public Collection<String> getValues(String inPreference)
+	{
+
+		Object currentlist = getValueFromResults(inPreference);
 		return collect(currentlist);
-		
+
 	}
-	
+
 	
 }

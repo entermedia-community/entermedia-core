@@ -1014,5 +1014,10 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 	{
 		fieldSettingsGroup = (MultiValued)inFieldSettingsGroup;
 	}
+
+	public void setUser(User inUser)
+	{
+		setValue("userid",inUser.getId());
+	}
 	
 }
