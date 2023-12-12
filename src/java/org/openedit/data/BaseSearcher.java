@@ -3356,7 +3356,10 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	public Data loadData(WebPageRequest inReq,String dataid)
 	{
 		Data data = null;
-		
+		if( dataid == null)
+		{
+			return null;
+		}
 		if (dataid.startsWith("multiedit"))
 		{
 			CompositeData compositeasset = (CompositeData) inReq.getSessionValue(dataid);

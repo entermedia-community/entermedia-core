@@ -224,7 +224,7 @@ public class PageManager
 		String fullPath = PathUtilities.buildRelative( inPath, "/" );
 		
 		Page page = (Page) getCacheManager().get( CACHEID, fullPath );
-		if( page != null && !inCheckDates)
+		if( page != null ) // && !inCheckDates)
 		{
 			return page;
 		}
