@@ -236,9 +236,13 @@ public class BaseCompositeData extends BaseData implements Data, CompositeData
 	protected Object getValueFromResults(String inKey) 
 	{
 			Object val = commonValues.get(inKey);
-			if (val != null)
+			if (val != null || val == ValuesMap.NULLVALUE)
 			{
-				return val;
+				if( ValuesMap.NULLVALUE == val)
+				{
+					val = null;
+				}
+				return val;  //This wins
 			}
 			Iterator iterator = getSelectedResults().iterator();
 			if (!iterator.hasNext())
@@ -246,58 +250,58 @@ public class BaseCompositeData extends BaseData implements Data, CompositeData
 				return null;
 			}
 			Data firstrow = (Data) iterator.next();
-			String text = firstrow.get(inKey);
+			String firsttext = firstrow.get(inKey); //First value
 			while (iterator.hasNext())
 			{
 				Data data = (Data) iterator.next();
 				String dataval = data.get(inKey);
-				if (text == null)
+				if (firsttext == null)
 				{
-					if (text != dataval)
+					if (firsttext != dataval)
 					{
-						text = "";
+						firsttext = "NOTEQUAL";  //They dont agree
 						break;
 					}
 				}
-				else if (text.length() > 0 && !text.equals(dataval))
+				else if (firsttext.length() > 0 && !firsttext.equals(dataval))
 				{
 					//Maybe just out of order?
 					boolean multi = isMulti(inKey);
 
 					if (dataval != null && multi)
 					{
-						String[] vals = VALUEDELMITER.split(text);
-						text = "";
+						String[] vals = VALUEDELMITER.split(firsttext);
+						firsttext = ""; //Has some value
 						for (int i = 0; i < vals.length; i++)
 						{
 							if (dataval.contains(vals[i])) //vals are in an array
 							{
-								if (text.length() == 0)
+								if (firsttext.length() == 0)
 								{
-									text = vals[i];
+									firsttext = vals[i];
 								}
 								else
 								{
-									text = text + " | " + vals[i];
+									firsttext = firsttext + " | " + vals[i];
 								}
 							}
 						}
 					}
 					else
 					{
-						text = "";
+						// ext = ""; "NOTEQUAL"
 						break;
 					}
 
 				}
 			}
-			if (text == null)
-			{
-				text = "";
-			}
-			val = text;
+//			if (text == null)
+//			{
+//				text = "NULL";
+//			}
+			val = firsttext;
 
-			if (text != null && !text.isEmpty())
+			if (firsttext != null && !firsttext.isEmpty())
 			{
 
 				PropertyDetail detail = getPropertyDetails().getDetail(inKey);
@@ -311,7 +315,10 @@ public class BaseCompositeData extends BaseData implements Data, CompositeData
 					}
 				}
 			}
-
+			if( firsttext == null)
+			{
+				val = ValuesMap.NULLVALUE;
+			}
 			commonValues.put(inKey, val);
 			return val;
 	}
