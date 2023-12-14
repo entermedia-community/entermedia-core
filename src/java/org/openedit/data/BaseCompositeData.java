@@ -35,7 +35,7 @@ public class BaseCompositeData extends BaseData implements Data, CompositeData
 	protected String fieldId;
 	protected Collection fieldEditFields;
 	protected EventManager fieldEventManager;
-	protected Map<String, Object> commonValues = new HashMap();
+	protected Map<String, Object> commonCachedValues = new HashMap();
 	
 	protected EventManager getEventManager()
 	{
@@ -203,23 +203,24 @@ public class BaseCompositeData extends BaseData implements Data, CompositeData
 	{	
 		if (size() > 0)
 		{
-			Object val = (String)getPropertiesSet().get(inId); //set by the user since last save
-//			if( val == null && fieldPropertiesPreviouslySaved != null)
-//			{
-//				val = (String)getPropertiesPreviouslySaved().get(inId);
-//			}
-			if( val == null)
+			Object val = getPropertiesSet().getValue(inId); //set by the user since last save
+			if( val != null)
 			{
-				val = super.getValue(inId); //set by looking over the cached results
-			}
-			if( val != null ) //already set to a value
-			{
-				if( (val instanceof String) && ((String)val).length() == 0 )
-				{
-					return null; //set to empty
-				}
 				return val;
 			}
+			
+//			if( val == null)
+//			{
+//				val = super.getValue(inId); //set by looking over the cached results
+//			}
+//			if( val != null ) //already set to a value
+//			{
+//				if( (val instanceof String) && ((String)val).length() == 0 )
+//				{
+//					return null; //set to empty
+//				}
+//				return val;
+//			}
 //			if( val == null ) 
 //			{
 //				return null;
@@ -227,7 +228,7 @@ public class BaseCompositeData extends BaseData implements Data, CompositeData
 			//return something only if all the values match the first record
 			val = getValueFromResults(inId);
 			//getPropertiesPreviouslySaved().put(inId, val);
-			super.setValue(inId, val);
+			//super.setValue(inId, val);
 			return val;
 		}
 		
@@ -235,7 +236,7 @@ public class BaseCompositeData extends BaseData implements Data, CompositeData
 	}
 	protected Object getValueFromResults(String inKey) 
 	{
-			Object val = commonValues.get(inKey);
+			Object val = commonCachedValues.get(inKey);
 			if (val != null || val == ValuesMap.NULLVALUE)
 			{
 				if( ValuesMap.NULLVALUE == val)
@@ -275,7 +276,7 @@ public class BaseCompositeData extends BaseData implements Data, CompositeData
 					if (dataval != null && multi)
 					{
 						String[] vals = VALUEDELMITER.split(firsttext);
-						firsttext = ""; //Has some value
+						firsttext = ""; //Has some value They dont agree
 						for (int i = 0; i < vals.length; i++)
 						{
 							if (dataval.contains(vals[i])) //vals are in an array
@@ -294,6 +295,7 @@ public class BaseCompositeData extends BaseData implements Data, CompositeData
 					else
 					{
 						// ext = ""; "NOTEQUAL"
+						firsttext = "";
 						break;
 					}
 
@@ -323,7 +325,7 @@ public class BaseCompositeData extends BaseData implements Data, CompositeData
 			{
 				val = ValuesMap.NULLVALUE;
 			}
-			commonValues.put(inKey, val);  //a blank string just means there is nothing in common, (not that its null)
+			commonCachedValues.put(inKey, val);  //a blank string just means there is nothing in common, (not that its null)
 			return val;
 	}
 	public void setProperty(String inKey, String inValue)
