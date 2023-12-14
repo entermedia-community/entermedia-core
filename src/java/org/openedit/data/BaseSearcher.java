@@ -514,6 +514,10 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				}
 				if (hitsperpage == null)
 				{
+					hitsperpage = inPageRequest.findValue("hitsperpage");
+				}
+				if (hitsperpage == null)
+				{
 					hitsperpage = inPageRequest.findValue(getSearchType()+ "hitsperpage");
 				}
 				if (hitsperpage != null)
