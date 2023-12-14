@@ -259,15 +259,19 @@ public class BaseCompositeData extends BaseData implements Data, CompositeData
 				{
 					if (firsttext != dataval)
 					{
-						firsttext = "NOTEQUAL";  //They dont agree
+						firsttext = "";  //They dont agree
 						break;
 					}
 				}
-				else if (firsttext.length() > 0 && !firsttext.equals(dataval))
+				else if (!firsttext.isEmpty() && !firsttext.equals(dataval))
 				{
 					//Maybe just out of order?
 					boolean multi = isMulti(inKey);
-
+					if (dataval == null)
+					{
+						firsttext = "";  //They dont agree
+						break;
+					}
 					if (dataval != null && multi)
 					{
 						String[] vals = VALUEDELMITER.split(firsttext);
@@ -319,7 +323,7 @@ public class BaseCompositeData extends BaseData implements Data, CompositeData
 			{
 				val = ValuesMap.NULLVALUE;
 			}
-			commonValues.put(inKey, val);
+			commonValues.put(inKey, val);  //a blank string just means there is nothing in common, (not that its null)
 			return val;
 	}
 	public void setProperty(String inKey, String inValue)
@@ -569,6 +573,11 @@ public class BaseCompositeData extends BaseData implements Data, CompositeData
 		}
 		else if( existingvalue instanceof String)
 		{
+			if( ((String) existingvalue).isEmpty())
+			{
+				return new HashSet();
+			}
+			
 			String[] vals = VALUEDELMITER.split(existingvalue.toString());
 			Set set = new HashSet(vals.length);
 			for (int i = 0; i < vals.length; i++) {

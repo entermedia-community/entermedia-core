@@ -323,8 +323,12 @@ public class ValuesMap extends HashMap
 		}
 		if( object instanceof Collection)
 		{
-			StringBuffer values = new StringBuffer();
 			Collection existingvalues = (Collection)object;
+			if(existingvalues.isEmpty())
+			{
+				return null;
+			}
+			StringBuffer values = new StringBuffer();
 			for (Iterator iterator = existingvalues.iterator(); iterator.hasNext();)
 			{
 				Object detail = (Object) iterator.next();
