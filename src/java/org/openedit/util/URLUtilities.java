@@ -1004,10 +1004,16 @@ public class URLUtilities
 //				  cutoff = cutoff.replace("<a ", "") + " \"</span>";
 //			  }
 			  
+			  
 			  return cutoff + "...";
 		  }
+		  
+		  //Suppoort new lines and tabs and spaces?
+//		  String replaced = sb.toString().replace("\\n", "<br>");
+//		  //replaced = replaced.replace("/n", "<br>");
+//		  replaced = replaced.replace("	", "&nbsp;&nbsp;&nbsp;&nbsp;");
+//		  return replaced;
 		  return sb.toString();
-			
 		
 	}
 
