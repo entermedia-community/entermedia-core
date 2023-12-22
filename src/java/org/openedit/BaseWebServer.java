@@ -19,6 +19,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletContext;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.dom4j.DocumentHelper;
@@ -59,7 +61,7 @@ public class BaseWebServer implements WebServer
 	protected List fieldAllPlugIns;
 	protected String fieldNodeId;
 	protected Date fieldLastMountsReloaded ;
-	
+	protected ServletContext fieldServletContext;
 	
 	
 	public Date getLastMountsReloaded()
@@ -225,6 +227,7 @@ public class BaseWebServer implements WebServer
 			BaseWebPageRequest request = new BaseWebPageRequest();
 			request.setContentPage(page);
 			request.setPage(page);
+			request.putPageValue("servletcontext", getServletContext());
 			if( getModuleManager().contains("MediaAdminModule") )
 			{
 				getModuleManager().execute("MediaAdminModule.initCatalogs", request);
@@ -853,4 +856,14 @@ public class BaseWebServer implements WebServer
 		getPageManager().removePage(old);
 		reloadMounts();
 	}
+
+	public ServletContext getServletContext() {
+		return fieldServletContext;
+	}
+
+	public void setServletContext(ServletContext inServletContext) {
+		fieldServletContext = inServletContext;
+	}
+
+
 }
