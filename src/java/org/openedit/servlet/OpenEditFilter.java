@@ -20,6 +20,7 @@ import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.ServletRegistration;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
@@ -99,6 +100,7 @@ public class OpenEditFilter implements Filter
 		}
 
 		BaseWebServer server = new BaseWebServer();  //Singleton?
+		server.setServletContext(servletContext);
 		server.setRootDirectory(new File(rootPath));
 		server.setNodeId(servletContext.getInitParameter("entermedianodeid"));
 		server.initialize();
@@ -107,6 +109,11 @@ public class OpenEditFilter implements Filter
 		servletContext.setAttribute(WebServer.class.getName(), server); //TODO: Why is this here?
 		fieldEngine = server.getOpenEditEngine();
 		server.finalizeStartup();
+		
+		
+		
+		
+		
 	}
 
 	protected OpenEditEngine getEngine()
