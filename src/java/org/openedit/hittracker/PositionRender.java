@@ -18,7 +18,7 @@ import org.apache.commons.logging.LogFactory;
 		protected boolean fieldAsending;//LowToHigh;
 		protected int fieldPage = 1;
 		protected int fieldHitsPerPage = -1;
-		protected int fieldMaxPageListing = 10; //used for page listing
+		protected int fieldMaxPageListing = 6; //used for page listing
 		protected long fieldSize;
 		
 		public long getSize()
