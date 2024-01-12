@@ -169,7 +169,7 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 	
 	public boolean isList()
 	{
-		return isDataType("list") || isViewType("list");
+		return isDataType("list") || isViewType("list") || isViewType("entity");
 	}
 
 	public boolean isMultiValue()
