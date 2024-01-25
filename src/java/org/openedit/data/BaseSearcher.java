@@ -287,13 +287,13 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 
 		}
 		HitTracker oldtracker = null;
+		UserProfile usersettings = (UserProfile) inPageRequest.getUserProfile();
 
 		if (runsearch)
 		{
 			try
 			{
 				
-				UserProfile usersettings = (UserProfile) inPageRequest.getUserProfile();
 				if (usersettings != null && inQuery.getSortBy() == null)
 				{
 					String sort = usersettings.getSortForSearchType(inQuery.getResultType());
@@ -427,15 +427,16 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				{
 					//hitsperpage = (String) inPageRequest.getPageValue(getSearchType()+ "hitsperpage");
 				}
-				if (hitsperpage == null)
-				{
-					hitsperpage = inPageRequest.findValue(getSearchType()+ "hitsperpage");
-				}
 				if (hitsperpage == null && usersettings != null) 
 				{
 					int count = usersettings.getHitsPerPageForSearchType(inQuery.getResultType(), inPageRequest);
 					hitsperpage = String.valueOf(count);
 				}
+				if (hitsperpage == null)
+				{
+					hitsperpage = inPageRequest.findValue(getSearchType()+ "hitsperpage");
+				}
+				
 				
 				if( hitsperpage == null && oldtracker != null)
 				{
@@ -507,6 +508,11 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				if (hitsperpage == null)
 				{
 					hitsperpage = inPageRequest.getPageProperty("hitsperpage");
+				}
+				if (hitsperpage == null && usersettings != null) 
+				{
+					int count = usersettings.getHitsPerPageForSearchType(inQuery.getResultType(), inPageRequest);
+					hitsperpage = String.valueOf(count);
 				}
 				if (hitsperpage == null)
 				{

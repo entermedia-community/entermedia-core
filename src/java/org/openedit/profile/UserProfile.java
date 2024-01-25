@@ -610,7 +610,7 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 			resultview = get(view+"resultview");
 		}
 		if(resultview != null) {
-			view = resultview + view  + "hitsperpage";
+			view =  view + resultview  + "hitsperpage";
 			String value = get(view);
 			if(value != null) {
 				return Integer.parseInt(value);
