@@ -440,8 +440,11 @@ public class BaseUserManager implements UserManager
 		
 	}
 
-	@Override
-	public String createNewTempLoginKey(String userid, String email, String first,String last)
+	
+	
+	
+	@Override	
+	public String createNewTempLoginKey(String userid, String email, String first,String last, boolean force)
 	{
 		//Create a new one for this user
 		Searcher searcher = getSearcherManager().getSearcher("system", "templogincode");
@@ -449,6 +452,16 @@ public class BaseUserManager implements UserManager
 		{
 			throw new OpenEditException("First or last name is required");
 		}
+		
+		Calendar cal  = Calendar.getInstance();
+		cal.add(Calendar.HOUR, -1); //24 hours
+		Date newerthan = cal.getTime();
+		Data found = searcher.query().exact("user",userid).after("date",newerthan).searchOne();
+		if(found != null && !force) {
+			return found.get("securitycode");
+		}
+
+	
 		
 		Data data  = searcher.createNewData();
 		data.setValue("user",userid);

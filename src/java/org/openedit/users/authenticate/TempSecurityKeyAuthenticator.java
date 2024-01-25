@@ -9,6 +9,7 @@ import org.openedit.Data;
 import org.openedit.ModuleManager;
 import org.openedit.data.Searcher;
 import org.openedit.data.SearcherManager;
+import org.openedit.hittracker.HitTracker;
 import org.openedit.users.User;
 import org.openedit.users.UserManager;
 import org.openedit.users.UserManagerException;
@@ -44,7 +45,7 @@ public class TempSecurityKeyAuthenticator extends BaseAuthenticator
 		Searcher searcher = getSearcherManager().getSearcher("system", "templogincode");
 		
 		Calendar cal  = Calendar.getInstance();
-		cal.add(Calendar.DAY_OF_YEAR, -1); //24 hours
+		cal.add(Calendar.HOUR, -1); //24 hours
 		Date newerthan = cal.getTime();
 		Data found = searcher.query().exact("user",user.getId()).exact("securitycode",code).after("date",newerthan).searchOne();
 
@@ -72,9 +73,16 @@ public class TempSecurityKeyAuthenticator extends BaseAuthenticator
 			String securitycode = found.get("securitycode");  //Double checking
 			if( code.equals(securitycode))
 			{
+				HitTracker codes = searcher.query().exact("user",user.getId()).search();
+				searcher.deleteAll(codes, user);
 				return true;
 			}
-		}		
+		
+			
+		}
+		
+		
+		
 		return false;
 	}
 
