@@ -2123,6 +2123,11 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		{
 			page = "1";
 		}
+		//resettopageone
+		if (Boolean.parseBoolean(inPageRequest.findValue("resettopageone")))
+		{
+			page = "1";
+		}
 		return page;
 	}
 
