@@ -293,7 +293,7 @@ public class BaseUserManager implements UserManager
 			}
 		}
 	}
-
+	
 	@Override
 	public void saveUser(User inUser)
 	{
@@ -456,8 +456,8 @@ public class BaseUserManager implements UserManager
 		Calendar cal  = Calendar.getInstance();
 		cal.add(Calendar.HOUR, -1); //24 hours
 		Date newerthan = cal.getTime();
-		Data found = searcher.query().exact("user",userid).after("date",newerthan).searchOne();
-		if(found != null && !force) {
+		Data found = searcher.query().match("email",email.toLowerCase()).after("date",newerthan).searchOne();
+		if(found != null && !force) {   //force is mostly set to true so we will skip this and make a new one
 			return found.get("securitycode");
 		}
 
@@ -467,7 +467,7 @@ public class BaseUserManager implements UserManager
 		data.setValue("user",userid);
 		data.setValue("firstName",first);
 		data.setValue("lastName",last);
-		data.setValue("email",email);
+		data.setValue("email",email.toLowerCase());
 		data.setValue("date",new Date());
 		
 		String key = String.valueOf(new Random().nextInt(999999));
