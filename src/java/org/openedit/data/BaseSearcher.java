@@ -195,6 +195,16 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		}
 
 		if (inQuery.getHitsName() == null)
+		{			
+			String sessionid = inPageRequest.getRequestParameter(getSearchType() + "hitssessionid");
+			if( sessionid != null)
+			{
+				String name = sessionid.substring(0,sessionid.length() - getSearchType().length() - getCatalogId().length() );
+				inQuery.setHitsName(name);
+			}
+		}
+		
+		if (inQuery.getHitsName() == null)
 		{
 			String hitsname = inPageRequest.findValue(searchtype + "hitsname");
 			if (hitsname == null)
@@ -842,6 +852,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				search.setProperty(custom[i], value);
 			}
 		}
+		
 		return search;
 	}
 
