@@ -225,42 +225,68 @@ public class LocaleManager
 	public String getAge(Date inDate, String inLocale )
 	{
 		long diff = System.currentTimeMillis() - inDate.getTime();
+		diff = Math.abs(diff);
 		String label = null;
-		long minute = (diff / (1000 * 60)) % 60;
-		long hour = (diff / (1000 * 60 * 60));
-		String time = null;
+		Double minute = org.openedit.util.MathUtils.divide(diff, (1000L * 60L)) % 60L;
+		Double hour = org.openedit.util.MathUtils.divide(diff, (1000 * 60 * 60));
+		Double time = null;
 		if( hour < 1)
 		{
 			//Now or minutes
 			if( minute < 1)
 			{
-				label = "Now";
+				if ( minute < 0.1) 
+				{
+					label = "";
+					return null;
+				}
+				else {
+					label = "Seconds";
+					time = minute * 60D;
+				}
+				
 			}
 			else
 			{
-				label = "Minutes";
-				time = String.valueOf(minute);
+				if (minute < 2)
+				{
+					label = "Minute";
+				}
+				else 
+				{
+					label = "Minutes";
+				}
+				time = minute;
 			}
 		}
 		else if( hour < 24)
 		{
-			label = "Hours";
-			time = String.valueOf( hour );
+			if (hour < 2)
+			{
+				label = "Hour";
+			}
+			else 
+			{
+				label = "Hours";
+			}
+			time = hour ;
 		}
 		else
 		{
 			double days = (double)hour / 24d;
-			time = String.valueOf( (int) days );
+			time =  days;
 			label = "Day";
+			
 			if( (int)days > 1)
 			{
 				label =  label + "s";
 			}
 		}
+		
 		String translated = getTextLabelManager().getAutoText("/system/data/",label, inLocale);
 		if (time != null ) 
 		{
-			return time + " " + translated;
+			return MathUtils.roundUp(time) + " " + translated;
 		}
 		else 
 		{
