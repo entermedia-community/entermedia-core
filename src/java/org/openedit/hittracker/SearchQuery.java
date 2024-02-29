@@ -722,7 +722,7 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		{
 			return null;
 		}
-		if (getSorts().size() == 0)
+		if (getSorts().size() == 1)
 		{
 			return (String)getSorts().get(0);
 		}

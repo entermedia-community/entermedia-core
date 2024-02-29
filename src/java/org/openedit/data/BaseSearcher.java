@@ -196,13 +196,13 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 
 		if (inQuery.getHitsName() == null)
 		{			
-			String sessionid = inPageRequest.getRequestParameter(getSearchType() + "hitssessionid");
+			String sessionid = inPageRequest.getRequestParameter(getSearchType() + "hitssessionid"); ///--Not always true (entityhits)
 			if( sessionid != null)
 			{
 				String name = sessionid.substring(0,sessionid.length() - getSearchType().length() - getCatalogId().length() );
 				inQuery.setHitsName(name);
 			}
-		}
+		} 
 		
 		if (inQuery.getHitsName() == null)
 		{
@@ -304,16 +304,17 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			try
 			{
 				
-				if (usersettings != null && inQuery.getSortBy() == null)
-				{
-					String sort = usersettings.getSortForSearchType(inQuery.getResultType());
-					inQuery.setSortBy(sort);
-				}
 				if (inQuery.getSortBy() == null)
 				{
 					String sort = inPageRequest.findValue("sortby");
 					inQuery.setSortBy(sort);
 				}
+				if (usersettings != null && inQuery.getSortBy() == null)
+				{
+					String sort = usersettings.getSortForSearchType(inQuery.getResultType());
+					inQuery.setSortBy(sort);
+				}
+				
 				if (inQuery.getSortBy() == null)
 				{
 					String sort = inPageRequest.findValue(getSearchType()+"sortby");
