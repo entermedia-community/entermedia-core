@@ -738,6 +738,27 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		}
 		return sorts.toString();
 	}
+	public PropertyDetail getSortByDetail()
+	{
+		String id = null;
+		for (Iterator iterator = getSorts().iterator(); iterator.hasNext();)
+		{
+			String sort = (String) iterator.next();
+			if( sort.endsWith("Up"))
+			{
+				id = sort.substring(0,sort.length() - 2 );
+				break;
+			}
+			if( sort.endsWith("Down"))
+			{
+				id = sort.substring(0,sort.length() - 4 );
+				break;
+			}
+			id = sort;
+		}
+		PropertyDetail detail = getPropertyDetails().getDetail(id);
+		return detail;
+	}
 
 	public void setSortBy(String inSortBy)
 	{
