@@ -62,9 +62,19 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	protected Collection<String> fieldSecurityIds;
 	protected boolean fieldIncludeDescription = false;
 	protected boolean fieldIncludeDeleted = false;
+	protected String fieldTimeZone;
 	
 	
-	
+	public String getTimeZone() {
+		return fieldTimeZone;
+	}
+
+
+	public void setTimeZone(String inTimeZone) {
+		fieldTimeZone = inTimeZone;
+	}
+
+
 	public boolean isIncludeDeleted()
 	{
 		return fieldIncludeDeleted;
