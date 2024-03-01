@@ -1875,6 +1875,53 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					search.setProperty(t.getId() + ".after", afterString);
 				}
 			}
+			
+//			<option value="ytd" #if( $op && $op == "ytd" )selected #end>[[Year To Date]]</option>
+//			<option value="previousyear" #if( $op && $op == "previousyear" )selected #end>[[Previous Year]]</option>				
+//			<option value="after" #if( $op && $op == "after" )selected #end>[[After Date]]</option>
+//			<option value="before" #if( $op && $op == "before" )selected #end >[[Before Date]]</option>
+//			<option value="betweendates" #if( $op && $op == "betweendates" )selected #end >[[Between]]</option>
+//			<option value="before1" #if( $op && $op == "before1" )selected #end>[[Past 24 hours]]</option>
+//			<option value="before7" #if( $op && $op == "before7" )selected #end>[[Past week]]</option>
+//			<option value="before30" #if( $op && $op == "before30" )selected #end>[[Past month]]</option>
+//			<option value="before365" #if( $op && $op == "before365" )selected #end>[[Past year]]</option>
+
+			
+			else if ("ytd".equals(op))
+			{
+				Calendar c = new GregorianCalendar();
+				c.setTimeZone(TimeZone.getTimeZone("GMT"));
+				c.set(Calendar.DAY_OF_YEAR, 1);
+				c.set(Calendar.HOUR_OF_DAY, 0);
+				c.set(Calendar.SECOND, 0);
+				c.set(Calendar.MILLISECOND, 0);
+				c.set(Calendar.MINUTE, 0);
+				// add search term
+				Date from = c.getTime();
+				c.set(Calendar.YEAR,c.get(Calendar.YEAR) + 1);
+				Date to = c.getTime();
+				t = search.addBetween(field, from, to);
+				search.setProperty(t.getId() + ".after", DateStorageUtil.getStorageUtil().formatForStorage(from));
+				search.setProperty(t.getId() + ".before", DateStorageUtil.getStorageUtil().formatForStorage(to));
+			}
+			else if ("previousyear".equals(op))
+			{
+				Calendar c = new GregorianCalendar();
+				c.setTimeZone(TimeZone.getTimeZone("GMT"));
+				c.set(Calendar.DAY_OF_YEAR, 1);
+				c.set(Calendar.HOUR_OF_DAY, 0);
+				c.set(Calendar.SECOND, 0);
+				c.set(Calendar.MILLISECOND, 0);
+				c.set(Calendar.MINUTE, 0);
+				c.set(Calendar.YEAR,c.get(Calendar.YEAR) - 1);
+				// add search term
+				Date from = c.getTime();
+				c.set(Calendar.YEAR,c.get(Calendar.YEAR) + 1);
+				Date to = c.getTime();
+				t = search.addBetween(field, from, to);
+				search.setProperty(t.getId() + ".after", DateStorageUtil.getStorageUtil().formatForStorage(from));
+				search.setProperty(t.getId() + ".before", DateStorageUtil.getStorageUtil().formatForStorage(to));
+			}
 			else if ("betweenages".equals(op))
 			{
 				String beforeString = inPageRequest.getRequestParameter(field.getId() + ".before");
