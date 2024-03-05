@@ -57,7 +57,7 @@
   <target name="compile">
     <mkdir dir="${build}"/>
     
-    <javac debug="true" destdir="${build}" srcdir="${src}" release="9">
+    <javac debug="true" destdir="${build}" srcdir="${src}" target="1.8">
       <classpath>
 	<!-- pathelement location="/usr/local/classpath/share/classpath/glibj.zip"/ -->
         <fileset dir="${lib}">
@@ -100,7 +100,7 @@
   </target>
   
   <target name="junit" depends="compile">
-    <javac debug="true" destdir="${build}" srcdir="${testsrc}" release="9">
+    <javac debug="true" destdir="${build}" srcdir="${testsrc}" source="1.5" target="1.5">
       <classpath>
         <fileset dir="${lib}">
           <include name="*.jar"/>
