@@ -100,7 +100,7 @@
   </target>
   
   <target name="junit" depends="compile">
-    <javac debug="true" destdir="${build}" srcdir="${testsrc}" source="1.5" target="1.5">
+    <javac debug="true" destdir="${build}" srcdir="${testsrc}"  source="12" target="12">
       <classpath>
         <fileset dir="${lib}">
           <include name="*.jar"/>
