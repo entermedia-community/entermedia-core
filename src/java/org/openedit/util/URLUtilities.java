@@ -971,7 +971,7 @@ public class URLUtilities
 		    
 		    link.append(" <a href=\"");
 		    link.append(text);
-		    link.append("target=\"_blank\"  \">");
+		    link.append("\" target=\"_blank\" >");
 		    link.append(text);
 		    link.append("</a>");
 		    m.appendReplacement(sb, Matcher.quoteReplacement(link.toString()));
