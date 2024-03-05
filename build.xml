@@ -57,7 +57,7 @@
   <target name="compile">
     <mkdir dir="${build}"/>
     
-    <javac debug="true" destdir="${build}" srcdir="${src}" target="1.8">
+    <javac debug="true" destdir="${build}" srcdir="${src}" source="1.8" target="1.8">
       <classpath>
 	<!-- pathelement location="/usr/local/classpath/share/classpath/glibj.zip"/ -->
         <fileset dir="${lib}">
