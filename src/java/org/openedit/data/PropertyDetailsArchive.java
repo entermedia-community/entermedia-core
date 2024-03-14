@@ -200,7 +200,7 @@ public class PropertyDetailsArchive implements CatalogEnabled
 								// a custom search screen or something
 		{
 			id = id + "_" + inProfile.get("settingsgroup");
-			String propId = "view_" + inView.replace('/', '_');
+			String propId = "view_" + id.replace('/', '_');
 			values = inProfile.getValues(propId);
 			if (values != null)
 			{
