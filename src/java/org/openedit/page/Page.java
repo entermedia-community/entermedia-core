@@ -990,4 +990,15 @@ public class Page implements Data, Comparable
 		return getProperties().keySet();
 	}
 
+	public List getPageLoaders()
+	{
+		List copy = (List)getCache().get("pageLoaders");
+		if( copy == null)
+		{
+			copy =  getPageSettings().getPageLoaders();
+			getCache().put("pageLoaders",copy);
+		}
+		return copy;
+	}
+
 }

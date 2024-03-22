@@ -278,5 +278,7 @@ public interface WebPageRequest
 	void closeStreams();
 
 	void addRequestParameter(String inString, String inName);
+
+	void putPageValues(Map inPageValues);
 	
 }

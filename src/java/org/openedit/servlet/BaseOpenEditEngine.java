@@ -6,6 +6,7 @@ package org.openedit.servlet;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -23,8 +24,10 @@ import org.openedit.error.ErrorHandler;
 import org.openedit.event.EventManager;
 import org.openedit.generators.Output;
 import org.openedit.page.Page;
+import org.openedit.page.PageLoader;
 import org.openedit.page.PageRequestKeys;
 import org.openedit.page.PageStreamer;
+import org.openedit.page.manage.PageLoaderConfig;
 import org.openedit.page.manage.PageManager;
 import org.openedit.util.RequestUtils;
 import org.openedit.util.URLUtilities;
@@ -40,7 +43,7 @@ public class BaseOpenEditEngine implements OpenEditEngine
 	protected boolean fieldHideFolders = true;
 	protected EventManager fieldPageEventHandler;
 	protected RequestUtils fieldRequestUtils;
-	
+
 	public void render( HttpServletRequest inRequest, HttpServletResponse inResponse ) throws IOException, OpenEditException 
 	{
 		checkEngineInit( inResponse );
@@ -76,8 +79,16 @@ public class BaseOpenEditEngine implements OpenEditEngine
 //		{
 //			checkdates = Boolean.parseBoolean( inRequest.getParameter("reload") ); //Dont call before we call setCharacterEncoding
 //		}
+		
 	    Page page = getPageManager().getPage( requestedPath,checkdates);
 	    
+		RightPage rightpage = getRightPage(page);
+	    
+		if( rightpage != null)
+		{
+			page = rightpage.getRightPage();
+		}
+		
 		//If link does not exists. Then put a real welcome page on there so that fallback will work
 	    boolean wasfolder = page.isFolder();
 		if(!wasfolder &&  util.requestPath().endsWith("/")) {
@@ -166,6 +177,16 @@ public class BaseOpenEditEngine implements OpenEditEngine
 			context.setPage(transpage);
 			
 		}
+		
+		if( rightpage != null && rightpage.getParams() != null)
+		{
+			context.putAllRequestParameters(rightpage.getParams());
+		}
+		if( rightpage != null && rightpage.getPageValues() != null)
+		{
+			context.putPageValues(rightpage.getPageValues());
+		}
+		
 		beginRender(context);
 		//if ( page.isDynamic() )
 		//{
@@ -173,6 +194,32 @@ public class BaseOpenEditEngine implements OpenEditEngine
 		//}
 	}
 	
+	protected RightPage getRightPage(Page inPage)
+	{
+		
+		if(inPage.exists())
+		{
+			return null;
+		}
+
+		List list = inPage.getPageLoaders();
+		if( list == null)
+		{
+			return null;
+		}
+		
+		for (Iterator iterator = list.iterator(); iterator.hasNext();)
+		{
+			PageLoaderConfig config = (PageLoaderConfig) iterator.next();
+			//<Page-Loader loader="projectLoader" />
+			String bean = config.getXmlConfig().get("loader");
+			PageLoader loader = (PageLoader)getModuleManager().getBean(config.getCatalogId(), bean);
+			RightPage rightp = loader.getRightPage(inPage);
+			return rightp;
+		}
+		return null;
+	}
+
 	/**
      * @see org.openedit.servlet.OpenEditEngine#hideFolders()
      */

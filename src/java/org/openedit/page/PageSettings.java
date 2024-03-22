@@ -40,6 +40,7 @@ public class PageSettings
 	protected List fieldScripts;
 	protected List fieldStyles;
 	protected List fieldPathActions;
+	protected List fieldPageLoaders;
 	protected TextLabelManager fieldTextLabels;
 	protected String fieldAlternateContentPath;
 	protected boolean fieldOriginalyExistedContentPath; //used to see if a new file has need added or removed
@@ -1151,6 +1152,47 @@ public class PageSettings
 	public void setStyles(List inStyles)
 	{
 		fieldStyles = inStyles;
+	}
+	public List getPageLoaders()
+	{
+		//add top level parents last
+		List finalList = new ArrayList();
+	
+		PageSettings parent = this;
+		PageSettings fallbackparent = getFallback();
+		while ( parent != null)
+		{
+			if( parent.fieldPageLoaders != null)
+			{
+				finalList.addAll(0,parent.fieldPageLoaders);
+			}
+			if ( fallbackparent != null)  //first check the mirror site
+			{
+				PageSettings chain = fallbackparent;
+				int count = 0;
+				while( chain != null && count++ < 10)
+				{
+					if( chain.fieldPageLoaders != null)
+					{
+						finalList.addAll(0,chain.fieldPageLoaders);
+					}
+					chain = chain.getFallback();
+				}
+				fallbackparent = fallbackparent.getParent();
+				if( fallbackparent == null)
+				{
+					fallbackparent = parent.getFallback();
+				}
+
+			}
+			parent = parent.getParent();
+		}			
+		return finalList;
+
+	}
+	public void setPageLoaders(List<PageLoader> inLoaders)
+	{
+		fieldPageLoaders = inLoaders;
 	}
 
 	

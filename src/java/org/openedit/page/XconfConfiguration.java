@@ -684,4 +684,9 @@ public class XconfConfiguration extends XMLConfiguration
 		}
 	}
 
+	public List getPageLoaders()
+	{
+		return getChildren( "page-loader" );
+	}
+
 }

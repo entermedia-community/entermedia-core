@@ -29,6 +29,7 @@ import org.openedit.PageAccessListener;
 import org.openedit.WebPageRequest;
 import org.openedit.cache.CacheManager;
 import org.openedit.page.Page;
+import org.openedit.page.PageLoader;
 import org.openedit.page.PageSettings;
 import org.openedit.repository.CompoundRepository;
 import org.openedit.repository.ContentItem;
@@ -649,6 +650,5 @@ public class PageManager
 		ContentItem item = getRepository().getStub(inPathToFile);
 		return item;
 	}
-	
 
 }

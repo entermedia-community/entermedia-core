@@ -23,6 +23,7 @@ import org.openedit.generators.GeneratorWithAcceptFilter;
 import org.openedit.generators.GeneratorWithMimeTypeFilter;
 import org.openedit.page.Page;
 import org.openedit.page.PageAction;
+import org.openedit.page.PageLoader;
 import org.openedit.page.PageProperty;
 import org.openedit.page.PageSettings;
 import org.openedit.page.Permission;
@@ -390,13 +391,15 @@ public class XConfToPageSettingsConverter
 
 		inPageSettings.setStyles(loadStyles(inPageSettings,config.getStyles()));
 
-		//turns out we need this for login-path and other places I am sure
-		//If there are unkown tags in the xconf then set the user defined data field
+		List loaders = loadPageLoaders(inPageSettings,config.getPageLoaders());
+		inPageSettings.setPageLoaders(loaders);
 
-		if ( config.hasChild("product") || config.hasChild("asset") || config.hasChild("blog")) //TODO: Do we use this anymore?
-		{
-			inPageSettings.setUserDefinedData(config);
-		}
+//		//turns out we need this for login-path and other places I am sure
+//		//If there are unkown tags in the xconf then set the user defined data field
+//		if ( config.hasChild("product") || config.hasChild("asset") || config.hasChild("blog")) //TODO: Do we use this anymore?
+//		{
+//			inPageSettings.setUserDefinedData(config);
+//		}
 		
 		String mime = inPageSettings.getPropertyValue("mimetype", null);
 		if( mime != null)
@@ -406,6 +409,25 @@ public class XConfToPageSettingsConverter
 		
 	}
 
+	protected List<PageLoaderConfig> loadPageLoaders(PageSettings inPageSettings, List inPageLoaders)
+	{
+		if ( inPageLoaders.size() == 0)
+		{
+			return null;
+		}
+		List pageActions = new ArrayList(inPageLoaders.size());
+		Iterator loaderElements = inPageLoaders.iterator();
+		while (loaderElements.hasNext())
+		{
+			Configuration pageActionElement = (Configuration) loaderElements.next();
+			PageLoaderConfig config = new PageLoaderConfig();
+			config.setXmlConfig(pageActionElement );
+			config.setCatalogId(inPageSettings.getPropertyValueFixed("catalogid"));
+			pageActions.add( config );
+		}
+		return pageActions;
+		
+	}
 	protected void loadAlternativeContent(PageSettings inPageSettings, String inUrlPath, boolean inContentexists) throws RepositoryException
 	{
 		inPageSettings.setOriginalyExistedContentPath(inContentexists);
