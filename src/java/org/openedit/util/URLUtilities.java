@@ -648,13 +648,34 @@ public class URLUtilities
 			}
 			return sb.toString();
 	}
-	/**
-	 * A simple hack to escape XML, stolen from Jakarta commons XmlUtils
-	 *
-	 * @param inStr
-	 *
-	 * @return String
-	 */
+	public static String xmlEscapeArea(String inStr)
+	{
+		if ( inStr == null )
+		{
+			return null;
+		}
+		StringBuffer output = new StringBuffer(inStr.length() + 50);
+		for (int i = 0; i < inStr.length(); i++)
+		{
+			char c = inStr.charAt(i);
+			switch (c)
+			{
+			case '&':
+				output.append("&amp;");
+				break;
+			case '<':
+				output.append("&lt;");
+				break;
+			case '>':
+				output.append("&gt;");
+				break;
+			default:
+				output.append(c);
+				break;
+			}
+		}
+		return output.toString();
+	}
 	public static String xmlEscape(String inStr)
 	{
 		if ( inStr == null )
@@ -685,6 +706,9 @@ public class URLUtilities
 				break;
 			case '>':
 				output.append("&gt;");
+				break;
+			case '\t':
+				output.append("&ensp;");
 				break;
 			case '\"':
 				output.append("&quot;");
