@@ -641,7 +641,11 @@ public class PropertyDetailsArchive implements CatalogEnabled
 		for (Iterator iter = root.elementIterator("property"); iter.hasNext();)
 		{
 			Element element = (Element) iter.next();
-
+			//Remove deleted ones?
+			if( "true".equals(element.attributeValue("deleted") ) )
+			{
+				continue;
+			}
 			PropertyDetail d = createDetail(defaults, inInputFile, element, inType);
 			newdetails.add(d);
 			
