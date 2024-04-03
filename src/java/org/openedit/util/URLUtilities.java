@@ -598,6 +598,18 @@ public class URLUtilities
 		String siteRoot = ctx.substring( 0, ctx.indexOf("/", 8) ); //8 comes from https://
 		return siteRoot;
 	}
+	
+	public String domain()
+	{
+		String site = siteRoot();
+		String domain = site.substring(site.indexOf("//") + 2,site.length());
+		if( domain.contains(":"))
+		{
+			domain  = domain.substring(0,domain.indexOf(":"));
+		}
+		return domain;
+	}
+	
 	public static String xmlEscapeWithWrap(String inStr)
 	{
 		return xmlEscapeWithWrap(inStr, 100);
