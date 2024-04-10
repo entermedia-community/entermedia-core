@@ -70,6 +70,11 @@ public class BaseOpenEditEngine implements OpenEditEngine
 		if ( session != null)
 		{
 			String mode = (String)session.getAttribute("oe_edit_mode");
+			if( "nocache".equals(mode) && requestedPath.endsWith(".html"))
+			{
+				getPageManager().clearCache();
+			}
+			
 			if( "debug".equals(mode) || "editing".equals(mode))
 			{
 				checkdates = true;

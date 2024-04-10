@@ -276,7 +276,7 @@ public class PageSettings
 	{
 		return getScripts(false);
 	}
-	public List getScripts(boolean folderonly)
+	public List getScripts(boolean skipparentfolders)
 	{
 		//add top level parents last
 		List finalList = new ArrayList();
@@ -288,7 +288,7 @@ public class PageSettings
 		
 		while ( parent != null)
 		{
-			if( folderonly && parentcount > 1)
+			if( skipparentfolders && parentcount > 1)
 			{
 				break;
 			}

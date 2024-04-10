@@ -245,11 +245,11 @@ public class Page implements Data, Comparable
 		return null;
 	}
 
-	public List getScripts(boolean folderonly)
+	public List getScripts(boolean skipparentfolders)
 	{
 		if( isHtml() )
 		{
-			List scripts =  getPageSettings().getScripts(folderonly);
+			List scripts =  getPageSettings().getScripts(skipparentfolders);
 			//look for duplicate
 			List copy = new ArrayList(scripts.size());
 			HashMap ids = new HashMap(scripts.size());
@@ -292,15 +292,15 @@ public class Page implements Data, Comparable
 	{
 		return getScriptPaths(false);
 	}
-	public List getScriptPaths(boolean folderonly)
+	public List getScriptPaths(boolean skipparentfolders)
 	{
 		List paths = null;
-		if(!folderonly) {
+		if(!skipparentfolders) {
 			 paths = (List)getCache().get("scriptPaths");
 		}
 		if( paths == null)
 		{
-			List scripts = getScripts(folderonly);
+			List scripts = getScripts(skipparentfolders);
 			if( scripts != null)
 			{
 				paths = new ArrayList(scripts.size());
@@ -309,7 +309,7 @@ public class Page implements Data, Comparable
 					Script script = (Script) iterator.next();
 					paths.add(getPageSettings().replaceProperty(script.getSrc()));
 				}
-				if(!folderonly) {
+				if(!skipparentfolders) {
 					getCache().put("scriptPaths",paths);
 				}
 			}
