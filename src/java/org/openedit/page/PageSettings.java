@@ -272,11 +272,11 @@ public class PageSettings
 		return finalList;
 
 	}
-	public List getScripts()
+	public List getAllScripts()
 	{
-		return getScripts(false);
+		return getScripts(null);
 	}
-	public List getScripts(boolean skipparentfolders)
+	public List getScripts(String startingfrom)
 	{
 		//add top level parents last
 		List finalList = new ArrayList();
@@ -288,9 +288,12 @@ public class PageSettings
 		
 		while ( parent != null)
 		{
-			if( skipparentfolders && parentcount > 1)
+			if( startingfrom != null)
 			{
-				break;
+				if( startingfrom.startsWith(parent.getPath()) )
+				{
+					break;
+				}
 			}
 			if( parent.fieldScripts != null)
 			{
@@ -319,11 +322,11 @@ public class PageSettings
 		}			
 		return finalList;
 	}
-	public List getStyles()
+	public List getAllStyles()
 	{
-		return getStyles(false);
+		return getStyles(null);
 	}
-	public List getStyles(boolean folderonly)
+	public List getStyles(String startingfrom)
 	{
 		//add top level parents last
 		List finalList = new ArrayList();
@@ -334,9 +337,12 @@ public class PageSettings
 		
 		while ( parent != null)
 		{
-			if( folderonly && parentcount > 1)
+			if( startingfrom != null)
 			{
-				break;
+				if( startingfrom.startsWith(parent.getPath()) )
+				{
+					break;
+				}
 			}
 			
 			if( parent.fieldStyles != null)

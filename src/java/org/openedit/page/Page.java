@@ -202,13 +202,13 @@ public class Page implements Data, Comparable
 	
 	public List getStyles()
 	{
-		return getStyles(false);
+		return getStyles(null);
 	}
-	public List getStyles(boolean folderonly)
+	public List getStyles(String startingfrom)
 	{
 		if( isHtml() )
 		{
-			List styles =  getPageSettings().getStyles(folderonly);
+			List styles =  getPageSettings().getStyles(startingfrom);
 			//look for duplicate
 			List copy = new ArrayList(styles.size());
 			HashMap ids = new HashMap(styles.size());
@@ -245,11 +245,11 @@ public class Page implements Data, Comparable
 		return null;
 	}
 
-	public List getScripts(boolean skipparentfolders)
+	public List getScripts(String startingfrom)
 	{
 		if( isHtml() )
 		{
-			List scripts =  getPageSettings().getScripts(skipparentfolders);
+			List scripts =  getPageSettings().getScripts(startingfrom);
 			//look for duplicate
 			List copy = new ArrayList(scripts.size());
 			HashMap ids = new HashMap(scripts.size());
@@ -286,21 +286,34 @@ public class Page implements Data, Comparable
 	}
 	public List getScripts()
 	{
-		return getScripts(false);
+		return getScripts(null);
 	}
 	public List getScriptPaths()
 	{
-		return getScriptPaths(false);
+		return getScriptPathsAfter(null);
 	}
-	public List getScriptPaths(boolean skipparentfolders)
+	public List getScriptPathsOfContent()
+	{
+		String appid = get("applicationid");
+		List custom = null;
+		if( appid != null)
+		{
+			String apppath = "/" + appid + "/_site.xconf";
+			custom = getScriptPathsAfter(apppath);
+		}
+		else
+		{
+			custom = getScriptPaths();
+		}
+		return custom;
+	}
+	public List getScriptPathsAfter(String startingfrom)
 	{
 		List paths = null;
-		if(!skipparentfolders) {
-			 paths = (List)getCache().get("scriptPaths");
-		}
+			 paths = (List)getCache().get("scriptPaths" + startingfrom);
 		if( paths == null)
 		{
-			List scripts = getScripts(skipparentfolders);
+			List scripts = getScripts(startingfrom);
 			if( scripts != null)
 			{
 				paths = new ArrayList(scripts.size());
@@ -309,24 +322,40 @@ public class Page implements Data, Comparable
 					Script script = (Script) iterator.next();
 					paths.add(getPageSettings().replaceProperty(script.getSrc()));
 				}
-				if(!skipparentfolders) {
-					getCache().put("scriptPaths",paths);
-				}
+				getCache().put("scriptPaths"  +startingfrom,paths);
 			}
 		}
 		return paths;
 	}
+	
+	public List getStylePathsOfContent()
+	{
+		String appid = get("applicationid");
+		List custom = null;
+		if( appid != null)
+		{
+			String apppath = "/" + appid + "/_site.xconf";
+			custom = getStylePaths(apppath);
+		}
+		else
+		{
+			custom = getStylePaths();
+		}
+		return custom;
+	}
+
+	
 	public List getStylePaths()
 	{
-		List paths = getStylePaths(false);
+		List paths = getStylePaths(null);
 		return paths;
 	}
-	public List getStylePaths(boolean folderonly)
+	public List getStylePaths(String startingfrom)
 	{
-		List paths = (List)getCache().get("stylePaths");
+		List paths = (List)getCache().get("stylePaths" + startingfrom);
 		if( paths == null)
 		{
-			List styles = getStyles(folderonly);
+			List styles = getStyles(startingfrom);
 			if( styles != null)
 			{
 				paths = new ArrayList(styles.size());
@@ -335,7 +364,7 @@ public class Page implements Data, Comparable
 					Style style = (Style) iterator.next();
 					paths.add(getPageSettings().replaceProperty(style.getHref()));
 				}
-				getCache().put("stylePaths",paths);
+				getCache().put("stylePaths" + startingfrom,paths);
 			}
 		}
 		return paths;
