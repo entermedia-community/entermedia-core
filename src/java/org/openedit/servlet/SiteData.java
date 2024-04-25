@@ -29,17 +29,19 @@ public class SiteData extends BaseData
 		String first = (String)values.iterator().next();
 		return first;
 	}
-	public String findAppPath(String inRequestedPath)
+	public String fixRealPath(String inRequestedPath)
 	{
 		if( inRequestedPath.startsWith("/manager") || inRequestedPath.startsWith("/system") || inRequestedPath.startsWith("/openedit")  )
 		{
 			return inRequestedPath;
 		}
+		
 		String apppath = get("rootpath");
 		if( inRequestedPath.startsWith(apppath))
 		{
 			return inRequestedPath;
 		}
+		//This just adds back the missing /site/..
 		return apppath + inRequestedPath;
 	}
 
@@ -47,7 +49,7 @@ public class SiteData extends BaseData
 	{
 		if( inName.equals("siteid"))
 		{
-			return getId();
+			//return getId();
 		}
 		return getSiteParameters().get(inName);
 	}
@@ -55,7 +57,7 @@ public class SiteData extends BaseData
 	{
 		return get("rootpath");
 	}
-	public String getAppLink(String inApplicationid)
+	public String getSiteLink(String inApplicationid)
 	{
 		String apppath = get("rootpath");
 		String id = apppath.substring(1);
@@ -67,6 +69,17 @@ public class SiteData extends BaseData
 		String dir = inApplicationid.substring(apppath.length() -1, inApplicationid.length());
 		return dir;
 	}
-	
+
+	public String getDomainLink()
+	{
+		String domainpath = get("domainpath");
+		if( domainpath != null)
+		{
+			return domainpath;
+		}
+
+		return "/";
+	}
+
 	
 }

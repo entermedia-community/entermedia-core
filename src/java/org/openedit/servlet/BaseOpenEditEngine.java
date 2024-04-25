@@ -54,17 +54,6 @@ public class BaseOpenEditEngine implements OpenEditEngine
 	    
 	    String siteUrl = util.siteRoot(); //The actual URL they are going to
 	    SiteData sitedata = getSiteManager().findSiteData(siteUrl);
-	    if(sitedata != null)
-	    {
-//	    	if( !requestedPath.startsWith(sitedata.getRootPath()) )
-//	    	{
-//	    		sitedata = null;
-//	    	}
-//	    	else
-//	    	{
-	    		requestedPath = sitedata.findAppPath(requestedPath);
-//	    	}
-	    }
 	    boolean checkdates = false;
 		HttpSession session = inRequest.getSession(false);
 		if ( session != null)
@@ -85,60 +74,9 @@ public class BaseOpenEditEngine implements OpenEditEngine
 //			checkdates = Boolean.parseBoolean( inRequest.getParameter("reload") ); //Dont call before we call setCharacterEncoding
 //		}
 		
-	    Page page = getPageManager().getPage( requestedPath,checkdates);
 	    
-		RightPage rightpage = getRightPage(util, sitedata, page);
-	    
-		if( rightpage != null)
-		{
-			page = rightpage.getRightPage();
-		}
-		else
-		{
-			//If link does not exists. Then put a real welcome page on there so that fallback will work
-		    boolean wasfolder = page.isFolder();
-			if(!wasfolder &&  util.requestPath().endsWith("/")) {
-				wasfolder = true;
-			}
-			String alternative = page.get("alternative_extension");
-	
-			if ( wasfolder && alternative == null )
-		    {
-		    	page = findWelcomePage(page, checkdates); 
-				if( !util.requestPath().endsWith("/"))
-				{
-		    		String contextPath = inRequest.getContextPath();
-					if( contextPath == null )
-					{
-						contextPath  = ""; //No Webapp
-					}
-					inResponse.sendRedirect(contextPath + page.getPath() );
-					return;
-				}
-	    	}
-			if( page.getPageType() == null || wasfolder)
-			{
-				boolean found = false;
-				String alternative_page = page.get("alternative_page");
-				if(alternative_page != null)
-				{
-					page = getPageManager().getPage( alternative_page,false);
-				}
-				else
-				{
-					//String alternative = page.get("alternative_extension");
-					if(alternative != null)
-					{
-						if(wasfolder) {
-							page = getPageManager().getPage( requestedPath + "/index." + alternative,false);
-						} else {
-							page = getPageManager().getPage( requestedPath + "." + alternative,false);	
-						}
-						
-					}
-				}	
-			}
-		}
+		RightPage rightpage = getRightPage(util, sitedata, requestedPath,checkdates);
+		Page page = rightpage.getRightPage();
 		//inResponse.addHeader("Connection", "Keep-Alive");
 		//inResponse.addHeader("Keep-Alive", "timeout=60000");
 
@@ -151,38 +89,21 @@ public class BaseOpenEditEngine implements OpenEditEngine
 		}
 		else
 		{
-//			 if( util.requestPath().endsWith("/")) {
-//						
-//		    }
-		    	
 			String mime = page.getMimeType();
 			inResponse.setContentType( mime );
 		}
 
 		WebPageRequest context = createWebPageRequest( page, inRequest, inResponse, util );
-		String applicationid = page.getProperty("applicationid");
-		
+		//String applicationid = page.getProperty("applicationid");
 		if( sitedata != null)  //TODO: deprecated Dont do this anymore
 		{
 			context.putPageValue("sitedata", sitedata);
-			if( applicationid != null)
-			{
-				page.setProperty("applink", sitedata.getAppLink(applicationid));
-			}
-		}
-		else 
-		{
-			if( applicationid != null)
-			{
-				page.setProperty("applink", "/" + applicationid);			
-			}
 		}
 		context.putPageValue("reloadpages", checkdates);
 		Page transpage = getPageManager().getPage(page,context);
-		if(! transpage.getPath().equals(page.getPath())){
-			
+		if(! transpage.getPath().equals(page.getPath()))
+		{
 			context.setPage(transpage);
-			
 		}
 		
 		if( rightpage != null && rightpage.getParams() != null)
@@ -201,29 +122,90 @@ public class BaseOpenEditEngine implements OpenEditEngine
 		//}
 	}
 	
-	protected RightPage getRightPage( URLUtilities util,SiteData sitedata, Page inPage)
+	protected RightPage getRightPage( URLUtilities util,SiteData sitedata, String requestedPath,boolean checkdates)
 	{
-		if(!util.requestPath().equals("/") && inPage.exists())
-		{
-			return null;
-		}
+		String fixedpath = null;
+	    if(sitedata != null)
+	    {
+	    	fixedpath = sitedata.fixRealPath(requestedPath);
+	    }
+	    else
+	    {
+	    	fixedpath = requestedPath;
+	    }
 
-		List list = inPage.getPageLoaders();
-		if( list == null || list.isEmpty())
+		Page page = getPageManager().getPage(fixedpath,checkdates);
+		if(!util.requestPath().equals("/") && page.exists())
 		{
-			return null;
+			RightPage right = new RightPage();
+			right.setRightPage(page);
+			return right;
 		}
 		
-		for (Iterator iterator = list.iterator(); iterator.hasNext();)
+		List list = page.getPageLoaders();
+		if( list != null && !list.isEmpty())
 		{
-			PageLoaderConfig config = (PageLoaderConfig) iterator.next();
-			//<Page-Loader loader="projectLoader" />
-			String bean = config.getXmlConfig().get("loader");
-			PageLoader loader = (PageLoader)getModuleManager().getBean(config.getCatalogId(), bean);
-			RightPage rightp = loader.getRightPage(util, sitedata,inPage);
-			return rightp;
+			for (Iterator iterator = list.iterator(); iterator.hasNext();)
+			{
+				PageLoaderConfig config = (PageLoaderConfig) iterator.next();
+				//<Page-Loader loader="projectLoader" />
+				String bean = config.getXmlConfig().get("loader");
+				PageLoader loader = (PageLoader)getModuleManager().getBean(config.getCatalogId(), bean);
+				RightPage rightp = loader.getRightPage(util, sitedata,page,requestedPath);
+				if( rightp != null)
+				{
+					return rightp;
+				}
+			}
+		}		
+	    
+		//If link does not exists. Then put a real welcome page on there so that fallback will work
+	    boolean wasfolder = page.isFolder();
+		if(!wasfolder &&  util.requestPath().endsWith("/")) {
+			wasfolder = true;
 		}
-		return null;
+		String alternative = page.get("alternative_extension");
+
+		if ( wasfolder && alternative == null )
+	    {
+	    	page = findWelcomePage(page, checkdates); 
+//			if( !util.requestPath().endsWith("/"))
+//			{
+//	    		String contextPath = inRequest.getContextPath();
+//				if( contextPath == null )
+//				{
+//					contextPath  = ""; //No Webapp
+//				}
+//				inResponse.sendRedirect(contextPath + page.getPath() );
+//				return;
+//			}
+    	}
+		if( page.getPageType() == null || wasfolder)
+		{
+			boolean found = false;
+			String alternative_page = page.get("alternative_page");
+			if(alternative_page != null)
+			{
+				page = getPageManager().getPage( alternative_page,false);
+			}
+			else
+			{
+				//String alternative = page.get("alternative_extension");
+				if(alternative != null)
+				{
+					if(wasfolder) {
+						page = getPageManager().getPage( requestedPath + "/index." + alternative,false);
+					} else {
+						page = getPageManager().getPage( requestedPath + "." + alternative,false);	
+					}
+					
+				}
+			}	
+		}
+	
+		RightPage right = new RightPage();
+		right.setRightPage(page);
+		return right;
 	}
 
 	/**
