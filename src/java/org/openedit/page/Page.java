@@ -320,7 +320,13 @@ public class Page implements Data, Comparable
 				for (Iterator iterator = scripts.iterator(); iterator.hasNext();)
 				{
 					Script script = (Script) iterator.next();
-					paths.add(getPageSettings().replaceProperty(script.getSrc()));
+					String value = script.getSrc();
+					value = getPageSettings().replaceProperty(value);
+					if( value == null)
+					{
+						throw new OpenEditException("src value cannot be null " + script.getPath() + " #" + script.getId());
+					}
+					paths.add(value);
 				}
 				getCache().put("scriptPaths"  +startingfrom,paths);
 			}
