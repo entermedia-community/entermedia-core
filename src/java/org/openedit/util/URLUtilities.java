@@ -728,9 +728,6 @@ public class URLUtilities
 			case '\'':
 				output.append("&apos;");
 				break;
-			case '\n':
-				output.append("<br>");
-				break;
 			default:
 				output.append(c);
 				break;
