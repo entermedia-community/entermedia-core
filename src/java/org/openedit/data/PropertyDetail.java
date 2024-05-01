@@ -174,6 +174,13 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 
 	public boolean isMultiValue()
 	{
+		
+		String multiple = get("multiple");
+		if( multiple != null)
+		{
+			return Boolean.parseBoolean(multiple);
+		}
+		
 		return isViewType("multiselect") 
 				|| isDataType("multi")
 				|| isDataType("faceprofilegroup")
