@@ -132,8 +132,8 @@ public class BaseEditorModule extends BaseModule
 					return;
 				}
 		    	//Loop over the various starting pages. 
-		    	page = findWelcomePage(page); 
-		    	inReq.redirect(page.getPath() );
+//		    	page = findWelcomePage(page); 
+//		    	inReq.redirect(page.getPath() );
 				
 	    	}
 			return;
