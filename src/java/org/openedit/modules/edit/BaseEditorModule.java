@@ -122,7 +122,8 @@ public class BaseEditorModule extends BaseModule
 		boolean exist = inReq.getPage().exists(); 
 		if (  exist )
 		{
-			Page page = inReq.getPage();
+			
+/*			Page page = inReq.getPage();
 			//If link does not exists. Then put a real welcome page on there so that fallback will work
 			if ( page.isFolder() )
 		    {
@@ -136,6 +137,7 @@ public class BaseEditorModule extends BaseModule
 //		    	inReq.redirect(page.getPath() );
 				
 	    	}
+	    	*/
 			return;
 		}
 	
