@@ -673,6 +673,9 @@ public class URLUtilities
 			switch (c)
 			{
 			case '&':
+				//can you just blindly replace any & since it might be part of &apos;?
+				//IE seems to espace the & for some reason inStr = inStr.replaceAll("'", "&apos;");		
+				//inStr = inStr.replaceAll("&", "&amp;");
 				output.append("&amp;");
 				break;
 			case '<':
@@ -680,6 +683,18 @@ public class URLUtilities
 				break;
 			case '>':
 				output.append("&gt;");
+				break;
+			case '\t':
+				output.append("&ensp;");
+				break;
+			case '\"':
+				output.append("&quot;");
+				break;
+			case '\'':
+				output.append("&apos;");
+				break;
+			case '\n':
+				output.append("<br>");
 				break;
 			default:
 				output.append(c);
