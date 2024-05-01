@@ -135,7 +135,7 @@ public class BaseOpenEditEngine implements OpenEditEngine
 	    }
 
 		Page page = getPageManager().getPage(fixedpath,checkdates);
-		if(!util.requestPath().equals("/") && page.exists())
+		if(!page.isFolder() && page.exists())
 		{
 			RightPage right = new RightPage();
 			right.setRightPage(page);
@@ -182,7 +182,6 @@ public class BaseOpenEditEngine implements OpenEditEngine
     	}
 		if( page.getPageType() == null || wasfolder)
 		{
-			boolean found = false;
 			String alternative_page = page.get("alternative_page");
 			if(alternative_page != null)
 			{
