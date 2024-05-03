@@ -875,6 +875,19 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 	
 	
 	
+	protected boolean fieldFolderBased;
+	
+	public boolean isFolderBased()
+	{
+		return fieldFolderBased;
+	}
+
+	public void setFolderBased(boolean inSystemDefined)
+	{
+		fieldFolderBased = inSystemDefined;
+	}
+
+	
 	
 
 

@@ -716,7 +716,5 @@ public class PropertyDetails extends ArrayList
 		}
 		return found;
 	}
-
-	
 	
 }

@@ -363,10 +363,10 @@ public class PropertyDetailsArchive implements CatalogEnabled
 				{
 					path = findConfigurationFile("/fields/defaultLog.xml");
 				}
-				else if (inType.startsWith("entity"))
-				{
-					path = findConfigurationFile("/fields/defaultEntity.xml");
-				}
+//				else if (inType.startsWith("entity"))
+//				{
+//					path = findConfigurationFile("/fields/defaultEntity.xml");
+//				}
 				else
 				{
 					path = findConfigurationFile("/fields/default.xml");
@@ -411,6 +411,7 @@ public class PropertyDetailsArchive implements CatalogEnabled
 					for (Iterator iterator2 = extras.iterator(); iterator2.hasNext();)
 					{
 						PropertyDetail detail = (PropertyDetail) iterator2.next();
+						detail.setFolderBased(true);
 						PropertyDetail existing = details.getDetail(detail.getId());
 						if (existing == null)
 						{
@@ -585,8 +586,11 @@ public class PropertyDetailsArchive implements CatalogEnabled
 		for (Iterator iterator = inDetails.getDetails().iterator(); iterator.hasNext();)
 		{
 			PropertyDetail detail = (PropertyDetail) iterator.next();
-			Element element = file.addNewElement();
-			fillElement(element, detail);
+			if( !detail.isFolderBased() )
+			{
+				Element element = file.addNewElement();
+				fillElement(element, detail);
+			}
 		}
 		getXmlArchive().saveXml(file, inUser);
 		clearCache();
