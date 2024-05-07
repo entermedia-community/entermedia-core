@@ -382,7 +382,7 @@ public class PropertyDetails extends ArrayList
 
 	public PropertyDetail getDetail(String inId)
 	{
-		if (inId == null)
+		if (inId == null || inId.startsWith("."))
 		{
 			return null;
 		}
