@@ -287,10 +287,11 @@ public class URLUtilities
 		encoded = encoded.replace(" ", "%20");
 		return encoded;
 	}
-	private static String encodeParamVal(String value) {
+	public static String encodeParamVal(String value) {
 	    try
 		{
-			return URLEncoder.encode(value, "UTF-8");
+			String enc = URLEncoder.encode(value, "UTF-8");
+			return enc;
 		}
 		catch (UnsupportedEncodingException e)
 		{
