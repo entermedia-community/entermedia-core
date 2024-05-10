@@ -241,11 +241,11 @@ public final class PathUtilities
 		{
 			start++; //to remove slash
 		}
-		int dotIndex = newpath.lastIndexOf(".");
-		if(dotIndex > 0 && start > dotIndex)
-		{
-			return newpath;
-		}
+		int dotIndex = newpath.lastIndexOf(".",start);
+//		if(dotIndex > 0 && start > dotIndex)
+//		{
+//			return newpath;  //why is this here?
+//		}
 		if (dotIndex == -1 )
 		{
 			return newpath.substring(start);
