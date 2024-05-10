@@ -244,9 +244,9 @@ public final class PathUtilities
 		int dotIndex = newpath.lastIndexOf(".",start);
 //		if(dotIndex > 0 && start > dotIndex)
 //		{
-//			return newpath;  //why is this here?
+//			return newpath;  //bad logic
 //		}
-		if (dotIndex == -1 )
+		if (dotIndex == -1 || dotIndex < start )
 		{
 			return newpath.substring(start);
 		}
