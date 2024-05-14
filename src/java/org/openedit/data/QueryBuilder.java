@@ -16,6 +16,7 @@ import org.openedit.hittracker.SearchQuery;
 import org.openedit.hittracker.Term;
 import org.openedit.profile.UserProfile;
 import org.openedit.users.Group;
+import org.openedit.util.DateStorageUtil;
 
 public class QueryBuilder
 {
@@ -226,6 +227,19 @@ public class QueryBuilder
 		if( inData != null)
 		{
 			return exact(inKey,inData.getId());
+		}
+		else if(!isIgnoreBlank()) 
+		{
+				throw new OpenEditException("Value is empty for " + inKey);
+		}
+		return this;
+	}
+	public QueryBuilder exact(String inKey, Date inDate) 
+	{
+		if( inDate != null)
+		{
+			getQuery().addExact(inKey, DateStorageUtil.getStorageUtil().formatForStorage(inDate));
+			return this;
 		}
 		else if(!isIgnoreBlank()) 
 		{
