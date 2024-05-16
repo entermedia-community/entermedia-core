@@ -470,7 +470,8 @@ public class BaseUserManager implements UserManager
 		data.setValue("email",email.toLowerCase());
 		data.setValue("date",new Date());
 		
-		String key = String.valueOf(new Random().nextInt(999999));
+		Random random = new Random();
+	    String key = String.format("%06d", random.nextInt(999999));
 		data.setValue("securitycode",key);
 
 		searcher.saveData(data);
