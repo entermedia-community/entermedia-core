@@ -284,14 +284,28 @@ public class Page implements Data, Comparable
 		}
 		return null;
 	}
+	
+	/**
+	 * @deprecated use getScriptsForApp or getScriptsAfterApp
+	 * @return
+	 */
 	public List getScripts()
 	{
 		return getScripts(null);
 	}
+	
+	/**
+	 * @deprecated use getScriptsForApp or getScriptsAfterApp
+	 * @return
+	 */
 	public List getScriptPaths()
 	{
 		return getScriptPathsAfter(null);
 	}
+	/**
+	 * @deprecated use getScriptsForApp or getScriptsAfterApp
+	 * @return
+	 */
 	public List getScriptPathsOfContent()
 	{
 		String appid = get("applicationid");
@@ -307,6 +321,37 @@ public class Page implements Data, Comparable
 		}
 		return custom;
 	}
+	
+	public List getScriptsForApp()
+	{
+		String appid = get("applicationid");
+		if( appid == null)
+		{
+			return null;
+		}
+		
+		String apppath = "/" + appid + "/_site.xconf";
+		List scripts = getScriptPathsAfter(apppath);  
+		//TODO: Remove ones that are also defined in the child of this location
+		List combined = new ArrayList(scripts); 
+		
+		List redefined = getScriptsAfterApp();
+		combined.removeAll(redefined);
+		return combined;
+	}
+	public List getScriptsAfterApp()
+	{
+		String appid = get("applicationid");
+		if( appid == null)
+		{
+			return null;
+		}
+		//TODO: Show everything redefined in here
+		String apppath = "/" + appid + "/_site.xconf";
+		List scripts = getScriptPathsAfter(apppath);
+		return scripts;
+	}
+
 	public List getScriptPathsAfter(String startingfrom)
 	{
 		List paths = null;

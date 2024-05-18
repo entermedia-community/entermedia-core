@@ -234,6 +234,21 @@ public class VelocityGenerator extends BaseGenerator implements Generator
 		//Velocity had a bug that it required log4j unless you use the static instance.
 		//getEngine().set(eprops);
 
+//		runtime.log.logsystem.class = org.apache.velocity.runtime.log.ServletLogChute
+//				runtime.log.logsystem.servlet.level = info
+				
+		 //private Logger log = LoggerFactory.getLogger(DEFAULT_RUNTIME_LOG_NAME);		
+//		velocityProperties.setProperty(RuntimeConstants.RUNTIME_LOG_INSTANCE,
+//		velocityProperties.setProperty( RuntimeConstants.RUNTIME_LOG_LOGSYSTEM_CLASS,"org.apache.velocity.runtime.log.Log4JLogChute" );
+//		velocityProperties.setProperty("runtime.log.logsystem.log4j.logger",LOGGER_NAME);
+//		
+//		org.apache.velocity.tools.generic.log.CommonsLogLogSystem
+		
+//		runtime.log.logsystem.class = org.apache.velocity.runtime.log.ServletLogChute
+//				runtime.log.logsystem.servlet.level = info
+				
+//		velocityProperties.put("runtime.log.logsystem.class","org.apache.velocity.runtime.log.NullLogChute" );
+		
 		//fieldEngine = new VelocityEngine(velocityProperties);
 		
 		try
