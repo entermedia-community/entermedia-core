@@ -145,5 +145,6 @@ public interface PageRequestKeys
 	 * NOLAYOUT is a valid value
 	 */
 	public static final String INNERLAYOUTOVERRIDE = "innerlayoutoverride";
+	public static final String PAGE_MANAGER = "pageManager";
 
 }

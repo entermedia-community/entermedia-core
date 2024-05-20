@@ -15,6 +15,7 @@ package org.openedit.page.manage;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -28,8 +29,9 @@ import org.openedit.OpenEditException;
 import org.openedit.PageAccessListener;
 import org.openedit.WebPageRequest;
 import org.openedit.cache.CacheManager;
+import org.openedit.config.Script;
+import org.openedit.config.Style;
 import org.openedit.page.Page;
-import org.openedit.page.PageLoader;
 import org.openedit.page.PageSettings;
 import org.openedit.repository.CompoundRepository;
 import org.openedit.repository.ContentItem;
@@ -650,5 +652,113 @@ public class PageManager
 		ContentItem item = getRepository().getStub(inPathToFile);
 		return item;
 	}
+	
+	public List<String> getScriptPathsForApp(Page inContent)
+	{
+		String applicationid = inContent.get("applicationid");
+		String apppath = "/" + applicationid + "/_site.xconf";
+		PageSettings site = getPageSettingsManager().getPageSettings(apppath);
+		List<String> appscripts = loadScriptPathsFor(site);
+		return appscripts;
+	}
+	public List<String> getScriptPathsWithoutApp(Page inContent)
+	{
+		List<String> scripts = loadScriptPathsFor( inContent.getPageSettings() );
+		String applicationid = inContent.get("applicationid");
+		if( applicationid == null)
+		{
+			return scripts;
+		}
+		String apppath = "/" + applicationid + "/_site.xconf";
+		PageSettings site = getPageSettingsManager().getPageSettings(apppath);
 
+		List<String> combined = new ArrayList(scripts); 
+		
+		List<String> appscripts = loadScriptPathsFor(site);
+		combined.removeAll(appscripts);
+		return combined;
+	}
+	protected List<String> loadScriptPathsFor(PageSettings startingfrom)
+	{
+		List paths = null;
+			 paths = (List)getCacheManager().get("scriptPaths",startingfrom.getPath());
+		if( paths == null)
+		{
+			List<Script> scripts = startingfrom.getScripts();
+			if( scripts != null)
+			{
+				paths = new ArrayList(scripts.size());
+				for (Iterator iterator = scripts.iterator(); iterator.hasNext();)
+				{
+					Script script = (Script) iterator.next();
+					if( !script.isCancel() )
+					{
+						String value = script.getSrc();
+						value = startingfrom.replaceProperty(value);
+						if( value == null)
+						{
+							throw new OpenEditException("src value cannot be null " + script.getPath() + " #" + script.getId());
+						}
+						paths.add(value);
+					}
+				}
+				getCacheManager().put("scriptPaths" ,startingfrom.getPath(),paths);
+			}
+		}
+		return paths;
+	}
+	public List<String> getStylePathsForApp(Page inContent)
+	{
+		String applicationid = inContent.get("applicationid");
+		String apppath = "/" + applicationid + "/_site.xconf";
+		PageSettings site = getPageSettingsManager().getPageSettings(apppath);
+		List<String> styles = getStylePathsFor(site);
+		return styles;
+	}
+	public List<String> getStylePathsWithoutApp(Page inContent)
+	{
+		List<String> styles = getStylePathsFor( inContent.getPageSettings() );
+		String applicationid = inContent.get("applicationid");
+		if( applicationid == null)
+		{
+			return styles;
+		}
+		String apppath = "/" + applicationid + "/_site.xconf";
+		PageSettings site = getPageSettingsManager().getPageSettings(apppath);
+
+		List<String> combined = new ArrayList(styles); 
+		
+		List<String> appstyles = getStylePathsFor(site);
+		combined.removeAll(appstyles);
+		return combined;
+	}
+	public List<String> getStylePathsFor(Page inContent)
+	{
+		return getStylePathsFor(inContent.getPageSettings());
+	}
+	public List<String> getStylePathsFor(PageSettings startingfrom)
+	{
+		List paths = (List)getCacheManager().get("stylePaths", startingfrom.getPath());
+		if( paths == null)
+		{
+			List<Style> styles = startingfrom.getStyles();
+			if( styles != null)
+			{
+				paths = new ArrayList(styles.size());
+				for (Iterator iterator = styles.iterator(); iterator.hasNext();)
+				{
+					Style style = (Style) iterator.next();
+					String value = style.getHref();
+					value = startingfrom.replaceProperty(value);
+					if( value == null)
+					{
+						throw new OpenEditException("src value cannot be null " + style.getHref() + " #" + style.getId());
+					}
+					paths.add(value);
+				}
+				getCacheManager().put("stylePaths", startingfrom.getPath(),paths);
+			}
+		}
+		return paths;
+	}
 }

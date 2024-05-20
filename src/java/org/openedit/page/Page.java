@@ -200,234 +200,89 @@ public class Page implements Data, Comparable
 	}
 	
 	
-	public List getStyles()
+	public List<Style> getStyles()
 	{
-		return getStyles(null);
-	}
-	public List getStyles(String startingfrom)
-	{
-		if( isHtml() )
+		List<Style> styles =  getPageSettings().getStyles();
+		//look for duplicate
+		List copy = new ArrayList(styles.size());
+		HashMap ids = new HashMap(styles.size());
+		//Set got = new HashSet(styles.size());
+		HashSet canceled = new HashSet();
+		for (Iterator iterator = styles.iterator(); iterator.hasNext();)
 		{
-			List styles =  getPageSettings().getStyles(startingfrom);
-			//look for duplicate
-			List copy = new ArrayList(styles.size());
-			HashMap ids = new HashMap(styles.size());
-			//Set got = new HashSet(styles.size());
-			HashSet canceled = new HashSet();
-			for (Iterator iterator = styles.iterator(); iterator.hasNext();)
-			{
-				Style script = (Style) iterator.next();
-				ids.put(script.getId(),script);
-			}
-			for (Iterator iterator = styles.iterator(); iterator.hasNext();)
-			{
-				Style script = (Style) iterator.next();
-				Style goodone = (Style)ids.get(script.getId());
-				if( canceled.contains( goodone.getId()) )
-				{
-					continue;
-				}
-				if( !copy.contains(goodone) )
-				{
-					if( goodone.isCancel() )
-					{
-						canceled.add(goodone.getId());
-					}
-					else
-					{
-						copy.add(goodone);
-					}
-				}
-
-			}
-			return copy;
+			Style script = (Style) iterator.next();
+			ids.put(script.getId(),script);
 		}
-		return null;
+		for (Iterator iterator = styles.iterator(); iterator.hasNext();)
+		{
+			Style script = (Style) iterator.next();
+			Style goodone = (Style)ids.get(script.getId());
+			if( canceled.contains( goodone.getId()) )
+			{
+				continue;
+			}
+			if( !copy.contains(goodone) )
+			{
+				if( goodone.isCancel() )
+				{
+					canceled.add(goodone.getId());
+				}
+				else
+				{
+					copy.add(goodone);
+				}
+			}
+
+		}
+		return copy;
 	}
 
-	public List getScripts(String startingfrom)
+	public List<Script> getScripts()
 	{
-		if( isHtml() )
+		List scripts =  getPageSettings().getScripts();
+		//look for duplicate
+		List copy = new ArrayList(scripts.size());
+		HashMap ids = new HashMap(scripts.size());
+		HashSet canceled = new HashSet();
+		for (Iterator iterator = scripts.iterator(); iterator.hasNext();)
 		{
-			List scripts =  getPageSettings().getScripts(startingfrom);
-			//look for duplicate
-			List copy = new ArrayList(scripts.size());
-			HashMap ids = new HashMap(scripts.size());
-			HashSet canceled = new HashSet();
-			for (Iterator iterator = scripts.iterator(); iterator.hasNext();)
+			Script script = (Script) iterator.next();
+			ids.put(script.getId(),script);
+		}
+		for (Iterator iterator = scripts.iterator(); iterator.hasNext();)
+		{
+			Script script = (Script) iterator.next();
+			Script goodone = (Script)ids.get(script.getId());
+			//goodone.setSrc(getPageSettings().replaceProperty(goodone.getSrc()));
+			if( canceled.contains( goodone.getId()) )
 			{
-				Script script = (Script) iterator.next();
-				ids.put(script.getId(),script);
+				continue;
 			}
-			for (Iterator iterator = scripts.iterator(); iterator.hasNext();)
+			if( !copy.contains(goodone) )
 			{
-				Script script = (Script) iterator.next();
-				Script goodone = (Script)ids.get(script.getId());
-				//goodone.setSrc(getPageSettings().replaceProperty(goodone.getSrc()));
-				if( canceled.contains( goodone.getId()) )
+				if( goodone.isCancel() )
 				{
-					continue;
+					canceled.add(goodone.getId());
 				}
-				if( !copy.contains(goodone) )
+				else
 				{
-					if( goodone.isCancel() )
-					{
-						canceled.add(goodone.getId());
-					}
-					else
-					{
-						copy.add(goodone);
-					}
+					copy.add(goodone);
 				}
 			}
-			return copy;
 		}
-		return null;
+		return copy;
 	}
 	
-	/**
-	 * @deprecated use getScriptsForApp or getScriptsAfterApp
-	 * @return
-	 */
-	public List getScripts()
-	{
-		return getScripts(null);
-	}
 	
-	/**
-	 * @deprecated use getScriptsForApp or getScriptsAfterApp
-	 * @return
-	 */
-	public List getScriptPaths()
-	{
-		return getScriptPathsAfter(null);
-	}
-	/**
-	 * @deprecated use getScriptsForApp or getScriptsAfterApp
-	 * @return
-	 */
-	public List getScriptPathsOfContent()
-	{
-		String appid = get("applicationid");
-		List custom = null;
-		if( appid != null)
-		{
-			String apppath = "/" + appid + "/_site.xconf";
-			custom = getScriptPathsAfter(apppath);
-		}
-		else
-		{
-			custom = getScriptPaths();
-		}
-		return custom;
-	}
 	
-	public List getScriptsForApp()
-	{
-		String appid = get("applicationid");
-		if( appid == null)
-		{
-			return null;
-		}
-		
-		String apppath = "/" + appid + "/_site.xconf";
-		List scripts = getScriptPathsAfter(apppath);  
-		//TODO: Remove ones that are also defined in the child of this location
-		List combined = new ArrayList(scripts); 
-		
-		List redefined = getScriptsAfterApp();
-		combined.removeAll(redefined);
-		return combined;
-	}
-	public List getScriptsAfterApp()
-	{
-		String appid = get("applicationid");
-		if( appid == null)
-		{
-			return null;
-		}
-		//TODO: Show everything redefined in here
-		String apppath = "/" + appid + "/_site.xconf";
-		List scripts = getScriptPathsAfter(apppath);
-		return scripts;
-	}
 
-	public List getScriptPathsAfter(String startingfrom)
-	{
-		List paths = null;
-			 paths = (List)getCache().get("scriptPaths" + startingfrom);
-		if( paths == null)
-		{
-			List scripts = getScripts(startingfrom);
-			if( scripts != null)
-			{
-				paths = new ArrayList(scripts.size());
-				for (Iterator iterator = scripts.iterator(); iterator.hasNext();)
-				{
-					Script script = (Script) iterator.next();
-					String value = script.getSrc();
-					value = getPageSettings().replaceProperty(value);
-					if( value == null)
-					{
-						throw new OpenEditException("src value cannot be null " + script.getPath() + " #" + script.getId());
-					}
-					paths.add(value);
-				}
-				getCache().put("scriptPaths"  +startingfrom,paths);
-			}
-		}
-		return paths;
-	}
-	
-	public List getStylePathsOfContent()
-	{
-		String appid = get("applicationid");
-		List custom = null;
-		if( appid != null)
-		{
-			String apppath = "/" + appid + "/_site.xconf";
-			custom = getStylePaths(apppath);
-		}
-		else
-		{
-			custom = getStylePaths();
-		}
-		return custom;
-	}
-
-	
-	public List getStylePaths()
-	{
-		List paths = getStylePaths(null);
-		return paths;
-	}
-	public List getStylePaths(String startingfrom)
-	{
-		List paths = (List)getCache().get("stylePaths" + startingfrom);
-		if( paths == null)
-		{
-			List styles = getStyles(startingfrom);
-			if( styles != null)
-			{
-				paths = new ArrayList(styles.size());
-				for (Iterator iterator = styles.iterator(); iterator.hasNext();)
-				{
-					Style style = (Style) iterator.next();
-					paths.add(getPageSettings().replaceProperty(style.getHref()));
-				}
-				getCache().put("stylePaths" + startingfrom,paths);
-			}
-		}
-		return paths;
-	}
-	
 	/**
 	 * Get a List of page actions.  To add an action to the page just add the action to this List.
 	 * Page actions are triggered each time the page is requested.
 	 *
 	 * @return A List of page actions
 	 */
-	public List getPathActions()
+	public List<PageAction> getPathActions()
 	{
 		List copy = (List)getCache().get("pathActions");
 		if( copy == null)

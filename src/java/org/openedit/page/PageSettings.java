@@ -19,6 +19,8 @@ import org.apache.commons.collections.map.ListOrderedMap;
 import org.apache.commons.collections.set.ListOrderedSet;
 import org.openedit.OpenEditException;
 import org.openedit.config.Configuration;
+import org.openedit.config.Script;
+import org.openedit.config.Style;
 import org.openedit.page.manage.TextLabelManager;
 import org.openedit.repository.ContentItem;
 import org.openedit.util.PathUtilities;
@@ -272,11 +274,7 @@ public class PageSettings
 		return finalList;
 
 	}
-	public List getAllScripts()
-	{
-		return getScripts(null);
-	}
-	public List getScripts(String startingfrom)
+	public List<Script> getScripts()
 	{
 		//add top level parents last
 		List finalList = new ArrayList();
@@ -288,13 +286,6 @@ public class PageSettings
 		
 		while ( parent != null)
 		{
-			if( startingfrom != null)
-			{
-				if( startingfrom.startsWith(parent.getPath()) )
-				{
-					break;
-				}
-			}
 			if( parent.fieldScripts != null)
 			{
 				finalList.addAll(0,parent.fieldScripts);
@@ -322,11 +313,8 @@ public class PageSettings
 		}			
 		return finalList;
 	}
-	public List getAllStyles()
-	{
-		return getStyles(null);
-	}
-	public List getStyles(String startingfrom)
+
+	public List<Style> getStyles()
 	{
 		//add top level parents last
 		List finalList = new ArrayList();
@@ -337,14 +325,6 @@ public class PageSettings
 		
 		while ( parent != null)
 		{
-			if( startingfrom != null)
-			{
-				if( startingfrom.startsWith(parent.getPath()) )
-				{
-					break;
-				}
-			}
-			
 			if( parent.fieldStyles != null)
 			{
 				finalList.addAll(0,parent.fieldStyles);

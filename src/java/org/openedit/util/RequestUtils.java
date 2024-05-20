@@ -218,7 +218,8 @@ public class RequestUtils {
 		BaseWebPageRequest context = (BaseWebPageRequest)getModuleManager().getBean("webPageRequest");
 		context.setLocaleManager(getLocaleManager());
 		context.putProtectedPageValue( PageRequestKeys.PAGE, inPage);
-		context.putProtectedPageValue(PageRequestKeys.CONTENT, inPage);			
+		context.putProtectedPageValue(PageRequestKeys.CONTENT, inPage);	
+		context.putProtectedPageValue(PageRequestKeys.PAGE_MANAGER, getPageManager());
 		context.putProtectedPageValue(PageRequestKeys.USER, inUser);	
 		// put standard servlet stuff into the context
 		if( inRequest != null)
