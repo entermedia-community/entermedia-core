@@ -19,9 +19,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -688,19 +690,33 @@ public class PageManager
 			if( scripts != null)
 			{
 				paths = new ArrayList(scripts.size());
+				Set canceled = new HashSet();
 				for (Iterator iterator = scripts.iterator(); iterator.hasNext();)
 				{
 					Script script = (Script) iterator.next();
-					if( !script.isCancel() )
+					if( script.isCancel())
 					{
-						String value = script.getSrc();
-						value = startingfrom.replaceProperty(value);
-						if( value == null)
-						{
-							throw new OpenEditException("src value cannot be null " + script.getPath() + " #" + script.getId());
-						}
-						paths.add(value);
+						canceled.add(script.getId());
 					}
+					else
+					{
+						canceled.remove(script.getId()); //Last one wins
+					}
+				}
+				for (Iterator iterator = scripts.iterator(); iterator.hasNext();)
+				{
+					Script script = (Script) iterator.next();
+					if(canceled.contains(script.getId()))
+					{
+						continue;
+					}
+					String value = script.getSrc();
+					value = startingfrom.replaceProperty(value);
+					if( value == null)
+					{
+						throw new OpenEditException("src value cannot be null " + script.getPath() + " #" + script.getId());
+					}
+					paths.add(value);
 				}
 				getCacheManager().put("scriptPaths" ,startingfrom.getPath(),paths);
 			}
@@ -744,17 +760,36 @@ public class PageManager
 			List<Style> styles = startingfrom.getStyles();
 			if( styles != null)
 			{
+				Set canceled = new HashSet();
 				paths = new ArrayList(styles.size());
+
 				for (Iterator iterator = styles.iterator(); iterator.hasNext();)
 				{
 					Style style = (Style) iterator.next();
+					if( style.isCancel())
+					{
+						canceled.add(style.getId());
+					}
+					else
+					{
+						canceled.remove(style.getId());  //Last one wins
+					}
+				}
+
+				for (Iterator iterator = styles.iterator(); iterator.hasNext();)
+				{
+					Style style = (Style) iterator.next();
+					if(canceled.contains(style.getId()))
+					{
+						continue;
+					}
 					String value = style.getHref();
 					value = startingfrom.replaceProperty(value);
-					if( value == null)
+					if( value != null)
 					{
-						throw new OpenEditException("src value cannot be null " + style.getHref() + " #" + style.getId());
+						//throw new OpenEditException("src value cannot be null " + style.getHref() + " #" + style.getId());
+						paths.add(value);
 					}
-					paths.add(value);
 				}
 				getCacheManager().put("stylePaths", startingfrom.getPath(),paths);
 			}
