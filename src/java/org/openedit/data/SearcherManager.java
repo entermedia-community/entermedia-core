@@ -149,20 +149,29 @@ public class SearcherManager
 		{
 			beanName = inFieldName + "Searcher";
 		}	
-		else
+		else if( getModuleManager().contains(inFieldName + "Searcher"))
+		{
+			beanName = inFieldName + "Searcher";
+		}
+
+		if( beanName == null)
 		{
 				beanName = details.getBeanName(); //Once item is saved it always uses dataSearcher for the type
 				if( beanName == null)
 				{
-					if( inFieldName.endsWith("Log"))
-					{
-						beanName = "dynamicLogSearcher";					
-					}
-					else
-					{
-						beanName = "listSearcher";
-					}
+					throw new OpenEditException("Must have bean name" + inFieldName);
 				}
+//				if( beanName == null)
+//				{
+//					if( inFieldName.endsWith("Log"))
+//					{
+//						beanName = "dynamicLogSearcher";					
+//					}
+//					else
+//					{
+//						beanName = "listSearcher";
+//					}
+//				}
 		}
 		searcher = (Searcher)getModuleManager().getBean(inCatalogId, beanName, false);
 		if(log.isDebugEnabled())

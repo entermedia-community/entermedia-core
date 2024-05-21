@@ -348,13 +348,15 @@ public class PropertyDetailsArchive implements CatalogEnabled
 			XmlFile settings = getXmlArchive().getXml(path); // checks time
 			if (details != null && details.getInputFile() == settings)
 			{
+				fixBeanName(details,settings);
 				return details;
 			}
 			log.debug("Loading " + getCatalogId() + " " + inType);
-			settings = getXmlArchive().getXml(path);
 			details = new PropertyDetails(this,inType);
 
 			String basesettings = "/" + getCatalogId() + "/data/fields/" + inType + ".xml";
+
+
 			XmlFile basesettingsdefaults = getXmlArchive().getXml(basesettings);
 
 			if (!settings.isExist() && !basesettingsdefaults.isExist() )
@@ -363,23 +365,13 @@ public class PropertyDetailsArchive implements CatalogEnabled
 				{
 					path = findConfigurationFile("/fields/defaultLog.xml");
 				}
-//				else if (inType.startsWith("entity"))
-//				{
-//					path = findConfigurationFile("/fields/defaultEntity.xml");
-//				}
 				else
 				{
 					path = findConfigurationFile("/fields/default.xml");
 				}
 				// This should not happen as well
-				settings = getXmlArchive().getXml(path);
-			}
-
-			if (settings.isExist())
-			{
-				setAllDetails(details, inType, settings.getContentItem().getPath(), settings.getRoot());
-				getViewLabels().clear();
-
+				settings.setRoot(settings.getRoot().createCopy());
+				//Why?
 			}
 
 			if( basesettingsdefaults.isExist() )
@@ -390,9 +382,12 @@ public class PropertyDetailsArchive implements CatalogEnabled
 //				details.setClassName(basesettingsdefaults.getRoot().attributeValue("class"));
 				details.setBaseSettings(basesettingsdefaults);
 			}
+			setAllDetails(details, inType, settings.getContentItem().getPath(), settings.getRoot());
+			getViewLabels().clear();
 
 			// load any defaults by folder - AFTER we have loaded all the existing stuff.
 			// don't overwrite anything that is here already.
+			fixBeanName(details,settings);
 			
 			
 			List paths = getPageManager().getChildrenPaths("/" + getCatalogId() + "/data/fields/" + inType + "/", true);
@@ -429,6 +424,33 @@ public class PropertyDetailsArchive implements CatalogEnabled
 		catch (OpenEditException ex)
 		{
 			throw new OpenEditRuntimeException(ex);
+		}
+	}
+
+	protected void fixBeanName(PropertyDetails inDetails, XmlFile settings) {
+
+		if( settings.getRoot().attributeValue("beanname") != null)
+		{
+			return;
+		}
+		String islists = "/" + getCatalogId() + "/data/lists/" + inDetails.getId() + ".xml";
+		String isfolder = "/" + getCatalogId() + "/data/lists/" + inDetails.getId() + "/";
+		
+		if (inDetails.getId().endsWith("Log"))
+		{
+			inDetails.setBeanName("dynamicLogSearcher");
+		}
+		if( getPageManager().getPage(islists).exists())
+		{
+			inDetails.setBeanName("listSearcher");
+		}
+		else if( getPageManager().getPage(isfolder).exists())
+		{
+			inDetails.setBeanName("folderSearcher");
+		}
+		else
+		{
+			inDetails.setBeanName("dataSearcher");
 		}
 	}
 	public PropertyDetail createDetail(String inId, String inName)
