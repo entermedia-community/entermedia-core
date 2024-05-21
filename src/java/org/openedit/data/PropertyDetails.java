@@ -178,13 +178,13 @@ public class PropertyDetails extends ArrayList
 	{
 		if (fieldBeanName == null)
 		{
-			if( fieldBaseSettings != null && getBaseSettings().getRoot() != null)
+			if (getInputFile() != null && getInputFile().getRoot() != null)
 			{
-				return getBaseSettings().getRoot().attributeValue("beanname");
+				fieldBeanName =  getInputFile().getRoot().attributeValue("beanname");
 			}
-			else if (getInputFile() != null && getInputFile().getRoot() != null)
+			if(fieldBeanName == null && fieldBaseSettings != null && getBaseSettings().getRoot() != null)
 			{
-				return getInputFile().getRoot().attributeValue("beanname");
+				fieldBeanName = getBaseSettings().getRoot().attributeValue("beanname");
 			}
 			//			if( fieldBeanName == null )
 			//			{
