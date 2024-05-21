@@ -369,6 +369,7 @@ public class PropertyDetailsArchive implements CatalogEnabled
 				{
 					path = findConfigurationFile("/fields/default.xml");
 				}
+				settings = getXmlArchive().getXml(path); //RELOAD
 				// This should not happen as well
 				settings.setRoot(settings.getRoot().createCopy());
 				//Why?
@@ -382,12 +383,12 @@ public class PropertyDetailsArchive implements CatalogEnabled
 //				details.setClassName(basesettingsdefaults.getRoot().attributeValue("class"));
 				details.setBaseSettings(basesettingsdefaults);
 			}
+			fixBeanName(details,settings);
 			setAllDetails(details, inType, settings.getContentItem().getPath(), settings.getRoot());
 			getViewLabels().clear();
 
 			// load any defaults by folder - AFTER we have loaded all the existing stuff.
 			// don't overwrite anything that is here already.
-			fixBeanName(details,settings);
 			
 			
 			List paths = getPageManager().getChildrenPaths("/" + getCatalogId() + "/data/fields/" + inType + "/", true);
