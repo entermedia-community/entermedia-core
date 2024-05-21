@@ -346,18 +346,16 @@ public class PropertyDetailsArchive implements CatalogEnabled
 			String path = "/WEB-INF/data/" + getCatalogId() + "/fields/" + inType + ".xml";
 
 			XmlFile settings = getXmlArchive().getXml(path); // checks time
+			String basesettings = "/" + getCatalogId() + "/data/fields/" + inType + ".xml";
+			XmlFile basesettingsdefaults = getXmlArchive().getXml(basesettings);
 			if (details != null && details.getInputFile() == settings)
 			{
-				fixBeanName(details,settings);
+				fixBeanName(details,basesettingsdefaults,settings);
 				return details;
 			}
 			log.debug("Loading " + getCatalogId() + " " + inType);
 			details = new PropertyDetails(this,inType);
 
-			String basesettings = "/" + getCatalogId() + "/data/fields/" + inType + ".xml";
-
-
-			XmlFile basesettingsdefaults = getXmlArchive().getXml(basesettings);
 
 			if (!settings.isExist() && !basesettingsdefaults.isExist() )
 			{
@@ -383,7 +381,7 @@ public class PropertyDetailsArchive implements CatalogEnabled
 //				details.setClassName(basesettingsdefaults.getRoot().attributeValue("class"));
 				details.setBaseSettings(basesettingsdefaults);
 			}
-			fixBeanName(details,settings);
+			fixBeanName(details,basesettingsdefaults,settings);
 			setAllDetails(details, inType, settings.getContentItem().getPath(), settings.getRoot());
 			getViewLabels().clear();
 
@@ -428,12 +426,17 @@ public class PropertyDetailsArchive implements CatalogEnabled
 		}
 	}
 
-	protected void fixBeanName(PropertyDetails inDetails, XmlFile settings) {
+	protected void fixBeanName(PropertyDetails inDetails,XmlFile basesettings, XmlFile settings) {
 
 		if( settings.getRoot().attributeValue("beanname") != null)
 		{
 			return;
 		}
+		if( basesettings.getRoot().attributeValue("beanname") != null)
+		{
+			return;
+		}
+		
 		String islists = "/" + getCatalogId() + "/data/lists/" + inDetails.getId() + ".xml";
 		String isfolder = "/" + getCatalogId() + "/data/lists/" + inDetails.getId() + "/";
 		
