@@ -2,6 +2,7 @@ package org.openedit.util;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -130,6 +131,7 @@ public class Replacer implements CatalogEnabled
 								object = col.iterator().next();
 							}
 						}
+						
 						if( object instanceof String )
 						{
 							if (localproperty!=null &&  foreigntable!=null)
@@ -153,7 +155,7 @@ public class Replacer implements CatalogEnabled
 							//Already found the first level
 							for (int i = 1; i < pairs.length; i++)
 							{
-								String otherdatavalue = data.get(pairs[i]);
+								Object otherdatavalue = data.getValue(pairs[i]);
 								if(otherdatavalue == null)
 								{
 									break;
@@ -173,12 +175,12 @@ public class Replacer implements CatalogEnabled
 									}
 								}
 					
-								data = getData(pairs[i], otherdatavalue);
-								if( data == null)
-								{
-									variable = otherdatavalue;
-									break;
-								}
+//								data = getData(pairs[i], otherdatavalue);
+//								if( data == null)
+//								{
+//									variable = otherdatavalue;
+//									break;
+//								}
 							}
 						}
 						else
@@ -200,8 +202,17 @@ public class Replacer implements CatalogEnabled
 			
 			if( variable != null)
 			{
-				String sub = variable.toString();
-				sub = replace(sub,inValues);
+				String sub = null;
+				if( variable instanceof Date)
+				{
+					Date date = (Date)variable;
+					sub = DateStorageUtil.getStorageUtil().formatDateObj(date, "yyyy-MM-dd");
+				}
+				else
+				{
+					sub = variable.toString();
+					sub = replace(sub,inValues);
+				}
 				inCode = inCode.substring(0,start) + sub + inCode.substring(end+1);
 				start = start + sub.length();
 			}
