@@ -475,9 +475,22 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				
 				if (oldtracker != null && oldtracker.hasSelections())
 				{
-					tracker.loadPreviousSelections(oldtracker);
-					tracker.setShowOnlySelected(oldtracker.isShowOnlySelected());
-					//tracker.setSharedFilters(oldtracker.getSharedFilters());
+					
+					clear = inPageRequest.getRequestParameter(searchtype + "clearselection");
+					if (clear == null) {
+						clear = (String)inPageRequest.getPageValue(searchtype + "clearselection");
+					}
+					if (Boolean.parseBoolean(clear))
+					{
+							tracker.deselectAll();
+							tracker.setShowOnlySelected(false);
+					}
+					else 
+					{
+						tracker.loadPreviousSelections(oldtracker);
+						tracker.setShowOnlySelected(oldtracker.isShowOnlySelected());
+					//	tracker.setSharedFilters(oldtracker.getSharedFilters());
+					}
 				}
 
 				if (isFireEvents() && inQuery.isFireSearchEvent())
