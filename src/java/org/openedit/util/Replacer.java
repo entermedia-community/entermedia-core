@@ -10,6 +10,7 @@ import java.util.StringTokenizer;
 
 import org.openedit.CatalogEnabled;
 import org.openedit.Data;
+import org.openedit.data.PropertyDetail;
 import org.openedit.data.Searcher;
 import org.openedit.data.SearcherManager;
 
@@ -166,21 +167,32 @@ public class Replacer implements CatalogEnabled
 								
 								if (getSearcherManager() != null)
 								{
-									Searcher searcher = getSearcherManager().getExistingSearcher(getCatalogId(), pairs[i]);
+									Searcher searcher = getSearcherManager().getExistingSearcher(getCatalogId(), pairs[i-1]);
 									if (searcher == null)
 									{
 										variable = otherdatavalue;
 										break;
-
+									}
+									else
+									{		
+										PropertyDetail detail = searcher.getPropertyDetails().getDetail(pairs[i]);
+										data = getData(detail.getListId(), otherdatavalue.toString());
+										if( data == null)
+										{
+											variable = otherdatavalue;
+											break;
+										}
+										else
+										{
+											variable = data;
+										}
 									}
 								}
+								else
+								{
+									variable = otherdatavalue;
+								}
 					
-//								data = getData(pairs[i], otherdatavalue);
-//								if( data == null)
-//								{
-//									variable = otherdatavalue;
-//									break;
-//								}
 							}
 						}
 						else
