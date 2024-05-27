@@ -265,14 +265,10 @@ public class SearcherManager
 		{
 			mask = inDetail.get("mask"); //Legacy. Remove by 2023
 		}
-		String val = null;
-		if( mask != null)
+		String val = inParent.get(inDetail.getId());
+		if( val == null && mask != null)
 		{
 			val = getValue(inDetail.getCatalogId(),mask,inParent.getProperties());
-		}
-		else
-		{
-			val = inParent.get(inDetail.getId());
 		}
 		return val;
 	}
