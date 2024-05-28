@@ -41,18 +41,6 @@ public class RequestUtils {
 	protected String fieldHome;
 	protected String fieldSiteRoot;
 	
-	public String getSiteRoot()
-	{
-		return fieldSiteRoot;
-	}
-
-
-	public void setSiteRoot(String inSiteRoot)
-	{
-		fieldSiteRoot = inSiteRoot;
-	}
-
-
 	protected String getHome()
 	{
 		return fieldHome;
@@ -207,7 +195,7 @@ public class RequestUtils {
 			}
 		}		
 
-		request.putPageValue("siteRoot", getSiteRoot());
+	//	request.putPageValue("siteRoot", getSiteRoot());
 
 		return request;
 	}
@@ -304,12 +292,6 @@ public class RequestUtils {
 			context.putProtectedPageValue(PageRequestKeys.URL_UTILITIES, util);
 			
 		}
-
-		if( fieldSiteRoot == null)
-		{
-			setSiteRoot(context.getSiteRoot());
-		}
-		context.putPageValue("siteRoot", getSiteRoot());
 
 		return context;
 	}
