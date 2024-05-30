@@ -252,6 +252,9 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			if (clear == null) {
 				clear = (String)inPageRequest.findPathValue(searchtype + "clearselection");
 			}
+			if (clear == null) {
+				clear = (String)inPageRequest.getPageValue(searchtype + "clearselection");
+			}
 			if (Boolean.parseBoolean(clear))
 			{
 				if( tracker.hasSelections() )
@@ -477,6 +480,9 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				{
 					
 					clear = inPageRequest.getRequestParameter(searchtype + "clearselection");
+					if (clear == null) {
+						clear = (String)inPageRequest.findPathValue(searchtype + "clearselection");
+					}
 					if (clear == null) {
 						clear = (String)inPageRequest.getPageValue(searchtype + "clearselection");
 					}
