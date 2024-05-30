@@ -396,10 +396,10 @@ public class XConfToPageSettingsConverter
 
 //		//turns out we need this for login-path and other places I am sure
 //		//If there are unkown tags in the xconf then set the user defined data field
-//		if ( config.hasChild("product") || config.hasChild("asset") || config.hasChild("blog")) //TODO: Do we use this anymore?
-//		{
-//			inPageSettings.setUserDefinedData(config);
-//		}
+		if ( config.hasChild("product") || config.hasChild("asset") || config.hasChild("blog")) //TODO: Do we use this anymore?
+		{
+			inPageSettings.setUserDefinedData(config);
+		}
 		
 		String mime = inPageSettings.getPropertyValue("mimetype", null);
 		if( mime != null)
