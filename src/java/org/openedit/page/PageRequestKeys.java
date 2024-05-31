@@ -103,7 +103,9 @@ public interface PageRequestKeys
 	 * Use "$page" in the Velocity page.
 	 */
 	public static final String PAGE = "page";
-	
+
+	public static final String SITEROOT = "siteroot";
+
 	/**
 	 * An alias for the "page" variable
 	 * 
