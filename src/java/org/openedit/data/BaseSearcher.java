@@ -255,6 +255,12 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			if (clear == null) {
 				clear = (String)inPageRequest.getPageValue(searchtype + "clearselection");
 			}
+			if (clear == null) {
+				String clearsearchtype = (String)inPageRequest.findPathValue("clearselection");
+				if(searchtype.equals(clearsearchtype)) {
+					clear = "true";
+				}
+			}
 			if (Boolean.parseBoolean(clear))
 			{
 				if( tracker.hasSelections() )
