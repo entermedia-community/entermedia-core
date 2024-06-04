@@ -1,5 +1,7 @@
 package org.openedit.modules.translations;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
@@ -95,6 +97,25 @@ public class LanguageMap extends TreeMap
 		return json.toJSONString();
 	}
 	
+	@Override
+	public boolean equals(Object inO) {
+		if( inO instanceof LanguageMap)
+		{
+			LanguageMap map = (LanguageMap)inO;
+			if(map.size() != size())
+			{
+				return false;
+			}
+			Collection copy = new ArrayList(values());
+			copy.removeAll(map.values());
+			if( !copy.isEmpty())
+			{
+				return false;
+			}
+			return true;
+		}
+		return super.equals(inO);
+	}
 
 	@Override
 	public boolean isEmpty()

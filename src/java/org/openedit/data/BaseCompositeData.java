@@ -251,63 +251,65 @@ public class BaseCompositeData extends BaseData implements Data, CompositeData
 				return null;
 			}
 			Data firstrow = (Data) iterator.next();
-			String firsttext = firstrow.get(inKey); //First value
+			Object firstval = firstrow.getValue(inKey); //First value
 			while (iterator.hasNext())
 			{
 				Data data = (Data) iterator.next();
-				String dataval = data.get(inKey);
-				if (firsttext == null)
+				Object dataval = data.getValue(inKey);
+				if (firstval == null)
 				{
-					if (firsttext != dataval)
+					if( dataval != null )
 					{
-						firsttext = "";  //They dont agree
+						firstval = ValuesMap.NULLVALUE;  //They dont agree
 						break;
 					}
+					//or keep looking 
 				}
-				else if (!firsttext.isEmpty() && !firsttext.equals(dataval))
+				else if(dataval != null)
 				{
-					//Maybe just out of order?
-					boolean multi = isMulti(inKey);
-					if (dataval == null)
+					if( dataval instanceof Collection && firstval instanceof Collection)
 					{
-						firsttext = "";  //They dont agree
-						break;
-					}
-					if (dataval != null && multi)
-					{
-						String[] vals = VALUEDELMITER.split(firsttext);
-						firsttext = ""; //Has some value They dont agree
-						for (int i = 0; i < vals.length; i++)
-						{
-							if (dataval.contains(vals[i])) //vals are in an array
+						//check sizes, remove all from one and see whats left?
+						Collection firstvalc = (Collection)firstval;
+						Collection datavalc = (Collection)dataval;
+//						if( datavalc.size() != firstvalc.size())
+//						{
+//							firstval = ValuesMap.NULLVALUE;  //They dont agree
+//							break;
+//						}
+						Collection copy = new ArrayList((Collection)firstvalc);
+						
+						//Only leave common values
+						for (Iterator iterator2 = copy.iterator(); iterator2.hasNext();) {
+							Object value = (Object) iterator2.next();
+							if( !datavalc.contains(value))
 							{
-								if (firsttext.length() == 0)
-								{
-									firsttext = vals[i];
-								}
-								else
-								{
-									firsttext = firsttext + " | " + vals[i];
-								}
+								firstvalc = new ArrayList(firstvalc);  //Instance editing
+								firstvalc.remove(value);
+								firstval = firstvalc;
 							}
 						}
+						if( firstvalc.isEmpty())
+						{
+							firstval = ValuesMap.NULLVALUE;  //They dont agree
+							break;
+						}
+						continue;
 					}
-					else
+					
+					if( !dataval.equals(firstval))  //For LaguageMap, numbers and dates and strings
 					{
-						// ext = ""; "NOTEQUAL"
-						firsttext = "";
+						firstval = ValuesMap.NULLVALUE;  //They dont agree
 						break;
 					}
-
+					//Else the are equal so keep searching
 				}
 			}
-//			if (text == null)
-//			{
-//				text = "NULL";
-//			}
-			val = firsttext;
 
-			if (firsttext != null && !firsttext.isEmpty())
+			
+			val = firstval;
+/*
+			if (firstval != null && !firstval.isEmpty())
 			{
 
 				PropertyDetail detail = getPropertyDetails().getDetail(inKey);
@@ -321,11 +323,16 @@ public class BaseCompositeData extends BaseData implements Data, CompositeData
 					}
 				}
 			}
-			if( firsttext == null)
+*/
+			if( firstval == null)
 			{
 				val = ValuesMap.NULLVALUE;
 			}
 			commonCachedValues.put(inKey, val);  //a blank string just means there is nothing in common, (not that its null)
+			if( val == ValuesMap.NULLVALUE)
+			{
+				return null;
+			}
 			return val;
 	}
 	public void setProperty(String inKey, String inValue)
