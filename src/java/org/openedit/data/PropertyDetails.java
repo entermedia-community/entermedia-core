@@ -706,7 +706,7 @@ public class PropertyDetails extends ArrayList
 			for (Iterator iter = getDetails().iterator(); iter.hasNext();)
 			{
 				PropertyDetail detail = (PropertyDetail) iter.next();
-				if( detail.getName().equals(inName))
+				if( detail.getName() != null && detail.getName().equals(inName))
 				{
 					found = detail;
 					getExternalIdCache().put(inName, found);
