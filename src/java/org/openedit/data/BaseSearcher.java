@@ -2981,6 +2981,10 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 							{
 								langval = inReq.getRequestParameter(field + ".language." + (j + 1)); //legacy
 							}
+							if (langval == null)
+							{
+								langval = "";
+							}
 							map.setText(lang, langval);
 						}
 					}

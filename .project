@@ -3,7 +3,6 @@
 	<name>entermedia-core</name>
 	<comment></comment>
 	<projects>
-		<project>Resin</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
