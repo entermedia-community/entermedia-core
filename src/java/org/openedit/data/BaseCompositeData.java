@@ -252,6 +252,10 @@ public class BaseCompositeData extends BaseData implements Data, CompositeData
 			}
 			Data firstrow = (Data) iterator.next();
 			Object firstval = firstrow.getValue(inKey); //First value
+			if( firstval != null && firstval instanceof LanguageMap)
+			{
+				firstval = new LanguageMap((Map)firstval);
+			}
 			while (iterator.hasNext())
 			{
 				Data data = (Data) iterator.next();
@@ -267,7 +271,7 @@ public class BaseCompositeData extends BaseData implements Data, CompositeData
 				}
 				else if(dataval != null)
 				{
-					if( dataval instanceof Collection && firstval instanceof Collection)
+					if( dataval instanceof List && firstval instanceof List)
 					{
 						//check sizes, remove all from one and see whats left?
 						Collection firstvalc = (Collection)firstval;

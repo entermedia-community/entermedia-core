@@ -2947,9 +2947,9 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				Object oldval = data.getValue(detail.getId());
 				if (oldval != null)
 				{
-					if (oldval instanceof LanguageMap)
+					if (oldval instanceof Map)
 					{
-						map = (LanguageMap) oldval;
+						map = new LanguageMap((Map) oldval);
 					}
 					else
 					{
