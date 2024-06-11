@@ -269,6 +269,11 @@ public class BaseCompositeData extends BaseData implements Data, CompositeData
 					}
 					//or keep looking 
 				}
+				else if(dataval == null)
+				{
+					firstval = ValuesMap.NULLVALUE;  //They dont agree
+					break;
+				}
 				else if(dataval != null)
 				{
 					if( dataval instanceof LanguageMap)
