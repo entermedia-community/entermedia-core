@@ -164,38 +164,52 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 		if (inParentCategory == null) {
 			return null;
 		}
-		
+		List list= new ArrayList(1);
+		list.add(inParentCategory);
+		Collection<ModuleData> found = getEntitiesForCategories(list);
+		return found;
+	}
+	public Collection<ModuleData> getEntitiesForCategories(Collection<Category> inParentCategories)
+	{
+		if (inParentCategories == null) {
+			return null;
+		}
 		Collection<ModuleData> items = new ArrayList();
-		for (Iterator iterator = getEntities().iterator(); iterator.hasNext();)
+		
+		for (Iterator iterator1 = inParentCategories.iterator(); iterator1.hasNext();) 
 		{
-			Data module = (Data) iterator.next();
-			Object value = inParentCategory.findValue(module.getId());
-			if( value != null)
+			Category cat = (Category) iterator1.next();
+			for (Iterator iterator = getEntities().iterator(); iterator.hasNext();)
 			{
-				if( value instanceof Collection)
+				Data module = (Data) iterator.next();
+				Object value = cat.findValue(module.getId());
+				if( value != null)
 				{
-					Collection all = (Collection) value;
-					for (Iterator iterator2 = all.iterator(); iterator2.hasNext();)
+					if( value instanceof Collection)
 					{
-						String item = (String) iterator2.next();
-						MultiValued entity = (MultiValued)getSearcherManager().getCachedData(getCatalogId(), module.getId(), item);
+						Collection all = (Collection) value;
+						for (Iterator iterator2 = all.iterator(); iterator2.hasNext();)
+						{
+							String item = (String) iterator2.next();
+							MultiValued entity = (MultiValued)getSearcherManager().getCachedData(getCatalogId(), module.getId(), item);
+							if (entity != null)
+							{
+								//entity.setValue("moduleid", module.getId());
+								items.add(new ModuleData(module.getId(),entity));
+							}
+						}
+					}
+					else 
+					{
+						MultiValued entity = (MultiValued)getSearcherManager().getCachedData(getCatalogId(), module.getId(), (String) value);
 						if (entity != null)
 						{
 							//entity.setValue("moduleid", module.getId());
 							items.add(new ModuleData(module.getId(),entity));
-						}
+						}	
 					}
+					
 				}
-				
-				else {
-					MultiValued entity = (MultiValued)getSearcherManager().getCachedData(getCatalogId(), module.getId(), (String) value);
-					if (entity != null)
-					{
-						//entity.setValue("moduleid", module.getId());
-						items.add(new ModuleData(module.getId(),entity));
-					}	
-				}
-				
 			}
 		}
 		return items;
