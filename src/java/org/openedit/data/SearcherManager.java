@@ -249,13 +249,13 @@ public class SearcherManager
 	{
 		return getData(inDetail.getListCatalogId(), inDetail.getListId(), inValue);
 	}
-	public String getValue(Searcher inSearcher, Data inParent, String inField)
+	public Object getValue(Searcher inSearcher, Data inParent, String inField)
 	{
 		PropertyDetail detail = inSearcher.getDetail(inField);
-		String val = getValue(inParent,detail);
+		Object val = getValue(inParent,detail);
 		return val;
 	}
-	public String getValue(Data inParent,PropertyDetail inDetail)
+	public Object getValue(Data inParent,PropertyDetail inDetail)
 	{
 		if(inParent == null || inDetail == null){
 			return null;
@@ -265,7 +265,7 @@ public class SearcherManager
 		{
 			mask = inDetail.get("mask"); //Legacy. Remove by 2023
 		}
-		String val = inParent.get(inDetail.getId());
+		Object val = inParent.getValue(inDetail.getId());
 		if( val == null && mask != null)
 		{
 			val = getValue(inDetail.getCatalogId(),mask,inParent.getProperties());
