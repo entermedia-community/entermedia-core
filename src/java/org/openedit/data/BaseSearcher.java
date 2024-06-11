@@ -2950,6 +2950,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					if (oldval instanceof Map)
 					{
 						map = new LanguageMap((Map) oldval);
+						//map = (LanguageMap)oldval;
 					}
 					else
 					{
@@ -2981,10 +2982,11 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 							{
 								langval = inReq.getRequestParameter(field + ".language." + (j + 1)); //legacy
 							}
-							if (langval == null)
-							{
-								langval = "";
-							}
+
+//							if (langval == null)  //Should not blank out values that dont match
+//							{
+//								langval = "";
+//							}
 							map.setText(lang, langval);
 						}
 					}
@@ -3031,6 +3033,10 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 						if( all == null)
 						{
 							all = new ArrayList();
+						}
+						else 
+						{
+							all = new ArrayList(all);
 						}
 						if( toadd != null)
 						{

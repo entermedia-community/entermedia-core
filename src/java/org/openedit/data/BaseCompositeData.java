@@ -343,13 +343,19 @@ public class BaseCompositeData extends BaseData implements Data, CompositeData
 	{
 		if( inValue == null )
 		{
-			inValue = "";
+			getPropertiesSet().put(inKey, ValuesMap.NULLVALUE);
+			return;
 		}
 		//getProperties().put(inKey, inValue);
 		getPropertiesSet().put(inKey,inValue);
 	}
 	public void setValues(String inKey, Collection<String> inValues)
 	{
+		if( inValues == null )
+		{
+			getPropertiesSet().put(inKey, ValuesMap.NULLVALUE);
+			return;
+		}
 		//Turn this into a string? Nope
 		getPropertiesSet().put(inKey,inValues);
 	}
@@ -358,7 +364,7 @@ public class BaseCompositeData extends BaseData implements Data, CompositeData
 	{
 		if( inValue == null )
 		{
-			//inValue = "";
+			getPropertiesSet().put(inKey, ValuesMap.NULLVALUE);
 			return;
 		}
 		//getProperties().put(inKey, inValue);
@@ -474,7 +480,7 @@ public class BaseCompositeData extends BaseData implements Data, CompositeData
 						LanguageMap map = null;
 						if (datavalue instanceof LanguageMap)
 						{
-							map = (LanguageMap) datavalue;
+							map = new LanguageMap( (Map)datavalue);
 						}
 						if (map == null)
 						{
