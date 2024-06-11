@@ -271,6 +271,23 @@ public class BaseCompositeData extends BaseData implements Data, CompositeData
 				}
 				else if(dataval != null)
 				{
+					if( dataval instanceof LanguageMap)
+					{
+						LanguageMap langs = (LanguageMap) firstval;
+						LanguageMap copy = null;
+						copy = new LanguageMap( (Map)firstval);
+						for (Iterator iterator3 = copy.keySet().iterator(); iterator3.hasNext();)
+						{
+							String code = (String) iterator3.next();
+							Object value = ((LanguageMap) firstval).get(code);
+							Object value2 = ((LanguageMap) dataval).get(code);
+							if(!value.equals(value2)) {
+								langs.remove(code);
+								firstval = langs;
+							}
+						}
+						continue;
+					}
 					if( dataval instanceof List && firstval instanceof List)
 					{
 						//check sizes, remove all from one and see whats left?
