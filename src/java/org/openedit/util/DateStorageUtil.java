@@ -508,6 +508,10 @@ public class DateStorageUtil
 	{
 		return formatForStorage( new Date() );
 	}
+	public String getTodayForDisplay()
+	{
+		return formatDateObj(new Date(), "yyyy-MM-dd");
+	}
 	public Date getThisMonday()
 	{
 		Calendar c = Calendar.getInstance();

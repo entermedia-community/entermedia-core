@@ -10,8 +10,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -23,6 +21,7 @@ import org.openedit.cache.CacheManager;
 import org.openedit.hittracker.HitTracker;
 import org.openedit.locks.LockManager;
 import org.openedit.node.NodeManager;
+import org.openedit.util.DateStorageUtil;
 import org.openedit.util.Replacer;
 
 public class SearcherManager
@@ -433,7 +432,14 @@ public class SearcherManager
 		}
 		Replacer replacer = getReplacer(inCatalogId);
 		
-		String val = replacer.replace(inMask, inValues);
+		Map newvals = new HashMap();
+		newvals.put("formatteddate", DateStorageUtil.getStorageUtil().getTodayForDisplay());
+		if(inValues != null) 
+		{
+			newvals.putAll(inValues);
+		}
+		
+		String val = replacer.replace(inMask, newvals);
 		if( val.startsWith("$") && val.equals(inMask) )
 		{
 			return "";
