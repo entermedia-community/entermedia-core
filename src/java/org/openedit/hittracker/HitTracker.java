@@ -48,6 +48,7 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 	protected String fieldTempSessionId;
 	public static final Pattern WORDS = Pattern.compile("[a-zA-Z\\d]+");
 	
+	protected Map<String,FilterNode> fieldCleanFilterValues; //What is actually from this search
 	protected Map<String,FilterNode> fieldActiveFilterValues; //What is actually from this search
 	
 	protected boolean fieldUseServerCursor;
@@ -1670,6 +1671,15 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 		return found;
 	}
 
+	public Map<String, FilterNode> getCleanFilterValues()
+	{
+		return fieldCleanFilterValues;
+	}
+	public void setCleanFilterValues(Map<String, FilterNode> inActualFilterValues)
+	{
+		fieldCleanFilterValues = inActualFilterValues;
+	}
+
 	
 	public Map<String, FilterNode> getActiveFilterValues()
 	{
@@ -1678,8 +1688,22 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 	public void setActiveFilterValues(Map<String, FilterNode> inActualFilterValues)
 	{
 		fieldActiveFilterValues = inActualFilterValues;
+		if(inActualFilterValues != null)
+		{
+			if( getSearchQuery().isShowAll())
+			{
+				fieldCleanFilterValues = inActualFilterValues;
+			}
+		}
 	}
-
+	public boolean hasFiltersChanged()
+	{
+		if( fieldCleanFilterValues != null && fieldCleanFilterValues != fieldActiveFilterValues)
+		{
+			return true;
+		}
+		return false;
+	}
 	
 	@Override
 	public String toString()

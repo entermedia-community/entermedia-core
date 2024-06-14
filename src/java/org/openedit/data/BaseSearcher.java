@@ -284,6 +284,21 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					}
 				}
 			}
+			
+			String previous = inPageRequest.getRequestParameter("usefirstfilters");
+			if( previous != null && inPageRequest.getUserProfile() != null)
+			{
+				Boolean newval = Boolean.parseBoolean(inPageRequest.getRequestParameter("usefirstfiltersvalue"));
+				Boolean oldval = inPageRequest.getUserProfile().getBoolean("usefirstfilters");
+				if( oldval != newval)
+				{
+					inPageRequest.getUserProfile().setProperty("usefirstfilters", newval.toString());
+					runsearch = true;
+					//Save profile
+				}
+			}
+
+			
 			if (!runsearch && hasChanged(tracker))
 			{
 				//do we want to cache queries a little longer?
@@ -334,8 +349,12 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				}
 				oldtracker = tracker;
 
-				Boolean keepfilter = Boolean.parseBoolean( inPageRequest.findValue("keeppreviousfilter") );
-
+				Boolean usefirstfilters = false;
+				if( inPageRequest.getUserProfile() != null)
+				{
+					usefirstfilters = inPageRequest.getUserProfile().getBoolean("usefirstfilters");
+				}
+				
 //				if( !keepfilter)
 //				{
 //					//use the shared ones
@@ -344,9 +363,11 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 //					activefilters = filters.getAllValues(inPageRequest, this, inQuery.getMainInput() );
 //				}
 				//No old filter around, but user did not pass in a filter. Must use the shared one
-				if( keepfilter && oldtracker != null && oldtracker.getActiveFilterValues() != null)
+				if( usefirstfilters && oldtracker != null && oldtracker.getCleanFilterValues() != null)
 				{
-					//We will be keeping the old values down below
+					//No need to init filters they have already run
+					//tracker.setActiveFilterValues(oldtracker.getActiveFilterValues());
+
 				}
 				else
 				{
@@ -390,7 +411,6 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 						if(clearfilters== null) {
 							clearfilters = (String) inPageRequest.findValue(getSearchType() + "clearfilters");
 						}
-						
 						String removeterm = inPageRequest.getRequestParameter("removeterm");
 						
 						if (!Boolean.parseBoolean(clearfilters))
@@ -477,9 +497,11 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				tracker.setPage(startingpage);
 				tracker.setSearchQuery(inQuery);
 
-				if( keepfilter &&  oldtracker != null && oldtracker.getActiveFilterValues() != null )
+				tracker.setCleanFilterValues(oldtracker.getCleanFilterValues()); //Keep passing this around
+
+				if( usefirstfilters &&  oldtracker != null && oldtracker.getCleanFilterValues() != null )
 				{
-					tracker.setActiveFilterValues(oldtracker.getActiveFilterValues());
+					tracker.setActiveFilterValues(oldtracker.getCleanFilterValues());
 				}
 				
 				if (oldtracker != null && oldtracker.hasSelections())
@@ -2802,7 +2824,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	{
 		SearchQuery q = createSearchQuery();
 		q.addMatches("id", "*");
-
+		q.setShowAll(true);
 		if (inReq != null)
 		{
 			String sort = inReq.getRequestParameter("sortby");

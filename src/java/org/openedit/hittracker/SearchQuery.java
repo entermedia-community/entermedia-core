@@ -39,6 +39,7 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	protected transient List fieldTerms = new ArrayList();
 
 	protected boolean fieldAndTogether = true;
+	protected boolean fieldShowAll = false;
 	protected boolean fieldEndUserSearch = false;
 	protected String fieldSortLanguage = "en";
 	protected boolean fieldIncludeFacets = false;
@@ -2412,6 +2413,16 @@ public boolean isFilterSelected(String type, String value) {
 			}
 		}
 		return true;
+	}
+
+
+	public boolean isShowAll()
+	{
+		return fieldShowAll;
+	}
+	public void setShowAll(boolean inAll)
+	{
+		fieldShowAll = inAll;
 	}
 	
 }

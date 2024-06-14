@@ -289,6 +289,7 @@ public class QueryBuilder
 	public QueryBuilder all() 
 	{
 		getQuery().addMatches("id", "*");
+		getQuery().setShowAll(true);
 		return this;
 	}
 	
