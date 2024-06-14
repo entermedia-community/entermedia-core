@@ -497,13 +497,20 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				tracker.setPage(startingpage);
 				tracker.setSearchQuery(inQuery);
 
-				tracker.setCleanFilterValues(oldtracker.getCleanFilterValues()); //Keep passing this around
-
-				if( usefirstfilters &&  oldtracker != null && oldtracker.getCleanFilterValues() != null )
+				String cacheit = inPageRequest.getRequestParameter("reloadresults");
+				if(!Boolean.parseBoolean(cacheit) )
 				{
-					tracker.setActiveFilterValues(oldtracker.getCleanFilterValues());
-				}
-				
+					tracker.setCleanFilterValues(oldtracker.getCleanFilterValues()); //Keep passing this around
+					
+					if( usefirstfilters &&  oldtracker != null && oldtracker.getCleanFilterValues() != null )
+					{
+						tracker.setActiveFilterValues(oldtracker.getCleanFilterValues());
+					}
+					else if( oldtracker != null && oldtracker.getActiveFilterValues() != null)
+					{
+						//tracker.setActiveFilterValues(oldtracker.getActiveFilterValues());
+					}
+				}				
 				if (oldtracker != null && oldtracker.hasSelections())
 				{
 					
