@@ -42,7 +42,7 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	protected boolean fieldShowAll = false;
 	protected boolean fieldEndUserSearch = false;
 	protected String fieldSortLanguage = "en";
-	protected boolean fieldIncludeFacets = false;
+	//protected boolean fieldIncludeFacets = false;
 	protected Collection<PropertyDetail> fieldUserFacets;
 	protected List fieldSorts;
 	protected Map fieldSuggestedSearches;
