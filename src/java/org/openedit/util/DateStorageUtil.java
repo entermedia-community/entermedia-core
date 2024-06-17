@@ -254,7 +254,7 @@ public class DateStorageUtil
 		}
 		catch (Exception ex)
 		{
-			log.info("Could not parse date " + inStoredDate);
+			log.info("Warning: Could not parse date " + inStoredDate);
 		}
 
 		return null;
