@@ -44,6 +44,12 @@ public class MathUtils
 		return n;
 	}
 	
+	public double getModulus(int inNum1, int inNum2)
+	{
+		Double d = (double)inNum1 % (double)inNum2;
+		return d;
+	}
+	
 	
 	public float getPercentage(int inSoFar, int inTotal)
 	{
