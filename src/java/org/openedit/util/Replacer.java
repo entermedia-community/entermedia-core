@@ -156,10 +156,22 @@ public class Replacer implements CatalogEnabled
 			if( currentvalue != null)
 			{
 				String sub = null;
-				if(currentvalue instanceof DataWithSearcher)
+				
+				if( currentvalue instanceof Date)
+				{
+					String format = "yyyy-MM-dd";  //TODO: Use locale format?
+					sub = DateStorageUtil.getStorageUtil().formatDateObj((Date)currentvalue, format);
+				}
+				else if(currentvalue instanceof DataWithSearcher)
 				{
 					DataWithSearcher data = (DataWithSearcher)currentvalue;
-					sub = data.getData().getName(inLocale);
+					String text = data.getData().getName(inLocale);
+//					text = UrlU (text);
+//					$text.replaceAll("(\r\n|\n)", "<br />")
+//
+//					String span = String.format("<span class='labelitem' data-searchtype='%str' data-id='%s'>" + text + "</span>",data.getData().getId(),data.getSearchType());
+//					sub = span;
+					sub = text;
 				}
 				else
 				{
