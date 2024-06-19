@@ -1139,7 +1139,7 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 		}
 		return name;
 	}
-	public String findPathValue(String inName)
+	public String findPathValue(String inName) 
 	{
 		String name = null;
 		SiteData sitedata = (SiteData)getPageValue("sitedata");
@@ -1160,6 +1160,17 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 		{
 			name = getContentPage().get(inName);
 		}
+		if(name == null) {
+			String searchtypeFromRequest = getContentPage().get("searchtypeFromRequest");
+			if(Boolean.parseBoolean(searchtypeFromRequest)) {
+				name = getRequestParameter(inName);
+				if(name !=null)
+				{
+					log.info("Requestparameter called from: "+getPath());
+				}
+			}
+		}
+		
 		name = getPage().getPageSettings().replaceProperty(name);
 		return name;
 	}
