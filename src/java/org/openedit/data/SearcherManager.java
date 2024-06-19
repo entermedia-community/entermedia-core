@@ -446,7 +446,7 @@ public class SearcherManager
 		}
 		return val; 
 	}
-	public String getValue(String inCatalogId, String inMask,Data inData, String inLocale)
+	public String getValue(String inCatalogId, String inMask,String inSearchType, Data inData, String inLocale)
 	{
 		if( inMask == null || inData == null)
 		{
@@ -454,9 +454,39 @@ public class SearcherManager
 		}
 		Replacer replacer = getReplacer(inCatalogId);
 		
+		Searcher searcher = getExistingSearcher(inCatalogId,inSearchType);
+		
 		Map newvals = new HashMap();
 		newvals.put("formatteddate", DateStorageUtil.getStorageUtil().getTodayForDisplay());
-		newvals.put("data",inData);
+		
+		DataWithSearcher smartdata = new DataWithSearcher(this,inCatalogId,inSearchType,inData);
+		newvals.put("data",smartdata);
+		newvals.put(inSearchType,smartdata);
+		
+		//${data.entitysourcetype.userid.email} > ${data}
+		
+//		for (Iterator iterator = inData.getProperties().keySet().iterator(); iterator.hasNext();) {
+//			String key = (String) iterator.next();
+//			if( inMask.contains(key))
+//			{
+//				PropertyDetail detail = searcher.getPropertyDetails().getDetail(key);
+//				String value = inData.get(key);
+//				if( value != null)
+//				{
+//					if( detail.isList())
+//					{
+//						DataWithSearcher smartdata = new DataWithSearcher(this,inData,detail); 
+//						newvals.put(key,smartdata);
+//					}
+//					else
+//					{
+//						newvals.put(key,value);
+//					}
+//				}
+//				
+//			}
+//		}
+		
 		newvals.putAll(inData.getProperties());
 		
 		String val = replacer.replace(inMask, newvals);

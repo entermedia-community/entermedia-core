@@ -1,8 +1,10 @@
 package org.openedit.util;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -10,8 +12,7 @@ import java.util.StringTokenizer;
 
 import org.openedit.CatalogEnabled;
 import org.openedit.Data;
-import org.openedit.data.PropertyDetail;
-import org.openedit.data.Searcher;
+import org.openedit.data.DataWithSearcher;
 import org.openedit.data.SearcherManager;
 
 
@@ -67,7 +68,7 @@ public class Replacer implements CatalogEnabled
 	public String replace(String inCode, Map<String, Object> inValues)
 	{
 		
-		String done = replace(inCode,inValues,null);
+		String done = replace(inCode,inValues,"en");
 		return done;
 	}
 
@@ -96,146 +97,73 @@ public class Replacer implements CatalogEnabled
 			}
 			
 			String key = inCode.substring(start+2,end);
-			Object variable = null;
+			Object currentvalue = null;
 			ArrayList<String> values = findKeys(key,"||");
 			
-			for(String value:values)
+			for(String mask:values)
 			{
-				variable = inValues.get(value); //check for property
-				if( variable == null )
+				String[] pairs = mask.split("\\.");
+				currentvalue = inValues.get(pairs[0]); //check for property
+				for (int i = 1; i < pairs.length; i++)
 				{
-					//TODO: Loop over each of the dots to find the final object
-					int dot = value.indexOf('.');
-					if( dot > 0)
+					String nextpart = pairs[i];
+					if( currentvalue instanceof Collection)
 					{
-						String objectname = value.substring(0,dot);
-						Object object = null;
-						
-						String localproperty = null;
-						String foreigntable = null;
-						
-						if(objectname.contains(":"))
+						Collection col = (Collection)currentvalue;
+						if( !col.isEmpty())
 						{
-							//${localfield:listid.field} Use this format if your local field maps to a different table 
-							String [] splits = objectname.split(":");
-							if (splits.length==2)
-							{
-								localproperty = splits[0];
-							    foreigntable = splits[1];
-								object = inValues.get(localproperty);
-								value = value.substring(value.indexOf(":")+ 1);
-								dot = value.indexOf('.');
-							}
-						}
-						else
-						{
-							object = inValues.get(objectname);  //${division.folder}
-						}
-						if( object instanceof Collection)
-						{
-							Collection col = (Collection)object;
-							if( !col.isEmpty())
-							{
-								object = col.iterator().next();
-							}
-						}
-						
-						if( object instanceof String )
-						{
-							if (localproperty!=null &&  foreigntable!=null)
-							{
-								String localval = (String) inValues.get(localproperty);
-								object = getData(foreigntable,localval);
-							}
-							else
-							{
-								object = getData(objectname,(String)object); //division
-							}
-							if(isAlwaysReplace() && object == null)
-							{
-								variable="";
-							}
-						}
-						if(object instanceof Data)
-						{
-							Data data = (Data)object;
-							String[] pairs = value.split("\\.");
-							//Already found the first level
-							for (int i = 1; i < pairs.length; i++)
-							{
-								Object otherdatavalue = data.getValue(pairs[i]);
-								if(otherdatavalue == null)
-								{
-									break;
-								}
-								
-								//TODO:  There are a bunch of places where we use a constructor for this bean.  Isn't there code like this 
-								//in getValue from SearcherManager?  Added nu
-								
-								if (getSearcherManager() != null)
-								{
-									Searcher searcher = getSearcherManager().getExistingSearcher(getCatalogId(), pairs[i-1]);
-									if (searcher == null)
-									{
-										variable = otherdatavalue;
-										break;
-									}
-									else
-									{		
-										PropertyDetail detail = searcher.getPropertyDetails().getDetail(pairs[i]);
-										data = getData(detail.getListId(), otherdatavalue.toString());
-										if( data == null)
-										{
-											variable = otherdatavalue;
-											break;
-										}
-										else
-										{
-											variable = data;
-										}
-									}
-								}
-								else
-								{
-									variable = otherdatavalue;
-								}
-					
-							}
-						}
-						else
-						{
-							//?? INT?
+							currentvalue = col.iterator().next();
 						}
 					}
+					if( currentvalue instanceof Date)
+					{
+						Date date = (Date)currentvalue;
+						String format = "yyyy-MM-dd";  //TODO: Use locale format?
+						if( pairs.length > i)
+						{
+							//grab the hour?
+							format = pairs[i+1]; //TODO: grab all text
+						}
+
+						currentvalue = DateStorageUtil.getStorageUtil().formatDateObj(date, format);
+						break;
+					}
+					else if(currentvalue instanceof DataWithSearcher)
+					{
+						DataWithSearcher smartdata = (DataWithSearcher)currentvalue;
+						currentvalue = smartdata.getChildValue(nextpart);
+					}
+					else if( currentvalue instanceof String )
+					{
+					}	
+					if (currentvalue==null)
+					{
+						break;
+					}
 				}
-				if (variable!=null){
+				if( currentvalue != null)
+				{
 					break;
 				}
 			}
 			
-			if( isAlwaysReplace() && variable == null )
+			if( isAlwaysReplace() && currentvalue == null )
 			{
-				variable="";
+				currentvalue="";
 			}
 			
 			
-			if( variable != null)
+			if( currentvalue != null)
 			{
 				String sub = null;
-				if( variable instanceof Date)
+				if(currentvalue instanceof DataWithSearcher)
 				{
-					Date date = (Date)variable;
-					sub = DateStorageUtil.getStorageUtil().formatDateObj(date, "yyyy-MM-dd");
-				}
-				else if( variable instanceof Data && inLocale != null )
-				{
-					sub = ((Data)variable).getName(inLocale);
-					sub = replace(sub,inValues);
+					DataWithSearcher data = (DataWithSearcher)currentvalue;
+					sub = data.getData().getName(inLocale);
 				}
 				else
 				{
-					sub = variable.toString();
-					sub = replace(sub,inValues);
+					sub = currentvalue.toString();
 				}
 				inCode = inCode.substring(0,start) + sub + inCode.substring(end+1);
 				start = start + sub.length();
