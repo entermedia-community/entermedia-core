@@ -500,7 +500,10 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				String cacheit = inPageRequest.getRequestParameter("reloadresults");
 				if(!Boolean.parseBoolean(cacheit) )
 				{
-					tracker.setCleanFilterValues(oldtracker.getCleanFilterValues()); //Keep passing this around
+					if( oldtracker != null)
+					{
+						tracker.setCleanFilterValues(oldtracker.getCleanFilterValues()); //Keep passing this around
+					}
 					
 					if( usefirstfilters &&  oldtracker != null && oldtracker.getCleanFilterValues() != null )
 					{
