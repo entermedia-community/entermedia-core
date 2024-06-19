@@ -64,13 +64,20 @@ public class Replacer implements CatalogEnabled
 		return replace(inCode, map);
 	}
 
+	public String replace(String inCode, Map<String, Object> inValues)
+	{
+		
+		String done = replace(inCode,inValues,null);
+		return done;
+	}
+
 	/**
 	 * ${localfield:listid.field} Use this format if your local field maps to a different table 
 	 * @param inCode
 	 * @param inValues
 	 * @return
 	 */
-	public String replace(String inCode, Map<String, Object> inValues)
+	public String replace(String inCode, Map<String, Object> inValues, String inLocale)
 	{
 		if( inCode == null)
 		{
@@ -219,6 +226,11 @@ public class Replacer implements CatalogEnabled
 				{
 					Date date = (Date)variable;
 					sub = DateStorageUtil.getStorageUtil().formatDateObj(date, "yyyy-MM-dd");
+				}
+				else if( variable instanceof Data && inLocale != null )
+				{
+					sub = ((Data)variable).getName(inLocale);
+					sub = replace(sub,inValues);
 				}
 				else
 				{

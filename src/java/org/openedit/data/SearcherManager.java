@@ -423,7 +423,7 @@ public class SearcherManager
 		}
 		return val;
 	}
-	
+
 	public String getValue(String inCatalogId, String inMask,Map inValues)
 	{
 		if( inMask == null)
@@ -438,6 +438,26 @@ public class SearcherManager
 		{
 			newvals.putAll(inValues);
 		}
+		
+		String val = replacer.replace(inMask, newvals);
+		if( val.startsWith("$") && val.equals(inMask) )
+		{
+			return "";
+		}
+		return val; 
+	}
+	public String getValue(String inCatalogId, String inMask,Data inData, String inLocale)
+	{
+		if( inMask == null || inData == null)
+		{
+			return null;
+		}
+		Replacer replacer = getReplacer(inCatalogId);
+		
+		Map newvals = new HashMap();
+		newvals.put("formatteddate", DateStorageUtil.getStorageUtil().getTodayForDisplay());
+		newvals.put("data",inData);
+		newvals.putAll(inData.getProperties());
 		
 		String val = replacer.replace(inMask, newvals);
 		if( val.startsWith("$") && val.equals(inMask) )
