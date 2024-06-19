@@ -19,7 +19,7 @@ import org.openedit.data.SearcherManager;
 public class Replacer implements CatalogEnabled
 {
 	protected SearcherManager fieldSearcherManager;
-	protected boolean fieldAlwaysReplace =  false;
+	protected boolean fieldAlwaysReplace =  true;
 	protected String fieldCatalogId;
 	
 	public boolean isAlwaysReplace() {
