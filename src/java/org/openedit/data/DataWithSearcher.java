@@ -1,5 +1,6 @@
 package org.openedit.data;
 
+import java.util.Collection;
 import java.util.Date;
 
 import org.openedit.Data;
@@ -65,6 +66,15 @@ public class DataWithSearcher {
 			{
 				if( searcher != null)
 				{
+					if( othervalue instanceof Collection)
+					{
+						Collection others = (Collection)othervalue;
+						if( others.isEmpty())
+						{
+							return null;
+						}
+						othervalue = others.iterator().next();
+					}
 					Data childdata = getSearcherManager().getCachedData(detail.getCatalogId(),detail.getListId(), othervalue.toString());
 					if( childdata != null)
 					{
