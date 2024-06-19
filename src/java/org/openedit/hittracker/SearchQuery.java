@@ -528,6 +528,17 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	{
 		if (!inDetail.isViewType("list") && !inDetail.isViewType("category"))
 		{
+
+//			if(inDetail.isDate())
+//			{
+//				Date found =  DateStorageUtil.getStorageUtil().parseFromStorage(inRawValue);
+//				if( found != null)
+//				{
+//					return found.getTime();
+//				}
+//			}
+			
+
 			return inRawValue;
 		}
 
@@ -536,6 +547,7 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		{
 			return inRawValue;
 		}
+		
 		Data data = (Data) searcher.searchById(inRawValue);
 		if (data == null)
 		{
@@ -1675,7 +1687,7 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 			public String toQuery()
 			{
 				//String date = DateTools.dateToString(inDate, Resolution.SECOND);
-				String fin = getDetail().getId() + ":[" + inDate + " TO 99999999999999]";
+				String fin = getDetail().getId() + ":[" + inDate.getTime() + " TO 99999999999999]";
 				return fin;
 			}
 		};
