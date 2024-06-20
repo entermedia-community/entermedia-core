@@ -134,6 +134,11 @@ public class Replacer implements CatalogEnabled
 						currentvalue = DateStorageUtil.getStorageUtil().formatDateObj(date, format);
 						break;
 					}
+					else if(currentvalue instanceof Data)
+					{
+						Data smartdata = (Data)currentvalue;
+						currentvalue = smartdata.getValue(nextpart);
+					}
 					else if(currentvalue instanceof DataWithSearcher)
 					{
 						DataWithSearcher smartdata = (DataWithSearcher)currentvalue;
