@@ -50,7 +50,13 @@ public class Replacer implements CatalogEnabled
 		fieldCatalogId = inDefaultCatalogId;
 	}
 
-
+	/**
+	 * @deprecated use SearcherManager.getValue
+	 * @param inCode
+	 * @param inValues
+	 * @return
+	 */
+	
 	public String replace(String inCode, Data inValues)
 	{
 		Map<?,?> props = inValues.getProperties();
