@@ -451,12 +451,13 @@ public class SearcherManager
 		String code = getValue(inCatalogId,inMask,inSearchType,inData,null,inLocale);
 		return code;
 	}
-	public String getValue(String inCatalogId, String inMask,String inSearchType, Data inData,Map inExtra, String inLocale)
+	public String getValue(String inCatalogId, String inMask, String inSearchType, Data inData, Map inExtra, String inLocale)
 	{
-		if( inMask == null || inData == null)
+		if( inMask == null)
 		{
 			return null;
 		}
+
 		Replacer replacer = getReplacer(inCatalogId);
 		
 		Searcher searcher = getExistingSearcher(inCatalogId,inSearchType);
@@ -468,8 +469,10 @@ public class SearcherManager
 		newvals.put("data",smartdata);
 		newvals.put(inSearchType,smartdata);
 		
-		
+		if (inData != null) 
+		{
 		newvals.putAll(inData.getProperties());
+		}
 		if( inExtra != null)
 		{
 			newvals.putAll(inExtra);
