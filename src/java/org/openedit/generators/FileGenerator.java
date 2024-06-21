@@ -146,7 +146,16 @@ public class FileGenerator extends BaseGenerator implements Generator
 					
 					//inReq.getResponse().setHeader("Content-Disposition: attachment; filename*=us-ascii'en-us'"+ fileName);
 					fileName.replace("\"", "/\"");
+					//res.setHeader("Content-disposition", "attachment; filename*=utf-8''\""+ fileName +"\"");
+					
+					res.setHeader("Content-Type", "application/octet-stream; charset=utf-8");
 					res.setHeader("Content-disposition", "attachment; filename*=utf-8''\""+ fileName +"\"");
+					//res.setHeader("Content-disposition", "attachment; filename*=utf-8''\""+ fileName +"\"");
+					
+					//Content-Type: 'application/octet-stream; charset=utf-8'
+					//Content-Disposition: attachment; filename="filename.jpg"; filename*="filename.jpg"
+					//		Content-Length: <size in bytes>
+					
 				}
 			}	
 			
