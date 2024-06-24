@@ -135,12 +135,6 @@ public class BaseOpenEditEngine implements OpenEditEngine
 	    }
 
 		Page page = getPageManager().getPage(fixedpath,checkdates);
-		if(!page.isFolder() && page.exists())
-		{
-			RightPage right = new RightPage();
-			right.setRightPage(page);
-			return right;
-		}
 		
 		List list = page.getPageLoaders();
 		if( list != null && !list.isEmpty())
@@ -158,6 +152,12 @@ public class BaseOpenEditEngine implements OpenEditEngine
 				}
 			}
 		}		
+		if(!page.isFolder() && page.exists())
+		{
+			RightPage right = new RightPage();
+			right.setRightPage(page);
+			return right;
+		}
 	    
 		//If link does not exists. Then put a real welcome page on there so that fallback will work
 	    boolean wasfolder = page.isFolder();

@@ -263,7 +263,7 @@ public interface WebPageRequest
 	
 	public UserProfile getUserProfile();
 
-	void putAllRequestParameters(Map inArgs);
+	void putAllRequestParameters(Map<String,Object> inArgs);
 	
 	public String getMethod();
 	public void setMethod(String inMethod);

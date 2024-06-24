@@ -388,7 +388,7 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 		}
 		return parents;
 	}
-	protected Map getLocalParameters()
+	protected Map<String,Object> getLocalParameters()
 	{
 		if (fieldParameters == null)
 		{
@@ -402,7 +402,7 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 	 */
 	protected Map getAllLocalParameters()
 	{
-		Map params = new HashMap();
+		Map<String,Object> params = new HashMap();
 			
 		for (Iterator iterator = getParentsAsList().iterator(); iterator.hasNext();) {
 			BaseWebPageRequest req = (BaseWebPageRequest) iterator.next();

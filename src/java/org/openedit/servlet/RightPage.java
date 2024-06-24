@@ -33,7 +33,7 @@ public class RightPage
 	{
 		fieldRightPage = inRightPage;
 	}
-	public Map getParams()
+	public Map<String,Object> getParams()
 	{
 		if (fieldParams == null)
 		{
@@ -47,7 +47,7 @@ public class RightPage
 		fieldParams = inParams;
 	}
 	protected Map fieldParams;
-	public void putParam(String inString, String inId)
+	public void putParam(String inString, Object inId)
 	{
 		getParams().put(inString,inId);
 	}
