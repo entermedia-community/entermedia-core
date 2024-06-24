@@ -422,7 +422,6 @@ public class XConfToPageSettingsConverter
 			Configuration pageActionElement = (Configuration) loaderElements.next();
 			PageLoaderConfig config = new PageLoaderConfig();
 			config.setXmlConfig(pageActionElement );
-			config.setCatalogId(inPageSettings.getPropertyValueFixed("catalogid"));
 			pageActions.add( config );
 		}
 		return pageActions;

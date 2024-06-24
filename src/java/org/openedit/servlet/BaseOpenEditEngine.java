@@ -139,12 +139,13 @@ public class BaseOpenEditEngine implements OpenEditEngine
 		List list = page.getPageLoaders();
 		if( list != null && !list.isEmpty())
 		{
+			String catalogid = page.getProperty("catalogid");
 			for (Iterator iterator = list.iterator(); iterator.hasNext();)
 			{
 				PageLoaderConfig config = (PageLoaderConfig) iterator.next();
 				//<Page-Loader loader="projectLoader" />
 				String bean = config.getXmlConfig().get("loader");
-				PageLoader loader = (PageLoader)getModuleManager().getBean(config.getCatalogId(), bean);
+				PageLoader loader = (PageLoader)getModuleManager().getBean(catalogid, bean);
 				RightPage rightp = loader.getRightPage(util, sitedata,page,requestedPath);
 				if( rightp != null)
 				{

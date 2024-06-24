@@ -13,14 +13,4 @@ public class PageLoaderConfig
 	{
 		fieldXmlConfig = inXmlConfig;
 	}
-	public String getCatalogId()
-	{
-		return fieldCatalogId;
-	}
-	public void setCatalogId(String inCatalogId)
-	{
-		fieldCatalogId = inCatalogId;
-	}
-	protected String fieldCatalogId;
-	
 }
