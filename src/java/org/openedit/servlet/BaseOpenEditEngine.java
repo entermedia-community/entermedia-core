@@ -137,6 +137,15 @@ public class BaseOpenEditEngine implements OpenEditEngine
 		Page page = getPageManager().getPage(fixedpath,checkdates);
 		
 		List list = page.getPageLoaders();
+		if(( list == null || list.isEmpty()) && (fixedpath.endsWith("/") || page.isFolder()))
+		{
+			if( fixedpath.endsWith("/") )
+			{
+				fixedpath = fixedpath.substring(0,fixedpath.length()-1);
+			}
+			page = getPageManager().getPage(fixedpath + "/index.html",checkdates);
+			list = page.getPageLoaders();
+		}
 		if( list != null && !list.isEmpty())
 		{
 			String catalogid = page.getProperty("catalogid");
