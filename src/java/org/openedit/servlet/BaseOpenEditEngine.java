@@ -139,11 +139,12 @@ public class BaseOpenEditEngine implements OpenEditEngine
 		List list = page.getPageLoaders();
 		if(( list == null || list.isEmpty()) && (fixedpath.endsWith("/") || page.isFolder()))
 		{
-			if( fixedpath.endsWith("/") )
+			String tmppath =fixedpath; 
+			if( tmppath.endsWith("/") )
 			{
-				fixedpath = fixedpath.substring(0,fixedpath.length()-1);
+				tmppath = tmppath.substring(0,tmppath.length()-1);
 			}
-			page = getPageManager().getPage(fixedpath + "/index.html",checkdates);
+			page = getPageManager().getPage(tmppath + "/index.html",checkdates);
 			list = page.getPageLoaders();
 		}
 		if( list != null && !list.isEmpty())
