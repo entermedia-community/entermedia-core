@@ -188,8 +188,10 @@ public class Replacer implements CatalogEnabled
 				{
 					sub = currentvalue.toString();
 				}
-				inCode = inCode.substring(0,start) + sub + inCode.substring(end+1);
-				start = start + sub.length();
+				if(sub != null) {
+					inCode = inCode.substring(0,start) + sub + inCode.substring(end+1);
+					start = start + sub.length();
+				}
 			}
 			else
 			{
