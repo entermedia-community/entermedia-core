@@ -362,15 +362,16 @@ public class PropertyDetailsArchive implements CatalogEnabled
 				if (inType.endsWith("Log"))
 				{
 					path = findConfigurationFile("/fields/defaultLog.xml");
+					settings = getXmlArchive().getXml(path); //RELOAD
+					settings.setRoot(settings.getRoot().createCopy());
 				}
 				else
 				{
 					path = findConfigurationFile("/fields/default.xml");
+					settings = getXmlArchive().getXml(path); //RELOAD
+					settings.setRoot(settings.getRoot().createCopy());
+					settings.getRoot().addAttribute("beanname",null); //let the fixBeanName work
 				}
-				settings = getXmlArchive().getXml(path); //RELOAD
-				// This should not happen as well
-				settings.setRoot(settings.getRoot().createCopy());
-				//Why?
 			}
 
 			if( basesettingsdefaults.isExist() )
@@ -418,6 +419,14 @@ public class PropertyDetailsArchive implements CatalogEnabled
 			details.setInputFile(settings);
 			getPropertyDetails().put(inType, details);
 
+//			PropertyDetail name = details.getDetail("name");
+//			if( name != null)
+//			{
+//				if( !name.isMultiLanguage() )
+//				{
+//					log.info(inType + " Nope");
+//				}
+//			}			
 			return details;
 		}
 		catch (OpenEditException ex)
@@ -426,7 +435,8 @@ public class PropertyDetailsArchive implements CatalogEnabled
 		}
 	}
 
-	protected void fixBeanName(PropertyDetails inDetails,XmlFile basesettings, XmlFile settings) {
+	protected void fixBeanName(PropertyDetails inDetails,XmlFile basesettings, XmlFile settings) 
+	{
 
 		if( settings.getRoot().attributeValue("beanname") != null)
 		{
@@ -436,7 +446,7 @@ public class PropertyDetailsArchive implements CatalogEnabled
 		{
 			return;
 		}
-		
+
 		String islists = "/" + getCatalogId() + "/data/lists/" + inDetails.getId() + ".xml";
 		String isfolder = "/" + getCatalogId() + "/data/lists/" + inDetails.getId() + "/";
 		
@@ -444,13 +454,13 @@ public class PropertyDetailsArchive implements CatalogEnabled
 		{
 			inDetails.setBeanName("dynamicLogSearcher");
 		}
-		if( getPageManager().getPage(islists).exists())
-		{
-			inDetails.setBeanName("listSearcher");
-		}
 		else if( getPageManager().getPage(isfolder).exists())
 		{
 			inDetails.setBeanName("folderSearcher");
+		}
+		else if( getPageManager().getPage(islists).exists())
+		{
+			inDetails.setBeanName("listSearcher");
 		}
 		else
 		{
