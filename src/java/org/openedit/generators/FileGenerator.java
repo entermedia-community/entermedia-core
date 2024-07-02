@@ -165,13 +165,13 @@ public class FileGenerator extends BaseGenerator implements Generator
 				length = (long)contentpage.getContentItem().getLength();
 				if ( length != -1)
 				{
+					res.setHeader("Accept-Ranges", "bytes");
 					if( start > -1)
 					{	
 						if( end == -1)
 						{
 							end = length - 1;  //1024-1 1023
 						}
-						res.setHeader("Accept-Ranges", "bytes");
 						res.setHeader("Content-Range", "bytes " + start + "-" + end + "/" + length); //len is total
 						long sent = end + 1 - start; // 0 1024 - 1024 length
 
