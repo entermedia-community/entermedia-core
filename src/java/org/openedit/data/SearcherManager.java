@@ -537,10 +537,10 @@ public class SearcherManager
 		Object data = searcher.searchById(inId);
 		if(data == null)
 		{
-			getCacheManager(inCatalogId).put("sm-data" + inCatalogId, inSearchType + "/" + inId, CacheManager.NULLDATA);
+			getCacheManager(inCatalogId).put("data" + inSearchType, inId, CacheManager.NULLDATA);
 			return null;
 		}
-		getCacheManager(inCatalogId).put("sm-data" + inCatalogId, inSearchType + "/" + inId, data);
+		getCacheManager(inCatalogId).put("data" + inSearchType,  inId, data);
 		return (Data)data;
 	}
 	public Data getData(PropertyDetail inDetail, String inId)
