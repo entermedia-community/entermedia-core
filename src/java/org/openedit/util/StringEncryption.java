@@ -418,11 +418,20 @@ public class StringEncryption
 		String name = keybase + home;
 		if( withapp )
 		{
-			String root = PathUtilities.extractRootDirectory(inReq.getPath() );
-			if( root != null && root.length() > 1)
-			{
-				name = name + root.substring(1);
+			//allow root to be specified specifically.
+			String root = inReq.findPathValue("logincookieroot");
+			
+			
+			if(root == null) {
+				root = PathUtilities.extractRootDirectory(inReq.getPath() );
+				if( root != null && root.length() > 1)
+				{
+					name = name + root.substring(1);
+				}
 			}
+			
+			name = name+ root;
+		
 		}
 		
 		return name;
