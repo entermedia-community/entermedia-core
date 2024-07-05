@@ -608,7 +608,14 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 	public void putProtectedPageValue(String inKey, Object inObject)
 	{
 		getProtectedFields().remove(inKey);
-		putPageValue(inKey, inObject);
+		if (inObject == null)
+		{
+			getVariables().remove(inKey);
+		}
+		else
+		{
+			getVariables().put(inKey, inObject);
+		}
 		getProtectedFields().add(inKey);
 	}
 
