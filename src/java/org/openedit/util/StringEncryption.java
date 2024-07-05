@@ -420,9 +420,11 @@ public class StringEncryption
 		{
 			//allow root to be specified specifically.
 			String root = inReq.findPathValue("logincookieroot");
+			if(root != null) {
+				name = name+ root;
+			}
 			
-			
-			if(root == null) {
+			else {
 				root = PathUtilities.extractRootDirectory(inReq.getPath() );
 				if( root != null && root.length() > 1)
 				{
@@ -430,7 +432,7 @@ public class StringEncryption
 				}
 			}
 			
-			name = name+ root;
+			
 		
 		}
 		
