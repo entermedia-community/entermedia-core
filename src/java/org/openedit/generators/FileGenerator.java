@@ -199,7 +199,15 @@ public class FileGenerator extends BaseGenerator implements Generator
 			{
 				if( length > -1)
 				{
-					res.setContentLength((int)length);
+					if (length <= Integer.MAX_VALUE)
+					{
+						res.setContentLength((int)length);
+					}
+					else
+					{
+						//res.removeHeader("Content-Length");
+					    res.addHeader("Content-Length", Long.toString(length));
+					}
 				}
 				InputStreamReader reader = null;
 				if ( contentpage.getCharacterEncoding() != null )
