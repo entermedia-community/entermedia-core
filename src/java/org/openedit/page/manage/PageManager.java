@@ -33,6 +33,7 @@ import org.openedit.WebPageRequest;
 import org.openedit.cache.CacheManager;
 import org.openedit.config.Script;
 import org.openedit.config.Style;
+import org.openedit.generators.VelocityGenerator;
 import org.openedit.page.Page;
 import org.openedit.page.PageSettings;
 import org.openedit.repository.CompoundRepository;
@@ -795,5 +796,15 @@ public class PageManager
 			}
 		}
 		return paths;
+	}
+	public void enableEditMode(boolean inB) 
+	{
+		VelocityGenerator gen =  (VelocityGenerator)getPageSettingsManager().getGenerator("velocityGenerator");
+		if( gen != null)
+		{
+			gen.enableEditMode(inB);
+		}
+		
+	
 	}
 }

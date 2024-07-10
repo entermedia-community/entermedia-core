@@ -17,10 +17,13 @@
 package org.openedit.generators;
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.io.Writer;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 
 import org.apache.commons.logging.Log;
@@ -52,6 +55,7 @@ public class VelocityGenerator extends BaseGenerator implements Generator
 	public File fieldRootDirectory;
 	protected VelocityEngine fieldEngine;
 	protected OpenEditEngine fieldOpenEditEngine;
+	Properties velocityProperties;
 	
 	public VelocityGenerator()
 	{
@@ -156,7 +160,6 @@ public class VelocityGenerator extends BaseGenerator implements Generator
 			throw new OpenEditException(ioex.getMessage() + " on " + inPage.getPath(),ioex);
 		}
 	}
-
 	protected void init() 
 	{
 		//Velocity.setProperty( "runtime.log.logsystem.class", getClass().getName() );
@@ -169,7 +172,31 @@ public class VelocityGenerator extends BaseGenerator implements Generator
 		 * object.)
 		 */
 		//Map velocityProperties = new HashMap();
-		Properties velocityProperties = new Properties();
+		
+		
+		velocityProperties = new Properties();
+
+		File root = new File( getRootDirectory(),"WEB-INF/velocityprod.properties");
+		if( root.exists() )
+		{
+			try
+			{
+				FileReader reader = new FileReader(root,StandardCharsets.UTF_8);
+				velocityProperties.load(reader);
+				reader.close();
+			}
+			catch (Throwable ex)
+			{
+				log.error(ex,ex);
+			}
+		}
+		else
+		{
+			velocityProperties.put("velocimacro.library.autoreload", "false");
+	 		velocityProperties.put("file.resource.loader.cache", "true");
+			velocityProperties.put("file.resource.loader.modificationCheckInterval", "2"); // 2 seconds of cache
+			
+		}
 //		velocityProperties.put(RuntimeConstants.RUNTIME_LOG_LOGSYSTEM_CLASS,
 //			"org.openedit.generators.VelocityLogger");
 
@@ -183,10 +210,12 @@ public class VelocityGenerator extends BaseGenerator implements Generator
 		velocityProperties.put("resource.loader","file" );  //valid options might be file, class, jar
 		velocityProperties.put("runtime.log.invalid.references", "false");
 		velocityProperties.put("resource.manager.logwhenfound", "false");
-
-		velocityProperties.put("file.resource.loader.cache", "true");
+		
+		
+		//https://stackoverflow.com/questions/2334628/apache-velocity-performance-pitfalls
+		
+		velocityProperties.put("parser.pool.size", "50");
 		velocityProperties.put(RuntimeConstants.RESOURCE_MANAGER_DEFAULTCACHE_SIZE, "300"); //89 is the default
-		velocityProperties.put("file.resource.loader.modificationCheckInterval", "2"); // 2 seconds of cache
  
 		velocityProperties.put("velocimacro.permissions.allow.inline", "true");
 		velocityProperties.put("velocimacro.permissions.allow.inline.to.replace.global", "true");
@@ -251,11 +280,16 @@ public class VelocityGenerator extends BaseGenerator implements Generator
 		
 		//fieldEngine = new VelocityEngine(velocityProperties);
 		
+	}
+	protected void initEngine() 
+	{
+
 		try
 		{
 		   //velocityProperties.put("file.resource.loader.instance", getGeneratedResourceLoader());
 		   getEngine().setApplicationAttribute("openEditEngine", getOpenEditEngine());
 		   getEngine().init(velocityProperties);
+		   //getEngine().reset();
 			
 /*		   Class c = getEngine().getClass();
 		   // get the reflected object 
@@ -291,6 +325,7 @@ public class VelocityGenerator extends BaseGenerator implements Generator
 		{
 			fieldEngine = new VelocityEngine();
 			init();
+			initEngine();
 		}
 		return fieldEngine;
 	}
@@ -308,6 +343,27 @@ public class VelocityGenerator extends BaseGenerator implements Generator
 	public void setOpenEditEngine(OpenEditEngine inOpenEditEngine)
 	{
 		fieldOpenEditEngine = inOpenEditEngine;
+	}
+
+	public void enableEditMode(boolean inEditor)
+	{
+		fieldEngine = new VelocityEngine();
+		init();
+
+		if( inEditor)
+		{
+			velocityProperties.put("file.resource.loader.modificationCheckInterval","2");
+			velocityProperties.put("file.resource.loader.cache","true");
+		}
+		else   //Production
+		{
+			velocityProperties.put("file.resource.loader.cache","true");
+			velocityProperties.put("file.resource.loader.modificationCheckInterval","60");
+		}
+		initEngine();
+//		
+//		 = 50
+
 	}
 
 }
