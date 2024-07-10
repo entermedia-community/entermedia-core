@@ -251,7 +251,16 @@ public class FileGenerator extends BaseGenerator implements Generator
 	{
 		if( length > -1 && inReq.getResponse() != null)
 		{
-			inReq.getResponse().setContentLength((int)length);
+			
+			if (length <= Integer.MAX_VALUE)
+			{
+				inReq.getResponse().setContentLength((int)length);
+			}
+			else
+			{
+				//res.removeHeader("Content-Length");
+				inReq.getResponse().addHeader("Content-Length", Long.toString(length));
+			}
 		}
 		OutputStream outs = inOut.getStream();
 		if( start > -1)
