@@ -498,7 +498,16 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				inQuery = getSearchSecurity().attachSecurity(inPageRequest, this, inQuery);
 				
 				tracker = search(inQuery); //search here <----!!!!!
-				tracker.setPage(startingpage);
+
+				String setpage = inPageRequest.findPathValue(getSearchType()+ "setpage");
+				if( setpage != null)
+				{
+					tracker.setPage(Integer.parseInt(setpage));
+				}
+				else
+				{
+					tracker.setPage(startingpage);
+				}
 				tracker.setSearchQuery(inQuery);
 
 				String cacheit = inPageRequest.getRequestParameter("reloadresults");
