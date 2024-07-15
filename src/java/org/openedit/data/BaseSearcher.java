@@ -305,6 +305,16 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				runsearch = true;
 				startingpage = tracker.getPage();
 			}
+			String setpage = inPageRequest.findPathValue(getSearchType()+ "setpage");
+			if( setpage != null)
+			{
+				startingpage = Integer.parseInt(setpage);
+				if(tracker != null) 
+				{
+					tracker.setPage(startingpage);
+				}
+			}
+			
 			if (!runsearch && !inQuery.equalTerms(tracker.getSearchQuery()))
 			{
 				runsearch = true;
@@ -499,15 +509,9 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				
 				tracker = search(inQuery); //search here <----!!!!!
 
-				String setpage = inPageRequest.findPathValue(getSearchType()+ "setpage");
-				if( setpage != null)
-				{
-					tracker.setPage(Integer.parseInt(setpage));
-				}
-				else
-				{
-					tracker.setPage(startingpage);
-				}
+				
+				tracker.setPage(startingpage);
+				
 				tracker.setSearchQuery(inQuery);
 
 				String cacheit = inPageRequest.getRequestParameter("reloadresults");
