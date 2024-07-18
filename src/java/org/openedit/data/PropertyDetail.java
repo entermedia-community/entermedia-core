@@ -873,8 +873,6 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 		return Boolean.valueOf(highlight);
 	}
 	
-	
-	
 	protected boolean fieldFolderBased;
 	
 	public boolean isFolderBased()
@@ -885,6 +883,13 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 	public void setFolderBased(boolean inSystemDefined)
 	{
 		fieldFolderBased = inSystemDefined;
+	}
+
+	public boolean isAutoIncrement() 
+	{
+		String highlight = get("autoincrement");
+		return Boolean.valueOf(highlight);
+
 	}
 
 	
