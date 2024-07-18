@@ -456,6 +456,11 @@ public class SearcherManager
 	
 	public Object getValue(Data inData, PropertyDetail inDetail, String inMask, Map inExtra, String inLocale)
 	{
+		if(inData == null)
+		{
+			return null;
+		}
+		
 		Object object =  inData.getValue(inDetail.getId());
 		
 		if(object != null || inMask == null) 
@@ -465,16 +470,15 @@ public class SearcherManager
 				Collection vals = ((MultiValued) inData).getValues(inDetail.getId());
 				return vals;
 			}
-			if(inData != null)
-			{
+
 				
-				if( object instanceof LanguageMap)
-				{
-					LanguageMap lan = (LanguageMap)object;
-					return lan.getText(inLocale);
-				}	
-				return object;
-			}
+			if( object instanceof LanguageMap)
+			{
+				LanguageMap lan = (LanguageMap)object;
+				return lan.getText(inLocale);
+			}	
+			return object;
+
 		}
 		
 		String catalogId = inDetail.getListCatalogId();
