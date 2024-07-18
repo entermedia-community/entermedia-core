@@ -481,6 +481,11 @@ public class SearcherManager
 
 		}
 		
+		return renderMask(inData, inDetail, inMask, inExtra, inLocale); 
+	}
+
+
+	public Object renderMask(Data inData, PropertyDetail inDetail, String inMask, Map inExtra, String inLocale) {
 		String catalogId = inDetail.getListCatalogId();
 		String searchType = inDetail.getSearchType();
 		
@@ -503,12 +508,12 @@ public class SearcherManager
 		{
 			newvals.putAll(inExtra);
 		}
-		String val = replacer.replace(inMask, newvals);
+		String val = replacer.replace(inMask, newvals, inLocale);
 		if( val != null && val.startsWith("$") && val.equals(inMask) )
 		{
 			return "";
 		}
-		return val; 
+		return val;
 	}
 	/*
 	public Collection getValues(String inCatalogId, String inMask,Map inValues)
