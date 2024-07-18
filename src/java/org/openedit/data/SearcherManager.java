@@ -20,6 +20,7 @@ import org.openedit.OpenEditException;
 import org.openedit.cache.CacheManager;
 import org.openedit.hittracker.HitTracker;
 import org.openedit.locks.LockManager;
+import org.openedit.modules.translations.LanguageMap;
 import org.openedit.node.NodeManager;
 import org.openedit.util.DateStorageUtil;
 import org.openedit.util.Replacer;
@@ -248,29 +249,13 @@ public class SearcherManager
 	{
 		return getData(inDetail.getListCatalogId(), inDetail.getListId(), inValue);
 	}
+	/*
 	public Object getValue(Searcher inSearcher, Data inParent, String inField)
 	{
 		PropertyDetail detail = inSearcher.getDetail(inField);
 		Object val = getValue(inParent,detail);
 		return val;
-	}
-	public Object getValue(Data inParent,PropertyDetail inDetail)
-	{
-		if(inParent == null || inDetail == null){
-			return null;
-		}
-		String mask = inDetail.get("rendermask");
-		if( mask == null )
-		{
-			mask = inDetail.get("mask"); //Legacy. Remove by 2023
-		}
-		Object val = inParent.getValue(inDetail.getId());
-		if( val == null && mask != null)
-		{
-			val = getValue(inDetail.getCatalogId(),mask,inParent.getProperties());
-		}
-		return val;
-	}
+	}*/
 	public Collection getUniqueValues(Searcher inSearcher, HitTracker inHits, String inColumn, String startsWith)
 	{
 		if(inHits != null){
@@ -332,6 +317,7 @@ public class SearcherManager
 		Collections.sort(sorted);
 		return sorted;
 	}
+	/*
 	public String getLabel(Searcher inSearcher, Data inData)
 	{
 		if(inData == null){
@@ -359,6 +345,8 @@ public class SearcherManager
 		}
 		return val;
 	}
+	*/
+	/*
 	public String getLabel(PropertyDetail inDetail, Data inData, String inLocale)
 	{
 		if( inData == null || inDetail == null)
@@ -387,6 +375,8 @@ public class SearcherManager
 		}
 		return val;
 	}
+	*/
+	/*
 	public String getLabel(PropertyDetail inDetail, Data inData)
 	{
 		if(inData == null){
@@ -423,8 +413,12 @@ public class SearcherManager
 		}
 		return val;
 	}
-
-	public String getValue(String inCatalogId, String inMask,Map inValues)
+	*/
+	
+	
+	
+	/*
+	public String getValue(String inCatalogId, String inMask, Map inValues)
 	{
 		if( inMask == null)
 		{
@@ -446,28 +440,49 @@ public class SearcherManager
 		}
 		return val; 
 	}
-	public String getValue(String inCatalogId, String inMask,String inSearchType, Data inData,String inLocale)
-	{
-		String code = getValue(inCatalogId,inMask,inSearchType,inData,null,inLocale);
-		return code;
-	}
-	public String getValue(String inCatalogId, String inMask, String inSearchType, Data inData, Map inExtra, String inLocale)
-	{
-		if( inMask == null)
-		{
-			return null;
-		}
+	*/
 
-		Replacer replacer = getReplacer(inCatalogId);
+	public Object getValue(Data inData, PropertyDetail inDetail, String inLocale)
+	{
+		Object value = getValue(inData, inDetail, null, inLocale);
+		return value;
+	}
+	
+	public Object getValue(Data inData, PropertyDetail inDetail, Map inExtra, String inLocale)
+	{
+		String mask = inDetail.get("rendermask");
+		if(mask == null) 
+		{
+			if(inDetail.isMultiValue() && inData instanceof MultiValued) 
+			{
+				Collection vals = ((MultiValued) inData).getValues(inDetail.getId());
+				return vals;
+			}
+			if(inData != null)
+			{
+				Object object =  inData.getValue(inDetail.getId());
+				if( object instanceof LanguageMap)
+				{
+					LanguageMap lan = (LanguageMap)object;
+					return lan.getText(inLocale);
+				}	
+				return object;
+			}
+		}
 		
-		Searcher searcher = getExistingSearcher(inCatalogId,inSearchType);
+		String catalogId = inDetail.getListCatalogId();
+		String searchType = inDetail.getSearchType();
+		
+		Replacer replacer = getReplacer(catalogId);
+		
+		Searcher searcher = getExistingSearcher(catalogId, searchType);
 		
 		Map newvals = new HashMap();
 		newvals.put("formatteddate", DateStorageUtil.getStorageUtil().getTodayForDisplay());
 		
-		DataWithSearcher smartdata = new DataWithSearcher(this,inCatalogId,inSearchType,inData);
+		DataWithSearcher smartdata = new DataWithSearcher(this, catalogId, searchType, inData);
 		newvals.put("data",smartdata);
-		newvals.put(inSearchType,smartdata);
+		newvals.put(searchType,smartdata);
 		
 		if (inData != null) 
 		{
@@ -477,13 +492,14 @@ public class SearcherManager
 		{
 			newvals.putAll(inExtra);
 		}
-		String val = replacer.replace(inMask, newvals);
-		if( val.startsWith("$") && val.equals(inMask) )
+		String val = replacer.replace(mask, newvals);
+		if( val != null && val.startsWith("$") && val.equals(mask) )
 		{
 			return "";
 		}
 		return val; 
 	}
+	/*
 	public Collection getValues(String inCatalogId, String inMask,Map inValues)
 	{
 		String value = getValue(inCatalogId,inMask,inValues);
@@ -494,7 +510,7 @@ public class SearcherManager
 		String[] values = MultiValued.VALUEDELMITER.split(value);
 		return Arrays.asList(values);
 	}
-	
+	*/
 	public Replacer getReplacer(String inCatalogId)
 	{
 		return (Replacer)getModuleManager().getBean(inCatalogId, "replacer");
