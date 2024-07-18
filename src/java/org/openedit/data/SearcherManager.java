@@ -447,11 +447,18 @@ public class SearcherManager
 		Object value = getValue(inData, inDetail, null, inLocale);
 		return value;
 	}
-	
 	public Object getValue(Data inData, PropertyDetail inDetail, Map inExtra, String inLocale)
 	{
 		String mask = inDetail.get("rendermask");
-		if(mask == null) 
+		Object value = getValue(inData, inDetail, mask,  null, inLocale);
+		return value;
+	}
+	
+	public Object getValue(Data inData, PropertyDetail inDetail, String inMask, Map inExtra, String inLocale)
+	{
+		Object object =  inData.getValue(inDetail.getId());
+		
+		if(object != null || inMask == null) 
 		{
 			if(inDetail.isMultiValue() && inData instanceof MultiValued) 
 			{
@@ -460,7 +467,7 @@ public class SearcherManager
 			}
 			if(inData != null)
 			{
-				Object object =  inData.getValue(inDetail.getId());
+				
 				if( object instanceof LanguageMap)
 				{
 					LanguageMap lan = (LanguageMap)object;
@@ -492,8 +499,8 @@ public class SearcherManager
 		{
 			newvals.putAll(inExtra);
 		}
-		String val = replacer.replace(mask, newvals);
-		if( val != null && val.startsWith("$") && val.equals(mask) )
+		String val = replacer.replace(inMask, newvals);
+		if( val != null && val.startsWith("$") && val.equals(inMask) )
 		{
 			return "";
 		}
