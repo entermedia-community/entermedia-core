@@ -804,7 +804,25 @@ public class PageManager
 		{
 			gen.enableEditMode(inB);
 		}
-		
-	
 	}
+	
+	public String translate(Page inPage, String inText, String inLocale)
+	{
+		
+		String value = getTextLabelManager().getAutoText(inPage.getPath(),inText, inLocale);
+		return value;
+	}
+
+	protected TextLabelManager fieldTextLabelManager;
+
+	public TextLabelManager getTextLabelManager()
+	{
+		return fieldTextLabelManager;
+	}
+
+	public void setTextLabelManager(TextLabelManager inTextLabelManager)
+	{
+		fieldTextLabelManager = inTextLabelManager;
+	}
+	
 }
