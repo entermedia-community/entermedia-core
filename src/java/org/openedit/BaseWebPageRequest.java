@@ -585,15 +585,13 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 	 */
 	public void putPageValue(String inKey, Object inObject)
 	{
-		
-		if( "siteroot".equals(inKey))
+		if( "siteroot".equals(inKey) ||  getProtectedFields().contains(inKey) && getParent() != null)
 		{
-			throw new OpenEditException("Nobody change siteroot! " + inObject);
-		}
-		
-		if (getProtectedFields().contains(inKey) && getParent() != null)
-		{
-			throw new OpenEditException("Restricted variables can only be set at the root level");
+			if( get(inKey) != null )
+			{
+				log.error("Nobody change resticted variables! " + inObject);
+				return;
+			}
 		}
 		if (inObject == null)
 		{
