@@ -1712,11 +1712,15 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 		if(getSearcher() != null) {
 			text = "[" + getSearchType() + "]";
 		}
-		text = text + " size:" + size() + " page: " + getPage()  + " query: " + getSearchQuery().toQuery();
+		text = text + " size:" + size() + " query: " + getSearchQuery().toQuery();
 		if( getSearchQuery() != null )
 			{
 			text = text + " sorted by: "+ getSearchQuery().getSorts();
 			}
+		if( getPage() > 1)
+		{
+			text = text + " page: " + getPage();
+		}
 		return text;
 	}
 
