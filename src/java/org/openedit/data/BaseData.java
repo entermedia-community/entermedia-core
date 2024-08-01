@@ -245,7 +245,12 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 		setProperty("id", String.valueOf( inNewid) );
 	}
 
-	public void setId(String inNewid) {
+	public void setId(String inNewid) 
+	{
+		if( inNewid == null)
+		{
+			inNewid = ValuesMap.NULLSTRING;
+		}
 		setProperty("id", inNewid);
 	}
 
@@ -301,6 +306,10 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 	public Object getValue(String inKey)
 	{
 		Object val = getMap().getValue(inKey);
+		if( val == ValuesMap.NULLSTRING)
+		{
+			val = null;
+		}
 		if( val == null && inKey.equals("name"))
 		{
 			Map map = (Map)getMap().getValue(inKey  + "_int");

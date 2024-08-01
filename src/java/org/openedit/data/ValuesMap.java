@@ -19,6 +19,8 @@ import org.openedit.util.DateStorageUtil;
 public class ValuesMap extends HashMap
 {
 	public static final Object NULLVALUE = new Object(); 
+	public static final String NULLSTRING= new String();
+	
 	public ValuesMap()
 	{
 		super(5);
