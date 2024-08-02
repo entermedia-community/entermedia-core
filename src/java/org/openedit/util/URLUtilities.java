@@ -1010,6 +1010,7 @@ public class URLUtilities
 		  while (m.find()) {
 		   // String text = m.group(1);
 		    String text = m.group(0).trim();
+		    log.info("Escaping: " + text);
 		    if( maxchars > -1 && maxchars < escaped.length() )  //Not gonna fit
 		    {
 		    	m.appendReplacement(sb,text);
