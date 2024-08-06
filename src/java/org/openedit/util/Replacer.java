@@ -128,7 +128,7 @@ public class Replacer implements CatalogEnabled
 						if( pairs.length > i)
 						{
 							//grab the hour?
-							format = pairs[i+1]; //TODO: grab all text
+							format = nextpart;
 						}
 
 						currentvalue = DateStorageUtil.getStorageUtil().formatDateObj(date, format);
