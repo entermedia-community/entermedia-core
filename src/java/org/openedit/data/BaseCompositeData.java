@@ -279,19 +279,26 @@ public class BaseCompositeData extends BaseData implements Data, CompositeData
 					if( dataval instanceof LanguageMap)
 					{
 						LanguageMap langs = (LanguageMap) firstval;
-						LanguageMap copy = null;
-						copy = new LanguageMap( (Map)firstval);
-						for (Iterator iterator3 = copy.keySet().iterator(); iterator3.hasNext();)
+						LanguageMap copy = new LanguageMap( (Map)firstval);
+						for (Iterator iterator3 = langs.keySet().iterator(); iterator3.hasNext();)
 						{
 							String code = (String) iterator3.next();
 							Object value = ((LanguageMap) firstval).get(code);
 							Object value2 = ((LanguageMap) dataval).get(code);
 							if(!value.equals(value2)) {
-								langs.remove(code);
-								firstval = langs;
+								copy.remove(code);
 							}
 						}
-						continue;
+						if(copy.isEmpty())
+						{
+							firstval = ValuesMap.NULLVALUE;  //They dont agree
+							break;
+						}
+						else
+						{
+							firstval = copy;
+							continue;
+						}
 					}
 					if( dataval instanceof List && firstval instanceof List)
 					{
@@ -371,6 +378,7 @@ public class BaseCompositeData extends BaseData implements Data, CompositeData
 		//getProperties().put(inKey, inValue);
 		getPropertiesSet().put(inKey,inValue);
 	}
+	
 	public void setValues(String inKey, Collection<String> inValues)
 	{
 		if( inValues == null )
@@ -384,12 +392,21 @@ public class BaseCompositeData extends BaseData implements Data, CompositeData
 	@Override
 	public void setValue(String inKey, Object inValue)
 	{
+		if ("emrecordstatus".equals(inKey))
+		{
+			return;//ignore
+		}
+		if (inValue == null)
+		{
+			inValue = "";
+		}
+		/*
+		 * TODO: should we use this?
 		if( inValue == null )
 		{
 			getPropertiesSet().put(inKey, ValuesMap.NULLVALUE);
 			return;
-		}
-		//getProperties().put(inKey, inValue);
+		}*/
 		getPropertiesSet().put(inKey,inValue);
 	}
 	
@@ -454,14 +471,25 @@ public class BaseCompositeData extends BaseData implements Data, CompositeData
 	{
 		//compare keywords, categories and data. 
 		List<Data> tosave = new ArrayList(100);
+		
+		
+		Map safevalues = new HashMap();
+
+		for (Iterator iterator = getEditFields().iterator(); iterator.hasNext();)
+		{
+			String field = (String) iterator.next();
+			addSafeValue(field, safevalues);
+		}
+		
+		
 		long start = System.currentTimeMillis();
 		for (Iterator iterator = getSelectedResults().iterator(); iterator.hasNext();)
 		{
 			Data data = (Data) iterator.next();
 			Data inloopasset = null;
 			getEventManager().fireDataEditEvent(inReq, getSearcher(), data);
-
-			for (Iterator iterator2 = getPropertiesSet().keySet().iterator(); iterator2.hasNext();)
+ 
+			for (Iterator iterator2 = safevalues.keySet().iterator(); iterator2.hasNext();)
 			{
 				String key = (String) iterator2.next();
 				if( "id".equals(key))
@@ -469,7 +497,7 @@ public class BaseCompositeData extends BaseData implements Data, CompositeData
 					continue;
 				}
 					
-				Object newvalue = getPropertiesSet().get(key);
+				Object newvalue = safevalues.get(key);
 				PropertyDetail detail = getSearcher().getDetail(key);
 				Object datavalue = data.get(key);
 				
@@ -539,6 +567,59 @@ public class BaseCompositeData extends BaseData implements Data, CompositeData
 		setSelectedResults(null);
 		getPropertiesSet().clear();
 	}
+	protected void addSafeValue(String field, Map safevalues) {
+		Object newval = getPropertiesSet().getObject(field); //set by the user since last save
+		//See if the values changed
+		Object oldval = getValueFromResults(field); 
+		//A blank string means no common value.
+		//A null means empty
+
+		if( newval == null && oldval == null)
+		{
+			return;
+		}
+		
+		if (newval != null && newval instanceof String)  //Clean up the newval
+		{
+			String snewval = newval.toString();
+			if( snewval.isEmpty())
+			{
+				newval = null;
+			}
+		}
+		
+		if (oldval != null && oldval.toString().isEmpty())
+		{
+			oldval = null;
+		}
+		PropertyDetail detail = getPropertyDetails().getDetail(field);
+		//See if there is a newval
+		if (newval != null && !newval.equals(oldval))
+		{
+			
+			if (detail.isMultiLanguage() && oldval != null)
+			{
+				
+				LanguageMap newvall = (LanguageMap)newval;
+				LanguageMap oldvall = (LanguageMap)oldval;
+				LanguageMap langs = (LanguageMap) oldvall;
+				for (Iterator iterator3 = langs.keySet().iterator(); iterator3.hasNext();)
+				{
+					String code = (String) iterator3.next();
+					if(newvall.getText(code) == null)
+					{
+						newvall.setText(code, "");
+					}
+				}
+				safevalues.put(field, newvall);
+			}
+			else
+			{
+				safevalues.put(field, newval);
+			}
+		}
+	}
+	
 	protected void setValue(Data inLoaded, String inKey, Object inValue)
 	{
 		// TODO Auto-generated method stub
@@ -549,6 +630,8 @@ public class BaseCompositeData extends BaseData implements Data, CompositeData
 		inLoaded.setValue(inKey, inValue);
 
 	}
+	
+	
 	protected void saveAll(WebPageRequest inReq, Collection<Data> tosave)
 	{
 		getSearcher().saveAllData( tosave, null);
