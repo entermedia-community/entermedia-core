@@ -83,9 +83,11 @@ public class DataWithSearcher {
 					}
 				}
 			}
-			else if(detail.isDate() && !(othervalue instanceof Date))
+			else if(detail.isDate() && !(othervalue instanceof Date)) //Is this used?
 			{
 				Date date = DateStorageUtil.getStorageUtil().parseFromStorage(othervalue.toString());
+				//TODO: Support .year
+				
 				return date;
 			}
 			
