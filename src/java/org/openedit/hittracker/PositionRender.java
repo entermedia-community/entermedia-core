@@ -248,7 +248,7 @@ import org.apache.commons.logging.LogFactory;
 		
 		public List pagesAfter(List pagerange)
 		{
-			if (getTotalPages() == getPage())
+			if (getTotalPages() == getPage() || getTotalPages() == 0)
 			{
 				return Collections.EMPTY_LIST;
 			}
