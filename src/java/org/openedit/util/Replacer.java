@@ -176,13 +176,15 @@ public class Replacer implements CatalogEnabled
 				else if(currentvalue instanceof DataWithSearcher)
 				{
 					DataWithSearcher data = (DataWithSearcher)currentvalue;
-					String text = data.getData().getName(inLocale);
-//					text = UrlU (text);
-//					$text.replaceAll("(\r\n|\n)", "<br />")
-//
-//					String span = String.format("<span class='labelitem' data-searchtype='%str' data-id='%s'>" + text + "</span>",data.getData().getId(),data.getSearchType());
-//					sub = span;
-					sub = text;
+					if(data.getData() != null) {
+						String text = data.getData().getName(inLocale);
+	//					text = UrlU (text);
+	//					$text.replaceAll("(\r\n|\n)", "<br />")
+	//
+	//					String span = String.format("<span class='labelitem' data-searchtype='%str' data-id='%s'>" + text + "</span>",data.getData().getId(),data.getSearchType());
+	//					sub = span;
+						sub = text;
+					}
 				}
 				else
 				{

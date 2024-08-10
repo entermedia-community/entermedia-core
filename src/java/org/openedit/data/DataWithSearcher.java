@@ -59,7 +59,10 @@ public class DataWithSearcher {
 	{
 		Searcher searcher = getSearcherManager().getExistingSearcher(getCatalogId(), getSearchType());
 		PropertyDetail detail = searcher.getPropertyDetails().getDetail(inChildField);
-		Object othervalue = getData().getValue(inChildField);
+		Object othervalue = null;
+		if(getData() != null) {
+			othervalue= getData().getValue(inChildField);
+		}
 		if( othervalue != null)
 		{
 			if(detail.isList())
