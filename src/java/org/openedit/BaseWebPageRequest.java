@@ -1177,7 +1177,7 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 				name = getRequestParameter(inName);
 				if(name !=null)
 				{
-					log.info("Requestparameter called from: "+getPath());
+					//log.info("Requestparameter called from: "+getPath());
 				}
 			}
 		}
