@@ -224,46 +224,6 @@ public class EventManager
 	}
 	
 	
-	// entityversionLog
-	
-	public void fireAssetAddedToEntity(WebPageRequest inReq, Searcher inSearcher, Data data)
-	{
-		WebEvent event = new WebEvent();
-		event.setSearchType(inSearcher.getSearchType());
-		event.setCatalogId(inSearcher.getCatalogId());
-		event.setOperation("assetadded");
-		event.setProperty("applicationid", inReq.findValue("applicationid"));
-		event.setUser(inReq.getUser());
-		
-		//event.setProperty("dataid", data.getId());
-		//event.setProperty("id", data.getId());
-		event.setProperty("moduleid", data.get("entitysourcetype"));
-		event.setProperty("entityid", data.getId()); //data.getId() ??
-				
-		event.setProperty("note", "data added to entity");
-		event.setValue("data", data);
-		fireEvent(event);
-	}
-	
-	public void fireDataRemovedFromEntity(WebPageRequest inReq, Searcher inSearcher, Data data)
-	{
-		WebEvent event = new WebEvent();
-		event.setSearchType(inSearcher.getSearchType());
-		event.setCatalogId(inSearcher.getCatalogId());
-		event.setOperation("dataremoved");
-		event.setProperty("applicationid", inReq.findValue("applicationid"));
-		event.setUser(inReq.getUser());
-		
-		//event.setProperty("dataid", data.getId());
-		//event.setProperty("id", data.getId());
-		event.setProperty("moduleid", data.get("entitysourcetype"));
-		event.setProperty("entityid", data.getId());
-				
-		event.setProperty("note", "data removed from entity");
-		event.setValue("data", data);
-		fireEvent(event);
-	}
-
 
 	
 }
