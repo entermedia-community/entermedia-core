@@ -450,4 +450,10 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 		return false;
 	}
 
+	
+	public Data copy()
+	{
+		Data copy = (Data)clone();
+		return copy;
+	}
 }
