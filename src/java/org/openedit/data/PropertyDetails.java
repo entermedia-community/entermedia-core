@@ -716,5 +716,18 @@ public class PropertyDetails extends ArrayList
 		}
 		return found;
 	}
+
+	public List findRequiredProperties() {
+			List list = new ArrayList(getDetails().size());
+			for (Iterator iter = getDetails().iterator(); iter.hasNext();)
+			{
+				PropertyDetail d = (PropertyDetail) iter.next();
+				if (d.isRequired()  && !d.isDeleted())
+				{
+					list.add(d);
+				}
+			}
+			return list;
+	}
 	
 }
