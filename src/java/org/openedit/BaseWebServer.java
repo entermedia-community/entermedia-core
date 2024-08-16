@@ -683,8 +683,9 @@ public class BaseWebServer implements WebServer
 				if( repositorytype == null)
 				{
 					//For legacy support. New UI uses type drop down
-					boolean versioncontrol = Boolean.parseBoolean(child.attributeValue("useversioncontrol"));
-					if (versioncontrol)
+					String isset = child.attributeValue("useversioncontrol");
+					
+					if (isset == null || Boolean.parseBoolean(isset))
 					{
 						repositorytype = "versionRepository";
 					}

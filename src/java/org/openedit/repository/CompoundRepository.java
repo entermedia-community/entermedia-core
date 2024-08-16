@@ -11,7 +11,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.openedit.ModuleManager;
 import org.openedit.repository.filesystem.FileRepository;
+import org.openedit.repository.filesystem.VersionedRepository;
 import org.openedit.util.PathUtilities;
 
 /**
@@ -24,6 +26,17 @@ public class CompoundRepository implements Repository
 {
 	protected List fieldRepositories;
 	protected Repository fieldDefaultRepository;
+	protected Repository fieldVersionRepository;
+	protected ModuleManager fieldModuleManager;
+	public ModuleManager getModuleManager() {
+		return fieldModuleManager;
+	}
+
+	public void setModuleManager(ModuleManager inModuleManager) {
+		fieldModuleManager = inModuleManager;
+	}
+
+
 	protected File fieldRoot;
 	
 	public void addRepository(Repository inRepository)
@@ -84,6 +97,17 @@ public class CompoundRepository implements Repository
 				}
 			}
     	}
+    	
+    	if( inPath.startsWith("/WEB-INF/data/") && inPath.length() > 23)
+    	{
+    		
+    		String[] paths = inPath.split("/");
+    		if( paths.length > 5 && paths[5].equals("originals"))
+    		{
+    			return getVersionRepository();
+    		}
+    	}
+    	
 		return getDefaultRepository();
 	}
 	
@@ -125,7 +149,7 @@ public class CompoundRepository implements Repository
 	{
 		return resolveRepository( inPath ).getVersions( inPath );
 	}
-	
+
 	public Repository getDefaultRepository()
 	{
 		if (fieldDefaultRepository == null)
@@ -137,6 +161,19 @@ public class CompoundRepository implements Repository
 		}
 
 		return fieldDefaultRepository;
+	}
+
+	public Repository getVersionRepository()
+	{
+		if (fieldVersionRepository == null)
+		{
+			VersionedRepository repo = (VersionedRepository)getModuleManager().getBean("versionRepository"); //new XmlVersionedRepository();
+			repo.setPath("/");
+			repo.setExternalPath(getRoot().getAbsolutePath());
+			fieldVersionRepository =repo;
+		}
+
+		return fieldVersionRepository;
 	}
 	public void setDefaultRepository( Repository defaultRepository )
 	{

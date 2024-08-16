@@ -27,21 +27,12 @@ public abstract class VersionedRepository extends FileRepository
 	}
 	public ContentItem get( String inPath ) throws RepositoryException
 	{
-		File file = getFile( inPath);
-		FileItem contentItem = new FileItem();
-//		if ( inPath.endsWith(".html") && !file.exists() )
-//		{
-//			String xmlPath = PathUtilities.extractPagePath( inPath )+ ".xml";
-//			File xfile = getFile(xmlPath);
-//			if( xfile.exists())
-//			{
-//				file = xfile;
-//				contentItem.setActualPath(xmlPath);
-//			}
-//		}
-//		checkVersion(file, inPath);
-		contentItem.setPath( inPath );
-		contentItem.setFile( file);
+//		File file = getFile( inPath);
+//		FileItem contentItem = new FileItem();
+//		contentItem.setPath( inPath );
+//		contentItem.setFile( file);
+//		return contentItem;
+		ContentItem contentItem = super.get(inPath);
 		return contentItem;
 	}
 	public ContentItem getStub( String inPath ) throws RepositoryException
@@ -255,23 +246,23 @@ public abstract class VersionedRepository extends FileRepository
 	public void remove( ContentItem inContentItem ) throws RepositoryException
 	{
 		File todelete = getFile( inContentItem.getPath() );
-		if ( inContentItem.getMessage() == null)
-		{
-			inContentItem.setMessage( inContentItem.getPath() + " removed");
-		}
-		inContentItem.setType( ContentItem.TYPE_REMOVED );
-/*		if ( inContentItem.exists() )
-		{
-			File metadata = getMetaDataFile(todelete);
-			if ( metadata.exists() )
-			{
-				incrementVersion( inContentItem );
-				saveVersion( inContentItem );
-			}
-		}
-*/
 		if( inContentItem.isMakeVersion() )
 		{
+			if ( inContentItem.getMessage() == null)
+			{
+				inContentItem.setMessage( inContentItem.getPath() + " removed");
+			}
+			inContentItem.setType( ContentItem.TYPE_REMOVED );
+	/*		if ( inContentItem.exists() )
+			{
+				File metadata = getMetaDataFile(todelete);
+				if ( metadata.exists() )
+				{
+					incrementVersion( inContentItem );
+					saveVersion( inContentItem );
+				}
+			}
+	*/
 			saveVersion(inContentItem);
 		}
 		deleteAll(todelete);

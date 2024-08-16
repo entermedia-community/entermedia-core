@@ -730,7 +730,7 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 	{
 		return inHit.get(inString);
 	}
-	public Collection collectValues(String inString)
+	public Collection<String> collectValues(String inString)
 	{
 		if( size() > 10000)
 		{
