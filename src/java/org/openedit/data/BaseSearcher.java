@@ -539,7 +539,11 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 						clear = (String)inPageRequest.findPathValue(searchtype + "clearselection");
 					}
 					if (clear == null) {
-						clear = (String)inPageRequest.getPageValue(searchtype + "clearselection");
+						Object val = inPageRequest.getPageValue(searchtype + "clearselection");
+						if( val != null)
+						{
+							clear = val.toString();
+						}
 					}
 					if (Boolean.parseBoolean(clear))
 					{
