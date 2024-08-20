@@ -419,4 +419,15 @@ public class QueryBuilder
 		}
 		return this;
 	}
+	public QueryBuilder ids(String[] inAssetids) {
+		return orgroup("id",inAssetids);
+	}
+	protected QueryBuilder orgroup(String inKey, String[] inAssetids) {
+		if( inAssetids == null) {
+			return this;
+		}
+				
+		getQuery().addOrsGroup(inKey, Arrays.asList( inAssetids ) );
+		return this;
+	}
 }
