@@ -24,7 +24,7 @@ public class Highlighter
 			while (m.find())
 			{
 				String searchfor = m.group();
-				if( searchfor.equalsIgnoreCase("or") || searchfor.equalsIgnoreCase("and") || searchfor.equalsIgnoreCase("not"))
+				if( !text.contains(" ") && (searchfor.equalsIgnoreCase("or") || searchfor.equalsIgnoreCase("and") || searchfor.equalsIgnoreCase("not")))
 				{
 					continue;
 				}
