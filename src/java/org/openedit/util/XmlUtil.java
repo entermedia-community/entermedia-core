@@ -67,6 +67,8 @@ public class XmlUtil
 		try
 		{
 			reader.setEncoding(inEncode);
+			reader.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+
 			Document document = reader.read(inXmlReader);
 			Element root = document.getRootElement();
 			return root;
