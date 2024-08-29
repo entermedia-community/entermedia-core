@@ -1353,6 +1353,9 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 	
 	
 	public String getSearchDate(String inDate) {
+		if(inDate == null) {
+			return null;
+		}
 		Date stored = getLocaleManager().getDateStorageUtil().parseFromStorage(inDate);
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		format.setTimeZone(TimeZone.getTimeZone("GMT"));
