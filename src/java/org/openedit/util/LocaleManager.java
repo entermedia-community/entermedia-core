@@ -235,7 +235,7 @@ public class LocaleManager
 			//Now or minutes
 			if( minute < 1)
 			{
-				if ( minute < 0.1) 
+				if ( minute < 0.05) 
 				{
 					label = "";
 					return null;
