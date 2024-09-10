@@ -26,11 +26,15 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.openedit.BaseWebServer;
 import org.openedit.WebServer;
 
 public class OpenEditFilter implements Filter
 {
+	private static final Log log = LogFactory.getLog(OpenEditFilter.class);
+
 	private OpenEditEngine fieldEngine;
 
 	public void destroy()
@@ -87,7 +91,7 @@ public class OpenEditFilter implements Filter
 	public void init(FilterConfig inConfig) throws ServletException
 	{
 		ServletContext servletContext = inConfig.getServletContext();		
-
+		log.info("grabbed context: " + servletContext);
 		String rootPath = inConfig.getInitParameter("oe.root.path");
 
 		if( rootPath == null)
