@@ -685,7 +685,7 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable
 		fieldEditCount++;
 		synchronized (this)
 		{
-			fieldXmlFile = null; //reload it each time?
+			//fieldXmlFile = null; //reload it each time?
 			getCacheManager().clear(cacheId());
 		}
 	}

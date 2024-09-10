@@ -41,8 +41,8 @@ public class XmlFolderSearcher extends XmlSearcher
 			//getConfigurationPath
 			XmlFile composite = new XmlFile();
 			
-			String rootpath = "/WEB-INF/data/" + getCatalogId() + "/lists/" + inName ;
-			composite.setPath(rootpath + "/custom.xml");
+			String rootpath = "/WEB-INF/data/" + getCatalogId() + "/lists/" + inName + ".xml";
+			composite.setPath(rootpath);
 
 			long inLastModified = getPageManager().getRepository().getStub(composite.getPath()).lastModified().getTime();
 			composite.setLastModified(inLastModified);
@@ -50,17 +50,27 @@ public class XmlFolderSearcher extends XmlSearcher
 			Element root = DocumentHelper.createElement(inName);
 			composite.setRoot(root);
 
-			List<String> children = getPageManager().getChildrenPaths(rootpath,false);
-			if( children.size() > 0)
+			XmlFile parent = super.loadXmlFile();
+			if( parent.isExist())
 			{
-				composite.setExist(true);
-				loadChildren(inName, children, root, true);
+				for (Iterator iterator = parent.getRoot().elementIterator(); iterator
+						.hasNext();) 
+				{
+					Element row = (Element) iterator.next();
+					row.setParent(null);
+					root.add(row);
+				}
 			}
+//			List<String> children = getPageManager().getChildrenPaths(rootpath,false);
+//			if( children.size() > 0)
+//			{
+//				composite.setExist(true);
+			//				loadChildren(inName, children, root, true);
+//			}
 			List<String> children2 = getPageManager().getChildrenPaths("/" + getCatalogId() + "/data" + "/lists/" + inName + "/",true);
 			if( children2.size() > 0)
 			{
 				composite.setExist(true);
-				boolean existing = children.size() > 0;
 				loadChildren(inName, children2, root, true);
 			}
 //			HitTracker hits = getSearcherManager().getList(
@@ -134,7 +144,11 @@ public class XmlFolderSearcher extends XmlSearcher
 			String id = element.attributeValue("id");
 			if ( inEid.equals(id))
 			{
-				return element;
+				String deleted = element.attributeValue("recordstatus");
+				if( !Boolean.parseBoolean(deleted))
+				{
+					return element;
+				}
 			}
 		}
 		return null;
@@ -142,17 +156,19 @@ public class XmlFolderSearcher extends XmlSearcher
 
 	public void deleteAll(User inUser)
 	{
-		String path = "/WEB-INF/data/" + getCatalogId() + "/lists"
-				+ "/" + getSearchType() + "/custom.xml";
-		Page page = getPageManager().getPage(path);
-		getPageManager().removePage(page);
-		clearIndex();
+//		String path = "/WEB-INF/data/" + getCatalogId() + "/lists"
+//				+ "/" + getSearchType() + "/custom.xml";
+//		Page page = getPageManager().getPage(path);
+//		getPageManager().removePage(page);
 		HitTracker all = getAllHits();
 		for (Iterator iterator = all.iterator(); iterator.hasNext();)
 		{
 			Data data = (Data)iterator.next();
 			delete(data,inUser);
 		}
+		clearIndex();
+		fieldXmlFile = null; //reload
+		getXmlFile();
 
 	}
 	
@@ -178,7 +194,7 @@ public class XmlFolderSearcher extends XmlSearcher
 		//If this element is manipulated then the instance is the same
 		//No need to read it ElementData data = (ElementData)inData;
 		String path = "/WEB-INF/data/" + getCatalogId() + "/lists"
-		+ "/" + getSearchType() + "/custom.xml";
+		+ "/" + getSearchType() + ".xml";
 		XmlFile settings = getXmlArchive().getXml(path);
 
 		
@@ -193,7 +209,7 @@ public class XmlFolderSearcher extends XmlSearcher
 
 	public void saveAllData(Collection inAll, User inUser){
 		String path = "/WEB-INF/data/" + getCatalogId() + "/lists"
-				+ "/" + getSearchType() + "/custom.xml";
+				+ "/" + getSearchType() + ".xml";
 		saveAllData(inAll, inUser, path);
 	}
 
