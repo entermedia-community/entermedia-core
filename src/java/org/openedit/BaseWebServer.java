@@ -227,6 +227,7 @@ public class BaseWebServer implements WebServer
 			BaseWebPageRequest request = new BaseWebPageRequest();
 			request.setContentPage(page);
 			request.setPage(page);
+			log.info("Adding ServletContext");
 			request.putPageValue("servletcontext", getServletContext());
 			if( getModuleManager().contains("MediaAdminModule") )
 			{
