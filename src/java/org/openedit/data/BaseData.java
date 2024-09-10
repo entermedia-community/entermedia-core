@@ -141,7 +141,7 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 		{
 			return (int)val;
 		}
-		return Integer.parseInt(val.toString());
+		return Integer.parseInt(val.toString().trim());
 	}
 	
 	
