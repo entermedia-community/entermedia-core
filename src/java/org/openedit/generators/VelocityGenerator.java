@@ -129,7 +129,7 @@ public class VelocityGenerator extends BaseGenerator implements Generator
 			Throwable wrapped = ex.getWrappedThrowable();
 			if (wrapped instanceof ContentNotAvailableException)
 			{
-				throw new OpenEditException("Error generating " + inPage.getPath(), wrapped);
+				throw (ContentNotAvailableException)wrapped;
 			}
 			if (wrapped instanceof RuntimeException)
 			{

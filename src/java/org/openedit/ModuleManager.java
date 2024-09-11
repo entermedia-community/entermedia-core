@@ -19,6 +19,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openedit.di.BeanLoader;
 import org.openedit.di.BeanLoaderAware;
+import org.openedit.error.ContentNotAvailableException;
 import org.openedit.modules.BaseModule;
 import org.openedit.page.Page;
 import org.openedit.page.PageAction;
@@ -111,7 +112,13 @@ public class ModuleManager implements BeanLoaderAware, ShutdownList
 		catch ( InvocationTargetException ex)
 		{
 			Throwable cause = ex.getTargetException();
-			if ( cause instanceof OpenEditException)
+			
+			if ( cause instanceof ContentNotAvailableException)
+			{
+				ContentNotAvailableException error = (ContentNotAvailableException)cause;
+				log.error("404 on " + error.getPathWithError() );
+			}
+			else if ( cause instanceof OpenEditException)
 			{
 				throw (OpenEditException)cause;
 			}
