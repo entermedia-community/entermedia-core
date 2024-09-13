@@ -61,7 +61,7 @@ public class XmlFolderSearcher extends XmlSearcher
 					root.add(row);
 				}
 			}
-			List<String> children = getPageManager().getChildrenPaths(rootpath,false);
+			List<String> children = getPageManager().getChildrenPaths(rootpath + inName,false);
 			if( children.size() > 0)
 			{
 				composite.setExist(true);
