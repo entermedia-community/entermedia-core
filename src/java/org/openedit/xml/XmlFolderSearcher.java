@@ -41,8 +41,8 @@ public class XmlFolderSearcher extends XmlSearcher
 			//getConfigurationPath
 			XmlFile composite = new XmlFile();
 			
-			String rootpath = "/WEB-INF/data/" + getCatalogId() + "/lists/" + inName + ".xml";
-			composite.setPath(rootpath);
+			String rootpath = "/WEB-INF/data/" + getCatalogId() + "/lists/";
+			composite.setPath(rootpath + inName + ".xml");
 
 			long inLastModified = getPageManager().getRepository().getStub(composite.getPath()).lastModified().getTime();
 			composite.setLastModified(inLastModified);
@@ -61,12 +61,12 @@ public class XmlFolderSearcher extends XmlSearcher
 					root.add(row);
 				}
 			}
-//			List<String> children = getPageManager().getChildrenPaths(rootpath,false);
-//			if( children.size() > 0)
-//			{
-//				composite.setExist(true);
-			//				loadChildren(inName, children, root, true);
-//			}
+			List<String> children = getPageManager().getChildrenPaths(rootpath,false);
+			if( children.size() > 0)
+			{
+				composite.setExist(true);
+				loadChildren(inName, children, root, true);
+			}
 			List<String> children2 = getPageManager().getChildrenPaths("/" + getCatalogId() + "/data" + "/lists/" + inName + "/",true);
 			if( children2.size() > 0)
 			{
