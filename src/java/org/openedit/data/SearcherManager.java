@@ -639,7 +639,8 @@ public class SearcherManager
 	}
 	public void clear()
 	{
-		for (Iterator iterator = getCache().keySet().iterator(); iterator.hasNext();)
+		Map cache = new HashMap(getCache());
+		for (Iterator iterator = cache.keySet().iterator(); iterator.hasNext();)
 		{
 			String key = (String) iterator.next();
 			String[] vals = key.split("|");
