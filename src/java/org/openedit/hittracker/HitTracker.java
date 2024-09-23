@@ -1670,7 +1670,18 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 		}
 		return found;
 	}
-
+	public FilterNode findFilterChildValue(String inField, String inChildId)
+	{
+		if( getActiveFilterValues() != null && !getActiveFilterValues().isEmpty() )
+		{
+			FilterNode found = getActiveFilterValues().get(inField); 
+			if( found != null)
+			{
+				return found.getChild(inChildId);
+			}
+		}
+		return null;
+	}
 	public Map<String, FilterNode> getCleanFilterValues()
 	{
 		return fieldCleanFilterValues;
