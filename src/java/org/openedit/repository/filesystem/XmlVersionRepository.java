@@ -243,8 +243,8 @@ public class XmlVersionRepository extends VersionedRepository
 
 	@Override
 	public ContentItem getVersion(ContentItem inItem, String inVersion) throws RepositoryException {
-		String dir = PathUtilities.extractDirectoryName( inItem.getPath() );
-		String vpath =  dir + VERSIONS + "/" + inVersion + '~' + inItem.getName();
+		String dir = PathUtilities.extractDirectoryPath( inItem.getPath() );
+		String vpath =  dir + "/" + VERSIONS + "/" + inVersion + '~' + inItem.getName();
 		ContentItem item = getStub(vpath);
 		return item;
 	}
