@@ -260,5 +260,15 @@ public class XmlVersionRepository extends VersionedRepository
 		
 		
 	}
-
+	public void remove( ContentItem inCurrent ) throws RepositoryException
+	{
+		saveVersion(inCurrent);
+		super.remove(inCurrent);
+	}
+	
+	public void move( ContentItem inSource, ContentItem inDestination ) throws RepositoryException
+	{
+		saveVersion(inSource);
+		super.move(inSource, inDestination);
+	}
 }
