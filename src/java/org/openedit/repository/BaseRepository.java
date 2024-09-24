@@ -323,7 +323,7 @@ public abstract class BaseRepository implements Repository
 	}
 
 	@Override
-	public void restoreVersion(String inPath, String inVersion) throws RepositoryException {
+	public void restoreVersion(ContentItem inPath, String inVersion) throws RepositoryException {
 		throw new OpenEditException("Not implemented");
 	}
 }
