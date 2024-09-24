@@ -95,11 +95,20 @@ public abstract class VersionedRepository extends FileRepository
 
 		if (file.exists())
 		{
-			if (inContentItem.getMessage() == null)
+			ContentItem previous = getStub(inContentItem.getPath());
+			previous.setMessage(inContentItem.getMessage());
+			previous.setAuthor(inContentItem.getAuthor());
+			
+			if (previous.getMessage() == null)
 			{
-				inContentItem.setMessage( inContentItem.getPath() + " modified" );
+				previous.setMessage( inContentItem.getPath() + " modified" );
 			}
-			inContentItem.setType( ContentItem.TYPE_EDITED );
+			previous.setType( ContentItem.TYPE_EDITED );
+			previous.setMakeVersion(inContentItem.isMakeVersion());
+			if (  previous.isMakeVersion() )
+			{
+				saveVersion( previous );
+			}
 		}
 		else
 		{
@@ -119,10 +128,6 @@ public abstract class VersionedRepository extends FileRepository
 			writeContent( inContentItem );
 		}
 			
-		if (  inContentItem.isMakeVersion() )
-		{
-			saveVersion( inContentItem );
-		}
 
 	}
 	protected String[] listFiles( final String inFileName, File versionsDirectory )

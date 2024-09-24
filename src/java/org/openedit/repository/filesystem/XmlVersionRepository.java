@@ -143,7 +143,7 @@ public class XmlVersionRepository extends VersionedRepository
 			versionsDirectory.mkdirs();
 		}
 	
-		checkVersion(file, inPath);
+		//checkVersion(file, inPath);
 
 		File metadata = getMetaDataFile( file );
 		List knownContentItems = readAll( inPath, metadata );
@@ -248,6 +248,7 @@ public class XmlVersionRepository extends VersionedRepository
 		File oldversion = getVersionFile( currentfile, inVersion);
 		FileItem item = new FileItem();
 		item.setFile(oldversion);
+		item.setPath(inItem.getPath());
 		return item;
 	}
 	public void restoreVersion(ContentItem inCurrent, String inVersion) throws RepositoryException {
