@@ -14,6 +14,7 @@ import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
+import org.openedit.OpenEditException;
 import org.openedit.repository.ContentItem;
 import org.openedit.repository.RepositoryException;
 import org.openedit.util.PathUtilities;
@@ -238,6 +239,19 @@ public class XmlVersionRepository extends VersionedRepository
 			item.getFile().delete();
 		}
 		metadata.delete();
+	}
+
+	public void restoreVersion(ContentItem inCurrent, String inVersion) throws RepositoryException {
+		
+		saveVersion(inCurrent);
+
+		File currentfile = getFile( inCurrent.getPath() );
+		
+		File oldversion = getVersionFile( currentfile, inVersion);
+
+		getFileUtils().copyFiles( oldversion, currentfile );
+		
+		
 	}
 
 }
