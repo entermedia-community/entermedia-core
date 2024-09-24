@@ -55,7 +55,7 @@ public interface Repository
 	public ContentItem getLastVersion(String inPath) throws RepositoryException;
 
 	void restoreVersion( ContentItem inPath, String inVersion ) throws RepositoryException;
-
+	ContentItem getVersion( ContentItem inItem, String inVersion ) throws RepositoryException;
 	
 	void setPath( String inPath);
 	String getPath();

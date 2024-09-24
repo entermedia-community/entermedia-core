@@ -241,6 +241,15 @@ public class XmlVersionRepository extends VersionedRepository
 		metadata.delete();
 	}
 
+	@Override
+	public ContentItem getVersion(ContentItem inItem, String inVersion) throws RepositoryException {
+		File currentfile = getFile( inItem.getPath() );
+		
+		File oldversion = getVersionFile( currentfile, inVersion);
+		FileItem item = new FileItem();
+		item.setFile(oldversion);
+		return item;
+	}
 	public void restoreVersion(ContentItem inCurrent, String inVersion) throws RepositoryException {
 		
 		saveVersion(inCurrent);

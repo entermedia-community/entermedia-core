@@ -326,4 +326,8 @@ public abstract class BaseRepository implements Repository
 	public void restoreVersion(ContentItem inPath, String inVersion) throws RepositoryException {
 		throw new OpenEditException("Not implemented");
 	}
+	@Override
+	public ContentItem getVersion(ContentItem inItem, String inVersion) throws RepositoryException {
+		throw new OpenEditException("Not implemented");
+	}
 }
