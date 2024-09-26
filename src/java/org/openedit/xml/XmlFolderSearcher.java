@@ -49,7 +49,7 @@ public class XmlFolderSearcher extends XmlSearcher
 			
 			Element root = DocumentHelper.createElement(inName);
 			composite.setRoot(root);
-
+			composite.setExist(true);
 			XmlFile parent = super.loadXmlFile();
 			if( parent.isExist())
 			{
