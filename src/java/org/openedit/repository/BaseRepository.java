@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.openedit.OpenEditException;
 import org.openedit.util.EmStringUtils;
 import org.openedit.util.PathUtilities;
 
@@ -320,5 +321,13 @@ public abstract class BaseRepository implements Repository
 		}
 		return false;
 	}
- 
+
+	@Override
+	public void restoreVersion(ContentItem inPath, String inVersion) throws RepositoryException {
+		throw new OpenEditException("Not implemented");
+	}
+	@Override
+	public ContentItem getVersion(ContentItem inItem, String inVersion) throws RepositoryException {
+		throw new OpenEditException("Not implemented");
+	}
 }

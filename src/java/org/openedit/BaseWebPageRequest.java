@@ -1352,14 +1352,14 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 	}
 	
 	
-	public String getSearchDate(String inDate) {
+	public String getSearchDate(Object inDate) {
 		if(inDate == null) {
 			return null;
 		}
-		Date stored = getLocaleManager().getDateStorageUtil().parseFromStorage(inDate);
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-		format.setTimeZone(TimeZone.getTimeZone("GMT"));
-		String value = format.format(stored);
+		
+		Date stored = getLocaleManager().getDateStorageUtil().parseFromObject(inDate);
+		String value = getLocaleManager().getDateStorageUtil().formatDateObj(stored, "yyyy-MM-dd");
+		
 		return value;
 		
 	}
@@ -1410,16 +1410,6 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 		return getLocaleManager().formatDateTimeForDisplay( inDate, getLocale());
 	}
 	
-	
-	public String gateDate(String inFormat, String inDate) {
-		Date stored = getLocaleManager().getDateStorageUtil().parseFromStorage(inDate);
-		if( inFormat != null)
-		{
-			String value = getLocaleManager().getDateStorageUtil().formatDateObj(stored, inFormat);
-			return value;
-		}
-		return null;
-	}
 	
 	
 	public String getTimeOfDay(Date inDate)

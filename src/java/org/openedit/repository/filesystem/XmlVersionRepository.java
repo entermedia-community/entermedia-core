@@ -14,7 +14,9 @@ import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
+import org.openedit.OpenEditException;
 import org.openedit.repository.ContentItem;
+import org.openedit.repository.Repository;
 import org.openedit.repository.RepositoryException;
 import org.openedit.util.PathUtilities;
 import org.openedit.util.XmlUtil;
@@ -118,10 +120,15 @@ public class XmlVersionRepository extends VersionedRepository
 	        	date = new Date();
 	        }
 	        version.addAttribute("date",String.valueOf( date.getTime()));
-	        version.addAttribute("author",inRevision.getAuthor());
+	        if( inRevision.getAuthor() != null)
+	        {
+	        	version.addAttribute("author",inRevision.getAuthor());
+	        }
 	        version.addAttribute("type",inRevision.getType());
-	        version.setText(inRevision.getMessage());
-
+	        if( inRevision.getMessage() != null)
+	        {
+	        	version.setText(inRevision.getMessage());
+	        }
 	        inMetadata.getParentFile().mkdirs();
 	        getXmlUtil().saveXml(document, inMetadata );
 	}
@@ -142,7 +149,7 @@ public class XmlVersionRepository extends VersionedRepository
 			versionsDirectory.mkdirs();
 		}
 	
-		checkVersion(file, inPath);
+		//checkVersion(file, inPath);
 
 		File metadata = getMetaDataFile( file );
 		List knownContentItems = readAll( inPath, metadata );
@@ -240,4 +247,69 @@ public class XmlVersionRepository extends VersionedRepository
 		metadata.delete();
 	}
 
+	@Override
+	public ContentItem getVersion(ContentItem inItem, String inVersion) throws RepositoryException {
+		String dir = PathUtilities.extractDirectoryPath( inItem.getPath() );
+		String vpath =  dir + "/" + VERSIONS + "/" + inVersion + '~' + inItem.getName();
+		ContentItem item = getStub(vpath);
+		return item;
+	}
+	
+	/**
+	 * @param inFile
+	 * @param inNumber
+	 * @return
+	 */
+	protected File getVersionFile( File inSourceFile, String inVersionNumber )
+	{
+		File versionFile = new File( getVersionsDirectory( inSourceFile ), inVersionNumber + '~' + inSourceFile.getName() );
+		return versionFile;
+	}
+
+	public void restoreVersion(ContentItem inCurrent, String inVersion) throws RepositoryException {
+		
+		saveVersion(inCurrent);
+
+		File currentfile = getFile( inCurrent.getPath() );
+		
+		File oldversion = getVersionFile( currentfile, inVersion);
+
+		getFileUtils().copyFiles( oldversion, currentfile );
+		
+	}
+//	/**
+//	 * Be careful with this method since it can slow the system down
+//	 * @param inPath
+//	 */
+//	protected void checkVersion(File file, String inPath) throws RepositoryException
+//	{
+//		if (file.isDirectory())
+//		{
+//			return;
+//		}
+//		//if there is no versions directory yet then we return
+//		File versionsDirectory = getVersionsDirectory( file );
+//		if( !versionsDirectory.exists() )
+//		{
+//			return; 
+//		}
+//
+//		int m = maxVersionNumber(file);
+//		if ( m == 0)
+//		{
+//			createInitialContentItem( inPath );
+//		}
+//		else
+//		{
+//			String max = String.valueOf( m );
+//			File lastVersion = getVersionFile( file,  max );
+//			if( file.lastModified() > lastVersion.lastModified() )
+//			{
+//				ContentItem newItem = createContentItem(inPath);
+//				newItem.setAuthor( "admin" );
+//				newItem.setMessage("edited version from disk");
+//				saveVersion( newItem );
+//			}
+//		}
+//	}
 }

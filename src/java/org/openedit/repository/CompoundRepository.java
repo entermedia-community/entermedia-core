@@ -378,4 +378,15 @@ public class CompoundRepository implements Repository
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public void restoreVersion(ContentItem inPath, String inVersion) throws RepositoryException {
+		resolveRepository( inPath.getPath() ).restoreVersion(inPath, inVersion);
+	}
+	
+	@Override
+	public ContentItem getVersion(ContentItem inItem, String inVersion) throws RepositoryException {
+		return resolveRepository( inItem.getPath() ).getVersion(inItem, inVersion);
+		
+	}
 }

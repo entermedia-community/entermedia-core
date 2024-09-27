@@ -10,6 +10,7 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openedit.repository.ContentItem;
+import org.openedit.repository.Repository;
 import org.openedit.repository.RepositoryException;
 import org.openedit.util.PathUtilities;
 
@@ -39,41 +40,7 @@ public abstract class VersionedRepository extends FileRepository
 	{
 		return createContentItem(inPath);
 	}
-	/**
-	 * Be careful with this method since it can slow the system down
-	 * @param inPath
-	 */
-	protected void checkVersion(File file, String inPath) throws RepositoryException
-	{
-		if (file.isDirectory())
-		{
-			return;
-		}
-		//if there is no versions directory yet then we return
-		File versionsDirectory = getVersionsDirectory( file );
-		if( !versionsDirectory.exists() )
-		{
-			return; 
-		}
-
-		int m = maxVersionNumber(file);
-		if ( m == 0)
-		{
-			createInitialContentItem( inPath );
-		}
-		else
-		{
-			String max = String.valueOf( m );
-			File lastVersion = getVersionFile( file,  max );
-			if( file.lastModified() > lastVersion.lastModified() )
-			{
-				ContentItem newItem = createContentItem(inPath);
-				newItem.setAuthor( "admin" );
-				newItem.setMessage("edited version from disk");
-				saveVersion( newItem );
-			}
-		}
-	}
+	
 	
 	public void put( ContentItem inContentItem ) throws RepositoryException
 	{
@@ -95,11 +62,17 @@ public abstract class VersionedRepository extends FileRepository
 
 		if (file.exists())
 		{
-			if (inContentItem.getMessage() == null)
+			ContentItem previous = getStub(inContentItem.getPath());
+			previous.setMessage(inContentItem.getMessage());
+			previous.setAuthor(inContentItem.getAuthor());
+			
+			if (previous.getMessage() == null)
 			{
-				inContentItem.setMessage( inContentItem.getPath() + " modified" );
+				previous.setMessage( inContentItem.getPath() + " modified" );
 			}
-			inContentItem.setType( ContentItem.TYPE_EDITED );
+			previous.setType( ContentItem.TYPE_EDITED );
+			previous.setMakeVersion(inContentItem.isMakeVersion());
+			saveVersion( previous );
 		}
 		else
 		{
@@ -119,10 +92,6 @@ public abstract class VersionedRepository extends FileRepository
 			writeContent( inContentItem );
 		}
 			
-		if (  inContentItem.isMakeVersion() )
-		{
-			saveVersion( inContentItem );
-		}
 
 	}
 	protected String[] listFiles( final String inFileName, File versionsDirectory )
@@ -211,13 +180,14 @@ public abstract class VersionedRepository extends FileRepository
 		{
 			destination.mkdirs();
 		}
-		moveFiles( sourceFile, destination );
-
-		if (  inDestination.isMakeVersion() )
+		inSource.setType(ContentItem.TYPE_MOVED);
+		saveVersion(inSource);
+		if( inDestination.exists())
 		{
-			saveVersion( inDestination );
+			inDestination.setType(ContentItem.TYPE_MOVED);
+			saveVersion(inDestination);
 		}
-		
+		moveFiles( sourceFile, destination );
 	}
 	
 	public void copy( ContentItem inSource, ContentItem inDestination ) throws RepositoryException
@@ -235,38 +205,10 @@ public abstract class VersionedRepository extends FileRepository
 		}
 		copyFiles(sourceFile, destination);
 
-		if (  inDestination.isMakeVersion() )
-		{
-			saveVersion( inDestination );
-		}
+		saveVersion( inDestination );
 
 	}
 
-
-	public void remove( ContentItem inContentItem ) throws RepositoryException
-	{
-		File todelete = getFile( inContentItem.getPath() );
-		if( inContentItem.isMakeVersion() )
-		{
-			if ( inContentItem.getMessage() == null)
-			{
-				inContentItem.setMessage( inContentItem.getPath() + " removed");
-			}
-			inContentItem.setType( ContentItem.TYPE_REMOVED );
-	/*		if ( inContentItem.exists() )
-			{
-				File metadata = getMetaDataFile(todelete);
-				if ( metadata.exists() )
-				{
-					incrementVersion( inContentItem );
-					saveVersion( inContentItem );
-				}
-			}
-	*/
-			saveVersion(inContentItem);
-		}
-		deleteAll(todelete);
-	}
 	
 	public abstract List getVersions( String inPath ) throws RepositoryException;
 		
@@ -278,20 +220,20 @@ public abstract class VersionedRepository extends FileRepository
 //		return contentItem;
 //	}
 	
-	protected ContentItem createInitialContentItem( String inPath ) throws RepositoryException
-	{
-		ContentItem contentItem = createContentItem(inPath);
-		contentItem.setPath(inPath);
-		contentItem.setAuthor( "admin" );
-		contentItem.setMessage( "automatic version" );
-		contentItem.setVersion( "1" );
-		contentItem.setType( ContentItem.TYPE_ADDED );
-		if ( contentItem.exists() )
-		{
-			saveVersion( contentItem );
-		}
-		return contentItem;
-	}
+//	protected ContentItem createInitialContentItem( String inPath ) throws RepositoryException
+//	{
+//		ContentItem contentItem = createContentItem(inPath);
+//		contentItem.setPath(inPath);
+//		contentItem.setAuthor( "auto" );
+//		contentItem.setMessage( "automatic version" );
+//		contentItem.setVersion( "1" );
+//		contentItem.setType( ContentItem.TYPE_ADDED );
+//		if ( contentItem.exists() )
+//		{
+//			saveVersion( contentItem );
+//		}
+//		return contentItem;
+//	}
 
 	protected File getVersionsDirectory( String inPath )
 	{
@@ -312,14 +254,41 @@ public abstract class VersionedRepository extends FileRepository
 
 	protected abstract void saveVersion( ContentItem inContentItem ) throws RepositoryException;
 
-	/**
-	 * @param inFile
-	 * @param inNumber
-	 * @return
-	 */
-	protected File getVersionFile( File inSourceFile, String inVersionNumber )
+
+	public void remove( ContentItem inContentItem ) throws RepositoryException
 	{
-		File versionFile = new File( getVersionsDirectory( inSourceFile ), inVersionNumber + '~' + inSourceFile.getName() );
-		return versionFile;
-	}	
+		File todelete = getFile( inContentItem.getPath() );
+		if ( inContentItem.getMessage() == null)
+		{
+			inContentItem.setMessage( inContentItem.getPath() + " removed");
+		}
+		inContentItem.setType( ContentItem.TYPE_REMOVED );
+/*		if ( inContentItem.exists() )
+		{
+			File metadata = getMetaDataFile(todelete);
+			if ( metadata.exists() )
+			{
+				incrementVersion( inContentItem );
+				saveVersion( inContentItem );
+			}
+		}
+*/
+		saveVersion(inContentItem);
+		deleteAll(todelete);
+	}
+	
+	
+	public void move(ContentItem inSource, Repository inSourceRepository, ContentItem inDestination) throws RepositoryException
+	{
+		if( inDestination.exists())
+		{
+			saveVersion(inDestination);
+		}
+		if( inSourceRepository instanceof XmlVersionRepository)
+		{
+			saveVersion(inSource);
+		}
+		super.move(inSource,  inSourceRepository,  inDestination);
+	}
+	
 }
