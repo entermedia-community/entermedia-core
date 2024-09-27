@@ -727,6 +727,8 @@ public class URLUtilities
 				//can you just blindly replace any & since it might be part of &apos;?
 				//IE seems to espace the & for some reason inStr = inStr.replaceAll("'", "&apos;");		
 				//inStr = inStr.replaceAll("&", "&amp;");
+				
+				//DON'T replace \t it's valid XML
 				output.append("&amp;");
 				break;
 			case '<':
@@ -734,10 +736,7 @@ public class URLUtilities
 				break;
 			case '>':
 				output.append("&gt;");
-				break;
-			case '\t':
-				output.append("&ensp;");
-				break;
+				break;			
 			case '\"':
 				output.append("&quot;");
 				break;
