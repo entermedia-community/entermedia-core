@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,6 +39,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.collections.map.ListOrderedMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.openedit.data.BaseData;
 import org.openedit.data.SearcherManager;
@@ -256,6 +256,12 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 						value = (String)array.iterator().next();
 					}
 				}
+				else if (vals instanceof Map) {
+	                // Convert the Map to a JSON string or handle it accordingly
+	                JSONObject jsonObject = new JSONObject((Map) vals);
+					value = jsonObject.toJSONString();
+				}
+				
 				else
 				{
 					value = (String)vals;
