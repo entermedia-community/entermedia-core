@@ -330,4 +330,11 @@ public abstract class BaseRepository implements Repository
 	public ContentItem getVersion(ContentItem inItem, String inVersion) throws RepositoryException {
 		throw new OpenEditException("Not implemented");
 	}
+	
+	public void saveVersion( ContentItem inContentItem ) throws RepositoryException
+	{
+		throw new OpenEditException("Not implemented");
+		
+	}
+
 }

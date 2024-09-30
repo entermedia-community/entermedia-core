@@ -178,7 +178,7 @@ public class XmlVersionRepository extends VersionedRepository
 	}
 
 	
-	protected void saveVersion( ContentItem inContentItem ) throws RepositoryException
+	public void saveVersion( ContentItem inContentItem ) throws RepositoryException
 	{
 		File file = getFile( inContentItem.getPath() );
 		if ( file.isDirectory() )

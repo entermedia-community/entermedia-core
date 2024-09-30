@@ -389,4 +389,9 @@ public class CompoundRepository implements Repository
 		return resolveRepository( inItem.getPath() ).getVersion(inItem, inVersion);
 		
 	}
+
+	@Override
+	public void saveVersion(ContentItem inItem) throws RepositoryException {
+		resolveRepository( inItem.getPath() ).saveVersion(inItem);
+	}
 }

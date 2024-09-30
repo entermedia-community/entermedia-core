@@ -252,8 +252,6 @@ public abstract class VersionedRepository extends FileRepository
 		return metadata;
 	}
 
-	protected abstract void saveVersion( ContentItem inContentItem ) throws RepositoryException;
-
 
 	public void remove( ContentItem inContentItem ) throws RepositoryException
 	{

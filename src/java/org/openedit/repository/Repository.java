@@ -67,7 +67,8 @@ public interface Repository
 	void setExternalPath(String inRootAbsolutePath);
 	String getExternalPath();
 	
-	
+	public void saveVersion( ContentItem inContentItem ) throws RepositoryException;
+
 	
 	
 	
