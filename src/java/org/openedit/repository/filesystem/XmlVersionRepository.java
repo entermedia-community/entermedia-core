@@ -180,6 +180,10 @@ public class XmlVersionRepository extends VersionedRepository
 	
 	public void saveVersion( ContentItem inContentItem ) throws RepositoryException
 	{
+		if( !inContentItem.isMakeVersion() )
+		{
+			return;
+		}
 		File file = getFile( inContentItem.getPath() );
 		if ( file.isDirectory() )
 		{
