@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -111,32 +112,32 @@ public class Exec
 		return runExec(inArgs, null, inSaveOutput);
 	}
 
-	public ExecResult runExec(String inCommandKey, List<String> inArgs)
+	public ExecResult runExec(String inCommandKey, Collection<String> inArgs)
 	{
 		return runExec(inCommandKey, inArgs, getTimeLimit());
 	}
 
-	public ExecResult runExec(String inCommandKey, List<String> inArgs, long inTimeout)
+	public ExecResult runExec(String inCommandKey, Collection<String> inArgs, long inTimeout)
 	{
 		return runExec(inCommandKey, inArgs, false, null, inTimeout);
 	}
 
-	public ExecResult runExec(String inCommandKey, List<String> inArgs, File inRootFolder)
+	public ExecResult runExec(String inCommandKey, Collection<String> inArgs, File inRootFolder)
 	{
 		return runExec(inCommandKey, inArgs, false, inRootFolder, getTimeLimit());
 	}
 
-	public ExecResult runExec(String inCommandKey, List<String> inArgs, boolean inSaveOutput)
+	public ExecResult runExec(String inCommandKey, Collection<String> inArgs, boolean inSaveOutput)
 	{
 		return runExec(inCommandKey, inArgs, inSaveOutput, getTimeLimit());
 	}
 
-	public ExecResult runExec(String inCommandKey, List<String> inArgs, boolean inSaveOutput, long inTimeout)
+	public ExecResult runExec(String inCommandKey, Collection<String> inArgs, boolean inSaveOutput, long inTimeout)
 	{
 		return runExec(inCommandKey, inArgs, inSaveOutput, null, inTimeout);
 	}
 
-	public ExecResult runExec(String inCommandKey, List<String> inArgs, boolean inSaveOutput, File inRootFolder, long inTimeout)
+	public ExecResult runExec(String inCommandKey, Collection<String> inArgs, boolean inSaveOutput, File inRootFolder, long inTimeout)
 	{
 		ArrayList<String> command = new ArrayList<String>();
 		//check for cached version
