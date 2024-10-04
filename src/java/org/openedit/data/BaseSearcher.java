@@ -31,6 +31,7 @@ import org.openedit.cache.CacheManager;
 import org.openedit.config.Configuration;
 import org.openedit.event.EventManager;
 import org.openedit.event.WebEvent;
+import org.openedit.hittracker.EmptyHitTracker;
 import org.openedit.hittracker.GeoFilter;
 import org.openedit.hittracker.HitTracker;
 import org.openedit.hittracker.SearchQuery;
@@ -509,9 +510,12 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					
 				}
 				inQuery = getSearchSecurity().attachSecurity(inPageRequest, this, inQuery);
+				if(inQuery.isForceEmpty()) {
+					tracker = new EmptyHitTracker();
+				} else {
 				
-				tracker = search(inQuery); //search here <----!!!!!
-
+					tracker = search(inQuery); //search here <----!!!!!
+				}
 				
 				tracker.setPage(startingpage);
 				
