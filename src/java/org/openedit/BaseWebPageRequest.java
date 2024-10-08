@@ -1170,11 +1170,11 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 		}
 		if( name == null)
 		{
-			name = getContentPage().get(inName);
+			name = getPage().get(inName);
 		}
 		if( name == null)
 		{
-			name = getPage().get(inName);
+			name = getContentPage().get(inName);
 		}
 		if(name == null) {
 			String searchtypeFromRequest = getContentPage().get("searchtypeFromRequest");
