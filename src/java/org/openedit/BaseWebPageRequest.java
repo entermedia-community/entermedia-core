@@ -1168,14 +1168,13 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 		{
 			name = findActionValue(inName);
 		}
-		//TODO: Change the order. The content should go first?
-		if( name == null)
-		{
-			name = getPage().get(inName);
-		}
 		if( name == null)
 		{
 			name = getContentPage().get(inName);
+		}
+		if( name == null)
+		{
+			name = getPage().get(inName);
 		}
 		if(name == null) {
 			String searchtypeFromRequest = getContentPage().get("searchtypeFromRequest");
