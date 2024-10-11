@@ -347,6 +347,11 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					String sort = inPageRequest.findValue("sortby");
 					inQuery.setSortBy(sort);
 				}
+				
+				if (inQuery.getSortBy() == null) {
+					String sort = inPageRequest.findValue(getSearchType()+"sortby");
+					inQuery.setSortBy(sort);
+				}
 				if (usersettings != null && inQuery.getSortBy() == null)
 				{
 					String sort = usersettings.getSortForSearchType(inQuery.getResultType());
@@ -355,10 +360,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				
 				if (inQuery.getSortBy() == null)
 				{
-					String sort = inPageRequest.findValue(getSearchType()+"sortby");
-					if(sort == null) {
-						sort = (String) inPageRequest.getPageValue(getSearchType()+"sortby");
-					}
+					String sort = (String) inPageRequest.getPageValue(getSearchType()+"sortby");
 					inQuery.setSortBy(sort);
 				}
 				oldtracker = tracker;

@@ -1775,5 +1775,15 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 		
 		return -1;
 	}
+	
+	public String getSortBy() {
+		if(getSearchQuery() != null) {
+			return getSearchQuery().getSortBy();
+		}
+		return null;
+	}
+	
+	
+	
 }
 
