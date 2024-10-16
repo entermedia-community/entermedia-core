@@ -20,6 +20,7 @@ public class ValuesMap extends HashMap
 {
 	public static final Object NULLVALUE = new Object(); 
 	public static final String NULLSTRING= new String();
+	public static final Data NULLDATA = new BaseData(); 
 	
 	public ValuesMap()
 	{
