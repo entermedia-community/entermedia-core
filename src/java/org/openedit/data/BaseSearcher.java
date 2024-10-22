@@ -2303,9 +2303,13 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 
 	public void changeSort(WebPageRequest inReq) throws OpenEditException
 	{
-		String sort = inReq.getRequestParameter("sortby");
 		HitTracker hits = loadHits(inReq);
-
+		String sort = inReq.getRequestParameter("sortby");
+		if (sort == null) {
+			String searchtype = hits.getSearchType();
+			sort = inReq.getRequestParameter(searchtype + "sortby");
+		}
+		
 		if (hits != null && sort != null)
 		{
 			SearchQuery group = hits.getSearchQuery();
