@@ -1661,6 +1661,37 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 		return matches;
 	}
 
+	public FilterNode findFilterValue(PropertyDetail inDetail)
+	{
+		FilterNode found = null;
+		if( getActiveFilterValues() != null && !getActiveFilterValues().isEmpty() )
+		{
+			found = getActiveFilterValues().get(inDetail.getId()); //we must be running a filter beyond just main input
+		}
+		if( found == null)
+		{
+			if( !getSearchType().equals(inDetail.getSearchType() ) )
+			{
+				//get all values
+				Searcher childsearcher = getSearcher().getSearcherManager().getSearcher(inDetail.getCatalogId(), inDetail.getSearchType());
+				PropertyDetail childdetail = childsearcher.getDetail(inDetail.getId());
+				Collection values = getSearcher().getSearcherManager().getList(childdetail.getListCatalogId(),childdetail.getListId());
+				found = new FilterNode();
+				found.setId(inDetail.getId());
+				found.setPropertyDetail(childdetail);
+				//Max size?
+				for (Iterator iterator = values.iterator(); iterator.hasNext();) {
+					Data node = (Data) iterator.next();
+					FilterNode child = new FilterNode();
+					child.setProperties(node.getProperties());
+					found.addChild(child);
+				}
+			}
+		}
+		
+		return found;
+	}
+
 	public FilterNode findFilterValue(String inId)
 	{
 		FilterNode found = null;

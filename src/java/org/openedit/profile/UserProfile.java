@@ -103,6 +103,7 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 		fieldModules = inModules;
 	}
 
+	
 	public Collection<Data> getEntities()
 	{
 		Collection<Data> items = new ArrayList();

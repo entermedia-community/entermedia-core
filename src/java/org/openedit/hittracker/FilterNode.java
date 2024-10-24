@@ -1,6 +1,7 @@
 package org.openedit.hittracker;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
@@ -13,7 +14,7 @@ import org.openedit.modules.translations.LanguageMap;
 public class FilterNode extends BaseData
 {
 	
-	protected List fieldChildren;
+	protected Collection fieldChildren;
 	protected boolean isSelected;
 	protected PropertyDetail fieldPropertyDetail;
 	
@@ -62,7 +63,7 @@ public class FilterNode extends BaseData
 		});
 		return sorted;
 	}
-	public List getChildren()
+	public Collection getChildren()
 	{
 		if (fieldChildren == null)
 		{
@@ -72,7 +73,7 @@ public class FilterNode extends BaseData
 
 		return fieldChildren;
 	}
-	public void setChildren(List inChildren)
+	public void setChildren(Collection inChildren)
 	{
 		fieldChildren = inChildren;
 	}
@@ -190,7 +191,9 @@ public class FilterNode extends BaseData
 		}
 		else
 		{
-			getChildren().add(0,inChild);
+			List newcollection = new ArrayList(getChildren());
+			newcollection.add(0,inChild);
+			setChildren(newcollection);
 		}
 		
 	}
