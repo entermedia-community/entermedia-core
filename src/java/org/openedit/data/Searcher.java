@@ -208,5 +208,7 @@ public interface Searcher extends CatalogEnabled
 
 	public Object getFulltext(Data inSearchHitData);
 
+	public HitTracker getCachedSearch(QueryBuilder inQ);
+
     
 }

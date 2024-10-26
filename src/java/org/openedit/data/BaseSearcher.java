@@ -3607,6 +3607,17 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		return data;
 	}
 
-	
+
+	@Override
+	public HitTracker getCachedSearch(QueryBuilder inQ) {
+		String query = inQ.getQuery().toQuery();
+		HitTracker tracker = (HitTracker)getCacheManager().get(getSearchType() + ".cachedsearch" , query);
+		if( tracker == null)
+		{
+			tracker = inQ.search();
+			getCacheManager().put(getSearchType() + ".cachedsearch" , query,tracker);
+		}
+		return tracker;
+	}
 	
 }
