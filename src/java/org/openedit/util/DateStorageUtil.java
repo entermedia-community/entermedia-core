@@ -139,6 +139,16 @@ public class DateStorageUtil
 		}
 	}
 
+	public long getTime(String inStoredDate)
+	{
+		Date time = parseFromStorage(inStoredDate);
+		if( time != null)
+		{
+			return time.getTime();
+		}
+		return -1;
+	}
+
 	public Date parseFromStorage(String inStoredDate)
 	{
 		if (inStoredDate == null)
