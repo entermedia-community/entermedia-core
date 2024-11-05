@@ -1,5 +1,6 @@
 package org.openedit.util;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -250,5 +251,12 @@ public class OutputFiller
 			}
 		}
 		out.flush();
+	}
+	
+	public byte[] readAll(InputStream in) throws IOException
+	{
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		fill(in,out);
+		return out.toByteArray();
 	}
 }
