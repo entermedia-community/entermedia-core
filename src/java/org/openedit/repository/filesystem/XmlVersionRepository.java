@@ -60,13 +60,13 @@ public class XmlVersionRepository extends VersionedRepository
 		ContentItem item = createContentItem(versionPath);
 		item.setActualPath(versionPath);
 
-		if(!item.exists())
-		{
-			//check older version format also
-			versionPath = rootDir + "/" + inVersionsDir + "/"+ filename + "~" + version.attributeValue("number")  ;
-			item = createContentItem(versionPath);
-			item.setActualPath(versionPath);
-		}
+//		if(!item.exists())
+//		{
+//			//check older version format also
+//			versionPath = rootDir + "/" + inVersionsDir + "/"+ filename + "~" + version.attributeValue("number")  ;
+//			item = createContentItem(versionPath);
+//			item.setActualPath(versionPath);
+//		}
 		item.setPath(inPath);
 
 		//We dont need the date here since we use a FileItem that points to the date on the disk
@@ -74,9 +74,16 @@ public class XmlVersionRepository extends VersionedRepository
 		
 		item.setAuthor(version.attributeValue("author"));
 		item.setVersion(version.attributeValue("number"));
+		item.setPreviewImage(version.attributeValue("previewfilename"));
 		String comment = version.getTextTrim();
 		item.setMessage(comment);
 		item.setType(version.attributeValue("type"));
+		String modtime = version.attributeValue("date");
+		if( modtime != null)
+		{
+			item.setLastModified(new Date(Long.parseLong(modtime)));
+		}
+		
 		return item;
 	}
 	public List readAll(String inPath, File inMetadata) throws RepositoryException
@@ -98,7 +105,7 @@ public class XmlVersionRepository extends VersionedRepository
 	        return all;
 	}
 	
-	public void append(ContentItem inRevision, File inMetadata) throws RepositoryException
+	public void append(ContentItem inRevision, File inMetadata, File savedVersion) throws RepositoryException
 	{
 	        Document document = null;
 			if ( !inMetadata.exists() )
@@ -129,8 +136,24 @@ public class XmlVersionRepository extends VersionedRepository
 	        {
 	        	version.setText(inRevision.getMessage());
 	        }
+	        String previewinput = inRevision.getPreviewImage();
 	        inMetadata.getParentFile().mkdirs();
+	        
+	        if( previewinput != null)
+	        {
+	        	ContentItem preview = getStub(previewinput);
+	        	String ext = PathUtilities.extractPageType(previewinput);
+				File input = new File(preview.getAbsolutePath());
+	        	File output = new File( savedVersion.getAbsolutePath() + "preview." + ext);
+	        	
+	        	//Copy image
+	        	copyFiles(input, output);
+	        	version.addAttribute("previewfilename", output.getName());
+
+	        }
 	        getXmlUtil().saveXml(document, inMetadata );
+
+	        
 	}
 	
 	/* (non-javadoc)
@@ -192,16 +215,17 @@ public class XmlVersionRepository extends VersionedRepository
 		int maxVersionNum = maxVersionNumber( file );
 
 		//check that this is not the same content as last version
-		if ( maxVersionNum > 0)
-		{
-			File oldversion = getVersionFile(file,String.valueOf(maxVersionNum ) );
-			if ( oldversion.length() == file.length())
-			{
-				//these might be the same
-				//TODO: Do a string comparison on them
-				return;
-			}
-		}
+//		if ( maxVersionNum > 0)
+//		{
+//			File oldversion = getVersionFile(file,String.valueOf(maxVersionNum ) );
+//			if ( oldversion.length() == file.length())
+//			{
+//				//these might be the same
+//				//TODO: Do a string comparison on them
+//				log.
+//				return;
+//			}
+//		}
 		
 		inContentItem.setVersion( String.valueOf( maxVersionNum + 1 ) );
 		
@@ -214,7 +238,7 @@ public class XmlVersionRepository extends VersionedRepository
 				getFileUtils().copyFiles( file, newversion );
 			}
 			File metadata = getMetaDataFile( file );
-			append( inContentItem, metadata );
+			append( inContentItem, metadata, newversion );
 		}
 		catch( Exception e )
 		{

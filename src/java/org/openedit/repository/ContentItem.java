@@ -39,6 +39,7 @@ public abstract class ContentItem
 	protected String fieldMessage;
 	protected String fieldVersion;
 	protected String fieldType;
+	protected String fieldPreviewImage;
 	protected String fieldPath;
 	protected String fieldActualPath; //only used when content actually comes from another path
 	protected String fieldAbsolutePath; //Used as an URL or full system location
@@ -61,7 +62,17 @@ public abstract class ContentItem
 	{
 		fieldAbsolutePath = inAbsolutePath;
 	}
-	
+
+	public String getPreviewImage()
+	{
+		return fieldPreviewImage;
+	}
+
+	public void setPreviewImage(String inPreviewImage)
+	{
+		fieldPreviewImage = inPreviewImage;
+	}
+
 	/**
 	 * This path is relative.
 	 * 

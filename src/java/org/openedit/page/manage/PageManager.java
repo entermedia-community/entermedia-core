@@ -386,31 +386,31 @@ public class PageManager
 		//Kind of hackish. Guess we need to look on the disk to be sure but that could be slow
 		ContentItem oldItem = inPage.getContentItem();
 		boolean existing = oldItem.exists();
-		String makeversion = inPage.getProperty("makeversion");
-		if (makeversion != null)
-		{
-			boolean ver = Boolean.parseBoolean(makeversion);
-			oldItem.setMakeVersion(ver);
-		}
+//		String makeversion = inPage.getProperty("makeversion");
+//		if (makeversion != null)
+//		{
+//			boolean ver = Boolean.parseBoolean(makeversion);
+//			oldItem.setMakeVersion(ver);
+//		}
 		getRepository().put( oldItem );
 		clearCache(inPage);
 		
 		//we want to get the recent version back from disk
-		if ( oldItem.isMakeVersion() && oldItem.lastModified() == null ) //might be a StringItem for example
-		{
-			//Load up a fresh item from the disk drive since we uploaded
-			ContentItem reloadedItem = getRepository().get( inPage.getPath() );
-			if ( oldItem.getMessage() != null && reloadedItem.getMessage() == null )
-			{
-				reloadedItem.setAuthor(oldItem.getAuthor());
-				reloadedItem.setMessage(oldItem.getMessage());
-				reloadedItem.setType(oldItem.getType());
-				reloadedItem.setVersion(oldItem.getVersion());
-			}
-			reloadedItem.setMakeVersion(oldItem.isMakeVersion());
-			
-			inPage.setContentItem( reloadedItem );
-		}
+//		if ( oldItem.isMakeVersion() && oldItem.lastModified() == null ) //might be a StringItem for example
+//		{
+//			//Load up a fresh item from the disk drive since we uploaded
+//			ContentItem reloadedItem = getRepository().get( inPage.getPath() );
+//			if ( oldItem.getMessage() != null && reloadedItem.getMessage() == null )
+//			{
+//				reloadedItem.setAuthor(oldItem.getAuthor());
+//				reloadedItem.setMessage(oldItem.getMessage());
+//				reloadedItem.setType(oldItem.getType());
+//				reloadedItem.setVersion(oldItem.getVersion());
+//			}
+//			reloadedItem.setMakeVersion(oldItem.isMakeVersion());
+//			
+//			inPage.setContentItem( reloadedItem );
+//		}
 
 		if (existing)
 		{
