@@ -81,6 +81,23 @@ public class RevisionEditorModule extends BaseEditorModule
 		return null;
 	}
 
+
+	public ContentItem loadRevision( WebPageRequest inContext )	throws Exception
+	{
+		RevisionSession session = getRevisions(inContext);
+		String version = inContext.getRequiredParameter( "version" );
+
+		for ( Iterator iter = session.getRevisions().iterator(); iter.hasNext(); )
+		{
+			ContentItem revision = (ContentItem) iter.next();
+			if ( revision.getVersion().equals( version ) )
+			{
+				inContext.putPageValue("revision",revision);
+				return revision;
+			}
+		}
+		return null;
+	}
 	/**
 	 * Retrieves the content item for a revision.  The <code>version</code>
 	 * parameter must be set to the version number to retrieve, and the
