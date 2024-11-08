@@ -196,18 +196,18 @@ public class PropertyDetailsArchive implements CatalogEnabled
 	}
 		String id = inView;
 		Collection values = null;
-//		if (inProfile != null) // this is important since they may have created
-//								// a custom search screen or something
-//		{
-//			id = id + "_" + inProfile.get("settingsgroup");
-//			String propId = "view_" + id.replace('/', '_');
-//			values = inProfile.getValues(propId);
-//			if (values != null)
-//			{
-//				id = id + "_" + values.toString(); // More specific to the user,
-//													// 1000 limit cache
-//			}
-//		}
+		if (inProfile != null) // this is important since they may have created
+								// a custom search screen or something
+		{
+			id = id + "_" + inProfile.get("settingsgroup");
+			String propId = "view_" + id.replace('/', '_');
+			values = inProfile.getValues(propId);
+			if (values != null)
+			{
+				id = id + "_" + values.toString(); // More specific to the user,
+													// 1000 limit cache
+			}
+		}
 		View view = null;
 		if (id != null)
 		{
