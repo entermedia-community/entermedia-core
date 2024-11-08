@@ -92,7 +92,7 @@ public class RevisionEditorModule extends BaseEditorModule
 			ContentItem revision = (ContentItem) iter.next();
 			if ( revision.getVersion().equals( version ) )
 			{
-				inContext.putPageValue("revision",revision);
+				inContext.putPageValue("selectedrevision",revision);
 				return revision;
 			}
 		}
