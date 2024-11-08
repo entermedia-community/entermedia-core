@@ -85,8 +85,11 @@ public class RevisionEditorModule extends BaseEditorModule
 	public ContentItem loadRevision( WebPageRequest inContext )	throws Exception
 	{
 		RevisionSession session = getRevisions(inContext);
-		String version = inContext.getRequiredParameter( "version" );
-
+		String version = inContext.getRequestParameter( "version" );
+		if( version == null)
+		{
+			return null;
+		}
 		for ( Iterator iter = session.getRevisions().iterator(); iter.hasNext(); )
 		{
 			ContentItem revision = (ContentItem) iter.next();
