@@ -13,7 +13,6 @@ import java.util.Map;
 
 import org.openedit.ModuleManager;
 import org.openedit.repository.filesystem.FileRepository;
-import org.openedit.repository.filesystem.VersionedRepository;
 import org.openedit.util.PathUtilities;
 
 /**
@@ -97,17 +96,7 @@ public class CompoundRepository implements Repository
 				}
 			}
     	}
-    	
-    	if( inPath.startsWith("/WEB-INF/data/") && inPath.length() > 23)
-    	{
-    		
-    		String[] paths = inPath.split("/");
-    		if( paths.length > 5 && paths[5].equals("originals"))
-    		{
-    			return getVersionRepository();
-    		}
-    	}
-    	
+
 		return getDefaultRepository();
 	}
 	
@@ -145,10 +134,6 @@ public class CompoundRepository implements Repository
 		resolveRepository( inRevision.getPath() ).remove( inRevision );
 	}
 
-	public List getVersions( String inPath ) throws RepositoryException
-	{
-		return resolveRepository( inPath ).getVersions( inPath );
-	}
 
 	public Repository getDefaultRepository()
 	{
@@ -163,18 +148,7 @@ public class CompoundRepository implements Repository
 		return fieldDefaultRepository;
 	}
 
-	public Repository getVersionRepository()
-	{
-		if (fieldVersionRepository == null)
-		{
-			VersionedRepository repo = (VersionedRepository)getModuleManager().getBean("versionRepository"); //new XmlVersionedRepository();
-			repo.setPath("/");
-			repo.setExternalPath(getRoot().getAbsolutePath());
-			fieldVersionRepository =repo;
-		}
 
-		return fieldVersionRepository;
-	}
 	public void setDefaultRepository( Repository defaultRepository )
 	{
 		fieldDefaultRepository = defaultRepository;
@@ -189,10 +163,6 @@ public class CompoundRepository implements Repository
 		return resolveRepository( inPath ).doesExist(inPath);
 	}
 
-	public ContentItem getLastVersion(String inPath) throws RepositoryException
-	{
-		return resolveRepository( inPath ).getLastVersion(inPath );
-	}
 
 	public List getChildrenNames(String inParent) throws RepositoryException
 	{
@@ -379,19 +349,4 @@ public class CompoundRepository implements Repository
 		return null;
 	}
 
-	@Override
-	public void restoreVersion(ContentItem inPath, String inVersion) throws RepositoryException {
-		resolveRepository( inPath.getPath() ).restoreVersion(inPath, inVersion);
-	}
-	
-	@Override
-	public ContentItem getVersion(ContentItem inItem, String inVersion) throws RepositoryException {
-		return resolveRepository( inItem.getPath() ).getVersion(inItem, inVersion);
-		
-	}
-
-	@Override
-	public void saveVersion(ContentItem inItem) throws RepositoryException {
-		resolveRepository( inItem.getPath() ).saveVersion(inItem);
-	}
 }

@@ -606,14 +606,6 @@ public class PageManager
 	{
 		return getChildrenPaths(inUrl);
 	}
-	public ContentItem getLatestVersion(String inPath) throws RepositoryException
-	{
-		return getRepository().getLastVersion(inPath);
-	}	
-	public List getVersions(String inPath) throws RepositoryException
-	{
-		return getRepository().getVersions(inPath);
-	}
 	public List getChildrenPaths(String inPath, boolean inIncludeFallBack)
 	{
 		List all = getRepository().getChildrenNames(inPath);

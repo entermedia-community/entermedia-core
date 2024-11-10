@@ -3,13 +3,13 @@
  */
 package org.openedit.util;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.Writer;
@@ -24,6 +24,7 @@ import org.dom4j.util.PerThreadSingleton;
 import org.openedit.OpenEditException;
 import org.openedit.OpenEditRuntimeException;
 import org.openedit.config.XMLConfiguration;
+import org.openedit.repository.ContentItem;
 
 /**
  * @author cburkey
@@ -45,7 +46,11 @@ public class XmlUtil
 			throw new RuntimeException(inFile.toString(), ex);
 		}
 	}
-	
+	public Element getXml(ContentItem inItem, String inEncoding)
+	{
+		Element root = getXml(inItem.getInputStream(),inEncoding);
+		return root;
+	}	
 	public Element getXml(InputStream inXmlReader, String inEncoding)
 	{
 		try
@@ -129,7 +134,22 @@ public class XmlUtil
 			FileUtils.safeClose(inWriter);
 		}
 	}
+
 	
+	public void saveXml(Document inRoot, OutputStream inStream, String inEncoding)
+	{
+
+		try
+		{
+			Writer inWriter = new OutputStreamWriter(inStream,inEncoding);
+		saveXml(inRoot,inWriter,inEncoding);
+	}
+	catch ( Exception ex )
+	{
+		throw new RuntimeException(ex);
+	}
+	}
+
 	public void saveXmlConfiguration(XMLConfiguration inConfig, File inFile)
 	{
 		Document doc = DocumentHelper.createDocument();

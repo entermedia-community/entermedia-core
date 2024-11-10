@@ -11,24 +11,18 @@ import java.io.StringReader;
 import java.io.Writer;
 import java.util.List;
 
-import junit.framework.TestCase;
-
 import org.openedit.repository.ContentItem;
-import org.openedit.repository.Repository;
 import org.openedit.repository.RepositoryException;
-import org.openedit.repository.filesystem.DirectoryTool;
-import org.openedit.repository.filesystem.FileItem;
-import org.openedit.repository.filesystem.StringItem;
-import org.openedit.repository.filesystem.VersionedRepository;
-import org.openedit.repository.filesystem.XmlVersionRepository;
 import org.openedit.util.OutputFiller;
+
+import junit.framework.TestCase;
 
 /**
  * @author Matthew Avery, mavery@einnovation.com
  */
 public class BaseRepositoryTest extends TestCase
 {
-	protected VersionedRepository fieldRepository;
+	protected FileRepository fieldRepository;
 	protected DirectoryTool fieldDirectoryTool;
 
 
@@ -46,11 +40,11 @@ public class BaseRepositoryTest extends TestCase
 		return fieldDirectoryTool;
 	}
 
-	public VersionedRepository getRepository()
+	public FileRepository getRepository()
 	{
 		if (fieldRepository == null)
 		{
-			fieldRepository = new XmlVersionRepository();
+			fieldRepository = new FileRepository();
 			fieldRepository.setExternalPath(getRootDirectory().getAbsolutePath().replace('\\', '/'));
 		}
 		return fieldRepository;
@@ -146,67 +140,6 @@ public class BaseRepositoryTest extends TestCase
 		assertTrue( contentItem.exists() );
 	}
 
-	public void testPut() throws Exception
-	{
-		File indexFile = makeIndexFile();
-		assertEquals( 0, getRepository().maxVersionNumber( indexFile ) );
-		putIndexFile();
-		assertEquals( 1, getRepository().maxVersionNumber( indexFile ) );
-		putIndexFile();
-		putIndexFile();
-		putIndexFile();
-		//It had not changed so the version should still be one
-		assertEquals( 1, getRepository().maxVersionNumber( indexFile ) );
-		
-		StringItem item = new StringItem( "/index.html",  "<p>New content XXX</p>" ,null);
-		item.setMessage("Automatic ContentItem from filesystem." );
-		item.setAuthor("admin");
-		getRepository().put(item);
-		assertEquals( 2, getRepository().maxVersionNumber( indexFile ) );
-		
-
-		
-	}
-
-
-	public void testCheckReservedPaths() throws Exception
-	{
-		assertBadPath( "/foo/bar/.versions" );
-		assertBadPath( "/foo/bar/.versions/.somestuff" );
-		try
-		{
-			getRepository().checkReservedPaths( "/foo/bar/index.html" );
-		}
-		catch( RepositoryException e )
-		{
-			assertTrue( false );
-		}
-	}
-	protected void assertBadPath( String inPath ) throws Exception
-	{
-		try
-		{
-			getRepository().checkReservedPaths( inPath );
-			assertTrue( false );
-		}
-		catch( RepositoryException e )
-		{
-			assertTrue( true );
-		}
-	}
-
-	/**
-	 * This method should be the exact number of version on file
-	 * @throws Exception
-	 */
-	public void testMaxVersionNumber() throws Exception
-	{
-		File indexFile = makeIndexFile();
-		assertEquals( 0, getRepository().maxVersionNumber( indexFile ) );
-		putIndexFile();
-		assertEquals( 1, getRepository().maxVersionNumber( indexFile ) );
-	}
-
 
 	public void testRemove() throws Exception
 	{
@@ -277,8 +210,6 @@ public class BaseRepositoryTest extends TestCase
 		writer.flush();
 		writer.close();
 
-		File versionsdir = new File( getRepository().getExternalPath(), ".versions" );
-		versionsdir.mkdirs();
 		return indexFile;
 	}
 	
@@ -292,22 +223,7 @@ public class BaseRepositoryTest extends TestCase
 		getRepository().put(item);
 	}
 
-
-	public void testGetVersionsDirectory() throws Exception
-	{
-		getRepository();
-		makeIndexFile();
-		
-		File versionsDirectory = getRepository().getVersionsDirectory( "/foo/bar/file.html" );
-		assertFalse( versionsDirectory.exists() );
-		
-		
-		ContentItem contentItem = new StringItem("/foo/bar/file.html", "<p>New content</p>",null );
-		getRepository().put( contentItem );
-		versionsDirectory = getRepository().getVersionsDirectory( "/foo/bar/file.html" );
-		assertTrue( versionsDirectory.exists() );
-
-	}
+	
 	public File getRootDirectory()
 	{
 		return getDirectoryTool().getRootDirectory();

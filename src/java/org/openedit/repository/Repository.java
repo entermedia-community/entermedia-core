@@ -46,17 +46,7 @@ public interface Repository
 
 	
 	void remove( ContentItem inPath ) throws RepositoryException;
-	
-	/* Returns a List of ContentItems sorted by version number
-	 * 
-	 */
-	List getVersions( String inPath ) throws RepositoryException;
-	
-	public ContentItem getLastVersion(String inPath) throws RepositoryException;
-
-	void restoreVersion( ContentItem inPath, String inVersion ) throws RepositoryException;
-	ContentItem getVersion( ContentItem inItem, String inVersion ) throws RepositoryException;
-	
+		
 	void setPath( String inPath);
 	String getPath();
 	/**
@@ -66,11 +56,6 @@ public interface Repository
 	 */
 	void setExternalPath(String inRootAbsolutePath);
 	String getExternalPath();
-	
-	public void saveVersion( ContentItem inContentItem ) throws RepositoryException;
-
-	
-	
 	
 	
 	void setFilterIn(String inFilters);

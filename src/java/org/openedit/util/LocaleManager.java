@@ -316,5 +316,16 @@ public class LocaleManager
 		}
 		return null;
 	}
-
+	Sizer sizer;
+	
+	public String getFileSize(long inSize)
+	{
+		if( sizer == null)
+		{
+			sizer = new Sizer();
+		}
+		String size = sizer.inEnglish(inSize);
+		return size;
+	}
+	
 }

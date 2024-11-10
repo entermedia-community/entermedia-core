@@ -22,30 +22,6 @@ public abstract class BaseRepository implements Repository
 	protected String[] fieldFilterInList;
 	protected Map fieldProperties;
  	
-//	public String getPrefix()
-//	{
-//		if( fieldPrefix == null)
-//		{
-//			String external = getExternalPath();
-//			if( external == null)
-//			{
-//				external = getServerRoot() + getPath(); //point to itself? /webapps + /WEB-INF
-//			}
-//			else
-//			{
-//				///home/cburkey/data  + WEB-INF/index.xconf
-//				new File(external).mkdirs();
-//			}
-//			//remove trailing slashes
-//			if( external.endsWith("/"))
-//			{
-//				external = external.substring(0, external.length()-1);
-//			}
-//			fieldPrefix =	external;
-//		}
-//		return fieldPrefix;
-//	}
-
 	public Map getProperties()
 	{
 		if (fieldProperties == null)
@@ -321,20 +297,6 @@ public abstract class BaseRepository implements Repository
 		}
 		return false;
 	}
-
-	@Override
-	public void restoreVersion(ContentItem inPath, String inVersion) throws RepositoryException {
-		throw new OpenEditException("Not implemented");
-	}
-	@Override
-	public ContentItem getVersion(ContentItem inItem, String inVersion) throws RepositoryException {
-		throw new OpenEditException("Not implemented");
-	}
 	
-	public void saveVersion( ContentItem inContentItem ) throws RepositoryException
-	{
-		throw new OpenEditException("Not implemented");
-		
-	}
 
 }
