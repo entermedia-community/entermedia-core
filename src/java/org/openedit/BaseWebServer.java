@@ -689,7 +689,7 @@ public class BaseWebServer implements WebServer
 					
 					if (isset == null || Boolean.parseBoolean(isset))
 					{
-						repositorytype = "versionRepository";
+						repositorytype = "fileRepository";//version repo is gone
 					}
 				}
 				if( repositorytype == null)
