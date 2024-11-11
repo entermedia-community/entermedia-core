@@ -159,9 +159,9 @@ public class PropertyDetailsArchive implements CatalogEnabled
 		return file.isExist();
 	}
 
-	protected XmlFile getViewXml(String inView)
+	protected XmlFile getViewXml(String inViewPath)
 	{
-		String path = findConfigurationFile("/views/" + inView + ".xml");
+		String path = findConfigurationFile("/views/" + inViewPath + ".xml");
 		XmlFile file = getXmlArchive().getXml(path);
 		return file;
 	}
@@ -199,12 +199,12 @@ public class PropertyDetailsArchive implements CatalogEnabled
 		if (inProfile != null) // this is important since they may have created
 								// a custom search screen or something
 		{
-			id = id + "_" + inProfile.get("settingsgroup");
+			//id = id + "_" + inProfile.get("settingsgroup");
 			String propId = "view_" + id.replace('/', '_');
 			values = inProfile.getValues(propId);
 			if (values != null)
 			{
-				id = id + "_" + values.toString(); // More specific to the user,
+				id = id + "_" + values.toString(); // TODO: More specific to the user,
 													// 1000 limit cache
 			}
 		}
@@ -1000,10 +1000,10 @@ public class PropertyDetailsArchive implements CatalogEnabled
 		return listFilesByFolderType("views/" + inViewType, false);
 	}
 
-	public Data getView(String inType, String inView)
+	public Data getView(String inType, String inViewPath)
 	{
 		// Guess the type is not used. the inview has the type in the path name?
-		return getViewXml(inView);
+		return getViewXml(inViewPath);
 	}
 
 	public String getViewLabel(String inView)
@@ -1272,6 +1272,107 @@ public class PropertyDetailsArchive implements CatalogEnabled
 			path = "/" + getCatalogId() + "/data" + inPath;
 		}
 		return path;
+	}
+
+	public void addToView(Searcher inSearcher, String viewpath , String inNewField)
+	{
+		Data view = getView(inSearcher.getSearchType(), viewpath);
+
+		XmlFile file = (XmlFile)view;
+		String viewbase = null;
+		
+//			if(archive != null) {
+//				viewbase = archive.getCatalogSettingValue("viewbase");  //TODO: Add setting in the archive
+//			}
+//			if(viewbase == null) {
+			 viewbase = "/WEB-INF/data/" + inSearcher.getCatalogId()+ "/views/";
+//	
+//			}
+		String path = viewbase + viewpath + ".xml";
+		file.setPath(path);
+		file.setElementName("property");
+
+		Element element = file.addNewElement();
+		element.addAttribute("id", inNewField);
+		element.clearContent();
+		getXmlArchive().saveXml(file, null);
+		getViewCache().clear();// clearCache(); //Only clear this type
+			
+	}
+	
+	public void removeFromView(Searcher inSearcher, String inViewpath, String indetailid)
+	{
+		Data view = getView(inSearcher.getSearchType(), inViewpath);
+
+		XmlFile file = (XmlFile)view;
+		String viewbase = "/WEB-INF/data/" + inSearcher.getCatalogId()+ "/views/";
+		String path = viewbase + inViewpath + ".xml";
+		file.setPath(path);
+		file.setElementName("property");
+
+		Element element = loadViewElement(file, indetailid);
+		file.deleteElement(element);
+
+		if (file.getRoot().elements().size() == 0)
+		{
+			getXmlArchive().deleteXmlFile(file);
+		}
+		else
+		{
+			getXmlArchive().saveXml(file, null);
+		}
+
+		getXmlArchive().saveXml(file, null);
+		getViewCache().clear();// clearCache(); //Only clear this type		
+	}
+
+	public void saveView(Searcher inSearcher, String inViewpath, String[] inSortedIds)
+	{
+		if (inSortedIds == null) {
+			throw new OpenEditException("Missing sort list ids");
+		}
+		Data view = getView(inSearcher.getSearchType(), inViewpath);
+
+		XmlFile file = (XmlFile)view;
+		String viewbase = "/WEB-INF/data/" + inSearcher.getCatalogId()+ "/views/";
+		String path = viewbase + inViewpath + ".xml";
+		file.setPath(path);
+		file.setElementName("property");
+
+		List tosave = new ArrayList();
+		for (int i = 0; i < inSortedIds.length; i++)
+		{
+			//Element sourceelement = file.getElementById();
+			String id = inSortedIds[i];
+			Element sourceelement = loadViewElement(file, id);
+			if (sourceelement != null)
+			{
+				sourceelement = (Element)sourceelement.clone();
+				tosave.add(sourceelement);
+			}
+		}
+		if (tosave.isEmpty())
+		{
+			throw new OpenEditException("Should not be removing all fields");
+		}
+
+		file.getElements().clear();
+		file.getElements().addAll(tosave);
+		
+		getXmlArchive().saveXml(file, null);
+		getViewCache().clear();// clearCache(); //Only clear this type		
+		
+	}
+
+	protected Element loadViewElement(XmlFile file, String toremove)
+	{
+		Element element = file.getElementById(toremove);
+		if (element == null && toremove.contains("."))
+		{
+			toremove = toremove.substring(toremove.indexOf(".") + 1, toremove.length());
+			element = file.getElementById(toremove);
+		}
+		return element;
 	}
 
 }
