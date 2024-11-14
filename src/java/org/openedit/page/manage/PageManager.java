@@ -656,6 +656,16 @@ public class PageManager
 		List<String> appscripts = loadScriptPathsFor(site);
 		return appscripts;
 	}
+	
+	public List<Script> getScriptsForApp(Page inContent)
+	{
+		String applicationid = inContent.get("applicationid");
+		String apppath = "/" + applicationid + "/_site.xconf";
+		PageSettings site = getPageSettingsManager().getPageSettings(apppath);
+		List<Script> appscripts = loadScriptsFor(site);
+		return appscripts;
+	}
+	
 	public List<String> getScriptPathsWithoutApp(Page inContent)
 	{
 		List<String> scripts = loadScriptPathsFor( inContent.getPageSettings() );
@@ -673,6 +683,51 @@ public class PageManager
 		combined.removeAll(appscripts);
 		return combined;
 	}
+	
+	public List<Script> loadScriptsFor(PageSettings startingfrom)
+	{
+		List<Script>  finalscripts = (List)getCacheManager().get("scripts",startingfrom.getPath());
+		if( finalscripts == null)
+		{
+			List<Script> scripts = startingfrom.getScripts();
+			if( scripts != null)
+			{
+				finalscripts = new ArrayList(scripts.size());
+				Set canceled = new HashSet();
+				for (Iterator iterator = scripts.iterator(); iterator.hasNext();)
+				{
+					Script script = (Script) iterator.next();
+					if( script.isCancel())
+					{
+						canceled.add(script.getId());
+					}
+					else
+					{
+						canceled.remove(script.getId()); //Last one wins
+					}
+				}
+				for (Iterator iterator = scripts.iterator(); iterator.hasNext();)
+				{
+					Script script = (Script) iterator.next();
+					if(canceled.contains(script.getId()))
+					{
+						continue;
+					}
+//					String value = script.getSrc();
+//					value = startingfrom.replaceProperty(value);
+//					if( value == null)
+//					{
+//						throw new OpenEditException("src value cannot be null " + script.getPath() + " #" + script.getId());
+//					}
+					finalscripts.add(script);
+				}
+				getCacheManager().put("scripts" ,startingfrom.getPath(),finalscripts);
+			}
+			}
+		return finalscripts;
+	}
+
+	
 	protected List<String> loadScriptPathsFor(PageSettings startingfrom)
 	{
 		List paths = null;

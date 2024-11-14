@@ -114,6 +114,7 @@ public class XConfToPageSettingsConverter
 		script.setId(inConfigElement.get("id"));
 		script.setSrc(inConfigElement.get("src"));
 		script.setCancel(Boolean.parseBoolean(inConfigElement.get("cancel")));
+		script.setDefer(Boolean.parseBoolean(inConfigElement.get("defer")));
 		String external = inConfigElement.get("external");
 		script.setExternal(Boolean.parseBoolean(external));
 		script.setPath(inSettings.getPath());

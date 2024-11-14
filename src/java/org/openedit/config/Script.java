@@ -5,6 +5,15 @@ public class Script
 	protected String fieldSrc;
 	protected String fieldId;
 	protected boolean fieldExternal;
+	protected boolean fieldDefer;
+	public boolean isDefer()
+	{
+		return fieldDefer;
+	}
+	public void setDefer(boolean inDefer)
+	{
+		fieldDefer = inDefer;
+	}
 	protected String fieldPath;
 	protected boolean fieldCancel;
 	
