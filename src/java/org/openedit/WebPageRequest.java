@@ -253,7 +253,7 @@ public interface WebPageRequest
 	
 	public String getRequestParamsAsList();
 
-	public void unpackageVariables();
+//	public void unpackageVariables();
 	
 	public String getText(String inKey);
 	

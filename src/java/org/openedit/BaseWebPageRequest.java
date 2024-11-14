@@ -482,6 +482,7 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 		Object ret = getVariables().get(inKey);
 		if (ret == null && getParent() != null)
 		{
+			//log.info("Parent=" + getParent().hashCode() + "!=" + hashCode());
 			return getParent().getPageValue(inKey);
 		}
 		if( ret == null  && getParent() == null)
@@ -1262,82 +1263,6 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 		return list.toString();
 	}
 	
-	public String ajax()
-	{
-		String id = packageVariables();
-		return "varpackageid: '" + id + "'";
-	}
-	public String ajaxid()
-	{
-		String id = packageVariables();
-		return id;
-	}
-	public String rewriteParams()
-	{
-		String id = packageVariables();
-		return "varpackageid=" + id + "";
-	}
-	
-	
-	public VariableStore getVariableStore()
-	{
-		VariableStore store = (VariableStore)getSessionValue("variablestore");
-		if (store == null)
-		{
-			store = new VariableStore();
-			putSessionValue("variablestore", store);
-		}
-		return store;
-	}
-	
-	public String packageVariables()
-	{
-		VariablePackage varPackage = new VariablePackage();
-		Map allVariables = getAllVariables();
-		
-		for (Iterator iterator = allVariables.keySet().iterator(); iterator.hasNext();)
-		{
-			String key = (String) iterator.next();
-			if (!getProtectedFields().contains(key)
-					//we don't overwrite vars anyway. this might not be necessary
-					&& !key.equals("pages")
-					&& !key.equals("context"))
-			{
-				Object value = allVariables.get(key);
-				varPackage.addVariable(key, value);
-			}
-			
-		}
-		
-		String id = getVariableStore().addPackage(varPackage);
-		return id;
-	}
-	
-	public void unpackageVariables()
-	{
-		String id = getRequestParameter("varpackageid");
-		if (id != null)
-		{
-			VariablePackage varPackage = getVariableStore().getPackage(id);
-			if (varPackage != null)
-			{
-				Map current = getAllVariables();
-				Map map = varPackage.getVariables();
-				for (Iterator iterator = map.keySet().iterator(); iterator.hasNext();) 
-				{
-					String key = (String) iterator.next();
-					
-					if(!current.containsKey(key))
-					{
-						//log.info("putting page value" + val);
-						Object val = map.get(key);
-						putPageValue(key, val);
-					}
-					
-				}
-			}
-		}
-	}
 	public String getDate(Date inDate)
 	{
 		String format = getUserProfileValue("shortdateformat");
