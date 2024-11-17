@@ -121,6 +121,18 @@ public class PageTest extends BaseTestCase
 		assertTrue( page.isCurrent() );
 	}
 
+	public void testShadowFallBack() throws Exception
+	{
+		Page page = getPage( "/appwithshadow/AToB/inb.html" );
+		assertEquals("/appwithshadow/AToB/inb.xconf",page.getPageSettings().getPath());
+		assertEquals("/WEB-INF/base/ShadowFallBack/AToB/inb.xconf",page.getPageSettings().getFallback().getPath());
+		assertEquals("/WEB-INF/base/ShadowFallBack/AToB/_site.xconf",page.getPageSettings().getFallback().getParent().getPath());
+
+		assertEquals("/WEB-INF/base/ShadowFallBack/B/inb.xconf",page.getPageSettings().getFallback().getFallback().getPath());
+		assertEquals("/WEB-INF/base/ShadowFallBack/B/_site.xconf",page.getPageSettings().getFallback().getFallback().getParent().getPath());
+		assertTrue(page.exists());
+		
+	}
 	/**
 	 * DOCUMENT ME!
 	 *
