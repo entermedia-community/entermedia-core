@@ -337,8 +337,8 @@ public class XConfToPageSettingsConverter
 	public void configure(PageSettings inPageSettings, String inUrlPath) throws OpenEditException
 	{
 		boolean contentexists =  getPageSettingsManager().getRepository().doesExist( inUrlPath );
-		boolean settings = inPageSettings.exists();
-		if ( !settings )
+		boolean fileexists = inPageSettings.exists();
+		if ( !fileexists )
 		{
 			loadFallBackDirectory( inPageSettings, inUrlPath, contentexists );
 			//	loadOverrideDirectory( inPageSettings, inUrlPath );		
@@ -365,7 +365,7 @@ public class XConfToPageSettingsConverter
 		config.populate(root);
 		inPageSettings.getProperties().putAll( loadProperties( config.getProperties()));
 		
-		if( settings ) //Reloads it here since it was not loaded above
+		if( fileexists ) //Reloads it here since it was not loaded above
 		{
 			loadFallBackDirectory( inPageSettings, inUrlPath, contentexists );		
 			loadAlternativeContent(inPageSettings, inUrlPath, contentexists);
@@ -432,13 +432,13 @@ public class XConfToPageSettingsConverter
 	{
 		inPageSettings.setOriginalyExistedContentPath(inContentexists);
 		//Find the alternative content path if found someplace else							
-		String fallback = inPageSettings.getPropertyValueFixed("fallbackcontentpath");
-		if( fallback != null)
-		{
-			fallback = PathUtilities.resolveRelativePath(fallback, inPageSettings.getPath());
-			inPageSettings.setAlternateContentPath(fallback);
-		}
-		else if(!inContentexists)
+//		String fallback = inPageSettings.getPropertyValueFixed("fallbackcontentpath");
+//		if( fallback != null)
+//		{
+//			fallback = PathUtilities.resolveRelativePath(fallback, inPageSettings.getPath());
+//			inPageSettings.setAlternateContentPath(fallback);
+//		}
+		if(!inContentexists)
 		{
 			//Look for some content to use
 			PageSettings settings = inPageSettings.getFallback();
@@ -473,33 +473,29 @@ public class XConfToPageSettingsConverter
 	 */
 	protected void loadFallBackDirectory(PageSettings inPageSettings, String inUrlPath, boolean contentexists) throws OpenEditException
 	{
-		boolean inwebinfs = false;
-		if ( inUrlPath.startsWith("/WEB-INF/"))
-		{
-			inwebinfs = true;
-		}
-		boolean specified = false;
+		
+//		if( inUrlPath.isEmpty() || inUrlPath.equals("/_site.xconf") )
+//		{
+//			//No fallback for top level
+//			return;
+//		}
+		
 		String fallBackValue = null;
 
 		//this is a catch 22. If we don't have a 1st level fallback set it might not look for second level
 		PageProperty fallBackDir  = inPageSettings.getProperty("fallbackdirectory");
+		
 		String alternativepath = null;
 		if ( fallBackDir  != null && fallBackDir.getValue() != null )
 		{
+			String fallbacksetpath = fallBackDir.getPath();
 			fallBackValue = fallBackDir.getValue();
 			//1. First is looks in mattcatalog. But there we want to use another fallback
 			
 			//this might be using a variable. The value for this comes from the parent
 			fallBackValue = inPageSettings.replaceProperty(fallBackValue);
 			fallBackValue = inPageSettings.getParent().replaceProperty(fallBackValue);
-			
-			//Lets support relative paths ../A -> ../B
-			if( fallBackValue.contains("..") )
-			{
-				fallBackValue = PathUtilities.buildRelative(fallBackValue, inUrlPath);
-			}
-			
-			
+
 			if( fallBackValue.equals("/"))
 			{
 				fallBackValue = "";
@@ -511,16 +507,25 @@ public class XConfToPageSettingsConverter
 			{
 				return;
 			}
-			//Find out the directory we are in. 
-			String thisdir = fallBackDir.getPath();
-			//There is a problem here, we seem to be mixing and matching paths and the substring
-//			if( !inUrlPath.startsWith(thisdir) )
-//			{
-//				inwebinfs = true;
-//			}
-//			else
-//			{
-				thisdir = PathUtilities.extractDirectoryPath(thisdir); //what level the path was defined
+
+			//Lets support relative paths ../A -> ../B
+			if( fallBackValue.contains("..") )
+			{
+				//Need to make sure we add back in the extra stuff
+				String fbthisdir = PathUtilities.extractDirectoryPath(fallbacksetpath); //what level the path was defined
+				String newfallBackValue = PathUtilities.buildRelative(fallBackValue, fbthisdir);
+				
+				//Need to add on any extra subdirectories or file parts
+				String filepart = inUrlPath.substring(fbthisdir.length(),inUrlPath.length()); //Just want the end part
+				if( !filepart.endsWith(".xconf") )
+				{
+					filepart = PathUtilities.extractPagePath(filepart) + ".xconf"; //Take off the index.html... Use index.xconf?
+				}
+				alternativepath = newfallBackValue + filepart; //end part might be a file name or _site.xconf
+			}
+			else
+			{
+				String thisdir = PathUtilities.extractDirectoryPath(fallbacksetpath); //what level the path was defined
 				String filepart = inUrlPath.substring(thisdir.length(),inUrlPath.length());
 				alternativepath = fallBackValue + filepart; //end part might be a file name or _site.xconf
 				if( alternativepath.equals(inUrlPath))
@@ -529,68 +534,30 @@ public class XConfToPageSettingsConverter
 					log.debug(inUrlPath + " Cannot specify self as fallback directory");
 					return;
 				}
-				specified = true;
-//			}
+			}
 		}
-		else if(!inwebinfs)//Site wide default
+		else
 		{
-			fallBackValue = "/WEB-INF/base";
-			alternativepath = fallBackValue + inUrlPath;
-		}
-		
-		try
-		{
-			if( inwebinfs && !specified)
+			//Only default the site.xconf May get infinite loops
+			//if( inUrlPath.equals("/_site.xconf") || inUrlPath.startsWith("/system/") || inUrlPath.startsWith("/openedit/") )
+			if( inUrlPath.startsWith("/WEB-INF/base") )
 			{
-				//log.info("Not loading fallback for " + inUrlPath);
+				//No fallback found. 
+				return;
 			}
 			else
 			{
-				PageSettings otherxconf = getPageSettingsManager().getPageSettings(alternativepath);
-				//log.info("loading fallback for " + inUrlPath + " with " + alternativepath);
-				inPageSettings.setFallBack(otherxconf);
-//				if( specified )
-//				{
-//					followFallBack(inPageSettings, fallBackDir, alternativepath);
-//				}
-				
-				
+				alternativepath = "/WEB-INF/base" + inUrlPath;
 			}
-		} 
-		catch ( Exception ex )
-		{
-			log.error(ex);
-			if( ex instanceof OpenEditException)
-			{
-				throw (OpenEditException)ex;
-			}
-			throw new OpenEditException(ex);
 		}
-	}
-	/*
-	protected void followFallBack(PageSettings inPageSettings, PageProperty fallBackDir, String alternativepath)
-	{
-		PageSettings otherxconf;
-		PageProperty fallBackDirNew  = inPageSettings.getProperty("fallbackdirectory");
-		String oldval = fallBackDir == null?null:fallBackDir.getValue();
-		String newval = fallBackDirNew == null?null:fallBackDirNew.getValue();
 		
-		if( newval != null && !newval.equals( oldval ) )
+		if( alternativepath != null)
 		{
-			//loadFallBackDirectory(inPageSettings,inUrlPath, contentexists);
-			//log.info(newval);
-			String defined = PathUtilities.extractDirectoryPath(fallBackDirNew.getPath()); //what level the path was defined
-
-			String extrapathinfo = alternativepath.substring(defined.length() );
-			newval = inPageSettings.replaceProperty(newval);
-			newval = inPageSettings.getParent().replaceProperty(newval);
-			newval = newval + extrapathinfo;
-			otherxconf = getPageSettingsManager().getPageSettings(newval);
+			//log.info("loading fallback for " + inUrlPath + " with " + alternativepath);
+			PageSettings otherxconf = getPageSettingsManager().getPageSettings(alternativepath);
 			inPageSettings.setFallBack(otherxconf);
-			followFallBack(inPageSettings,fallBackDirNew,alternativepath);
 		}
 	}
-	*/
 
 	public FilterReader getFilterReader()
 	{

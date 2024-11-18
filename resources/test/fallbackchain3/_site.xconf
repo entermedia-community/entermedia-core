@@ -1,3 +1,5 @@
 <page>
 	<property name="level3">level3</property>
+	<property name="fallbackdirectory">/WEB-INF/base/fallbackchain3</property>
+	
 </page>
