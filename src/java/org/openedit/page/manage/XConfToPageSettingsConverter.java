@@ -492,6 +492,14 @@ public class XConfToPageSettingsConverter
 			//this might be using a variable. The value for this comes from the parent
 			fallBackValue = inPageSettings.replaceProperty(fallBackValue);
 			fallBackValue = inPageSettings.getParent().replaceProperty(fallBackValue);
+			
+			//Lets support relative paths ../A -> ../B
+			if( fallBackValue.contains("..") )
+			{
+				fallBackValue = PathUtilities.buildRelative(fallBackValue, inUrlPath);
+			}
+			
+			
 			if( fallBackValue.equals("/"))
 			{
 				fallBackValue = "";
