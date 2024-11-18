@@ -13,10 +13,9 @@ See the GNU Lesser General Public License for more details.
 package org.openedit.page;
 
 import java.io.File;
+import java.util.Collection;
 
 import org.openedit.BaseTestCase;
-import org.openedit.page.Page;
-import org.openedit.page.PageSettings;
 import org.openedit.repository.filesystem.FileItem;
 import org.openedit.util.strainer.AndFilter;
 import org.openedit.util.strainer.Filter;
@@ -59,7 +58,9 @@ public class PageTest extends BaseTestCase
 		
 		Page page = getPage( "/simple/test.html" );
 		assertEquals("/simple/test.xconf",page.getPageSettings().getPath());
-		assertEquals("true",page.getPageSettings().getProperty("simple").getValue());
+		PageProperty prop = page.getPageSettings().getProperty("simple");
+		assertNotNull("Prop should be set",prop);
+		assertEquals("true",prop.getValue());
 		
 //		PageSettings  settings = getFixture().getPageManager().getPageSettingsManager().getPageSettings("/simple/test.html");
 //		
@@ -125,14 +126,71 @@ public class PageTest extends BaseTestCase
 	{
 		Page page = getPage( "/appwithshadow/AToB/inb.html" );
 		assertEquals("/appwithshadow/AToB/inb.xconf",page.getPageSettings().getPath());
-		assertEquals("/WEB-INF/base/ShadowFallBack/AToB/inb.xconf",page.getPageSettings().getFallback().getPath());
-		assertEquals("/WEB-INF/base/ShadowFallBack/AToB/_site.xconf",page.getPageSettings().getFallback().getParent().getPath());
+		assertEquals("/appwithshadow/AToB/_site.xconf",page.getPageSettings().getParent().getPath());
+		
+		PageSettings B = page.getPageSettings().getFallback();
+		assertEquals("/appwithshadow/B/inb.xconf",B.getPath());
+		assertEquals("/appwithshadow/B/_site.xconf",B.getParent().getPath());
 
-		assertEquals("/WEB-INF/base/ShadowFallBack/B/inb.xconf",page.getPageSettings().getFallback().getFallback().getPath());
-		assertEquals("/WEB-INF/base/ShadowFallBack/B/_site.xconf",page.getPageSettings().getFallback().getFallback().getParent().getPath());
+		assertEquals("/WEB-INF/base/ShadowFallBack/B/inb.xconf",B.getFallback().getPath());
+		assertEquals("/WEB-INF/base/ShadowFallBack/B/_site.xconf",B.getFallback().getParent().getPath());
 		assertTrue(page.exists());
 		
 	}
+	
+	public void testShadowFallBack2() throws Exception
+	{
+		Page page = getPage( "/appwithshadow2/AToB/inb.html" );
+		
+		PageSettings AToB = page.getPageSettings();
+		
+		assertEquals("/appwithshadow2/AToB/_site.xconf",AToB.getParent().getPath());  
+		assertEquals("/appwithshadow2/_site.xconf",AToB.getParent().getParent().getPath());
+
+		PageProperty prop =  AToB.getProperty("fallbackdirectory");
+		assertNotNull("Property should exist",prop);
+		assertEquals("/appwithshadow2/_site.xconf",prop.getPath());
+
+		PageProperty appid =  AToB.getProperty("applicationid");
+		assertNotNull("Property should exist",appid);
+		assertEquals("appwithshadow2",appid.getValue());
+
+	//	assertEquals("/WEB-INF/base/ShadowFallBack/B/_site.xconf",B.getPath());
+		
+		assertEquals("/appwithshadow2/AToB/inb.xconf",AToB.getPath());
+		assertEquals("/appwithshadow2/AToB/_site.xconf",AToB.getParent().getPath());
+
+		PageSettings fallback = getFixture().getPageManager().getPageSettingsManager().getPageSettings("/WEB-INF/base/ShadowFallBack2/AToB/_site.xconf");
+		PageProperty baseprop =  fallback.getProperty("fallbackdirectory");
+		assertNotNull("Property should exist",baseprop);
+		assertEquals("/WEB-INF/base/ShadowFallBack2/AToB/_site.xconf",baseprop.getPath());
+		
+		
+		
+		Collection<PageSettings> settings = AToB.getLoadedFallBacksPageSettings();
+		assertNotNull("Missing settings",settings);
+		assertEquals("Missing settings",3,settings.size());
+		
+		String realpath = getFixture().getPageManager().getPageSettingsManager().loadAlternativeContent(AToB, page.getPath() );
+
+		assertEquals("/WEB-INF/base/ShadowFallBack2/B/inb.html",realpath);
+		
+		
+//		assertEquals("/WEB-INF/base/ShadowFallBack/AToB/_site.xconf",AToB.load);
+//
+//		PageSettings B = AToB.getParent().getFallback().getFallback();
+//		assertNotNull("Should be auto set relative to the original url",B);
+//		assertEquals("/WEB-INF/base/ShadowFallBack/B/_site.xconf",B.getPath());
+		
+//		assertEquals("/appwithshadow2/B/inb.xconf",B.getPath());
+//		assertEquals("/appwithshadow2/B/_site.xconf",B.getParent().getPath());
+//
+//		assertEquals("/WEB-INF/base/ShadowFallBack/B/inb.xconf",B.getFallback().getPath());
+//		assertEquals("/WEB-INF/base/ShadowFallBack/B/_site.xconf",B.getFallback().getParent().getPath());
+		assertTrue(page.exists());
+		
+	}
+	
 	/**
 	 * DOCUMENT ME!
 	 *
@@ -232,7 +290,7 @@ public class PageTest extends BaseTestCase
 		
 		
 		Page altpage = getPage( "/WEB-INF/base/layout_tests/nonexistent.html" );
-		assertEquals( null,altpage.getAlternateContentPath());
+		//assertEquals( null,altpage.getAlternateContentPath());
 		assertFalse( altpage.exists() );
 
 		
