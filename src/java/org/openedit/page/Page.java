@@ -472,6 +472,15 @@ public class Page implements Data, Comparable
 		return false;
 	}
 
+	public boolean isPropertyTrue(String inKey, boolean inDefault)
+	{
+		Object val = getProperty(inKey);
+		if( val == null)
+		{
+			return inDefault;
+		}
+		return Boolean.parseBoolean(val.toString());
+	}
 
 	/**
 	 * DOCME

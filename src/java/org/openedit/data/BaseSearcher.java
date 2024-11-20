@@ -938,7 +938,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		{
 			for (int i = 0; i < custom.length; i++)
 			{
-				String value = inPageRequest.getRequestParameter(custom[i] + ".value");
+				String value = findValueParameter(inPageRequest,custom[i]);
 				search.setProperty(custom[i], value);
 			}
 		}
@@ -946,6 +946,37 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		return search;
 	}
 
+	protected String findValueParameter(WebPageRequest inPageRequest, String inParam)
+	{
+		String value = inPageRequest.getRequestParameter(inParam + "value");
+		if( value == null)
+		{ 
+			//old style
+			value = inPageRequest.getRequestParameter(inParam + ".value");
+		}
+		return value;
+	}
+	
+	protected String[] findValueParameters(WebPageRequest inPageRequest, String inParam)
+	{
+		String[] value = inPageRequest.getRequestParameters(inParam + "values");
+
+		//old style
+		if( value == null)
+		{ 
+			value = inPageRequest.getRequestParameters(inParam + ".values");
+		}
+		if( value == null)
+		{ 
+			value = inPageRequest.getRequestParameters(inParam + "value");
+		}
+		if( value == null)
+		{ 
+			value = inPageRequest.getRequestParameters(inParam + ".value");
+		}
+		return value;
+	}
+	
 	protected void addAggregations(WebPageRequest inPageRequest, SearchQuery inSearch) {
 		// TODO Auto-generated method stub
 		
@@ -1095,7 +1126,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			}
 			valuecounter.put(detail.getId(), count);
 
-			String[] vals = inPageRequest.getRequestParameters(detail.getId() + ".value");
+			String[] vals =  findValueParameters(inPageRequest,detail.getId());
 			String val = null;
 			if (vals != null && vals.length == 1 && vals[0] != null && vals[0].length() == 0)
 			{
@@ -1108,7 +1139,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			}
 			if (val == null || val.equals(""))
 			{
-				val = inPageRequest.getRequestParameter(field + ".value");
+				val = findValueParameter(inPageRequest,field);
 			}
 			if (val != null && val.contains("|"))
 			{
@@ -1117,7 +1148,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			}
 			else if (val == null)
 			{
-				vals = inPageRequest.getRequestParameters(detail.getId() + ".values");
+				vals = findValueParameters(inPageRequest,detail.getId());
 				if (vals != null && vals.length == 1 && vals[0].length() == 0)
 				{
 					vals = null;
@@ -1215,12 +1246,14 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					String value = (String)field.get("value");
 					if( value != null)
 					{
-						inPageRequest.addRequestParameter(name  + ".value", value);
+						inPageRequest.addRequestParameter(name  + "value", value);
+						inPageRequest.addRequestParameter(name  + ".value", value); //Old style
 					}
 
 					Collection values = (Collection)field.get("values");
 					if( values != null)
 					{
+						inPageRequest.setRequestParameter(name  + "values", (String[])values.toArray(new String[values.size()]));
 						inPageRequest.setRequestParameter(name  + ".values", (String[])values.toArray(new String[values.size()]));
 					}
 					
@@ -1253,10 +1286,10 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				String lang = language[j];
 				String lid = detail.getId() + "_int." + lang;
 				String fieldid = detail.getId() + "." + lang;
-				String langval = inPageRequest.getRequestParameter(fieldid + ".value");
+				String langval = findValueParameter(inPageRequest, fieldid);
 				if (langval == null)
 				{
-					langval = inPageRequest.getRequestParameter(detail.getId() + ".value");
+					langval = findValueParameter(inPageRequest, detail.getId());
 				}
 				if ("en".equals(lang) && langval == null)
 				{
@@ -2990,21 +3023,17 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			String field = null;
 			if (detail != null)
 			{
-				field = detail.getId();
+				field = detail.getId(); //Why this?
 			}
 			else
 			{
 				field = fields[i];
 			}
 
-			String[] values = inReq.getRequestParameters(field + ".values");
+			String[] values = findValueParameters(inReq, field );
 			if (values == null)
 			{
-				values = inReq.getRequestParameters(fields[i] + ".value");
-			}
-			if (values == null)
-			{
-				values = inReq.getRequestParameters(field + ".value");
+				values = findValueParameters(inReq, fields[i]);
 			}
 
 			if (detail == null)
@@ -3127,7 +3156,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					}
 					else
 					{
-						String[] hasvalues = inReq.getRequestParameters(field + ".values");
+						String[] hasvalues = findValueParameters(inReq, field);
 						if( hasvalues == null )
 						{
 							result = null;
