@@ -75,6 +75,10 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 	public HitTracker(Searcher inSearcher)
 	{
 		this();
+		if( inSearcher == null)
+		{
+			throw new OpenEditException("Server must not be null");
+		}
 		setSearcher(inSearcher);
 	}
 	protected void setAllSelected(boolean inSelectAll)
@@ -1770,6 +1774,12 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 	{
 		List terms = new ArrayList();
 		
+		if( getSearcher() == null)
+		{
+			log.error("Searcher is missing");
+			return null;
+		}
+		
 		List<PropertyDetail> details = getSearcher().getPropertyDetailsArchive().getView(  //assetadvancedfilter
 				getSearchType(), getSearchType() + "/" + getSearchType() + inView, inReq.getUserProfile());
 
@@ -1817,4 +1827,5 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 	
 	
 }
+
 
