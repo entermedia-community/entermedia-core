@@ -161,8 +161,28 @@ public class PropertyDetailsArchive implements CatalogEnabled
 
 	protected XmlFile getViewXml(String inViewPath)
 	{
-		String path = findConfigurationFile("/views/" + inViewPath + ".xml");
-		XmlFile file = getXmlArchive().getXml(path);
+		String savepath = findConfigurationFile("/views/" + inViewPath + ".xml");
+		XmlFile file = getXmlArchive().getXml(savepath);
+		
+		if( !file.isExist() )
+		{
+			String name = "edit";  //general
+			
+			if( inViewPath.contains("results") || inViewPath.contains("filter"))
+			{
+				name = "results";
+			}
+			else if( inViewPath.contains("addnew") )
+			{
+				name = "addnew";
+			} 
+			String path = "/" + getCatalogId() + "/data/views/default/" + name + ".xml";
+			file = getXmlArchive().getXml(path);
+			//save here
+			savepath = "/WEB-INF/data/" + getCatalogId() + "/views/" + inViewPath;
+			file.setPath(savepath);
+		}
+		
 		return file;
 	}
 
