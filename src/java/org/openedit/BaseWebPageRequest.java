@@ -235,6 +235,16 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 		return referringPage;
 	}
 	
+	public boolean getRequestParameterBoolean(String inKey, boolean inDefault)
+	{
+		String boolvalue = getRequestParameter(inKey);
+		if( boolvalue == null )
+		{
+			return inDefault;
+		}
+		return Boolean.parseBoolean(boolvalue);
+	}
+
 	public String getRequestParameter(String inKey)
 	{
 		String value = getLocalRequestParameter(inKey);

@@ -280,5 +280,7 @@ public interface WebPageRequest
 	void addRequestParameter(String inString, String inName);
 
 	void putPageValues(Map inPageValues);
-	
+
+	public boolean getRequestParameterBoolean(String inKey, boolean inDefault);
+
 }
