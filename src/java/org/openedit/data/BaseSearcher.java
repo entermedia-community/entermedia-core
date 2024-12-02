@@ -3638,15 +3638,22 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 
 
 	@Override
-	public HitTracker getCachedSearch(QueryBuilder inQ) {
+	public HitTracker getCachedSearch(QueryBuilder inQ) 
+	{
 		String query = inQ.getQuery().toQuery();
-		HitTracker tracker = (HitTracker)getCacheManager().get(getSearchType() + ".cachedsearch" , query);
-		if( tracker == null)
+		CacheEntry entry = (CacheEntry)getCacheManager().get(getSearchType() + ".cachedsearch" , query);
+		if( entry == null )
 		{
-			tracker = inQ.search();
-			getCacheManager().put(getSearchType() + ".cachedsearch" , query,tracker);
+			entry = new CacheEntry();
 		}
-		return tracker;
+		if( !getIndexId().equals( entry.getIndexId() ) )
+		{
+			entry.setIndexId(getIndexId());
+			HitTracker tracker = inQ.search();
+			entry.setHits(tracker);
+			getCacheManager().put(getSearchType() + ".cachedsearch" , query,entry);
+		}
+		return entry.getHits();
 	}
 	
 }
