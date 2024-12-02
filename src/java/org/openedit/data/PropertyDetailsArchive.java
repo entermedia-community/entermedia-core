@@ -209,12 +209,12 @@ public class PropertyDetailsArchive implements CatalogEnabled
 		return getView(propdetails, inView, inProfile);
 	}
 
-	public View getView(PropertyDetails propdetails, String inView, UserProfile inProfile)
+	public View getView(PropertyDetails propdetails, String inViewPath, UserProfile inProfile)
 	{
-	if(inView == null) {
+	if(inViewPath == null) {
 		return null;
 	}
-		String id = inView;
+		String id = inViewPath;
 		Collection values = null;
 		if (inProfile != null) // this is important since they may have created
 								// a custom search screen or something
@@ -237,10 +237,10 @@ public class PropertyDetailsArchive implements CatalogEnabled
 		{
 			return view;
 		}
-		XmlFile types = getViewXml(inView);
+		XmlFile types = getViewXml(inViewPath);
 		if (types.isExist())
 		{
-			view = readViewElement(propdetails, types.getRoot(), inView);
+			view = readViewElement(propdetails, types.getRoot(), inViewPath);
 			if (view != null)
 			{
 				view.setViewFile(types);
@@ -250,7 +250,7 @@ public class PropertyDetailsArchive implements CatalogEnabled
 		if (view == null)
 		{
 			view = new View();
-			view.setId(inView);
+			view.setId(inViewPath);
 		}
 
 		if (inProfile != null)
@@ -275,7 +275,7 @@ public class PropertyDetailsArchive implements CatalogEnabled
 					String vid = (String) iterator.next();
 					if (vid.length() > 0 && view.findDetail(vid) == null)
 					{
-						PropertyDetail detail = loadDetail(propdetails, types, inView, vid);
+						PropertyDetail detail = loadDetail(propdetails, types, inViewPath, vid);
 						if (detail != null)
 						{
 							view.add(detail);
@@ -1025,6 +1025,20 @@ public class PropertyDetailsArchive implements CatalogEnabled
 		// Guess the type is not used. the inview has the type in the path name?
 		return getViewXml(inViewPath);
 	}
+	
+	public View getView(Data inViewData, UserProfile inProfile)
+	{
+		String typeid = inViewData.get("moduleid");
+		PropertyDetails propdetails = getPropertyDetailsCached(typeid);
+		if (propdetails == null)
+		{
+			log.error("No such properties file " + typeid);
+			return null;
+		}
+		String viewPath = typeid + "/" + inViewData.getId();
+		return getView(typeid, viewPath, inProfile);
+	}
+	
 
 	public String getViewLabel(String inView)
 	{

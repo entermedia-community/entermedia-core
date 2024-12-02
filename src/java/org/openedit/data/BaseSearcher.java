@@ -974,6 +974,10 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		{ 
 			value = inPageRequest.getRequestParameters(inParam + ".value");
 		}
+		if( value == null || (value.length == 1 && value[0] == null) || value[0].trim().isEmpty() )
+		{
+			return null;
+		}
 		return value;
 	}
 	
@@ -1466,6 +1470,9 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	 */
 	protected PropertyDetail getDetail(String inTermId, WebPageRequest inReq)
 	{
+		if (inTermId == null) {
+			return null;
+		}
 
 		PropertyDetail detail = null;
 		String catalogid = null;
@@ -2794,6 +2801,15 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		//		List results = getPropertyDetailsArchive().getDataProperties(getSearchType(), inView, inProfile);
 		//		return results;
 		View view = getPropertyDetailsArchive().getView(getSearchType(), inView, inProfile);
+		return view;
+	}
+	
+	public List getDetailsForView(Data inViewData, UserProfile inProfile)
+	{
+		//		List results = getPropertyDetailsArchive().getDataProperties(getSearchType(), inView, inProfile);
+		//		return results;
+		
+		View view = getPropertyDetailsArchive().getView(inViewData, inProfile); 
 		return view;
 	}
 
