@@ -378,7 +378,6 @@ public class BaseCompositeData extends BaseData implements Data, CompositeData
 		//getProperties().put(inKey, inValue);
 		getPropertiesSet().put(inKey,inValue);
 	}
-	
 	public void setValues(String inKey, Collection<String> inValues)
 	{
 		if( inValues == null )
@@ -773,6 +772,12 @@ public class BaseCompositeData extends BaseData implements Data, CompositeData
 	@Override
 	public Collection<String> getValues(String inPreference)
 	{
+
+		Object val = getPropertiesSet().getValue(inPreference); //set by the user since last save
+		if( val != null)
+		{
+			return (Collection<String>)val;
+		}
 
 		Object currentlist = getValueFromResults(inPreference);
 		return collect(currentlist);
