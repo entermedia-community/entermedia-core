@@ -1026,19 +1026,6 @@ public class PropertyDetailsArchive implements CatalogEnabled
 		return getViewXml(inViewPath);
 	}
 	
-	public View getView(Data inViewData, UserProfile inProfile)
-	{
-		String typeid = inViewData.get("moduleid");
-		PropertyDetails propdetails = getPropertyDetailsCached(typeid);
-		if (propdetails == null)
-		{
-			log.error("No such properties file " + typeid);
-			return null;
-		}
-		String viewPath = typeid + "/" + inViewData.getId();
-		return getView(typeid, viewPath, inProfile);
-	}
-	
 
 	public String getViewLabel(String inView)
 	{

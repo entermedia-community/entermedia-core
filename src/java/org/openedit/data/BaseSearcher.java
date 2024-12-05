@@ -2806,10 +2806,11 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	
 	public List getDetailsForView(Data inViewData, UserProfile inProfile)
 	{
-		//		List results = getPropertyDetailsArchive().getDataProperties(getSearchType(), inView, inProfile);
-		//		return results;
+		String typeid = inViewData.get("moduleid");
+		String viewPath = typeid + "/" + inViewData.getId();
+
+		View view = getPropertyDetailsArchive().getView(getPropertyDetails(), viewPath, inProfile);
 		
-		View view = getPropertyDetailsArchive().getView(inViewData, inProfile); 
 		return view;
 	}
 

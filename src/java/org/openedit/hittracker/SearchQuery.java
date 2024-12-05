@@ -64,7 +64,19 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	protected boolean fieldIncludeDescription = false;
 	protected boolean fieldIncludeDeleted = false;
 	protected String fieldTimeZone;
+	protected int fieldDefaultAggregationCount = 50;
 	
+	public int getDefaultAggregationCount()
+	{
+		return fieldDefaultAggregationCount;
+	}
+
+
+	public void setDefaultAggregationCount(int inDefaultAggregationCount)
+	{
+		fieldDefaultAggregationCount = inDefaultAggregationCount;
+	}
+
 	protected boolean fieldForceEmpty = false;
 
 	public boolean isForceEmpty() {
