@@ -518,7 +518,10 @@ public class PageManager
 	{
 		synchronized( getCacheManager() )
 		{
-			getCacheManager().clear(CACHEID);
+//			getCacheManager().clear(CACHEID); 
+//			getCacheManager().clear("stylePaths");
+			getCacheManager().clearAll();
+			
 			getPageSettingsManager().clearCache();
 		}
 	}

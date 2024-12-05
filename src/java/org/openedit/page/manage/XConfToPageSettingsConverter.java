@@ -94,10 +94,7 @@ public class XConfToPageSettingsConverter
 		{
 			Configuration pageActionElement = (Configuration) pageActionElements.next();
 			Style script = createStyle(inSettings, pageActionElement );
-			if( script != null)
-			{
-				pageActions.add( script );
-			}
+			pageActions.add( script );
 		}
 		return pageActions;
 	}
