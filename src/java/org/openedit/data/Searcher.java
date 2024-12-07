@@ -99,26 +99,12 @@ public interface Searcher extends CatalogEnabled
 
 	public PropertyDetails getPropertyDetails();
 
-	/**
-	 * @deprecated No longer need a user passed in
-	 * @param inView
-	 * @param inUser
-	 * @return
-	 */
-	public List getDetailsForView(String inView, User inUser);
-
-	public List getDetailsForView(String inView, UserProfile inUserProfile);
-
-	/**
-	 * Do we even need this to work?
-	 * @deprecated No longer need a user passed in
-	 * @param inView
-	 * @param inFieldName
-	 * @param inUser
-	 * @return
-	 */
-	public PropertyDetail getDetailForView(String inView, String inFieldName, User inUser);
+	public ViewFieldList getDetailsForView(String inViewId);
+	public ViewFieldList getDetailsForView(Data inViewData);
 	
+	public ViewFieldList getDetailsForView(String inViewId, UserProfile inProfile);
+	public ViewFieldList getDetailsForView(Data inViewData, UserProfile inUserProfile);
+
 	public List getProperties();
 
 	public abstract HitTracker getAllHits(WebPageRequest inReq);

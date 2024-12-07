@@ -847,14 +847,14 @@ public class PageManager
 		}
 		return paths;
 	}
-	public void enableEditMode(boolean inB) 
-	{
-		VelocityGenerator gen =  (VelocityGenerator)getPageSettingsManager().getGenerator("velocityGenerator");
-		if( gen != null)
-		{
-			gen.enableEditMode(inB);
-		}
-	}
+//	public void enableEditMode(boolean inB) 
+//	{
+////		VelocityGenerator gen =  (VelocityGenerator)getPageSettingsManager().getGenerator("velocityGenerator");
+////		if( gen != null)
+////		{
+////			gen.enableEditMode(inB);
+////		}
+//	}
 	
 	public String translate(Page inPage, String inText, String inLocale)
 	{

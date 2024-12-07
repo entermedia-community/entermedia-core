@@ -11,18 +11,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openedit.CatalogEnabled;
 import org.openedit.Data;
-import org.openedit.MultiValued;
 import org.openedit.OpenEditException;
-import org.openedit.WebPageRequest;
 import org.openedit.data.PropertyDetail;
 import org.openedit.data.Searcher;
+import org.openedit.profile.UserProfile;
 import org.openedit.util.DateStorageUtil;
 
 
@@ -1770,7 +1768,7 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 		return text;
 	}
 
-	public List getFilteredTerms(WebPageRequest inReq, String inView)
+	public List getFilteredTerms(String inViewId, UserProfile inProfile)
 	{
 		List terms = new ArrayList();
 		
@@ -1779,9 +1777,8 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 			log.error("Searcher is missing");
 			return null;
 		}
-		
-		List<PropertyDetail> details = getSearcher().getPropertyDetailsArchive().getView(  //assetadvancedfilter
-				getSearchType(), getSearchType() + "/" + getSearchType() + inView, inReq.getUserProfile());
+			
+		List<PropertyDetail> details = getSearcher().getDetailsForView(inViewId, inProfile);
 
 		if( details == null)
 		{

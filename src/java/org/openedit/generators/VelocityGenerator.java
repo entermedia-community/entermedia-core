@@ -344,26 +344,23 @@ public class VelocityGenerator extends BaseGenerator implements Generator
 	{
 		fieldOpenEditEngine = inOpenEditEngine;
 	}
-
-	public void enableEditMode(boolean inEditor)
-	{
-		fieldEngine = new VelocityEngine();
-		init();
-
-		if( inEditor)
-		{
-			velocityProperties.put("file.resource.loader.modificationCheckInterval","2");
-			velocityProperties.put("file.resource.loader.cache","true");
-		}
-		else   //Production
-		{
-			velocityProperties.put("file.resource.loader.cache","true");
-			velocityProperties.put("file.resource.loader.modificationCheckInterval","60");
-		}
-		initEngine();
-//		
-//		 = 50
-
-	}
+//
+//	public void enableEditMode(boolean inEditor)
+//	{
+//		if( inEditor)
+//		{
+//			velocityProperties.put("file.resource.loader.modificationCheckInterval","2");
+//			velocityProperties.put("file.resource.loader.cache","true");
+//		}
+//		else   //Production
+//		{
+//			velocityProperties.put("file.resource.loader.cache","true");
+//			velocityProperties.put("file.resource.loader.modificationCheckInterval","60");
+//		}
+//		initEngine();
+////		
+////		 = 50
+//
+//	}
 
 }

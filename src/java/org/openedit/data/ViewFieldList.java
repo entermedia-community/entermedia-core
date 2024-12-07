@@ -16,7 +16,7 @@ import org.openedit.OpenEditException;
  *
  */
 
-public class View extends ArrayList implements ViewItem
+public class ViewFieldList extends ArrayList implements ViewItem
 {
 	
 	protected String fieldId;
@@ -110,7 +110,7 @@ public class View extends ArrayList implements ViewItem
 			}
 			else
 			{
-				View child = (View)item;
+				ViewFieldList child = (ViewFieldList)item;
 				return child.findDetail(inId);
 			}
 			

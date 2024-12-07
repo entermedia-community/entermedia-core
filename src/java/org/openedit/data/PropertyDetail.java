@@ -25,7 +25,6 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 //	protected String fieldExternalId;
 //	protected String fieldExternalType;
 	protected String fieldCatalogId;
-	protected String fieldView;
 	protected String fieldSearchType;
 //	
 //	protected boolean fieldIndex; //this can be searched as a Lucene field
@@ -129,16 +128,6 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 	public void setSearchType(String inSearchType)
 	{
 		fieldSearchType = inSearchType;
-	}
-
-	public String getView()
-	{
-		return fieldView;
-	}
-
-	public void setView(String inView)
-	{
-		fieldView = inView;
 	}
 
 
@@ -513,7 +502,6 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 		d.setElementData(data);
 		d.fieldCatalogId = fieldCatalogId;
 		d.fieldSearchType = fieldSearchType;
-		d.fieldView = fieldView;
 		d.fieldTextLabelManager = fieldTextLabelManager;
 		
 //		d.setValue("catalogid", getCatalogId());

@@ -62,7 +62,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	protected ModuleManager fieldModuleManager;
 	protected String fieldNewDataName;
 	protected boolean fieldForceBulk = false;
-
+	
 	protected CacheManager fieldCacheManager;
 
 	public CacheManager getCacheManager()
@@ -389,26 +389,21 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				{
 					//This will load later
 					String filterby = inPageRequest.findValue("runfilterview"); //runagregationview
-					if( filterby == null)
+					if( filterby != null)
 					{
-						filterby = "advancedfilter";
-					}
-					List<PropertyDetail> details = getPropertyDetailsArchive().getView(  //assetadvancedfilter
-							getSearchType(), getSearchType() + "/" + getSearchType() + filterby, inPageRequest.getUserProfile());
-					if( details == null)
-					{
-						filterby = "advancedsearch";
-						details = getPropertyDetailsArchive().getView(  //assetadvancedfilter
-							getSearchType(), getSearchType() + "/" + getSearchType() + filterby, inPageRequest.getUserProfile());
-					}
-					if( details != null)
-					{
-						for (Iterator iterator = details.iterator(); iterator.hasNext();)
+							//						filterby = "advancedfilter";
+						List<PropertyDetail> details = getDetailsForView(getSearchType() + filterby, inPageRequest.getUserProfile()); 
+								//getPropertyDetailsArchive().getViewFields(  //assetadvancedfilter
+								//getSearchType(), getSearchType() + "/" + getSearchType() + filterby, inPageRequest.getUserProfile());
+						if( details != null)
 						{
-							PropertyDetail propertyDetail = (PropertyDetail) iterator.next();
-							if( propertyDetail.getSearchType().equals(getSearchType()))
+							for (Iterator iterator = details.iterator(); iterator.hasNext();)
 							{
-								inQuery.addAggregation(propertyDetail);
+								PropertyDetail propertyDetail = (PropertyDetail) iterator.next();
+								if( propertyDetail.getSearchType().equals(getSearchType()))
+								{
+									inQuery.addAggregation(propertyDetail);
+								}
 							}
 						}
 					}
@@ -1528,7 +1523,6 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			// create a virtual one?
 			detail = new PropertyDetail();
 			detail.setId(propertyid);
-			detail.setView(view);
 			detail.setCatalogId(catalogid);
 		}
 		//Needed?
@@ -2672,26 +2666,6 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		return details.findIndexProperties();
 	}
 
-	public List getSearchProperties(User inUser)
-	{
-		List details = getDetailsForView(getSearchType() + "/" + getSearchType() + "search", inUser);
-		if (details == null)
-		{
-			PropertyDetail det = getDetail("name");
-			details = new ArrayList();
-			if (det != null)
-			{
-				details.add(det);
-			}
-			det = getDetail("id");
-			if (det != null)
-			{
-				details.add(det);
-			}
-		}
-		return details;
-	}
-
 	public List getStoredProperties()
 	{
 		PropertyDetails details = getPropertyDetailsArchive().getPropertyDetailsCached(getSearchType());
@@ -2768,52 +2742,36 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		}
 		return (Data) getModuleManager().getBean(getCatalogId(), getNewDataName(), false);
 	}
-
-	/**
-	 * @deprecated use getDetailsForView
-	 * @param inView
-	 * @param inUser
-	 * @return
-	 * @throws Exception
-	 */
-	public List getDataProperties(String inView, User inUser) throws Exception
+	
+	//Prefered API
+	public ViewFieldList getDetailsForView(Data inViewData, UserProfile inProfile)
 	{
-		return getPropertyDetailsArchive().getDataProperties(getSearchType(), inView, inUser);
+		if( inViewData == null)
+		{
+			log.error("No viewdata passed in");
+			return null;
+		}
+		ViewFieldList fields = getPropertyDetailsArchive().getViewFields(getPropertyDetails(), inViewData, inProfile);
+		return fields;
 	}
-
-	public List getDetailsForView(String inView)
+	public ViewFieldList getDetailsForView(String inViewId, UserProfile inProfile)
 	{
-		return getDetailsForView(inView, (UserProfile) null);
+		Data viewdata = getSearcherManager().getCachedData(getCatalogId(), "view", inViewId);
+		ViewFieldList fields = getDetailsForView(viewdata,inProfile);
+		return fields;
 	}
-
-	//Some problem with Velocity, if the user is null then it does not resolve this method
-	/**
-	 * @deprecated remove this by April 1 2013
-	 */
-	public List getDetailsForView(String inView, User inUser)
+	public ViewFieldList getDetailsForView(Data inViewData)
 	{
-		List results = getPropertyDetailsArchive().getDataProperties(getSearchType(), inView, inUser);
-		return results;
+		ViewFieldList fields = getDetailsForView(inViewData,null);
+		
+		return fields;
 	}
-
-	public List getDetailsForView(String inView, UserProfile inProfile)
+	public ViewFieldList getDetailsForView(String inViewId)
 	{
-		//		List results = getPropertyDetailsArchive().getDataProperties(getSearchType(), inView, inProfile);
-		//		return results;
-		View view = getPropertyDetailsArchive().getView(getSearchType(), inView, inProfile);
-		return view;
+		ViewFieldList fields = getDetailsForView(inViewId,null);
+		return fields;
 	}
 	
-	public List getDetailsForView(Data inViewData, UserProfile inProfile)
-	{
-		String typeid = inViewData.get("moduleid");
-		String viewPath = typeid + "/" + inViewData.getId();
-
-		View view = getPropertyDetailsArchive().getView(getPropertyDetails(), viewPath, inProfile);
-		
-		return view;
-	}
-
 	/**
 	 * This is old code and should not be used any more
 	 */
@@ -3293,11 +3251,11 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	{
 		throw new IllegalAccessError("nextId Not implemented");
 	}
-
-	public String getViewLabel(String inView)
-	{
-		return getPropertyDetailsArchive().getViewLabel(inView);
-	}
+//
+//	public String getViewLabel(String inView)
+//	{
+//		return getPropertyDetailsArchive().getViewLabel(inView);
+//	}
 
 	public Data uniqueResult(SearchQuery inQ)
 	{
@@ -3558,14 +3516,6 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		}
 
 	}
-
-	public Data getViewData(String inViewPath)
-	{
-		String id = inViewPath.substring(inViewPath.lastIndexOf("/") + 1);
-		Data found = getSearcherManager().getData(getCatalogId(), "view", id);
-		return found;
-	}
-
 	@Override
 	public void saveJson(Collection inJsonArray)
 	{
@@ -3642,12 +3592,23 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			return null;
 		}
 		Data data = (Data)getCacheManager().get("data" + getSearchType(), inId);
+		
+		if( data == BaseData.NULL )
+		{
+			return null;
+		}
+		
 		if( data == null && inId != null)
 		{
 			data = (Data)searchById(inId);
-			if( data != null)
+			if( data == null)
 			{
-				getCacheManager().put("data" + getSearchType(), inId, data);
+				data =  BaseData.NULL;
+			}
+			getCacheManager().put("data" + getSearchType(), inId, data);
+			if( data == BaseData.NULL)
+			{
+				return null;
 			}
 		}
 		return data;
@@ -3672,5 +3633,21 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		}
 		return entry.getHits();
 	}
+	
+//	public ViewFieldList loadViewFields(ViewDa)
+//	{
+//		ViewFieldList details = (ViewFieldList)inReq.getPageValue("details");
+//		if( details == null)
+//		{
+//			String viewid = (String)inReq.getPageValue("viewid");
+//			details = 
+//			#if( $context.getUserProfile() )
+//					#set ($details = $searcher.getDetailsForView($view, $context.getUserProfile()))
+//				#else
+//					#set ($details = $searcher.getDetailsForView($view))
+//				#end
+//			#end	
+//		}	
+//	}
 	
 }

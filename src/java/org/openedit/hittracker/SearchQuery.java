@@ -1121,7 +1121,7 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 			PropertyDetail detail = term.getDetail();
 			if (detail != null)
 			{
-				if (inCatalogid.equals(detail.getCatalogId()) && inView.equals(detail.getView()) && inField.equals(detail.getId()))
+				if (inCatalogid.equals(detail.getCatalogId()) && inField.equals(detail.getId()))
 				{
 					termList.add(term);
 				}
@@ -1139,7 +1139,7 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 			PropertyDetail detail = term.getDetail();
 			if (detail != null)
 			{
-				if (inCatalogid.equals(detail.getCatalogId()) && inView.equals(detail.getView()) && inField.equals(detail.getId()))
+				if (inCatalogid.equals(detail.getCatalogId()) && inField.equals(detail.getId()))
 				{
 					return term;
 				}
@@ -1327,8 +1327,6 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 			if (detail != null)
 			{
 				String catalogid = detail.getCatalogId();
-				String view = detail.getView();
-				termelem.addAttribute("view", view);
 				termelem.addAttribute("catalogid", catalogid);
 				termelem.addAttribute("searchtype", detail.getSearchType());
 			}

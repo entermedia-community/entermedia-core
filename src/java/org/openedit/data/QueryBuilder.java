@@ -185,6 +185,14 @@ public class QueryBuilder
 		HitTracker tracker = getSearcher().cachedSearch(inContext, getQuery());
 		return tracker;
 	}
+	
+	public HitTracker cachedSearch()
+	{
+		HitTracker tracker = getSearcher().getCachedSearch(this);
+		return tracker;
+	}
+	
+	
 	public HitTracker search()
 	{
 		HitTracker tracker = getSearcher().search(getQuery());
