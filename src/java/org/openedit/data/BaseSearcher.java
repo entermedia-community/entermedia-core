@@ -2646,7 +2646,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		fieldEventManager = inEventManager;
 	}
 
-	public List getProperties()
+	public Collection getProperties()
 	{
 		PropertyDetails details = getPropertyDetailsArchive().getPropertyDetailsCached(getSearchType());
 		if (details == null)
@@ -2751,6 +2751,16 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			log.error("No viewdata passed in");
 			return null;
 		}
+		if( inProfile != null)
+		{
+			String saveforall = inProfile.get("view_saveforallenabled");
+			if( Boolean.parseBoolean(saveforall) )
+			{
+				ViewFieldList fields = getPropertyDetailsArchive().getViewFields(getPropertyDetails(), inViewData, null);
+				return fields;
+			}
+		}
+		
 		ViewFieldList fields = getPropertyDetailsArchive().getViewFields(getPropertyDetails(), inViewData, inProfile);
 		return fields;
 	}
@@ -2838,7 +2848,6 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				}
 			}
 		}
-		Collections.sort(	sublist);
 		return sublist;
 	}
 	public Collection<PropertyDetail> getActivePropertyDetails()
@@ -2853,7 +2862,6 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					sublist.addDetail(detail);
 				}
 		}
-		Collections.sort(sublist);
 		return sublist;
 	}
 

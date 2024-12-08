@@ -14,7 +14,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openedit.xml.XmlFile;
 
-public class PropertyDetails extends ArrayList
+public class PropertyDetails implements Collection
 {
 	private static final Log log = LogFactory.getLog(PropertyDetails.class);
 
@@ -729,5 +729,87 @@ public class PropertyDetails extends ArrayList
 			}
 			return list;
 	}
-	
+
+	@Override
+	public boolean isEmpty()
+	{
+		// TODO Auto-generated method stub
+		return getDetails().isEmpty();
+	}
+
+	@Override
+	public boolean contains(Object inO)
+	{
+		// TODO Auto-generated method stub
+		return  getDetails().contains(inO);
+	}
+
+	@Override
+	public Object[] toArray()
+	{
+		// TODO Auto-generated method stub
+		return  getDetails().toArray();
+	}
+
+	@Override
+	public Object[] toArray(Object[] inA)
+	{
+		// TODO Auto-generated method stub
+		return  getDetails().toArray(inA);
+	}
+
+	@Override
+	public boolean add(Object inE)
+	{
+		// TODO Auto-generated method stub
+		return  getDetails().add(inE);
+	}
+
+	@Override
+	public boolean remove(Object inO)
+	{
+		// TODO Auto-generated method stub
+		return  getDetails().remove(inO);
+	}
+
+	@Override
+	public boolean containsAll(Collection inC)
+	{
+		// TODO Auto-generated method stub
+		return  getDetails().containsAll(inC);
+	}
+
+	@Override
+	public boolean addAll(Collection inC)
+	{
+		// TODO Auto-generated method stub
+		return  getDetails().addAll(inC);
+	}
+
+	@Override
+	public boolean removeAll(Collection inC)
+	{
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean retainAll(Collection inC)
+	{
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void clear()
+	{
+		// TODO Auto-generated method stub
+		getDetails().clear();
+	}
+	@Override
+	public String toString()
+	{
+		// TODO Auto-generated method stub
+		return getDetails().toString();
+	}
 }

@@ -105,7 +105,7 @@ public interface Searcher extends CatalogEnabled
 	public ViewFieldList getDetailsForView(String inViewId, UserProfile inProfile);
 	public ViewFieldList getDetailsForView(Data inViewData, UserProfile inUserProfile);
 
-	public List getProperties();
+	public Collection getProperties();
 
 	public abstract HitTracker getAllHits(WebPageRequest inReq);
 

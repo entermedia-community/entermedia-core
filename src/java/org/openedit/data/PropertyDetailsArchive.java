@@ -217,7 +217,9 @@ public class PropertyDetailsArchive implements CatalogEnabled
 
 	public XmlFile getViewXml(Data inViewData)
 	{
+		
 		String moduleid = inViewData.get("moduleid");
+
 		String inViewPath = moduleid + "/" + inViewData.getId();
 
 		String savepath = findConfigurationFile("/views/" + inViewPath + ".xml");
@@ -241,6 +243,8 @@ public class PropertyDetailsArchive implements CatalogEnabled
 				if( !file.isExist() )
 				{
 					log.error("No default view found " + path);
+					path = "/" + getCatalogId() + "/data/views/defaults/resultstable.xml";
+					file = getXmlArchive().getXml(path);
 				}
 				savepath = "/WEB-INF/data/" + getCatalogId() + "/views/" + inViewPath + ".xml";
 				file.setPath(savepath); //In case they save it
@@ -383,9 +387,17 @@ public class PropertyDetailsArchive implements CatalogEnabled
 					}
 				}
 			}
-
-			details.setInputFile(settings);
-			getPropertyDetails().put(inType, details);
+			PropertyDetails finallist = new PropertyDetails(this,inType);
+			for (Iterator iterator = details.iterator(); iterator.hasNext();)
+			{
+				PropertyDetail detail = (PropertyDetail) iterator.next();
+				if(!detail.isDeleted())
+				{
+					finallist.addDetail(detail);
+				}
+			}
+			finallist.setInputFile(settings);
+			getPropertyDetails().put(inType, finallist);
 
 //			PropertyDetail name = details.getDetail("name");
 //			if( name != null)
@@ -636,7 +648,7 @@ public class PropertyDetailsArchive implements CatalogEnabled
 			//Remove deleted ones?
 			if( "true".equals(element.attributeValue("deleted") ) )
 			{
-				continue;
+				//continue; //Add them in until the end
 			}
 			PropertyDetail d = createDetail(defaults, inInputFile, element, inType);
 			newdetails.add(d);
@@ -969,14 +981,14 @@ public class PropertyDetailsArchive implements CatalogEnabled
 			}
 			else
 			{
+				if( "true".equals( elem.attributeValue("deleted")) )
+				{
+					continue;
+				}
 				String key = elem.attributeValue("id");
 				PropertyDetail detail = inDetails.getDetail(key);
 				if (detail != null)
 				{
-					if( detail.isDeleted())
-					{
-						continue;
-					}
 					PropertyDetail local = detail.copy();
 					local.populateViewElements(elem);
 					view.add(local);
@@ -1187,24 +1199,9 @@ public class PropertyDetailsArchive implements CatalogEnabled
 		return path;
 	}
 
-	public void addToView(Searcher inSearcher, Data inViewData , String inNewField)
+	public void addToView(Data inViewData , String inNewField)
 	{
-		//Data viewdata = getSearcherManager().getCachedData(getCatalogId(), inSearcher.getSearchType(), inViewId);
-		
 		XmlFile file = getViewXml(inViewData);
-
-		String viewbase = null;
-		
-//			if(archive != null) {
-//				viewbase = archive.getCatalogSettingValue("viewbase");  //TODO: Add setting in the archive
-//			}
-//			if(viewbase == null) {
-			 viewbase = "/WEB-INF/data/" + inSearcher.getCatalogId()+ "/views/";
-//	
-//			}
-		String path = viewbase + inSearcher.getSearchType() + "/" + inViewData.getId() + ".xml";
-		file.setPath(path);
-		file.setElementName("property");
 
 		Element element = file.addNewElement();
 		element.addAttribute("id", inNewField);
@@ -1214,13 +1211,9 @@ public class PropertyDetailsArchive implements CatalogEnabled
 			
 	}
 	
-	public void removeFromView(Searcher inSearcher, Data inViewData, String indetailid)
+	public void removeFromView(Data inViewData, String indetailid)
 	{
 		XmlFile file = getViewXml(inViewData);
-//		String viewbase = "/WEB-INF/data/" + inSearcher.getCatalogId()+ "/views/";
-//		String path = viewbase + inViewpath + ".xml";
-//		file.setPath(path);
-		file.setElementName("property");
 
 		Element element = loadViewElement(file, indetailid);
 		file.deleteElement(element);
@@ -1238,16 +1231,12 @@ public class PropertyDetailsArchive implements CatalogEnabled
 		getViewCache().clear();// clearCache(); //Only clear this type		
 	}
 
-	public void saveView(Searcher inSearcher,  Data inViewData, String[] inSortedIds)
+	public void saveView(Data inViewData, String[] inSortedIds)
 	{
 		if (inSortedIds == null) {
 			throw new OpenEditException("Missing sort list ids");
 		}
 		XmlFile file = getViewXml(inViewData);
-//		String viewbase = "/WEB-INF/data/" + inSearcher.getCatalogId()+ "/views/";
-//		String path = viewbase + inViewId + ".xml";
-//		file.setPath(path);
-//		file.setElementName("property");
 
 		List tosave = new ArrayList();
 		for (int i = 0; i < inSortedIds.length; i++)
