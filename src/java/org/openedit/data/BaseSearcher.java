@@ -337,8 +337,8 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				}
 				oldtracker = tracker;
 
-				boolean issummaryminimized = userprofile.getBoolean("minimize" + getSearchType() + "summary");
-				if( !issummaryminimized )
+				String issummaryminimized = userprofile.get("minimize" + getSearchType() + "summary");
+				if( issummaryminimized  != null && !Boolean.parseBoolean(issummaryminimized ) )
 				{
 					List<PropertyDetail> details = getDetailsForView(getSearchType() + "advancedsearch", userprofile); 
 					if( details != null)
