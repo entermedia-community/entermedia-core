@@ -224,6 +224,15 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		boolean runsearch = false;
 
 		String cache = inPageRequest.getRequestParameter(searchtype + "cache");
+
+		if( cache == null)
+		{
+			cache = inPageRequest.findActionValue("forcesearch");
+			if( cache != null && Boolean.parseBoolean(cache) )
+			{
+				runsearch = true;
+			}
+		}	
 		if( cache == null)
 		{
 			cache = inPageRequest.findValue(searchtype + "cache");
@@ -289,20 +298,6 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				}
 			}
 			
-			String previous = inPageRequest.getRequestParameter("usefirstfilters");
-			if( previous != null && inPageRequest.getUserProfile() != null)
-			{
-				Boolean newval = Boolean.parseBoolean(inPageRequest.getRequestParameter("usefirstfiltersvalue"));
-				Boolean oldval = inPageRequest.getUserProfile().getBoolean("usefirstfilters");
-				if( oldval != newval)
-				{
-					inPageRequest.getUserProfile().setProperty("usefirstfilters", newval.toString());
-					runsearch = true;
-					//Save profile
-				}
-			}
-
-			
 			if (!runsearch && hasChanged(tracker))
 			{
 				//do we want to cache queries a little longer?
@@ -335,7 +330,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 
 		}
 		HitTracker oldtracker = null;
-		UserProfile usersettings = (UserProfile) inPageRequest.getUserProfile();
+		UserProfile userprofile = (UserProfile) inPageRequest.getUserProfile();
 
 		if (runsearch)
 		{
@@ -352,9 +347,9 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					String sort = inPageRequest.findValue(getSearchType()+"sortby");
 					inQuery.setSortBy(sort);
 				}
-				if (usersettings != null && inQuery.getSortBy() == null)
+				if (userprofile != null && inQuery.getSortBy() == null)
 				{
-					String sort = usersettings.getSortForSearchType(inQuery.getResultType());
+					String sort = userprofile.getSortForSearchType(inQuery.getResultType());
 					inQuery.setSortBy(sort);
 				}
 				
@@ -365,50 +360,22 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				}
 				oldtracker = tracker;
 
-				Boolean usefirstfilters = false;
-				if( inPageRequest.getUserProfile() != null)
+				boolean issummaryminimized = userprofile.getBoolean("minimize" + getSearchType() + "summary");
+				if( !issummaryminimized )
 				{
-					usefirstfilters = inPageRequest.getUserProfile().getBoolean("usefirstfilters");
-				}
-				
-//				if( !keepfilter)
-//				{
-//					//use the shared ones
-//					SharedFilters filters = (SharedFilters) getModuleManager().getBean(getCatalogId(), "userFilters", false);
-//					filters.setUserProfile(inPageRequest.getUserProfile());
-//					activefilters = filters.getAllValues(inPageRequest, this, inQuery.getMainInput() );
-//				}
-				//No old filter around, but user did not pass in a filter. Must use the shared one
-				if( usefirstfilters && oldtracker != null && oldtracker.getCleanFilterValues() != null)
-				{
-					//No need to init filters they have already run
-					//tracker.setActiveFilterValues(oldtracker.getActiveFilterValues());
-
-				}
-				else
-				{
-					//This will load later
-					String filterby = inPageRequest.findValue("runfilterview"); //runagregationview
-					if( filterby != null)
+					List<PropertyDetail> details = getDetailsForView(getSearchType() + "advancedsearch", userprofile); 
+					if( details != null)
 					{
-							//						filterby = "advancedfilter";
-						List<PropertyDetail> details = getDetailsForView(getSearchType() + filterby, inPageRequest.getUserProfile()); 
-								//getPropertyDetailsArchive().getViewFields(  //assetadvancedfilter
-								//getSearchType(), getSearchType() + "/" + getSearchType() + filterby, inPageRequest.getUserProfile());
-						if( details != null)
+						for (Iterator iterator = details.iterator(); iterator.hasNext();)
 						{
-							for (Iterator iterator = details.iterator(); iterator.hasNext();)
+							PropertyDetail propertyDetail = (PropertyDetail) iterator.next();
+							if( propertyDetail.getSearchType().equals(getSearchType()))
 							{
-								PropertyDetail propertyDetail = (PropertyDetail) iterator.next();
-								if( propertyDetail.getSearchType().equals(getSearchType()))
-								{
-									inQuery.addAggregation(propertyDetail);
-								}
+								inQuery.addAggregation(propertyDetail);
 							}
 						}
 					}
 				}
-
 				
 				if (oldtracker != null)
 				{
@@ -487,9 +454,9 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					hitsperpage = inPageRequest.findValue(getSearchType()+ "hitsperpage");
 				}
 
-				if (hitsperpage == null && usersettings != null) 
+				if (hitsperpage == null && userprofile != null) 
 				{
-					int count = usersettings.getHitsPerPageForSearchType(inQuery.getResultType(), inPageRequest);
+					int count = userprofile.getHitsPerPageForSearchType(inQuery.getResultType(), inPageRequest);
 					hitsperpage = String.valueOf(count);
 				}
 				
@@ -519,23 +486,6 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				
 				tracker.setSearchQuery(inQuery);
 
-				String cacheit = inPageRequest.getRequestParameter("reloadresults");
-				if(!Boolean.parseBoolean(cacheit) )
-				{
-					if( oldtracker != null)
-					{
-						tracker.setCleanFilterValues(oldtracker.getCleanFilterValues()); //Keep passing this around
-					}
-					
-					if( usefirstfilters &&  oldtracker != null && oldtracker.getCleanFilterValues() != null )
-					{
-						tracker.setActiveFilterValues(oldtracker.getCleanFilterValues());
-					}
-					else if( oldtracker != null && oldtracker.getActiveFilterValues() != null)
-					{
-						//tracker.setActiveFilterValues(oldtracker.getActiveFilterValues());
-					}
-				}				
 				if (oldtracker != null && oldtracker.hasSelections())
 				{
 					
@@ -616,9 +566,9 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				{
 					hitsperpage = inPageRequest.findValue(getSearchType()+ "hitsperpage");
 				}
-				if (hitsperpage == null && usersettings != null) 
+				if (hitsperpage == null && userprofile != null) 
 				{
-					int count = usersettings.getHitsPerPageForSearchType(inQuery.getResultType(), inPageRequest);
+					int count = userprofile.getHitsPerPageForSearchType(inQuery.getResultType(), inPageRequest);
 					hitsperpage = String.valueOf(count);
 				}
 				if (hitsperpage != null)
