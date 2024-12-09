@@ -221,35 +221,12 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 
 		tracker = (HitTracker) inPageRequest.getSessionValue(inQuery.getSessionId());
 
-		boolean runsearch = false;
-
-		String cache = inPageRequest.getRequestParameter(searchtype + "cache");
-
-		if( cache == null)
+		boolean runsearch = true;
+		if (tracker != null)
 		{
-			cache = inPageRequest.findActionValue("forcesearch");
-			if( cache != null && Boolean.parseBoolean(cache) )
-			{
-				runsearch = true;
-			}
-		}	
-		if( cache == null)
-		{
-			cache = inPageRequest.findValue(searchtype + "cache");
-		}
-		if( cache == null)
-		{
-			cache = inPageRequest.getRequestParameter("cache");
-		}	
-		if (cache != null && !Boolean.parseBoolean(cache))
-		{
-			runsearch = true;
+			runsearch = checkRunSearch(inPageRequest);
 		}
 
-		if (tracker == null)
-		{
-			runsearch = true;
-		}
 		int startingpage = 1;
 
 		if (!runsearch && tracker != null)
@@ -642,6 +619,36 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		}
 
 		return tracker;
+	}
+
+	protected boolean checkRunSearch(WebPageRequest inPageRequest)
+	{
+		boolean runsearch = false;
+
+		String searchtype = getSearchType();
+		String cache = inPageRequest.getRequestParameter(searchtype + "cache");
+
+		if( cache == null)
+		{
+			cache = inPageRequest.findActionValue("forcesearch");
+			if( cache != null && Boolean.parseBoolean(cache) )
+			{
+				runsearch = true;
+			}
+		}	
+		if( cache == null)
+		{
+			cache = inPageRequest.findValue(searchtype + "cache");
+		}
+		if( cache == null)
+		{
+			cache = inPageRequest.getRequestParameter("cache");
+		}	
+		if (cache != null && !Boolean.parseBoolean(cache))
+		{
+			runsearch = true;
+		}
+		return runsearch;
 	}
 
 	public boolean hasChanged(HitTracker inTracker)
