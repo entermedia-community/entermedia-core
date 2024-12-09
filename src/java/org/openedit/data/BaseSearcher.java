@@ -324,10 +324,32 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					String sort = inPageRequest.findValue(getSearchType()+"sortby");
 					inQuery.setSortBy(sort);
 				}
-				if (userprofile != null && inQuery.getSortBy() == null)
-				{
-					String sort = userprofile.getSortForSearchType(inQuery.getResultType());
-					inQuery.setSortBy(sort);
+				
+				if(userprofile != null) {
+				
+					if (inQuery.getSortBy() == null)
+					{
+						String sort = userprofile.getSortForSearchType(inQuery.getResultType());
+						inQuery.setSortBy(sort);
+					}
+					
+					String issummaryminimized = userprofile.get("minimize" + getSearchType() + "summary");
+					if( issummaryminimized  != null && !Boolean.parseBoolean(issummaryminimized ) )
+					{
+						List<PropertyDetail> details = getDetailsForView(getSearchType() + "advancedsearch", userprofile); 
+						if( details != null)
+						{
+							for (Iterator iterator = details.iterator(); iterator.hasNext();)
+							{
+								PropertyDetail propertyDetail = (PropertyDetail) iterator.next();
+								if( propertyDetail.getSearchType().equals(getSearchType()))
+								{
+									inQuery.addAggregation(propertyDetail);
+								}
+							}
+						}
+					}
+				
 				}
 				
 				if (inQuery.getSortBy() == null)
@@ -336,23 +358,8 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					inQuery.setSortBy(sort);
 				}
 				oldtracker = tracker;
-
-				String issummaryminimized = userprofile.get("minimize" + getSearchType() + "summary");
-				if( issummaryminimized  != null && !Boolean.parseBoolean(issummaryminimized ) )
-				{
-					List<PropertyDetail> details = getDetailsForView(getSearchType() + "advancedsearch", userprofile); 
-					if( details != null)
-					{
-						for (Iterator iterator = details.iterator(); iterator.hasNext();)
-						{
-							PropertyDetail propertyDetail = (PropertyDetail) iterator.next();
-							if( propertyDetail.getSearchType().equals(getSearchType()))
-							{
-								inQuery.addAggregation(propertyDetail);
-							}
-						}
-					}
-				}
+			
+				
 				
 				if (oldtracker != null)
 				{
