@@ -23,7 +23,6 @@ public class PropertyDetails implements Collection
 	protected List fieldDetails;
 	protected Map fieldDetailsCached;
 	protected Map fieldExternalIdCache;
-	protected Map fieldDefaults;
 	protected XmlFile fieldInputFile;
 	protected String fieldPrefix;
 	protected String fieldBeanName;
@@ -243,22 +242,6 @@ public class PropertyDetails implements Collection
 	public void setInputFile(XmlFile inInputFile)
 	{
 		fieldInputFile = inInputFile;
-	}
-
-	public Map getDefaults()
-	{
-		if (fieldDefaults == null)
-		{
-			fieldDefaults = new HashMap();
-
-		}
-
-		return fieldDefaults;
-	}
-
-	public void setDefaults(Map inDefaults)
-	{
-		fieldDefaults = inDefaults;
 	}
 
 	long fieldLastLoaded;

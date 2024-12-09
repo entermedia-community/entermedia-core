@@ -313,12 +313,10 @@ public class PropertyDetailsArchive implements CatalogEnabled
 		PropertyDetails details = (PropertyDetails) getPropertyDetails().get(inType);
 		try
 		{
-			//Always load up base file first if we can
-			
-			//String path =  "/" + getCatalogId() + "/data/fields/" + inType + ".xml";
+			//Check cache
 			String path = "/WEB-INF/data/" + getCatalogId() + "/fields/" + inType + ".xml";
-
 			XmlFile settings = getXmlArchive().getXml(path); // checks time
+			
 			String basesettings = "/" + getCatalogId() + "/data/fields/" + inType + ".xml";
 			XmlFile basesettingsdefaults = getXmlArchive().getXml(basesettings);
 			if (details != null && details.getInputFile() == settings)
@@ -326,10 +324,12 @@ public class PropertyDetailsArchive implements CatalogEnabled
 				fixBeanName(details,basesettingsdefaults,settings);
 				return details;
 			}
+			
 			log.debug("Loading " + getCatalogId() + " " + inType);
 			details = new PropertyDetails(this,inType);
-
-
+			
+			Collection allfields = new ArrayList();
+			
 			if (!settings.isExist() && !basesettingsdefaults.isExist() )
 			{
 				if (inType.endsWith("Log"))
@@ -349,32 +349,27 @@ public class PropertyDetailsArchive implements CatalogEnabled
 
 			if( basesettingsdefaults.isExist() )
 			{
-//				String beanname = basesettingsdefaults.getRoot().attributeValue("beanname");
-//				details.setBeanName(beanname);
-//				details.setPrefix(basesettingsdefaults.getRoot().attributeValue("prefix"));
-//				details.setClassName(basesettingsdefaults.getRoot().attributeValue("class"));
 				details.setBaseSettings(basesettingsdefaults);
 			}
 			fixBeanName(details,basesettingsdefaults,settings);
-			setAllDetails(details, inType, settings.getContentItem().getPath(), settings.getRoot());
+			loadDetails(allfields, inType, settings.getContentItem().getPath(), settings.getRoot());
 
 			// load any defaults by folder - AFTER we have loaded all the existing stuff.
 			// don't overwrite anything that is here already.
 			
-			
-			List paths = getPageManager().getChildrenPaths("/" + getCatalogId() + "/data/fields/" + inType + "/", true);
-			paths.add(basesettings); //Needed?
+			List basefolders = getPageManager().getChildrenPaths("/" + getCatalogId() + "/data/fields/" + inType + "/", true);
+			basefolders.add(basesettings); //Needed?
 			List datapaths = getPageManager().getChildrenPaths("/WEB-INF/data/" + getCatalogId() + "/fields/" + inType + "/", true);
-			paths.addAll(datapaths);
+			basefolders.addAll(datapaths);
 			
-			for (Iterator iterator = paths.iterator(); iterator.hasNext();)
+			for (Iterator iterator = basefolders.iterator(); iterator.hasNext();)
 			{
-				String defaultfile = (String) iterator.next();
-				if (defaultfile.endsWith(".xml"))
+				String baseandfolderfiles = (String) iterator.next();
+				if (baseandfolderfiles.endsWith(".xml"))
 				{
-					XmlFile defaults = getXmlArchive().getXml(defaultfile);
+					XmlFile defaults = getXmlArchive().getXml(baseandfolderfiles);
 					PropertyDetails extras = new PropertyDetails(this,inType);
-					setAllDetails(extras, inType, defaults.getContentItem().getPath(), defaults.getRoot());
+					loadDetails(allfields, inType, defaults.getContentItem().getPath(), defaults.getRoot());
 					for (Iterator iterator2 = extras.iterator(); iterator2.hasNext();)
 					{
 						PropertyDetail detail = (PropertyDetail) iterator2.next();
@@ -382,22 +377,22 @@ public class PropertyDetailsArchive implements CatalogEnabled
 						PropertyDetail existing = details.getDetail(detail.getId());
 						if (existing == null)
 						{
-							details.addDetail(detail);
+							allfields.add(detail);
+							//details.addDetail(detail);
 						}
 					}
 				}
 			}
-			PropertyDetails finallist = new PropertyDetails(this,inType);
-			for (Iterator iterator = details.iterator(); iterator.hasNext();)
+			for (Iterator iterator = allfields.iterator(); iterator.hasNext();)
 			{
 				PropertyDetail detail = (PropertyDetail) iterator.next();
 				if(!detail.isDeleted())
 				{
-					finallist.addDetail(detail);
+					details.addDetail(detail);
 				}
 			}
-			finallist.setInputFile(settings);
-			getPropertyDetails().put(inType, finallist);
+			details.setInputFile(settings);
+			getPropertyDetails().put(inType, details);
 
 //			PropertyDetail name = details.getDetail("name");
 //			if( name != null)
@@ -621,41 +616,39 @@ public class PropertyDetailsArchive implements CatalogEnabled
 		fieldCatalogId = inCatalogId;
 	}
 
-	public void setAllDetails(PropertyDetails details, String inType, String inInputFile, Element root)
+	public void loadDetails(Collection tosave, String inType, String inInputFile, Element root)
 	{
-		List newdetails = new ArrayList();
-		Map defaults = new HashMap();
-
-		for (Iterator iterator = root.attributeIterator(); iterator.hasNext();)
-		{
-			Attribute attr = (Attribute) iterator.next();
-			String name = attr.getName();
-			if( name != null)
-			{
-				name = name.trim();
-			}
-			String value = attr.getValue();
-			if( value != null)
-			{
-				value = value.trim();
-			}
-			defaults.put(name, value);
-		}
-		details.setDefaults(defaults);
+//		Map defaults = new HashMap();
+//
+//		for (Iterator iterator = root.attributeIterator(); iterator.hasNext();)
+//		{
+//			Attribute attr = (Attribute) iterator.next();
+//			String name = attr.getName();
+//			if( name != null)
+//			{
+//				name = name.trim();
+//			}
+//			String value = attr.getValue();
+//			if( value != null)
+//			{
+//				value = value.trim();
+//			}
+//			defaults.put(name, value);
+//		}
+//		details.setDefaults(defaults);
 		for (Iterator iter = root.elementIterator("property"); iter.hasNext();)
 		{
 			Element element = (Element) iter.next();
 			//Remove deleted ones?
-			if( "true".equals(element.attributeValue("deleted") ) )
-			{
-				//continue; //Add them in until the end
-			}
-			PropertyDetail d = createDetail(defaults, inInputFile, element, inType);
-			newdetails.add(d);
+//			if( "true".equals(element.attributeValue("deleted") ) )
+//			{
+//				//continue; //Add them in until the end
+//			}
+			PropertyDetail d = createDetail(inInputFile, element, inType);
+			tosave.add(d);
 			
 		}
 		// Collections.sort(newdetails);
-		details.setDetails(newdetails);
 	}
 
 	public void fillElement(Element element, PropertyDetail inDetail)
@@ -787,7 +780,7 @@ public class PropertyDetailsArchive implements CatalogEnabled
 	}
 
 
-	protected PropertyDetail createDetail(Map defaults, String inInputFile, Element element, String inType)
+	protected PropertyDetail createDetail(String inInputFile, Element element, String inType)
 	{
 		PropertyDetail d = new PropertyDetail();
 		d.setElementData(new ElementData(element));

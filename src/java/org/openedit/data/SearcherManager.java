@@ -108,7 +108,7 @@ public class SearcherManager
 					{
 						getCache().put(finalcatalogid + "|" + inFieldName, searcher); //make sure we store both versions since they are the same searcher
 					}
-					if( id.equals("catalogsettings") )
+					if( id.equals("catalogsettings") )  //What is this? Can it be removed?
 					{
 						Data defaultval = (Data)searcher.searchById("log_all_searches");
 						if( defaultval != null )
@@ -159,7 +159,7 @@ public class SearcherManager
 				beanName = details.getBeanName(); //Once item is saved it always uses dataSearcher for the type
 				if( beanName == null)
 				{
-					throw new OpenEditException("Must have bean name" + inFieldName);
+					throw new OpenEditException("No Searcher found with bean name " + inFieldName + "Searcher");
 				}
 //				if( beanName == null)
 //				{
