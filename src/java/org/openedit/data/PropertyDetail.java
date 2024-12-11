@@ -769,7 +769,10 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 			{
 				value = getElementData().getValue("viewtype");
 			}
-
+			else if( inId.equals("securityfield"))
+			{
+				value = getElementData().getValue("securityfield");
+			}
 
 		}
 		return value;
