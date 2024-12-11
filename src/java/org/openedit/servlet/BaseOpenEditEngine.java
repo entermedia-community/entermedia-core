@@ -6,9 +6,10 @@ package org.openedit.servlet;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Writer;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -29,6 +30,7 @@ import org.openedit.page.PageRequestKeys;
 import org.openedit.page.PageStreamer;
 import org.openedit.page.manage.PageLoaderConfig;
 import org.openedit.page.manage.PageManager;
+import org.openedit.util.PathUtilities;
 import org.openedit.util.RequestUtils;
 import org.openedit.util.URLUtilities;
 
@@ -43,7 +45,7 @@ public class BaseOpenEditEngine implements OpenEditEngine
 	protected boolean fieldHideFolders = true;
 	protected EventManager fieldPageEventHandler;
 	protected RequestUtils fieldRequestUtils;
-
+	
 	public void render( HttpServletRequest inRequest, HttpServletResponse inResponse ) throws IOException, OpenEditException 
 	{
 		checkEngineInit( inResponse );
@@ -121,13 +123,37 @@ public class BaseOpenEditEngine implements OpenEditEngine
 			context.closeStreams(); 
 		//}
 	}
-	
+	protected boolean doesRootFolderExists(String requestedPath)
+	{
+		String root = PathUtilities.extractRootDirectory(requestedPath);
+		
+		if( root.equals("/") )
+		{
+			return true;
+		}
+		//Needed?
+		if( requestedPath.startsWith("/manager") || requestedPath.startsWith("/system") || requestedPath.startsWith("/openedit")  )
+		{
+			return true;
+		}
+
+		if( getPageManager().getPage(root + "/",false).exists() )
+		{
+			return true;
+		}
+		return false;
+		
+	}
 	protected RightPage getRightPage( URLUtilities util,SiteData sitedata, String requestedPath,boolean checkdates)
 	{
 		String fixedpath = null;
 	    if(sitedata != null)
 	    {
-	    	fixedpath = sitedata.fixRealPath(requestedPath);
+	    	boolean exists = doesRootFolderExists(requestedPath);
+	    	if( !exists )
+	    	{
+	    		fixedpath = sitedata.fixRealPath(requestedPath);
+	    	}
 	    }
 	    else
 	    {

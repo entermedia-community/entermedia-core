@@ -31,11 +31,6 @@ public class SiteData extends BaseData
 	}
 	public String fixRealPath(String inRequestedPath)
 	{
-		if( inRequestedPath.startsWith("/manager") || inRequestedPath.startsWith("/system") || inRequestedPath.startsWith("/openedit")  )
-		{
-			return inRequestedPath;
-		}
-		
 		String apppath = get("rootpath");
 		if( inRequestedPath.startsWith(apppath))
 		{
