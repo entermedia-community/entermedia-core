@@ -123,19 +123,13 @@ public class BaseOpenEditEngine implements OpenEditEngine
 			context.closeStreams(); 
 		//}
 	}
-	protected boolean doesRootFolderExists(String requestedPath)
+	protected boolean doesRootFolderExists(String root)
 	{
-		String root = PathUtilities.extractRootDirectory(requestedPath);
-		
 		if( root.equals("/") )
 		{
 			return true;
 		}
 		//Needed?
-		if( requestedPath.startsWith("/manager") || requestedPath.startsWith("/system") || requestedPath.startsWith("/openedit")  )
-		{
-			return true;
-		}
 
 		if( getPageManager().getPage(root + "/",false).exists() )
 		{
@@ -147,13 +141,25 @@ public class BaseOpenEditEngine implements OpenEditEngine
 	protected RightPage getRightPage( URLUtilities util,SiteData sitedata, String requestedPath,boolean checkdates)
 	{
 		String fixedpath = null;
-	    if(sitedata != null)
+		if( requestedPath.startsWith("/manager") || requestedPath.startsWith("/system") || requestedPath.startsWith("/openedit")  )
+		{
+			fixedpath = requestedPath;
+		}
+		else if(sitedata != null)
 	    {
-	    	boolean exists = doesRootFolderExists(requestedPath);
-	    	if( !exists )
+	    	int second = requestedPath.indexOf("/",2);
+	    	if( second > -1)
 	    	{
-	    		fixedpath = sitedata.fixRealPath(requestedPath);
+		    	String root = requestedPath.substring(0,second);
+		    	if( doesRootFolderExists(root) )
+		    	{
+		    		fixedpath = requestedPath;
+		    	}
 	    	}
+	    	if( fixedpath == null)
+	 	    {
+	    		fixedpath = sitedata.fixRealPath(requestedPath);
+	 	    }
 	    }
 	    if( fixedpath == null)
 	    {
