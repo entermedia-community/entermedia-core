@@ -155,7 +155,7 @@ public class BaseOpenEditEngine implements OpenEditEngine
 	    		fixedpath = sitedata.fixRealPath(requestedPath);
 	    	}
 	    }
-	    else
+	    if( fixedpath == null)
 	    {
 	    	fixedpath = requestedPath;
 	    }
