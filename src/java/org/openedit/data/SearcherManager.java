@@ -1,9 +1,9 @@
 package org.openedit.data;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -495,6 +495,7 @@ public class SearcherManager
 		
 		Map newvals = new HashMap();
 		newvals.put("formatteddate", DateStorageUtil.getStorageUtil().getTodayForDisplay());
+		newvals.put("nowdate", new Date());
 		
 		DataWithSearcher smartdata = new DataWithSearcher(this, catalogId, searchType, inData);
 		newvals.put("data",smartdata);
