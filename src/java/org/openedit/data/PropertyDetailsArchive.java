@@ -219,35 +219,43 @@ public class PropertyDetailsArchive implements CatalogEnabled
 	{
 		
 		String moduleid = inViewData.get("moduleid");
+		if( moduleid == null)
+		{
+			String backuppath = findConfigurationFile("/views/" + inViewData.getId() + ".xml");
+			XmlFile file = getXmlArchive().getXml(backuppath);
+			return file;
 
+		}
+
+		//First Data
 		String inViewPath = moduleid + "/" + inViewData.getId();
-
-		String savepath = findConfigurationFile("/views/" + inViewPath + ".xml");
-		XmlFile file = getXmlArchive().getXml(savepath);
+		String readwritepath = "/WEB-INF/data/" + getCatalogId() + "/views/" + inViewPath + ".xml";
+		XmlFile file = getXmlArchive().getXml(readwritepath);  //This comes from base page
 		
 		if( !file.isExist() )
 		{
-			if( moduleid == null)
-			{
-				return file;
+			//Look in base
+			String backuppath = findConfigurationFile("/views/" + inViewPath + ".xml");
+			file = getXmlArchive().getXml(backuppath);
 
-			}
+			if( !file.isExist() )
+			{
 				//Replace the name with default
-				//getSearcherManager().getCachedData(getCatalogId(), "module", inSearchType);
 				String name = inViewData.getId();
 				name = name.substring(moduleid.length());
 				
 				String path = "/" + getCatalogId() + "/data/views/defaults/" + name + ".xml";
-				
 				file = getXmlArchive().getXml(path);
+				
+				//Random anything
 				if( !file.isExist() )
 				{
 					log.error("No default view found " + path);
 					path = "/" + getCatalogId() + "/data/views/defaults/resultstable.xml";
 					file = getXmlArchive().getXml(path);
 				}
-				savepath = "/WEB-INF/data/" + getCatalogId() + "/views/" + inViewPath + ".xml";
-				file.setPath(savepath); //In case they save it
+			}
+			file.setPath(readwritepath); //In case they save it
 		}
 		
 		return file;
