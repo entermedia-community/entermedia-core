@@ -438,4 +438,11 @@ public class QueryBuilder
 		getQuery().addOrsGroup(inKey, Arrays.asList( inAssetids ) );
 		return this;
 	}
+	
+	public QueryBuilder put(String inKey,Object inValue)
+	{
+		getQuery().setValue(inKey,inValue);
+		return this;
+		
+	}
 }
