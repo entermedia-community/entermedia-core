@@ -313,8 +313,16 @@ public class PageStreamer
 	public void include(String inPath, WebPageRequest inReq) throws OpenEditException
 	{
 		String[] parts = inPath.split("[?]");
-		String fullPath = PathUtilities.resolveRelativePath(parts[0], getWebPageRequest().getContentPage()
-			.getPath());
+		Page userpage = inReq.getPage();   //Only support relative to itself. Not fallack
+		if( userpage.getPath().startsWith("/WEB-INF/base") )
+		{
+			//We ended up in base code. Need to stay relative the browser url
+			//throw exeception? We should never been loading pages with path in base
+			userpage = inReq.getContentPage();
+		}
+		
+		String fullPath = PathUtilities.resolveRelativePath(parts[0], userpage.getPath());
+		
 		boolean canedit = false;
 		User user = getWebPageRequest().getUser();
 		if( user != null )
