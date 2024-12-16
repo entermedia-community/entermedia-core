@@ -242,16 +242,17 @@ public class PropertyDetailsArchive implements CatalogEnabled
 			{
 				//Replace the name with default
 				String name = inViewData.getId();
-				name = name.substring(moduleid.length());
-				
-				String path = "/" + getCatalogId() + "/data/views/defaults/" + name + ".xml";
-				file = getXmlArchive().getXml(path);
-				
+				if (name.length() > moduleid.length())
+				{
+					name = name.substring(moduleid.length());
+					String path = "/" + getCatalogId() + "/data/views/defaults/" + name + ".xml";
+					file = getXmlArchive().getXml(path);
+				}
 				//Random anything
 				if( !file.isExist() )
 				{
-					log.error("No default view found " + path);
-					path = "/" + getCatalogId() + "/data/views/defaults/resultstable.xml";
+					log.error("No default view found " + name);
+					String path = "/" + getCatalogId() + "/data/views/defaults/resultstable.xml";
 					file = getXmlArchive().getXml(path);
 				}
 			}
