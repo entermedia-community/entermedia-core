@@ -532,6 +532,24 @@ public class StringEncryption
 		return value;
 	}
 
+	public String generateHashFromString(String inInput, int length) {
+	    try {
+	        // Use MD5 to hash the URL
+	        MessageDigest digest = MessageDigest.getInstance("MD5");
+	        digest.update(inInput.getBytes(UTF8_CHARSET));
+	        byte[] hashBytes = digest.digest();
 
+	        // Convert the hash to a hex string
+	        StringBuilder hashString = new StringBuilder();
+	        for (byte b : hashBytes) {
+	            hashString.append(String.format("%02x", b));
+	        }
+
+	        // Return the shortened hash
+	        return hashString.substring(0, Math.min(length, hashString.length()));
+	    } catch (NoSuchAlgorithmException e) {
+	        throw new OpenEditException("Failed to generate hash for URL: " + e.getMessage(), e);
+	    }
+	}
 	
 }
