@@ -32,30 +32,30 @@ public class EntityPermissions
 		fieldPermissions = inEntityPermissions;
 	}
 
-	public Map getPermissions(String inEntityId)
+	public Map getPermissions(String inPermissionBundle)
 	{
-		Map permissions = getPermissions().get(inEntityId);
+		Map permissions = getPermissions().get(inPermissionBundle);
 		return permissions;
 	}
 	
-	public void putPermission(String inEntityId, String inId, Object value)
+	public void putPermission(String inModuleId, String inId, Object value)
 	{
 		if(value == null) {
 			//Don't include anything if the value isn't set at all in the database
 			return;
 		}
-		Map permissions = getPermissions(inEntityId);
+		Map permissions = getPermissions(inModuleId);
 		if( permissions == null)
 		{
 			permissions = new HashMap();
-			getPermissions().put(inEntityId,permissions);
+			getPermissions().put(inModuleId,permissions);
 		}
 		permissions.put(inId,Boolean.valueOf(value.toString()));
 	}
 
-	public Boolean can(String inEntityId, String inKey) 
+	public Boolean can(String inModuleId, String inKey) 
 	{
-		Map<String,Boolean> permissions = getPermissions(inEntityId);
+		Map<String,Boolean> permissions = getPermissions(inModuleId);
 		if( permissions == null)
 		{
 			return true;

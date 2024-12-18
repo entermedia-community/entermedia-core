@@ -70,10 +70,27 @@ public class Permissions {
 		return can;
 	}
 	
-	public Boolean can(String inEntity, String inKey)
+	public Boolean can(String inModuleId, String inKey)
 	{
-		boolean can = getEntityPermissions().can(inEntity,inKey);
+		boolean can = getEntityPermissions().can(inModuleId,inKey);
+
 		return can;
 	}
+
+	public Boolean can(String inModuleId, boolean isDataOwner, String inKey)
+	{
+		if( isDataOwner )
+		{
+			boolean can = can("owner" + inModuleId,inKey);
+			if( can )
+			{
+				return true;
+			}
+		}	
+		boolean can = can(inModuleId,inKey);
+		return can;
+	}
+
+
 	
 }
