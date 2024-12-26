@@ -14,7 +14,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openedit.xml.XmlFile;
 
-public class PropertyDetails implements Collection
+public class PropertyDetails implements Collection<PropertyDetail> 
 {
 	private static final Log log = LogFactory.getLog(PropertyDetails.class);
 
@@ -742,7 +742,7 @@ public class PropertyDetails implements Collection
 	}
 
 	@Override
-	public boolean add(Object inE)
+	public boolean add(PropertyDetail inE)
 	{
 		// TODO Auto-generated method stub
 		return  getDetails().add(inE);

@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -20,6 +19,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.entermediadb.location.GeoCoder;
 import org.entermediadb.location.Position;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.openedit.Data;
@@ -2955,6 +2955,98 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		return tracker;
 	}
 
+	public void updateData(Data inChild, JSONObject inUpdate) {
+	    for (Object keyObj : inUpdate.keySet()) {
+	        String key = (String) keyObj;
+	        Object value = inUpdate.get(key);
+
+	        PropertyDetail detail = getDetail(key);
+	        if (detail == null) {
+	            log.warn("No PropertyDetail found for key: " + key);
+	            continue; // Skip if there's no detail available
+	        }
+
+	        Object result = null;
+
+	        // Handle multi-language fields
+	        if (detail.isMultiLanguage()) {
+	            LanguageMap map = null;
+	            Object existingValue = inChild.getValue(detail.getId());
+	            if (existingValue instanceof Map) {
+	                map = new LanguageMap((Map<String, String>) existingValue);
+	            } else {
+	                map = new LanguageMap();
+	                if (existingValue != null) {
+	                    map.setText("en", existingValue.toString());
+	                }
+	            }
+
+	            if (value instanceof JSONObject) {
+	                JSONObject langValues = (JSONObject) value;
+	                for (Object langKey : langValues.keySet()) {
+	                    String lang = (String) langKey;
+	                    String langValue = langValues.get(lang).toString();
+	                    map.setText(lang, langValue);
+	                }
+	            }
+
+	            result = map;
+	        }
+	        // Handle multi-value fields
+	        else if (detail.isMultiValue()) {
+	            if (value instanceof JSONArray) {
+	                JSONArray array = (JSONArray) value;
+	                List<String> values = new ArrayList<>();
+	                for (Object obj : array) {
+	                    values.add(obj.toString());
+	                }
+	                result = values;
+	            }
+	        }
+	        // Handle nested or object-array fields (skip for now)
+	        else if (detail.isDataType("nested") || detail.isDataType("objectarray")) {
+	            continue;
+	        }
+	        // Handle other types
+	        else {
+	            if (value instanceof String) {
+	                String val = (String) value;
+
+	                if (detail.isDate()) {
+	                    result = parseDateValue(val, detail);
+	                } else if (detail.isBoolean()) {
+	                    result = Boolean.parseBoolean(val);
+	                } else {
+	                    result = val;
+	                }
+	            } else {
+	                result = value; // Directly assign non-string values
+	            }
+	        }
+
+	        // Update the Data object
+	        if (result == null && detail.isBoolean()) {
+	            inChild.setValue(key, false);
+	        } else {
+	            inChild.setValue(key, result);
+	        }
+	    }
+	}
+
+	protected Date parseDateValue(String val, PropertyDetail detail) {
+	    try {
+	        if (val.length() == 10) { // Assuming date format 'yyyy-MM-dd'
+	            return DateStorageUtil.getStorageUtil().parse(val, "yyyy-MM-dd");
+	        } else {
+	            return DateStorageUtil.getStorageUtil().parseFromStorage(val);
+	        }
+	    } catch (Exception e) {
+	        log.error("Failed to parse date value: " + val, e);
+	        return null;
+	    }
+	}
+	
+	
 
 	public Data updateData(WebPageRequest inReq, String[] fields, Data data)
 	{

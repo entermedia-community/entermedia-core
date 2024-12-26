@@ -14,6 +14,7 @@ import org.openedit.hittracker.SearchQuery;
 import org.openedit.profile.UserProfile;
 import org.openedit.users.User;
 
+
 public interface Searcher extends CatalogEnabled
 {
 	
@@ -39,6 +40,10 @@ public interface Searcher extends CatalogEnabled
 	public abstract SearchQuery addStandardSearchTerms(WebPageRequest inPageRequest) throws OpenEditException;
 
 	public Data updateData(WebPageRequest inReq, String[] fields, Data data);
+	
+	
+	
+	
 	
 	public abstract List deselect(String inField, String[] toremove) throws OpenEditException;
 
@@ -195,6 +200,8 @@ public interface Searcher extends CatalogEnabled
 	public Object getFulltext(Data inSearchHitData);
 
 	public HitTracker getCachedSearch(QueryBuilder inQ);
+
+	public void updateData(Data inChild, JSONObject inUpdate);
 
     
 }
