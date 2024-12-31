@@ -925,7 +925,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		{ 
 			value = inPageRequest.getRequestParameters(inParam + ".values");
 		}
-		if( value == null)
+		if( value == null || (value.length == 1 && value[0] == null) || value[0].trim().isEmpty() )
 		{ 
 			value = inPageRequest.getRequestParameters(inParam + "value");
 		}
