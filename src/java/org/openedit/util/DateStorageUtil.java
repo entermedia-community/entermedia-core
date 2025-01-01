@@ -357,7 +357,7 @@ public class DateStorageUtil
 	}
 	public Calendar getCalendar(Date date)
 	{
-		Calendar cal = Calendar.getInstance(Locale.US);
+		Calendar cal = createUTCCalendar();
 		cal.setTime(date);
 		return cal;
 	}
@@ -522,19 +522,41 @@ public class DateStorageUtil
 	{
 		return formatDateObj(new Date(), "yyyy-MM-dd");
 	}
-	public Date getThisMonday()
+
+	public Calendar createCalendar()
 	{
-		Calendar c = Calendar.getInstance();
+		Calendar c = Calendar.getInstance(); //America/New_York ?
 		c.set(Calendar.HOUR_OF_DAY, 0);
 		c.set(Calendar.MINUTE, 0);
 		c.set(Calendar.SECOND, 0);
 		c.set(Calendar.MILLISECOND, 0);
+		return c;
+	}
+	public Calendar createCalendar(TimeZone inTimeZone)
+	{
+		Calendar c = Calendar.getInstance(inTimeZone); //America/New_York ?
+		c.set(Calendar.HOUR_OF_DAY, 0);
+		c.set(Calendar.MINUTE, 0);
+		c.set(Calendar.SECOND, 0);
+		c.set(Calendar.MILLISECOND, 0);
+		return c;
+		
+	}
+	public Calendar createUTCCalendar()
+	{
+		Calendar c = createCalendar(TimeZone.getTimeZone("UTC")); //America/New_York ?
+		return c;
+	}
+	
+	public Date getThisMonday()
+	{
+		Calendar c = createUTCCalendar();
 		c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
 		return c.getTime();
 	}
 	public Date getThisMonday(String inDate)
 	{
-		Calendar c = Calendar.getInstance();
+		Calendar c = createUTCCalendar();
 		c.setTime(parseFromStorage(inDate));
 		c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
 		return c.getTime();
@@ -542,11 +564,7 @@ public class DateStorageUtil
 	public Collection getWeeks(int inCount)
 	{
 		Collection weeks = new ArrayList();
-		Calendar c = Calendar.getInstance();
-		c.set(Calendar.HOUR_OF_DAY, 0);
-		c.set(Calendar.MINUTE, 0);
-		c.set(Calendar.SECOND, 0);
-		c.set(Calendar.MILLISECOND, 0);
+		Calendar c = createUTCCalendar();
 		c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
 		c.add(Calendar.DAY_OF_YEAR, inCount * -7);
 
