@@ -471,12 +471,13 @@ public class SearcherManager
 				return vals;
 			}
 
-				
+				/*
 			if( object instanceof LanguageMap)
 			{
 				LanguageMap lan = (LanguageMap)object;
 				return lan.getText(inLocale);
 			}	
+			*/
 			return object;
 
 		}
