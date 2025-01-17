@@ -17,6 +17,7 @@ import org.openedit.Data;
 import org.openedit.ModuleManager;
 import org.openedit.MultiValued;
 import org.openedit.OpenEditException;
+import org.openedit.WebPageRequest;
 import org.openedit.cache.CacheManager;
 import org.openedit.hittracker.HitTracker;
 import org.openedit.locks.LockManager;
@@ -256,7 +257,7 @@ public class SearcherManager
 		Object val = getValue(inParent,detail);
 		return val;
 	}*/
-	public Collection getUniqueValues(Searcher inSearcher, HitTracker inHits, String inColumn, String startsWith)
+	public Collection getUniqueValues(Searcher inSearcher, HitTracker inHits, String inColumn, String startsWith, WebPageRequest inContext)
 	{
 		if(inHits != null){
 			inHits.enableBulkOperations();
@@ -282,7 +283,12 @@ public class SearcherManager
 			}
 			else
 			{
-				String val = (String) obj;
+				String val = inContext.getText(obj);
+				if( val.toLowerCase().startsWith(startsWith))
+				{
+					results.add( val);
+				}
+				
 				if(val != null) {
 					/*if( val.toLowerCase().startsWith(startsWith))
 					{

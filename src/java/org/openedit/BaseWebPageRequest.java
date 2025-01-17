@@ -1405,7 +1405,7 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 		return label;
 		
 	}
-	public String getText(String inKey)
+	public String getPageText(String inKey)
 	{
 		String text = getPage().getText(inKey, getLocale());
 		return text;

@@ -255,7 +255,7 @@ public interface WebPageRequest
 
 //	public void unpackageVariables();
 	
-	public String getText(String inKey);
+	public String getText(Object inObj);
 	
 	public String getSiteRoot();
 	
