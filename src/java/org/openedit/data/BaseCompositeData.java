@@ -774,9 +774,9 @@ public class BaseCompositeData extends BaseData implements Data, CompositeData
 	{
 
 		Object val = getPropertiesSet().getValue(inPreference); //set by the user since last save
-		if( val != null)
+		if( val != null && !val.equals(""))
 		{
-			return (Collection<String>)val;
+			return (Collection<String>)val; 
 		}
 
 		Object currentlist = getValueFromResults(inPreference);
