@@ -334,10 +334,10 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 					}
 					
 					String issummaryminimized = userprofile.get("minimize" + getSearchType() + "summary");
-					if( issummaryminimized  != null && !Boolean.parseBoolean(issummaryminimized ) )
+					if( issummaryminimized  == null || !Boolean.parseBoolean(issummaryminimized ) )
 					{
 						List<PropertyDetail> details = getDetailsForView(getSearchType() + "advancedsearch", userprofile); 
-						if( details != null)
+						if( details != null && !details.isEmpty())
 						{
 							for (Iterator iterator = details.iterator(); iterator.hasNext();)
 							{
