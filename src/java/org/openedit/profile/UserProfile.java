@@ -455,10 +455,6 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 	}
 
 	public Permissions getPermissions() {
-		if (fieldPermissions == null) {
-			fieldPermissions = new Permissions(this);
-		}
-
 		return fieldPermissions;
 	}
 

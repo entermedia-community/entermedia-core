@@ -1,26 +1,65 @@
 package org.openedit.users;
 
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.openedit.CatalogEnabled;
+import org.openedit.Data;
 import org.openedit.data.EntityPermissions;
+import org.openedit.data.Searcher;
+import org.openedit.data.SearcherManager;
+import org.openedit.hittracker.HitTracker;
 import org.openedit.profile.UserProfile;
 
-public class Permissions {
+public class Permissions implements CatalogEnabled 
+{
+	private static final Log log = LogFactory.getLog(Permissions.class);
 
 	protected UserProfile fieldUserProfile;
-	protected Set fieldSettingsGroupPermissions;
+	protected Set fieldSystemRolePermissions;
+	protected SearcherManager fieldSearcherManager;
+	protected String fieldCatalogId;
 	
-	public Set getSettingsGroupPermissions()
+	public Permissions()
 	{
-		return fieldSettingsGroupPermissions;
+	}
+	
+	//system wide
+	
+	public String getCatalogId()
+	{
+		return fieldCatalogId;
 	}
 
-
-	public void setSettingsGroupPermissions(Set inSettingsGroupPermissions)
+	public void setCatalogId(String inCatalogId)
 	{
-		fieldSettingsGroupPermissions = inSettingsGroupPermissions;
+		fieldCatalogId = inCatalogId;
+	}
+
+	public SearcherManager getSearcherManager()
+	{
+		return fieldSearcherManager;
+	}
+
+	public void setSearcherManager(SearcherManager inSearcherManager)
+	{
+		fieldSearcherManager = inSearcherManager;
+	}
+
+	public Set getSystemRolePermissions()
+	{
+		return fieldSystemRolePermissions;  ///Default system permissions from the default entity?
+	}
+
+	public void setSystemRolePermissions(Set inSettingsGroupPermissions)
+	{
+		fieldSystemRolePermissions = inSettingsGroupPermissions;
+	}
+	public EntityPermissions getEntityPermissions() {
+		return getUserProfile().getEntityPermissions();
 	}
 
 
@@ -33,22 +72,6 @@ public class Permissions {
 	public void setUserProfile(UserProfile inUserProfile)
 	{
 		fieldUserProfile = inUserProfile;
-		if( fieldUserProfile.getSettingsGroup() != null)
-		{
-			Collection permissions = fieldUserProfile.getSettingsGroup().getValues("permissions");
-			if (permissions != null)
-			{
-				setSettingsGroupPermissions( new HashSet(permissions) );
-			}
-			else
-			{
-				setSettingsGroupPermissions( new HashSet() );
-			}
-		}
-		else
-		{
-			setSettingsGroupPermissions( new HashSet() );
-		}
 	}
 
 
@@ -57,40 +80,194 @@ public class Permissions {
 		setUserProfile(inProfile)	;
 	}
 
+	//"product","createnew"
+//	public Boolean can(Data module, Data inData, String inKey)
+//	{
+//		//First check role
+//		
+//		
+////		String role = findEntityPermissionLevel(module);
+////		if( isDataOwner )
+////		{
+////			boolean can = can("owner" + inModuleId,inKey);
+////			if( can )
+////			{
+////				return true;
+////			}
+////		}	
+//		boolean can = can(module,inKey);
+//		return can;
+//	}
 
-	public EntityPermissions getEntityPermissions() {
-		return getUserProfile().getEntityPermissions();
+	private Data loadModule(String inModuleId)
+	{
+		Data  module = getSearcherManager().getCachedData(getCatalogId(), "module", inModuleId);
+		return module;
 	}
 
-
-	public Boolean can(String inKey)
+	private String findModulePermissionLevel(Data inModule)
 	{
-		boolean can = getSettingsGroupPermissions().contains(inKey);
-		
+		boolean iseditor = isEditorFor(inModule);
+		if( iseditor )
+		{
+			return "editor";
+		}
+		if( !iseditor )
+		{
+			String roleid = getUserProfile().get("settingsgroup");
+			String[] standardroles = new String[]{"editor","administrator","users","owner"};
+			for (int i = 0; i < standardroles.length; i++)
+			{
+				if( standardroles[i].equals(roleid) )
+				{
+					return standardroles[i];
+				}
+			}
+		}
+		return "users";
+	}
+
+	protected boolean isEditorFor(Data inData)
+	{
+		Collection users = inData.getValues("editorusers");
+		if (users != null && !users.isEmpty() )
+		{
+			if( users.contains(getUserProfile().getUserId() ) )
+			{	
+				return true;
+			}
+		}
+		Collection groups = inData.getValues("editorgroups");
+		if (groups != null && !groups.isEmpty() )
+		{
+			Collection<Group> usergroups = getUserProfile().getUser().getGroups();
+			for (Iterator iterator = usergroups.iterator(); iterator.hasNext();)
+			{
+				Group group = (Group) iterator.next();
+				if( groups.contains(group.getId()) )
+				{
+					return true;
+				}
+			}
+		}
+		Collection roles = inData.getValues("editorroles");
+		if (roles != null && !roles.isEmpty() )
+		{
+			if( roles.contains(getUserProfile().getId() ) )
+			{	
+				return true;
+			}
+		}
+		return false;
+	}
+	
+
+	//System Level
+	
+	public Boolean can(String inKey)  //System wide settings
+	{
+		boolean can = getSystemRolePermissions().contains(inKey);
+		return can;
+	}
+	//Module Level
+	public Boolean can(String inModuleId, String inKey)
+	{
+		return canModule(inModuleId,inKey);
+	}
+	public Boolean canModule(String inModuleId, String inKey)
+	{
+		Data module = loadModule(inModuleId);
+		if( module == null )
+		{
+			log.error("No such module" + inModuleId);
+			return false;
+		}
+		boolean can = canModule(module,inKey);
+		return can;
+	}
+	public Boolean canModule(Data module, String inKey)
+	{
+		String role = findModulePermissionLevel(module);
+//		
+		boolean can = getEntityPermissions(module,role).can(inKey);
 		return can;
 	}
 	
-	public Boolean can(String inModuleId, String inKey)
+	//Entity level
+//	public Boolean canInEntity(String inModuleId, Data inEntity, String inKey)
+//	{
+//		Data module = loadModule(inModuleId);
+//		boolean can = can(module,inEntity,inKey);
+//		return can;
+//	}
+	
+	public Boolean canEntity(Data inModule, Data inEntity, String inKey)
 	{
-		boolean can = getEntityPermissions().can(inModuleId,inKey);
-
-		return can;
-	}
-
-	public Boolean can(String inModuleId, boolean isDataOwner, String inKey)
-	{
-		if( isDataOwner )
+		String userpermissionlevel = findEntityPermissionLevel(inModule, inEntity);
+		EntityPermissions entitypermissions = getEntityPermissions(inModule, userpermissionlevel);
+		boolean can = entitypermissions.can(inKey);
+		if( can )
 		{
-			boolean can = can("owner" + inModuleId,inKey);
-			if( can )
-			{
-				return true;
-			}
+			return true;
 		}	
-		boolean can = can(inModuleId,inKey);
+		can = canModule(inModule,inKey);
 		return can;
 	}
 
+	private String findEntityPermissionLevel(Data inModule, Data inEntity)
+	{
+		String roleid = getUserProfile().get("settingsgroup");
+		if( "administrator".equals(roleid) )
+		{
+			return roleid;
+		}
+		
+		boolean isowner = getUserProfile().getUserId().equals(inEntity.get("owner"));
+		if( isowner )
+		{
+			return "owner";
+		}	
+		
+
+		boolean iseditor = isEditorFor(inEntity);
+		if( iseditor )
+		{
+			return "editor";
+		}
+
+		iseditor = isEditorFor(inModule);
+		if( iseditor )
+		{
+			return "editor";
+		}
+				
+		//Must be viewer either at entity or module level
+		return "users";
+	}
+
+	public EntityPermissions getEntityPermissions(Data inModule, String inRole)
+	{
+		String id = inModule + "_" + inRole;
+		EntityPermissions modulepermissions = (EntityPermissions)getSearcherManager().getCacheManager().get("permissions" + getCatalogId(),id);
+		if( modulepermissions == null)
+		{
+			Searcher searcher = getSearcherManager().getSearcher(getCatalogId(), "permissionentityassigned");
+			HitTracker grouppermissions = searcher.query().exact("settingsgroup",inRole).exact("moduleid", inModule.getId()).search();
+			modulepermissions = new EntityPermissions();
+			for (Iterator iterator = grouppermissions.iterator(); iterator.hasNext();)
+			{
+				Data data = (Data) iterator.next();
+				String moduleid = data.get("moduleid");
+				String permissionname = data.get("permissionsentity");
+				Object val = data.getValue("enabled");
+				modulepermissions.putPermission(permissionname, val);
+			}
+			getSearcherManager().getCacheManager().put("permissions" + getCatalogId(),id, modulepermissions);
+		}
+		
+		return modulepermissions;
+
+	}
 
 	
 }
