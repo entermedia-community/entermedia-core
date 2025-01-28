@@ -32,5 +32,6 @@ public interface Data
 	Set keySet();
 
 	public Collection getValues(String inField);
+	public String toJsonString();
 
 }

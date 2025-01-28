@@ -456,4 +456,18 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 		Data copy = (Data)clone();
 		return copy;
 	}
+	
+	
+	
+	public String toJsonString()
+	{
+		
+		throw new OpenEditException("NOT IMPLEMENTED");
+		
+
+	}
+	
+	
+	
+	
 }

@@ -14,6 +14,7 @@ import java.util.Set;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.openedit.Data;
+import org.openedit.OpenEditException;
 import org.openedit.repository.ContentItem;
 import org.openedit.util.PathUtilities;
 
@@ -311,4 +312,11 @@ public class XmlFile implements Data
 		return getProperties().keySet();
 	}
 
+	
+	public String toJsonString()
+	{		
+		throw new OpenEditException("NOT IMPLEMENTED");
+	}
+	
+	
 }

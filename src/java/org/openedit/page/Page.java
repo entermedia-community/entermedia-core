@@ -945,4 +945,11 @@ public class Page implements Data, Comparable
 		return copy;
 	}
 
+	
+	public String toJsonString()
+	{		
+		throw new OpenEditException("NOT IMPLEMENTED");
+	}
+	
+	
 }

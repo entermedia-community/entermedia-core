@@ -639,4 +639,12 @@ public class ElementData implements MultiValued, SaveableData, Comparable, Searc
 		}
 		return false;
 	}
+	
+	public String toJsonString()
+	{		
+		throw new OpenEditException("NOT IMPLEMENTED");
+	}
+	
+	
+	
 }

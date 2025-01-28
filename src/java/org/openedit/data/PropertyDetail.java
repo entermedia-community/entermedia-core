@@ -14,6 +14,7 @@ import java.util.Set;
 import org.dom4j.Attribute;
 import org.dom4j.Element;
 import org.openedit.Data;
+import org.openedit.OpenEditException;
 import org.openedit.WebPageRequest;
 import org.openedit.modules.translations.LanguageMap;
 import org.openedit.page.manage.TextLabelManager;
@@ -883,6 +884,10 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 
 	}
 
+	public String toJsonString()
+	{		
+		throw new OpenEditException("NOT IMPLEMENTED");
+	}
 	
 	
 
