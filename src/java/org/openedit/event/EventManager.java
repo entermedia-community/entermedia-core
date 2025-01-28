@@ -107,11 +107,47 @@ public class EventManager
 	public void fireDataEditEvent(WebPageRequest inReq, Searcher inSearcher, Data object)
 	{
 
+		String changes = readChanges(inReq, inSearcher, object);
+
+		if (changes.length() > 0)
+		{
+			inReq.putPageValue("datachanges", changes);
+			
+			WebEvent event = new WebEvent();
+			event.setCatalogId(inSearcher.getCatalogId());
+			String type = inSearcher.getSearchType();
+			event.setSearchType(type);
+			event.setSource(this);
+			//assetedit
+
+			//			event.setSearchType("assetedit");
+			//			event.setSource(this);
+			//			event.setOperation("assetedit");
+			//			event.setSourcePath(asset.getSourcePath());
+
+			//			event.setProperty("assetid", asset.getId());
+			//			event.setProperty("assetname", asset.getName());
+			//			event.setProperty("changes", changes.toString());
+
+			event.setOperation("edit");
+			event.setSourcePath(object.getSourcePath());
+			event.setProperty("id", object.getId());
+			event.setProperty(inSearcher.getSearchType() + "id", object.getId());
+
+			event.setProperty("sourcepath", object.getSourcePath());
+			//aka "changes"
+			event.setProperty("details", changes.toString());
+			event.setUser(inReq.getUser());
+			fireEvent(event);
+		}
+	}
+
+	public String readChanges(WebPageRequest inReq, Searcher inSearcher, Data object) {
 		StringBuffer changes = new StringBuffer();
 		String[] fields = inReq.getRequestParameters("field");
 		if (fields == null)
 		{
-			return;
+			return null;
 		}
 		//		if (composite != null)
 		//		{
@@ -176,36 +212,7 @@ public class EventManager
 				changes.append(field + ": " + oldval + " -> " + value);
 			}
 		}
-
-		if (changes.length() > 0)
-		{
-			WebEvent event = new WebEvent();
-			event.setCatalogId(inSearcher.getCatalogId());
-			String type = inSearcher.getSearchType();
-			event.setSearchType(type);
-			event.setSource(this);
-			//assetedit
-
-			//			event.setSearchType("assetedit");
-			//			event.setSource(this);
-			//			event.setOperation("assetedit");
-			//			event.setSourcePath(asset.getSourcePath());
-
-			//			event.setProperty("assetid", asset.getId());
-			//			event.setProperty("assetname", asset.getName());
-			//			event.setProperty("changes", changes.toString());
-
-			event.setOperation("edit");
-			event.setSourcePath(object.getSourcePath());
-			event.setProperty("id", object.getId());
-			event.setProperty(inSearcher.getSearchType() + "id", object.getId());
-
-			event.setProperty("sourcepath", object.getSourcePath());
-			//aka "changes"
-			event.setProperty("details", changes.toString());
-			event.setUser(inReq.getUser());
-			fireEvent(event);
-		}
+		return changes.toString();
 	}
 
 	public void fireDataSavedEvent(WebPageRequest inReq, Searcher inSearcher, Data data)
