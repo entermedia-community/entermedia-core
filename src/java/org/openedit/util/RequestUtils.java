@@ -298,7 +298,7 @@ public class RequestUtils
 			TimeZone timezone = (TimeZone) context.getSessionValue("usertimezone");
 			if (timezone == null)
 			{
-				String timezonetext = inRequest.getHeader("X-TimeZoneOffset");
+				String timezonetext = inRequest.getHeader("X-TimeZone");
 				if (timezonetext != null)
 				{
 
