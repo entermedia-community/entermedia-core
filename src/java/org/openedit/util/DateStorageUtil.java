@@ -357,7 +357,7 @@ public class DateStorageUtil
 	}
 	public Calendar getCalendar(Date date)
 	{
-		Calendar cal = createUTCCalendar();
+		Calendar cal = createCalendar();
 		cal.setTime(date);
 		return cal;
 	}
