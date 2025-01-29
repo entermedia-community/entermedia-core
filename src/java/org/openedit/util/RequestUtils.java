@@ -292,15 +292,16 @@ public class RequestUtils {
 			util = new URLUtilities(null,null);
 			context.putProtectedPageValue(PageRequestKeys.URL_UTILITIES, util);
 		}
-
-		String timezonetext = inRequest.getHeader("X-TimeZone");
-		if( timezonetext != null)
+		if( inRequest != null )
 		{
-			TimeZone timezone = TimeZone.getTimeZone(timezonetext);
-			context.setTimeZone(timezone);
-			context.putSessionValue("usertimezone", timezone);
-		}
-		
+			String timezonetext = inRequest.getHeader("X-TimeZone");
+			if( timezonetext != null)
+			{
+				TimeZone timezone = TimeZone.getTimeZone(timezonetext);
+				context.setTimeZone(timezone);
+				context.putSessionValue("usertimezone", timezone);
+			}
+		}		
 		return context;
 	}
 	
