@@ -294,7 +294,7 @@ public class RequestUtils {
 		}
 		if( inRequest != null )
 		{
-			String timezonetext = inRequest.getHeader("X-TimeZone");
+			String timezonetext = inRequest.getHeader("X-TimeZoneOffset");
 			if( timezonetext != null)
 			{
 				TimeZone timezone = TimeZone.getTimeZone(timezonetext);
