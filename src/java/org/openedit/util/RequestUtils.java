@@ -8,6 +8,7 @@ import java.io.Writer;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TimeZone;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -290,9 +291,16 @@ public class RequestUtils {
 		{
 			util = new URLUtilities(null,null);
 			context.putProtectedPageValue(PageRequestKeys.URL_UTILITIES, util);
-			
 		}
 
+		String timezonetext = inRequest.getHeader("X-TimeZone");
+		if( timezonetext != null)
+		{
+			TimeZone timezone = TimeZone.getTimeZone(timezonetext);
+			context.setTimeZone(timezone);
+			context.putSessionValue("usertimezone", timezone);
+		}
+		
 		return context;
 	}
 	

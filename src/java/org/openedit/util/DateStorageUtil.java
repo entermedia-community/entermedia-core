@@ -362,6 +362,13 @@ public class DateStorageUtil
 		return cal;
 	}
 
+	public Calendar getCalendar()
+	{
+		Calendar c = createCalendar(); //America/New_York ?
+		return c;
+
+	}
+
 	public int getDiffYears(String first, String last)
 	{
 		Date one = parseFromStorage(first);

@@ -77,6 +77,26 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 	protected Map fieldBackUpSession;
 	protected LocaleManager fieldLocaleManager;
 	protected String fieldLocale;
+	protected TimeZone fieldTimeZone;
+	
+	public TimeZone getTimeZone()
+	{
+		if( fieldTimeZone == null )
+		{
+			fieldTimeZone = (TimeZone)getSessionValue("usertimezone");
+			if( fieldTimeZone == null)
+			{
+				fieldTimeZone = TimeZone.getDefault();
+			}
+		}
+		return fieldTimeZone;
+	}
+
+	public void setTimeZone(TimeZone inTimeZone)
+	{
+		fieldTimeZone = inTimeZone;
+	}
+
 	protected boolean fieldHasRedirected;
 	protected boolean fieldHasForwarded;
 	protected boolean fieldHasCancelActions;
@@ -1286,7 +1306,8 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 	
 	public String getDate(int inDate) {
 			SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
-			format.setTimeZone(TimeZone.getTimeZone("GMT"));			
+			//format.setTimeZone(TimeZone.getTimeZone("GMT"));
+			format.setTimeZone(getTimeZone());
 			Date date = new Date(inDate * 1000L);
 			return format.format(date);
 	}
@@ -1347,7 +1368,7 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 			String value = getLocaleManager().getDateStorageUtil().formatDateObj(inDate, format);
 			return value;
 		}
-		return getLocaleManager().formatDateTimeForDisplay( inDate, getLocale());
+		return getLocaleManager().formatDateTimeForDisplay( inDate, getLocale(), getTimeZone());
 	}
 	
 	

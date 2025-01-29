@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.StringTokenizer;
+import java.util.TimeZone;
 
 import org.openedit.page.manage.TextLabelManager;
 
@@ -212,12 +213,18 @@ public class LocaleManager
 	}
 	public String formatDateTimeForDisplay(Date inDate, String inLocale)
 	{
+		String formated = formatDateTimeForDisplay(inDate, inLocale, null);
+		return formated;
+	}
+	public String formatDateTimeForDisplay(Date inDate, String inLocale, TimeZone inTimeZone)
+	{
 		if( inDate == null)
 		{
 			return "";
 		}
 		Locale loc = getLocale(inLocale);
 		DateFormat format = SimpleDateFormat.getDateTimeInstance(SimpleDateFormat.SHORT, SimpleDateFormat.LONG,loc);
+		format.setTimeZone(inTimeZone);
 		String formated = format.format(inDate);
 		return formated;
 	}
