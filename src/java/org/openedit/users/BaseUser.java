@@ -149,7 +149,7 @@ public class BaseUser extends BaseData implements User, Comparable
 		}
 		if( out.length() == 0)
 		{
-			if( getEmail() != null && Character.isDigit(getUserName().charAt(0) ) )
+			if( getEmail() != null && getUserName() != null && Character.isDigit(getUserName().charAt(0) ) )
 			{
 				out.append(getEmail());
 			}
