@@ -3,6 +3,7 @@ package org.openedit.data;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -359,7 +360,15 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 	}
 	public void addValue(String inKey, Object inNewValue)
 	{
-		
+		if( inNewValue instanceof Collection)
+		{
+			for (Iterator iterator = ((Collection)inNewValue).iterator(); iterator.hasNext();)
+			{
+				Object value = (Object) iterator.next();
+				addValue(inKey, value);
+			}
+			return;
+		}
 		Collection values = getValues(inKey);
 		if(values == null) 
 		{
