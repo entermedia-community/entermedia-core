@@ -41,7 +41,8 @@ public interface Searcher extends CatalogEnabled
 
 	public Data updateData(WebPageRequest inReq, String[] fields, Data data);
 	
-	
+	public Collection<PropertyDetail> findSummaryFields(SearchQuery inQuery, UserProfile userprofile);
+
 	
 	
 	

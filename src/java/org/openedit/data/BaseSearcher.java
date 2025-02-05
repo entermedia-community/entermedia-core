@@ -332,24 +332,18 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 						String sort = userprofile.getSortForSearchType(inQuery.getResultType());
 						inQuery.setSortBy(sort);
 					}
-					
-					String issummaryminimized = userprofile.get("minimize" + getSearchType() + "summary");
-					if( issummaryminimized  == null || !Boolean.parseBoolean(issummaryminimized ) )
+					Collection<PropertyDetail> details = findSummaryFields(inQuery, userprofile);
+					if( details != null )
 					{
-						List<PropertyDetail> details = getDetailsForView(getSearchType() + "advancedsearch", userprofile); 
-						if( details != null && !details.isEmpty())
+						for (Iterator iterator = details.iterator(); iterator.hasNext();)
 						{
-							for (Iterator iterator = details.iterator(); iterator.hasNext();)
+							PropertyDetail propertyDetail = (PropertyDetail) iterator.next();
+							if( propertyDetail.getSearchType().equals(getSearchType()))
 							{
-								PropertyDetail propertyDetail = (PropertyDetail) iterator.next();
-								if( propertyDetail.getSearchType().equals(getSearchType()))
-								{
-									inQuery.addAggregation(propertyDetail);
-								}
+								inQuery.addAggregation(propertyDetail);
 							}
 						}
 					}
-				
 				}
 				
 				if (inQuery.getSortBy() == null)
@@ -626,6 +620,21 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		}
 
 		return tracker;
+	}
+
+	
+	public Collection<PropertyDetail> findSummaryFields(SearchQuery inQuery, UserProfile userprofile)
+	{
+		String issummaryminimized = userprofile.get("minimize" + getSearchType() + "summary");
+		if( issummaryminimized  == null || !Boolean.parseBoolean(issummaryminimized ) )
+		{
+			List<PropertyDetail> details = getDetailsForView(getSearchType() + "advancedsearch", userprofile); 
+			if( details != null && !details.isEmpty())
+			{
+				return details;
+			}
+		}
+		return null;
 	}
 
 	protected boolean checkRunSearch(WebPageRequest inPageRequest)
