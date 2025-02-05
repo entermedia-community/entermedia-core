@@ -17,6 +17,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openedit.CatalogEnabled;
 import org.openedit.ModuleManager;
 import org.openedit.OpenEditException;
 import org.openedit.Shutdownable;
@@ -45,7 +46,16 @@ public class BaseOpenEditEngine implements OpenEditEngine
 	protected boolean fieldHideFolders = true;
 	protected EventManager fieldPageEventHandler;
 	protected RequestUtils fieldRequestUtils;
-	
+	protected Map fieldAppLoaders;
+	protected Map getAppLoaders()
+	{
+		if (fieldAppLoaders == null)
+		{
+			fieldAppLoaders = new HashMap();
+		}
+
+		return fieldAppLoaders;
+	}
 	public void render( HttpServletRequest inRequest, HttpServletResponse inResponse ) throws IOException, OpenEditException 
 	{
 		checkEngineInit( inResponse );
@@ -187,11 +197,21 @@ public class BaseOpenEditEngine implements OpenEditEngine
 				PageLoaderConfig config = (PageLoaderConfig) iterator.next();
 				//<Page-Loader loader="projectLoader" />
 				String bean = config.getXmlConfig().get("loader");
-				PageLoader loader = (PageLoader)getModuleManager().getBean(catalogid, bean);
-				RightPage rightp = loader.getRightPage(util, sitedata,page,requestedPath);
-				if( rightp != null)
+				
+				String siteid = page.getProperty("siteid");
+				if( siteid != null )
 				{
-					return rightp;
+					PageLoader loader = (PageLoader)getAppLoaders().get(siteid);
+					if( loader == null)
+					{
+						loader = (PageLoader)getModuleManager().getBean(catalogid, bean, false); 
+						getAppLoaders().put(siteid,loader);
+					}
+					RightPage rightp = loader.getRightPage(util, sitedata,page,requestedPath);
+					if( rightp != null)
+					{
+						return rightp;
+					}
 				}
 			}
 		}		
