@@ -2376,8 +2376,16 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 						query.removeTerm(term);
 					}
 				}
+				query.removeTerm("description");
+				if (query.getTerms().isEmpty())
+				{
+					query.addMatches("id", "*");
+					query.setShowAll(true);
+				}
 				hits.invalidate(); // Causes the hits to
-				cachedSearch(inReq, query);
+				
+				hits = cachedSearch(inReq, query);
+				inReq.putPageValue("hits", hits);
 				return;
 			}
 			
@@ -2417,7 +2425,14 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				
 				
 				// be // reloaded
-				cachedSearch(inReq, query);
+				if (query.getTerms().isEmpty())
+				{
+					query.addMatches("id", "*");
+					query.setShowAll(true);
+					hits.invalidate();
+				}
+				hits = cachedSearch(inReq, query);
+				inReq.putPageValue("hits", hits);
 			}
 		}
 	}
