@@ -200,27 +200,35 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			String sessionid = inPageRequest.getRequestParameter(getSearchType() + "hitssessionid"); ///--Not always true (entityhits)
 			if( sessionid != null)
 			{
-				String name = sessionid.substring(0,sessionid.length() - getSearchType().length() - getCatalogId().length() );
-				inQuery.setHitsName(name);
+			//	String name = sessionid.substring(0,sessionid.length() - getSearchType().length() - getCatalogId().length() );
+			//	inQuery.setHitsName(name);
+				tracker = (HitTracker) inPageRequest.getSessionValue(sessionid);
+				if (tracker != null)
+				{
+					inQuery.setHitsName(tracker.getSearchQuery().getHitsName());
+				}
 			}
 		} 
 		
-		if (inQuery.getHitsName() == null)
+		if(tracker == null)
 		{
-			String hitsname = inPageRequest.findValue(searchtype + "hitsname");
-			if (hitsname == null)
+			if (inQuery.getHitsName() == null)
 			{
-				hitsname = inPageRequest.findValue( "hitsname");
+				String hitsname = inPageRequest.findValue(searchtype + "hitsname");
+				if (hitsname == null)
+				{
+					hitsname = inPageRequest.findValue( "hitsname");
+				}
+				if (hitsname == null)
+				{
+					hitsname = "hits";
+				}
+				inQuery.setHitsName(hitsname);
 			}
-			if (hitsname == null)
-			{
-				hitsname = "hits";
-			}
-			inQuery.setHitsName(hitsname);
+	
+			tracker = (HitTracker) inPageRequest.getSessionValue(inQuery.getSessionId());
 		}
-
-		tracker = (HitTracker) inPageRequest.getSessionValue(inQuery.getSessionId());
-
+		
 		boolean runsearch = true;
 		if (tracker != null)
 		{
@@ -3266,6 +3274,10 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 							format = "MM/dd/yyyy";
 						}
 						result = DateStorageUtil.getStorageUtil().parse(val, format);
+					}
+					else if (val.equals("NOW"))
+					{
+						result = new Date();
 					}
 					else
 					{
