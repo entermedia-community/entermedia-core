@@ -338,7 +338,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 						for (Iterator iterator = details.iterator(); iterator.hasNext();)
 						{
 							PropertyDetail propertyDetail = (PropertyDetail) iterator.next();
-							if( propertyDetail.getSearchType().equals(getSearchType()))
+							//if( propertyDetail.getSearchType().equals(getSearchType())) //Cant hurt much
 							{
 								inQuery.addAggregation(propertyDetail);
 							}
