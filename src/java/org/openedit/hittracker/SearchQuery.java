@@ -1028,7 +1028,7 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	
 	public Collection getExtraTerms(Collection<PropertyDetail> inDetails)
 	{
-		if( getTerms() == null || getTerms().isEmpty() )
+		if( getTerms() == null || getTerms().isEmpty() || inDetails == null )
 		{
 			return Collections.EMPTY_LIST;
 		}
