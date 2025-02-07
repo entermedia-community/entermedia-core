@@ -2345,9 +2345,8 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		}
 	}
 
-	public void updateFilters(WebPageRequest inReq) throws OpenEditException
+	public void clearFilter(WebPageRequest inReq) throws OpenEditException
 	{
-		//Legacy stuff
 		String toadd = inReq.getRequestParameter("filtertype");
 		String toremove = inReq.getRequestParameter("removefilter");
 		String removeterm = inReq.getRequestParameter("removeterm");
@@ -2355,6 +2354,25 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		if( toadd != null || toremove != null || removeterm != null)
 		{
 			HitTracker hits = loadHits(inReq);
+			if( removeterm != null && removeterm.equals("*") )
+			{
+				//Remove all the view terms
+				SearchQuery query = hits.getSearchQuery();
+				Collection<PropertyDetail> details = findSummaryFields(query, inReq.getUserProfile());
+				for (Iterator iterator = details.iterator(); iterator.hasNext();)
+				{
+					PropertyDetail detail = (PropertyDetail) iterator.next();
+					Term term = query.getTermByDetailId(detail.getId());
+					if( term != null)
+					{
+						query.removeTerm(term);
+					}
+				}
+				hits.invalidate(); // Causes the hits to
+				cachedSearch(inReq, query);
+				return;
+			}
+			
 	
 			if (hits != null)
 			{

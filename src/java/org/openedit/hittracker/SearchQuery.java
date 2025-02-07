@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -1024,6 +1025,33 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		}
 		return terms;
 	}
+	
+	public Collection getExtraTerms(Collection<PropertyDetail> inDetails)
+	{
+		if( getTerms() == null || getTerms().isEmpty() )
+		{
+			return Collections.EMPTY_LIST;
+		}
+			
+		Set detailids = new HashSet();
+		for (Iterator iterator = inDetails.iterator(); iterator.hasNext();)
+		{
+			PropertyDetail detail = (PropertyDetail) iterator.next();
+			detailids.add(detail.getId() );
+		}
+		
+		List terms = new ArrayList();
+		for (Iterator iterator = getTerms().iterator(); iterator.hasNext();)
+		{
+			Term term = (Term) iterator.next();
+			if( !detailids.contains(term.getDetail().getId()) )
+			{
+				terms.add(term);
+			}
+		}
+		return terms;
+	}
+	
 
 	public Term addMatches(String inString, String value)
 	{

@@ -166,7 +166,7 @@ public interface Searcher extends CatalogEnabled
 
 	HitTracker searchByIds(Collection<String> inIds);
 
-	public void updateFilters(WebPageRequest inReq);
+	public void clearFilter(WebPageRequest inReq);
 
 	public void restoreSettings();
 	
