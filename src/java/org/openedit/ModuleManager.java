@@ -169,7 +169,11 @@ public class ModuleManager implements BeanLoaderAware, ShutdownList
 		{
 			return;
 		}
-		for (Iterator iter = actions.iterator(); iter.hasNext();)
+		String method = inPageRequest.getMethod();
+
+		List copy = condenseActions(inPage, method, actions );  //reverse the list with the root run first
+
+		for (Iterator iter = copy.iterator(); iter.hasNext();)
 		{
 			PageAction pageAction = (PageAction) iter.next();
 			if ( inPageRequest.hasCancelActions() || inPageRequest.hasRedirected() || inPageRequest.hasForwarded() )
@@ -265,7 +269,9 @@ public class ModuleManager implements BeanLoaderAware, ShutdownList
 				continue;
 			}
 			String allow = pageAction.getConfig().getAttribute("allowduplicates");
-			if( Boolean.parseBoolean(allow))
+			String bean = pageAction.getConfig().getAttribute("bean");
+			//PageValue.loadPageVariable
+			if( bean != null || Boolean.parseBoolean(allow))
 			{
 				copy.add(pageAction);
 				//This is so the child action is added first then the parent is excluded unless it has allowduplicated turned on
