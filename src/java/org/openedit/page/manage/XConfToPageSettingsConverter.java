@@ -341,6 +341,11 @@ public class XConfToPageSettingsConverter
 			//	loadOverrideDirectory( inPageSettings, inUrlPath );		
 			loadAlternativeContent(inPageSettings, inUrlPath, contentexists);
 //
+			String mime = inPageSettings.getPropertyValue("mimetype", null);
+			if( mime != null)
+			{
+				inPageSettings.setMimeType(mime);
+			}
 			return;
 		}
 		if( log.isDebugEnabled())
