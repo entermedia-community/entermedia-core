@@ -129,6 +129,9 @@ public class Permissions implements CatalogEnabled
 
 	protected boolean isEditorFor(Data inData)
 	{
+		if(inData == null) {
+			return false;
+		}
 		Collection users = inData.getValues("editorusers");
 		if (users != null && !users.isEmpty() )
 		{
@@ -187,6 +190,9 @@ public class Permissions implements CatalogEnabled
 	}
 	public Boolean canModule(Data module, String inKey)
 	{
+		if(module == null) {
+			return false;
+		}
 		String role = findModulePermissionLevel(module);
 //		
 		boolean can = getEntityPermissions(module,role).can(inKey);
