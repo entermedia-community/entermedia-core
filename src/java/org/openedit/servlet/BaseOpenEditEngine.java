@@ -196,16 +196,19 @@ public class BaseOpenEditEngine implements OpenEditEngine
 			{
 				PageLoaderConfig config = (PageLoaderConfig) iterator.next();
 				//<Page-Loader loader="projectLoader" />
-				String bean = config.getXmlConfig().get("loader");
-				
-				String siteid = page.getProperty("siteid");
-				if( siteid != null )
+				String pathid = page.getProperty("applicationid");
+				if( pathid == null )
 				{
-					PageLoader loader = (PageLoader)getAppLoaders().get(siteid);
+					pathid = page.getProperty("siteid");
+				}
+				if( pathid != null )
+				{
+					PageLoader loader = (PageLoader)getAppLoaders().get(pathid);
 					if( loader == null)
 					{
+						String bean = config.getXmlConfig().get("loader");
 						loader = (PageLoader)getModuleManager().getBean(catalogid, bean, false); 
-						getAppLoaders().put(siteid,loader);
+						getAppLoaders().put(pathid,loader);
 					}
 					RightPage rightp = loader.getRightPage(util, sitedata,page,requestedPath);
 					if( rightp != null)
