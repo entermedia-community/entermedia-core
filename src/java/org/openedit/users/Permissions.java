@@ -169,8 +169,11 @@ public class Permissions implements CatalogEnabled
 	
 	public Boolean can(String inKey)  //System wide settings
 	{
-		boolean can = getSystemRolePermissions().contains(inKey);
-		return can;
+		if(getSystemRolePermissions() != null) {
+			boolean can = getSystemRolePermissions().contains(inKey);
+			return can;
+		}
+		return false;
 	}
 	//Module Level
 	public Boolean can(String inModuleId, String inKey)
