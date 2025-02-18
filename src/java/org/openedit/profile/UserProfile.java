@@ -852,6 +852,9 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 	public boolean hasPermission(String inPropertyName)
 	{
 		Permissions permissions = getPermissions();
+		if(permissions == null) {
+			return false;
+		}
 		return permissions.can(inPropertyName);
 	}
 	
