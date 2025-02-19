@@ -1325,6 +1325,23 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 		
 	}
 	
+	public String getDateTime(Object inDate, String format) {
+		if(inDate == null) {
+			return null;
+		}
+		if (format == null)
+		{
+			format = "yyyy-MM-dd";
+		}
+		Date stored = getLocaleManager().getDateStorageUtil().parseFromObject(inDate);
+		String value = getLocaleManager().getDateStorageUtil().formatDateObj(stored, format);
+		
+		return value;
+		
+	}
+	
+	
+	
 	public String getHours(String inDate)
 	{
 		if( inDate == null || inDate.length() == 0)
