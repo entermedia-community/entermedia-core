@@ -13,4 +13,9 @@ public class PageLoaderConfig
 	{
 		fieldXmlConfig = inXmlConfig;
 	}
+	public String getLoader()
+	{
+		String loader = getXmlConfig().get("loader");
+		return loader;
+	}
 }
