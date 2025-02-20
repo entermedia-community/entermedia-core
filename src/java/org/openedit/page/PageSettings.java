@@ -22,6 +22,7 @@ import org.openedit.OpenEditException;
 import org.openedit.config.Configuration;
 import org.openedit.config.Script;
 import org.openedit.config.Style;
+import org.openedit.page.manage.PageLoaderConfig;
 import org.openedit.page.manage.TextLabelManager;
 import org.openedit.repository.ContentItem;
 import org.openedit.util.PathUtilities;
@@ -1140,29 +1141,24 @@ public class PageSettings
 	{
 		fieldStyles = inStyles;
 	}
-	public List getPageLoaders()
+	public List<PageLoaderConfig> getPageLoaders()
 	{
 		//add top level parents last
 		List finalList = new ArrayList();
-	
+		Set ids = new HashSet();
+		
 		PageSettings parent = this;
 		PageSettings fallbackparent = getFallback();
 		while ( parent != null)
 		{
-			if( parent.fieldPageLoaders != null)
-			{
-				finalList.addAll(0,parent.fieldPageLoaders);
-			}
+			addLoaders(ids, finalList,parent.fieldPageLoaders);
 			if ( fallbackparent != null)  //first check the mirror site
 			{
 				PageSettings chain = fallbackparent;
 				int count = 0;
 				while( chain != null && count++ < 10)
 				{
-					if( chain.fieldPageLoaders != null)
-					{
-						finalList.addAll(0,chain.fieldPageLoaders);
-					}
+					addLoaders(ids, finalList,chain.fieldPageLoaders);
 					chain = chain.getFallback();
 				}
 				fallbackparent = fallbackparent.getParent();
@@ -1174,9 +1170,26 @@ public class PageSettings
 			}
 			parent = parent.getParent();
 		}		
-		Collections.reverse(finalList);
+		//Collections.reverse(finalList);
 		return finalList;
 
+	}
+	private void addLoaders(Set hashset, List inFinalList, List<PageLoaderConfig> inPageLoaders)
+	{
+		if( inPageLoaders == null)
+		{
+			return;
+		}
+		for (int i = 0; i < inPageLoaders.size(); i++)
+		{
+			PageLoaderConfig config = inPageLoaders.get(i);
+			if( !hashset.contains(config.getLoader() ) )
+			{
+				hashset.add(config.getLoader());
+				inFinalList.add(config);
+			}
+		}
+		
 	}
 	public void setPageLoaders(List<PageLoader> inLoaders)
 	{

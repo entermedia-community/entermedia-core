@@ -178,8 +178,8 @@ public class BaseOpenEditEngine implements OpenEditEngine
 
 		Page page = getPageManager().getPage(fixedpath,checkdates);
 		
-		List list = page.getPageLoaders();
-		if(( list == null || list.isEmpty()) && (fixedpath.endsWith("/") || page.isFolder()))
+		List list = null;
+		if( fixedpath.endsWith("/") || page.isFolder() )
 		{
 			String tmppath =fixedpath; 
 			if( tmppath.endsWith("/") )
@@ -187,6 +187,10 @@ public class BaseOpenEditEngine implements OpenEditEngine
 				tmppath = tmppath.substring(0,tmppath.length()-1);
 			}
 			page = getPageManager().getPage(tmppath + "/index.html",checkdates);
+			list = page.getPageLoaders();
+		}
+		else
+		{
 			list = page.getPageLoaders();
 		}
 		if( list != null && !list.isEmpty())
@@ -206,7 +210,7 @@ public class BaseOpenEditEngine implements OpenEditEngine
 					PageLoader loader = (PageLoader)getAppLoaders().get(pathid);
 					if( loader == null)
 					{
-						String bean = config.getXmlConfig().get("loader");
+						String bean = config.getLoader();
 						loader = (PageLoader)getModuleManager().getBean(catalogid, bean, false); 
 						getAppLoaders().put(pathid,loader);
 					}
