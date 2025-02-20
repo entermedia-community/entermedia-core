@@ -241,7 +241,8 @@ public final class PathUtilities
 		{
 			start++; //to remove slash
 		}
-		int dotIndex = newpath.indexOf(".",start);
+		//int dotIndex = newpath.indexOf(".",start);   //bad logic
+		int dotIndex = newpath.lastIndexOf(".");
 //		if(dotIndex > 0 && start > dotIndex)
 //		{
 //			return newpath;  //bad logic
