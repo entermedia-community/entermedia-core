@@ -430,7 +430,7 @@ public class QueryBuilder
 	public QueryBuilder ids(String[] inAssetids) {
 		return orgroup("id",inAssetids);
 	}
-	protected QueryBuilder orgroup(String inKey, String[] inAssetids) {
+	public QueryBuilder orgroup(String inKey, String[] inAssetids) {
 		if( inAssetids == null) {
 			return this;
 		}
