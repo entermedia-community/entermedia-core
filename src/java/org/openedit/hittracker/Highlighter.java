@@ -15,6 +15,8 @@ public class Highlighter
 
 		if (text != null && input != null && input.length() > 1)
 		{
+			text = text.replaceAll("<[^>]*>", "");
+					
 			Matcher m = WORDS.matcher(input);
 
 			String[] parsedkeywords = MultiValued.VALUEDELMITER.split(text);
