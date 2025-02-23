@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.openedit.Data;
@@ -470,12 +471,14 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 	
 	public String toJsonString()
 	{
-		
-		throw new OpenEditException("NOT IMPLEMENTED");
-		
-
-	}
-	
+		StringBuffer output = new StringBuffer();
+		output.append("{ \"_id\": \"" + getId() + "\",");
+		output.append(" \"map\" :");
+		JSONObject object = new JSONObject(getProperties());  //TODO: Deal with Java Objects. Loop over stuff?
+		output.append(object.toJSONString());
+		output.append(" \n}");
+		return output.toString();
+	}	
 	
 	
 	
