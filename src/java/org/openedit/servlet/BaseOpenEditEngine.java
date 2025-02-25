@@ -60,14 +60,13 @@ public class BaseOpenEditEngine implements OpenEditEngine
 	{
 		checkEngineInit( inResponse );
 		//inRequest.setCharacterEncoding( "UTF-8" ); //This needs to be the first thing we do. Dont call getParameter
-	    URLUtilities util = new URLUtilities(inRequest, inResponse);
+	    URLUtilities urlutil = new URLUtilities(inRequest, inResponse);
 
-	    String requestedPath = util.getOriginalPath();
+	    Site site = getSiteManager().findSiteData(urlutil);
 	    
-	    String siteUrl = util.siteRoot(); //The actual URL they are going to
-	    SiteData sitedata = getSiteManager().findSiteData(siteUrl);
 	    boolean checkdates = false;
 		HttpSession session = inRequest.getSession(false);
+	    String requestedPath = urlutil.getOriginalPath();
 		if ( session != null)
 		{
 			String mode = (String)session.getAttribute("oe_edit_mode");
@@ -87,7 +86,7 @@ public class BaseOpenEditEngine implements OpenEditEngine
 //		}
 		
 	    
-		RightPage rightpage = getRightPage(util, sitedata, requestedPath,checkdates);
+		RightPage rightpage = getRightPage(urlutil, site, requestedPath,checkdates);
 		Page page = rightpage.getRightPage();
 		//inResponse.addHeader("Connection", "Keep-Alive");
 		//inResponse.addHeader("Keep-Alive", "timeout=60000");
@@ -105,12 +104,10 @@ public class BaseOpenEditEngine implements OpenEditEngine
 			inResponse.setContentType( mime );
 		}
 
-		WebPageRequest context = createWebPageRequest( page, inRequest, inResponse, util );
+		WebPageRequest context = createWebPageRequest( page, inRequest, inResponse, urlutil );
 		//String applicationid = page.getProperty("applicationid");
-		if( sitedata != null)  //TODO: deprecated Dont do this anymore
-		{
-			context.putPageValue("sitedata", sitedata);
-		}
+		context.putProtectedPageValue(PageRequestKeys.SITE, site );
+		context.putPageValue("sitedata", site.getSiteData() );
 		context.putPageValue("reloadpages", checkdates);
 		Page transpage = getPageManager().getPage(page,context);
 		if(! transpage.getPath().equals(page.getPath()))
@@ -148,14 +145,14 @@ public class BaseOpenEditEngine implements OpenEditEngine
 		return false;
 		
 	}
-	protected RightPage getRightPage( URLUtilities util,SiteData sitedata, String requestedPath,boolean checkdates)
+	protected RightPage getRightPage( URLUtilities util,Site site, String requestedPath,boolean checkdates)
 	{
 		String fixedpath = null;
 		if( requestedPath.startsWith("/manager") || requestedPath.startsWith("/system") || requestedPath.startsWith("/openedit")  )
 		{
 			fixedpath = requestedPath;
 		}
-		else if(sitedata != null)
+		else if(site != null)
 	    {
 	    	int second = requestedPath.indexOf("/",2);
 	    	if( second > -1)
@@ -168,7 +165,7 @@ public class BaseOpenEditEngine implements OpenEditEngine
 	    	}
 	    	if( fixedpath == null)
 	 	    {
-	    		fixedpath = sitedata.fixRealPath(requestedPath);
+	    		fixedpath = site.fixRealPath(requestedPath);
 	 	    }
 	    }
 	    if( fixedpath == null)
@@ -214,7 +211,7 @@ public class BaseOpenEditEngine implements OpenEditEngine
 						loader = (PageLoader)getModuleManager().getBean(catalogid, bean, false); 
 						getAppLoaders().put(pathid,loader);
 					}
-					RightPage rightp = loader.getRightPage(util, sitedata,page,requestedPath);
+					RightPage rightp = loader.getRightPage(util,site,page,requestedPath);
 					if( rightp != null)
 					{
 						return rightp;

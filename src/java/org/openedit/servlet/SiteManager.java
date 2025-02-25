@@ -1,7 +1,9 @@
 package org.openedit.servlet;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 import org.openedit.MultiValued;
 import org.openedit.cache.CacheManager;
@@ -14,7 +16,7 @@ public class SiteManager
 {
 	protected CacheManager fieldCacheManager;
 	protected SearcherManager fieldSearcherManager;
-	protected SiteData NULLSITE = new SiteData();
+	protected Site NULLSITE = new Site();
 	public SearcherManager getSearcherManager()
 	{
 		return fieldSearcherManager;
@@ -35,42 +37,23 @@ public class SiteManager
 		fieldCacheManager = inCacheManager;
 	}
 	
-	public String getDomain(String base) {
-		// string off start
-		String basestring = base.substring(base.lastIndexOf("//") + 2,
-				base.length());
-		int port = basestring.indexOf(":");
-		if( port > -1)
-		{
-			basestring = basestring.substring(0,port);
-		}
-		
-		int nextslash = basestring.indexOf("/");
-		if( nextslash > -1)
-		{
-			basestring = basestring.substring(0,nextslash);
-		}
-		basestring = basestring.toLowerCase();
-		return basestring;
-	}
-	
-	public SiteData findSiteData(String inUrl)
+	public Site findSiteData(URLUtilities inUrlUtil)
 	{
-		String domain = getDomain(inUrl);
+		String domain = inUrlUtil.domain();
 		if( domain == null)
 		{
 			return null;
 		}
-		SiteData found = (SiteData)getCacheManager().get("systemsitedata", domain);
+		Site found = (Site)getCacheManager().get("systemsitedata", domain);
 		if( found == null)
 		{
+			found = new Site();
+			
+			found.setSiteRootDynamic( inUrlUtil.siteRoot() );
+			
 			Searcher searcher = getSearcherManager().getSearcher("system", "site");
 			HitTracker hits = searcher.query().all().search();
-			if(hits.isEmpty())
-			{
-				found = NULLSITE;
-			}
-			else
+			if(!hits.isEmpty())
 			{
 				for (Iterator iterator = hits.iterator(); iterator.hasNext();)
 				{
@@ -83,7 +66,8 @@ public class SiteManager
 							String  tmpdomain = (String ) iterator2.next();
 							if( domain.endsWith(tmpdomain))  //*.oe.com .endswith oe.com
 							{
-								found = (SiteData)searcher.loadData(data);
+								SiteData sitedata = (SiteData)searcher.loadData(data);
+								found.setSiteData(sitedata);
 							}
 						}
 					}
@@ -99,15 +83,7 @@ public class SiteManager
 //					found.setSiteParameter(data.get("parametername"),data.get("parametervalue"));
 //				}
 //			}
-			if( found == null)
-			{
-				found = NULLSITE;
-			}
 			getCacheManager().put("systemsitedata", domain, found);
-		}
-		if( found == NULLSITE)
-		{
-			return null;
 		}
 		return found;
 	}

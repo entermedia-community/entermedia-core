@@ -594,7 +594,35 @@ public class URLUtilities
 		{
 			return null;
 		}
+		String siteroot = fieldRequest.getHeader("X-SiteRoot");
 
+		if( siteroot != null )
+		{
+			return siteroot;
+		}
+//		return null;
+//		String host = fieldRequest.getHeader("Host");
+//		if( host != null)
+//		{
+//			//Includes the port
+//			//https://serverfault.com/questions/363159/nginx-proxy-pass-redirects-ignore-port
+//			if( host.endsWith(":443") )
+//			{
+//				siteroot = "https://" + host;
+//			}
+//			else
+//			{
+//				siteroot = "http://" + host;
+//			}
+//			int colon = siteroot.indexOf(":");
+//			if( colon > -1 )
+//			{
+//				siteroot = siteroot.substring(0,colon);
+//			}
+//			return siteroot;
+//		}
+//		
+//		
 		StringBuffer ctx = fieldRequest.getRequestURL();
 		String siteRoot = ctx.substring( 0, ctx.indexOf("/", 8) ); //8 comes from https://
 		return siteRoot;
@@ -609,6 +637,28 @@ public class URLUtilities
 			domain  = domain.substring(0,domain.indexOf(":"));
 		}
 		return domain;
+		
+		
+		/**
+		 *
+		 		String basestring = base.substring(base.lastIndexOf("//") + 2,
+				base.length());
+		int port = basestring.indexOf(":");
+		if( port > -1)
+		{
+			basestring = basestring.substring(0,port);
+		}
+		
+		int nextslash = basestring.indexOf("/");
+		if( nextslash > -1)
+		{
+			basestring = basestring.substring(0,nextslash);
+		}
+		basestring = basestring.toLowerCase();
+		return basestring;
+
+		 *
+		 */
 	}
 	
 	public static String xmlEscapeWithWrap(String inStr)

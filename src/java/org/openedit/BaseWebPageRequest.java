@@ -43,14 +43,13 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.openedit.data.BaseData;
 import org.openedit.data.SearcherManager;
-import org.openedit.generators.VariablePackage;
-import org.openedit.generators.VariableStore;
 import org.openedit.modules.translations.LanguageMap;
 import org.openedit.page.Page;
 import org.openedit.page.PageAction;
 import org.openedit.page.PageRequestKeys;
 import org.openedit.page.PageStreamer;
 import org.openedit.profile.UserProfile;
+import org.openedit.servlet.Site;
 import org.openedit.servlet.SiteData;
 import org.openedit.users.User;
 import org.openedit.util.LocaleManager;
@@ -499,8 +498,8 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 	
 	public String getSiteRoot()
 	{
-		String siteRoot = (String)getPageValue("siteroot");
-		return siteRoot;
+		String siteroot = (String)getPageValue(PageRequestKeys.SITEROOT);
+		return siteroot;
 	}
 
 	public Object get(String inKey)

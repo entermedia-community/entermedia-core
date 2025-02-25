@@ -105,6 +105,7 @@ public interface PageRequestKeys
 	public static final String PAGE = "page";
 
 	public static final String SITEROOT = "siteroot";
+	public static final String SITEROOTCURRENT = "siterootcurrent";
 
 	/**
 	 * An alias for the "page" variable
@@ -148,5 +149,6 @@ public interface PageRequestKeys
 	 */
 	public static final String INNERLAYOUTOVERRIDE = "innerlayoutoverride";
 	public static final String PAGE_MANAGER = "pageManager";
+	public static final String SITE = "site";
 
 }

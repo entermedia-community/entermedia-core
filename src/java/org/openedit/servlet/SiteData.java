@@ -1,6 +1,5 @@
 package org.openedit.servlet;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,26 +18,6 @@ public class SiteData extends BaseData
 	{
 		getSiteParameters().put(inKey, inValue);
 	}
-	public String getFirstDomain()
-	{
-		Collection values = getValues("domains");
-		if(values == null || values.isEmpty())
-		{
-			return null;
-		}
-		String first = (String)values.iterator().next();
-		return first;
-	}
-	public String fixRealPath(String inRequestedPath)
-	{
-		String apppath = get("rootpath");
-		if( inRequestedPath.startsWith(apppath))
-		{
-			return inRequestedPath;
-		}
-		//This just adds back the missing /site/..
-		return apppath + inRequestedPath;
-	}
 
 	public String getSiteParameter(String inName)
 	{
@@ -52,19 +31,6 @@ public class SiteData extends BaseData
 	{
 		return get("rootpath");
 	}
-	public String getSiteLink(String inApplicationid)
-	{
-		String apppath = get("rootpath");
-		String id = apppath.substring(1);
-		if( !inApplicationid.startsWith(id))
-		{
-			return "/" + inApplicationid;
-		}
-		
-		String dir = inApplicationid.substring(apppath.length() -1, inApplicationid.length());
-		return dir;
-	}
-
 	public String getDomainLink()
 	{
 		String domainpath = get("domainpath");
@@ -75,6 +41,5 @@ public class SiteData extends BaseData
 
 		return "/";
 	}
-
 	
 }
