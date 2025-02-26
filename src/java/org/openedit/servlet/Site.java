@@ -42,6 +42,10 @@ public class Site
 	}
 	public String fixRealPath(String inRequestedPath)
 	{
+		if(getSiteData() == null) {
+			return inRequestedPath;
+
+		}
 		String apppath = getSiteData().get("rootpath");
 		if( inRequestedPath.startsWith(apppath))
 		{
