@@ -1662,5 +1662,5 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 	public String doubleToMoney(double val, int decimals) {
 	    return String.format("%,." + decimals + "f", val);
 	}
-	
+
 }

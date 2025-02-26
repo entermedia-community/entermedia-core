@@ -299,9 +299,12 @@ public class RequestUtils
 			if (timezone == null)
 			{
 				String timezonetext = inRequest.getHeader("X-TimeZone");
+				if( timezonetext == null )
+				{
+					//Request?
+				}
 				if (timezonetext != null)
 				{
-
 					try
 					{
 						ZoneId zoneId = ZoneId.of(timezonetext);

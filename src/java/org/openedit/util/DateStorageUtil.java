@@ -1,14 +1,12 @@
 package org.openedit.util;
 
 import java.text.DateFormat;
-import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
@@ -40,6 +38,36 @@ public class DateStorageUtil
 				format.setTimeZone(TimeZone.getTimeZone("UTC"));		
 			}
 			fieldDateFormats.put(inFormat, format);
+		}
+		return format;
+	}
+
+	//The entire DateStorage is threadsafe singleton
+	public DateFormat getDateFormat(String inFormat, TimeZone inTimeZone)
+	{
+		if (fieldDateFormats == null)
+		{
+			fieldDateFormats = new HashMap<String, DateFormat>();
+		}
+		DateFormat format = fieldDateFormats.get(inFormat + inTimeZone);
+		if (format == null)
+		{
+			format = new SimpleDateFormat(inFormat);
+			format.setLenient(true);
+			
+			if( inTimeZone == null )
+			{
+				if( inFormat.equals("yyyy-MM-dd'T'HH:mm:ss.SSSXXX") || inFormat.equals("yyyy-MM-dd'T'HH:mm:ss.SSSX") )
+				{
+					inTimeZone  = TimeZone.getTimeZone("UTC");		
+				}
+			}
+			if( inTimeZone != null )
+			{
+				format.setTimeZone(inTimeZone);
+			}
+			
+			fieldDateFormats.put(inFormat + inTimeZone, format);
 		}
 		return format;
 	}
@@ -393,7 +421,21 @@ public class DateStorageUtil
 		}
 
 	}
-
+	public Date parse(String inDate, String inFormat, TimeZone inTimezone)
+	{
+		DateFormat format = getDateFormat(inFormat,inTimezone);
+		try
+		{
+			Date parsed = format.parse(inDate);
+			return parsed;
+		}
+		catch (Exception ex)
+		{
+			log.info("Could not parse date " + inDate);
+			return null;
+		}
+		
+	}
 	public Date parse(String inDate, String inFormat)
 	{
 

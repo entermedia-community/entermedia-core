@@ -19,6 +19,7 @@ package org.openedit;
 import java.io.OutputStream;
 import java.io.Writer;
 import java.util.Map;
+import java.util.TimeZone;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -283,4 +284,6 @@ public interface WebPageRequest
 
 	public boolean getRequestParameterBoolean(String inKey, boolean inDefault);
 
+	public TimeZone getTimeZone();
+	
 }
