@@ -624,7 +624,7 @@ public class URLUtilities
 //		
 //		
 		StringBuffer ctx = fieldRequest.getRequestURL();
-		String siteRoot = ctx.substring( 0, ctx.indexOf("/", 8) ); //8 comes from https://
+		siteroot = ctx.substring( 0, ctx.indexOf("/", 8) ); //8 comes from https://
 		
 		int colon = siteroot.indexOf(":", 8);
 		if( colon > -1 )
@@ -637,7 +637,7 @@ public class URLUtilities
 			}
 		}
 
-		return siteRoot;
+		return siteroot;
 	}
 	
 	public String domain()
