@@ -627,14 +627,12 @@ public class URLUtilities
 		siteroot = ctx.substring( 0, ctx.indexOf("/", 8) ); //8 comes from https://
 		
 		int colon = siteroot.indexOf(":", 8);
-		if( colon > -1 )
+		if( colon == -1 )
 		{
-			String port = siteroot.substring(colon,siteroot.length());
-			if( port.length() < 2 )
-			{
-				//assume to https
-				siteroot = siteroot.replace("http:","https:");
-			}
+//			String port = siteroot.substring(colon,siteroot.length());
+//			if( port.length() < 2 )
+			//assume to https
+			siteroot = siteroot.replace("http:","https:");
 		}
 
 		return siteroot;
