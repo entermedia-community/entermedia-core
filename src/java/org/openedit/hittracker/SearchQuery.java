@@ -141,6 +141,18 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		
 	}
 	
+	public PropertyDetail findFacet(String inId)
+	{
+		for (Iterator iterator = getFacets().iterator(); iterator.hasNext();)
+		{
+			PropertyDetail detail = (PropertyDetail) iterator.next();
+			if( inId.equals( detail.getId() ) )
+			{
+				return detail;
+			}
+		}
+		return null;
+	}
 	
 	public Collection<PropertyDetail> getFacets()
 	{
