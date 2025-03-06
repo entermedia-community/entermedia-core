@@ -1056,6 +1056,7 @@ public class URLUtilities
 			return null;
 		}
 		String escaped = URLUtilities.xmlEscape(inMessage);
+		escaped = escaped.replaceAll("\\n", "<br>");
 		escaped = escaped.replaceAll("&lt;br&gt;", "<br>");
 		escaped = escaped.replaceAll("&lt;i&gt;", "<i>");
 		escaped = escaped.replaceAll("&lt;/ir&gt;", "</i>");
