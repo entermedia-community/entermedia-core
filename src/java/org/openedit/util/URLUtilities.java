@@ -810,7 +810,69 @@ public class URLUtilities
 		}
 		return output.toString();
 	}
+	
+	public static String xmlPlainText(String inStr)
+	{
+		if ( inStr == null )
+		{
+			return null;
+		}
+		
+		return inStr.replaceAll("<[^>]*>", "");
+	}
+	
+	public static String xmlPlainTextWithWrap(String inStr)
+	{
+		if ( inStr == null )
+		{
+			return null;
+		}
 
+		String output = inStr.replaceAll("\\r|\\n", "");
+		output = output.replaceAll("(?i)<p[^>]*>", "\n");
+		output = output.replaceAll("(?i)<br[^>]*>", "\n");
+		output = output.replaceAll("<[^>]*>", "");
+		output = output.replaceAll("(?m)^\\s+|\\h+$", "");
+		return output.toString();
+	}
+
+	public static String xmlPlainTextWithWrap(String inStr, int len) {
+		if ( inStr == null )
+		{
+			return null;
+		}
+		
+		String output = xmlPlainTextWithWrap(inStr);
+		if(output.length() > len) {
+			output = output.substring(0, len);
+			output = output.trim() + "...";
+		}
+		return output;
+	}
+	
+	public static String xmlFirstParagraph(String inStr) {
+		if ( inStr == null )
+		{
+			return null;
+		}
+		
+		String str = inStr.replaceAll("\\r|\\n", "");
+		str = inStr.replaceAll("<p>\\s*</p>", "");
+		
+		int start = str.indexOf("<p");
+		int end = str.indexOf("</p>");
+		
+		if(end - start <= 0) {
+			return null;
+		}
+		
+		String paragraph = inStr.substring(start, end);
+		paragraph = paragraph.replaceAll("<[^>]*>", "");
+		
+		return paragraph;
+	}
+	
+	
 	public static String textEscape(String inStr)
 	{
 		if ( inStr == null )

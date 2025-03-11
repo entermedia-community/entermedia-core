@@ -148,6 +148,42 @@ public final class PathUtilities
 		String name = extractFileName(dirpath);
 		return name;
 	}
+	
+	/**
+	 * Get the path parameters from <property name="route-template">/path/to/:something</property>
+	 *
+	 * @param template The url template from "route-template" page variable
+	 * @param path The path from which to retrieve the parameters
+	 *
+	 * @return The parameters as a map
+	 */
+	public static Map<String, String> extractPathParams(String template, String path)
+	{
+		template = template.replaceAll("^/|/$", "");
+		path = path.replaceAll("^/|/$", "");
+		
+		String[] templateParts = template.split("/");
+		String[] urlParts = path.split("/");
+
+	    if (templateParts.length != urlParts.length) 
+	    {
+	        throw new Error("URL structure does not match the template");
+	    }
+	    
+	    Map<String, String> params = new HashMap<String, String>();
+
+	    for(int i = 0; i < templateParts.length; i++) 
+	    {
+	    	String part = templateParts[i];
+	    	
+	    	if(part.startsWith(":")) 
+	    	{
+	    		params.put(part.substring(1), urlParts[i]);
+	    	}
+	    }
+	    
+		return params;
+	}
 
 	/**
 	 * Builds a path that might be within or one above a parent path String ret =
@@ -277,6 +313,15 @@ public final class PathUtilities
 				String pagePath = path.substring(0,lastDot);		
 				return pagePath;
 			}
+		}
+		return path;
+	}
+	
+	public static String extractNonIndexPagePath(String path) {
+		path = extractPagePath(path);
+		if(path.endsWith("/index")) 
+		{
+			path = path.substring(0, path.length() - 6);
 		}
 		return path;
 	}
