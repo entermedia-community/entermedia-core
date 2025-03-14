@@ -157,13 +157,13 @@ public class PropertyDetailsArchive implements CatalogEnabled
 		if (types.isExist())
 		{
 			details = readViewElement(propdetails, types.getRoot());
-			if (details != null)
+			if (details != null && !details.isEmpty())
 			{
 				details.setViewFile(types);
 			}
 		}
 
-		if (details == null)
+		if (details == null || details.isEmpty())
 		{
 			details = new ViewFieldList();
 			details.setId(inViewData.getId());  //Not needed
