@@ -658,7 +658,7 @@ public class DateStorageUtil
 			return null;
 		}
 		Date date = null;
-		if( inDateObj instanceof String )
+		if( inDateObj instanceof Date )
 		{
 			date = (Date)inDateObj;
 		}
