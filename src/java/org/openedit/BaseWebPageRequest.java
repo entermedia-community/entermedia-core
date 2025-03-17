@@ -49,9 +49,9 @@ import org.openedit.page.PageAction;
 import org.openedit.page.PageRequestKeys;
 import org.openedit.page.PageStreamer;
 import org.openedit.profile.UserProfile;
-import org.openedit.servlet.Site;
 import org.openedit.servlet.SiteData;
 import org.openedit.users.User;
+import org.openedit.util.DateStorageUtil;
 import org.openedit.util.LocaleManager;
 import org.openedit.util.PathUtilities;
 import org.openedit.util.SessionMap;
@@ -1424,6 +1424,12 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 		}
 		return getLocaleManager().getAge(inDate, getLocale());
 	}
+	
+	public DateStorageUtil getDateUtil()
+	{
+		return getLocaleManager().getDateStorageUtil();
+	}
+	
 	public String getDateTime(String inStoredDate)
 	{
 		Date stored = getLocaleManager().getDateStorageUtil().parseFromStorage(inStoredDate);

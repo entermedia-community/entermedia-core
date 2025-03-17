@@ -307,30 +307,6 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 		
 	}
 	
-	public String getISO8601(String inField)
-	{
-		Object date = getValue(inField);
-		if(date == null)
-		{
-			return null;
-		}
-
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-		
-		String isoDate;
-		
-		if(date instanceof Date)
-		{
-			isoDate = sdf.format(date);
-		}
-		else
-		{
-			isoDate = sdf.format(DateStorageUtil.getStorageUtil().parseFromStorage((String)date));
-		}
-		
-		return isoDate;
-	}
-	
 	public Object getValue(String inKey)
 	{
 		Object val = getMap().getValue(inKey);

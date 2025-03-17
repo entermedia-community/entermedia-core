@@ -77,6 +77,8 @@ public class DateStorageUtil
 		return getDateFormat("yyyy-MM-dd HH:mm:ss Z");
 	}
 
+	
+	//getJsonFormat
 	public DateFormat getJsonFormat()
 	{
 		return getDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
@@ -86,7 +88,10 @@ public class DateStorageUtil
 		return getDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 	}
 
-
+	public DateFormat getISO8601Format()
+	{
+		return getDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+	}
 	protected DateFormat getExifFormat()
 	{
 		// 2010:09:20 13:20:53-04:00
@@ -646,6 +651,24 @@ public class DateStorageUtil
 	}
 	
 
+	public String getISO8601(Object inDateObj)
+	{
+		if( inDateObj == null)
+		{
+			return null;
+		}
+		Date date = null;
+		if( inDateObj instanceof String )
+		{
+			date = (Date)inDateObj;
+		}
+		else
+		{
+			date = parseFromStorage((String)inDateObj);
+		}
+		String formated = getISO8601Format().format(date);				
+		return formated;
+	}
 	
 
 }
