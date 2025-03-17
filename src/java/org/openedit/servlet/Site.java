@@ -47,7 +47,7 @@ public class Site
 
 		}
 		String apppath = getSiteData().get("rootpath");
-		if( inRequestedPath.startsWith(apppath))
+		if( inRequestedPath.startsWith(apppath + "/"))
 		{
 			return inRequestedPath;
 		}
