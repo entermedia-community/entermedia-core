@@ -315,7 +315,7 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 			return null;
 		}
 
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 		
 		String isoDate;
 		
