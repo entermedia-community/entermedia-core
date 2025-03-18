@@ -862,6 +862,14 @@ public class URLUtilities
 		int start = str.indexOf("<p");
 		int end = str.indexOf("</p>");
 		
+		if( end < 200) //try and grab a longer paragraph
+		{
+			int nextend = str.indexOf("</p>",end + 1);
+			if( nextend > -1 )
+			{
+				end = nextend;	
+			}
+		}
 		if(end - start <= 0) {
 			return null;
 		}
