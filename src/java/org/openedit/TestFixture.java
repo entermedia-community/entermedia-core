@@ -38,6 +38,45 @@ public class TestFixture
 {
 	protected String fieldPath = null;
 	protected BaseWebServer fieldWebServer;	
+	protected String fieldCategoryId = "entermedia/catalogs/testcatalog";
+	protected String fieldRootPath;
+	
+	public String getRootPath()
+	{
+		if( fieldRootPath == null)
+		{
+			String rootPath = System.getProperty("oe.root.path");
+			if ( rootPath == null )
+			{
+				File found = new File( "resources/test");
+				if( found.exists())
+				{
+					rootPath = "resources/test";
+				}
+				else
+				{
+					rootPath = "webapp";
+				}
+			}
+			fieldRootPath = rootPath;
+		}
+		return fieldRootPath;
+	}
+
+	public void setRootPath(String inRootPath)
+	{
+		fieldRootPath = inRootPath;
+	}
+
+	public String getCategoryId()
+	{
+		return fieldCategoryId;
+	}
+
+	public void setCategoryId(String inCategoryId)
+	{
+		fieldCategoryId = inCategoryId;
+	}
 
 	/**
 	 * Constructor for TestFixture.
@@ -88,7 +127,7 @@ public class TestFixture
 		{
 			context.putPageValue( PageRequestKeys.USER, admin );
 			SearcherManager manager = (SearcherManager)getModuleManager().getBean("searcherManager");
-			UserProfile profile = (UserProfile)manager.getData("entermedia/catalogs/testcatalog", "userprofile","admin");
+			UserProfile profile = (UserProfile)manager.getData(getCategoryId(), "userprofile","admin");
 			context.putPageValue( "userprofile", profile );
 		}
 		context.putPageValue("username", "admin");
@@ -160,20 +199,8 @@ public class TestFixture
 		if (fieldWebServer == null)
 		{
 			fieldWebServer = new BaseWebServer();
-			String rootPath = System.getProperty("oe.root.path");
-			if ( rootPath == null )
-			{
-				File found = new File( "resources/test");
-				if( found.exists())
-				{
-					rootPath = "resources/test";
-				}
-				else
-				{
-					rootPath = "webapp";
-				}
-			}
-			fieldWebServer.setRootDirectory(new File( rootPath).getAbsoluteFile());
+		
+			fieldWebServer.setRootDirectory(new File( getRootPath()).getAbsoluteFile());
 			fieldWebServer.initialize();
 		}
 
