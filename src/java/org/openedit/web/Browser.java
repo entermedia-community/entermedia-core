@@ -13,6 +13,7 @@ See the GNU Lesser General Public License for more details.
 package org.openedit.web;
 
 import java.util.Locale;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -283,10 +284,19 @@ public class Browser
 			}
 		}
 		
-		//Mozilla/5.0 (iPad; CPU OS 6_0 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10A5355d Safari/8536.25
+		// Mozilla/5.0 (iPad; CPU OS 6_0 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10A5355d Safari/8536.25
 		if( getUserAgent().contains("AppleWebKit"))
 		{
 			setBrowserType(WEBKIT_BROWSER);
+		}
+		
+		boolean isMobile = Pattern.compile("Android|iPhone|iPad|iPod", Pattern.CASE_INSENSITIVE)
+				.matcher(getUserAgent())
+				.find();
+		
+		if(isMobile)
+		{
+			setNarrow(true);
 		}
 		
 	}
