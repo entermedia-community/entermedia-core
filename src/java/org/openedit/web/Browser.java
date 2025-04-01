@@ -36,6 +36,40 @@ public class Browser
 	public static final int TEXT_BROWSER = 8;
 	protected int fieldBrowserType = UNKNOWN_BROWSER;
 
+	protected int fieldWidth;
+	public int getWidth()
+	{
+		return fieldWidth;
+	}
+
+	public void setWidth(int inWidth)
+	{
+		fieldWidth = inWidth;
+	}
+
+	public int getHeight()
+	{
+		return fieldHeight;
+	}
+
+	public void setHeight(int inHeight)
+	{
+		fieldHeight = inHeight;
+	}
+
+	protected int fieldHeight;
+	protected boolean isNarrow;
+	
+
+	public boolean isNarrow()
+	{
+		return isNarrow;
+	}
+
+	public void setNarrow(boolean inIsNarrow)
+	{
+		isNarrow = inIsNarrow;
+	}
 
 	public static final int IE_EDIT_WIDTH = 83;		//	percentage width of edit iframe in IE
 	public static final int MOZILLA_EDIT_WIDTH = 100;	//	percentage width of edit iframe in Mozilla
