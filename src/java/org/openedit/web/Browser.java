@@ -280,14 +280,8 @@ public class Browser
 					browser = browser + "/" + details[j+1]; 
 				}
 				setVersions(browser);
-				return;
+				continue;
 			}
-		}
-		
-		// Mozilla/5.0 (iPad; CPU OS 6_0 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10A5355d Safari/8536.25
-		if( getUserAgent().contains("AppleWebKit"))
-		{
-			setBrowserType(WEBKIT_BROWSER);
 		}
 		
 		boolean isMobile = Pattern.compile("Android|iPhone|iPad|iPod", Pattern.CASE_INSENSITIVE)
@@ -370,7 +364,7 @@ public class Browser
 		{
 			return GECKO_BROWSER;
 		}
-		if (browVer.startsWith("Safari") )
+		if (browVer.startsWith("Safari") || browVer.contains("AppleWebKit") )
 		{
 			return WEBKIT_BROWSER;		
 		}
@@ -394,6 +388,8 @@ public class Browser
 		{
 			return NETSCAPE_BROWSER;
 		}
+		// Mozilla/5.0 (iPad; CPU OS 6_0 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10A5355d Safari/8536.25
+
 		return UNKNOWN_BROWSER;
 	}
 
