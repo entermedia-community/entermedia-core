@@ -40,6 +40,8 @@ public interface MimeTypeMap
      */
     public String getMimeType(String inExtension);
 
+    public String getExtensionForMimeType(String inMimeType);
+
     /**
      * Get the MIME type for the given path.
      *

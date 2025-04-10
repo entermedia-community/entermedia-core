@@ -50,6 +50,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 import java.util.StringTokenizer;
@@ -233,5 +234,20 @@ public class BaseMimeTypeMap implements MimeTypeMap
 	public void setRootDirectory(File inRootDirectory)
 	{
 		fieldRootDirectory = inRootDirectory;
+	}
+
+	@Override
+	public String getExtensionForMimeType(String inMimeType) {
+		
+		for (Iterator iterator = getInternalMap().keySet().iterator(); iterator.hasNext();) 
+		{
+			String 	type = (String) iterator.next();
+			String value = (String)getInternalMap().get(type);
+			if( inMimeType.equals(value))
+			{
+				return type;
+			}
+		}
+		return null;
 	}
 }
