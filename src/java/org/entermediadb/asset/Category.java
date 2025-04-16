@@ -129,7 +129,8 @@ public interface Category extends MultiValued, Comparable
 	Object findValue(String inString);
 
 	Collection findValues(String inString);
-
+	public Collection<String> collectValues(String inKey);
+	
 	boolean hasLoadedParent();
 
 	boolean hasSelfCategory(Collection<Category> inViewcategories);
