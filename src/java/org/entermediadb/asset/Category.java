@@ -129,7 +129,10 @@ public interface Category extends MultiValued, Comparable
 	Object findValue(String inString);
 
 	Collection findValues(String inString);
-	public Collection<String> collectValues(String inKey);
+	
+	Collection<String> collectValues(String inKey);
+	
+	void collectValues(String inKey, Collection<String> inValue);
 	
 	boolean hasLoadedParent();
 
