@@ -22,6 +22,7 @@ public interface MultiValued extends Data
 	public int getInt(String inId);
 	public float getFloat(String inId);
 	public long getLong(String inId);
+	public void addValues(String inString, Collection inValues);
 	
 
 

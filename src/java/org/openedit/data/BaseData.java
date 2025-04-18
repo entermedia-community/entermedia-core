@@ -386,6 +386,20 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 		}
 			
 	}
+	
+	public void addValues(String inKey, Collection inNewValues)
+	{
+		if (inNewValues == null)
+		{
+			return;
+		}
+		for (Iterator iterator = inNewValues.iterator(); iterator.hasNext();)
+		{
+			Object value = (Object) iterator.next();
+				addValue(inKey, value);
+		}
+	}
+	
 	public void removeValue(String inKey)
 	{
 		getMap().remove(inKey);

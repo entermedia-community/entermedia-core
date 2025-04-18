@@ -707,6 +707,9 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 		return view;
 	}
 
+	/** @Deprecated
+	 * 
+	 */
 
 	public Collection<Category> getViewCategories()
 	{
