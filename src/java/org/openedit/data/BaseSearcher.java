@@ -2762,7 +2762,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	{
 		if( inViewData == null)
 		{
-			log.error("No viewdata passed in");
+			log.error("No viewdata passed in: " + getSearchType() );
 			return null;
 		}
 		if( inProfile != null)

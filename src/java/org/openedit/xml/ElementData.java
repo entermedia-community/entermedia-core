@@ -645,6 +645,17 @@ public class ElementData implements MultiValued, SaveableData, Comparable, Searc
 		throw new OpenEditException("NOT IMPLEMENTED");
 	}
 	
-	
+	public void addValues(String inKey, Collection inNewValues)
+	{
+		if (inNewValues == null)
+		{
+			return;
+		}
+		for (Iterator iterator = inNewValues.iterator(); iterator.hasNext();)
+		{
+			Object value = (Object) iterator.next();
+				addValue(inKey, value);
+		}
+	}
 	
 }
