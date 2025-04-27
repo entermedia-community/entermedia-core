@@ -143,7 +143,22 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 		return items;
 	}
 
-
+	public Collection<String> getEntitiesIdsByIdOrName(Collection<String> moduleIdsOrNames) 
+	{
+		Collection<String> items = new ArrayList();
+		for (Iterator iterator = getModules().iterator(); iterator.hasNext();)
+		{
+			Data module = (Data) iterator.next();
+			if( Boolean.parseBoolean( module.get("isentity") ) )
+			{
+				if(moduleIdsOrNames.contains(module.getId()) || moduleIdsOrNames.contains(module.getName()))
+				{
+					items.add(module.getId());
+				}
+			}
+		}
+		return items;
+	}
 	
 	public Collection<String> getEntitiesIds()
 	{
