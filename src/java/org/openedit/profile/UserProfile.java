@@ -143,9 +143,9 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 		return items;
 	}
 
-	public Collection<String> getEntitiesIdsByIdOrName(Collection<String> moduleIdsOrNames) 
+	public Collection<Data> getEntitiesByIdOrName(Collection<String> moduleIdsOrNames) 
 	{
-		Collection<String> items = new ArrayList();
+		Collection<Data> items = new ArrayList();
 		for (Iterator iterator = getModules().iterator(); iterator.hasNext();)
 		{
 			Data module = (Data) iterator.next();
@@ -153,7 +153,7 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 			{
 				if(moduleIdsOrNames.contains(module.getId()) || moduleIdsOrNames.contains(module.getName()))
 				{
-					items.add(module.getId());
+					items.add(module);
 				}
 			}
 		}
