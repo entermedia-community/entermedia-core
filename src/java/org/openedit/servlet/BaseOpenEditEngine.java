@@ -210,6 +210,7 @@ public class BaseOpenEditEngine implements OpenEditEngine
 						String bean = config.getLoader();
 						loader = (PageLoader)getModuleManager().getBean(catalogid, bean, false); 
 						getAppLoaders().put(pathid,loader);
+						log.info(page + " " +  pathid + " loader: " + loader);
 					}
 					RightPage rightp = loader.getRightPage(util,site,page,requestedPath);
 					if( rightp != null)
