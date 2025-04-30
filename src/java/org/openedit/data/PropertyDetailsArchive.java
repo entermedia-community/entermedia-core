@@ -353,6 +353,17 @@ public class PropertyDetailsArchive implements CatalogEnabled
 					dataxmlfile.setRoot(dataxmlfile.getRoot().createCopy());
 					dataxmlfile.getRoot().addAttribute("beanname",null); //let the fixBeanName work
 				}
+				
+			}
+			else if(!basesettingsdefaults.isExist())
+			{
+				String beanname = dataxmlfile.getRoot().attributeValue("beanname");
+				if( beanname == null || beanname.equals("listSearcher"))
+				{
+					String listpath = findConfigurationFile("/fields/default.xml");
+					basesettingsdefaults = getXmlArchive().getXml(listpath);
+					
+				}
 			}
 
 			details = new PropertyDetails(this,inType); //Start fresh
