@@ -2896,6 +2896,10 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 
 	public PropertyDetail getDetail(String inId)
 	{
+		if (inId == null)
+		{
+			return null;
+		}
 		PropertyDetails details = getPropertyDetailsArchive().getPropertyDetailsCached(getSearchType());
 		if (details == null)
 		{
