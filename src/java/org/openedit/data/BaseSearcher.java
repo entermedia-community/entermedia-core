@@ -2916,19 +2916,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		q.setShowAll(true);
 		if (inReq != null)
 		{
-			String sort = inReq.getRequestParameter("sortby");
-			if (sort == null)
-			{
-				sort = (String) inReq.getPageValue("sortby");
-			}
-			if (sort == null)
-			{
-				sort = inReq.findValue("sortby");
-			}
-			if (sort != null)
-			{
-				q.setSortBy(sort);
-			}
+			addSorts(inReq, q);
 			
 			return cachedSearch(inReq, q);
 		}
