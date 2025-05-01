@@ -342,4 +342,15 @@ public class FileGenerator extends BaseGenerator implements Generator
 	{
 		return true;
 	}
+	protected void forceDownload(WebPageRequest inReq, String inFilename)
+	{
+		String filename = inFilename.replace("\"", "/\"");
+
+		if(inReq.getResponse() != null)
+		{
+			inReq.getResponse().setHeader("Content-disposition", "attachment; filename=\""+ filename +"\"");  //This seems to work on firefox
+		}
+	}
+
+
 }
