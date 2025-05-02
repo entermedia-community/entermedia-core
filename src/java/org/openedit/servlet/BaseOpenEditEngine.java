@@ -204,14 +204,13 @@ public class BaseOpenEditEngine implements OpenEditEngine
 				}
 				if( pathid != null )
 				{
-					PageLoader loader = (PageLoader)getAppLoaders().get(pathid);
+					PageLoader loader = (PageLoader)getAppLoaders().get(pathid); //Todo: Replace with Cache manager based on Path
 					if( loader == null)
 					{
-						log.info(getAppLoaders());
 						String bean = config.getLoader();
 						loader = (PageLoader)getModuleManager().getBean(catalogid, bean, false); 
 						getAppLoaders().put(pathid,loader);
-						log.info(page + " " +  pathid + " loader: " + loader);
+						//log.info(page + " " +  pathid + " loader: " + loader);
 					}
 					
 					
