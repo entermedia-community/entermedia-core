@@ -219,7 +219,7 @@ public class BaseOpenEditEngine implements OpenEditEngine
 					RightPage rightp = loader.getRightPage(util,site,page,requestedPath);
 					if( rightp != null)
 					{
-						log.info("Not the right page");
+						log.info(page + " Not the right page");
 						return rightp;
 					}
 				}
