@@ -704,6 +704,13 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 		return Boolean.parseBoolean(get("multilanguage"));
 	}
 	
+	public boolean isCategory()
+	{
+		return Boolean.parseBoolean(get("category"));
+	}
+	
+	
+	
 	public boolean isKeywordMap()
 	{
 		return isDataType("kwmap");
