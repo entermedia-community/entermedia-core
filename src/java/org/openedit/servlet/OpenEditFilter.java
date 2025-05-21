@@ -90,13 +90,18 @@ public class OpenEditFilter implements Filter
 	 */
 	public void init(FilterConfig inConfig) throws ServletException
 	{
-		ServletContext servletContext = inConfig.getServletContext();		
-		log.info("grabbed context: " + servletContext);
-		String rootPath = inConfig.getInitParameter("oe.root.path");
-
-		if( rootPath == null)
+		String rootPath = null;
+		ServletContext servletContext = null;
+		if( inConfig != null)
 		{
-			rootPath = servletContext.getRealPath("/");
+			servletContext = inConfig.getServletContext();		
+			log.info("grabbed context: " + servletContext);
+			rootPath = inConfig.getInitParameter("oe.root.path");
+	
+			if( rootPath == null)
+			{
+				rootPath = servletContext.getRealPath("/");
+			}
 		}
 		if( rootPath == null)
 		{
@@ -106,11 +111,17 @@ public class OpenEditFilter implements Filter
 		BaseWebServer server = new BaseWebServer();  //Singleton?
 		server.setServletContext(servletContext);
 		server.setRootDirectory(new File(rootPath));
-		server.setNodeId(servletContext.getInitParameter("entermedianodeid"));
+		if( servletContext != null)
+		{
+			server.setNodeId(servletContext.getInitParameter("entermedianodeid"));
+		}
 		server.initialize();
 		server.getBeanLoader().registerSingleton("WebServer",this);
-		servletContext.setAttribute(BaseWebServer.class.getName(), server); //TODO: Why is this here?
-		servletContext.setAttribute(WebServer.class.getName(), server); //TODO: Why is this here?
+		if( servletContext != null)
+		{
+			servletContext.setAttribute(BaseWebServer.class.getName(), server); //TODO: Why is this here?
+			servletContext.setAttribute(WebServer.class.getName(), server); //TODO: Why is this here?
+		}
 		fieldEngine = server.getOpenEditEngine();
 		server.finalizeStartup();
 		
