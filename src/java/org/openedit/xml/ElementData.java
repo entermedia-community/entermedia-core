@@ -282,7 +282,11 @@ public class ElementData implements MultiValued, SaveableData, Comparable, Searc
 				getElement().remove(child);
 			}
 			inValue = getMap().toString(inValue);
-
+			if (inValue == null)
+			{
+				removeValues(inId);
+				return;
+			}
 			String val = (String) inValue;
 			if (val.isEmpty())
 			{
