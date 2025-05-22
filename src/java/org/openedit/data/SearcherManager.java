@@ -827,6 +827,30 @@ public class SearcherManager
 	{
 		getShowLogs().put(inCatalogId, inValue);
 	}
+
+	public Collection reloadLists(String inCatalogid)
+	{
+		PropertyDetailsArchive archive = getPropertyDetailsArchive(inCatalogid);
+		Collection<String> tables = archive.listTablesInListFolder();
+		
+		List types = new ArrayList();
+		for (Iterator iterator = tables.iterator(); iterator.hasNext();)
+		{
+			String tablename = (String)iterator.next();
+			Searcher searcher = loadSearcher(archive, tablename);
+			if (searcher instanceof Reloadable)
+			{
+				if( !searcher.getSearchType().contains("$searcher.getSearchType()") )
+				{
+					searcher.reIndexAll();
+					
+					types.add(searcher.getSearchType());
+				}	
+			}
+		}
+		return types;
+	}
+	
 	public Collection reloadLoadedSettings(String inCatalogid)
 	{
 		Collection<Searcher> tables = listLoadedSearchers(inCatalogid);

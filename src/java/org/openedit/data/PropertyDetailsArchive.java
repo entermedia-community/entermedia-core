@@ -820,7 +820,6 @@ public class PropertyDetailsArchive implements CatalogEnabled
 	{
 		// lists, views, fields
 		String inPath = "/" + getCatalogId() + "/data/" + inFolderType + "/";
-		List basepaths = getPageManager().getChildrenPaths(inPath, true);
 
 		Set set = new HashSet();
 		addFolder(inPath, "", set, subdirectories);
@@ -883,7 +882,7 @@ public class PropertyDetailsArchive implements CatalogEnabled
 
 	}
 
-	public List listSearchTypes()
+	public List<String> listSearchTypes()
 	{
 		List fields = listFilesByFolderType("fields", false);
 		HashSet all = new HashSet(fields);
@@ -1277,4 +1276,36 @@ public class PropertyDetailsArchive implements CatalogEnabled
 		return element;
 	}
 
+	public Collection<String> listTablesInListFolder()
+	{
+		Collection<String> types = listSearchTypes();
+		Set<String> names = new HashSet();
+		
+		for (Iterator iterator = types.iterator(); iterator.hasNext();)
+		{
+			String tablename = (String) iterator.next();
+			String path = "/WEB-INF/data/" + getCatalogId() + "/lists/" + tablename + ".xml";
+
+			boolean islist = false;
+			
+			if( getPageManager().getRepository().doesExist(path) )
+			{
+				islist = true;
+			}
+			else
+			{
+				String folder = "/WEB-INF/data/" + getCatalogId() + "/lists/" + tablename + "/";
+				if( getPageManager().getRepository().doesExist(folder) )
+				{
+					islist = true;				
+				}
+			}
+			if( islist )
+			{
+				names.add(tablename);
+			}
+		}
+		return names;
+		
+	}
 }
