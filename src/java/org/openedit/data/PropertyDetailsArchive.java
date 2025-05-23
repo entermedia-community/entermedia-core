@@ -17,6 +17,7 @@ import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.openedit.CatalogEnabled;
 import org.openedit.Data;
+import org.openedit.ModuleManager;
 import org.openedit.OpenEditException;
 import org.openedit.OpenEditRuntimeException;
 import org.openedit.page.Page;
@@ -44,6 +45,18 @@ public class PropertyDetailsArchive implements CatalogEnabled
 	protected List fieldChildTableNames;
 	protected String fieldSaveTo = "data"; //base,catalog,data
 	protected List fieldSearchTypes;
+	
+	protected ModuleManager fieldModuleManager;
+
+	public ModuleManager getModuleManager()
+	{
+		return fieldModuleManager;
+	}
+
+	public void setModuleManager(ModuleManager inModuleManager)
+	{
+		fieldModuleManager = inModuleManager;
+	}
 
 	public String getSaveTo()
 	{
@@ -330,7 +343,7 @@ public class PropertyDetailsArchive implements CatalogEnabled
 			XmlFile basesettingsdefaults = getXmlArchive().getXml(basedataxmlfile);
 			if (details != null && details.getInputFile() == dataxmlfile) //Cache Check. Same instance
 			{
-				fixBeanName(details,basesettingsdefaults,dataxmlfile);
+				fixBeanName(details, inType, basesettingsdefaults, dataxmlfile);
 				return details;
 			}
 			
@@ -379,7 +392,7 @@ public class PropertyDetailsArchive implements CatalogEnabled
 				loadDetails(allfields, inType, basesettingsdefaults.getContentItem().getPath(), basesettingsdefaults.getRoot(), false);    //Base data exact
 			}
 			details.setBaseSettings(basesettingsdefaults);  //For bean name etc
-			fixBeanName(details,basesettingsdefaults,dataxmlfile);
+			fixBeanName(details,inType, basesettingsdefaults, dataxmlfile);
 			
 			// load any defaults by folder - AFTER we have loaded all the existing stuff.
 			// don't overwrite anything that is here already.
@@ -439,38 +452,69 @@ public class PropertyDetailsArchive implements CatalogEnabled
 		}
 	}
 
-	protected void fixBeanName(PropertyDetails inDetails,XmlFile basesettings, XmlFile settings) 
+	protected void fixBeanName(PropertyDetails inDetails, String inSearchtype, XmlFile basesettings, XmlFile settings) 
 	{
 
-		if( settings.getRoot().attributeValue("beanname") != null)
+		String beanName =settings.getRoot().attributeValue("beanname");
+		if( beanName  != null)
 		{
 			return;
 		}
-		if( basesettings.getRoot().attributeValue("beanname") != null)
+		
+		
+		
+		
+		if( getModuleManager().contains(getCatalogId(), inSearchtype + "Searcher") ) //this might be a lookup
 		{
-			return;
+			beanName = inSearchtype + "Searcher";
+		}	
+		else if( getModuleManager().contains(inSearchtype + "Searcher"))
+		{
+			beanName = inSearchtype + "Searcher";
 		}
 
-		String islists = "/" + getCatalogId() + "/data/lists/" + inDetails.getId() + ".xml";
-		String isfolder = "/" + getCatalogId() + "/data/lists/" + inDetails.getId() + "/";
-		
-		if (inDetails.getId().endsWith("Log"))
+		if (beanName == null)
 		{
-			inDetails.setBeanName("dynamicLogSearcher");
+			String islists = "/" + getCatalogId() + "/data/lists/" + inDetails.getId() + ".xml";
+			String isfolder = "/" + getCatalogId() + "/data/lists/" + inDetails.getId() + "/";
+			
+			String isDatalists = "/WEB-INF/data/" + getCatalogId() + "/lists/" + inDetails.getId() + ".xml";
+			String isDatafolder = "/WEB-INF/data/" + getCatalogId() + "/lists/" + inDetails.getId() + "/";
+			
+			if (inDetails.getId().endsWith("Log"))
+			{
+				beanName = "dynamicLogSearcher";
+			}
+			else if( getPageManager().getPage(isfolder).exists())
+			{
+				beanName = "folderSearcher";
+			}
+			else if( getPageManager().getPage(islists).exists())
+			{
+				beanName = "listSearcher";
+			}
+			else if( getPageManager().getPage(isDatafolder).exists())
+			{
+				beanName = "folderSearcher";
+			}
+			else if( getPageManager().getPage(isDatalists).exists())
+			{
+				beanName = "listSearcher";
+			}
+			else
+			{
+				beanName = basesettings.getRoot().attributeValue("beanname");
+				if (beanName == null)
+				{
+					beanName = "dataSearcher";
+				}
+			}
+			
+			
 		}
-		else if( getPageManager().getPage(isfolder).exists())
-		{
-			inDetails.setBeanName("folderSearcher");
-		}
-		else if( getPageManager().getPage(islists).exists())
-		{
-			inDetails.setBeanName("listSearcher");
-		}
-		else
-		{
-			inDetails.setBeanName("dataSearcher");
-		}
+		inDetails.setBeanName(beanName);
 	}
+	
 	public PropertyDetail createDetail(String inId, String inName)
 	{
 		PropertyDetail detail = null;

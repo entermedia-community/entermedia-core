@@ -145,6 +145,11 @@ public class SearcherManager
 		//Check the properites
 		PropertyDetails details = newarchive.getPropertyDetailsCached(inFieldName);
 		
+		String beanName = details.getBeanName();
+		searcher = (Searcher)getModuleManager().getBean(inCatalogId, beanName, false);
+		
+		/*
+		
 		String beanName = null;
 		if( getModuleManager().contains(inCatalogId,inFieldName + "Searcher") ) //this might be a lookup
 		{
@@ -175,6 +180,8 @@ public class SearcherManager
 //				}
 		}
 		searcher = (Searcher)getModuleManager().getBean(inCatalogId, beanName, false);
+		*/
+		
 		if(log.isDebugEnabled())
 		{
 			log.debug("Searcher not found creating dynamic instance ");
@@ -837,10 +844,12 @@ public class SearcherManager
 		for (Iterator iterator = tables.iterator(); iterator.hasNext();)
 		{
 			String tablename = (String)iterator.next();
-			Searcher searcher = loadSearcher(archive, tablename);
+			Searcher searcher = loadSearcher(inCatalogid, tablename, true);
 			if (searcher instanceof Reloadable)
 			{
-				if( !searcher.getSearchType().contains("$searcher.getSearchType()") )
+				String searchtype = searcher.getSearchType();
+				
+				if(searchtype != null &&  !searchtype.contains("$searcher.getSearchType()") )
 				{
 					searcher.reIndexAll();
 					
