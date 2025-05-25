@@ -463,7 +463,6 @@ public class PropertyDetailsArchive implements CatalogEnabled
 		
 		
 		
-		
 		if( getModuleManager().contains(getCatalogId(), inSearchtype + "Searcher") ) //this might be a lookup
 		{
 			beanName = inSearchtype + "Searcher";
@@ -472,7 +471,12 @@ public class PropertyDetailsArchive implements CatalogEnabled
 		{
 			beanName = inSearchtype + "Searcher";
 		}
-
+		//Don't allow any guesswork.
+		if(basesettings.getRoot().attributeValue("enforcebeanname") != null) {
+			 beanName = basesettings.getRoot().attributeValue("enforcebeanname");
+		}
+		
+		
 		if (beanName == null)
 		{
 			String islists = "/" + getCatalogId() + "/data/lists/" + inDetails.getId() + ".xml";
