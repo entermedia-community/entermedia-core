@@ -455,6 +455,13 @@ public class PropertyDetailsArchive implements CatalogEnabled
 	protected void fixBeanName(PropertyDetails inDetails, String inSearchtype, XmlFile basesettings, XmlFile settings) 
 	{
 
+		String enforcedname = basesettings.getRoot().attributeValue("enforcebeanname");
+		if(enforcedname != null) {
+			 inDetails.setBeanName(enforcedname);
+			 return;
+		}
+		
+		
 		String beanName =settings.getRoot().attributeValue("beanname");
 		if( beanName  != null)
 		{
@@ -472,9 +479,7 @@ public class PropertyDetailsArchive implements CatalogEnabled
 			beanName = inSearchtype + "Searcher";
 		}
 		//Don't allow any guesswork.
-		if(basesettings.getRoot().attributeValue("enforcebeanname") != null) {
-			 beanName = basesettings.getRoot().attributeValue("enforcebeanname");
-		}
+		
 		
 		
 		if (beanName == null)
