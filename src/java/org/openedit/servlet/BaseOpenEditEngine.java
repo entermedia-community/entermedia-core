@@ -17,11 +17,11 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openedit.CatalogEnabled;
 import org.openedit.ModuleManager;
 import org.openedit.OpenEditException;
 import org.openedit.Shutdownable;
 import org.openedit.WebPageRequest;
+import org.openedit.cache.CacheManager;
 import org.openedit.error.ErrorHandler;
 import org.openedit.event.EventManager;
 import org.openedit.generators.Output;
@@ -31,7 +31,6 @@ import org.openedit.page.PageRequestKeys;
 import org.openedit.page.PageStreamer;
 import org.openedit.page.manage.PageLoaderConfig;
 import org.openedit.page.manage.PageManager;
-import org.openedit.util.PathUtilities;
 import org.openedit.util.RequestUtils;
 import org.openedit.util.URLUtilities;
 
@@ -175,7 +174,7 @@ public class BaseOpenEditEngine implements OpenEditEngine
 
 		Page page = getPageManager().getPage(fixedpath,checkdates);
 		
-		List list = null;
+		List<PageLoaderConfig> list = null;
 		if( fixedpath.endsWith("/") || page.isFolder() )
 		{
 			String tmppath =fixedpath; 
@@ -190,36 +189,14 @@ public class BaseOpenEditEngine implements OpenEditEngine
 		{
 			list = page.getPageLoaders();
 		}
-		if( list != null && !list.isEmpty())
+		
+		if(	requestedPath != null && list != null && !list.isEmpty())
 		{
 			String catalogid = page.getProperty("catalogid");
-			for (Iterator iterator = list.iterator(); iterator.hasNext();)
+			RightPage rightp = findRightPage(catalogid,site, page, util, list);
+			if( rightp != null)
 			{
-				PageLoaderConfig config = (PageLoaderConfig) iterator.next();
-				//<Page-Loader loader="projectLoader" />
-				String pathid = page.getProperty("applicationid");
-				if( pathid == null )
-				{
-					pathid = page.getProperty("siteid");
-				}
-				if( pathid != null )
-				{
-					PageLoader loader = (PageLoader)getAppLoaders().get(pathid); //Todo: Replace with Cache manager based on Path
-					if( loader == null)
-					{
-						String bean = config.getLoader();
-						loader = (PageLoader)getModuleManager().getBean(catalogid, bean, false); 
-						getAppLoaders().put(pathid,loader);
-						//log.info(page + " " +  pathid + " loader: " + loader);
-					}
-					
-					
-					RightPage rightp = loader.getRightPage(util,site,page,requestedPath);
-					if( rightp != null)
-					{
-						return rightp;
-					}
-				}
+				return rightp;
 			}
 		}		
 		if(!page.isFolder() && page.exists())
@@ -275,6 +252,22 @@ public class BaseOpenEditEngine implements OpenEditEngine
 		RightPage right = new RightPage();
 		right.setRightPage(page);
 		return right;
+	}
+	
+	protected RightPage findRightPage(String catalogid, Site site, Page currentpage, URLUtilities util, List<PageLoaderConfig> list  )
+	{
+		for (Iterator<PageLoaderConfig> iterator = list.iterator(); iterator.hasNext();)
+		{
+			PageLoaderConfig config = iterator.next();
+			String bean = config.getLoader();
+			PageLoader loader = (PageLoader)getModuleManager().getBean(catalogid, bean, true); 
+			RightPage rightp = loader.getRightPage(util,site,currentpage);
+			if( rightp != null)
+			{
+				return rightp;
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -540,5 +533,11 @@ public class BaseOpenEditEngine implements OpenEditEngine
 		    }
 		}
 		return getPageManager().getPage( dir + "index.html",indates);
+	}
+	
+	protected CacheManager getCacheManager()
+	{
+		return (CacheManager)getModuleManager().getBean("systemCacheManager");
+		
 	}
 }

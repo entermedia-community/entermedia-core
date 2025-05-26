@@ -454,22 +454,17 @@ public class PropertyDetailsArchive implements CatalogEnabled
 
 	protected void fixBeanName(PropertyDetails inDetails, String inSearchtype, XmlFile basesettings, XmlFile settings) 
 	{
-
-		String enforcedname = basesettings.getRoot().attributeValue("enforcebeanname");
-		if(enforcedname != null) {
-			 inDetails.setBeanName(enforcedname);
-			 return;
-		}
-		
-		
-		String beanName =settings.getRoot().attributeValue("beanname");
-		if( beanName  != null)
+		if( basesettings != null && basesettings.getRoot() != null)
 		{
-			return;
+			String enforcedname = basesettings.getRoot().attributeValue("enforcebeanname");
+			if(enforcedname != null) {
+				 inDetails.setBeanName(enforcedname);
+				 return;
+			}
 		}
 		
 		
-		
+		String beanName = null;
 		if( getModuleManager().contains(getCatalogId(), inSearchtype + "Searcher") ) //this might be a lookup
 		{
 			beanName = inSearchtype + "Searcher";
@@ -478,48 +473,52 @@ public class PropertyDetailsArchive implements CatalogEnabled
 		{
 			beanName = inSearchtype + "Searcher";
 		}
-		//Don't allow any guesswork.
-		
-		
-		
-		if (beanName == null)
+		if( beanName == null)
 		{
-			String islists = "/" + getCatalogId() + "/data/lists/" + inDetails.getId() + ".xml";
-			String isfolder = "/" + getCatalogId() + "/data/lists/" + inDetails.getId() + "/";
-			
-			String isDatalists = "/WEB-INF/data/" + getCatalogId() + "/lists/" + inDetails.getId() + ".xml";
-			String isDatafolder = "/WEB-INF/data/" + getCatalogId() + "/lists/" + inDetails.getId() + "/";
-			
-			if (inDetails.getId().endsWith("Log"))
+			beanName =settings.getRoot().attributeValue("beanname");
+			if( beanName != null)
 			{
-				beanName = "dynamicLogSearcher";
+				return;
 			}
-			else if( getPageManager().getPage(isfolder).exists())
+		}
+		if (beanName != null)
+		{
+			inDetails.setBeanName(beanName);
+			return;
+		}
+		String islists = "/" + getCatalogId() + "/data/lists/" + inDetails.getId() + ".xml";
+		String isfolder = "/" + getCatalogId() + "/data/lists/" + inDetails.getId() + "/";
+		
+		String isDatalists = "/WEB-INF/data/" + getCatalogId() + "/lists/" + inDetails.getId() + ".xml";
+		String isDatafolder = "/WEB-INF/data/" + getCatalogId() + "/lists/" + inDetails.getId() + "/";
+		
+		if (inDetails.getId().endsWith("Log"))
+		{
+			beanName = "dynamicLogSearcher";
+		}
+		else if( getPageManager().getPage(isfolder).exists())
+		{
+			beanName = "folderSearcher";
+		}
+		else if( getPageManager().getPage(islists).exists())
+		{
+			beanName = "listSearcher";
+		}
+		else if( getPageManager().getPage(isDatafolder).exists())
+		{
+			beanName = "folderSearcher";
+		}
+		else if( getPageManager().getPage(isDatalists).exists())
+		{
+			beanName = "listSearcher";
+		}
+		else
+		{
+			beanName = basesettings.getRoot().attributeValue("beanname");
+			if (beanName == null)
 			{
-				beanName = "folderSearcher";
+				beanName = "dataSearcher";
 			}
-			else if( getPageManager().getPage(islists).exists())
-			{
-				beanName = "listSearcher";
-			}
-			else if( getPageManager().getPage(isDatafolder).exists())
-			{
-				beanName = "folderSearcher";
-			}
-			else if( getPageManager().getPage(isDatalists).exists())
-			{
-				beanName = "listSearcher";
-			}
-			else
-			{
-				beanName = basesettings.getRoot().attributeValue("beanname");
-				if (beanName == null)
-				{
-					beanName = "dataSearcher";
-				}
-			}
-			
-			
 		}
 		inDetails.setBeanName(beanName);
 	}
