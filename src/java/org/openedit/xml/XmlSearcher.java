@@ -114,6 +114,13 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable
 	
 	public boolean passes(Element inElement, SearchQuery inQuery) throws ParseException
 	{
+		
+		if ( "deleted".equals( inElement.attributeValue("recordstatus") ) )
+		{
+			return false;
+		}
+		
+		
 		for (Iterator iterator = inQuery.getTerms().iterator(); iterator.hasNext();) 
 		{
 			Term term = (Term) iterator.next();
