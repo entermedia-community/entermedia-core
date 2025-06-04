@@ -614,6 +614,15 @@ public class PageManager
 		List all = getRepository().getChildrenNames(inPath);
 		if( inIncludeFallBack)
 		{
+			Set<String> names = new HashSet<String>();
+			if( all != null)
+			{
+				for (Iterator iterator = all.iterator(); iterator.hasNext();)
+				{
+					String path = (String) iterator.next();
+					names.add(PathUtilities.extractFileName(path) );
+				}
+			}
 			PageSettings settings = getPageSettingsManager().getPageSettings(inPath);
 			settings = settings.getFallback();
 			while( settings != null)
@@ -626,7 +635,14 @@ public class PageManager
 				else
 				{
 					List morechildren = getRepository().getChildrenNames(dirparent );
-					all.addAll(morechildren);
+					for (Iterator iterator = morechildren.iterator(); iterator.hasNext();)
+					{
+						String morepath = (String) iterator.next();
+						if( !names.contains(PathUtilities.extractFileName(morepath) ) )
+						{
+							all.add(morepath);
+						}
+					}
 					settings = settings.getFallback();
 				}	
 			}
