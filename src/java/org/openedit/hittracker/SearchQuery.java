@@ -2453,7 +2453,20 @@ public boolean isFilterSelected(String type, String value) {
 		
 	}	
 	
-	
+	public void addFunction(PropertyDetail inDetail,Object values)
+	{
+//		Term term = new Term()
+//		{
+//			public String toQuery()
+//			{
+//				return getDetail().getId();
+//			}
+//		};
+//		term.setOperation("function");
+//		term.setDetail(inDetail);
+//		term.setValue(value);
+//		addTerm(term);
+	}
 
 	public String[] extractIds(Collection inDataCollection)
 	{
