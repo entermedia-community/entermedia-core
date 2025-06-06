@@ -527,6 +527,14 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	}
 	public String getFriendlyValue(Term inTerm, PropertyDetail inDetail)
 	{
+		if(inTerm == null || inDetail == null) {
+			return null;
+		}
+		
+		if(inDetail.isDate()) {
+			return getFriendlyDateValue(inTerm, inDetail);
+		}
+		
 		String value = inTerm.getValue();
 		if( value != null)
 		{
@@ -548,6 +556,37 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		}
 		return out.toString();
 	}
+
+	public String getFriendlyDateValue(Term inTerm, PropertyDetail inDetail) {
+	    if (inTerm == null || inDetail == null) {
+	        return "";
+	    }
+
+	    String after = getInput(inDetail.getId() + ".after");
+	    String before = getInput(inDetail.getId() + ".before");
+
+	    if ("betweendates".equals(inTerm.getOperation())) {
+	        if (after != null && before != null) {
+	            return after + " - " + before;
+	        } else if (after != null) {
+	            return "After " + after;
+	        } else if (before != null) {
+	            return "Before " + before;
+	        }
+	    }
+
+	    if ("beforedate".equals(inTerm.getOperation()) && before != null) {
+	        return "< " + before;
+	    }
+
+	    if ("afterdate".equals(inTerm.getOperation()) && after != null) {
+	        return "> " + after;
+	    }
+
+	    // 
+	    return null;
+	}
+
 
 	/**
 	 * Transforms a list ID value into a human-readable value.

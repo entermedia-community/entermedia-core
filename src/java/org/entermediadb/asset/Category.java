@@ -30,6 +30,7 @@ public interface Category extends MultiValued, Comparable
 	 * @return Returns the children.
 	 */
 	List getChildren();
+	public List<Category> getDescendants();
 
 	/**
 	 * @param children
