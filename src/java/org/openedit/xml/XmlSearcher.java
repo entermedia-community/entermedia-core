@@ -105,6 +105,12 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable
 	{
 		return getCatalogId() + getSearchType();
 	}
+	
+	public void reindexInternal() throws OpenEditException
+	{
+		
+		reIndexAll();
+	}
 
 	public void reIndexAll() throws OpenEditException
 	{
