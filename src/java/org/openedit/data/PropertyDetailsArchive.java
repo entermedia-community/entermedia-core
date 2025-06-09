@@ -940,6 +940,14 @@ public class PropertyDetailsArchive implements CatalogEnabled
 		HashSet all = new HashSet(fields);
 		List lists = listFilesByFolderType("lists", false);
 		all.addAll(lists);
+		
+		Collection remote = getSearcherManager().getList(getCatalogId(), "searchtypes");
+		for (Iterator iterator = remote.iterator(); iterator.hasNext();)
+		{
+			Data other = (Data) iterator.next();
+			all.add(other.getId());  //Users and Groups
+		}
+		
 		List sorted = new ArrayList(all);
 		Collections.sort(sorted);
 		fieldSearchTypes = sorted;

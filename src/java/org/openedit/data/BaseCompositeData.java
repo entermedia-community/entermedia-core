@@ -276,7 +276,7 @@ public class BaseCompositeData extends BaseData implements Data, CompositeData
 				}
 				else if(dataval != null)
 				{
-					if( dataval instanceof LanguageMap)
+					if( dataval instanceof LanguageMap && firstval instanceof LanguageMap )  //How could this happen?
 					{
 						LanguageMap langs = (LanguageMap) firstval;
 						LanguageMap copy = new LanguageMap( (Map)firstval);
