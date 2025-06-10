@@ -925,8 +925,9 @@ public class PropertyDetailsArchive implements CatalogEnabled
 			}
 			else
 			{
-				if (!type.startsWith("_"))
-				{
+				
+				if (!type.startsWith("_") && !type.isEmpty()) //ignore .DS_Store
+				{	
 					files.add(type);
 				}
 			}	
