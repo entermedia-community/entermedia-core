@@ -3,13 +3,13 @@ package org.openedit.hittracker;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.openedit.data.PropertyDetail;
+import org.openedit.data.ValuesMap;
 
 abstract public class Term {
 	protected String fieldId;
@@ -83,18 +83,18 @@ abstract public class Term {
 		}
 		return false;
 	}
-	protected Map fieldParameters;
+	protected ValuesMap fieldParameters;
 
-	public Map getParameters()
+	public ValuesMap getParameters()
 	{
 		if (fieldParameters == null)
 		{
-			fieldParameters = new HashMap();
+			fieldParameters = new ValuesMap();
 		}
 		return fieldParameters;
 	}
 
-	public void setParameters(Map inParameters)
+	public void setParameters(ValuesMap inParameters)
 	{
 		fieldParameters = inParameters;
 	}
@@ -166,9 +166,9 @@ abstract public class Term {
 		//fieldId = inDetail.getId() + "_" + System.currentTimeMillis();
 	}
 
-	public void setFieldParameters(Map fieldParameters)
+	public void setFieldParameters(Map inParameters)
 	{
-		this.fieldParameters = fieldParameters;
+		this.fieldParameters = new ValuesMap(inParameters);
 	}
 
 	public Object getValue(String inKey)
@@ -189,5 +189,10 @@ abstract public class Term {
 	public String toString()
 	{
 		return toQuery();
+	}
+
+	public void setParameter(String inKey,Object inValue)
+	{
+		getParameters().put(inKey,inValue);
 	}
 }

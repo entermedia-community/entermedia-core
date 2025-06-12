@@ -1123,7 +1123,27 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		return addContains(detail, value);
 	}
 
-	
+	public Term addExact(String inKey, double[] inValue)
+	{
+		PropertyDetail inField = createDetail(inKey);
+		if( inValue == null)
+		{
+			return null;
+		}
+		Term term = new Term()
+		{
+			public String toQuery()
+			{
+				return null;
+			}
+		};
+		term.setOperation("exact");
+		term.setDetail(inField);
+		term.setParameter("value",inValue);
+		addTerm(term);
+		return term;
+	}
+
 	
 	public Term addExact(String inKey, String inValue)
 	{
