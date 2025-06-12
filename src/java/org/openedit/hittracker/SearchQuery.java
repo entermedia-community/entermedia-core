@@ -1123,7 +1123,7 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		return addContains(detail, value);
 	}
 
-	public Term addExact(String inKey, double[] inValue)
+	public Term addVector(String inKey, double[] inValue, double min_score)
 	{
 		PropertyDetail inField = createDetail(inKey);
 		if( inValue == null)
@@ -1140,6 +1140,7 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		term.setOperation("exact");
 		term.setDetail(inField);
 		term.setParameter("value",inValue);
+		term.setParameter("min_score",min_score);
 		addTerm(term);
 		return term;
 	}
