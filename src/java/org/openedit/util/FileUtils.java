@@ -29,6 +29,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import javax.imageio.stream.ImageInputStream;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openedit.OpenEditException;
@@ -465,6 +467,22 @@ public class FileUtils
 			}
 		}
 	}
+	
+	public static void safeClose(ImageInputStream inStream)
+	{
+		if ( inStream != null)
+		{
+			try
+			{
+				inStream.close();
+			}
+			catch (IOException ex)
+			{
+				log.error(ex);
+			}
+		}
+	}
+	
 	public void replace(File inFile, String inKey, String inNewKey) throws Exception
 	{
 		FileReader filereader = new FileReader(inFile);
