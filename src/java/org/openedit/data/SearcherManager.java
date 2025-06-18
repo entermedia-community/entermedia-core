@@ -838,7 +838,7 @@ public class SearcherManager
 	public Collection reloadLists(String inCatalogid)
 	{
 		PropertyDetailsArchive archive = getPropertyDetailsArchive(inCatalogid);
-		Collection<String> tables = archive.listTablesInListFolder();
+		Collection<String> tables = archive.listLiveTables();
 		
 		List types = new ArrayList();
 		for (Iterator iterator = tables.iterator(); iterator.hasNext();)
@@ -849,7 +849,7 @@ public class SearcherManager
 			{
 				String searchtype = searcher.getSearchType();
 				
-				if(searchtype != null &&  !searchtype.contains("$searcher.getSearchType()") )
+				if(searchtype != null &&  !searchtype.startsWith("$") )
 				{
 					searcher.reIndexAll();
 					

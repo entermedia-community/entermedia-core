@@ -1337,36 +1337,23 @@ public class PropertyDetailsArchive implements CatalogEnabled
 		return element;
 	}
 
-	public Collection<String> listTablesInListFolder()
+
+	public Collection<String> listLiveTables()
 	{
 		Collection<String> types = listSearchTypes();
 		Set<String> names = new HashSet();
-		
+
+		Collection<String> livetypes  = getSearcherManager().getNodeManager(getCatalogId()).getMappedTypes(getCatalogId());
+
 		for (Iterator iterator = types.iterator(); iterator.hasNext();)
 		{
 			String tablename = (String) iterator.next();
-			String path = "/WEB-INF/data/" + getCatalogId() + "/lists/" + tablename + ".xml";
-
-			boolean islist = false;
-			
-			if( getPageManager().getRepository().doesExist(path) )
+			if( !livetypes.contains(tablename) )
 			{
-				islist = true;
+				continue;
 			}
-			else
-			{
-				String folder = "/WEB-INF/data/" + getCatalogId() + "/lists/" + tablename + "/";
-				if( getPageManager().getRepository().doesExist(folder) )
-				{
-					islist = true;				
-				}
-			}
-			if( islist )
-			{
-				names.add(tablename);
-			}
+			names.add(tablename);
 		}
 		return names;
-		
 	}
 }

@@ -37,5 +37,7 @@ public interface NodeManager
 
 	void connectoToDatabase();
 
+	Collection<String> getMappedTypes(String inCatalogId);
+
 	
 }
