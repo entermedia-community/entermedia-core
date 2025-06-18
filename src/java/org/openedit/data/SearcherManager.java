@@ -857,6 +857,8 @@ public class SearcherManager
 				}	
 			}
 		}
+		getCacheManager().clearAll();
+		Collections.sort( types );
 		return types;
 	}
 	
