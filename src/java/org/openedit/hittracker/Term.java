@@ -173,7 +173,7 @@ abstract public class Term {
 
 	public Object getValue(String inKey)
 	{
-		Object val =  getParameters().get(inKey);
+		Object val =  getParameters().getValue(inKey);
 		if( val == null && "op".equals(inKey))
 		{
 			val = getOperation();
