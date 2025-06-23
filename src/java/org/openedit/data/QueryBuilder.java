@@ -110,6 +110,21 @@ public class QueryBuilder
 		getQuery().addBetween(inKey, start, end);
 		return this;
 	}
+
+	public QueryBuilder between(String inKey, double start, double end)
+	{
+		getQuery().addBetween(inKey, start, end);
+		return this;
+		
+	}
+
+	public QueryBuilder between(String inKey, long start, long end)
+	{
+		getQuery().addBetween(inKey, start, end);
+		return this;
+		
+	}
+
 	
 	public QueryBuilder hitsPerPage(int inHitsPerPage)
 	{
