@@ -4,15 +4,20 @@
 package org.openedit.generators;
 
 import java.io.EOFException;
+import java.util.Date;
+import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.openedit.Generator;
 import org.openedit.WebPageRequest;
 import org.openedit.page.Page;
 import org.openedit.users.User;
 import org.openedit.util.OutputFiller;
+import org.openedit.util.SimpleDateFormatPerThread;
 
 /**
  * @author cburkey
@@ -22,6 +27,8 @@ public abstract class BaseGenerator implements Generator, Cloneable
 {
 	protected String fieldName;
 	private OutputFiller fieldOutputFiller;
+	
+	private static Log log = LogFactory.getLog(BaseGenerator.class);
 
 	protected OutputFiller getOutputFiller()
 	{
@@ -140,11 +147,69 @@ public abstract class BaseGenerator implements Generator, Cloneable
 		return ignoreError( inWrapped.getCause() );
 	}
 	
+	protected SimpleDateFormatPerThread fieldLastModFormat;
+	
+	public SimpleDateFormatPerThread getLastModFormat() 
+	{
+		if( fieldLastModFormat  == null)
+		{
+			//Tue, 05 Jan 2010 14:20:51 GMT  -- just english
+			fieldLastModFormat = new SimpleDateFormatPerThread("EEE, dd MMM yyyy HH:mm:ss z", Locale.US);
+			//log.info( fieldLastModFormat.format(new Date()) );
+		}
+		return fieldLastModFormat;
+	}
+	
+	protected boolean checkCache(WebPageRequest inContext, Page contentpage, HttpServletRequest req, HttpServletResponse res)
+	{
+		if( req != null)
+		{
+			String match = req.getHeader("If-None-Match");
+			if (match != null)
+			{
+				String lasmodified = String.valueOf(contentpage.lastModified());
+				if (lasmodified.equals(match))
+				{
+					res.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
+					return true;
+				}
+			}
+
+			String since = req.getHeader("If-Modified-Since");
+			if( since != null && since.endsWith("GMT"))
+			{
+				//304 Not Modified
+				try
+				{
+					Date old = getLastModFormat().parse(since);
+					
+					long oldtime = old.getTime() / 1000;
+					long currenttime = contentpage.lastModified() / 1000;
+					
+					if( currenttime == oldtime)
+					{
+						//log.info("if since"  + since);
+						res.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
+						return true;
+					}
+				}
+				catch( Exception ex)
+				{
+					log.error(since);
+				}
+			}
+			
+		}
+	
+		return false;
+	}
+	
 	
 	protected void setHeaders(HttpServletResponse res, Page contentpage)
 	{
 		Long lastmodified = contentpage.getLastModified().getTime();
 		res.setHeader("ETag", lastmodified.toString());
+		res.setHeader("Cache-Control", "max-age=0; must-revalidate");
 		res.setDateHeader("Last-Modified", lastmodified);
 		//long now = System.currentTimeMillis();	
 		//res.setDateHeader("Expires", now + (1000 * 60 * 60 * 24 * 30 * 6 )); //sec * min * hour * 48 Hours	 six months

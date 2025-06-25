@@ -50,18 +50,7 @@ public class FileGenerator extends BaseGenerator implements Generator
 {
 	private static Log log = LogFactory.getLog(FileGenerator.class);
 	protected PageManager fieldPageManager;
-	protected SimpleDateFormatPerThread fieldLastModFormat;
-	
-	public SimpleDateFormatPerThread getLastModFormat() 
-	{
-		if( fieldLastModFormat  == null)
-		{
-			//Tue, 05 Jan 2010 14:20:51 GMT  -- just english
-			fieldLastModFormat = new SimpleDateFormatPerThread("EEE, dd MMM yyyy HH:mm:ss z", Locale.US);
-			//log.info( fieldLastModFormat.format(new Date()) );
-		}
-		return fieldLastModFormat;
-	}
+
 	public PageManager getPageManager()
 	{
 		return fieldPageManager;
@@ -103,6 +92,7 @@ public class FileGenerator extends BaseGenerator implements Generator
 				{
 					return;
 				}
+				setHeaders(res, contentpage);
 			}
 			//sometimes we can specify the length of the document
 			//long length = -1;
@@ -284,39 +274,7 @@ public class FileGenerator extends BaseGenerator implements Generator
 		return in;
 	}
 	
-	protected boolean checkCache(WebPageRequest inContext, Page contentpage, HttpServletRequest req, HttpServletResponse res)
-	{
-		if( req != null)
-		{
-			String since = req.getHeader("If-Modified-Since");
-			if( since != null && since.endsWith("GMT"))
-			{
-				//304 Not Modified
-				try
-				{
-					Date old = getLastModFormat().parse(since);
-					
-					long oldtime = old.getTime() / 1000;
-					long currenttime = contentpage.lastModified() / 1000;
-					
-					if( currenttime == oldtime)
-					{
-						//log.info("if since"  + since);
-						res.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
-						return true;
-					}
-				}
-				catch( Exception ex)
-				{
-					log.error(since);
-				}
-			}
-			
-		}
-		setHeaders(res, contentpage);
-		
-		return false;
-	}
+	
 	
 	
 	public boolean canGenerate(WebPageRequest inReq)
