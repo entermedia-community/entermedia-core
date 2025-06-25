@@ -2362,6 +2362,9 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		if( toadd != null || toremove != null || removeterm != null)
 		{
 			HitTracker hits = loadHits(inReq);
+			if (hits == null) {
+				return;
+			}
 			if( removeterm != null && removeterm.equals("*") )
 			{
 				//Remove all the view terms
