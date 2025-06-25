@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.openedit.Generator;
 import org.openedit.WebPageRequest;
+import org.openedit.page.Page;
 import org.openedit.users.User;
 import org.openedit.util.OutputFiller;
 
@@ -137,6 +138,16 @@ public abstract class BaseGenerator implements Generator, Cloneable
 			return true;
 		}
 		return ignoreError( inWrapped.getCause() );
+	}
+	
+	
+	protected void setHeaders(HttpServletResponse res, Page contentpage)
+	{
+		Long lastmodified = contentpage.getLastModified().getTime();
+		res.setHeader("ETag", lastmodified.toString());
+		res.setDateHeader("Last-Modified", lastmodified);
+		//long now = System.currentTimeMillis();	
+		//res.setDateHeader("Expires", now + (1000 * 60 * 60 * 24 * 30 * 6 )); //sec * min * hour * 48 Hours	 six months
 	}
 
 }

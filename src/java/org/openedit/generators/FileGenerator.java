@@ -286,20 +286,7 @@ public class FileGenerator extends BaseGenerator implements Generator
 	
 	protected boolean checkCache(WebPageRequest inContext, Page contentpage, HttpServletRequest req, HttpServletResponse res)
 	{
-		long now = System.currentTimeMillis();			
-		boolean cache = true;
-		String nocache = inContext.findValue("cache");
-		if( nocache != null ) 
-		{
-			cache = Boolean.parseBoolean(nocache);
-		}
-		else
-		{
-			//is this recenlty modified?
-			//3333333recent99  + 24 hours (mil * sec * min * hours) will be more than now
-			cache = contentpage.lastModified() + (1000 * 60 * 60 * 24 ) < now;
-		}
-		if( cache && req != null)
+		if( req != null)
 		{
 			String since = req.getHeader("If-Modified-Since");
 			if( since != null && since.endsWith("GMT"))
@@ -326,18 +313,12 @@ public class FileGenerator extends BaseGenerator implements Generator
 			}
 			
 		}
-		res.setDateHeader("Last-Modified",contentpage.getLastModified().getTime());
+		setHeaders(res, contentpage);
 		
-		if(  cache )
-		{
-			res.setDateHeader("Expires", now + (1000 * 60 * 60 * 24 * 30 * 6 )); //sec * min * hour * 48 Hours	 six months			
-		}
-		else
-		{
-			res.setDateHeader("Expires", now - (1000 * 60 * 60 * 24)); //expired 24 hours ago
-		}
 		return false;
 	}
+	
+	
 	public boolean canGenerate(WebPageRequest inReq)
 	{
 		return true;
