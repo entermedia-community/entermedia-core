@@ -87,12 +87,12 @@ public class FileGenerator extends BaseGenerator implements Generator
 			//only bother if we are the content page and not in development
 			if ( res != null && inContext.getContentPage() == contentpage  )
 			{
-				boolean cached = checkCache(inContext, contentpage, req, res);
+				boolean cached = checkCache(inContext, contentpage.lastModified(), req, res);
 				if( cached )
 				{
 					return;
 				}
-				setHeaders(res, contentpage);
+				setHeaders(res, contentpage.lastModified());
 			}
 			//sometimes we can specify the length of the document
 			//long length = -1;

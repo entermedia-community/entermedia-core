@@ -160,14 +160,14 @@ public abstract class BaseGenerator implements Generator, Cloneable
 		return fieldLastModFormat;
 	}
 	
-	protected boolean checkCache(WebPageRequest inContext, Page contentpage, HttpServletRequest req, HttpServletResponse res)
+	protected boolean checkCache(WebPageRequest inContext, Long lastmodified, HttpServletRequest req, HttpServletResponse res)
 	{
 		if( req != null)
 		{
 			String match = req.getHeader("If-None-Match");
 			if (match != null)
 			{
-				String lasmodified = String.valueOf(contentpage.lastModified());
+				String lasmodified = String.valueOf(lastmodified);
 				if (lasmodified.equals(match))
 				{
 					res.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
@@ -184,7 +184,7 @@ public abstract class BaseGenerator implements Generator, Cloneable
 					Date old = getLastModFormat().parse(since);
 					
 					long oldtime = old.getTime() / 1000;
-					long currenttime = contentpage.lastModified() / 1000;
+					long currenttime = lastmodified / 1000;
 					
 					if( currenttime == oldtime)
 					{
@@ -205,12 +205,11 @@ public abstract class BaseGenerator implements Generator, Cloneable
 	}
 	
 	
-	protected void setHeaders(HttpServletResponse res, Page contentpage)
+	protected void setHeaders(HttpServletResponse res, Long lastmodified)
 	{
-		Long lastmodified = contentpage.getLastModified().getTime();
 		res.setHeader("ETag", lastmodified.toString());
 		res.setHeader("Cache-Control", "max-age=0; must-revalidate");
-		res.setDateHeader("Last-Modified", lastmodified);
+		//res.setDateHeader("Last-Modified", lastmodified);
 		//long now = System.currentTimeMillis();	
 		//res.setDateHeader("Expires", now + (1000 * 60 * 60 * 24 * 30 * 6 )); //sec * min * hour * 48 Hours	 six months
 	}
