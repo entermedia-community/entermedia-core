@@ -63,7 +63,9 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.security.cert.X509Certificate;
+import java.util.Collection;
 import java.util.Formatter;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -82,6 +84,7 @@ import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.conn.BasicHttpClientConnectionManager;
+import org.json.simple.JSONObject;
 import org.openedit.OpenEditException;
 
 
@@ -1260,5 +1263,18 @@ public class URLUtilities
 		text = text.replaceAll(" ","-").replaceAll("&amp;","-");
 		return text;
 	}
-	
+
+	public String getRequestParameter(String inKey)
+	{
+		String value = null;
+		if( getRequest() != null )
+		{
+			value = getRequest().getParameter(inKey);
+		}
+		if ( value != null && value.length() == 0)
+		{
+			value = null; //null out blank strings
+		}
+		return value;
+	}	
 }
