@@ -743,7 +743,15 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 		{
 			Data data = (Data) iterator.next();
 			Object value = data.getValue(inString);
-			if( value != null)
+			if( value instanceof Collection)
+			{
+				for (Iterator iterator2 = ((Collection)value).iterator(); iterator2.hasNext();)
+				{
+					Object object = (Object) iterator2.next();
+					allvalues.add(object);
+				}
+			}
+			else if( value != null)
 			{
 				allvalues.add(value);
 			}
