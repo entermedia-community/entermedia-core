@@ -734,7 +734,7 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 	}
 	public Collection<String> collectValues(String inString)
 	{
-		if( size() > 10000)
+		if(getHitsPerPage() < 1000 &&  size() > 10000)
 		{
 			throw new OpenEditException("Cant get values across large data sets " + getQuery());
 		}
