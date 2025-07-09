@@ -1,14 +1,13 @@
 package org.openedit.page;
 
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.openedit.Data;
 
 
-public class PermissionSorter implements Comparator<Permission>
+public class PermissionSorter implements java.util.Comparator<Permission>
 {
 	protected Map<String,Integer> fieldSortOrder;
 	
