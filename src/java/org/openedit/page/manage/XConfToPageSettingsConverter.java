@@ -123,6 +123,7 @@ public class XConfToPageSettingsConverter
 		style.setId(inConfigElement.get("id"));
 		style.setHref(inConfigElement.get("href"));
 		style.setExternal(Boolean.parseBoolean(inConfigElement.get("external")));
+		style.setPreload(Boolean.parseBoolean(inConfigElement.get("preload")));
 		style.setCancel(Boolean.parseBoolean(inConfigElement.get("cancel")));
 		return style;
 	}

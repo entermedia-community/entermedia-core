@@ -5,6 +5,16 @@ public class Style
 	protected String fieldHref;
 	protected String fieldId;
 	protected boolean fieldCancel;
+	protected boolean fieldPreload;
+	
+	public boolean isPreload()
+	{
+		return fieldPreload;
+	}
+	public void setPreload(boolean inPreload)
+	{
+		fieldPreload = inPreload;
+	}
 	public String getHref()
 	{
 		return fieldHref;

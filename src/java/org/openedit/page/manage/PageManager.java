@@ -667,6 +667,10 @@ public class PageManager
 		return item;
 	}
 	
+	
+	
+	
+	
 	public List<String> getScriptPathsForApp(Page inContent)
 	{
 		String applicationid = inContent.get("applicationid");
@@ -684,6 +688,19 @@ public class PageManager
 		List<Script> appscripts = loadScriptsFor(site);
 		return appscripts;
 	}
+	
+	
+	public List<Style> getStylesForApp(Page inContent)
+	{
+		String applicationid = inContent.get("applicationid");
+		String apppath = "/" + applicationid + "/_site.xconf";
+		PageSettings site = getPageSettingsManager().getPageSettings(apppath);
+		List<Style> appscripts = loadStylesFor(site);
+		return appscripts;
+	}
+	
+	
+	
 	
 	public List<String> getScriptPathsWithoutApp(Page inContent)
 	{
@@ -746,6 +763,51 @@ public class PageManager
 		return finalscripts;
 	}
 
+	
+	public List<Style> loadStylesFor(PageSettings startingfrom)
+	{
+		List<Style>  finalscripts = (List)getCacheManager().get("styles",startingfrom.getPath());
+		if( finalscripts == null)
+		{
+			List<Style> styles = startingfrom.getStyles();
+			if( styles != null)
+			{
+				finalscripts = new ArrayList(styles.size());
+				Set canceled = new HashSet();
+				for (Iterator iterator = styles.iterator(); iterator.hasNext();)
+				{
+					Style style = (Style) iterator.next();
+					if( style.isCancel())
+					{
+						canceled.add(style.getId());
+					}
+					else
+					{
+						canceled.remove(style.getId()); //Last one wins
+					}
+				}
+				for (Iterator iterator = styles.iterator(); iterator.hasNext();)
+				{
+					Style script = (Style) iterator.next();
+					if(canceled.contains(script.getId()))
+					{
+						continue;
+					}
+//					String value = script.getSrc();
+//					value = startingfrom.replaceProperty(value);
+//					if( value == null)
+//					{
+//						throw new OpenEditException("src value cannot be null " + script.getPath() + " #" + script.getId());
+//					}
+					finalscripts.add(script);
+				}
+				getCacheManager().put("styles" ,startingfrom.getPath(),finalscripts);
+			}
+			}
+		return finalscripts;
+	}
+	
+	
 	
 	protected List<String> loadScriptPathsFor(PageSettings startingfrom)
 	{
