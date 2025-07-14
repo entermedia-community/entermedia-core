@@ -1,11 +1,35 @@
 package org.openedit.config;
 
-public class Script
+import java.util.HashMap;
+import java.util.Map;
+
+public class Script 
 {
 	protected String fieldSrc;
 	protected String fieldId;
 	protected boolean fieldExternal;
 	protected boolean fieldDefer;
+	protected Map <String, String>fieldExtraProperties;
+	
+	public Map <String, String> getExtraProperties()
+	{
+		if (fieldExtraProperties == null)
+		{
+			fieldExtraProperties = new HashMap();
+			
+		}
+
+		return fieldExtraProperties;
+	}
+
+	public void setProperty(String inKey, String inValue) {
+		getExtraProperties().put(inKey, inValue);
+	}
+	
+	public String get(String inKey) {
+		return getExtraProperties().get(inKey);
+	}
+	
 	public boolean isDefer()
 	{
 		return fieldDefer;

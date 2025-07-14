@@ -115,6 +115,18 @@ public class XConfToPageSettingsConverter
 		String external = inConfigElement.get("external");
 		script.setExternal(Boolean.parseBoolean(external));
 		script.setPath(inSettings.getPath());
+		List extras = inConfigElement.getChildren("property");
+		if(extras != null) {
+			for (Iterator iterator = extras.iterator(); iterator.hasNext();)
+			{
+				Configuration child = (Configuration) iterator.next();
+				String key = child.getAttribute("name");
+				String val = child.getValue();
+				if(key != null && val != null) {
+					script.setProperty(key, val);
+				}
+			}
+		}
 		return script;
 	}
 	protected Style createStyle(PageSettings inSettings, Configuration inConfigElement)
