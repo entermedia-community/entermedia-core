@@ -431,6 +431,15 @@ public class QueryBuilder
 		return this;
 		
 	}
+
+	public QueryBuilder include(Collection<String> inCludes)
+	{
+		getQuery().setIncludeOnly(inCludes);
+		return this;
+		
+	}
+
+	
 	public QueryBuilder terms(WebPageRequest inReq) {
 		if (fieldQuery == null) {
 			

@@ -900,7 +900,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			resultype = getSearchType();
 		}
 		search.setResultType(resultype);
-		
+
 		String includeDescription = inPageRequest.findValue("includeDescription");
 		if(Boolean.parseBoolean(includeDescription)) {
 			search.setIncludeDescription(true);

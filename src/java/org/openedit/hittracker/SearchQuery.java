@@ -117,6 +117,19 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		fieldIncludeDescription = inIncludeDescription;
 	}
 
+	protected Collection fieldIncludeOnly;
+	
+	public Collection getIncludeOnly()
+	{
+		return fieldIncludeOnly;
+	}
+
+
+	public void setIncludeOnly(Collection inIncludeOnly)
+	{
+		fieldIncludeOnly = inIncludeOnly;
+	}
+
 	protected int fieldHitsPerPage = 15;	
 	
 	public SearchQuery()
