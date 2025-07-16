@@ -39,7 +39,7 @@ public interface MultiValued extends Data
 	}
 	public static List<Double> collectDoubles(Collection vector) 
 	{
-		List<Double> floats = new ArrayList(vector.size());
+		List<Double> doubles = new ArrayList(vector.size());
 		for (Iterator iterator = vector.iterator(); iterator.hasNext();)
 		{
 			Object floatobj = iterator.next();
@@ -51,6 +51,34 @@ public interface MultiValued extends Data
 			else
 			{
 				f = Double.parseDouble(floatobj.toString());
+			}
+			doubles.add(f);
+		}
+		return doubles;
+	}
+	public static List<Float> collectFloats(String[] vector) 
+	{
+		List<Float> floats = new ArrayList(vector.length );
+		for (int i = 0; i < vector.length; i++)
+		{
+			float f = Float.parseFloat(vector[i]);
+			floats.add(f);
+		}
+		return floats;
+	}
+	public static List<Float> collectFloats(Collection vector) {
+		List<Float> floats = new ArrayList(vector.size());
+		for (Iterator iterator = vector.iterator(); iterator.hasNext();)
+		{
+			Object floatobj = iterator.next();
+			float f;
+			if( floatobj instanceof Float || floatobj instanceof Double)
+			{
+				f = (float)floatobj;
+			}
+			else
+			{
+				f = Float.parseFloat(floatobj.toString());
 			}
 			floats.add(f);
 		}

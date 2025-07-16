@@ -692,7 +692,7 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 
 	public boolean isNumber()
 	{
-		if (isDataType("double") || isDataType("number") || isDataType("long"))
+		if (isDataType("double") || isDataType("float") || isDataType("number") || isDataType("long"))
 		{
 			return true;
 		}
