@@ -11,6 +11,12 @@ public class PaginatedIdHitTracker extends ListHitTracker
 	}
 	
 	@Override
+	public boolean hasChanged(HitTracker inTracker)
+	{
+		return false;
+	}
+	
+	@Override
 	public void setPage(int inPageOneBased)
 	{
 		if( inPageOneBased == -1)
@@ -32,7 +38,7 @@ public class PaginatedIdHitTracker extends ListHitTracker
 			
 			String sort = getSearchQuery().getSortBy();
 			
-			HitTracker assets = getSearcher().query().ids(page).named(getHitsName()).hitsPerPage(inHitsPerPage).sort(sort).search();
+			HitTracker assets = getSearcher().getSearcherManager().getSearcher(getSearcher().getCatalogId(),"asset").query().ids(page).hitsPerPage(inHitsPerPage).sort(sort).search();
 			fieldCurrentPage = assets.getPageOfHits();
 			
 		}
