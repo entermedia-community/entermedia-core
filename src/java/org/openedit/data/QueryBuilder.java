@@ -432,11 +432,17 @@ public class QueryBuilder
 		
 	}
 
-	public QueryBuilder include(Collection<String> inCludes)
+	public QueryBuilder includefields(Collection<String> inCludes)
 	{
 		getQuery().setIncludeOnly(inCludes);
 		return this;
 		
+	}
+
+	public QueryBuilder excludefields(Collection<String> excludefields)
+	{
+		getQuery().setExcludeFields(excludefields);
+		return this;
 	}
 
 	

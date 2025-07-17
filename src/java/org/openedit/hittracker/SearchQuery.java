@@ -111,13 +111,26 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		fieldIncludeDeleted = inIncludeDeleted;
 	}
 
+	protected Collection<String> fieldExcludeFields;
+
+	public Collection<String> getExcludeFields()
+	{
+		return fieldExcludeFields;
+	}
+
+
+	public void setExcludeFields(Collection<String> inExcludeFields)
+	{
+		fieldExcludeFields = inExcludeFields;
+	}
+
 
 	public void setIncludeDescription(boolean inIncludeDescription)
 	{
 		fieldIncludeDescription = inIncludeDescription;
 	}
 
-	protected Collection fieldIncludeOnly;
+	protected  Collection<String>  fieldIncludeOnly;
 	
 	public Collection getIncludeOnly()
 	{

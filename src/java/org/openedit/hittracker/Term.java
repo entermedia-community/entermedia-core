@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.dom4j.DocumentHelper;
@@ -49,6 +50,18 @@ abstract public class Term {
 		return fieldValues;
 	}
 	public Collection getValueCollection()
+	{
+		if( fieldValues != null)
+		{
+			return Arrays.asList(fieldValues);
+		}
+		if( fieldValue != null)
+		{
+			return Arrays.asList(fieldValue);
+		}
+		return Collections.EMPTY_LIST;
+	}
+	public List getValueList()
 	{
 		if( fieldValues != null)
 		{
