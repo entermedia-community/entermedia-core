@@ -5,21 +5,44 @@ import java.util.List;
 
 public class PaginatedIdHitTracker extends ListHitTracker
 {
+	public PaginatedIdHitTracker()
+	{
+		fieldPage = -1;
+	}
+	
+	@Override
+	public void setPage(int inPageOneBased)
+	{
+		if( inPageOneBased == -1)
+		{
+			return;
+		}
+		if( fieldPage != inPageOneBased )
+		{
+			fieldCurrentPage = null;
+			fieldPage = inPageOneBased;
 
+			int inHitsPerPage = getHitsPerPage();
+			int count = (getPage() - 1) * inHitsPerPage; // pick up from here
+			int max = Math.min(getList().size(), count + inHitsPerPage);
+			List page = getList().subList(count, max);
+
+			Term term = getSearchQuery().getTermByTermId("id");
+			term.setValues(page.toArray(new String[page.size()]));
+			
+			String sort = getSearchQuery().getSortBy();
+			
+			HitTracker assets = getSearcher().query().ids(page).named(getHitsName()).hitsPerPage(inHitsPerPage).sort(sort).search();
+			fieldCurrentPage = assets.getPageOfHits();
+			
+		}
+	}
+	
 	
 	public List getPageOfHits()
 	{
-		int inHitsPerPage = getHitsPerPage();
-		int count = (getPage() - 1) * inHitsPerPage; // pick up from here
-		int max = Math.min(getList().size(), count + inHitsPerPage);
-		List page = getList().subList(count, max);
-
-		Term term = getSearchQuery().getTermByTermId("id");
-		term.setValues(page.toArray(new String[page.size()]));
-		
-		String sort = getSearchQuery().getSortBy();
-		
-		HitTracker assets = getSearcher().query().ids(page).named(getHitsName()).hitsPerPage(inHitsPerPage).sort(sort).search();
-		return assets.getPageOfHits();
+		setPage(1); //?
+		List page = super.getPageOfHits();
+		return page;
 	}
 }
