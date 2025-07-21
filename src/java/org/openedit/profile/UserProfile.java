@@ -7,9 +7,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-
-import javax.sound.sampled.TargetDataLine;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -21,6 +18,7 @@ import org.openedit.WebPageRequest;
 import org.openedit.data.BaseData;
 import org.openedit.data.EntityPermissions;
 import org.openedit.data.PropertyDetail;
+import org.openedit.data.QueryBuilder;
 import org.openedit.data.SaveableData;
 import org.openedit.data.Searcher;
 import org.openedit.data.SearcherManager;
@@ -766,19 +764,15 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 	public Data getDefaultViewForModule(String inModuleId)
 	{
 		Searcher viewSearcher = getSearcherManager().getSearcher(getCatalogId(), "view");
-		SearchQuery q = viewSearcher.createSearchQuery();
-		q.addMatches("moduleid", inModuleId);
-		q.addMatches("systemdefined", "false");
-		q.addSortBy("ordering");
-		HitTracker row = (HitTracker) viewSearcher.search(q);
-		if (row.size() > 0)
-		{
-			if (row != null)
-			{
-				return row.get(0);
-			}
-		}
-		return null;
+		QueryBuilder q = viewSearcher.query();
+		q.exact("moduleid", inModuleId);
+		q.exact("systemdefined", "false");
+		q.sort("ordering");
+		q.hitsPerPage(1);
+		
+		HitTracker tracker = viewSearcher.getCachedSearch(q);
+
+        return (Data)tracker.iterator().next();
 	}
 
 	@Override
