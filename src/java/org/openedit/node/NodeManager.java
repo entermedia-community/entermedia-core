@@ -39,5 +39,7 @@ public interface NodeManager
 
 	Collection<String> getMappedTypes(String inCatalogId);
 
+	public boolean isForceSaveMasterCluster();
+	public void setForceSaveMasterCluster(boolean inForceSaveMasterCluster);
 	
 }
