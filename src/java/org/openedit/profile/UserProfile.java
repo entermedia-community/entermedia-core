@@ -765,6 +765,7 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 	{
 		Searcher viewSearcher = getSearcherManager().getSearcher(getCatalogId(), "view");
 		QueryBuilder q = viewSearcher.query();
+		q.ignoreEmpty();
 		q.exact("moduleid", inModuleId);
 		q.exact("systemdefined", "false");
 		q.sort("ordering");
