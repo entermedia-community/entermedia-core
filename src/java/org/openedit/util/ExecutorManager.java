@@ -11,6 +11,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.RejectedExecutionHandler;
@@ -157,13 +158,14 @@ public class ExecutorManager implements Shutdownable
 	        }
 	    }
 	}
-	public void execute(String inType, Runnable inRunnable)
+	public Future<?> execute(String inType, Runnable inRunnable)
 	{
-		getExecutor(inType).execute(inRunnable);
+		Future future =	getExecutor(inType).submit(inRunnable);
+		return future;
 	}
-	public void execute(Runnable inRunnable)
+	public  Future<?> execute(Runnable inRunnable)
 	{
-		execute("unlimited",inRunnable);
+		return execute("unlimited",inRunnable);
 	}
 	public void waitForIt(ExecutorService inExec)
 	{

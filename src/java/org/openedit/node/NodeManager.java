@@ -42,4 +42,5 @@ public interface NodeManager
 	public boolean isForceSaveMasterCluster();
 	public void setForceSaveMasterCluster(boolean inForceSaveMasterCluster);
 	
+	public void flushDb();
 }
