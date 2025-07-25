@@ -48,7 +48,6 @@ public class PaginatedIdHitTracker extends ListHitTracker
 	public List getPageOfHits()
 	{
 		setPage(1); //?
-		List page = super.getPageOfHits();
-		return page;
+		return fieldCurrentPage;
 	}
 }
