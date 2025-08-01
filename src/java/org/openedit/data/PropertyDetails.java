@@ -712,6 +712,19 @@ public class PropertyDetails implements Collection<PropertyDetail>
 			}
 			return list;
 	}
+	
+	public List findAiCreationProperties() {
+		List list = new ArrayList(getDetails().size());
+		for (Iterator iter = getDetails().iterator(); iter.hasNext();)
+		{
+			PropertyDetail d = (PropertyDetail) iter.next();
+			if (d.getValue("aicreationcommand") != null && d.getValue("aicreationcommand") != "")
+			{
+				list.add(d);
+			}
+		}
+		return list;
+	}
 
 	@Override
 	public boolean isEmpty()
