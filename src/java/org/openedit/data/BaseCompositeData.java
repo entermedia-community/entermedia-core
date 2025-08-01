@@ -1,6 +1,7 @@
 package org.openedit.data;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -774,9 +775,31 @@ public class BaseCompositeData extends BaseData implements Data, CompositeData
 	{
 
 		Object val = getPropertiesSet().getValue(inPreference); //set by the user since last save
-		if( val != null && !val.equals(""))
+		if( val != null)
 		{
-			return (Collection<String>)val; 
+			if (val.equals(""))
+			{
+			return null;
+			}
+			else if(val instanceof Collection)
+			{
+				return (Collection<String>)val;
+			}
+			else
+			{
+				String[] vals = null;
+				String value = (String)val;
+				if( value.contains("|") )
+				{
+					vals = MultiValued.VALUEDELMITER.split(value);
+				}
+				else
+				{
+					vals = new String[]{value};
+				}
+				Collection collection = new ArrayList(Arrays.asList(vals)); //To make it editable
+				return collection;
+			}
 		}
 
 		Object currentlist = getValueFromResults(inPreference);
