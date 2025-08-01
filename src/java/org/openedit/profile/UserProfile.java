@@ -772,7 +772,9 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 		q.hitsPerPage(1);
 		
 		HitTracker tracker = viewSearcher.getCachedSearch(q);
-
+		if(tracker.size()== 0) {
+		    return null;
+		}
         return (Data)tracker.iterator().next();
 	}
 
