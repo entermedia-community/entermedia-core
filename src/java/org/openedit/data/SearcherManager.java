@@ -64,6 +64,10 @@ public class SearcherManager
 		{
 			return null;
 		}
+		if( inCatalogId.endsWith("notset") )
+		{
+			throw new OpenEditException("Catalog id is not set for application. Add catalogid to .xconfs");
+		}
 		//look in map for existing
 		String id = inCatalogId + "|" + inFieldName;
 		
