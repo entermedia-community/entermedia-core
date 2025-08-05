@@ -62,7 +62,7 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	//protected List<ChildFilter> fieldChildrenFilters;
 	protected List<FilterNode> fieldFilters; 
 	protected Collection<String> fieldSecurityIds;
-	protected boolean fieldIncludeDescription = false;
+	protected boolean fieldIncludeDescription = true;
 	protected boolean fieldIncludeDeleted = false;
 	protected String fieldTimeZone;
 	protected int fieldDefaultAggregationCount = 50;

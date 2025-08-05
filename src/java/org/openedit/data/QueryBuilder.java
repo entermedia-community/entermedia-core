@@ -425,9 +425,9 @@ public class QueryBuilder
 	{
 		return getQuery().toQuery();
 	}
-	public QueryBuilder includeDescription()
+	public QueryBuilder includeDescription(Boolean inIncluded)
 	{
-		getQuery().setIncludeDescription(true);
+		getQuery().setIncludeDescription(inIncluded);
 		return this;
 		
 	}
