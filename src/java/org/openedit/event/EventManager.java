@@ -150,8 +150,13 @@ public class EventManager
 			}
 			event.setProperty("details", changesstring);
 			
-			String jsonsource = readJSON(inReq, inSearcher, object);
-			event.setValue("detailsjson", jsonsource);
+			if (inSearcher.getSearchType().equals("asseteditLog"))
+			{
+				String jsonsource = readJSON(inReq, inSearcher, object);
+				event.setValue("detailsjson", jsonsource);
+			}
+			
+			
 			
 			event.setUser(inReq.getUser());
 			fireEvent(event);
