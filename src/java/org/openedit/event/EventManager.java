@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.json.simple.JSONObject;
 import org.openedit.Data;
 import org.openedit.OpenEditException;
 import org.openedit.WebPageRequest;
@@ -135,11 +136,41 @@ public class EventManager
 			event.setProperty(inSearcher.getSearchType() + "id", object.getId());
 
 			event.setProperty("sourcepath", object.getSourcePath());
+			
 			//aka "changes"
-			event.setProperty("details", changes.toString());
+			String changesstring = changes.toString();
+			
+			String viewid = inReq.findValue("viewid");
+			event.setProperty("viewid", viewid);
+			
+			if (viewid != null)
+			{
+				Data view = getSearcherManager().getCachedData(inSearcher.getCatalogId(), "view", viewid);
+				changesstring = view.getName() + " \n" + changesstring;
+			}
+			event.setProperty("details", changesstring);
+			
+			String jsonsource = readJSON(inReq, inSearcher, object);
+			event.setValue("detailsjson", jsonsource);
+			
 			event.setUser(inReq.getUser());
 			fireEvent(event);
 		}
+	}
+	
+	public String readJSON(WebPageRequest inReq, Searcher inSearcher, Data object)
+	{
+		Data compare = inSearcher.createNewData();
+		String[] fields = inReq.getRequestParameters("field");
+		if (fields == null)
+		{
+			return null;
+		}
+		
+		inSearcher.updateData(inReq, fields, compare);
+		
+		String jsonsource = compare.toJsonString();
+		return jsonsource;
 	}
 
 	public String readChanges(WebPageRequest inReq, Searcher inSearcher, Data object) {
@@ -166,7 +197,7 @@ public class EventManager
 			{
 				continue;
 			}
-			if (oldval == null && value instanceof LanguageMap)
+			if ((oldval == null || oldval.equals("")) && value instanceof LanguageMap)
 			{
 				if (((LanguageMap) value).isEmpty())
 				{
@@ -209,7 +240,7 @@ public class EventManager
 				{
 					oldval = "Empty";
 				}
-				changes.append(field + ": " + oldval + " -> " + value);
+				changes.append(detail.getName() + ": " + oldval + " -> " + value + "\n");
 			}
 		}
 		return changes.toString();
