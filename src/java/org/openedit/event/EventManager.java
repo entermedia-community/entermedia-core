@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.openedit.Data;
 import org.openedit.OpenEditException;
@@ -14,6 +15,9 @@ import org.openedit.data.PropertyDetail;
 import org.openedit.data.Searcher;
 import org.openedit.data.SearcherManager;
 import org.openedit.modules.translations.LanguageMap;
+import org.openedit.users.User;
+
+import groovy.json.JsonOutput;
 
 public class EventManager
 {
@@ -102,11 +106,54 @@ public class EventManager
 	public void eventFired(WebEvent inEvent)
 	{
 		fireEvent(inEvent);//legacy
-		
 	}
 
-	public void fireDataEditEvent(WebPageRequest inReq, Searcher inSearcher, Data object)
+	public void fireDataEditEvent(WebPageRequest inReq, Searcher inDataSearcher, Data inData)
 	{
+		Map changes= readChanges(inReq, inDataSearcher, inData);
+		String viewid = inReq.findValue("viewid");
+		fireDataEditEvent(inDataSearcher,inReq.getUser(),viewid,inData, changes);
+	}
+	public void fireDataEditEvent(Searcher inDataSearcher, User inUser, String inViewId, Data inData, Map inChanges)
+	{
+		if (!inChanges.isEmpty())
+		{
+			
+			String logtype = inDataSearcher.getSearchType() + "editLog";
+			
+			WebEvent event = new WebEvent();
+			event.setCatalogId(inDataSearcher.getCatalogId());
+			event.setSearchType(logtype);
+			event.setSource(this);
+			event.setOperation("edit");
+			event.setSourcePath(inData.getSourcePath());
+			event.setProperty("id", inData.getId());
+			event.setProperty(inDataSearcher.getSearchType() + "id", inData.getId());  //Deprecated
+			event.setProperty("dataid", inData.getId());
+			event.setProperty("sourcepath", inData.getSourcePath());
+			
+			//aka "changes"
+			event.setProperty("viewid", inViewId);
+			String changesstring = makeHumanLog(inDataSearcher,inData,inChanges);
+			
+			if (inViewId != null)
+			{
+				Data view = getSearcherManager().getCachedData(inDataSearcher.getCatalogId(), "view", inViewId);
+				changesstring = view.getName() + " \n" + changesstring;
+			}
+			event.setProperty("details", changesstring);
+			
+			if (inDataSearcher.getSearchType().equals("asset"))
+			{
+				String jsonsource = makeJsonLog(inChanges);
+				event.setValue("detailsjson", jsonsource);
+			}
+			event.setUser(inUser);
+			fireEvent(event);
+		}
+	}
+	
+	/*
 
 		String changes = readChanges(inReq, inSearcher, object);
 
@@ -119,17 +166,6 @@ public class EventManager
 			String type = inSearcher.getSearchType();
 			event.setSearchType(type);
 			event.setSource(this);
-			//assetedit
-
-			//			event.setSearchType("assetedit");
-			//			event.setSource(this);
-			//			event.setOperation("assetedit");
-			//			event.setSourcePath(asset.getSourcePath());
-
-			//			event.setProperty("assetid", asset.getId());
-			//			event.setProperty("assetname", asset.getName());
-			//			event.setProperty("changes", changes.toString());
-
 			event.setOperation("edit");
 			event.setSourcePath(object.getSourcePath());
 			event.setProperty("id", object.getId());
@@ -155,100 +191,113 @@ public class EventManager
 				String jsonsource = readJSON(inReq, inSearcher, object);
 				event.setValue("detailsjson", jsonsource);
 			}
-			
-			
-			
 			event.setUser(inReq.getUser());
 			fireEvent(event);
 		}
 	}
+	*/
 	
-	public String readJSON(WebPageRequest inReq, Searcher inSearcher, Data object)
+	public String makeJsonLog(Map changes)
 	{
-		Data compare = inSearcher.createNewData();
-		String[] fields = inReq.getRequestParameters("field");
-		if (fields == null)
-		{
-			return null;
-		}
-		
-		inSearcher.updateData(inReq, fields, compare);
-		
-		String jsonsource = compare.toJsonString();
-		return jsonsource;
-	}
+//		Data newdata = inDataSearcher.createNewData();
+//		Map data = inData.getProperties();
+//		newdata.getProperties().putAll(data);
 
-	public String readChanges(WebPageRequest inReq, Searcher inSearcher, Data object) {
-		StringBuffer changes = new StringBuffer();
-		String[] fields = inReq.getRequestParameters("field");
-		if (fields == null)
+		JSONObject json = new JSONObject();
+		for(Iterator iterator = changes.keySet().iterator(); iterator.hasNext();)
 		{
-			return null;
-		}
-		//		if (composite != null)
-		//		{
-		//			changes.append("MutliEdit->");
-		//		}
-		Data compare = inSearcher.createNewData();
-		inSearcher.updateData(inReq, fields, compare);
-		for (int i = 0; i < fields.length; i++)
-		{
-			String field = fields[i];
-			Object value = compare.getValue(field);
-
-			Object oldval = object.getValue(field);
-
-			if (value == null && oldval == null)
+			String key = (String) iterator.next();
+			Object value = changes.get(key);
+			if (value == null)
 			{
 				continue;
 			}
-			if ((oldval == null || oldval.equals("")) && value instanceof LanguageMap)
+			if (value instanceof Collection)
 			{
-				if (((LanguageMap) value).isEmpty())
+				JSONArray jsonarray = new JSONArray();
+				jsonarray.addAll((Collection) value);
+				json.put(key, jsonarray);
+			}
+			else if (value instanceof Map)
+			{
+				JSONObject jsonmap = new JSONObject((Map) value);
+				json.put(key, jsonmap);
+			}
+			else
+			{
+				json.put(key, value);
+			}
+		}
+		
+		String out = json.toJSONString();
+		return out;
+		
+	}
+	public Map readChanges(WebPageRequest inReq, Searcher inDataSearcher, Data inData) 
+	{
+		String[] fields = inReq.getRequestParameters("field");
+		Data newdata = inDataSearcher.createNewData();
+		inDataSearcher.updateData(inReq,fields,newdata );
+		Map changemap = newdata.getProperties();
+		return changemap;
+	}
+		
+	public String makeHumanLog(Searcher inDataSearcher, Data inData, Map changes) 
+	{
+		StringBuffer textoutput = new StringBuffer();
+		
+		Collection fields = changes.keySet();
+		for (Iterator iterator = fields.iterator(); iterator.hasNext();)
+		{
+			String field = (String) iterator.next();
+			Object newvalue = changes.get(field);
+
+			Object oldval = inData.getValue(field);
+
+			if (newvalue == null && oldval == null)
+			{
+				continue;
+			}
+			if ((oldval == null || oldval.equals("")) && newvalue instanceof LanguageMap)
+			{
+				if (((LanguageMap) newvalue).isEmpty())
 				{
 					continue;
 				}
 			}
-			if (value != null && oldval == null)
+			if (newvalue != null && oldval == null)
 			{
-				if(value.toString().isEmpty())
+				if(newvalue.toString().isEmpty())
 				{
 					continue;
 				}
 			}
 
-			if (value != null && !value.equals(oldval))
+			PropertyDetail detail = inDataSearcher.getDetail(field);
+			if (detail != null && detail.isList())
 			{
-				PropertyDetail detail = inSearcher.getDetail(field);
-				if (detail != null && detail.isList())
+				if (newvalue instanceof String && oldval instanceof String)
 				{
-					if (value instanceof String && oldval instanceof String)
+					Data data = (Data)getSearcherManager().getCachedData(detail.getListCatalogId(), detail.getListId(), (String) oldval);
+					if (data != null)
 					{
-						Searcher listSearcher = getSearcherManager().getListSearcher(detail);
-						Data data = (Data) listSearcher.searchById((String) oldval);
-						if (data != null)
-						{
-							oldval = data.getName();
-						}
-						data = (Data) listSearcher.searchById((String) value);
-						if (data != null)
-						{
-							value = data.getName();
-						}
+						oldval = data.getName();
+					}
+					Data newdata = (Data)getSearcherManager().getCachedData(detail.getListCatalogId(), detail.getListId(), (String) newvalue);
+					if (newdata != null)
+					{
+						newvalue = newdata.getName();
 					}
 				}
-				if (changes.length() > 0)
-				{
-					changes.append(", ");
-				}
-				if (oldval == null)
-				{
-					oldval = "Empty";
-				}
-				changes.append(detail.getName() + ": " + oldval + " -> " + value + "\n");
 			}
+			if (oldval == null)
+			{
+				oldval = "Empty";
+			}
+			textoutput.append(detail.getName() + ": " + oldval + " -> " + newvalue + "\n");
+			//textoutput.append();
 		}
-		return changes.toString();
+		return textoutput.toString();
 	}
 
 	public void fireDataSavedEvent(WebPageRequest inReq, Searcher inSearcher, Data data)
