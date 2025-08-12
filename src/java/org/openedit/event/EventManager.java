@@ -123,7 +123,7 @@ public class EventManager
 			
 			WebEvent event = new WebEvent();
 			event.setCatalogId(inDataSearcher.getCatalogId());
-			event.setSearchType(logtype);
+			event.setSearchType(inDataSearcher.getSearchType());
 			event.setSource(this);
 			event.setOperation("edit");
 			event.setSourcePath(inData.getSourcePath());
@@ -290,11 +290,17 @@ public class EventManager
 					}
 				}
 			}
+			else {
+				if (newvalue != null && newvalue.equals(oldval)) {
+					continue;
+				}
+
+			}
 			if (oldval == null)
 			{
 				oldval = "Empty";
 			}
-			textoutput.append(detail.getName() + ": " + oldval + " -> " + newvalue + "\n");
+			textoutput.append(detail.getName() + ": " + oldval + " -> " + newvalue + "\n ");
 			//textoutput.append();
 		}
 		return textoutput.toString();
