@@ -139,7 +139,10 @@ public class EventManager
 			if (inViewId != null)
 			{
 				Data view = getSearcherManager().getCachedData(inDataSearcher.getCatalogId(), "view", inViewId);
-				changesstring = view.getName() + " \n" + changesstring;
+				if (view != null)
+				{
+					changesstring = view.getName() + " \n" + changesstring;
+				}
 			}
 			event.setProperty("details", changesstring);
 			
