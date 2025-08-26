@@ -7,6 +7,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import org.openedit.modules.translations.LanguageMap;
+
 public interface MultiValued extends Data
 {
 	
@@ -84,5 +86,7 @@ public interface MultiValued extends Data
 		}
 		return floats;
 	}
+	
+	public LanguageMap getLanguageMap(String inId);
 
 }
