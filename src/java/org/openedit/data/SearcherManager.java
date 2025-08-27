@@ -100,15 +100,9 @@ public class SearcherManager
 					//set the data
 					searcher.setPropertyDetailsArchive(newarchive);
 					searcher.setSearcherManager(this);
-					if( init )
-					{
-						searcher.initialize();
-					}
-					if(log.isDebugEnabled())
-					{
-						log.debug("Created New Searcher: Catalog = " + searcher.getCatalogId() + "SearchType = " + searcher.getSearchType() + "Searcher = " + searcher.getClass() );
-					}
+					
 					getCache().put(id, searcher);
+					
 					if( !finalcatalogid.equals(inCatalogId))
 					{
 						getCache().put(finalcatalogid + "|" + inFieldName, searcher); //make sure we store both versions since they are the same searcher
@@ -120,6 +114,14 @@ public class SearcherManager
 						{
 							setShowSearchLogs(inCatalogId, Boolean.parseBoolean(defaultval.get("value")));
 						}
+					}
+					if( init )
+					{
+						searcher.initialize();
+					}
+					if(log.isDebugEnabled())
+					{
+						log.debug("Created New Searcher: Catalog = " + searcher.getCatalogId() + "SearchType = " + searcher.getSearchType() + "Searcher = " + searcher.getClass() );
 					}
 				}
 			}
