@@ -713,7 +713,16 @@ public class PageManager
 		String apppath = "/" + applicationid + "/_site.xconf";
 		PageSettings site = getPageSettingsManager().getPageSettings(apppath);
 
-		List<String> combined = new ArrayList(scripts); 
+		List<String> combined = new ArrayList();
+		for (Iterator iterator = scripts.iterator(); iterator.hasNext();)
+		{
+			String script = (String) iterator.next();
+			if (combined.contains(script) == false)
+			{
+				combined.add(script);
+			}
+			
+		}
 		
 		List<String> appscripts = loadScriptPathsFor(site);
 		combined.removeAll(appscripts);

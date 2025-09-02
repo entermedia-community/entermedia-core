@@ -1,6 +1,5 @@
 package org.openedit.data;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -64,13 +63,24 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 		{
 			return null;
 		}
-		LanguageMap value = getLanguageMap(inId);
+		Object value = getValue(inId);
 		if (value == null)
 		{
 			return null;
 		}
+
+		if (value instanceof Map)
+		{
+			LanguageMap map = getLanguageMap(inId, value);
+			if (map == null)
+			{
+				return null;
+			}
+			
+			return map.getText(inLocale);
+		}
 		
-		return value.getText(inLocale);
+		return value.toString();
 	}
 	
 	public LanguageMap getLanguageMap(String inId) 
@@ -84,6 +94,13 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 		{
 			return null;
 		}
+		return getLanguageMap(inId, value);
+	}
+
+
+
+	protected LanguageMap getLanguageMap(String inId, Object value)
+	{
 		if( value instanceof LanguageMap )
 		{
 			LanguageMap map = (LanguageMap)value;
