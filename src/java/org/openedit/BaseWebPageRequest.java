@@ -293,7 +293,7 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 				
 				else
 				{
-					value = (String)vals;
+					value = String.valueOf(vals);
 				}
 			}
 		}
