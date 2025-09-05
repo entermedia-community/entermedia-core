@@ -239,8 +239,10 @@ public class DateStorageUtil
 				return getExifFormat().parse(inStoredDate);
 			}
 
-			if (inStoredDate.length() > 18)
+			if (inStoredDate.length() > 18)				
 			{
+				// Handle HTML5 datetime-local without timezone: 2025-07-24T15:16
+				
 				if (inStoredDate.contains("T"))
 				{
 					return getJsonSqlFormat().parse(inStoredDate); //Also works for ElasticSearch
@@ -269,7 +271,9 @@ public class DateStorageUtil
 				}
 			}
 
-			// TODO: Deal with military time?
+			if (inStoredDate.matches("\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}")) {
+				return getDateFormat("yyyy-MM-dd'T'HH:mm").parse(inStoredDate);
+			}
 
 			if (inStoredDate.length() > 13 && inStoredDate.contains("/"))
 			{

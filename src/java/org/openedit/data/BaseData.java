@@ -1,5 +1,6 @@
 package org.openedit.data;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -540,5 +541,9 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 	}	
 	
 	
+	public Instant getInstant(String key) {
+	    Date d = getDate(key); // existing
+	    return d != null ? d.toInstant() : null;
+	}
 	
 }
