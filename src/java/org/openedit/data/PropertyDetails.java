@@ -95,14 +95,11 @@ public class PropertyDetails implements Collection<PropertyDetail>
 
 	public boolean isAllowDynamicFields()
 	{
-		if (getInputFile() != null && getInputFile().getRoot() != null)
+		String lazy = getSettingValue("allowdynamicfields");
+		
+		if (lazy != null)
 		{
-			String lazy = getInputFile().getRoot().attributeValue("allowdynamicfields");
-			if (lazy != null)
-			{
-				return Boolean.parseBoolean(lazy);
-			}
-			
+			return Boolean.parseBoolean(lazy);
 		}
 		return false;
 	}

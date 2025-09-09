@@ -101,12 +101,15 @@ public class PageStreamer
 	
 				if( maxlevels != null)
 				{
-					int cut = Integer.parseInt(maxlevels);
-					List toCut = getChildContentList();
-					if( cut < toCut.size())
+					if( !maxlevels.equals("null"))
 					{
-						toCut = toCut.subList(toCut.size() - cut, toCut.size());
-						fieldChildContentList = toCut;
+						int cut = Integer.parseInt(maxlevels);
+						List toCut = getChildContentList();
+						if( cut < toCut.size())
+						{
+							toCut = toCut.subList(toCut.size() - cut, toCut.size());
+							fieldChildContentList = toCut;
+						}
 					}
 				}
 			}
@@ -120,7 +123,7 @@ public class PageStreamer
 					maxlevels = getWebPageRequest().getContentProperty("oemaxlayout");
 				}
 	
-				if( maxlevels != null)
+				if( maxlevels != null && !maxlevels.equals("null"))
 				{
 					int cut = Integer.parseInt(maxlevels);
 					List toCut = getChildContentList();

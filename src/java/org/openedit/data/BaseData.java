@@ -69,8 +69,11 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 		{
 			return null;
 		}
-
 		if (value instanceof Map)
+		{
+			return value.toString();
+		}
+		if (value instanceof LanguageMap)
 		{
 			LanguageMap map = getLanguageMap(inId, value);
 			if (map == null)
