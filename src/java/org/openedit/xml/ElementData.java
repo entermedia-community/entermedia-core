@@ -661,5 +661,14 @@ public class ElementData implements MultiValued, SaveableData, Comparable, Searc
 				addValue(inKey, value);
 		}
 	}
-	
+
+	public boolean hasValue(String inKey)
+	{
+		Object value = getValue(inKey);
+		if (value != null)
+		{
+			return true;
+		}
+		return false;
+	}
 }

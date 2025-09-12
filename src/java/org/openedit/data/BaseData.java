@@ -542,6 +542,14 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 		return output.toString();
 	}	
 	
-	
+	public boolean hasValue(String inKey)
+	{
+		Object value = getValue(inKey);
+		if (value != null)
+		{
+			return true;
+		}
+		return false;
+	}	
 	
 }
