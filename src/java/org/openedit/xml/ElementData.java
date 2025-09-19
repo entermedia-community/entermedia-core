@@ -164,7 +164,8 @@ public class ElementData implements MultiValued, SaveableData, Comparable, Searc
 			if (noderoot != null)
 			{
 				PropertyDetail detail = getPropertyDetails().getDetail(inId);
-				if( "nested".equals(detail.getDataType()) )
+				
+				if(detail != null && "nested".equals(detail.getDataType()) )
 				{
 					Collection<Map> children = new ArrayList();
 					for (Iterator iterator = noderoot.elements().iterator(); iterator.hasNext();)
