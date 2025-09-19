@@ -171,6 +171,60 @@ public class Exec
 		return runExec(com, inRunFrom, inSaveOutput, getTimeLimit());
 	}
 
+	
+	public ExecResult runExec(List<String> com, File inRunFrom, boolean inSaveOutput, long inTimeout, boolean detach) throws OpenEditException {
+	    if (inTimeout == -1) {
+	        inTimeout = getTimeLimit();
+	    }
+	    log.info("Running: " + com);
+
+	    FinalizedProcessBuilder pb = new FinalizedProcessBuilder(com).keepProcess(false).logInputtStream(inSaveOutput);
+	    if (isOnWindows()) {
+	        pb.environment().put("HOME", inRunFrom.getAbsolutePath());
+	    } else {
+	        pb.directory(inRunFrom);
+	    }
+
+	    ExecResult result = new ExecResult();
+
+	    try {
+	        FinalizedProcess process = pb.start(getExecutorManager());
+
+	        if (detach) {
+	            // Don't wait, just mark as launched
+	            result.setRunOk(true);
+	            result.setReturnValue(0);
+	            return result;
+	        }
+
+	        try {
+	            int returnVal = process.waitFor(inTimeout);
+
+	            if (inSaveOutput) {
+	                result.setStandardOut(process.getStandardOutputs());
+	            }
+	            if (returnVal == 0) {
+	                result.setRunOk(true);
+	            }
+	            result.setReturnValue(returnVal);
+	        } finally {
+	            process.close();
+	        }
+	    } catch (Exception ex) {
+	        log.error(ex);
+	        result.setRunOk(false);
+	        result.setReturnValue(1);
+	        String error = result.getStandardError();
+	        if (error == null) {
+	            error = "";
+	        }
+	        error = error + ex.toString();
+	        result.setStandardError(error);
+	    }
+	    return result;
+	}
+
+	
 	public ExecResult runExec(List<String> com, File inRunFrom, boolean inSaveOutput, long inTimeout) throws OpenEditException
 	{
 		if( inTimeout == -1)
