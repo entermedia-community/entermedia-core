@@ -20,6 +20,7 @@ import org.openedit.Shutdownable;
 import org.openedit.cache.CacheManager;
 import org.openedit.data.BaseData;
 import org.openedit.data.BaseSearcher;
+import org.openedit.data.NonExportable;
 import org.openedit.data.PropertyDetail;
 import org.openedit.data.PropertyDetails;
 import org.openedit.hittracker.DataHitTracker;
@@ -31,7 +32,7 @@ import org.openedit.users.User;
 import org.openedit.util.DateStorageUtil;
 import org.openedit.util.PathUtilities;
 
-public class XmlSearcher extends BaseSearcher implements Shutdownable
+public class XmlSearcher extends BaseSearcher implements Shutdownable, NonExportable
 {
 	protected XmlArchive fieldXmlArchive;
 	private static final Log log = LogFactory.getLog(XmlSearcher.class);
