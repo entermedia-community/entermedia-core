@@ -44,7 +44,6 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable
 	
 	
 	
-	
 
 	public boolean isLazyInit()
 	{
