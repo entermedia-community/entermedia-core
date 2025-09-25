@@ -206,7 +206,13 @@ public class QueryBuilder
 		HitTracker tracker = getSearcher().getCachedSearch(this);
 		return tracker;
 	}
-	
+	public Data cachedSearchOne()
+	{
+		HitTracker tracker = getSearcher().getCachedSearch(this);
+		tracker.setHitsPerPage(1);
+		Data found = (Data)tracker.first();
+		return found;
+	}
 	
 	public HitTracker search()
 	{
