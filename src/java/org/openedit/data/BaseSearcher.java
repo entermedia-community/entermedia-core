@@ -3606,14 +3606,15 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				List all = new ArrayList(vals.length); 
 				for (int i = 0; i < vals.length; i++)
 				{
-					Object one = parser.parse(inVal);
+					String val = vals[i];
+					Object one = parser.parse(val);
 					all.add(one);
 				}
 				result = all;
 			}
 			catch (org.json.simple.parser.ParseException e)
 			{
-				log.error("Coudl not parse",e);
+				log.error("Could not parse: " + inVal, e);
 			}
 		}
 		return result;
