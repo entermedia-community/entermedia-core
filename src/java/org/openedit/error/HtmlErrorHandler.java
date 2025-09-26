@@ -61,7 +61,8 @@ public class HtmlErrorHandler implements ErrorHandler
 					try
 					{
 						context.getResponse().setStatus(404);
-						String pathWithError = context.getPage().getPath();
+						ContentNotAvailableException ex = (ContentNotAvailableException) exception;
+						String pathWithError = ex.getPathWithError();
 						context.putPageValue("errorpath", pathWithError);
 
 						String errorpagepath = content.getProperty("error404page");
