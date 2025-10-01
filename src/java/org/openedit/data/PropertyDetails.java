@@ -295,6 +295,20 @@ public class PropertyDetails implements Collection<PropertyDetail>
 		}
 		return list;
 	}
+	
+	public List findAiAutoCreatedProperties()
+	{
+		List list = new ArrayList();
+		for (Iterator iter = getDetails().iterator(); iter.hasNext();)
+		{
+			PropertyDetail d = (PropertyDetail) iter.next();
+			if (d.isIndex() && !d.isDeleted() && d.getBoolean("aiautocreated") )
+			{
+				list.add(d);
+			}
+		}
+		return list;
+	}
 
 	public List findKeywordProperties()
 	{
