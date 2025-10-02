@@ -615,12 +615,12 @@ public class ElementData implements MultiValued, SaveableData, Comparable, Searc
 	public ElementData copy()
 	{
 		ElementData data = new ElementData();
+		data.setPropertyDetails(getPropertyDetails());
 		for (Iterator iterator = keySet().iterator(); iterator.hasNext();)
 		{
 			String id = (String) iterator.next();
 			data.setValue(id, getValue(id));
 		}
-		data.setPropertyDetails(getPropertyDetails());
 		return data;
 	}
 
