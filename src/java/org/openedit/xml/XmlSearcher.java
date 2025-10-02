@@ -634,7 +634,7 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable, NonExport
 		{
 			//fake one
 			PropertyDetails details = new PropertyDetails(getPropertyDetailsArchive(),getSearchType());
-			PropertyDetail id = new PropertyDetail();
+			PropertyDetail id = details.createDetail("id");;
 			id.setIndex(true);
 			id.setStored(true);
 			id.setName("Id");
@@ -645,7 +645,7 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable, NonExport
 			
 			details.addDetail(id);
 
-			id = new PropertyDetail();
+			id = details.createDetail("name");;
 			id.setIndex(true);
 			id.setStored(true);
 			id.setName("Name");

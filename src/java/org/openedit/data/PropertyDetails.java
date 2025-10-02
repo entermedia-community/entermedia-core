@@ -12,6 +12,7 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openedit.xml.ElementData;
 import org.openedit.xml.XmlFile;
 
 public class PropertyDetails implements Collection<PropertyDetail> 
@@ -753,6 +754,29 @@ public class PropertyDetails implements Collection<PropertyDetail>
 		}
 		return list;
 	}
+	
+	
+	public PropertyDetail createDetail(String inId)
+	{
+		PropertyDetail detail = null;
+		//If this contains a . we actually want to search on that.  Not the parent ID of an object.		
+		//if(!inId.contains(".")) 
+		{
+			detail = getDetail(inId);
+		}
+		if( detail == null )
+		{
+			detail = new PropertyDetail();
+			ElementData element = new ElementData();
+			element.setPropertyDetails(this);
+			detail.setElementData(element);
+
+			detail.setId(inId);
+		}
+		return detail;
+	}
+	
+	
 
 	@Override
 	public boolean isEmpty()

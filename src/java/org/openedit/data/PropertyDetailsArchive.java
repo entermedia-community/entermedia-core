@@ -384,12 +384,12 @@ public class PropertyDetailsArchive implements CatalogEnabled
 			//Go from specific to general details
 			if( dataxmlfile.getContentItem().exists() ) //data exact
 			{
-				loadDetails(allfields, inType, dataxmlfile.getContentItem().getPath(), dataxmlfile.getRoot(), false);    //data exact
+				loadDetails(details, allfields, inType, dataxmlfile.getContentItem().getPath(), dataxmlfile.getRoot(), false);    //data exact
 			}
 			
 			if( basesettingsdefaults.isExist() )
 			{
-				loadDetails(allfields, inType, basesettingsdefaults.getContentItem().getPath(), basesettingsdefaults.getRoot(), false);    //Base data exact
+				loadDetails(details, allfields, inType, basesettingsdefaults.getContentItem().getPath(), basesettingsdefaults.getRoot(), false);    //Base data exact
 			}
 			details.setBaseSettings(basesettingsdefaults);  //For bean name etc
 			fixBeanName(details,inType, basesettingsdefaults, dataxmlfile);
@@ -403,7 +403,7 @@ public class PropertyDetailsArchive implements CatalogEnabled
 				if (baseandfolderfiles.endsWith(".xml"))
 				{
 					XmlFile defaults = getXmlArchive().getXml(baseandfolderfiles);
-					loadDetails(allfields, inType, defaults.getContentItem().getPath(), defaults.getRoot(), true);
+					loadDetails(details, allfields, inType, defaults.getContentItem().getPath(), defaults.getRoot(), true);
 				}
 			}
 
@@ -414,7 +414,7 @@ public class PropertyDetailsArchive implements CatalogEnabled
 				if (baseandfolderfiles.endsWith(".xml"))
 				{
 					XmlFile defaults = getXmlArchive().getXml(baseandfolderfiles);
-					loadDetails(allfields, inType, defaults.getContentItem().getPath(), defaults.getRoot(), true);
+					loadDetails(details, allfields, inType, defaults.getContentItem().getPath(), defaults.getRoot(), true);
 				}
 			}
 			
@@ -541,11 +541,8 @@ public class PropertyDetailsArchive implements CatalogEnabled
 		}
 		if( detail == null)
 		{
-			detail = new PropertyDetail();
-			ElementData element = new ElementData();
 			PropertyDetails details = getPropertyDetailsCached(inSearchtype);
-			element.setPropertyDetails(details);
-			detail.setElementData(element);
+			detail = details.createDetail(inId);
 			detail.setId(inId);
 			detail.setName(inName);
 			detail.setEditable(true);
@@ -701,7 +698,7 @@ public class PropertyDetailsArchive implements CatalogEnabled
 		fieldCatalogId = inCatalogId;
 	}
 
-	public void loadDetails(Map tosave, String inType, String inInputFile, Element root, boolean folderbased)
+	public void loadDetails(PropertyDetails inDetails, Map tosave, String inType, String inInputFile, Element root, boolean folderbased)
 	{
 		for (Iterator iter = root.elementIterator("property"); iter.hasNext();)
 		{
@@ -711,7 +708,7 @@ public class PropertyDetailsArchive implements CatalogEnabled
 			{
 				continue;
 			}
-			PropertyDetail detail = createDetail(inInputFile, element, inType);
+			PropertyDetail detail = createDetail(inDetails, inInputFile, element, inType);
 			detail.setFolderBased(folderbased);
 			tosave.put(detail.getId(),detail);
 		}
@@ -846,10 +843,10 @@ public class PropertyDetailsArchive implements CatalogEnabled
 	}
 
 
-	protected PropertyDetail createDetail(String inInputFile, Element element, String inType)
+	protected PropertyDetail createDetail(PropertyDetails inDetails, String inInputFile, Element element, String inType)
 	{
 		PropertyDetail d = new PropertyDetail();
-		d.setElementData(new ElementData(element));
+		d.setElementData(new ElementData(element, inDetails));
 		d.setTextLabelManager(getTextLabelManager());
 		d.setInputFilePath(inInputFile);
 		//		for (Iterator iterator = defaults.keySet().iterator(); iterator.hasNext();)

@@ -1212,21 +1212,14 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		return addOrsGroup(detail, inQuery);
 	}
 
-	protected PropertyDetail createDetail(String inId)
+
+
+	private PropertyDetail createDetail(String inId)
 	{
-		PropertyDetail detail = null;
-		//If this contains a . we actually want to search on that.  Not the parent ID of an object.		
-		//if(!inId.contains(".")) 
-		{
-			detail = getDetail(inId);
-		}
-		if( detail == null )
-		{
-			detail = new PropertyDetail();
-			detail.setId(inId);
-		}
-		return detail;
+		// TODO Auto-generated method stub
+		return getPropertyDetails().createDetail(inId);
 	}
+
 
 	public Term addQuery(String inString, String inValue)
 	{
@@ -1816,8 +1809,7 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		}
 		if(detail == null)
 		{
-			detail = new PropertyDetail();
-			detail.setId(inString);
+			detail = getPropertyDetails().createDetail(inString);
 			detail.setDataType("date");
 		}
 		return addAfter(detail, inSearchDate);
