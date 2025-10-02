@@ -79,7 +79,10 @@ public class HtmlErrorHandler implements ErrorHandler
 						log.debug("Ignored:" + ex);
 					}
 				}
-				
+				else
+				{
+					log.error("Got an error: " ,error);
+				}
 				if( !context.hasRedirected() && context.getResponse() != null)
 				{
 					try
