@@ -523,7 +523,7 @@ public class PropertyDetailsArchive implements CatalogEnabled
 		inDetails.setBeanName(beanName);
 	}
 	
-	public PropertyDetail createDetail(String inId, String inName)
+	public PropertyDetail createDetail(String inSearchtype, String inId, String inName)
 	{
 		PropertyDetail detail = null;
 		
@@ -542,6 +542,10 @@ public class PropertyDetailsArchive implements CatalogEnabled
 		if( detail == null)
 		{
 			detail = new PropertyDetail();
+			ElementData element = new ElementData();
+			PropertyDetails details = getPropertyDetailsCached(inSearchtype);
+			element.setPropertyDetails(details);
+			detail.setElementData(element);
 			detail.setId(inId);
 			detail.setName(inName);
 			detail.setEditable(true);
