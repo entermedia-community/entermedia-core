@@ -181,26 +181,7 @@ public class BaseEditorModule extends BaseModule
 					return;
 				}
 			}
-			//log.info( "Could not use  add page wizard. 404 error on: " + inReq.getPath() );
-			String errorpage = inReq.getContentPage().getProperty("error404"); //"/error404.html";
-			errorpage = errorpage !=null ? errorpage : ERROR404_HTML;
-			Page p404 = pageManager.getPage(errorpage);
-			if( !p404.exists() )
-			{
-				//p404 = pageManager.getPage("/system/error404page.html");
-				throw new ContentNotAvailableException("Content missing " +  inReq.getPath(), inReq.getPath());
-			}
-			if ( p404.exists() )
-			{
-				HttpServletResponse response = inReq.getResponse();
-				if ( response != null)
-				{
-					response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-				}
-				inReq.putProtectedPageValue("content", p404);
-				//inReq.forward(p404.getPath());
-				return;
-			}
+			throw new ContentNotAvailableException("Content missing " +  inReq.getPath(), inReq.getPath());
 		}
 		else
 		{
