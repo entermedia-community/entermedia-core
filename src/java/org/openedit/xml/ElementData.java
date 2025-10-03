@@ -163,28 +163,32 @@ public class ElementData implements MultiValued, SaveableData, Comparable, Searc
 			Element noderoot = getElement().element(inId);
 			if (noderoot != null)
 			{
-				PropertyDetail detail = getPropertyDetails().getDetail(inId);
-				
-				if(detail != null && "nested".equals(detail.getDataType()) )
+				PropertyDetails alldetails = getPropertyDetails(); //TODO: Move this to a new Subclass SearcherElementData 
+				if (alldetails != null)
 				{
-					Collection<Map> children = new ArrayList();
-					for (Iterator iterator = noderoot.elements().iterator(); iterator.hasNext();)
+					PropertyDetail detail = alldetails.getDetail(inId);
+					
+					if(detail != null && "nested".equals(detail.getDataType()) )
 					{
-						Element child = (Element) iterator.next();
-						ValuesMap map = new ValuesMap();
-						for (Iterator iteratork = child.attributeIterator(); iteratork.hasNext();)
+						Collection<Map> children = new ArrayList();
+						for (Iterator iterator = noderoot.elements().iterator(); iterator.hasNext();)
 						{
-							org.dom4j.Attribute attr = (org.dom4j.Attribute)iteratork.next(); 
-							String key = attr.getName(); 
-							String subvalue = child.attributeValue(key);
-							if( subvalue != null)
+							Element child = (Element) iterator.next();
+							ValuesMap map = new ValuesMap();
+							for (Iterator iteratork = child.attributeIterator(); iteratork.hasNext();)
 							{
-								map.put(key,subvalue);
+								org.dom4j.Attribute attr = (org.dom4j.Attribute)iteratork.next(); 
+								String key = attr.getName(); 
+								String subvalue = child.attributeValue(key);
+								if( subvalue != null)
+								{
+									map.put(key,subvalue);
+								}
 							}
+							children.add(map);
 						}
-						children.add(map);
+						return children;
 					}
-					return children;
 				}
 				value = noderoot.getTextTrim();
 				if (value == null || value.isEmpty())
