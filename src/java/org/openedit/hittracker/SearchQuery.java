@@ -1362,6 +1362,8 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 			child.getTerms().add(inTerm);
 		}
 	}
+	
+	
 
 	protected SearchQuery getChildQueryWithDetail(String inId)
 	{
@@ -2587,6 +2589,21 @@ public boolean isFilterSelected(String type, String value) {
 	public void setShowAll(boolean inAll)
 	{
 		fieldShowAll = inAll;
+	}
+
+
+	public void copyTerms(Collection<Term> inQueryTerms)
+	{
+		List<Term> newTerms = new ArrayList();
+		for (Iterator iterator = inQueryTerms.iterator(); iterator.hasNext();)
+		{
+			Term term = (Term) iterator.next();
+			term = term.copy();
+			String detailId = term.getDetail().getId();
+			term.setDetail(getPropertyDetails().getDetail(detailId));
+			newTerms.add(term);
+		}
+		setTerms(newTerms);
 	}
 	
 }
