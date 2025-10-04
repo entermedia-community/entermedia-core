@@ -75,15 +75,8 @@ public class VelocityGenerator extends BaseGenerator implements Generator
 			if ( !Boolean.parseBoolean(vir) )
 			{
 				log.info("Missing: " +inPage.getPath());
-				try
-				{
-					inOut.getWriter().write("404: " + inPage.getPath());
-					return;
-				}
-				catch (IOException e)
-				{
-					throw new ContentNotAvailableException("Missing: " +inPage.getPath(),inPage.getPath());
-				}
+				throw new ContentNotAvailableException("Missing: " +inPage.getPath(),inPage.getPath());
+				
 			}
 			else
 			{

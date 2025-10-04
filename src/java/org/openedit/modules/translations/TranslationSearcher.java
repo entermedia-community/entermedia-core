@@ -99,15 +99,14 @@ public class TranslationSearcher extends XmlSearcher
 		{
 			//fake one
 			PropertyDetails details = new PropertyDetails(getPropertyDetailsArchive(),getSearchType());
-			PropertyDetail id = new PropertyDetail();
+			PropertyDetail id = details.createDetail("id");
 			id.setIndex(true);
 			id.setStored(true);
 			id.getName("Id");
-			id.setId("id");
 			id.setEditable(true);
 			details.addDetail(id);
 
-			id = new PropertyDetail();
+			id = details.createDetail("name");
 			id.setIndex(true);
 			id.setStored(true);
 			id.getName("Name");

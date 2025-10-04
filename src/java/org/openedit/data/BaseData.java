@@ -2,6 +2,7 @@ package org.openedit.data;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
@@ -73,7 +74,7 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 		{
 			return value.toString();
 		}
-		if (value instanceof LanguageMap)
+		if (value instanceof Map)
 		{
 			LanguageMap map = getLanguageMap(inId, value);
 			if (map == null)
@@ -83,7 +84,6 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 			
 			return map.getText(inLocale);
 		}
-		
 		return value.toString();
 	}
 	
@@ -334,7 +334,31 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 	}
 	public boolean hasValue(String inField, String inId)
 	{
-		return getMap().containsInValues(inField,inId);
+		if( getMap().containsKey(inField) )
+		{
+			return getMap().containsInValues(inField,inId);
+		}
+		Object object = getValue(inField);
+		if( object == null)
+		{
+			return false;
+		}
+		if( object instanceof Collection)
+		{
+			boolean had =  ((Collection<String>)object).contains(inId);
+			return had;
+		}
+		if( object instanceof String[])
+		{
+			Collection<String> values = Arrays.asList((String[])object);
+			boolean had =  values.contains(inId);
+			return had;
+		}
+		if( inId.equals(object) )
+		{
+			return true;
+		}
+		return false;
 	}
 	
 	public Date getDate(String inField)
@@ -543,7 +567,20 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 		return output.toString();
 	}	
 	
-	
+	public boolean hasValue(String inKey)
+	{
+		Object value = getValue(inKey);
+		if (value != null)
+		{
+			if( value instanceof String)
+			{
+				boolean empty = ((String)value).trim().isEmpty();
+				return !empty;
+			}
+			return true;
+		}
+		return false;
+	}	
 	public Instant getInstant(String key) {
 	    Date d = getDate(key); // existing
 	    return d != null ? d.toInstant() : null;

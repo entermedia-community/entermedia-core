@@ -303,8 +303,9 @@ public class EventManager
 			{
 				oldval = "Empty";
 			}
-			if(detail != null) {
-			textoutput.append(detail.getName() + ": " + oldval + " -> " + newvalue + "\n ");
+			if (detail != null)
+			{
+				textoutput.append(detail.getName() + ": " + oldval + " -> " + newvalue + "\n ");
 			}
 			//textoutput.append();
 		}

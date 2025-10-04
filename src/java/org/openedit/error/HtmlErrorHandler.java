@@ -61,7 +61,8 @@ public class HtmlErrorHandler implements ErrorHandler
 					try
 					{
 						context.getResponse().setStatus(404);
-						String pathWithError = context.getPage().getPath();
+						ContentNotAvailableException ex = (ContentNotAvailableException) exception;
+						String pathWithError = ex.getPathWithError();
 						context.putPageValue("errorpath", pathWithError);
 
 						String errorpagepath = content.getProperty("error404page");
@@ -78,7 +79,10 @@ public class HtmlErrorHandler implements ErrorHandler
 						log.debug("Ignored:" + ex);
 					}
 				}
-				
+				else
+				{
+					log.error("Got an error: " ,error);
+				}
 				if( !context.hasRedirected() && context.getResponse() != null)
 				{
 					try

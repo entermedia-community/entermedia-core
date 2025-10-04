@@ -67,23 +67,23 @@ public class FileGenerator extends BaseGenerator implements Generator
 		HttpServletRequest req = inContext.getRequest();
 		long start = -1;
 		InputStream in = null;
-		try
+		in = contentpage.getInputStream();
+		if( in == null) 
 		{
-			in = contentpage.getInputStream();
-			if( in == null) 
+			String vir = contentpage.get("virtual");
+			if ( !Boolean.parseBoolean(vir) )
 			{
-				String vir = contentpage.get("virtual");
-				if ( !Boolean.parseBoolean(vir) )
-				{
-					log.info("Missing: " +contentpage.getPath());
-					throw new ContentNotAvailableException("Missing: " +contentpage.getPath(),contentpage.getPath());
-				}
-				else
-				{
-					log.debug("not found: " + contentpage);
-					return; //do nothing
-				}
+				log.info("Missing: " +contentpage.getPath());
+				throw new ContentNotAvailableException("Missing: " +contentpage.getPath(),contentpage.getPath());
 			}
+			else
+			{
+				log.debug("not found: " + contentpage);
+				return; //do nothing
+			}
+		}
+		try
+			{
 			//only bother if we are the content page and not in development
 			if ( res != null && inContext.getContentPage() == contentpage  )
 			{

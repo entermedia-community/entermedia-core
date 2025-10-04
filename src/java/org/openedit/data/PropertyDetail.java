@@ -68,6 +68,7 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 				{
 					Element child = (Element) iterator.next();
 					ElementData data = new ElementData(child);
+					data.setPropertyDetails(getElementData().getPropertyDetails());
 					PropertyDetail detail = new PropertyDetail();
 					detail.setElementData(data);
 					detail.setCatalogId(getCatalogId());

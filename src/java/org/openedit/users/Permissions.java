@@ -212,6 +212,10 @@ public class Permissions implements CatalogEnabled
 	
 	public Boolean canEntity(Data inModule, Data inEntity, String inKey)
 	{
+		if (inModule == null || inEntity == null || inKey == null)
+		{
+			return false;
+		}
 		String userpermissionlevel = findEntityPermissionLevel(inModule, inEntity);
 		EntityPermissions entitypermissions = getEntityPermissions(inModule, userpermissionlevel);
 		boolean can = entitypermissions.can(inKey);

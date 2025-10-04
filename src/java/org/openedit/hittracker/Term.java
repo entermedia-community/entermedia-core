@@ -9,10 +9,11 @@ import java.util.Map;
 
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
+import org.openedit.OpenEditException;
 import org.openedit.data.PropertyDetail;
 import org.openedit.data.ValuesMap;
 
-abstract public class Term {
+abstract public class Term implements Cloneable {
 	protected String fieldId;
 	protected PropertyDetail fieldDetail;
 	protected String fieldOperation;
@@ -207,5 +208,24 @@ abstract public class Term {
 	public void setParameter(String inKey,Object inValue)
 	{
 		getParameters().put(inKey,inValue);
+	}
+
+	public Term copy()
+	{
+		Term term = (Term)clone();
+		
+		return term;
+	}
+	
+	public Object clone()
+	{
+		try
+		{
+			return super.clone();
+		}
+		catch (CloneNotSupportedException e)
+		{
+			throw new OpenEditException(e);
+		}
 	}
 }

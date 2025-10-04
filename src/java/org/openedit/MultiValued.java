@@ -89,4 +89,5 @@ public interface MultiValued extends Data
 	
 	public LanguageMap getLanguageMap(String inId);
 
+	public boolean hasValue(String inKey);
 }
