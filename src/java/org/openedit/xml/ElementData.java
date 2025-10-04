@@ -1,5 +1,6 @@
 package org.openedit.xml;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
@@ -13,11 +14,8 @@ import java.util.regex.Pattern;
 import org.dom4j.Attribute;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
-import org.openedit.Data;
 import org.openedit.MultiValued;
 import org.openedit.OpenEditException;
-import org.openedit.WebPageRequest;
-import org.openedit.data.CompositeData;
 import org.openedit.data.PropertyDetail;
 import org.openedit.data.PropertyDetails;
 import org.openedit.data.SaveableData;
@@ -161,9 +159,37 @@ public class ElementData implements MultiValued, SaveableData, Comparable, Searc
 
 		if (value == null)
 		{
+			
 			Element noderoot = getElement().element(inId);
 			if (noderoot != null)
 			{
+				PropertyDetails alldetails = getPropertyDetails(); //TODO: Move this to a new Subclass SearcherElementData 
+				if (alldetails != null)
+				{
+					PropertyDetail detail = alldetails.getDetail(inId);
+					
+					if(detail != null && "nested".equals(detail.getDataType()) )
+					{
+						Collection<Map> children = new ArrayList();
+						for (Iterator iterator = noderoot.elements().iterator(); iterator.hasNext();)
+						{
+							Element child = (Element) iterator.next();
+							ValuesMap map = new ValuesMap();
+							for (Iterator iteratork = child.attributeIterator(); iteratork.hasNext();)
+							{
+								org.dom4j.Attribute attr = (org.dom4j.Attribute)iteratork.next(); 
+								String key = attr.getName(); 
+								String subvalue = child.attributeValue(key);
+								if( subvalue != null)
+								{
+									map.put(key,subvalue);
+								}
+							}
+							children.add(map);
+						}
+						return children;
+					}
+				}
 				value = noderoot.getTextTrim();
 				if (value == null || value.isEmpty())
 				{
@@ -593,12 +619,12 @@ public class ElementData implements MultiValued, SaveableData, Comparable, Searc
 	public ElementData copy()
 	{
 		ElementData data = new ElementData();
+		data.setPropertyDetails(getPropertyDetails());
 		for (Iterator iterator = keySet().iterator(); iterator.hasNext();)
 		{
 			String id = (String) iterator.next();
 			data.setValue(id, getValue(id));
 		}
-		data.setPropertyDetails(getPropertyDetails());
 		return data;
 	}
 
@@ -661,5 +687,14 @@ public class ElementData implements MultiValued, SaveableData, Comparable, Searc
 				addValue(inKey, value);
 		}
 	}
-	
+
+	public boolean hasValue(String inKey)
+	{
+		Object value = getValue(inKey);
+		if (value != null)
+		{
+			return true;
+		}
+		return false;
+	}
 }

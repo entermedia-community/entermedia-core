@@ -292,9 +292,13 @@ public class DateStorageUtil
 			if( format != null)
 			{
 				Date old = parse(inStoredDate,format);
-				if( old.getYear() < 100)
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(old);
+				
+				if( cal.get(Calendar.YEAR) < 100)
 				{
-					old.setYear(old.getYear()  + 2000);
+					cal.add(Calendar.YEAR, 2000);
+					return cal.getTime();
 				}
 				return old;
 			}

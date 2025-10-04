@@ -795,9 +795,8 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 
 		if (attr != null && value != null)
 		{
-			PropertyDetail detail = new PropertyDetail();
+			PropertyDetail detail = getPropertyDetails().createDetail(attr);
 			detail.setCatalogId(getCatalogId());
-			detail.setId(attr);
 			query.addExact(detail, value); //this is addMatches and not addExact so that we can handle wildcards
 		}
 		if (orderby != null)
@@ -843,9 +842,8 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			{
 				continue;
 			}
-			PropertyDetail detail = new PropertyDetail();
+			PropertyDetail detail = getPropertyDetails().createDetail(parts[0]);
 			detail.setCatalogId(getCatalogId());
-			detail.setId(parts[0]);
 			query.addMatches(detail, parts[1]);
 		}
 		return query;
@@ -1502,8 +1500,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		{
 			// continue;
 			// create a virtual one?
-			detail = new PropertyDetail();
-			detail.setId(propertyid);
+			detail = getPropertyDetailsArchive().getPropertyDetailsCached(searchtype).createDetail(propertyid);
 			detail.setCatalogId(catalogid);
 		}
 		//Needed?
@@ -2103,7 +2100,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				Configuration child = (Configuration) iterator.next();
 				String fieldName = child.getName();
 				String value = child.getValue();
-				PropertyDetail detail = new PropertyDetail();
+				PropertyDetail detail = getPropertyDetails().createDetail(fieldName);
 				detail.setCatalogId(getCatalogId());
 				detail.setId(fieldName);
 				search.addMatches(detail, value);
@@ -2119,9 +2116,8 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				Configuration child = (Configuration) iterator.next();
 				String fieldName = child.getName();
 				String value = child.getValue();
-				PropertyDetail detail = new PropertyDetail();
+				PropertyDetail detail = getPropertyDetails().createDetail(fieldName);
 				detail.setCatalogId(getCatalogId());
-				detail.setId(fieldName);
 
 				search.addNot(detail, value);
 			}
@@ -3123,8 +3119,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 			if (detail == null)
 			{
 				log.error("No detail " + fields[i]);
-				detail = new PropertyDetail();
-				detail.setId(field);
+				detail = getPropertyDetails().createDetail(field);
 				//This way code relying on this setting values will still work
 
 			}
@@ -3606,14 +3601,15 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				List all = new ArrayList(vals.length); 
 				for (int i = 0; i < vals.length; i++)
 				{
-					Object one = parser.parse(inVal);
+					String val = vals[i];
+					Object one = parser.parse(val);
 					all.add(one);
 				}
 				result = all;
 			}
 			catch (org.json.simple.parser.ParseException e)
 			{
-				log.error("Coudl not parse",e);
+				log.error("Could not parse: " + inVal, e);
 			}
 		}
 		return result;

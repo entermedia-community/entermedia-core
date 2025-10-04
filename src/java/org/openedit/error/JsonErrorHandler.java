@@ -49,6 +49,20 @@ public class JsonErrorHandler implements ErrorHandler
 		{
 			try
 			{
+				if ( error instanceof ContentNotAvailableException)
+				{
+					ContentNotAvailableException missingerror = (ContentNotAvailableException)error;
+					context.getResponse().setStatus(404);
+					Writer out = context.getWriter();
+					out.append("{ \"reponse\": {\n");
+					out.append(" \"status\":\"error\",");				
+					out.append("\"path\":\"" + missingerror.getPathWithError() + "\",");
+					String escaped = JSONObject.escape(error.getMessage());
+					out.append("\"details\":\"" + escaped + "\"");
+					out.append(" \n}\n}");
+					out.flush();
+					return true;
+				}
 				if ( !(error instanceof OpenEditException))
 				{
 					exception = new OpenEditException(error); //we need the toStacktrace method

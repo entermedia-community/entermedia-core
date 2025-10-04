@@ -20,6 +20,7 @@ import org.openedit.Shutdownable;
 import org.openedit.cache.CacheManager;
 import org.openedit.data.BaseData;
 import org.openedit.data.BaseSearcher;
+import org.openedit.data.NonExportable;
 import org.openedit.data.PropertyDetail;
 import org.openedit.data.PropertyDetails;
 import org.openedit.hittracker.DataHitTracker;
@@ -31,7 +32,7 @@ import org.openedit.users.User;
 import org.openedit.util.DateStorageUtil;
 import org.openedit.util.PathUtilities;
 
-public class XmlSearcher extends BaseSearcher implements Shutdownable
+public class XmlSearcher extends BaseSearcher implements Shutdownable, NonExportable
 {
 	protected XmlArchive fieldXmlArchive;
 	private static final Log log = LogFactory.getLog(XmlSearcher.class);
@@ -633,7 +634,7 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable
 		{
 			//fake one
 			PropertyDetails details = new PropertyDetails(getPropertyDetailsArchive(),getSearchType());
-			PropertyDetail id = new PropertyDetail();
+			PropertyDetail id = details.createDetail("id");;
 			id.setIndex(true);
 			id.setStored(true);
 			id.setName("Id");
@@ -644,7 +645,7 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable
 			
 			details.addDetail(id);
 
-			id = new PropertyDetail();
+			id = details.createDetail("name");;
 			id.setIndex(true);
 			id.setStored(true);
 			id.setName("Name");

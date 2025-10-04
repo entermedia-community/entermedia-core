@@ -15,6 +15,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.RejectedExecutionHandler;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -310,26 +311,40 @@ static class DefaultThreadFactory implements ThreadFactory {
     }
 }
 
-@Override
-public void shutdown()
-{
-	// TODO Auto-generated method stub
-	for (Iterator iterator = getExecutors().keySet().iterator(); iterator.hasNext();)
+	@Override
+	public void shutdown()
 	{
-		String type = (String) iterator.next();
-		ExecutorService exec = (ExecutorService)getExecutors().get(type);
-		try
+		// TODO Auto-generated method stub
+		for (Iterator iterator = getExecutors().keySet().iterator(); iterator.hasNext();)
 		{
-			exec.shutdown();
-			exec.awaitTermination(10L, TimeUnit.SECONDS);
+			String type = (String) iterator.next();
+			ExecutorService exec = (ExecutorService)getExecutors().get(type);
+			try
+			{
+				exec.shutdown();
+				exec.awaitTermination(10L, TimeUnit.SECONDS);
+			}
+			catch (Throwable e)
+			{
+				//	throw new OpenEditException(e);
+			}
+			log.debug("Exec shut down");
 		}
-		catch (Throwable e)
-		{
-			//	throw new OpenEditException(e);
-		}
-		log.debug("Exec shut down");
 	}
-}
-
+	protected ScheduledExecutorService fieldScheduler;
+	
+	protected ScheduledExecutorService getScheduler()
+	{
+		if( fieldScheduler == null)
+		{
+			fieldScheduler = Executors.newScheduledThreadPool(1); // Or more threads as needed}
+		}
+		return fieldScheduler;
+	}
+	
+	public void execLater(Runnable inRun, long inmillisonds)
+	{
+	    getScheduler().schedule(inRun, inmillisonds, TimeUnit.MILLISECONDS);
+	}
 
 }
