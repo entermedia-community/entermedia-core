@@ -2366,13 +2366,16 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				//Remove all the view terms
 				SearchQuery query = hits.getSearchQuery();
 				Collection<PropertyDetail> details = findSummaryFields(query, inReq.getUserProfile());
-				for (Iterator iterator = details.iterator(); iterator.hasNext();)
-				{
-					PropertyDetail detail = (PropertyDetail) iterator.next();
-					Term term = query.getTermByDetailId(detail.getId());
-					if( term != null)
+				if(details != null)
+				{					
+					for (Iterator iterator = details.iterator(); iterator.hasNext();)
 					{
-						query.removeTerm(term);
+						PropertyDetail detail = (PropertyDetail) iterator.next();
+						Term term = query.getTermByDetailId(detail.getId());
+						if( term != null)
+						{
+							query.removeTerm(term);
+						}
 					}
 				}
 				query.removeTerm("description");
