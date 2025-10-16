@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.openedit.OpenEditException;
 
@@ -50,6 +51,21 @@ public class JSONParser
 		{
 			org.json.simple.parser.JSONParser parser = new org.json.simple.parser.JSONParser();
 			JSONObject structureDef = (JSONObject) parser.parse(inText);
+			return structureDef;
+		}
+		catch(Throwable ex)
+		{
+			log.error("Could not parse " + inText);
+			throw new OpenEditException(ex);
+		}
+	}
+	
+	public JSONArray parseJSONArray(String inText)
+	{
+		try
+		{
+			org.json.simple.parser.JSONParser parser = new org.json.simple.parser.JSONParser();
+			JSONArray structureDef = (JSONArray) parser.parse(inText);
 			return structureDef;
 		}
 		catch(Throwable ex)
