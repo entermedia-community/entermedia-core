@@ -253,6 +253,13 @@ public class BaseCompositeData extends BaseData implements Data, CompositeData
 			}
 			Data firstrow = (Data) iterator.next();
 			Object firstval = firstrow.getValue(inKey); //First value
+			if (firstval != null && firstval instanceof String)
+			{
+				if( ((String)firstval).isEmpty())
+				{
+					firstval = null; //treat as null
+				}
+			}
 			if( firstval != null && firstval instanceof LanguageMap)
 			{
 				firstval = new LanguageMap((Map)firstval);
@@ -499,7 +506,7 @@ public class BaseCompositeData extends BaseData implements Data, CompositeData
 					
 				Object newvalue = safevalues.get(key);
 				PropertyDetail detail = getSearcher().getDetail(key);
-				Object datavalue = data.get(key);
+				Object datavalue = data.getValue(key);
 				
 				if( datavalue == newvalue )
 				{
@@ -570,11 +577,11 @@ public class BaseCompositeData extends BaseData implements Data, CompositeData
 	protected void addSafeValue(String field, Map safevalues) {
 		Object newval = getPropertiesSet().getObject(field); //set by the user since last save
 		//See if the values changed
-		Object oldval = getValueFromResults(field); 
+		Object commonval = getValueFromResults(field); 
 		//A blank string means no common value.
 		//A null means empty
 
-		if( newval == null && oldval == null)
+		if( newval == null && commonval == null)
 		{
 			return;
 		}
@@ -588,30 +595,34 @@ public class BaseCompositeData extends BaseData implements Data, CompositeData
 			}
 		}
 		
-		if (oldval != null && oldval.toString().isEmpty())
+		if (commonval != null && commonval.toString().isEmpty())
 		{
-			oldval = null;
+			commonval = null;
 		}
 		PropertyDetail detail = getPropertyDetails().getDetail(field);
 		//See if there is a newval
-		if (newval != null && !newval.equals(oldval))
+		if (newval != null && !newval.equals(commonval))
 		{
 			
-			if (detail.isMultiLanguage() && oldval != null)
+			if (detail.isMultiLanguage())
 			{
+				LanguageMap newval1 = (LanguageMap)newval;
+				if (newval1.isEmpty() )
+				{
+					return;
+				}
 				
-				LanguageMap newvall = (LanguageMap)newval;
-				LanguageMap oldvall = (LanguageMap)oldval;
-				LanguageMap langs = (LanguageMap) oldvall;
-				for (Iterator iterator3 = langs.keySet().iterator(); iterator3.hasNext();)
+				LanguageMap commonval1 = new LanguageMap();
+				for (Iterator iterator3 = newval1.keySet().iterator(); iterator3.hasNext();)
 				{
 					String code = (String) iterator3.next();
-					if(newvall.getText(code) == null)
+					String newvaltext = newval1.getText(code);
+					if (newvaltext != null )
 					{
-						newvall.setText(code, "");
+						commonval1.setText(code, newvaltext);
 					}
 				}
-				safevalues.put(field, newvall);
+				safevalues.put(field, commonval1);
 			}
 			else
 			{
