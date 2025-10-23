@@ -156,6 +156,43 @@ public class Permissions implements CatalogEnabled
 		return false;
 	}
 	
+	protected boolean isViewerOnlySet(Data inEntity)
+	{
+		if(inEntity == null) {
+			return false;
+		}
+		Collection users = inEntity.getValues("viewerusers");
+		if (users != null && !users.isEmpty() )
+		{
+			if( users.contains(getUserProfile().getUserId() ) )
+			{	
+				return true;
+			}
+		}
+		Collection groups = inEntity.getValues("viewergroups");
+		if (groups != null && !groups.isEmpty() )
+		{
+			Collection<Group> usergroups = getUserProfile().getUser().getGroups();
+			for (Iterator iterator = usergroups.iterator(); iterator.hasNext();)
+			{
+				Group group = (Group) iterator.next();
+				if( groups.contains(group.getId()) )
+				{
+					return true;
+				}
+			}
+		}
+		Collection roles = inEntity.getValues("viewerroles");
+		if (roles != null && !roles.isEmpty() )
+		{
+			if( roles.contains(getUserProfile().getId() ) )
+			{	
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	protected boolean isEditorFor(Data inModule, Data inEntity)
 	{
 		boolean iseditor = isEditorFor(inModule) ||  isEditorFor(inEntity);
@@ -226,7 +263,11 @@ public class Permissions implements CatalogEnabled
 		
 		if( inKey.equals("edit") )
 		{
-			//org.entermediadb.users //Cat check editorroles user etc
+			if( isViewerOnlySet(inEntity) )
+			{
+				return false;
+			}
+			
 			boolean istrue = isEditorFor(inModule,inEntity);
 			if( istrue )
 			{
