@@ -882,7 +882,16 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 		}
 		return getUser().isInGroup(inGroupId);
 	}
-	
+
+	public boolean isInGroup(Collection<String> inGroups)
+	{
+		if( getUser() == null)
+		{
+			return false;
+		}
+		return getUser().isInGroup(inGroups);
+	}
+
 	public void removeAllStartWith(String inName)
 	{
 		Collection collection = getMap().keySet();

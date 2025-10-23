@@ -107,24 +107,16 @@ public class Permissions implements CatalogEnabled
 
 	private String findModulePermissionLevel(Data inModule)
 	{
-		boolean iseditor = isEditorFor(inModule);
-		if( iseditor )
-		{
-			return "editor";
-		}
-		if( !iseditor )
-		{
-			String roleid = getUserProfile().get("settingsgroup");
-			String[] standardroles = new String[]{"editor","administrator","users","owner"};
-			for (int i = 0; i < standardroles.length; i++)
-			{
-				if( standardroles[i].equals(roleid) )
-				{
-					return standardroles[i];
-				}
-			}
-		}
-		return "users";
+		String roleid = getUserProfile().get("settingsgroup");
+//		String[] standardroles = new String[]{"editor","administrator","users","owner"};
+//		for (int i = 0; i < standardroles.length; i++)
+//		{
+//			if( standardroles[i].equals(roleid) )
+//			{
+//				return standardroles[i];
+//			}
+//		}
+		return roleid;
 	}
 
 	protected boolean isEditorFor(Data inData)
@@ -164,6 +156,12 @@ public class Permissions implements CatalogEnabled
 		return false;
 	}
 	
+	protected boolean isEditorFor(Data inModule, Data inEntity)
+	{
+		boolean iseditor = isEditorFor(inModule) ||  isEditorFor(inEntity);
+		return iseditor;
+	}
+
 
 	//System Level
 	
@@ -196,6 +194,15 @@ public class Permissions implements CatalogEnabled
 		if(module == null) {
 			return false;
 		}
+		
+		if( inKey.equals("edit") )
+		{
+			boolean istrue = isEditorFor(module);
+			if( istrue )
+			{
+				return true;
+			}
+		}
 		String role = findModulePermissionLevel(module);
 //		
 		boolean can = getEntityPermissions(module,role).can(inKey);
@@ -216,6 +223,17 @@ public class Permissions implements CatalogEnabled
 		{
 			return false;
 		}
+		
+		if( inKey.equals("edit") )
+		{
+			//org.entermediadb.users //Cat check editorroles user etc
+			boolean istrue = isEditorFor(inModule,inEntity);
+			if( istrue )
+			{
+				return true;
+			}
+		}
+		
 		String userpermissionlevel = findEntityPermissionLevel(inModule, inEntity);
 		EntityPermissions entitypermissions = getEntityPermissions(inModule, userpermissionlevel);
 		boolean can = entitypermissions.can(inKey);
@@ -223,39 +241,39 @@ public class Permissions implements CatalogEnabled
 		{
 			return true;
 		}	
-		can = canModule(inModule,inKey);
+		//can = canModule(inModule,inKey);
 		return can;
 	}
 
 	private String findEntityPermissionLevel(Data inModule, Data inEntity)
 	{
 		String roleid = getUserProfile().get("settingsgroup");
-		if( "administrator".equals(roleid) )
-		{
-			return roleid;
-		}
+//		if( "administrator".equals(roleid) )
+//		{
+//			return roleid;
+//		}
 		
 		boolean isowner = getUserProfile().getUserId().equals(inEntity.get("owner"));
 		if( isowner )
 		{
 			return "owner";
 		}	
-		
+		//TODO: Do we support custom roles?
 
-		boolean iseditor = isEditorFor(inEntity);
-		if( iseditor )
-		{
-			return "editor";
-		}
-
-		iseditor = isEditorFor(inModule);
-		if( iseditor )
-		{
-			return "editor";
-		}
-				
+//		boolean iseditor = isEditorFor(inEntity);
+//		if( iseditor )
+//		{
+//			return "editor";
+//		}
+//
+//		iseditor = isEditorFor(inModule);
+//		if( iseditor )
+//		{
+//			return "editor";
+//		}
+//				
 		//Must be viewer either at entity or module level
-		return "users";
+		return roleid;
 	}
 
 	public EntityPermissions getEntityPermissions(Data inModule, String inRole)
