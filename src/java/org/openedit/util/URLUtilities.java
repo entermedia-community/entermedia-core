@@ -63,9 +63,10 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.security.cert.X509Certificate;
-import java.util.Collection;
+import java.util.Arrays;
 import java.util.Formatter;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -84,8 +85,8 @@ import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.conn.BasicHttpClientConnectionManager;
-import org.json.simple.JSONObject;
 import org.openedit.OpenEditException;
+
 
 
 /**
@@ -800,11 +801,11 @@ public class URLUtilities
 			case '>':
 				output.append("&gt;");
 				break;			
-			case '\"':
+			case '"':
 				output.append("&quot;");
 				break;
 			case '\'':
-				output.append("&apos;");
+				output.append("&#39;");
 				break;
 			default:
 				output.append(c);
@@ -1115,7 +1116,7 @@ public class URLUtilities
 	    }
 	 
 	 private static final Pattern urlPattern = Pattern.compile(
-		        "(?:^|[\\W])((ht|f)tp(s?):\\/\\/|www\\.)"
+		        "(?:^|[^A-Za-z0-9\\\"\\'])((ht|f)tp(s?):\\/\\/|www\\.)"
 		                + "(([\\w\\-]+\\.){1,}?([\\w\\-.~]+\\/?)*"
 		                + "[\\p{Alnum}.,%_=?&#\\-+()\\[\\]\\*$~@!:/{};']*)",
 		        Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
@@ -1150,6 +1151,7 @@ public class URLUtilities
 		    	continue;
 		    }
 		    // ... possibly process 'text' ...
+		    
 		    StringBuffer link = new StringBuffer();
 		    
 		    link.append(" <a href=\"");
@@ -1164,7 +1166,7 @@ public class URLUtilities
 		  if( maxchars > -1 && maxchars < sb.length())
 		  {
 			  String cutoff = sb.toString().substring(0,maxchars);
-			  String[] types = new String[]{"div","b","i","span","a"};
+			  String[] types = new String[]{"div","b","i","span","a", "img"};
 			  for (int i = 0; i < types.length; i++)
 			  {
 				  cutoff = stripTags(cutoff, types[i]);
@@ -1213,6 +1215,56 @@ public class URLUtilities
 			inHtml = inHtml + "</" + tag;
 		}
 		return inHtml;
+	}
+	
+	private static final Set<String> ALLOWED_TAGS = new HashSet<>(Arrays.asList(
+            "div", "p", "b", "strong", "i", "em", "span", "a", "img", "blockquote",
+            "ul", "ol", "li", "hr", "br", "h1", "h2", "code"
+    ));
+
+	private static final Pattern tagPattern = Pattern.compile("<(/?)([a-zA-Z][a-zA-Z0-9]*)(\\s[^>]*)?>", Pattern.CASE_INSENSITIVE);
+	
+	public static String escapeUnsafeHtml(String input) 
+	{
+        if (input == null || input.isEmpty()) 
+        {
+            return input;
+        }
+        
+        StringBuilder result = new StringBuilder();
+        
+        Matcher matcher = tagPattern.matcher(input);
+        
+        int lastEnd = 0;
+        
+        while (matcher.find()) 
+        {
+            // Append text before the tag (escaped)
+	        result.append(xmlEscape(input.substring(lastEnd, matcher.start())));
+	        
+	        String fullTag = matcher.group(0);
+//	        String closingSlash = matcher.group(1);
+	        String tagName = matcher.group(2).toLowerCase();
+//	        String attributes = matcher.group(3);
+	        
+	        if (ALLOWED_TAGS.contains(tagName)) 
+	        {
+	            // Keep the allowed tag as-is
+	            result.append(fullTag);
+	        } 
+	        else 
+	        {
+	            // Escape the disallowed tag
+	            result.append(xmlEscape(fullTag));
+	        }
+	        
+	        lastEnd = matcher.end();
+	    }
+    
+	    // Append remaining text after last tag (escaped)
+	    result.append(xmlEscape(input.substring(lastEnd)));
+	    
+	    return result.toString();
 	}
 	
 	public String getDomain()
