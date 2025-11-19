@@ -373,6 +373,18 @@ public class BaseUser extends BaseData implements User, Comparable
 		return false;
 	}
 
+	public boolean isInGroup(Collection<String> inGroups)
+	{	
+		for (Iterator iterator = getGroups().iterator(); iterator.hasNext();)
+		{
+			Group group = (Group)iterator.next();
+			if(inGroups.contains( group.getId() ) )
+			{
+				return true;
+			}
+		}
+		return false;
+	}
 	
 	
 	public boolean isInGroup(String inGroup)

@@ -277,23 +277,26 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 			if( value == null && getVariables().containsKey("_jsonRequest"))
 			{
 				Object vals = getJsonRequest().get(inKey);
-				if (vals instanceof Collection )
+				if (vals != null)
 				{
-					Collection array = (Collection)vals;
-					if( array.size() > 0)
+					if (vals instanceof Collection )
 					{
-						value = (String)array.iterator().next();
+						Collection array = (Collection)vals;
+						if( array.size() > 0)
+						{
+							value = (String)array.iterator().next();
+						}
 					}
-				}
-				else if (vals instanceof Map) {
-	                // Convert the Map to a JSON string or handle it accordingly
-	                JSONObject jsonObject = new JSONObject((Map) vals);
-					value = jsonObject.toJSONString();
-				}
-				
-				else
-				{
-					value = String.valueOf(vals);
+					else if (vals instanceof Map) {
+		                // Convert the Map to a JSON string or handle it accordingly
+		                JSONObject jsonObject = new JSONObject((Map) vals);
+						value = jsonObject.toJSONString();
+					}
+					
+					else
+					{
+						value = String.valueOf(vals);
+					}
 				}
 			}
 		}

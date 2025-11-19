@@ -1,10 +1,8 @@
 package org.openedit.util;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -14,6 +12,7 @@ import org.openedit.CatalogEnabled;
 import org.openedit.Data;
 import org.openedit.data.DataWithSearcher;
 import org.openedit.data.SearcherManager;
+import org.openedit.modules.translations.LanguageMap;
 
 
 public class Replacer implements CatalogEnabled
@@ -185,6 +184,11 @@ public class Replacer implements CatalogEnabled
 	//					sub = span;
 						sub = text;
 					}
+				}
+				else if(currentvalue instanceof LanguageMap)
+				{
+					
+					sub = ((LanguageMap) currentvalue).getText(inLocale);
 				}
 				else
 				{

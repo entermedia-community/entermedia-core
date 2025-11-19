@@ -14,6 +14,9 @@ public interface Category extends MultiValued, Comparable
 
 	void sortChildren(boolean inRecursive);
 
+	boolean hasLoadedChildren();
+	
+	
 	List getRelatedCategoryIds();
 
 	void setRelatedCategoryIds(List fieldRelatedCategoryIds);
@@ -30,6 +33,9 @@ public interface Category extends MultiValued, Comparable
 	 * @return Returns the children.
 	 */
 	List getChildren();
+	
+	List getChildren(boolean inReloadifNeeded);
+
 	public List<Category> getDescendants();
 
 	/**
