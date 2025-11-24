@@ -70,11 +70,8 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 		{
 			return null;
 		}
-		if (value instanceof Map)
-		{
-			return value.toString();
-		}
-		if (value instanceof Map)
+		
+		if (value instanceof LanguageMap)
 		{
 			LanguageMap map = getLanguageMap(inId, value);
 			if (map == null)
@@ -83,6 +80,10 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 			}
 			
 			return map.getText(inLocale);
+		}
+		if (value instanceof Map)
+		{
+			return value.toString();
 		}
 		return value.toString();
 	}
