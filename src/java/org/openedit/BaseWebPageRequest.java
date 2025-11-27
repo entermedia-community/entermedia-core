@@ -755,6 +755,18 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 		}
 		return new String[]{(String) parameter};
 	}
+	
+	@Override
+	public Collection<String> getRequestCollection(String inKey)
+	{
+		
+		String[] values = getRequestParameters(inKey);
+		if (values != null)
+		{
+			return Arrays.asList(values);
+		}
+		return null;
+	}
 
 	/* 
 	 * @see org.openedit.WebPageContext#getStoredVariable(java.lang.String)
