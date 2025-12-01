@@ -243,13 +243,19 @@ public class Exec
 			FinalizedProcess process = pb.startPipe(getExecutorManager());
 			try
 			{
+				
 				InputStream resultingdata = process.getInputStream();
-				int returnVal = process.waitFor(inTimeout);
 				getFiller().fill(resultingdata, inOutput);
+
+				int returnVal = process.waitFor(inTimeout);
 				if (returnVal == 0) 
 				{
 					result.setRunOk(true); 
 				} 
+				else
+				{
+					process.destroyForcibly();
+				}
 				result.setReturnValue(returnVal);
 			}
 			finally
@@ -260,7 +266,7 @@ public class Exec
 		}
 		catch (Exception ex)
 		{
-			log.error(ex);
+			log.error("Error processing. " + com , ex);
 			result.setRunOk(false);
 			result.setReturnValue(1); //0 is success 1 is error
 			String error = result.getStandardError(); 

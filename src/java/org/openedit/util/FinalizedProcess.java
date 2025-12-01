@@ -94,6 +94,10 @@ public class FinalizedProcess implements Closeable {
 	public void destroy() {
 		process.destroy();
 	}
+	
+	public void destroyForcibly() {
+		process.destroyForcibly();
+	}
 
 	/**
 	 * Returns the exit value for the subprocess.
