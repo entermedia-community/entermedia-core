@@ -2439,6 +2439,15 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		}
 	}
 
+	@Override
+	public SearchQuery copyQuery(SearchQuery inSearch)
+	{
+		SearchQuery newq = createSearchQuery();
+		List<Term> terms = inSearch.getTerms();
+		newq.copyTerms(terms);
+		return newq;
+	}
+	
 	protected SearchQuery createSearchQuery(String inQueryString, WebPageRequest inPageRequest)
 	{
 		String[] array = inQueryString.split(";");

@@ -204,5 +204,7 @@ public interface Searcher extends CatalogEnabled
 
 	public void updateData(Data inChild, JSONObject inUpdate);
 
+	public SearchQuery copyQuery(SearchQuery inSearch);
+
     
 }
