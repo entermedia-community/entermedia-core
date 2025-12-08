@@ -184,21 +184,18 @@ public class BinaryStreamingProcessBuilder {
     }
     
     /**
-     * Stream data from input to output stream and return a copy as byte array
+     * Stream data from input to output stream without buffering in memory
      */
     private byte[] streamToOutputStream(InputStream inputStream, OutputStream targetStream) throws IOException {
-        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
         byte[] data = new byte[8192];
         int bytesRead;
         
         while ((bytesRead = inputStream.read(data, 0, data.length)) != -1) {
             targetStream.write(data, 0, bytesRead);
-            buffer.write(data, 0, bytesRead);
         }
         
         targetStream.flush();
-        buffer.flush();
-        return buffer.toByteArray();
+        return new byte[0]; // Return empty array when streaming to avoid memory overhead
     }
     
     /**
@@ -239,24 +236,50 @@ public class BinaryStreamingProcessBuilder {
             return exitCode;
         }
         
+        /**
+         * Get output data. Returns empty array if output was streamed to an OutputStream.
+         */
         public byte[] getOutputData() {
             return outputData;
         }
         
+        /**
+         * Get error data. Returns empty array if error was streamed to an OutputStream.
+         */
         public byte[] getErrorData() {
             return errorData;
         }
         
+        /**
+         * Get output as string. Returns empty string if output was streamed to an OutputStream.
+         */
         public String getOutputAsString() {
             return new String(outputData);
         }
         
+        /**
+         * Get error as string. Returns empty string if error was streamed to an OutputStream.
+         */
         public String getErrorAsString() {
             return new String(errorData);
         }
         
         public boolean isSuccess() {
             return exitCode == 0;
+        }
+        
+        /**
+         * Check if output data was buffered in memory
+         */
+        public boolean hasOutputData() {
+            return outputData != null && outputData.length > 0;
+        }
+        
+        /**
+         * Check if error data was buffered in memory
+         */
+        public boolean hasErrorData() {
+            return errorData != null && errorData.length > 0;
         }
     }
     
