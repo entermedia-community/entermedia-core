@@ -254,7 +254,9 @@ public class Exec
 				} 
 				else
 				{
+					log.error("ExecStream return: " + returnVal);
 					process.destroyForcibly();
+					
 				}
 				result.setReturnValue(returnVal);
 			}
