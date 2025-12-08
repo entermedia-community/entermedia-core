@@ -17,6 +17,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.dom4j.Element;
 import org.openedit.OpenEditException;
+import org.openedit.util.exec.BinaryStreamingProcessBuilder;
+import org.openedit.util.exec.BinaryStreamingProcessBuilder.ProcessResult;
 import org.openedit.xml.XmlArchive;
 import org.openedit.xml.XmlFile;
 
@@ -235,36 +237,15 @@ public class Exec
 		com.addAll(args);
 		log.info("Running: " + com); 
 
-		FinalizedProcessBuilder pb = new FinalizedProcessBuilder(com);
+		BinaryStreamingProcessBuilder builder = new BinaryStreamingProcessBuilder(com);
+		builder.setExecutorService(getExecutorManager().getExecutor("unlimited"));
 
 		ExecResult result = new ExecResult();
 		try
 		{
-			FinalizedProcess process = pb.startPipe(getExecutorManager());
-			try
-			{
-				
-				InputStream resultingdata = process.getInputStream();
-				getFiller().fill(resultingdata, inOutput);
-
-				int returnVal = process.waitFor(inTimeout);
-				if (returnVal == 0) 
-				{
-					result.setRunOk(true); 
-				} 
-				else
-				{
-					log.error("ExecStream return: " + returnVal);
-					process.destroyForcibly();
-					
-				}
-				result.setReturnValue(returnVal);
-			}
-			finally
-			{
-				//Stream should be read in fully then it returns the code
-				process.close();
-			}
+			ProcessResult process = builder.withOutputStream(inOutput).execute(); //withInput(resultingdata)
+			result.setRunOk(process.isSuccess());
+			result.setStandardError(process.getErrorAsString());
 		}
 		catch (Exception ex)
 		{
