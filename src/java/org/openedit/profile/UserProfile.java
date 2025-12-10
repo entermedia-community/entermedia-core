@@ -373,7 +373,7 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 			}
 		}
 		
-		return null;
+		return val;
 	}
 	
 	public Collection getValues(String inPreference)
@@ -814,7 +814,7 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 	@Override
 	public void setValue(String inId, Object inValue)
 	{ 
-		if (get("userid") != null)
+		if (getId() != null)
 		{
 			String val = (String) String.valueOf( inValue );
 			saveUserIfChanged(inId, val);

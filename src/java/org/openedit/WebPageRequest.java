@@ -18,6 +18,7 @@ package org.openedit;
 
 import java.io.OutputStream;
 import java.io.Writer;
+import java.util.Collection;
 import java.util.Map;
 import java.util.TimeZone;
 
@@ -124,6 +125,8 @@ public interface WebPageRequest
 	public String getParam(String inKey);
 
 	String[] getRequestParameters( String inKey );
+	
+	Collection<String> getRequestCollection(String inKey);
 		
 	void setRequestParameter( String inKey, String inValue );
 	

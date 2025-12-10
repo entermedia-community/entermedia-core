@@ -21,6 +21,7 @@ import java.io.Writer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Enumeration;
@@ -754,6 +755,18 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 		}
 		return new String[]{(String) parameter};
 	}
+	
+	@Override
+	public Collection<String> getRequestCollection(String inKey)
+	{
+		
+		String[] values = getRequestParameters(inKey);
+		if (values != null)
+		{
+			return Arrays.asList(values);
+		}
+		return null;
+	}
 
 	/* 
 	 * @see org.openedit.WebPageContext#getStoredVariable(java.lang.String)
@@ -1344,32 +1357,41 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 	
 	
 	
-	public String getHours(String inDate)
+	public String getHours(Object inDate)
 	{
-		if( inDate == null || inDate.length() == 0)
+		if( inDate == null)
 		{
 			return null;
 		}
-			
-		Date date = getLocaleManager().getDateStorageUtil().parseFromStorage(inDate);
+		Date date = getLocaleManager().getDateStorageUtil().parseFromObject(inDate);
+		
 		if(date == null){
 			return null;
 		}
 		
-		return String.valueOf(date.getHours());
+		Calendar calendar = Calendar.getInstance();
+	    calendar.setTime(date);
+	    int day = calendar.get(Calendar.HOUR_OF_DAY);
+	    return  String.valueOf(day);
+		
 	}
 	
 	
-	public String getMinutes(String inDate)
+	public String getMinutes(Object inDate)
 	{
 		if(inDate == null){
 			return null;
 		}
-		Date date = getLocaleManager().getDateStorageUtil().parseFromStorage(inDate);
+		Date date = getLocaleManager().getDateStorageUtil().parseFromObject(inDate);
+		
 		if(date == null){
 			return null;
 		}
-		return String.valueOf(date.getMinutes());
+		
+		Calendar calendar = Calendar.getInstance();
+	    calendar.setTime(date);
+	    int day = calendar.get(Calendar.MINUTE);
+	    return  String.valueOf(day);
 	}
 	
 	

@@ -431,7 +431,7 @@ public class BaseUser extends BaseData implements User, Comparable
 	@Override
 	public void setValue(String inKey, Object inValue)
 	{
-		if( inKey.equals("groups"))
+		if( inKey.equals("groups") && inValue != null)
 		{
 			Collection groups = new ArrayList();
 			Collection<String> vals = null;
