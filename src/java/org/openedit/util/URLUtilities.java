@@ -1126,18 +1126,32 @@ public class URLUtilities
 	}
 	 
 	public static String escapeMessage(String inMessage, int maxchars) {
+		return escapeMessage(inMessage, maxchars, false);
+	}
+	public static String escapeMessage(String inMessage, int maxchars, boolean singleline) {
 		if (inMessage == null) {
 			return null;
 		}
 		String escaped = URLUtilities.xmlEscape(inMessage);
-		escaped = escaped.replaceAll("\\n", "<br>");
-		escaped = escaped.replaceAll("&lt;br&gt;", "<br>");
 		escaped = escaped.replaceAll("&lt;i&gt;", "<i>");
 		escaped = escaped.replaceAll("&lt;/ir&gt;", "</i>");
 		escaped = escaped.replaceAll("&lt;b&gt;", "<b>");
 		escaped = escaped.replaceAll("&lt;/b&gt;", "</b>");
-		escaped = escaped.replaceAll("&lt;p&gt;", "<p>");
-		escaped = escaped.replaceAll("&lt;/p&gt;", "</p>");
+		
+		if(singleline)
+		{
+			escaped = escaped.replaceAll("\\n", " ");
+			escaped = escaped.replaceAll("&lt;br&gt;", " ");
+			escaped = escaped.replaceAll("&lt;p&gt;", "");
+			escaped = escaped.replaceAll("&lt;/p&gt;", " ");
+		}
+		else
+		{
+			escaped = escaped.replaceAll("\\n", "<br>");
+			escaped = escaped.replaceAll("&lt;br&gt;", "<br>");
+			escaped = escaped.replaceAll("&lt;p&gt;", "<p>");
+			escaped = escaped.replaceAll("&lt;/p&gt;", "</p>");
+		}
 
 		  Matcher m = urlPattern.matcher(escaped);
 		  StringBuffer sb = new StringBuffer(escaped.length());
