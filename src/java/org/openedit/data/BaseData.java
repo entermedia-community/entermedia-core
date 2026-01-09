@@ -559,13 +559,35 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 	
 	public String toJsonString()
 	{
-		StringBuffer output = new StringBuffer();
+		/*StringBuffer output = new StringBuffer();
 		output.append("{ \"_id\": \"" + getId() + "\",");
 		output.append(" \"map\" :");
 		JSONObject object = new JSONObject(getProperties());  //TODO: Deal with Java Objects. Loop over stuff?
 		output.append(object.toJSONString());
 		output.append(" \n}");
-		return output.toString();
+		return output.toString();*/
+		
+		JSONObject output = new JSONObject();
+		output.put("_id", getId());
+		Map properties = getProperties();
+		
+		for (Iterator iterator = properties.keySet().iterator(); iterator.hasNext();)
+		{
+			String key = (String) iterator.next();
+			Object value = properties.get(key);
+			
+			if (value instanceof Date)
+			{
+				String jsondate = DateStorageUtil.getStorageUtil().formatDateObj((Date)value, "yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+				properties.put(key, jsondate);
+			}
+			
+		}
+				
+		JSONObject object = new JSONObject(properties);  //TODO: Deal with Java Objects. Loop over stuff?
+		output.put("map", object);
+
+		return output.toJSONString();
 	}	
 	
 	public boolean hasValue(String inKey)
