@@ -63,6 +63,7 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.security.cert.X509Certificate;
+import java.text.Normalizer;
 import java.util.Arrays;
 import java.util.Formatter;
 import java.util.HashSet;
@@ -377,6 +378,14 @@ public class URLUtilities
 			}
 			return finalurl.toString();
 	 }
+	
+	public static String removeAccents(String input) {
+	    if (input == null) {
+	        return null;
+	    }
+	    String normalized = Normalizer.normalize(input, Normalizer.Form.NFD);
+	    return normalized.replaceAll("\\p{M}", "");
+	}
 	
 	public static String fixPath(String inPath)
 	{
@@ -1325,7 +1334,8 @@ public class URLUtilities
 
 	public static String dash(String inName)
 	{
-		String text = xmlEscape(inName);
+		String text = removeAccents(inName);
+		text = urlEscape(text);
 		text = text.replaceAll(" ","-").replaceAll("&amp;","-");
 		return text;
 	}
