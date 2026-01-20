@@ -2605,5 +2605,41 @@ public boolean isFilterSelected(String type, String value) {
 		}
 		setTerms(newTerms);
 	}
+
+
+	public Term lessThan(String inId, int inNumber)
+	{
+		Term term = new Term()
+		{
+			public String toQuery()
+			{
+				String fin = getDetail().getId() + ":[ < " + inNumber + "]";
+				return fin;
+			}
+		};
+		PropertyDetail detail = createDetail(inId);
+		term.setDetail(detail);
+		term.setValue(String.valueOf(inNumber));
+		term.setOperation("lessthannumber");
+		getTerms().add(term);
+		return term;
+	}
 	
+	public Term moreThan(String inId, int inNumber)
+	{
+		Term term = new Term()
+		{
+			public String toQuery()
+			{
+				String fin = getDetail().getId() + ":[ > " + inNumber + "]";
+				return fin;
+			}
+		};
+		PropertyDetail detail = createDetail(inId);
+		term.setDetail(detail);
+		term.setValue(String.valueOf(inNumber));
+		term.setOperation("greaterthannumber");
+		getTerms().add(term);
+		return term;
+	}
 }
