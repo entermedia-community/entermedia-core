@@ -1123,11 +1123,9 @@ public class URLUtilities
 	        } };
 	        return trustAllCerts;
 	    }
+	 private static String urlRegex = "\\b(?:https?|ftp)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
 	 
-	 private static final Pattern urlPattern = Pattern.compile(
-		        "(?:^|[^A-Za-z0-9\\\"\\'])((ht|f)tp(s?):\\/\\/|www\\.)"
-		                + "(([\\w\\-]+\\.){1,}?([\\w\\-.~]+\\/?)*"
-		                + "[\\p{Alnum}.,%_=?&#\\-+()\\[\\]\\*$~@!:/{};']*)",
+	 private static final Pattern urlPattern = Pattern.compile(urlRegex,
 		        Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
 	 
 	public static String escapeMessage(String inMessage) {
@@ -1156,8 +1154,8 @@ public class URLUtilities
 		}
 		else
 		{
-			escaped = escaped.replaceAll("\\n", "<br>");
-			escaped = escaped.replaceAll("&lt;br&gt;", "<br>");
+			escaped = escaped.replaceAll("\\n", "<br />");
+			escaped = escaped.replaceAll("&lt;br&gt;", "<br />");
 			escaped = escaped.replaceAll("&lt;p&gt;", "<p>");
 			escaped = escaped.replaceAll("&lt;/p&gt;", "</p>");
 		}
