@@ -72,6 +72,12 @@ public class QueryBuilder
 		return this;
 	}
 	
+	public QueryBuilder addchild(SearchQuery inQuery)
+	{
+		getQuery().addChildQuery(inQuery);
+		return this;
+	}
+	
 	
 	public QueryBuilder since(String inId, int date)
 	{
