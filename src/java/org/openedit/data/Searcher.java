@@ -198,7 +198,7 @@ public interface Searcher extends CatalogEnabled
 
 	public void saveJson(String inId, JSONObject inObject);
 
-	public Object getFulltext(Data inSearchHitData);
+	public String getFulltext(Data inSearchHitData);
 
 	public HitTracker getCachedSearch(QueryBuilder inQ);
 

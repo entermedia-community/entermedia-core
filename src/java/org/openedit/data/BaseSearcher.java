@@ -3651,7 +3651,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 	
 
 	@Override
-	public Object getFulltext(Data inSearchHitData)
+	public String getFulltext(Data inSearchHitData)
 	{
 		return null;
 	}

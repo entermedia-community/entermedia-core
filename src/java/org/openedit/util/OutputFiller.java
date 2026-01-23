@@ -6,9 +6,17 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
+import java.io.StringWriter;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Creation date: (9/11/2001 4:43:00 PM)
@@ -16,6 +24,7 @@ import java.io.Writer;
  */
 public class OutputFiller
 {
+	private static final Log log = LogFactory.getLog(OutputFiller.class);
 	protected int fieldBufferSize = 2048;  //2048 Seems to be 4% faster than 1024 for larger files 
 	protected long fieldMaxSize = -1;
 	
@@ -259,4 +268,54 @@ public class OutputFiller
 		fill(in,out);
 		return out.toByteArray();
 	}
+	
+	public String readAllText(InputStream in)
+	{
+		Reader input = null;
+		try
+		{
+			input= new InputStreamReader( in, "UTF-8");
+			StringWriter output = new StringWriter(); 
+			fill(input, output);
+			return output.toString();
+		}
+		catch( IOException ex)
+		{
+			log.error(ex);
+			return null;
+		}
+		finally
+		{
+			close(input);
+		}
+		
+	}
+	
+	  public List<String> splitUtf8(String input, int maxBytes)
+	  {
+	        List<String> chunks = new ArrayList<>();
+	        StringBuilder current = new StringBuilder();
+	        int currentBytes = 0;
+
+	        for (int i = 0; i < input.length(); i++) {
+	            String ch = String.valueOf(input.charAt(i));
+	            int chBytes = ch.getBytes(StandardCharsets.UTF_8).length;
+
+	            if (currentBytes + chBytes > maxBytes) {
+	                chunks.add(current.toString());
+	                current.setLength(0);
+	                currentBytes = 0;
+	            }
+
+	            current.append(ch);
+	            currentBytes += chBytes;
+	        }
+
+	        if (!current.isEmpty()) {
+	            chunks.add(current.toString());
+	        }
+
+	        return chunks;
+	    }
+	
 }
