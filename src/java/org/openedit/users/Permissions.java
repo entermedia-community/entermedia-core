@@ -263,11 +263,12 @@ public class Permissions implements CatalogEnabled
 		
 		if( inKey.equals("edit") )
 		{
+			/*
 			if( isViewerOnlySet(inEntity) )
 			{
 				return false;
 			}
-			
+			*/
 			boolean istrue = isEditorFor(inModule,inEntity);
 			if( istrue )
 			{
