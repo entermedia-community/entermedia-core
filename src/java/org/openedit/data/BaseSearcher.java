@@ -3305,6 +3305,11 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 				{
 					result = Boolean.parseBoolean(val);
 				}
+				else if (detail != null && detail.isNumber())
+				{
+					//clean non numeric chrs
+			    	result = val.replaceAll("[^0-9.\\-]", "");
+				}
 				else
 				{
 					result = val;
