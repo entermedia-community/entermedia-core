@@ -598,7 +598,7 @@ public class PageSettings
 	}
 	public PageProperty getFieldProperty(String inKey )
 	{
-		PageProperty val = (PageProperty)getProperties().get(inKey);
+		PageProperty val = (PageProperty)getMap().get(inKey);
 		if (val != null )
 		{
 			val.setPath(getXConf().getPath());

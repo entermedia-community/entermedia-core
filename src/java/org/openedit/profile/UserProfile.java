@@ -894,7 +894,7 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 
 	public void removeAllStartWith(String inName)
 	{
-		Collection collection = getMap().keySet();
+		Collection collection = getProperties().keySet();
 		Collection toremove = new HashSet();
 		for (Iterator iterator = collection.iterator(); iterator.hasNext();)
 		{

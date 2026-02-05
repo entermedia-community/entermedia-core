@@ -3431,7 +3431,7 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		else
 		{
 			Data data = (Data) createNewData();
-			Map fields = inHit.getProperties();
+			ValuesMap fields = inHit.getProperties();
 			fields = checkTypes(fields);
 			data.setProperties(fields);
 			data.setId(inHit.getId());
@@ -3448,14 +3448,14 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		}
 
 		Data data = (Data) createNewData();
-		Map fields = inHit.getProperties();
+		ValuesMap fields = inHit.getProperties();
 		fields = checkTypes(fields);
 		data.setProperties(fields);
 		data.setId(null);
 		return data;
 	}
 
-	protected Map checkTypes(Map inFields)
+	protected ValuesMap checkTypes(ValuesMap inFields)
 	{
 		return inFields;
 	}

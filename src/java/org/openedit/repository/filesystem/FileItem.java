@@ -22,6 +22,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openedit.Data;
 import org.openedit.OpenEditException;
+import org.openedit.data.ValuesMap;
 import org.openedit.repository.ContentItem;
 import org.openedit.repository.RepositoryException;
 import org.openedit.util.PathUtilities;
@@ -186,7 +187,7 @@ public class FileItem extends ContentItem implements Data
 	{
 		throw new IllegalAccessError("Not implemented");
 	}
-	public void setProperties(Map inProperties)
+	public void setProperties(ValuesMap inProperties)
 	{
 	}
 	
@@ -215,7 +216,7 @@ public class FileItem extends ContentItem implements Data
 		throw new IllegalAccessError("Not implemented");
 	}
 	
-	public Map getProperties()
+	public ValuesMap getProperties()
 	{
 		throw new IllegalAccessError("Not implemented");
 	}
