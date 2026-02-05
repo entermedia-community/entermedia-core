@@ -826,13 +826,13 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 	
 
 	@Override
-	public Map getProperties()
+	public ValuesMap getProperties()
 	{
 		return getElementData().getProperties();
 	}
 
 	@Override
-	public void setProperties(Map inProperties)
+	public void setProperties(ValuesMap inProperties)
 	{
 		getElementData().setProperties(inProperties);
 		

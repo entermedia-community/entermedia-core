@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
+import org.openedit.data.ValuesMap;
+
 public interface Data
 {
 	String getId();
@@ -24,10 +26,10 @@ public interface Data
 	
 	void setValue(String inKey, Object inValue);
 	
-	/** string values map */
-	Map getProperties();
-	
-	void setProperties(Map inObjects);
+	/** This is fast */
+	ValuesMap getProperties();
+
+	void setProperties(ValuesMap inObjects);
 	
 	Set keySet();
 

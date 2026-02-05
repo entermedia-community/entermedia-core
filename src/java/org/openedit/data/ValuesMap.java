@@ -18,9 +18,9 @@ import org.openedit.util.DateStorageUtil;
 
 public class ValuesMap extends HashMap
 {
-	public static final Object NULLVALUE = new Object(); 
-	public static final String NULLSTRING= new String();
-	public static final Data NULLDATA = new BaseData(); 
+	public static final Object NULLVALUE = new NullObject(); 
+	public static final String NULLSTRING= "NULLSTRING";
+	public static final Data NULLDATA = new NullData(); 
 	
 	public ValuesMap()
 	{
@@ -436,5 +436,20 @@ public class ValuesMap extends HashMap
 			return ((Integer)val);
 		}
 		return Integer.parseInt((String)val);
+	}
+	
+	public Map toMap()
+	{
+		ValuesMap newmap = new ValuesMap();
+		for (Iterator iterator = keySet().iterator(); iterator.hasNext();)
+		{
+			Object key = (Object) iterator.next();
+			Object value = get(key);
+			if( value != null)
+			{
+				newmap.put(key, value);
+			}
+		}
+		return newmap;
 	}
 }

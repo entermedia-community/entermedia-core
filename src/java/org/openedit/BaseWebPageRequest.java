@@ -44,6 +44,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.openedit.data.BaseData;
 import org.openedit.data.SearcherManager;
+import org.openedit.data.ValuesMap;
 import org.openedit.modules.translations.LanguageMap;
 import org.openedit.page.Page;
 import org.openedit.page.PageAction;
@@ -1580,7 +1581,7 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 	public Data getParameterData()
 	{
 		BaseData data = new BaseData();
-		data.setProperties(getParameterMap());
+		data.setProperties(new ValuesMap(getParameterMap()));
 		return data;
 	}
 

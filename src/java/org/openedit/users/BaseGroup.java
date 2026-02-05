@@ -81,7 +81,7 @@ public class BaseGroup extends BaseData implements Group, Serializable, Comparab
 				return true;
 			}
 		}
-		String ok =  getMap().getString( inPermission );
+		String ok =  getProperties().getString( inPermission );
 
 		if (Boolean.parseBoolean(ok))
 		{

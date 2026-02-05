@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -24,7 +25,7 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 {
 	public static final Data NULL = new BaseData(); 
 	
-	protected ValuesMap fieldMap;
+	protected ValuesMap fieldProperties;
 
 	public BaseData() {
 	}
@@ -33,19 +34,19 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 	
 	public BaseData(Map inMap) 
 	{
-		fieldMap = new ValuesMap(inMap);
+		fieldProperties = new ValuesMap(inMap);
 	}
 
 	public String get(String inId) 
 	{
-		if( fieldMap == null || inId == null)
+		if( fieldProperties == null || inId == null)
 		{
 			return null;
 		}
 		Object value = getValue(inId);
 		
 		
-		return getMap().toString(value);
+		return getProperties().toString(value);
 	}
 	
 	public String getText(String inId, WebPageRequest inContext) {
@@ -61,7 +62,7 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 	
 	public String getText(String inId, String inLocale) 
 	{
-		if( fieldMap == null)
+		if( fieldProperties == null)
 		{
 			return null;
 		}
@@ -90,7 +91,7 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 	
 	public LanguageMap getLanguageMap(String inId) 
 	{
-		if( fieldMap == null)
+		if( fieldProperties == null)
 		{
 			return null;
 		}
@@ -249,7 +250,7 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 	{
 		if (inValue == null) 
 		{
-			getMap().remove(inId);
+			getProperties().remove(inId);
 		} else {
 			setValue(inId, inValue);
 		}
@@ -284,13 +285,6 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 			throw new OpenEditException(e);
 		}
 	}
-	public ValuesMap getMap() 
-	{
-		if (fieldMap == null) {
-			fieldMap = new ValuesMap();
-		}
-		return fieldMap;
-	}
 
 	public void setId(int inNewid) {
 		setProperty("id", String.valueOf( inNewid) );
@@ -312,14 +306,19 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 	public void setSourcePath(String inSourcepath) {
 		setProperty("sourcepath", inSourcepath);
 	}
-
+	
+	//DO not call
 	public ValuesMap getProperties() 
 	{
-		return getMap();
+		if (fieldProperties == null) {
+			fieldProperties = new ValuesMap();
+		}
+		return fieldProperties;
+
 	}
-	public void setProperties(Map inProperties)
+	public void setProperties(ValuesMap inProperties)
 	{
-		getMap().putAll(inProperties);
+		getProperties().putAll(inProperties);
 	}
 	public int compareTo(Object inO) {
 		BaseData inData = (BaseData) inO;
@@ -331,13 +330,13 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 	
 	public Collection<String> getValues(String inPreference)
 	{
-		return getMap().getValues(inPreference);
+		return getProperties().getValues(inPreference);
 	}
 	public boolean hasValue(String inField, String inId)
 	{
-		if( getMap().containsKey(inField) )
+		if( getProperties().containsKey(inField) )
 		{
-			return getMap().containsInValues(inField,inId);
+			return getProperties().containsInValues(inField,inId);
 		}
 		Object object = getValue(inField);
 		if( object == null)
@@ -381,14 +380,14 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 	
 	public Object getValue(String inKey)
 	{
-		Object val = getMap().getValue(inKey);
+		Object val = getProperties().getValue(inKey);
 		if( val == ValuesMap.NULLSTRING)
 		{
 			val = null;
 		}
 		if( val == null && inKey.equals("name"))
 		{
-			Map map = (Map)getMap().getValue(inKey  + "_int");
+			Map map = (Map)getProperties().getValue(inKey  + "_int");
 			return map;
 		}
 		return val;
@@ -413,7 +412,7 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 				throw new OpenEditException(e);
 			}
 		}
-		getMap().put(inKey,inValue);
+		getProperties().put(inKey,inValue);
 	}
 	
 	/**
@@ -431,7 +430,7 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 //				values.append(" | ");
 //			}
 //		}
-		getMap().put(inKey, inValues);
+		getProperties().put(inKey, inValues);
 	}
 	public void addValue(String inKey, Object inNewValue)
 	{
@@ -474,21 +473,21 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 	
 	public void removeValue(String inKey)
 	{
-		getMap().remove(inKey);
+		getProperties().remove(inKey);
 		
 	}
 
 	@Override
 	public void removeValue(String inKey, Object inOldValue)
 	{
-		getMap().removeValue(inKey, inOldValue);
+		getProperties().removeValue(inKey, inOldValue);
 	}
 
 	
 	@Override
 	public Set keySet()
 	{
-		return getMap().keySet();
+		return getProperties().keySet();
 	}
 	
 	protected Long toLong(Number inNumber)
