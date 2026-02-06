@@ -445,7 +445,7 @@ public class ValuesMap extends HashMap
 		{
 			Object key = (Object) iterator.next();
 			Object value = get(key);
-			if( value != null)
+			if( value != null && value != NULLVALUE && value != NULLSTRING)
 			{
 				newmap.put(key, value);
 			}
