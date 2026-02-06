@@ -316,9 +316,10 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 		return fieldProperties;
 
 	}
-	public void setProperties(ValuesMap inProperties)
+	//only Adds properties does not remove any
+	public void setProperties(Map inProperties)
 	{
-		fieldProperties = inProperties;
+		getProperties().putAll(inProperties);
 	}
 	public int compareTo(Object inO) {
 		BaseData inData = (BaseData) inO;

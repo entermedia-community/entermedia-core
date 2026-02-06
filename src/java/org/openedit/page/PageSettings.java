@@ -605,9 +605,9 @@ public class PageSettings
 		}
 		return val;
 	}
-	public void setProperties( ValuesMap properties )
+	public void setProperties( Map properties )
 	{
-		fieldProperties = properties;
+		getProperties().putAll( properties );
 	}
 	public void putProperty(PageProperty inProperty)
 	{

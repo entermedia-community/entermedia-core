@@ -29,7 +29,11 @@ public interface Data
 	/** This is fast */
 	ValuesMap getProperties();
 
-	void setProperties(ValuesMap inObjects);
+	/**
+	 * Only add properties. Does not clear
+	 * @param inObjects
+	 */
+	void setProperties(Map inObjects);
 	
 	Set keySet();
 

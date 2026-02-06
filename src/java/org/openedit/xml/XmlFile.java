@@ -271,7 +271,7 @@ public class XmlFile implements Data
 	{
 		setPath(inSourcepath);
 	}	
-	public void setProperties(ValuesMap inProperties)
+	public void setProperties(Map inProperties)
 	{
 		for (Iterator iterator = inProperties.entrySet().iterator(); iterator.hasNext();)
 		{

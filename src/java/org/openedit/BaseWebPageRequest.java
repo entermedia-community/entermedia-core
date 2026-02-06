@@ -1581,7 +1581,7 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 	public Data getParameterData()
 	{
 		BaseData data = new BaseData();
-		data.setProperties(new ValuesMap(getParameterMap()));
+		data.setProperties(getParameterMap());
 		return data;
 	}
 

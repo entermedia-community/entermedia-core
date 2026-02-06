@@ -832,7 +832,7 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 	}
 
 	@Override
-	public void setProperties(ValuesMap inProperties)
+	public void setProperties(Map inProperties)
 	{
 		getElementData().setProperties(inProperties);
 		

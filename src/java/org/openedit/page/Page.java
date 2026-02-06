@@ -871,7 +871,7 @@ public class Page implements Data, Comparable
 		getPageSettings().setProperty(inId, inValue);
 		
 	}
-	public void setProperties(ValuesMap inProperties)
+	public void setProperties(Map inProperties)
 	{
 		getPageSettings().setProperties(inProperties);
 	}

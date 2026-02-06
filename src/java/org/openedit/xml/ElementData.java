@@ -410,7 +410,7 @@ public class ElementData implements MultiValued, SaveableData, Comparable, Searc
 		return name;
 	}
 
-	public void setProperties(ValuesMap inProperties)
+	public void setProperties(Map inProperties)
 	{
 		for (Iterator iterator = inProperties.keySet().iterator(); iterator.hasNext();)
 		{
