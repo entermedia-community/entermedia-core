@@ -48,7 +48,7 @@ public class ValuesMap extends HashMap
 	
 	public Object get(String inKey)
 	{
-		return getString(inKey);
+		return getValue(inKey);
 	}
 	
 	public void removeValue(String inKey, Object inOldValue)
@@ -378,7 +378,11 @@ public class ValuesMap extends HashMap
 			for (Iterator iterator = map.keySet().iterator(); iterator.hasNext();)
 			{
 				String key = (String) iterator.next();
-				put( key, map.getObject(key));
+				Object value = map.getValue(key);
+				if( value != null && value != NULLVALUE)
+				{
+					put( key, value);
+				}
 			}
 		}
 		else

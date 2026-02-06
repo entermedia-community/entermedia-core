@@ -43,10 +43,8 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 		{
 			return null;
 		}
-		Object value = getValue(inId);
-		
-		
-		return getProperties().toString(value);
+		String value = getProperties().getString(inId);
+		return value;
 	}
 	
 	public String getText(String inId, WebPageRequest inContext) {
