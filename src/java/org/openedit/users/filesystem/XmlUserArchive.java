@@ -290,7 +290,7 @@ public class XmlUserArchive implements CatalogEnabled  {
 
 		MapPropertyContainer container = new MapPropertyContainer();
 		container.loadProperties(root.element("properties"));
-		user.setProperties(container);
+		user.getProperties().putAll(container.toMap());
 		if( user.getValue("creationdate") == null)
 		{
 			user.setValue("creationdate", new Date(userFile.lastModified()) );
