@@ -62,6 +62,10 @@ public class Site
 			return inApplicationid;
 		}
 		String apppath = getSiteData().get("rootpath");
+		if(apppath == null)
+		{
+			return "/" + inApplicationid;
+		}
 		String id = apppath.substring(1);
 		if( !inApplicationid.startsWith(id))
 		{
