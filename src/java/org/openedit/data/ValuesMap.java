@@ -1,19 +1,26 @@
 package org.openedit.data;
 
 import java.math.BigDecimal;
+import java.util.AbstractSet;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Objects;
+import java.util.Set;
 
 import org.json.simple.JSONObject;
 import org.openedit.Data;
 import org.openedit.MultiValued;
 import org.openedit.modules.translations.LanguageMap;
 import org.openedit.util.DateStorageUtil;
+
 
 
 public class ValuesMap extends HashMap
@@ -35,15 +42,10 @@ public class ValuesMap extends HashMap
 	 * @param inKey
 	 * @return
 	 */
-	public Object getObject(String inKey)
+	public Object get(Object inKey)
 	{
-		Object obj = super.get(inKey);
+		Object obj = getValue((String)inKey);
 		return obj; 
-	}
-	
-	public Object get(String inKey)
-	{
-		return getValue(inKey);
 	}
 	
 	public void removeValue(String inKey, Object inOldValue)
@@ -146,9 +148,9 @@ public class ValuesMap extends HashMap
 		return collection;
 	}
 	
-	public Collection getObjects(String inPreference)
+	public Collection gets(String inPreference)
 	{
-		Object object = getObject(inPreference);
+		Object object = get(inPreference);
 		if( object == null || object == NULLVALUE)
 		{
 			return null;
@@ -199,10 +201,17 @@ public class ValuesMap extends HashMap
 		
 	}
 	
+	public Object getObject(String inId)
+	{
+		Object val = super.get(inId);
+		return val;
+		
+	}
+	
 	
 	public Object getValue(String inId)
 	{
-		Object val = getObject(inId);
+		Object val = super.get(inId);
 		if( val == null || val == NULLVALUE || val == NULLSTRING)
 		{
 			return null;
@@ -451,4 +460,94 @@ public class ValuesMap extends HashMap
 		}
 		return newmap;
 	}
+	
+	
+	public Set keySet() 
+	{
+		Set set = new HashSet();
+		Set superset =super.keySet();
+		for (Iterator iterator = superset.iterator(); iterator.hasNext();)
+		{
+			String key = (String) iterator.next();
+			/*
+			if( key.endsWith("_int"))
+			{
+				key = key.substring(0, key.length() - 4);
+			}
+			*/
+			if  ( getValue(key) != null) 
+			{
+				set.add(key);
+			}
+		}
+		return set;
+	}
+	
+	@Override
+	public Set<Map.Entry<Object, Object>> entrySet() 
+	 {
+		 List<Object> keys = new ArrayList<>(keySet());
+		 
+        return new AbstractSet<Map.Entry<Object, Object>>() {
+
+            @Override
+            public Iterator<Map.Entry<Object, Object>> iterator() {
+                return new Iterator<Map.Entry<Object, Object>>() {
+                    private int index = 0;
+
+                    @Override
+                    public boolean hasNext() {
+                        return index < keys.size();
+                    }
+
+                    @Override
+                    public Map.Entry<Object, Object> next() {
+                        if (!hasNext()) {
+                            throw new NoSuchElementException();
+                        }
+                        return new ValueEntry(keys, index++);
+                    }
+                };
+            }
+
+            @Override
+            public int size() {
+                return keys.size();
+            }
+        };
+    }
+
+    /* ---------------- Entry Implementation ---------------- */
+
+    private class ValueEntry implements Map.Entry<Object, Object> {
+        private final int index;
+        List<Object> keys = null;
+        ValueEntry(List<Object> inKeys, int index) {
+            this.index = index;
+            this.keys = inKeys;
+        }
+
+        @Override
+       public Object getKey() {
+           return this.keys.get(index);
+       }
+
+       @Override
+       public Object getValue() {
+           return ValuesMap.this.getValue((String) keys.get(index));
+       }
+
+       @Override
+       public Object setValue(Object value) {
+           Object oldValue = getValue();
+           ValuesMap.this.put(keys.get(index), value);
+           return oldValue;
+       }
+
+       @Override
+       public int hashCode() {
+           return Objects.hash(getKey(), getValue());
+       }
+
+   }
 }
