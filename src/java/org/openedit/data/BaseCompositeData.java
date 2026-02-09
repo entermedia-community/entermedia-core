@@ -575,7 +575,7 @@ public class BaseCompositeData extends BaseData implements Data, CompositeData
 		getPropertiesSet().clear();
 	}
 	protected void addSafeValue(String field, Map safevalues) {
-		Object newval = getPropertiesSet().getObject(field); //set by the user since last save
+		Object newval = getPropertiesSet().getValue(field); //set by the user since last save
 		//See if the values changed
 		Object commonval = getValueFromResults(field); 
 		//A blank string means no common value.

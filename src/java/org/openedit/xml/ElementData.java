@@ -568,7 +568,7 @@ public class ElementData implements MultiValued, SaveableData, Comparable, Searc
 
 	public LanguageMap getLanguageMap(String inKey)
 	{
-		LanguageMap language = (LanguageMap)getMap().getObject(inKey);
+		LanguageMap language = (LanguageMap)getMap().getValue(inKey);
 		if( language != null)
 		{
 			return language;

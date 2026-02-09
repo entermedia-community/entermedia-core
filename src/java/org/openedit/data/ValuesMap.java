@@ -31,19 +31,14 @@ public class ValuesMap extends HashMap
 		putAll(inMap);
 	}
 	/**
-	 * Thinking to not override the nullvalue check here
+	 * May return null object
 	 * @param inKey
 	 * @return
 	 */
 	public Object getObject(String inKey)
 	{
 		Object obj = super.get(inKey);
-//TODO: Should we just do this here?
-//		if( obj == null || obj == NULLVALUE)
-//		{
-//			return null;
-//		}
-		return obj;
+		return obj; 
 	}
 	
 	public Object get(String inKey)
@@ -53,8 +48,8 @@ public class ValuesMap extends HashMap
 	
 	public void removeValue(String inKey, Object inOldValue)
 	{
-		Object val = getObject(inKey);
-		if( val == null || val == NULLVALUE)
+		Object val = getValue(inKey);
+		if( val == null)
 		{
 			return;
 		}
@@ -116,8 +111,8 @@ public class ValuesMap extends HashMap
 	
 	public Collection<String> getValues(String inPreference)
 	{
-		Object object = getObject(inPreference);
-		if( object == null || object == NULLVALUE)
+		Object object = getValue(inPreference);
+		if( object == null)
 		{
 			return null;
 		}
@@ -150,6 +145,7 @@ public class ValuesMap extends HashMap
 		Collection collection = new ArrayList(Arrays.asList(vals)); //To make it editable
 		return collection;
 	}
+	
 	public Collection getObjects(String inPreference)
 	{
 		Object object = getObject(inPreference);
@@ -185,13 +181,13 @@ public class ValuesMap extends HashMap
 	}
 	public String getString(String inKey)
 	{
-		Object object = getObject(inKey);
+		Object object = getValue(inKey);
 		return toString(object);
 	}
 	public boolean getBoolean(String inId)
 	{
-		Object val = getObject(inId);
-		if( val == null || val == NULLVALUE)
+		Object val = getValue(inId);
+		if( val == null)
 		{
 			return false;
 		}
@@ -207,7 +203,7 @@ public class ValuesMap extends HashMap
 	public Object getValue(String inId)
 	{
 		Object val = getObject(inId);
-		if( val == null || val == NULLVALUE)
+		if( val == null || val == NULLVALUE || val == NULLSTRING)
 		{
 			return null;
 		}
@@ -230,7 +226,7 @@ public class ValuesMap extends HashMap
 	
 	public Double getDouble(String inId)
 	{
-		Object val = getObject(inId);
+		Object val = getValue(inId);
 		if( val != null)
 		{
 			if( val instanceof Double)
@@ -253,8 +249,8 @@ public class ValuesMap extends HashMap
 	}
 	public Date getDate(String inField)
 	{
-		Object val = getObject(inField);
-		if( val == null || val == NULLVALUE)
+		Object val = getValue(inField);
+		if( val == null)
 		{
 			return null;
 		}
@@ -262,15 +258,14 @@ public class ValuesMap extends HashMap
 		{
 			return (Date)val;
 		}
-		//??
 		Date date = DateStorageUtil.getStorageUtil().parseFromStorage((String)val);
 		return date;
 	}
 	
 	public Date getDate(String inField, String inDateFormat)
 	{
-		Object val = getObject(inField);
-		if( val == null || val == NULLVALUE)
+		Object val = getValue(inField);
+		if( val == null)
 		{
 			return null;
 		}
@@ -392,8 +387,8 @@ public class ValuesMap extends HashMap
 	}
 	public Long getLong(String inField)
 	{
-		Object val = getObject(inField);
-		if( val == null || val == NULLVALUE)
+		Object val = getValue(inField);
+		if( val == null)
 		{
 			return null;
 		}
@@ -426,8 +421,8 @@ public class ValuesMap extends HashMap
 	}
 	public Integer getInteger(String inField)
 	{
-		Object val = getObject(inField);
-		if( val == null || val == NULLVALUE)
+		Object val = getValue(inField);
+		if( val == null)
 		{
 			return 0;
 		}
