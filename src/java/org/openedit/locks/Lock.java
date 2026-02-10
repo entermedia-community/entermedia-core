@@ -3,10 +3,11 @@ package org.openedit.locks;
 import java.util.Date;
 
 import org.openedit.data.BaseData;
+import org.openedit.data.DataLoaded;
 import org.openedit.data.SaveableData;
 import org.openedit.util.DateStorageUtil;
 
-public class Lock extends BaseData implements SaveableData
+public class Lock extends BaseData implements SaveableData, DataLoaded
 {
 	public String getOwnerId()
 	{

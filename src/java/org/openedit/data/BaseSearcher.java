@@ -3424,12 +3424,23 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 		{
 			return null;
 		}
+		
+		if( getNewDataName() != null)
+		{
+			//We have Order or Asset... so if we 
+			if(  inHit instanceof DataLoaded)
+			{
+				return inHit;
+			}
+		}
 		if (getNewDataName() == null && inHit instanceof SaveableData)
 		{
 			return inHit;
 		}
 		else
 		{
+			//Was not DataLoaded and does have a specific type it should be 
+			//so Converting to that type
 			Data data = (Data) createNewData();
 			ValuesMap fields = inHit.getProperties();
 			fields = checkTypes(fields);

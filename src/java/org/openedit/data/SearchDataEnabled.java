@@ -2,7 +2,7 @@ package org.openedit.data;
 
 import java.util.Map;
 
-public interface SearchData {
+public interface SearchDataEnabled {
 	
 	
 	public Map getSearchData() ;
