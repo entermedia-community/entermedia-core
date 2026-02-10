@@ -54,7 +54,7 @@ public class MapPropertyContainer  extends ValuesMap
 			String key = (String) iter.next();
 			if ( !"id".equals(key) && !"name".equals(key))
 			{
-				String value = (String)get(key);
+				String value = String.valueOf(get(key));
 				Element propertyElem = propertiesElem.addElement("property");
 				propertyElem.addAttribute("name", key);
 				propertyElem.addAttribute("value", value);
