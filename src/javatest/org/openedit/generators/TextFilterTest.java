@@ -14,12 +14,9 @@ public class TextFilterTest extends BaseTestCase
 		Page page = getFixture().getPageManager().getPage("/generators/translate.html");
 		
 		TranslationFilter filter = new TranslationFilter(page,"&locale=en");
-
-//		StringBuffer test = filter.("1 [[2]] [[3]]");
-//		assertEquals(test.toString(),"1 2 3");
-//		StringWriter out = new StringWriter();
-//		new OutputFiller().fill(filter, out);
-//		System.out.println(out.toString());
+		StringWriter out = new StringWriter();
+		new OutputFiller().fill(filter, out);
+		System.out.println(out.toString());
 		
 	}
 }

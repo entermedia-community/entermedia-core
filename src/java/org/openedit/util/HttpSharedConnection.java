@@ -1,8 +1,14 @@
 package org.openedit.util;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -11,8 +17,11 @@ import javax.net.ssl.SSLContext;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpVersion;
 import org.apache.http.NameValuePair;
+import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
@@ -20,15 +29,28 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.entity.mime.content.ByteArrayBody;
+import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.cookie.BasicClientCookie;
+import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.ssl.SSLContextBuilder;
+import org.apache.http.util.EntityUtils;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.openedit.OpenEditException;
+import org.openedit.repository.ContentItem;
+import org.openedit.util.OutputFiller;
+import org.openedit.util.URLUtilities;
 
-/**
-@deprecated moved package to server
-*/
+
+
+
 public class HttpSharedConnection
 {
 	
@@ -38,7 +60,27 @@ public class HttpSharedConnection
 	ContentType contentType = ContentType.create("text/plain", UTF8);
 	ContentType octectType = ContentType.create("application/octect-stream", UTF8);
 	
+	public boolean DEBUG = false;
+	
 	protected HttpClient fieldHttpClient;
+	protected Collection fieldSharedHeaders;
+    protected BasicCookieStore cookieStore = new BasicCookieStore();
+
+	public Collection getSharedHeaders()
+	{
+		if (fieldSharedHeaders == null)
+		{
+			fieldSharedHeaders = new ArrayList();
+		}
+
+		return fieldSharedHeaders;
+	}
+
+
+	public void setSharedHeaders(Collection inSharedHeaders)
+	{
+		fieldSharedHeaders = inSharedHeaders;
+	}
 	
 	public HttpClient getSharedClient()
 	{
@@ -49,9 +91,9 @@ public class HttpSharedConnection
 				SSLContext sslContext;
 				sslContext = SSLContextBuilder.create().useProtocol("TLSv1.2").build();
 				RequestConfig globalConfig = RequestConfig.custom()
-			            .setCookieSpec(CookieSpecs.DEFAULT)
+			            .setCookieSpec(CookieSpecs.STANDARD)
 			            .setConnectTimeout(15 * 1000)
-			            .setSocketTimeout(120 * 1000)
+			            .setSocketTimeout(1200 * 1000)
 			            .build();
 				fieldHttpClient = HttpClients.custom().useSystemProperties()
 			            .setDefaultRequestConfig(globalConfig)
@@ -61,10 +103,6 @@ public class HttpSharedConnection
 			{
 				throw new OpenEditException(e);
 			}
-
-			
-		           
-			
 		}
 		return fieldHttpClient;
 	}
@@ -78,29 +116,30 @@ public class HttpSharedConnection
 	
 	public CloseableHttpResponse sharedPost(String path, Map<String,String> inParams)
 	{
-		try
-		{
 			HttpPost method = new HttpPost(path);
 			method.setEntity(build(inParams));
-			CloseableHttpResponse response2 = (CloseableHttpResponse)getSharedClient().execute(method);
+			CloseableHttpResponse response2 = sharedExecute(method);
 			return response2;
-		}
-		catch ( Throwable e )
-		{
-			throw new OpenEditException(e);
-		}
+	
 	}
+	public CloseableHttpResponse sharedPostWithJson(String inUrl,JSONObject inBody)
+	{
+		HttpPost post = new HttpPost(inUrl);
+		
+		post.addHeader("Content-Type", "application/json");
+		post.setEntity(new StringEntity(inBody.toString(), "UTF-8"));
+		post.setProtocolVersion(HttpVersion.HTTP_1_1);
+		
+		return sharedPost(post);
+		
+	}
+	
+	
 	public CloseableHttpResponse sharedPost(HttpPost inPost)
 	{
-		try
-		{
-			CloseableHttpResponse response2 = (CloseableHttpResponse)getSharedClient().execute(inPost);
-			return response2;
-		}
-		catch ( Throwable e )
-		{
-			throw new OpenEditException(e);
-		}
+		CloseableHttpResponse response2 = sharedExecute(inPost);
+		return response2;
+		
 	}
 	public void release(CloseableHttpResponse response2)
 	{
@@ -120,16 +159,17 @@ public class HttpSharedConnection
 	}
 	public CloseableHttpResponse sharedGet(String inUrl)
 	{
-		try
-		{
-			HttpGet method = new HttpGet(inUrl);
-			CloseableHttpResponse response2 = (CloseableHttpResponse) getSharedClient().execute(method);
-			return response2;
-		}
-		catch ( Exception ex )
-		{
-			throw new RuntimeException(ex);
-		}
+		return sharedGet(inUrl,null);
+	}
+	public CloseableHttpResponse sharedGet(String inUrl,Map extraHeaders)
+	{
+		//Escape before this, avoid double-encoding
+		//String escaped = URLUtilities.urlEscape(inUrl);
+		//escaped = escaped.replace("+","%20");
+		//log.info("Escaped URL: "+escaped);	 
+		HttpGet method = new HttpGet(inUrl);
+		CloseableHttpResponse response2 = (CloseableHttpResponse) sharedExecute(method);
+		return response2;
 	}
 	
 	protected HttpEntity build(Map <String, String> inMap){
@@ -145,8 +185,286 @@ public class HttpSharedConnection
 			
 		}
 		 return new UrlEncodedFormEntity(nameValuePairs, UTF8);
-
-		
 		
 	}
+//	public String getText(String inUrl) 
+//	{
+//
+//	}
+	//httpmethod.addHeader("authorization", "Bearer " + inAccessToken);
+	public JSONObject getJson(String inUrl) 
+	{
+		return getJson(inUrl,null);
+	}	
+	public JSONObject getJson(String inUrl,Map extraHeaders) 
+	{
+		CloseableHttpResponse resp = sharedGet(inUrl,extraHeaders);
+		JSONObject elem = (JSONObject) parseJson(resp);
+		return elem;
+	}
+	public JSONArray getJsonCollection(String inUrl,Map extraHeaders) 
+	{
+		CloseableHttpResponse resp = sharedGet(inUrl,extraHeaders);
+		JSONArray elem = (JSONArray) parseJson(resp);
+		return elem;
+	}
+	
+	public String getResponseString(String inUrl) 
+	{
+		return getResponseString(inUrl, null);
+	}
+	
+	public String getResponseString(String inUrl,Map extraHeaders) 
+	{
+		CloseableHttpResponse resp = sharedGet(inUrl,extraHeaders);
+		String text = parseText(resp);
+		return text;
+	}
+
+
+	public String parseText(CloseableHttpResponse inCreaterequest)
+	{
+		String errormessage = null;
+		try
+		{
+			StatusLine statusLine = inCreaterequest.getStatusLine();
+			if (statusLine.getStatusCode() != 200)
+			{
+				String returned = EntityUtils.toString(inCreaterequest.getEntity());
+				errormessage = "HTTP Error:" + statusLine.getStatusCode() + ":" + statusLine.getReasonPhrase() + " Body: \n" + returned;
+			}
+			else
+			{
+				return EntityUtils.toString(inCreaterequest.getEntity());
+			}
+		}
+		catch (Throwable e) 
+		{
+			throw new OpenEditException(e);
+		}
+		finally
+		{
+			release(inCreaterequest);
+		}
+		throw new OpenEditException(errormessage);
+	}
+	public JSONObject parseMap(CloseableHttpResponse resp) 
+	{
+		Object res = parseJson(resp);
+		return (JSONObject) res;
+	}
+	public Collection parseCollection(CloseableHttpResponse resp) 
+	{
+		Object res = parseJson(resp);
+		return (Collection) res;
+	}
+	
+	public Object parseJson(CloseableHttpResponse resp) 
+	{
+		try {
+			
+			if (resp.getStatusLine().getStatusCode() == 404)
+			{
+				return null;
+			}
+			if (resp.getStatusLine().getStatusCode() < 200 || resp.getStatusLine().getStatusCode() > 206)
+			{
+				String returned = EntityUtils.toString(resp.getEntity());
+				throw new OpenEditException("HTTP Error:" + resp.getStatusLine().getStatusCode() + ":" + resp.getStatusLine().getReasonPhrase() + " Body: \n" + returned);
+				//throw new OpenEditException("Could not process " + returned);
+			}
+			
+			HttpEntity entity = resp.getEntity();
+			
+			Object json = null;
+			JSONParser parser = new JSONParser();
+
+			if (DEBUG)
+			{
+				String returned = EntityUtils.toString(resp.getEntity());
+				log.info(returned);
+				json = parser.parse(returned);
+			}
+			else
+			{
+				String charset = "utf-8";
+				if( entity.getContentEncoding() != null )
+				{
+					charset = entity.getContentEncoding().getValue();
+				}
+				InputStreamReader reader = new InputStreamReader(entity.getContent(),charset);
+				json = parser.parse(reader);
+				
+			}
+			// log.info(content);
+			return json;
+		}
+		catch (Throwable e) 
+		{
+			if (e instanceof OpenEditException)
+			{
+				throw (OpenEditException) e;
+			}
+			else 
+			{
+				throw new OpenEditException("Could not parse", e);
+			}
+		}
+		finally
+		{
+			release(resp);
+		}
+	}
+	public File parseFile(CloseableHttpResponse inCreaterequest,String inAbsolutePath)
+	{
+		String errormessage = null;
+		try
+		{
+			StatusLine statusLine = inCreaterequest.getStatusLine();
+			if (statusLine.getStatusCode() != 200)
+			{
+				String returned = EntityUtils.toString(inCreaterequest.getEntity());
+				errormessage = "HTTP Error:" + statusLine.getStatusCode() + ":" + statusLine.getReasonPhrase() + " Body: \n" + returned;
+			}
+			else
+			{
+				InputStream input = inCreaterequest.getEntity().getContent();
+				OutputFiller filler = new OutputFiller();
+				File outfile = new File(inAbsolutePath);
+				filler.fill(input,outfile);
+
+				log.info("Saved to: " + outfile.getAbsolutePath());
+				return outfile;
+			}
+		}
+		catch (Throwable e) 
+		{
+			throw new OpenEditException(e);
+		}
+		finally
+		{
+			release(inCreaterequest);
+		}
+		throw new OpenEditException(errormessage);
+	}
+
+	public CloseableHttpResponse sharedPost(String path,HttpEntity inBuild)
+	{
+			HttpPost method = new HttpPost(URLUtilities.urlEscape(path));
+			method.setEntity(inBuild);
+			
+			CloseableHttpResponse response2 = sharedExecute(method);
+			return response2;
+		
+	}
+
+	public CloseableHttpResponse sharedExecute(HttpRequestBase method) 
+	{
+		CloseableHttpResponse resp = null;
+		try 
+		{
+			for (Iterator iterator = getSharedHeaders().iterator(); iterator.hasNext();)
+			{
+				Header header =  (Header)iterator.next();
+				method.addHeader(header);
+			}
+			//log.info(method);
+			resp = (CloseableHttpResponse)getSharedClient().execute(method);
+			return resp;
+		} 
+		catch (Throwable e)
+		{
+			log.info(resp);
+			release(resp);
+			throw new OpenEditException(e);
+		}
+	}
+	
+	public CloseableHttpResponse sharedMimePost(String path, Map<String,Object> inParams)
+	{
+		HttpEntity entity = buildMime(inParams);
+		return sharedPost(path,entity);
+	}
+	
+	protected HttpEntity buildMime(Map <String, Object> inMap)
+	{
+		HttpMimeBuilder builder = new HttpMimeBuilder();
+
+		for (Iterator iterator = inMap.keySet().iterator(); iterator.hasNext();)
+		{
+			String key = (String) iterator.next();
+			Object value = inMap.get(key);
+			if( value instanceof String)
+			{
+				builder.addPart(key, (String)value);
+			}
+			else if(value instanceof File)
+			{
+				builder.addPart(key, (File)value);
+			}
+			else if(value instanceof ContentItem)
+			{
+				ContentItem item = (ContentItem)value;
+				File file = new File(item.getAbsolutePath());
+				builder.addPart(key, file);
+			}
+			else if( value instanceof JSONObject)
+			{
+				builder.addPart(key, ((JSONObject) value).toJSONString(), "application/json" );
+			}
+			else if( value instanceof ByteArrayBody)
+			{
+				//ByteArrayBody bin = new ByteArrayBody(bytes, fileName);
+				builder.addPart(key,(ByteArrayBody)value);
+			}
+			
+		}
+		return builder.build();
+	}
+	
+	/**
+	 * @Deprecated
+	 */
+
+	public void addSharedHeader(String inType, String inVal)
+	{
+		/*BasicHeader header = new BasicHeader(inType, inVal);
+		getSharedHeaders().add(header);*/
+		putSharedHeader(inType, inVal);
+		
+	}
+	
+	public synchronized void putSharedHeader(String inType, String inVal)
+	{
+		Collection copy = new ArrayList(getSharedHeaders());
+		for (Iterator iterator = copy.iterator(); iterator.hasNext();)
+		{
+			BasicHeader header = (BasicHeader) iterator.next();
+			if( header.getName().equals(inType) )
+			{
+				getSharedHeaders().remove(header);
+			}
+		}
+		
+		BasicHeader header = new BasicHeader(inType, inVal);
+		getSharedHeaders().add(header);
+	}
+
+	public void addSharedCookie(String domain, String inKey,String inVal)
+	{
+		BasicClientCookie cookie = new BasicClientCookie(inKey, inVal);
+		cookie.setPath("/");
+		cookie.setDomain(domain);
+    	Calendar cal = new GregorianCalendar();
+    	cal.add(Calendar.MONTH, 1);
+    	cookie.setExpiryDate(cal.getTime());
+    	cookieStore.addCookie(cookie);
+	}
+
+
+	public void clearSharedHeaders()
+	{
+		fieldSharedHeaders = null;
+	}
+	
 }
