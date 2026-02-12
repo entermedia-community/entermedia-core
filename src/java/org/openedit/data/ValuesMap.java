@@ -15,6 +15,9 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Set;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.entermediadb.asset.Category;
 import org.json.simple.JSONObject;
 import org.openedit.Data;
 import org.openedit.MultiValued;
@@ -25,6 +28,8 @@ import org.openedit.util.DateStorageUtil;
 
 public class ValuesMap extends HashMap
 {
+	private static final Log log = LogFactory.getLog(ValuesMap.class);
+
 	public static final Object NULLVALUE = new NullObject(); 
 	public static final String NULLSTRING= "NULLSTRING";
 	public static final Data NULLDATA = new NullData(); 
@@ -480,6 +485,7 @@ public class ValuesMap extends HashMap
 				set.add(key);
 			}
 		}
+		//log.info("Keys are right: " + set);
 		return set;
 	}
 	
@@ -549,5 +555,10 @@ public class ValuesMap extends HashMap
            return Objects.hash(getKey(), getValue());
        }
 
+       @Override
+    public String toString()
+    {
+    	return getKey() + " = " + getValue();
+    }
    }
 }
