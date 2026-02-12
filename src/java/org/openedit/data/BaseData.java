@@ -234,7 +234,15 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 	}
 
 	public void setName(String inName) {
-		setProperty("name", inName);
+		Object intname = getValue("name");
+		if (intname instanceof LanguageMap)
+		{
+			((LanguageMap) intname).setText("en", inName);
+		}
+		else
+		{
+			setProperty("name", inName);
+		}
 	}
 
 	public String toString() {
