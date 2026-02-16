@@ -826,7 +826,7 @@ public class PropertyDetail implements Data,  ViewItem, Comparable
 	
 
 	@Override
-	public Map getProperties()
+	public ValuesMap getProperties()
 	{
 		return getElementData().getProperties();
 	}

@@ -27,6 +27,7 @@ import org.openedit.OpenEditException;
 import org.openedit.WebPageRequest;
 import org.openedit.config.Script;
 import org.openedit.config.Style;
+import org.openedit.data.ValuesMap;
 import org.openedit.error.ContentNotAvailableException;
 import org.openedit.generators.Output;
 import org.openedit.repository.ContentItem;
@@ -883,9 +884,11 @@ public class Page implements Data, Comparable
 	{
 		return getContentItem().getLength();
 	}
-	public Map getProperties() {
+	public ValuesMap getProperties() {
 		return getPageSettings().getProperties();
 	}
+	
+	
 	public int compareTo(Object inO)
 	{
 		Page other = (Page)inO;

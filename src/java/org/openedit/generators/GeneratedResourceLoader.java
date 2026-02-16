@@ -11,9 +11,7 @@ import org.apache.velocity.runtime.resource.loader.ResourceLoader;
 import org.apache.velocity.util.ExtProperties;
 import org.openedit.ModuleManager;
 import org.openedit.OpenEditException;
-import org.openedit.generators.filters.TextReaderFilter;
 import org.openedit.generators.filters.TranslationFilter;
-import org.openedit.generators.filters.XmlTranslationFilter;
 import org.openedit.page.Page;
 import org.openedit.page.manage.PageManager;
 import org.openedit.servlet.OpenEditEngine;
@@ -90,17 +88,17 @@ public class GeneratedResourceLoader extends ResourceLoader
 		String filter = templateName.substring(index + "?filter=".length(),amp);
 		if( filter.equals("translation")) //TODO: Use Spring. Check performance tho
 		{
-			TextReaderFilter reader = new TranslationFilter(page,templateName);
+			TranslationFilter reader = new TranslationFilter(page,templateName);
 			return new ReaderInputStream(reader, page.getCharacterEncoding());
 		} 
-		else if(filter.equals("xmltranslation")) //this seems slow
-		{
-			XmlTranslationFilter reader = new XmlTranslationFilter(page,templateName);
-			reader.setPageManager(getPageManager());
-			reader.setModuleManager(getModuleManager());
-			
-			return new ReaderInputStream(reader, page.getCharacterEncoding());
-		}
+//		else if(filter.equals("xmltranslation")) //this seems slow
+//		{
+//			XmlTranslationFilter reader = new XmlTranslationFilter(page,templateName);
+//			reader.setPageManager(getPageManager());
+//			reader.setModuleManager(getModuleManager());
+//			
+//			return new ReaderInputStream(reader, page.getCharacterEncoding());
+//		}
 		//not supported
 		throw new OpenEditException("filter "  + filter + " not supported");
 	}

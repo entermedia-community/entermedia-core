@@ -16,6 +16,7 @@ import org.openedit.Data;
 import org.openedit.MultiValued;
 import org.openedit.WebPageRequest;
 import org.openedit.data.BaseData;
+import org.openedit.data.DataLoaded;
 import org.openedit.data.EntityPermissions;
 import org.openedit.data.PropertyDetail;
 import org.openedit.data.QueryBuilder;
@@ -31,7 +32,7 @@ import org.openedit.users.UserManager;
 import org.openedit.users.UserManagerException;
 import org.openedit.xml.XmlArchive;
 
-public class UserProfile extends BaseData implements SaveableData, CatalogEnabled, User
+public class UserProfile extends BaseData implements SaveableData, DataLoaded, CatalogEnabled, User
 {
 	protected String fieldCatalogId;
 	protected SearcherManager fieldSearcherManager;
@@ -894,7 +895,7 @@ public class UserProfile extends BaseData implements SaveableData, CatalogEnable
 
 	public void removeAllStartWith(String inName)
 	{
-		Collection collection = getMap().keySet();
+		Collection collection = getProperties().keySet();
 		Collection toremove = new HashSet();
 		for (Iterator iterator = collection.iterator(); iterator.hasNext();)
 		{

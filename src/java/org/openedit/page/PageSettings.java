@@ -6,7 +6,6 @@ package org.openedit.page;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -22,6 +21,7 @@ import org.openedit.OpenEditException;
 import org.openedit.config.Configuration;
 import org.openedit.config.Script;
 import org.openedit.config.Style;
+import org.openedit.data.ValuesMap;
 import org.openedit.page.manage.PageLoaderConfig;
 import org.openedit.page.manage.TextLabelManager;
 import org.openedit.repository.ContentItem;
@@ -39,7 +39,7 @@ public class PageSettings
 	protected String fieldLayout;
 	protected String fieldInnerLayout;
 	protected List fieldGenerators;
-	protected Map fieldProperties;
+	protected ValuesMap fieldProperties;
 	protected List fieldPageActions;
 	protected List fieldScripts;
 	protected List fieldStyles;
@@ -407,14 +407,31 @@ public class PageSettings
 		}
 		return i;
 	}
-	public Map getProperties()
+	public ValuesMap getProperties()
 	{
 		if ( fieldProperties == null )
 		{
-			fieldProperties = new HashMap();
+			fieldProperties = new ValuesMap();
 		}
 		return fieldProperties;
 	}
+	
+	public Map getMap() 
+	{
+		ValuesMap newmap = new ValuesMap();
+		for (Iterator iterator = getProperties().keySet().iterator(); iterator.hasNext();)
+		{
+			Object key = (Object) iterator.next();
+			Object value = getProperties().get(key);
+			if( value != null)
+			{
+				newmap.put(key, value);
+			}
+		}
+		return newmap;
+	}
+
+	
 	public List getAllProperties()
 	{
 		return getAllProperties(true);
@@ -581,7 +598,7 @@ public class PageSettings
 	}
 	public PageProperty getFieldProperty(String inKey )
 	{
-		PageProperty val = (PageProperty)getProperties().get(inKey);
+		PageProperty val = (PageProperty)getMap().get(inKey);
 		if (val != null )
 		{
 			val.setPath(getXConf().getPath());
@@ -590,7 +607,7 @@ public class PageSettings
 	}
 	public void setProperties( Map properties )
 	{
-		fieldProperties = properties;
+		getProperties().putAll( properties );
 	}
 	public void putProperty(PageProperty inProperty)
 	{

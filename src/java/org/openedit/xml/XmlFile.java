@@ -15,6 +15,7 @@ import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.openedit.Data;
 import org.openedit.OpenEditException;
+import org.openedit.data.ValuesMap;
 import org.openedit.repository.ContentItem;
 import org.openedit.util.PathUtilities;
 
@@ -247,7 +248,7 @@ public class XmlFile implements Data
 	{
 		return PathUtilities.extractPageName(getPath());
 	}
-	public Map getProperties()
+	public ValuesMap getProperties()
 	{
 		// TODO Auto-generated method stub
 		return null;

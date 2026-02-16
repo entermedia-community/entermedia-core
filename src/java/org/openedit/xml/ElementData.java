@@ -16,15 +16,16 @@ import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.openedit.MultiValued;
 import org.openedit.OpenEditException;
+import org.openedit.data.DataLoaded;
 import org.openedit.data.PropertyDetail;
 import org.openedit.data.PropertyDetails;
 import org.openedit.data.SaveableData;
-import org.openedit.data.SearchData;
+import org.openedit.data.SearchDataEnabled;
 import org.openedit.data.ValuesMap;
 import org.openedit.modules.translations.LanguageMap;
 import org.openedit.util.DateStorageUtil;
 
-public class ElementData implements MultiValued, SaveableData, Comparable, SearchData
+public class ElementData implements MultiValued, SaveableData, DataLoaded, Comparable, SearchDataEnabled
 {
 	protected Element fieldElement;
 	protected String fieldVersion;
@@ -568,7 +569,7 @@ public class ElementData implements MultiValued, SaveableData, Comparable, Searc
 
 	public LanguageMap getLanguageMap(String inKey)
 	{
-		LanguageMap language = (LanguageMap)getMap().getObject(inKey);
+		LanguageMap language = (LanguageMap)getMap().getValue(inKey);
 		if( language != null)
 		{
 			return language;

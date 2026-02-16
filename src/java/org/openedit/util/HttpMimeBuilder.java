@@ -2,6 +2,8 @@ package org.openedit.util;
 
 import java.io.File;
 import java.nio.charset.Charset;
+import java.util.Iterator;
+import java.util.Map;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -11,6 +13,7 @@ import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.entity.mime.content.ByteArrayBody;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.HttpClients;
@@ -22,6 +25,7 @@ public class HttpMimeBuilder
 	Charset UTF8 = Charset.forName("UTF-8");
 	ContentType contentType = ContentType.create("text/plain", UTF8);
 	ContentType octectType = ContentType.create("application/octect-stream", UTF8);
+	ContentType jsonType = ContentType.create("application/json", UTF8);
 
 	public void addPart(String inKey, String inValue, String inType)
 	{
@@ -52,13 +56,17 @@ public class HttpMimeBuilder
 		FileBody fileBody = new FileBody(file, octectType, inName);
 		builder.addPart(inKey, fileBody);
 	}	
-
 	public void addPart(String inKey, File file,  ContentType inType)
 	{
 		FileBody fileBody = new FileBody(file, inType);
 		builder.addPart(inKey, fileBody);
 	}	
 	
+	public void addPart(String inKey, ByteArrayBody inPart)
+	{
+		builder.addPart(inKey,inPart);
+	}
+
 	public HttpEntity build()
 	{
 		return builder.build();
@@ -86,6 +94,25 @@ public class HttpMimeBuilder
 		{
 			throw new RuntimeException(ex);
 		}
+	}
+
+
+	public void addParts(Map inParams)
+	{
+		for (Iterator iterator = inParams.keySet().iterator(); iterator.hasNext();)
+		{
+			String key = (String) iterator.next();
+			Object value = inParams.get(key);
+			if( value instanceof String)
+			{
+				addPart(key,(String)value);
+			}
+			else if ( value instanceof File)
+			{
+				addPart(key,(File)value);
+			}
+		}
+		
 	}
 	
 

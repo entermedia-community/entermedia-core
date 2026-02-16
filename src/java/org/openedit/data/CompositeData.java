@@ -20,7 +20,6 @@ public interface CompositeData extends Data
 
 	public void setProperty(String inId, String inValue);
 
-	public Map getProperties();
 	public Iterator<Data> iterator();
 	public int size();
 	public void refresh();
