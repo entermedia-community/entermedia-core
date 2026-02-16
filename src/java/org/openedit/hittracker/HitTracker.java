@@ -905,6 +905,7 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 		}
 		else
 		{
+			selecteddata.deselectAll();
 			selecteddata.setSelections(getSelections());
 			selecteddata.setShowOnlySelected(true);
 		}

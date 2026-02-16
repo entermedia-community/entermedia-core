@@ -72,6 +72,12 @@ public class QueryBuilder
 		return this;
 	}
 	
+	public QueryBuilder addchild(SearchQuery inQuery)
+	{
+		getQuery().addChildQuery(inQuery);
+		return this;
+	}
+	
 	
 	public QueryBuilder since(String inId, int date)
 	{
@@ -123,6 +129,18 @@ public class QueryBuilder
 		getQuery().addBetween(inKey, start, end);
 		return this;
 		
+	}
+	
+	public QueryBuilder lessThan(String inId, int inNumber)
+	{
+		getQuery().lessThan(inId, inNumber);
+		return this;
+	}
+
+	public QueryBuilder moreThan(String inId, int inNumber)
+	{
+		getQuery().moreThan(inId, inNumber);
+		return this;
 	}
 
 	

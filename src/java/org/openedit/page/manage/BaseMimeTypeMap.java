@@ -55,6 +55,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
+import org.openedit.MultiValued;
 import org.openedit.OpenEditRuntimeException;
 import org.openedit.util.FileUtils;
 
@@ -111,6 +112,7 @@ public class BaseMimeTypeMap implements MimeTypeMap
 		return mimeType;
 	}
 
+	
 	/**
      * @see org.openedit.page.manage.MimeTypeMap#getPathMimeType(java.lang.String)
      */

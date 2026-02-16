@@ -684,7 +684,8 @@ public final class PathUtilities
 				 }
 			}
 		}
-		String result = URLUtilities.escapeUtf8(out.toString());
+		String result = URLUtilities.removeAccents(out.toString());
+				result = URLUtilities.urlEscape(result);
 		result = result.replaceAll("&amp;","-");
 		return result;
 	}

@@ -152,7 +152,7 @@ public class CSSUtils
 
     public static String makeGradientHover(String color1, String angle) {
         String color2 = lightenColor(color1, 15);
-        String gradient = "linear-gradient(" + angle + "deg, " + color1 + " 20%, " + color2 + " 100%)";
+        String gradient = "linear-gradient(" + angle + "deg, " + color1 + " 50%, " + color2 + " 100%)";
         return gradient;
     }
 

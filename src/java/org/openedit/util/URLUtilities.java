@@ -63,6 +63,7 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.security.cert.X509Certificate;
+import java.text.Normalizer;
 import java.util.Arrays;
 import java.util.Formatter;
 import java.util.HashSet;
@@ -377,6 +378,14 @@ public class URLUtilities
 			}
 			return finalurl.toString();
 	 }
+	
+	public static String removeAccents(String input) {
+	    if (input == null) {
+	        return null;
+	    }
+	    String normalized = Normalizer.normalize(input, Normalizer.Form.NFD);
+	    return normalized.replaceAll("\\p{M}", "");
+	}
 	
 	public static String fixPath(String inPath)
 	{
@@ -1114,11 +1123,9 @@ public class URLUtilities
 	        } };
 	        return trustAllCerts;
 	    }
+	 private static String urlRegex = "\\b(?:https?|ftp)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
 	 
-	 private static final Pattern urlPattern = Pattern.compile(
-		        "(?:^|[^A-Za-z0-9\\\"\\'])((ht|f)tp(s?):\\/\\/|www\\.)"
-		                + "(([\\w\\-]+\\.){1,}?([\\w\\-.~]+\\/?)*"
-		                + "[\\p{Alnum}.,%_=?&#\\-+()\\[\\]\\*$~@!:/{};']*)",
+	 private static final Pattern urlPattern = Pattern.compile(urlRegex,
 		        Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
 	 
 	public static String escapeMessage(String inMessage) {
@@ -1147,8 +1154,8 @@ public class URLUtilities
 		}
 		else
 		{
-			escaped = escaped.replaceAll("\\n", "<br>");
-			escaped = escaped.replaceAll("&lt;br&gt;", "<br>");
+			escaped = escaped.replaceAll("\\n", "<br />");
+			escaped = escaped.replaceAll("&lt;br&gt;", "<br />");
 			escaped = escaped.replaceAll("&lt;p&gt;", "<p>");
 			escaped = escaped.replaceAll("&lt;/p&gt;", "</p>");
 		}
@@ -1325,7 +1332,8 @@ public class URLUtilities
 
 	public static String dash(String inName)
 	{
-		String text = xmlEscape(inName);
+		String text = removeAccents(inName);
+		text = urlEscape(text);
 		text = text.replaceAll(" ","-").replaceAll("&amp;","-");
 		return text;
 	}
