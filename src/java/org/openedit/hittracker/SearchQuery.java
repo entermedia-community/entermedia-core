@@ -590,6 +590,11 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 
 	    String after = getInput(inDetail.getId() + ".after");
 	    String before = getInput(inDetail.getId() + ".before");
+	    
+	    if (after == null|| before == null)
+	    {
+	    	after = getInput(inDetail.getId());
+	    }
 
 	    if ("betweendates".equals(inTerm.getOperation())) {
 	        if (after != null && before != null) {
