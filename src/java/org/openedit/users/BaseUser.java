@@ -21,6 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.openedit.Data;
 import org.openedit.MultiValued;
 import org.openedit.OpenEditRuntimeException;
 import org.openedit.data.BaseData;
@@ -69,7 +70,7 @@ public class BaseUser extends BaseData implements User, Comparable
 	 */
 	public Collection getGroups()
 	{
-		Collection groups = (Collection)getValue("groups");
+		Collection groups = (Collection)getValue("groups"); 
 		if( groups == null)
 		{
 			groups = Collections.emptyList();
@@ -204,6 +205,30 @@ public class BaseUser extends BaseData implements User, Comparable
 			{
 				return val;
 			}
+		}
+		else if( "groups".equals( inKey ) )
+		{
+			Collection groups = (Collection) getProperties().getValue("groups");
+			if(groups == null)
+			{
+				return Collections.emptyList();
+			}
+			List<Data> groupdata = new ArrayList(groups.size());
+
+			for (Iterator iterator = groups.iterator(); iterator.hasNext();)
+			{
+				Object group = (Object) iterator.next();
+				if( group instanceof String)
+				{
+					group = getGroupSearcher().loadCachedData((String)group); //Cache this? Or lazy load em
+				}
+				if(group != null)
+				{
+					groupdata.add( (Data)group);
+				}
+			}
+			getProperties().put("groups", groupdata);
+			return groupdata;
 		}
 		return super.getValue(inKey);
 	}
