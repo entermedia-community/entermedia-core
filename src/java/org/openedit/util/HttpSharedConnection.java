@@ -43,6 +43,7 @@ import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.openedit.HttpException;
 import org.openedit.OpenEditException;
 import org.openedit.repository.ContentItem;
 import org.openedit.util.OutputFiller;
@@ -267,12 +268,22 @@ public class HttpSharedConnection
 			{
 				return null;
 			}
-			if (resp.getStatusLine().getStatusCode() < 200 || resp.getStatusLine().getStatusCode() > 206)
+			else if (resp.getStatusLine().getStatusCode() ==  422)
+			{
+				throw new  HttpException("HTTP Error:" + resp.getStatusLine().getStatusCode() + ":" + resp.getStatusLine().getReasonPhrase(), 
+						null, 
+						resp.getStatusLine().getStatusCode()  );
+			}
+			else if (resp.getStatusLine().getStatusCode() < 200 || resp.getStatusLine().getStatusCode() > 206)
 			{
 				String returned = EntityUtils.toString(resp.getEntity());
-				throw new OpenEditException("HTTP Error:" + resp.getStatusLine().getStatusCode() + ":" + resp.getStatusLine().getReasonPhrase() + " Body: \n" + returned);
+				
+				throw new HttpException("HTTP Error:" + resp.getStatusLine().getStatusCode() + ":" + resp.getStatusLine().getReasonPhrase() + " Body: \n" + returned, 
+						null, 
+						resp.getStatusLine().getStatusCode()  );
 				//throw new OpenEditException("Could not process " + returned);
 			}
+			
 			
 			HttpEntity entity = resp.getEntity();
 			
