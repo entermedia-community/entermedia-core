@@ -92,7 +92,7 @@ public interface User extends Data
 	 *
 	 * @return A collection of {@link Group}s
 	 */
-	Collection getGroups();
+	Collection<Group> getGroups();
 	
 	public boolean isInGroup(String inGroupId); 
 	/**
@@ -171,7 +171,7 @@ public interface User extends Data
 
 	boolean getBoolean(String inString);
 
-	void setGroups(Collection inGroupslist);
+	void setGroups(Collection<Group> inGroupslist);
 	
 	
 	public String getEnterMediaKey(); //Hash

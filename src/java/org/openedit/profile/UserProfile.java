@@ -1057,7 +1057,7 @@ public class UserProfile extends BaseData implements SaveableData, DataLoaded, C
 	}
 
 	@Override
-	public void setGroups(Collection inGroupslist)
+	public void setGroups(Collection<Group> inGroupslist)
 	{
 		getUser().setGroups(inGroupslist);
 	}
