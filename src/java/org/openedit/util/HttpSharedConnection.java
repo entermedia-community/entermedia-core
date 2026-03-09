@@ -18,7 +18,10 @@ import javax.net.ssl.SSLContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.Header;
+import org.apache.http.HeaderElement;
+import org.apache.http.HeaderElementIterator;
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
 import org.apache.http.NameValuePair;
 import org.apache.http.StatusLine;
@@ -30,14 +33,21 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.conn.ConnectionKeepAliveStrategy;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.content.ByteArrayBody;
 import org.apache.http.impl.client.BasicCookieStore;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.DefaultConnectionKeepAliveStrategy;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.impl.cookie.BasicClientCookie;
 import org.apache.http.message.BasicHeader;
+import org.apache.http.message.BasicHeaderElementIterator;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.protocol.HTTP;
+import org.apache.http.protocol.HttpContext;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONArray;
@@ -46,8 +56,6 @@ import org.json.simple.parser.JSONParser;
 import org.openedit.HttpException;
 import org.openedit.OpenEditException;
 import org.openedit.repository.ContentItem;
-import org.openedit.util.OutputFiller;
-import org.openedit.util.URLUtilities;
 
 
 
@@ -96,9 +104,40 @@ public class HttpSharedConnection
 			            .setConnectTimeout(15 * 1000)
 			            .setSocketTimeout(1200 * 1000)
 			            .build();
+				
+				/**
+				 * 
+				 */
+				
+				ConnectionKeepAliveStrategy myStrategy = new ConnectionKeepAliveStrategy() {
+				    @Override
+				    public long getKeepAliveDuration(HttpResponse response, HttpContext context) {
+				        // 1. Honor 'keep-alive' header from the server first
+				        HeaderElementIterator it = new BasicHeaderElementIterator(
+				                response.headerIterator(HTTP.CONN_KEEP_ALIVE));
+				        while (it.hasNext()) {
+				            HeaderElement he = it.nextElement();
+				            String param = he.getName();
+				            String value = he.getValue();
+				            if (value != null && param.equalsIgnoreCase("timeout")) {
+				                return Long.parseLong(value) * 1000;
+				            }
+				        }
+				        // 2. If the server is silent, keep it alive for 30 seconds as a default
+				        return 2 * 60 * 1000; //120 second defaults
+				        //return 500;
+				    }
+				};
+				
+				PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager();
+				cm.setMaxTotal(200);
+				cm.setDefaultMaxPerRoute(20);
+				
 				fieldHttpClient = HttpClients.custom().useSystemProperties()
 			            .setDefaultRequestConfig(globalConfig)
 			            .setSSLContext(sslContext)
+			            .setConnectionManager(cm)
+			            .setKeepAliveStrategy(myStrategy)
 			            .build();
 			} catch ( Throwable e )
 			{
