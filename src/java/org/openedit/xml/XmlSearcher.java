@@ -45,7 +45,6 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable, NonExport
 	
 	
 	
-	
 
 	public boolean isLazyInit()
 	{

@@ -1,5 +1,7 @@
 package org.openedit.hittracker;
 
+import java.util.List;
+
 import org.entermediadb.location.Position;
 
 public class GeoFilter extends Term
@@ -9,6 +11,7 @@ public class GeoFilter extends Term
 	protected String fieldType;
 	protected long fieldDistance;
 	protected Position fieldCenter;
+	protected List<Position> fieldPositions;
 	
 	public Position getCenter()
 	{
@@ -56,5 +59,12 @@ public class GeoFilter extends Term
 		String fin = getDetail().getId() + "location = " + " " + getValue() + " within " + getDistance();
 		return fin;
 	}
+	public List<Position> getPoints() {
+		return fieldPositions;
+	}
+	public void setPoints(List<Position> inPositions) {
+		fieldPositions = inPositions;
+	}
+	
 
 }
