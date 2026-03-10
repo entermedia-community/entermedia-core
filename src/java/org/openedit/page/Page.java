@@ -94,6 +94,10 @@ public class Page implements Data, Comparable
 		{
 			return false;
 		}
+		if( getMimeType().equals("application/yaml") )
+		{
+			return false;
+		}
 		return true;
 		
 	}
