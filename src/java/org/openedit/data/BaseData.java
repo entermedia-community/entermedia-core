@@ -574,8 +574,8 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 		output.append(" \n}");
 		return output.toString();*/
 		
-		JSONObject output = new JSONObject();
-		output.put("_id", getId());
+		//JSONObject output = new JSONObject();
+		//output.put("_id", getId());
 		Map properties = getProperties();
 		
 		for (Iterator iterator = properties.keySet().iterator(); iterator.hasNext();)
@@ -592,9 +592,10 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 		}
 				
 		JSONObject object = new JSONObject(properties);  //TODO: Deal with Java Objects. Loop over stuff?
-		output.put("map", object);
+		//output.put("map", object);
 
-		return output.toJSONString();
+		//return output.toJSONString();
+		return object.toJSONString();
 	}	
 	
 	public boolean hasValue(String inKey)
