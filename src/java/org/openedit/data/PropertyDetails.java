@@ -268,6 +268,7 @@ public class PropertyDetails implements Collection<PropertyDetail>
 
 	public List findIndexProperties()
 	{
+		//TODO: Cache all the field lists
 		List list = new ArrayList(getDetails().size());
 		for (Iterator iter = getDetails().iterator(); iter.hasNext();)
 		{

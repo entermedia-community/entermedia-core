@@ -160,8 +160,12 @@ public class ElementData implements MultiValued, SaveableData, DataLoaded, Compa
 
 		if (value == null)
 		{
-			
 			Element noderoot = getElement().element(inId);
+//			if( "defaultskilloverview".equals(inId) )
+//			{
+//				//Stop here
+//				System.out.println("Hey");
+//			}
 			if (noderoot != null)
 			{
 				PropertyDetails alldetails = getPropertyDetails(); //TODO: Move this to a new Subclass SearcherElementData 
@@ -169,6 +173,12 @@ public class ElementData implements MultiValued, SaveableData, DataLoaded, Compa
 				{
 					PropertyDetail detail = alldetails.getDetail(inId);
 					
+					if(detail != null && detail.isMultiLanguage() )
+					{
+						Object obj = getLanguageMap(inId);
+						return obj;
+					}
+						
 					if(detail != null && "nested".equals(detail.getDataType()) )
 					{
 						Collection<Map> children = new ArrayList();
