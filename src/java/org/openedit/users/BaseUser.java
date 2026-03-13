@@ -472,6 +472,14 @@ public class BaseUser extends BaseData implements User, Comparable
 				{
 					groups.add(object);
 				}
+				else if (object instanceof Data)
+				{
+					Group group = (Group)getGroupSearcher().loadData((Data)object);
+					if( group != null)
+					{
+						groups.add(group);
+					}
+				}
 				else
 				{
 					Group group = getGroupSearcher().getGroup((String)object);
