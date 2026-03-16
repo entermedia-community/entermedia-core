@@ -33,10 +33,15 @@ public class FileSystemAuthenticator extends BaseAuthenticator
 	
 	public boolean authenticate(AuthenticationRequest inAReq) throws UserManagerException
 	{
+		String inPassword = inAReq.getPassword();
+		if (inPassword == null)
+		{
+			return false;
+		}
 		String password = inAReq.getUser().getPassword(); 
 		if ( password != null)
 		{
-			String inPassword = inAReq.getPassword();
+			
 			//Decrypt their stored password
 			if(inPassword != null && password.startsWith("DES:"))
 			{

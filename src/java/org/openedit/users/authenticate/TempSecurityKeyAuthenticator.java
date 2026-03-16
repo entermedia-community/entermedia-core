@@ -64,6 +64,7 @@ public class TempSecurityKeyAuthenticator extends BaseAuthenticator
 			else
 			{
 				log.error("Security code expired or missing " + code);
+				throw new UserManagerException("Security code expired or missing");
 			}
 		}
 
