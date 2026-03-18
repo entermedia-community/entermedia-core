@@ -46,9 +46,7 @@ public abstract class ContentItem
 	protected boolean fieldStub;
 	protected Date fieldLastModified;
 	protected long fieldLength = -1;
-	protected boolean fieldMakeVersion = true; //used when saving content
 	protected OutputStream fieldOutputStream;
-	
 	
 	public boolean isStub()
 	{
@@ -195,18 +193,6 @@ public abstract class ContentItem
 		fieldVersion = version;
 	}
 	
-	/**
-	 * Should this class make a version of the file when saving
-	 * @return
-	 */	
-	public boolean isMakeVersion()
-	{
-		return fieldMakeVersion;
-	}
-	public void setMakeVersion(boolean inMakeVersion)
-	{
-		fieldMakeVersion = inMakeVersion;
-	}
 	/**
 	 * @return
 	 */

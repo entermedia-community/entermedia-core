@@ -180,11 +180,9 @@ public class XmlArchive
 				synchronized (page)
 				{
 					ContentItem tmp = getPageManager().getRepository().getStub(inFile.getPath() + ".tmp.xml");
-					tmp.setMakeVersion(false);
 					getXmlUtil().saveXml(inFile.getRoot(), tmp.getOutputStream(),page.getCharacterEncoding());
 			
 					ContentItem xmlcontent = getPageManager().getRepository().getStub(inFile.getPath());
-					xmlcontent.setMakeVersion(false);
 					getPageManager().getRepository().remove(xmlcontent); //might be a little faster to remove it first
 					getPageManager().getRepository().move(tmp, xmlcontent);
 					getPageManager().firePageModified(page);
@@ -256,7 +254,6 @@ public class XmlArchive
 	public void deleteXmlFile(XmlFile inSettings) throws OpenEditException
 	{
 		Page page = getPageManager().getPage(inSettings.getPath(),true);
-		page.getContentItem().setMakeVersion(false);
 		getPageManager().removePage(page);
 		
 	}

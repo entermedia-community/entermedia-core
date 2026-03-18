@@ -320,12 +320,6 @@ public class PageManager
 	{
 		if (inSourcePage.exists())
 		{
-			String makeversion = inDestinationPage.getProperty("makeversion");
-			if (makeversion != null)
-			{
-				boolean ver = Boolean.parseBoolean(makeversion);
-				inDestinationPage.getContentItem().setMakeVersion(ver);
-			}
 			ContentItem item = inDestinationPage.getContentItem();
 			item.setPath(inDestinationPage.getPath());
 			
@@ -352,8 +346,6 @@ public class PageManager
 		{
 			ContentItem item = inDestination.getContentItem(); //Use new path
 			item.setPath(inDestination.getPath());
-			String makeversion = inDestination.getProperty("makeversion");
-			item.setMakeVersion(Boolean.parseBoolean(makeversion));
 			getRepository().move( inSource.getContentItem(),  item);
 		}
 		else
@@ -366,13 +358,6 @@ public class PageManager
 
 	public void removePage( Page inPage ) throws OpenEditException
 	{
-		String makeversion = inPage.getProperty("makeversion");
-		if (makeversion != null)
-		{
-			boolean ver = Boolean.parseBoolean(makeversion);
-			inPage.getPageSettings().getXConf().setMakeVersion(ver);
-			inPage.getContentItem().setMakeVersion(ver);
-		}
 		inPage.getContentItem().setPath(inPage.getPath());
 		getRepository().remove( inPage.getContentItem() );
 		//getRepository().remove( inPage.getPageSettings().getXConf() );
@@ -569,8 +554,8 @@ public class PageManager
 			//could be null
 			item.setAuthor(inUser.getUserName());
 		}
-		boolean previous = inPage.getContentItem().isMakeVersion();
-		item.setMakeVersion(previous);
+//		boolean previous = inPage.getContentItem().isMakeVersion();
+//		item.setMakeVersion(previous);
 		inPage.setContentItem(item);
 		putPage(inPage);  //This sets the outputstream for us
 		return item.getOutputStream();
