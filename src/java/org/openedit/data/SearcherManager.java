@@ -482,26 +482,28 @@ public class SearcherManager
 		
 		Object object =  inData.getValue(inDetail.getId());
 		
-		if(object != null || inMask == null) 
+		if(object != null) 
 		{
 			if(inDetail.isMultiValue() && inData instanceof MultiValued) 
 			{
 				Collection vals = ((MultiValued) inData).getValues(inDetail.getId());
 				return vals;
 			}
-
-				/*
 			if( object instanceof LanguageMap)
 			{
-				LanguageMap lan = (LanguageMap)object;
-				return lan.getText(inLocale);
-			}	
-			*/
-			return object;
-
+				LanguageMap map = (LanguageMap)object;
+				if( !map.isEmpty() || inMask == null)
+				{
+					return map;
+				}
+			}
+		}
+		if( object == null && inMask != null)
+		{
+			return renderMask(inData, inDetail, inMask, inExtra, inLocale);
 		}
 		
-		return renderMask(inData, inDetail, inMask, inExtra, inLocale); 
+		return object;
 	}
 
 
