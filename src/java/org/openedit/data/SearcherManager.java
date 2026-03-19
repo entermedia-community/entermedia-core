@@ -500,7 +500,7 @@ public class SearcherManager
 		}
 		if( object == null && inMask != null)
 		{
-			return renderMask(inData, inDetail, inMask, inExtra, inLocale);
+			object = renderMask(inData, inDetail, inMask, inExtra, inLocale);
 		}
 		
 		return object;
