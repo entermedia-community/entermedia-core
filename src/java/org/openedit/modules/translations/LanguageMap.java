@@ -62,7 +62,7 @@ public class LanguageMap extends TreeMap
 	}
 	public void setText(String inLocale, String inVal)
 	{
-		if( inVal == null)
+		if( inVal == null || inVal.isEmpty())
 		{
 			remove(inLocale);
 		}

@@ -393,11 +393,12 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 		{
 			val = null;
 		}
+		/*
 		if( val == null && inKey.equals("name"))
 		{
 			Map map = (Map)getProperties().getValue(inKey  + "_int"); //Not needed, remove this
 			return map;
-		}
+		}*/
 		return val;
 	}
 	public void setValue(String inKey, Object inValue)

@@ -498,9 +498,13 @@ public class SearcherManager
 				}
 			}
 		}
-		if( object == null && inMask != null)
+		if( inMask != null)
 		{
-			object = renderMask(inData, inDetail, inMask, inExtra, inLocale);
+			if (object == null)
+			{
+				object = renderMask(inData, inDetail, inMask, inExtra, inLocale);
+			}
+			
 		}
 		
 		return object;
