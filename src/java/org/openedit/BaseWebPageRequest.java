@@ -1502,6 +1502,14 @@ public class BaseWebPageRequest implements WebPageRequest, PageRequestKeys
 		return String.valueOf(inValue);
 	}
 	
+	public String getText(Data inParent, Object inValue)
+	{
+		String text = inParent.getProperties().toString(inValue);
+		return text;
+	}
+	
+
+	
 	public LocaleManager getLocaleManager()
 	{
 		return fieldLocaleManager;

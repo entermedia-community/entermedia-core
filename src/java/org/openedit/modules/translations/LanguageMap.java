@@ -75,6 +75,10 @@ public class LanguageMap extends TreeMap
 	@Override
 	public String toString()
 	{
+		if( isEmpty())
+		{
+			return null;
+		}
 		if( size() == 1)
 		{
 			return (String)values().iterator().next();
