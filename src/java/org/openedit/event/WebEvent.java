@@ -14,7 +14,6 @@ public class WebEvent extends BaseData
 	protected Object fieldSource;
 	protected User fieldUser;
 	protected boolean fieldCancelEvent;
-	
 	public boolean isCancelEvent()
 	{
 		return fieldCancelEvent;
