@@ -21,6 +21,33 @@ public class Position {
 	{
 		return result;
 	}
+	
+	/**
+	 * Finds the distance in meters using the Haversine formula.
+	 * This is more accurate for long distances on a sphere.
+	 */
+	public double getDistanceInMeters(Position inOther) {
+	    if (inOther == null || !inOther.isDefined() || !this.isDefined()) {
+	        return Double.MAX_VALUE;
+	    }
+
+	    double lat1 = this.getLatitude();
+	    double lon1 = this.getLongitude();
+	    double lat2 = inOther.getLatitude();
+	    double lon2 = inOther.getLongitude();
+
+	    double dLat = Math.toRadians(lat2 - lat1);
+	    double dLon = Math.toRadians(lon2 - lon1);
+
+	    double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+	               Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
+	               Math.sin(dLon / 2) * Math.sin(dLon / 2);
+
+	    double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+	    // Using your class's defined RADIUS_EARTH (6400000) for consistency
+	    return RADIUS_EARTH * c; 
+	}
 
 	public void setResult(Element inResult)
 	{

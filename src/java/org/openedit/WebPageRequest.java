@@ -285,7 +285,7 @@ public interface WebPageRequest
 
 	void putPageValues(Map inPageValues);
 
-	public boolean getRequestParameterBoolean(String inKey, boolean inDefault);
+	public boolean getRequestParameterBoolean(String inKey, Boolean inDefault);
 
 	public TimeZone getTimeZone();
 	
