@@ -270,6 +270,10 @@ public class DateStorageUtil
 					return getDateFormat("MM.dd.yyyy hh:mm a").parse(inStoredDate);
 				}
 			}
+			
+			if (inStoredDate.length() == 16 && inStoredDate.contains("T") && inStoredDate.endsWith("Z")) {
+			    return getDateFormat("yyyyMMdd'T'HHmmss'Z'", TimeZone.getTimeZone("UTC")).parse(inStoredDate);
+			}
 
 			if (inStoredDate.matches("\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}")) {
 				return getDateFormat("yyyy-MM-dd'T'HH:mm").parse(inStoredDate);
