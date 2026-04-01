@@ -244,8 +244,8 @@ public class LocaleManager
 			{
 				if ( minute < 0.05) 
 				{
-					label = "";
-					return null;
+					label = "Seconds";
+					time = 0D;
 				}
 				else {
 					label = "Seconds";
