@@ -39,13 +39,14 @@ public class BaseData implements MultiValued, Comparable, Cloneable
 
 	public String get(String inId) 
 	{
-		if( fieldProperties == null || inId == null)
-		{
-			return null;
-		}
-		Object value = getValue(inId);
-		String stringvalue = getProperties().toString(value);
-		return stringvalue;
+	    if( fieldProperties == null || inId == null)
+	    {
+	        return null;
+	    }
+	    // This delegates to the getString() method in ValuesMap 
+	    // which ALREADY handles the toString logic you were trying to fix globally.
+	    String value = getProperties().getString(inId);
+	    return value;
 	}
 	
 	public String getText(String inId, WebPageRequest inContext) {
