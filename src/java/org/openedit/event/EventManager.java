@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.openedit.Data;
@@ -15,6 +17,7 @@ import org.openedit.data.PropertyDetail;
 import org.openedit.data.Searcher;
 import org.openedit.data.SearcherManager;
 import org.openedit.modules.translations.LanguageMap;
+import org.openedit.users.BaseUserManager;
 import org.openedit.users.User;
 
 import groovy.json.JsonOutput;
@@ -23,6 +26,7 @@ public class EventManager
 {
 	protected Map fieldFilteredListeners;
 	protected SearcherManager fieldSearcherManager;
+	private static final Log log = LogFactory.getLog(EventManager.class);
 
 	public SearcherManager getSearcherManager()
 	{
@@ -82,21 +86,25 @@ public class EventManager
 			{
 				Data data = (Data) iterator.next();
 				String bean = data.get("beanname"); 
-				WebEventListener listener = (WebEventListener)getSearcherManager().getModuleManager().getBean(inCatalogId, bean);
-				
-				Collection actionlist = (Collection)getSearcherManager().query(inCatalogId, "webeventlistenerfilter").match("webeventlistener", data.getId()).search();
+				try {
+					WebEventListener listener = (WebEventListener)getSearcherManager().getModuleManager().getBean(inCatalogId, bean);
+					
+					Collection actionlist = (Collection)getSearcherManager().query(inCatalogId, "webeventlistenerfilter").match("webeventlistener", data.getId()).search();
 
-				ListenerFilter actionfilter = new ListenerFilter();
-				actionfilter.setListener(listener);
-				String[] actions = new String[actionlist.size()];
-				int i = 0;
-				for (Iterator iterator2 = actionlist.iterator(); iterator2.hasNext();)
-				{
-					Data filter = (Data) iterator2.next();
-					actions[i++] = filter.get("action");
+					ListenerFilter actionfilter = new ListenerFilter();
+					actionfilter.setListener(listener);
+					String[] actions = new String[actionlist.size()];
+					int i = 0;
+					for (Iterator iterator2 = actionlist.iterator(); iterator2.hasNext();)
+					{
+						Data filter = (Data) iterator2.next();
+						actions[i++] = filter.get("action");
+					}
+					actionfilter.setActions(actions);
+					list.add(actionfilter);
+				} catch (Exception e) {
+					log.info("Could not add bean: " + bean);
 				}
-				actionfilter.setActions(actions);
-				list.add(actionfilter);
 			}
 			fieldFilteredListeners.put(inCatalogId,list);
 		}
