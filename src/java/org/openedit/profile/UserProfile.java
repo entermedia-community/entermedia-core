@@ -37,7 +37,7 @@ public class UserProfile extends BaseData implements SaveableData, DataLoaded, C
 	protected String fieldCatalogId;
 	protected SearcherManager fieldSearcherManager;
 	protected MultiValued fieldSettingsGroup;
-	//	protected Map<String,String> fieldSettingsGroupPermissions;
+	// protected Map<String,String> fieldSettingsGroupPermissions;
 	protected Map fieldResultViews;
 	protected XmlArchive fieldXmlArchive;
 	protected Collection fieldViewCategories;
@@ -47,19 +47,21 @@ public class UserProfile extends BaseData implements SaveableData, DataLoaded, C
 	protected String fieldSettingsGroupIndexId;
 	protected UserManager fieldUserManager;
 	protected EntityPermissions fieldEntityPermissions;
-	
-	public EntityPermissions getEntityPermissions() {
+
+	public EntityPermissions getEntityPermissions()
+	{
 		return fieldEntityPermissions;
 	}
 
-	public void setEntityPermissions(EntityPermissions inEntityPermissions) {
+	public void setEntityPermissions(EntityPermissions inEntityPermissions)
+	{
 		fieldEntityPermissions = inEntityPermissions;
 	}
 
 	public UserManager getUserManager()
 	{
 		return fieldUserManager;
-		
+
 	}
 
 	public void setUserManager(UserManager inUserManager)
@@ -77,21 +79,19 @@ public class UserProfile extends BaseData implements SaveableData, DataLoaded, C
 		fieldSettingsGroupIndexId = inIndexId;
 	}
 
-	
-
 	public boolean hasModule(String inId)
 	{
 		for (Iterator iterator = getModules().iterator(); iterator.hasNext();)
 		{
 			Data data = (Data) iterator.next();
-			if( data.getId().equals(inId))
+			if (data.getId().equals(inId))
 			{
 				return true;
 			}
 		}
 		return false;
 	}
-	
+
 	public Collection<Data> getModules()
 	{
 		return fieldModules;
@@ -102,35 +102,34 @@ public class UserProfile extends BaseData implements SaveableData, DataLoaded, C
 		fieldModules = inModules;
 	}
 
-	
 	public Collection<Data> getEntities()
 	{
 		Collection<Data> items = new ArrayList();
 		for (Iterator iterator = getModules().iterator(); iterator.hasNext();)
 		{
 			Data module = (Data) iterator.next();
-			if( Boolean.parseBoolean( module.get("isentity") ) )
+			if (Boolean.parseBoolean(module.get("isentity")))
 			{
 				items.add(module);
 			}
 		}
 		return items;
 	}
-	
+
 	public Collection<Data> getSearchableEntities()
 	{
 		Collection<Data> items = new ArrayList();
 		for (Iterator iterator = getModules().iterator(); iterator.hasNext();)
 		{
 			Data module = (Data) iterator.next();
-			if( Boolean.parseBoolean( module.get("isentity") )  && Boolean.parseBoolean( module.get("showonsearch") )) 
+			if (Boolean.parseBoolean(module.get("isentity")) && Boolean.parseBoolean(module.get("showonsearch")))
 			{
 				items.add(module);
 			}
 		}
 		return items;
 	}
-	
+
 	public Collection<String> getModuleIds()
 	{
 		Collection<String> items = new ArrayList();
@@ -142,15 +141,15 @@ public class UserProfile extends BaseData implements SaveableData, DataLoaded, C
 		return items;
 	}
 
-	public Collection<Data> getEntitiesByIdOrName(Collection<String> moduleIdsOrNames) 
+	public Collection<Data> getEntitiesByIdOrName(Collection<String> moduleIdsOrNames)
 	{
 		Collection<Data> items = new ArrayList();
 		for (Iterator iterator = getModules().iterator(); iterator.hasNext();)
 		{
 			Data module = (Data) iterator.next();
-			if( Boolean.parseBoolean( module.get("isentity") ) )
+			if (Boolean.parseBoolean(module.get("isentity")))
 			{
-				if(moduleIdsOrNames.contains(module.getId()) || moduleIdsOrNames.contains(module.getName()))
+				if (moduleIdsOrNames.contains(module.getId()) || moduleIdsOrNames.contains(module.getName()))
 				{
 					items.add(module);
 				}
@@ -158,14 +157,14 @@ public class UserProfile extends BaseData implements SaveableData, DataLoaded, C
 		}
 		return items;
 	}
-	
+
 	public Collection<String> getEntitiesIds()
 	{
 		Collection<String> items = new ArrayList();
 		for (Iterator iterator = getModules().iterator(); iterator.hasNext();)
 		{
 			Data module = (Data) iterator.next();
-			if( Boolean.parseBoolean( module.get("isentity") ) )
+			if (Boolean.parseBoolean(module.get("isentity")))
 			{
 				items.add(module.getId());
 			}
@@ -179,7 +178,7 @@ public class UserProfile extends BaseData implements SaveableData, DataLoaded, C
 		for (Iterator iterator = getModules().iterator(); iterator.hasNext();)
 		{
 			Data module = (Data) iterator.next();
-			if( Boolean.parseBoolean( module.get("isentity") ) && Boolean.parseBoolean( module.get("showonnav") ) )
+			if (Boolean.parseBoolean(module.get("isentity")) && Boolean.parseBoolean(module.get("showonnav")))
 			{
 				items.add(module);
 			}
@@ -189,54 +188,57 @@ public class UserProfile extends BaseData implements SaveableData, DataLoaded, C
 
 	public Collection<ModuleData> getEntitiesInParent(Category inParentCategory)
 	{
-		if (inParentCategory == null) {
+		if (inParentCategory == null)
+		{
 			return null;
 		}
-		List list= new ArrayList(1);
+		List list = new ArrayList(1);
 		list.add(inParentCategory);
 		Collection<ModuleData> found = getEntitiesForCategories(list);
 		return found;
 	}
+
 	public Collection<ModuleData> getEntitiesForCategories(Collection<Category> inParentCategories)
 	{
-		if (inParentCategories == null) {
+		if (inParentCategories == null)
+		{
 			return null;
 		}
 		Collection<ModuleData> items = new ArrayList();
-		
-		for (Iterator iterator1 = inParentCategories.iterator(); iterator1.hasNext();) 
+
+		for (Iterator iterator1 = inParentCategories.iterator(); iterator1.hasNext();)
 		{
 			Category cat = (Category) iterator1.next();
 			for (Iterator iterator = getEntities().iterator(); iterator.hasNext();)
 			{
 				Data module = (Data) iterator.next();
 				Object value = cat.findValue(module.getId());
-				if( value != null)
+				if (value != null)
 				{
-					if( value instanceof Collection)
+					if (value instanceof Collection)
 					{
 						Collection all = (Collection) value;
 						for (Iterator iterator2 = all.iterator(); iterator2.hasNext();)
 						{
 							String item = (String) iterator2.next();
-							MultiValued entity = (MultiValued)getSearcherManager().getCachedData(getCatalogId(), module.getId(), item);
+							MultiValued entity = (MultiValued) getSearcherManager().getCachedData(getCatalogId(), module.getId(), item);
 							if (entity != null)
 							{
-								//entity.setValue("moduleid", module.getId());
-								items.add(new ModuleData(module.getId(),entity));
+								// entity.setValue("moduleid", module.getId());
+								items.add(new ModuleData(module.getId(), entity));
 							}
 						}
 					}
-					else 
+					else
 					{
-						MultiValued entity = (MultiValued)getSearcherManager().getCachedData(getCatalogId(), module.getId(), (String) value);
+						MultiValued entity = (MultiValued) getSearcherManager().getCachedData(getCatalogId(), module.getId(), (String) value);
 						if (entity != null)
 						{
-							//entity.setValue("moduleid", module.getId());
-							items.add(new ModuleData(module.getId(),entity));
-						}	
+							// entity.setValue("moduleid", module.getId());
+							items.add(new ModuleData(module.getId(), entity));
+						}
 					}
-					
+
 				}
 			}
 		}
@@ -245,20 +247,17 @@ public class UserProfile extends BaseData implements SaveableData, DataLoaded, C
 
 	public User getUser()
 	{
-		User user = (User)getSearcherManager().getCachedData(getCatalogId(), "user",
-					super.get("userid"));
+		User user = (User) getSearcherManager().getCachedData(getCatalogId(), "user", super.get("userid"));
 		return user;
 	}
 
-
 	private static final Log log = LogFactory.getLog(UserProfile.class);
 
-	public UserProfile()
-	{
-//		if (1 > 32)
-//		{
-//
-//		}
+	public UserProfile() {
+		// if (1 > 32)
+		// {
+		//
+		// }
 	}
 
 	public String getCatalogId()
@@ -286,36 +285,36 @@ public class UserProfile extends BaseData implements SaveableData, DataLoaded, C
 		return getId();
 	}
 
-//	public Collection<String> getCollectionIds()
-//	{
-//		return fieldCollectionIds;
-//	}
-//
-//	public void setCollectionIds(Collection<String> inCollectionIds)
-//	{
-//		fieldCollectionIds = inCollectionIds;
-//	}
+	// public Collection<String> getCollectionIds()
+	// {
+	// return fieldCollectionIds;
+	// }
+	//
+	// public void setCollectionIds(Collection<String> inCollectionIds)
+	// {
+	// fieldCollectionIds = inCollectionIds;
+	// }
 	public boolean isInRole(String inRole)
 	{
-		if( inRole.equals( get("settingsgroup")))
+		if (inRole.equals(get("settingsgroup")))
 		{
-			return true;					
+			return true;
 		}
-		return false;					
+		return false;
 	}
-	
+
 	public boolean isEnabled(String inPreference)
 	{
 		String val = get(inPreference);
 		return Boolean.parseBoolean(val);
 	}
 
-	//	@Override
-	//	public String get(String inId) {
-	//		// TODO Auto-generated method stub
-	//		return getValue(inId);
-	//	}
-	//	
+	// @Override
+	// public String get(String inId) {
+	// // TODO Auto-generated method stub
+	// return getValue(inId);
+	// }
+	//
 	public String get(String inPreference)
 	{
 		if (inPreference == null)
@@ -325,20 +324,20 @@ public class UserProfile extends BaseData implements SaveableData, DataLoaded, C
 
 		String val = super.get(inPreference);
 
-		//		
+		//
 		if (val == null && getSettingsGroup() != null)
 		{
 			val = getSettingsGroup().get(inPreference);
 		}
 
-		//		if (val == null && getSettingsGroup() != null)
-		//		{
-		//			val = getSettingsGroupPermissions().get(inPreference);
-		//		}		
+		// if (val == null && getSettingsGroup() != null)
+		// {
+		// val = getSettingsGroupPermissions().get(inPreference);
+		// }
 		if (val == null && !inPreference.equals("userid"))
 		{
 			User user = getUser();
-			if( user != null)
+			if (user != null)
 			{
 				val = getUser().get(inPreference);
 			}
@@ -346,44 +345,46 @@ public class UserProfile extends BaseData implements SaveableData, DataLoaded, C
 
 		return val;
 	}
-	
+
 	public Object getValue(String inKey)
 	{
 		Object val = super.getValue(inKey);
-		if( val != null)
+		if (val != null)
 		{
 			return val;
 		}
-		if(inKey.equals("name")) {
+		if (inKey.equals("name"))
+		{
 			return getName();
 		}
-		if( inKey.equals("sendcollectionnotifications") || inKey.equals("sendapprovalnotifications") ||  inKey.equals("assethitsperpage") ||  inKey.equals("modulehitsperpage") )
+		if (inKey.equals("sendcollectionnotifications") || inKey.equals("sendapprovalnotifications") || inKey.equals("assethitsperpage") || inKey.equals("modulehitsperpage"))
 		{
-			if(getSettingsGroup() != null){
-			//if we have a local value then user it. Otherwise use parent.
-			return getSettingsGroup().getValue(inKey);
+			if (getSettingsGroup() != null)
+			{
+				// if we have a local value then user it. Otherwise use parent.
+				return getSettingsGroup().getValue(inKey);
 			}
 		}
-		
+
 		if (val == null && !inKey.equals("userid"))
 		{
 			User user = getUser();
-			if( user != null)
+			if (user != null)
 			{
 				val = getUser().getValue(inKey);
 			}
 		}
-		
+
 		return val;
 	}
-	
+
 	public Collection getValues(String inPreference)
 	{
 		Object value = super.getValue(inPreference);
-		if( value instanceof Collection)
+		if (value instanceof Collection)
 		{
 			Collection col = (Collection) value;
-			if( !col.isEmpty() )
+			if (!col.isEmpty())
 			{
 				return col;
 			}
@@ -393,19 +394,20 @@ public class UserProfile extends BaseData implements SaveableData, DataLoaded, C
 			value = getSettingsGroup().getValue(inPreference);
 		}
 		String val = null;
-		if( value instanceof Collection)
+		if (value instanceof Collection)
 		{
 			Collection col = (Collection) value;
-			if( !col.isEmpty() )
+			if (!col.isEmpty())
 			{
 				return col;
 			}
 		}
-		else if( value != null)
-		{
-			val = String.valueOf(value);
-		}
-		if( val == null)
+		else
+			if (value != null)
+			{
+				val = String.valueOf(value);
+			}
+		if (val == null)
 		{
 			val = get(inPreference);
 		}
@@ -468,11 +470,13 @@ public class UserProfile extends BaseData implements SaveableData, DataLoaded, C
 		return fieldSettingsGroup;
 	}
 
-	public Permissions getPermissions() {
+	public Permissions getPermissions()
+	{
 		return fieldPermissions;
 	}
 
-	public void setPermissions(Permissions inPermissions) {
+	public void setPermissions(Permissions inPermissions)
+	{
 		fieldPermissions = inPermissions;
 	}
 
@@ -485,6 +489,7 @@ public class UserProfile extends BaseData implements SaveableData, DataLoaded, C
 	{
 		save(null);
 	}
+
 	public void save(User inUser)
 	{
 		Searcher searcher = getSearcherManager().getSearcher(getCatalogId(), "userprofile");
@@ -504,7 +509,7 @@ public class UserProfile extends BaseData implements SaveableData, DataLoaded, C
 			values.append(detail.getId());
 			if (iterator.hasNext())
 			{
-				values.append(" "); //TODO move to |
+				values.append(" "); // TODO move to |
 			}
 		}
 		setProperty(inKey, values.toString());
@@ -528,17 +533,18 @@ public class UserProfile extends BaseData implements SaveableData, DataLoaded, C
 	public boolean containsValue(String inKey, String inValue)
 	{
 		Collection current = getValues(inKey);
-		
-		if( current != null && current.contains(inValue))
+
+		if (current != null && current.contains(inValue))
 		{
 			return true;
 		}
 		return false;
 	}
+
 	public void addValue(String inKey, String string)
 	{
 		Collection current = getValues(inKey);
-		if( current == null)
+		if (current == null)
 		{
 			current = new ArrayList();
 		}
@@ -550,12 +556,12 @@ public class UserProfile extends BaseData implements SaveableData, DataLoaded, C
 		{
 			string = string.trim();
 		}
-		if( !current.contains(string) )
+		if (!current.contains(string))
 		{
 			current.add(string);
 		}
 		setValue(inKey, current);
-				
+
 	}
 
 	public void removeValue(String inKey, String string)
@@ -602,7 +608,6 @@ public class UserProfile extends BaseData implements SaveableData, DataLoaded, C
 		return out.toString();
 	}
 
-
 	public XmlArchive getXmlArchive()
 	{
 		return fieldXmlArchive;
@@ -639,25 +644,27 @@ public class UserProfile extends BaseData implements SaveableData, DataLoaded, C
 	{
 		setProperty(inView, inPreference);
 	}
-	
-	public int getHitsPerPageForSearchType(String inSearchtype, WebPageRequest inReq) {
+
+	public int getHitsPerPageForSearchType(String inSearchtype, WebPageRequest inReq)
+	{
 		String view = inSearchtype;
 		String resultview = inReq.getRequestParameter("resultview");
-		
-		if(resultview == null) {
-			resultview = get(view+"resultview");
+
+		if (resultview == null)
+		{
+			resultview = get(view + "resultview");
 		}
-		if(resultview != null) {
-			view =  view + resultview  + "hitsperpage";
+		if (resultview != null)
+		{
+			view = view + resultview + "hitsperpage";
 			String value = get(view);
-			if(value != null) {
+			if (value != null)
+			{
 				return Integer.parseInt(value);
 			}
 		}
 		return getHitsPerPageForSearchType(inSearchtype);
 	}
-	
-	
 
 	public int getHitsPerPageForSearchType(String inSearchtype)
 	{
@@ -677,7 +684,7 @@ public class UserProfile extends BaseData implements SaveableData, DataLoaded, C
 		}
 		try
 		{
-			return Integer.parseInt(value);			
+			return Integer.parseInt(value);
 		}
 		catch (Exception ex)
 		{
@@ -721,47 +728,29 @@ public class UserProfile extends BaseData implements SaveableData, DataLoaded, C
 		return view;
 	}
 
-	/** @Deprecated
+	/**
+	 * @Deprecated
 	 * 
 	 */
 
-	public Collection<Category> getViewCategories()
-	{
-		return fieldViewCategories;
-	}
-
-	public void addToViewCategories(Category inCat)
-	{
-		for (Iterator iterator = getViewCategories().iterator(); iterator.hasNext();)
-		{
-			Category cat = (Category) iterator.next();
-			if( cat.equals(inCat))
-			{
-				return;
-			}
-		}
-		getViewCategories().add(inCat);
-	}
-	
-	public HitTracker getSelectedLibraries(WebPageRequest inReq)
-	{
-		Searcher librarySearcher = getSearcherManager().getSearcher(getCatalogId(), "library");
-		HitTracker tracker = librarySearcher.getAllHits();
-		tracker.setSelections(getViewCategories());
-		if (inReq.getUser() != null && inReq.getUser().isInGroup("administrators"))
-		{
-			tracker.selectAll();
-		}
-		//tracker.setShowOnlySelected(true);
-		return tracker;
-
-	}
-
-	public void setViewCategories(Collection<Category> inCombinedLibraries)
-	{
-		fieldViewCategories = inCombinedLibraries;
-	}
-
+	/*
+	 * public Collection<Category> getViewCategories() { return fieldViewCategories; }
+	 * 
+	 * public void addToViewCategories(Category inCat) { for (Iterator iterator =
+	 * getViewCategories().iterator(); iterator.hasNext();) { Category cat = (Category) iterator.next();
+	 * if( cat.equals(inCat)) { return; } } getViewCategories().add(inCat); }
+	 * 
+	 * public HitTracker getSelectedLibraries(WebPageRequest inReq) { Searcher librarySearcher =
+	 * getSearcherManager().getSearcher(getCatalogId(), "library"); HitTracker tracker =
+	 * librarySearcher.getAllHits(); tracker.setSelections(getViewCategories()); if (inReq.getUser() !=
+	 * null && inReq.getUser().isInGroup("administrators")) { tracker.selectAll(); }
+	 * //tracker.setShowOnlySelected(true); return tracker;
+	 * 
+	 * }
+	 * 
+	 * public void setViewCategories(Collection<Category> inCombinedLibraries) { fieldViewCategories =
+	 * inCombinedLibraries; }
+	 */
 	public Data getDefaultViewForModule(String inModuleId)
 	{
 		Searcher viewSearcher = getSearcherManager().getSearcher(getCatalogId(), "view");
@@ -771,12 +760,13 @@ public class UserProfile extends BaseData implements SaveableData, DataLoaded, C
 		q.exact("systemdefined", "false");
 		q.sort("ordering");
 		q.hitsPerPage(1);
-		
+
 		HitTracker tracker = viewSearcher.getCachedSearch(q);
-		if(tracker.size()== 0) {
-		    return null;
+		if (tracker.size() == 0)
+		{
+			return null;
 		}
-        return (Data)tracker.iterator().next();
+		return (Data) tracker.iterator().next();
 	}
 
 	@Override
@@ -811,13 +801,12 @@ public class UserProfile extends BaseData implements SaveableData, DataLoaded, C
 		super.setProperty(inId, inValue);
 	}
 
-	
 	@Override
 	public void setValue(String inId, Object inValue)
-	{ 
+	{
 		if (getId() != null)
 		{
-			String val = (String) String.valueOf( inValue );
+			String val = (String) String.valueOf(inValue);
 			saveUserIfChanged(inId, val);
 		}
 		super.setValue(inId, inValue);
@@ -825,23 +814,22 @@ public class UserProfile extends BaseData implements SaveableData, DataLoaded, C
 
 	protected void saveUserIfChanged(String inId, String val)
 	{
-		if ("lastName".equalsIgnoreCase(inId)
-				|| "firstName".equalsIgnoreCase(inId)
-				|| "email".equalsIgnoreCase(inId))
+		if ("lastName".equalsIgnoreCase(inId) || "firstName".equalsIgnoreCase(inId) || "email".equalsIgnoreCase(inId))
 		{
 			User user = getUser();
-			if(user != null) {
+			if (user != null)
+			{
 				String oldvalue = user.get(inId);
-				if( oldvalue == null || !oldvalue.equals(val)) 
-				{				
-					user.setValue(inId,val);
-					//getSearcherManager().getSearcher(getCatalogId(), "user").saveData(user);
-					//getUserManager().saveUser(user);
+				if (oldvalue == null || !oldvalue.equals(val))
+				{
+					user.setValue(inId, val);
+					// getSearcherManager().getSearcher(getCatalogId(), "user").saveData(user);
+					// getUserManager().saveUser(user);
 				}
 			}
-			
+
 		}
-	}	
+	}
 
 	@Override
 	public String getName()
@@ -859,7 +847,7 @@ public class UserProfile extends BaseData implements SaveableData, DataLoaded, C
 		Searcher facetsearcher = getSearcherManager().getSearcher(getCatalogId(), "userfacets");
 		SearchQuery query = facetsearcher.createSearchQuery();
 		query.addMatches("userid", getId());
-		query.addMatches("type", inId);//needed?
+		query.addMatches("type", inId);// needed?
 		HitTracker hits = facetsearcher.search(query);
 		return hits;
 
@@ -868,16 +856,16 @@ public class UserProfile extends BaseData implements SaveableData, DataLoaded, C
 	public boolean hasPermission(String inPropertyName)
 	{
 		Permissions permissions = getPermissions();
-		if(permissions == null) {
+		if (permissions == null)
+		{
 			return false;
 		}
 		return permissions.can(inPropertyName);
 	}
-	
 
 	public boolean isInGroup(String inGroupId)
 	{
-		if( getUser() == null)
+		if (getUser() == null)
 		{
 			return false;
 		}
@@ -886,7 +874,7 @@ public class UserProfile extends BaseData implements SaveableData, DataLoaded, C
 
 	public boolean isInGroup(Collection<String> inGroups)
 	{
-		if( getUser() == null)
+		if (getUser() == null)
 		{
 			return false;
 		}
@@ -900,7 +888,7 @@ public class UserProfile extends BaseData implements SaveableData, DataLoaded, C
 		for (Iterator iterator = collection.iterator(); iterator.hasNext();)
 		{
 			String key = (String) iterator.next();
-			if( key.startsWith(inName))
+			if (key.startsWith(inName))
 			{
 				toremove.add(key);
 			}
@@ -910,7 +898,7 @@ public class UserProfile extends BaseData implements SaveableData, DataLoaded, C
 			String key = (String) iterator.next();
 			removeValue(key);
 		}
-		
+
 	}
 
 	@Override
@@ -941,14 +929,14 @@ public class UserProfile extends BaseData implements SaveableData, DataLoaded, C
 	public void setLastName(String inLastName)
 	{
 		getUser().setLastName(inLastName);
-		
+
 	}
 
 	@Override
 	public void setEmail(String inEmail)
 	{
 		getUser().setEmail(inEmail);
-		
+
 	}
 
 	@Override
@@ -967,7 +955,7 @@ public class UserProfile extends BaseData implements SaveableData, DataLoaded, C
 	@Override
 	public void setPassword(String inPassword) throws UserManagerException
 	{
-		getUser().setPassword(inPassword);		
+		getUser().setPassword(inPassword);
 	}
 
 	@Override
@@ -987,7 +975,7 @@ public class UserProfile extends BaseData implements SaveableData, DataLoaded, C
 	public void setEnabled(boolean inEnabled)
 	{
 		getUser().setEnabled(inEnabled);
-		
+
 	}
 
 	@Override
@@ -995,7 +983,7 @@ public class UserProfile extends BaseData implements SaveableData, DataLoaded, C
 	{
 		return getUser().hasProperty(inProperty);
 	}
-	
+
 	@Override
 	public String getEnterMediaKey()
 	{
@@ -1017,7 +1005,7 @@ public class UserProfile extends BaseData implements SaveableData, DataLoaded, C
 	@Override
 	public void addGroup(Group inGroup)
 	{
-		getUser().addGroup(inGroup);		
+		getUser().addGroup(inGroup);
 	}
 
 	@Override
@@ -1064,12 +1052,12 @@ public class UserProfile extends BaseData implements SaveableData, DataLoaded, C
 
 	public void setSettingsGroup(Data inFieldSettingsGroup)
 	{
-		fieldSettingsGroup = (MultiValued)inFieldSettingsGroup;
+		fieldSettingsGroup = (MultiValued) inFieldSettingsGroup;
 	}
 
 	public void setUser(User inUser)
 	{
-		setValue("userid",inUser.getId());
+		setValue("userid", inUser.getId());
 	}
-	
+
 }
