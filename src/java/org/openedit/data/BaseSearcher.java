@@ -1991,6 +1991,115 @@ public abstract class BaseSearcher implements Searcher, DataFactory
 //			<option value="before365" #if( $op && $op == "before365" )selected #end>[[Past year]]</option>
 
 			
+			
+			// --- WEEK LOGIC (Monday to Sunday) ---
+			else if ("thisweek".equals(op))
+			{
+			    Calendar c = new GregorianCalendar();
+			    c.setFirstDayOfWeek(Calendar.MONDAY);
+			    c.set(Calendar.HOUR_OF_DAY, 0);
+			    c.set(Calendar.MINUTE, 0);
+			    c.set(Calendar.SECOND, 0);
+			    c.set(Calendar.MILLISECOND, 0);
+			    
+			    // Snap to the Monday of the current week
+			    c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+			    Date from = c.getTime();
+			    
+			    // Move forward 7 days to the start of next Monday
+			    c.add(Calendar.DAY_OF_WEEK, 7);
+			    Date to = c.getTime();
+			    
+			    t = search.addBetween(field, from, to);
+			}
+			else if ("lastweek".equals(op))
+			{
+			    Calendar c = new GregorianCalendar();
+			    c.setFirstDayOfWeek(Calendar.MONDAY);
+			    c.set(Calendar.HOUR_OF_DAY, 0);
+			    c.set(Calendar.MINUTE, 0);
+			    c.set(Calendar.SECOND, 0);
+			    c.set(Calendar.MILLISECOND, 0);
+			    
+			    // Jump back one week then snap to Monday
+			    c.add(Calendar.DAY_OF_WEEK, -7);
+			    c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+			    Date from = c.getTime();
+			    
+			    // Move forward to the start of this week's Monday
+			    c.add(Calendar.DAY_OF_WEEK, 7);
+			    Date to = c.getTime();
+			    
+			    t = search.addBetween(field, from, to);
+			}
+
+			// --- MONTH LOGIC ---
+			else if ("thismonth".equals(op))
+			{
+			    Calendar c = new GregorianCalendar();
+			    c.set(Calendar.DATE, 1); // First day of current month
+			    c.set(Calendar.HOUR_OF_DAY, 0);
+			    c.set(Calendar.MINUTE, 0);
+			    c.set(Calendar.SECOND, 0);
+			    c.set(Calendar.MILLISECOND, 0);
+			    Date from = c.getTime();
+			    
+			    c.add(Calendar.MONTH, 1); // First day of next month
+			    Date to = c.getTime();
+			    
+			    t = search.addBetween(field, from, to);
+			}
+			else if ("lastmonth".equals(op))
+			{
+			    Calendar c = new GregorianCalendar();
+			    c.set(Calendar.HOUR_OF_DAY, 0);
+			    c.set(Calendar.MINUTE, 0);
+			    c.set(Calendar.SECOND, 0);
+			    c.set(Calendar.MILLISECOND, 0);
+			    
+			    c.set(Calendar.DATE, 1);
+			    c.add(Calendar.MONTH, -1); // First day of last month
+			    Date from = c.getTime();
+			    
+			    c.add(Calendar.MONTH, 1); // First day of this month
+			    Date to = c.getTime();
+			    
+			    t = search.addBetween(field, from, to);
+			}
+
+			// --- YEAR LOGIC ---
+			else if ("thisyear".equals(op))
+			{
+			    Calendar c = new GregorianCalendar();
+			    c.set(Calendar.DAY_OF_YEAR, 1); // Jan 1st
+			    c.set(Calendar.HOUR_OF_DAY, 0);
+			    c.set(Calendar.MINUTE, 0);
+			    c.set(Calendar.SECOND, 0);
+			    c.set(Calendar.MILLISECOND, 0);
+			    Date from = c.getTime();
+			    
+			    c.add(Calendar.YEAR, 1); // Jan 1st next year
+			    Date to = c.getTime();
+			    
+			    t = search.addBetween(field, from, to);
+			}
+			else if ("lastyear".equals(op))
+			{
+			    Calendar c = new GregorianCalendar();
+			    c.set(Calendar.DAY_OF_YEAR, 1);
+			    c.add(Calendar.YEAR, -1); // Jan 1st last year
+			    c.set(Calendar.HOUR_OF_DAY, 0);
+			    c.set(Calendar.MINUTE, 0);
+			    c.set(Calendar.SECOND, 0);
+			    c.set(Calendar.MILLISECOND, 0);
+			    Date from = c.getTime();
+			    
+			    c.add(Calendar.YEAR, 1); // Jan 1st this year
+			    Date to = c.getTime();
+			    
+			    t = search.addBetween(field, from, to);
+			}
+			
 			else if ("ytd".equals(op))
 			{
 				Calendar c = new GregorianCalendar();
