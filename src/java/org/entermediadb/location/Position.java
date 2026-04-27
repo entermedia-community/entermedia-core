@@ -55,6 +55,46 @@ public class Position {
 		return RADIUS_EARTH * c;
 	}
 
+	/** ~Meters per degree of latitude. */
+	public static final double METERS_PER_DEGREE_LAT = 111_320.0;
+
+	/**
+	 * Squared short-range distance in m² (equirectangular, mid-latitude scale for
+	 * longitude). Faster than {@link #getDistanceInMeters} and adequate for
+	 * sub-km gating. Compare to a squared threshold, e.g.
+	 * {@code minMeters * minMeters}, to avoid {@link Math#sqrt} in a hot path.
+	 */
+	public double getFlatDistanceMetersSquaredTo(Position inOther) {
+		if (inOther == null || !inOther.isDefined() || !this.isDefined()) {
+			return Double.POSITIVE_INFINITY;
+		}
+		double lat1 = getLatitude();
+		double lon1 = getLongitude();
+		double lat2 = inOther.getLatitude();
+		double lon2 = inOther.getLongitude();
+		double latMid = (lat1 + lat2) / 2.0;
+		double mPerDegLon = METERS_PER_DEGREE_LAT * Math.cos(Math.toRadians(latMid));
+		double deltaLat = (lat1 - lat2) * METERS_PER_DEGREE_LAT;
+		double deltaLon = (lon1 - lon2) * mPerDegLon;
+		double lonDiff = Math.abs(lon1 - lon2);
+		if (lonDiff > 180) {
+			deltaLon = (360.0 - lonDiff) * mPerDegLon;
+		}
+		return deltaLat * deltaLat + deltaLon * deltaLon;
+	}
+
+	/**
+	 * Short-range distance in meters (equirectangular; see
+	 * {@link #getFlatDistanceMetersSquaredTo}).
+	 */
+	public double getFlatDistanceMetersTo(Position inOther) {
+		double s = getFlatDistanceMetersSquaredTo(inOther);
+		if (s == Double.POSITIVE_INFINITY) {
+			return Double.POSITIVE_INFINITY;
+		}
+		return Math.sqrt(s);
+	}
+
 	public void setResult(Element inResult) {
 		result = inResult;
 	}

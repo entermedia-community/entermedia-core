@@ -1591,17 +1591,37 @@ public abstract class BaseSearcher implements Searcher, DataFactory {
 					t = search.addBefore(field, before);
 					search.setProperty(t.getId() + ".before", beforeString);
 				} else {
-					Date before = formater.parse(beforeString);
-					Date after = formater.parse(afterString);
+					Date before = null;
+					Date after = null;
 
-					Calendar c = new GregorianCalendar();
+					// HTML5 datetime-local uses 'T' as a separator
+					boolean hasTime = beforeString.contains("T");
 
-					c.setTime(before);
-					c.set(Calendar.HOUR_OF_DAY, 23);
-					c.set(Calendar.MINUTE, 59);
-					c.set(Calendar.SECOND, 59);
-					c.set(Calendar.MILLISECOND, 999);
-					before = c.getTime();
+					if (hasTime) {
+					    // 1. Swap to the ISO/Storage formatter
+					    before = DateStorageUtil.getStorageUtil().parseFromStorage(beforeString);
+					    after = DateStorageUtil.getStorageUtil().parseFromStorage(afterString);
+					    
+					    // Check for nulls in case the HTML5 string was malformed
+					    if (before == null || after == null) {
+					        log.error("Failed to parse datetime strings: " + beforeString + " / " + afterString);
+					    }
+					} else {
+					    // 2. Fall back to the standard yyyy-MM-dd formatter
+					    before = formater.parse(beforeString);
+					    after = formater.parse(afterString);
+
+					    // Only pad to the end of the day if it's a "dumb" date search
+					    Calendar c = new GregorianCalendar();
+					    c.setTime(before);
+					    c.set(Calendar.HOUR_OF_DAY, 23);
+					    c.set(Calendar.MINUTE, 59);
+					    c.set(Calendar.SECOND, 59);
+					    c.set(Calendar.MILLISECOND, 999);
+					    before = c.getTime();
+					}
+
+					// Proceed with the search
 					t = search.addBetween(field, after, before);
 					search.setProperty(t.getId() + ".before", beforeString);
 					search.setProperty(t.getId() + ".after", afterString);

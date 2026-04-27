@@ -7,7 +7,6 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -158,61 +157,6 @@ public class Exec
 		{
 			return runExec(command, inRootFolder, inSaveOutput, inTimeout);
 		}
-	}
-
-	// --- varargs: same as Collection<String> command-key APIs; extra strings are args after the resolved binary ---
-
-	/**
-	 * @see #runExec(String, Collection)
-	 */
-	public ExecResult runExec(String inCommandKey, String... inArgs) {
-		return runExec(inCommandKey, toArgList(inArgs));
-	}
-
-	/**
-	 * @see #runExec(String, Collection, long)
-	 */
-	public ExecResult runExec(String inCommandKey, long inTimeout, String... inArgs) {
-		return runExec(inCommandKey, toArgList(inArgs), inTimeout);
-	}
-
-	/**
-	 * @see #runExec(String, Collection, File)
-	 */
-	public ExecResult runExec(String inCommandKey, File inRootFolder, String... inArgs) {
-		return runExec(inCommandKey, toArgList(inArgs), inRootFolder);
-	}
-
-	/**
-	 * @see #runExec(String, Collection, boolean)
-	 */
-	public ExecResult runExec(String inCommandKey, boolean inSaveOutput, String... inArgs) {
-		return runExec(inCommandKey, toArgList(inArgs), inSaveOutput);
-	}
-
-	/**
-	 * @see #runExec(String, Collection, boolean, long)
-	 */
-	public ExecResult runExec(String inCommandKey, boolean inSaveOutput, long inTimeout, String... inArgs) {
-		return runExec(inCommandKey, toArgList(inArgs), inSaveOutput, inTimeout);
-	}
-
-	/**
-	 * @see #runExec(String, Collection, boolean, File, long)
-	 */
-	public ExecResult runExec(String inCommandKey, boolean inSaveOutput, File inRootFolder, long inTimeout,
-		String... inArgs) {
-		return runExec(inCommandKey, toArgList(inArgs), inSaveOutput, inRootFolder, inTimeout);
-	}
-
-	/**
-	 * @return null when there are no extra args (same as a null collection for the {@link #runExec(String, Collection)} family)
-	 */
-	private static List<String> toArgList(String... inArgs) {
-		if (inArgs == null || inArgs.length == 0) {
-			return null;
-		}
-		return Arrays.asList(inArgs);
 	}
 
 	protected ExecCommand findCommand(String inCommandKey)
