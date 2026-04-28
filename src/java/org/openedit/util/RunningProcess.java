@@ -13,8 +13,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openedit.OpenEditException;
 
-public class RunningProcess
-{
+public class RunningProcess {
 	private static final Log log = LogFactory.getLog(Exec.class);
 	protected OutputFiller fieldFiller;
 
@@ -24,101 +23,87 @@ public class RunningProcess
 	BufferedReader readfromprocess;
 	StreamCopyRunner streamcopy;
 	String fieldCommandName;
-	public StreamCopyRunner getStreamcopy()
-	{
+
+	public StreamCopyRunner getStreamcopy() {
 		return streamcopy;
 	}
 
-	public ExecutorManager getExecutorManager()
-	{
+	public ExecutorManager getExecutorManager() {
 		return fieldExecutorManager;
 	}
 
-	public void setExecutorManager(ExecutorManager inExecutorManager)
-	{
+	public void setExecutorManager(ExecutorManager inExecutorManager) {
 		fieldExecutorManager = inExecutorManager;
 	}
 
-	public OutputFiller getFiller()
-	{
-		if (fieldFiller == null)
-		{
+	public OutputFiller getFiller() {
+		if (fieldFiller == null) {
 			fieldFiller = new OutputFiller();
 		}
 		return fieldFiller;
 	}
 
-
-	//Called one time
-	public void start(String inCommandKey)
-	{
-		start(inCommandKey,Collections.EMPTY_LIST);
+	// Called one time
+	public void start(String inCommandKey) {
+		start(inCommandKey, Collections.EMPTY_LIST);
 	}
-	public void start(String inCommandKey, List<String> args)
-	{
+
+	public void start(String inCommandKey, List<String> args) {
 		fieldCommandName = inCommandKey;
 		List com = new ArrayList(args.size() + 1);
 		com.add(inCommandKey);
 		com.addAll(args);
-		log.info("Starting: " + com); 
+		log.info("Starting: " + com);
 
-		try
-		{
+		try {
 			ProcessBuilder processBuilder = new ProcessBuilder();
 			processBuilder.redirectErrorStream(true);
 			processBuilder.command(com);
-			//processBuilder.
+			// processBuilder.
 			process = processBuilder.start();
-		      
-			sendtoprocesswriter = new OutputStreamWriter(  process.getOutputStream(), "UTF-8" ); //Send to process
-			//Start param thread
-			readfromprocess = new BufferedReader( new InputStreamReader(process.getInputStream(),"UTF-8") );
-			//int returnVal = process.waitFor();
+
+			sendtoprocesswriter = new OutputStreamWriter(process.getOutputStream(), "UTF-8"); // Send to process
+			// Start param thread
+			readfromprocess = new BufferedReader(new InputStreamReader(process.getInputStream(), "UTF-8"));
+			// int returnVal = process.waitFor();
 			streamcopy = new StreamCopyRunner(readfromprocess, getExecutorManager());
-			synchronized (streamcopy)
-			{
+			synchronized (streamcopy) {
 				streamcopy.startCopy();
-				streamcopy.wait(2000);	//needed?			
+				streamcopy.wait(2000); // needed?
 			}
+		} catch (Exception ex) {
+			throw new OpenEditException("Could not start " + fieldCommandName, ex);
 		}
-		catch (Exception ex)
-		{
-			throw new OpenEditException("Could not start " + fieldCommandName ,ex);
-		}
-		
+
 	}
-	public String runExecStream(String inToSendToProces) throws OpenEditException
-	{
+
+	public String runExecStream(String inToSendToProces) throws OpenEditException {
 		return runExecStream(inToSendToProces, -1);
 	}
-	public synchronized String runExecStream(String inToSendToProces, long timeout) throws OpenEditException
-	{
-			try
-			{
-				long start = System.currentTimeMillis();
-				
-				if( inToSendToProces.contains("\n") && inToSendToProces.indexOf("\n") < inToSendToProces.length() - 1 )
-				{
-					throw new OpenEditException("Cannot contain new lines " + inToSendToProces);
-				}
-				
-				sendtoprocesswriter.write(inToSendToProces + "\n");
-				sendtoprocesswriter.flush();
 
-//				return null;
-				String returned = getStreamcopy().getNextResult(timeout);
-				long time = System.currentTimeMillis() - start;
-				log.info("ran " + fieldCommandName + " for " + time/1000L + " seconds:");
-				//log.info("Complete " + fieldCommandName + " with:" + inToSendToProces);
-				return returned;
-				//get the last result from the other thread?
-				
+	public synchronized String runExecStream(String inToSendToProces, long timeout) throws OpenEditException {
+		try {
+			long start = System.currentTimeMillis();
+
+			if (inToSendToProces.contains("\n") && inToSendToProces.indexOf("\n") < inToSendToProces.length() - 1) {
+				throw new OpenEditException("Cannot contain new lines " + inToSendToProces);
 			}
-			catch (IOException e)
-			{
-				log.debug("Failed to gobble stream", e);
-			}
-			return null;
+
+			sendtoprocesswriter.write(inToSendToProces + "\n");
+			sendtoprocesswriter.flush();
+
+			// return null;
+			String returned = getStreamcopy().getNextResult(timeout);
+			long time = System.currentTimeMillis() - start;
+			log.info("ran " + fieldCommandName + " for " + time / 1000L + " seconds:");
+			// log.info("Complete " + fieldCommandName + " with:" + inToSendToProces);
+			return returned;
+			// get the last result from the other thread?
+
+		} catch (IOException e) {
+			log.debug("Failed to gobble stream", e);
+		}
+		return null;
 	}
 
 }

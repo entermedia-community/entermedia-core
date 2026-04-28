@@ -37,8 +37,7 @@ import org.apache.commons.logging.LogFactory;
  * @author John Leacox
  * 
  */
-public class StreamGobbler implements Closeable, Runnable
-{
+public class StreamGobbler implements Closeable, Runnable {
 	private static final Log log = LogFactory.getLog(StreamGobbler.class);
 
 	protected ExecutorManager fieldExecutorManager;
@@ -48,97 +47,79 @@ public class StreamGobbler implements Closeable, Runnable
 	protected String fieldOutput = null;
 	protected boolean fieldErrorStream;
 
-	public boolean isErrorStream()
-	{
+	public boolean isErrorStream() {
 		return fieldErrorStream;
 	}
 
-	public void setErrorStream(boolean inIsErrorStream)
-	{
+	public void setErrorStream(boolean inIsErrorStream) {
 		fieldErrorStream = inIsErrorStream;
 	}
 
-	public StreamGobbler(InputStream inputStream, boolean enableLogging)
-	{
+	public StreamGobbler(InputStream inputStream, boolean enableLogging) {
 		this.inputStream = inputStream;
 		this.isLoggingEnabled = enableLogging;
 
-		//setName("StreamGobbler");
-		//setDaemon(true);
+		// setName("StreamGobbler");
+		// setDaemon(true);
 	}
 
-	public ExecutorManager getExecutorManager()
-	{
+	public ExecutorManager getExecutorManager() {
 		return fieldExecutorManager;
 	}
 
-	public void setExecutorManager(ExecutorManager inExecutorManager)
-	{
+	public void setExecutorManager(ExecutorManager inExecutorManager) {
 		fieldExecutorManager = inExecutorManager;
 	}
 
 	/**
 	 * Starts gobbling the input stream.
 	 */
-	public void gobble()
-	{
+	public void gobble() {
 		getExecutorManager().execute(this);
 	}
 
 	@Override
-	public void run()
-	{
+	public void run() {
 		parentThread = Thread.currentThread();
 		BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
 		String line = null;
-		try
-		{
+		try {
 			StringBuffer writer = null;
-			if (isLoggingEnabled)
-			{
+			if (isLoggingEnabled) {
 				writer = new StringBuffer();
 			}
-			while (!Thread.currentThread().isInterrupted() && (line = br.readLine()) != null)
-			{
-				if (isLoggingEnabled)
-				{
+			while (!Thread.currentThread().isInterrupted() && (line = br.readLine()) != null) {
+				if (isLoggingEnabled) {
 					writer.append(line);
 					writer.append('\n');
-					if (writer.length() > 1000000) //Dont let this buffer get more than 100k of memory
+					if (writer.length() > 1000000) // Dont let this buffer get more than 100k of memory
 					{
 						String cut = writer.substring(writer.length() - 700000, writer.length());
 						writer = new StringBuffer(cut);
 					}
 				}
 			}
-			if (isLoggingEnabled)
-			{
+			if (isLoggingEnabled) {
 				fieldOutput = writer.toString();
 			}
-		}
-		catch (IOException e)
-		{
-			if (isLoggingEnabled)
-			{
+		} catch (IOException e) {
+			if (isLoggingEnabled) {
 				log.debug("Failed to gobble stream", e);
 				log.info("Failed to gobble stream");
-				
+
 			}
 		}
 	}
 
-	public String getOutput()
-	{
+	public String getOutput() {
 		return fieldOutput;
 	}
 
 	@Override
-	public void close() throws IOException
-	{
-		if (parentThread != null)
-		{
+	public void close() throws IOException {
+		if (parentThread != null) {
 			parentThread.interrupt();
-			//Do we need to destry this thread?
+			// Do we need to destry this thread?
 
 		}
 		inputStream.close();

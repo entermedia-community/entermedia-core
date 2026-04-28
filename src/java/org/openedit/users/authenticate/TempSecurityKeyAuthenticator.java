@@ -14,93 +14,74 @@ import org.openedit.users.User;
 import org.openedit.users.UserManager;
 import org.openedit.users.UserManagerException;
 
-public class TempSecurityKeyAuthenticator extends BaseAuthenticator
-{
+public class TempSecurityKeyAuthenticator extends BaseAuthenticator {
 	private static final Log log = LogFactory.getLog(TempSecurityKeyAuthenticator.class);
 
 	ModuleManager fieldModuleManager;
-	
-	public ModuleManager getModuleManager()
-	{
+
+	public ModuleManager getModuleManager() {
 		return fieldModuleManager;
 	}
 
-	public void setModuleManager(ModuleManager inModuleManager)
-	{
+	public void setModuleManager(ModuleManager inModuleManager) {
 		fieldModuleManager = inModuleManager;
 	}
 
-	public boolean authenticate(AuthenticationRequest inAReq) throws UserManagerException
-	{
+	public boolean authenticate(AuthenticationRequest inAReq) throws UserManagerException {
 		User user = inAReq.getUser();
 		String code = inAReq.get("templogincode");
-		
-		if( code == null)
-		{
+
+		if (code == null) {
 			return false;
 		}
-		//Search for the code
+		// Search for the code
 		UserManager userManager = getUserManager(inAReq.getCatalogId());
-		
-		Searcher searcher = getSearcherManager().getSearcher("system", "templogincode");
-		
-		Calendar cal  = Calendar.getInstance();
-		cal.add(Calendar.HOUR, -1); //24 hours
-		Date newerthan = cal.getTime();
-		Data found = searcher.query().exact("user",user.getId()).exact("securitycode",code).after("date",newerthan).searchOne();
 
-		if( found == null)
-		{
-			if( "testautologinuser".equals(user.getId()))
-			{
-				if( "666666".equals( code ) ) 
-				{
-					if( user.isEnabled())
-					{
+		Searcher searcher = getSearcherManager().getSearcher("system", "templogincode");
+
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.HOUR, -1); // 24 hours
+		Date newerthan = cal.getTime();
+		Data found = searcher.query().exact("user", user.getId()).exact("securitycode", code).after("date", newerthan)
+				.searchOne();
+
+		if (found == null) {
+			if ("testautologinuser".equals(user.getId())) {
+				if ("666666".equals(code)) {
+					if (user.isEnabled()) {
 						return true;
 					}
 				}
-			}
-			else
-			{
+			} else {
 				log.error("Security code expired or missing " + code);
 				throw new UserManagerException("Security code expired or missing");
 			}
 		}
 
-		
-		if( found != null)
-		{
-			String securitycode = found.get("securitycode");  //Double checking
-			if( code.equals(securitycode))
-			{
-				HitTracker codes = searcher.query().exact("user",user.getId()).search();
+		if (found != null) {
+			String securitycode = found.get("securitycode"); // Double checking
+			if (code.equals(securitycode)) {
+				HitTracker codes = searcher.query().exact("user", user.getId()).search();
 				searcher.deleteAll(codes, user);
 				return true;
 			}
-		
-			
+
 		}
-		
-		
-		
+
 		return false;
 	}
 
-	protected SearcherManager getSearcherManager()
-	{
-		return (SearcherManager)getModuleManager().getBean("searcherManager");
+	protected SearcherManager getSearcherManager() {
+		return (SearcherManager) getModuleManager().getBean("searcherManager");
 	}
 
-	private UserManager getUserManager(String inCatalogId)
-	{
-		if(inCatalogId != null) {
-			return  (UserManager) getModuleManager().getBean( inCatalogId, "userManager");
+	private UserManager getUserManager(String inCatalogId) {
+		if (inCatalogId != null) {
+			return (UserManager) getModuleManager().getBean(inCatalogId, "userManager");
 
 		} else {
-			return  (UserManager) getModuleManager().getBean( "userManager");
+			return (UserManager) getModuleManager().getBean("userManager");
 		}
 	}
-	
 
 }

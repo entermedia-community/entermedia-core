@@ -16,11 +16,10 @@ import java.io.File;
 
 import javax.xml.transform.Transformer;
 
-
-public interface TransformerManager
-{
+public interface TransformerManager {
 	/**
-	 * Retrieve the transformer for the given stylesheet relative to the page location.
+	 * Retrieve the transformer for the given stylesheet relative to the page
+	 * location.
 	 *
 	 * @return
 	 */

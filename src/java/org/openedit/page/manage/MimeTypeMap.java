@@ -6,7 +6,7 @@ package org.openedit.page.manage;
 /**
  * <p>
  * Interface for a map to determine the MIME type for a file or path
- * based upon its extension.  This interface was extracted from the
+ * based upon its extension. This interface was extracted from the
  * class of the same name originally from JPublish (http://www.jpublish.org)
  * and adapted by Open Edit (http://www.openedit.org).
  * </p>
@@ -14,13 +14,13 @@ package org.openedit.page.manage;
  * @author Eric Broyles <eric@sandra.com>
  * @version $Id: MimeTypeMap.java,v 1.11 2006/05/22 18:07:32 ebroyles Exp $
  */
-public interface MimeTypeMap
-{
+public interface MimeTypeMap {
 
     /**
      * Set the default MIME type.
      *
-     * @param inMimeType The new default MIME type.  If null, the DEAFULT_MIME_TYPE is used.
+     * @param inMimeType The new default MIME type. If null, the DEAFULT_MIME_TYPE
+     *                   is used.
      */
     public void setDefaultMimeType(String inMimeType);
 

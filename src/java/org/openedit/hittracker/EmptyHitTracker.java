@@ -7,11 +7,10 @@ import org.openedit.Data;
 
 public class EmptyHitTracker extends HitTracker {
 
-	
 	public EmptyHitTracker() {
-		
+
 	}
-	
+
 	@Override
 	public Data get(int inCount) {
 		// TODO Auto-generated method stub

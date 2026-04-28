@@ -13,30 +13,26 @@ See the GNU Lesser General Public License for more details.
 package org.openedit.users;
 
 /**
- * This exception is thrown when one attempts to create a group with a name that is already taken
+ * This exception is thrown when one attempts to create a group with a name that
+ * is already taken
  * by an existing group.
  *
  * @author Eric Galluzzo
  */
-public class DuplicateGroupException extends UserManagerException
-{
-	public DuplicateGroupException()
-	{
+public class DuplicateGroupException extends UserManagerException {
+	public DuplicateGroupException() {
 		super();
 	}
 
-	public DuplicateGroupException(String message)
-	{
+	public DuplicateGroupException(String message) {
 		super(message);
 	}
 
-	public DuplicateGroupException(String message, Throwable cause)
-	{
+	public DuplicateGroupException(String message, Throwable cause) {
 		super(message, cause);
 	}
 
-	public DuplicateGroupException(Throwable cause)
-	{
+	public DuplicateGroupException(Throwable cause) {
 		super(cause);
 	}
 }

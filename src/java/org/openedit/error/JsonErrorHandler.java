@@ -22,40 +22,33 @@ import org.openedit.WebPageRequest;
 import org.openedit.page.PageRequestKeys;
 import org.openedit.page.PageStreamer;
 
-
 /**
  * DOCUMENT ME!
  *
  * @author cburkey
  */
-public class JsonErrorHandler implements ErrorHandler
-{
+public class JsonErrorHandler implements ErrorHandler {
 	protected String fieldPathToErrorFile;
 	private static final Log log = LogFactory.getLog(JsonErrorHandler.class);
 
 	/**
 	 * @see org.jpublish.ErrorHandler#handleError(JPublishError)
 	 */
-	public boolean handleError(Throwable error, WebPageRequest context ) 
-	{
-		if( context.getResponse() != null && context.getResponse().getContentType() != null && 
-				!context.getResponse().getContentType().contains("json") )
-		{
+	public boolean handleError(Throwable error, WebPageRequest context) {
+		if (context.getResponse() != null && context.getResponse().getContentType() != null &&
+				!context.getResponse().getContentType().contains("json")) {
 			return false;
 		}
-		
+
 		OpenEditException exception = null;
-		if (context != null)
-		{
-			try
-			{
-				if ( error instanceof ContentNotAvailableException)
-				{
-					ContentNotAvailableException missingerror = (ContentNotAvailableException)error;
+		if (context != null) {
+			try {
+				if (error instanceof ContentNotAvailableException) {
+					ContentNotAvailableException missingerror = (ContentNotAvailableException) error;
 					context.getResponse().setStatus(404);
 					Writer out = context.getWriter();
 					out.append("{ \"reponse\": {\n");
-					out.append(" \"status\":\"error\",");				
+					out.append(" \"status\":\"error\",");
 					out.append("\"path\":\"" + missingerror.getPathWithError() + "\",");
 					String escaped = JSONObject.escape(error.getMessage());
 					out.append("\"details\":\"" + escaped + "\"");
@@ -63,66 +56,55 @@ public class JsonErrorHandler implements ErrorHandler
 					out.flush();
 					return true;
 				}
-				if ( !(error instanceof OpenEditException))
-				{
-					exception = new OpenEditException(error); //we need the toStacktrace method
+				if (!(error instanceof OpenEditException)) {
+					exception = new OpenEditException(error); // we need the toStacktrace method
+				} else {
+					exception = (OpenEditException) error;
 				}
-				else
-				{
-					exception = (OpenEditException)error;
-				}
-				if( !context.hasRedirected() && context.getResponse() != null)
-				{
-					try
-					{
+				if (!context.hasRedirected() && context.getResponse() != null) {
+					try {
 						context.getResponse().setStatus(500);
-					}
-					catch( Exception ex)
-					{
-						//ignored
+					} catch (Exception ex) {
+						// ignored
 						log.debug("Ignored:" + ex);
 					}
 				}
 				error.printStackTrace();
 				String pathWithError = exception.getPathWithError();
-				if( pathWithError == null)
-				{
+				if (pathWithError == null) {
 					pathWithError = context.getPage().getPath();
 					exception.setPathWithError(pathWithError);
-					
+
 				}
 				context.putPageValue("editPath", exception.getPathWithError());
-				context.putPageValue("oe-exception", exception); //must be a top level thing since we create a new context
-				//PageStreamer pages = (PageStreamer)context.getPageValue(PageRequestKeys.PAGES);
-				
+				context.putPageValue("oe-exception", exception); // must be a top level thing since we create a new
+																	// context
+				// PageStreamer pages =
+				// (PageStreamer)context.getPageValue(PageRequestKeys.PAGES);
+
 				Writer out = context.getWriter();
 				out.append("{ \"reponse\": {\n");
-				out.append(" \"status\":\"error\",");				
+				out.append(" \"status\":\"error\",");
 				out.append("\"path\":\"" + pathWithError + "\",");
 				String escaped = JSONObject.escape(error.getMessage());
 				out.append("\"details\":\"" + escaped + "\"");
 				out.append(" \n}\n}");
-				//error.printStackTrace( new PrintWriter( writer ) );
+				// error.printStackTrace( new PrintWriter( writer ) );
 				out.flush();
-			} catch ( Exception ex)
-			{
-				//Do not throw an error here is it will be infinite
-				log.error( ex);
+			} catch (Exception ex) {
+				// Do not throw an error here is it will be infinite
+				log.error(ex);
 				ex.printStackTrace();
-				try
-				{
+				try {
 					context.getWriter().write("Check error logs: " + ex);
-					//throw new OpenEditRuntimeException(ex);
-				}
-				catch (Throwable ex1)
-				{
-					log.error( ex1 );
+					// throw new OpenEditRuntimeException(ex);
+				} catch (Throwable ex1) {
+					log.error(ex1);
 				}
 			}
 			return true;
 		}
 		return false;
 	}
-	
 
 }

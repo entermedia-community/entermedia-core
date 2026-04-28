@@ -15,26 +15,25 @@ package org.openedit.modules.edit;
 import org.openedit.OpenEditException;
 import org.openedit.users.User;
 
-
 /**
- * This exception indicates that a client attempted to claim a lock that was already claimed by a
+ * This exception indicates that a client attempted to claim a lock that was
+ * already claimed by a
  * different user.
  *
  * @author Eric Galluzzo
  */
-public class AlreadyLockedException extends OpenEditException
-{
+public class AlreadyLockedException extends OpenEditException {
 	protected String fieldPath;
 	protected User fieldLockOwner;
 
 	/**
-	 * Create a new exception denoting that the given path is already locked by the given user.
+	 * Create a new exception denoting that the given path is already locked by the
+	 * given user.
 	 *
 	 * @param inPath The path that the client attempted to lock
 	 * @param inUser The user that has the path already locked
 	 */
-	public AlreadyLockedException(String inPath, User inUser)
-	{
+	public AlreadyLockedException(String inPath, User inUser) {
 		super("Path \"" + inPath + " \" is already locked by " + inUser.getUserName());
 		setPath(inPath);
 		setLockOwner(inUser);
@@ -45,8 +44,7 @@ public class AlreadyLockedException extends OpenEditException
 	 *
 	 * @return User
 	 */
-	public User getLockOwner()
-	{
+	public User getLockOwner() {
 		return fieldLockOwner;
 	}
 
@@ -55,8 +53,7 @@ public class AlreadyLockedException extends OpenEditException
 	 *
 	 * @return String
 	 */
-	public String getPath()
-	{
+	public String getPath() {
 		return fieldPath;
 	}
 
@@ -65,8 +62,7 @@ public class AlreadyLockedException extends OpenEditException
 	 *
 	 * @param lockOwner The {@link User} to set
 	 */
-	protected void setLockOwner(User lockOwner)
-	{
+	protected void setLockOwner(User lockOwner) {
 		fieldLockOwner = lockOwner;
 	}
 
@@ -75,8 +71,7 @@ public class AlreadyLockedException extends OpenEditException
 	 *
 	 * @param path The path to set
 	 */
-	protected void setPath(String path)
-	{
+	protected void setPath(String path) {
 		fieldPath = path;
 	}
 }

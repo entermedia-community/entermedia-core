@@ -15,8 +15,7 @@ import org.apache.commons.logging.LogFactory;
 import org.openedit.xml.ElementData;
 import org.openedit.xml.XmlFile;
 
-public class PropertyDetails implements Collection<PropertyDetail> 
-{
+public class PropertyDetails implements Collection<PropertyDetail> {
 	private static final Log log = LogFactory.getLog(PropertyDetails.class);
 
 	protected String fieldId;
@@ -28,171 +27,137 @@ public class PropertyDetails implements Collection<PropertyDetail>
 	protected String fieldPrefix;
 	protected String fieldBeanName;
 	protected String fieldToString;
-	protected String fieldClassName;//The object type to create
+	protected String fieldClassName;// The object type to create
 	protected String fieldDependsOnText;
 	protected boolean fieldAllowDynamicFields;;
 	protected PropertyDetailsArchive fieldArchive;
-	protected String fieldSearchTypes;//The tables to search for a multi-search
+	protected String fieldSearchTypes;// The tables to search for a multi-search
 
 	protected XmlFile fieldBaseSettings;
-	
 
-	public XmlFile getBaseSettings()
-	{
+	public XmlFile getBaseSettings() {
 		return fieldBaseSettings;
 	}
 
-	public void setBaseSettings(XmlFile inBaseSettings)
-	{
+	public void setBaseSettings(XmlFile inBaseSettings) {
 		fieldBaseSettings = inBaseSettings;
 	}
 
-	public PropertyDetailsArchive getArchive()
-	{
+	public PropertyDetailsArchive getArchive() {
 		return fieldArchive;
 	}
 
-	public void setArchive(PropertyDetailsArchive inArchive)
-	{
+	public void setArchive(PropertyDetailsArchive inArchive) {
 		fieldArchive = inArchive;
 	}
 
-	public String getId()
-	{
+	public String getId() {
 		return fieldId;
 	}
 
-	public void setId(String inId)
-	{
+	public void setId(String inId) {
 		fieldId = inId;
 	}
-	
-	public String getDependsOnText()
-	{
+
+	public String getDependsOnText() {
 		return fieldDependsOnText;
 	}
 
-	public void setDependsOnText(String inDependsOnText)
-	{
+	public void setDependsOnText(String inDependsOnText) {
 		fieldDependsOnText = inDependsOnText;
 	}
 
-	public void setAllowDynamicFields(boolean inAllowDynamicFields)
-	{
-		if (getInputFile() != null && getInputFile().getRoot() != null)
-		{
-			if(inAllowDynamicFields){
+	public void setAllowDynamicFields(boolean inAllowDynamicFields) {
+		if (getInputFile() != null && getInputFile().getRoot() != null) {
+			if (inAllowDynamicFields) {
 				getInputFile().getRoot().attributeValue("allowdynamicfields", "true");
-			} else{
+			} else {
 				getInputFile().getRoot().attributeValue("allowdynamicfields", "false");
 
-			}		
-			
+			}
+
 		}
-		
-		
+
 		fieldAllowDynamicFields = inAllowDynamicFields;
 	}
 
-	public boolean isAllowDynamicFields()
-	{
+	public boolean isAllowDynamicFields() {
 		String lazy = getSettingValue("allowdynamicfields");
-		
-		if (lazy != null)
-		{
+
+		if (lazy != null) {
 			return Boolean.parseBoolean(lazy);
 		}
 		return false;
 	}
 
-	
-	public PropertyDetails()
-	{
+	public PropertyDetails() {
 		// TODO Auto-generated constructor stub
 	}
-	public PropertyDetails(PropertyDetailsArchive inArchive, String inId)
-	{
+
+	public PropertyDetails(PropertyDetailsArchive inArchive, String inId) {
 		setArchive(inArchive);
 		setId(inId);
 	}
-	public Boolean isLazyInit()
-	{
 
-		if (getInputFile() != null && getInputFile().getRoot() != null)
-		{
+	public Boolean isLazyInit() {
+
+		if (getInputFile() != null && getInputFile().getRoot() != null) {
 			String lazy = getInputFile().getRoot().attributeValue("lazy-init");
-			if (lazy != null)
-			{
+			if (lazy != null) {
 				return Boolean.parseBoolean(lazy);
 			}
-			
+
 		}
 		return true;
 
 	}
 
-	public String getClassName()
-	{
-		if (fieldClassName == null)
-		{
-			if( fieldBaseSettings != null && getBaseSettings().getRoot() != null)
-			{
+	public String getClassName() {
+		if (fieldClassName == null) {
+			if (fieldBaseSettings != null && getBaseSettings().getRoot() != null) {
 				return getBaseSettings().getRoot().attributeValue("class");
-			}
-			else if (getInputFile() != null && getInputFile().getRoot() != null)
-			{
+			} else if (getInputFile() != null && getInputFile().getRoot() != null) {
 				return getInputFile().getRoot().attributeValue("class");
 			}
-			//			if( fieldBeanName == null )
-			//			{
-			//				fieldBeanName = "dynamicSearcher";
-			//			}
+			// if( fieldBeanName == null )
+			// {
+			// fieldBeanName = "dynamicSearcher";
+			// }
 		}
 		return fieldClassName;
 	}
 
-	public void setClassName(String inClassName)
-	{
+	public void setClassName(String inClassName) {
 		fieldClassName = inClassName;
 	}
 
-	
 	public String getSettingValue(String inKey) {
-		if( fieldBaseSettings != null && getBaseSettings().getRoot() != null)
-		{
+		if (fieldBaseSettings != null && getBaseSettings().getRoot() != null) {
 			return getBaseSettings().getRoot().attributeValue(inKey);
-		}
-		else if (getInputFile() != null && getInputFile().getRoot() != null)
-		{
+		} else if (getInputFile() != null && getInputFile().getRoot() != null) {
 			return getInputFile().getRoot().attributeValue(inKey);
 		}
-		
+
 		return null;
 	}
-	
-	
-	public String getBeanName()
-	{
-		if (fieldBeanName == null)
-		{
-			if (getInputFile() != null && getInputFile().getRoot() != null)
-			{
-				fieldBeanName =  getInputFile().getRoot().attributeValue("beanname");
+
+	public String getBeanName() {
+		if (fieldBeanName == null) {
+			if (getInputFile() != null && getInputFile().getRoot() != null) {
+				fieldBeanName = getInputFile().getRoot().attributeValue("beanname");
 			}
-			if(fieldBeanName == null && fieldBaseSettings != null && getBaseSettings().getRoot() != null)
-			{
+			if (fieldBeanName == null && fieldBaseSettings != null && getBaseSettings().getRoot() != null) {
 				fieldBeanName = getBaseSettings().getRoot().attributeValue("beanname");
 			}
-			//			if( fieldBeanName == null )
-			//			{
-			//				fieldBeanName = "dynamicSearcher";
-			//			}
+			// if( fieldBeanName == null )
+			// {
+			// fieldBeanName = "dynamicSearcher";
+			// }
 		}
 		return fieldBeanName;
 	}
 
-	public void setBeanName(String inBeanName)
-	{
+	public void setBeanName(String inBeanName) {
 		fieldBeanName = inBeanName;
 	}
 
@@ -202,62 +167,48 @@ public class PropertyDetails implements Collection<PropertyDetail>
 	 * 
 	 * @return
 	 */
-	public String getRender()
-	{
-		if (fieldToString == null)
-		{
-			if (getInputFile() != null && getInputFile().getRoot() != null)
-			{
+	public String getRender() {
+		if (fieldToString == null) {
+			if (getInputFile() != null && getInputFile().getRoot() != null) {
 				fieldToString = getInputFile().getRoot().attributeValue("tostring");
 			}
-			//			if( fieldBeanName == null )
-			//			{
-			//				fieldBeanName = "dynamicSearcher";
-			//			}
+			// if( fieldBeanName == null )
+			// {
+			// fieldBeanName = "dynamicSearcher";
+			// }
 		}
 		return fieldToString;
 	}
 
-	public void setRender(String inBeanName)
-	{
-		
-		if (getInputFile() != null && getInputFile().getRoot() != null)
-		{
-			 getInputFile().getRoot().setAttributeValue("tostring", inBeanName);
+	public void setRender(String inBeanName) {
+
+		if (getInputFile() != null && getInputFile().getRoot() != null) {
+			getInputFile().getRoot().setAttributeValue("tostring", inBeanName);
 		}
-		
-		
+
 		fieldToString = inBeanName;
 	}
 
-	
-
-	public XmlFile getInputFile()
-	{
+	public XmlFile getInputFile() {
 		return fieldInputFile;
 	}
 
-	public void setInputFile(XmlFile inInputFile)
-	{
+	public void setInputFile(XmlFile inInputFile) {
 		fieldInputFile = inInputFile;
 	}
 
 	long fieldLastLoaded;
 
-	public List getDetails()
-	{
-		if (fieldDetails == null)
-		{
+	public List getDetails() {
+		if (fieldDetails == null) {
 			fieldDetails = new ArrayList();
 		}
 		return fieldDetails;
 	}
 
-	public void addDetail(PropertyDetail inDetail)
-	{
+	public void addDetail(PropertyDetail inDetail) {
 		PropertyDetail oldDetail = getDetail(inDetail.getId());
-		if (oldDetail != null)
-		{
+		if (oldDetail != null) {
 			getDetails().remove(oldDetail);
 		}
 
@@ -266,103 +217,86 @@ public class PropertyDetails implements Collection<PropertyDetail>
 		getDetailsCached().put(inDetail.getId(), inDetail);
 	}
 
-	public List findIndexProperties()
-	{
-		//TODO: Cache all the field lists
+	public List findIndexProperties() {
+		// TODO: Cache all the field lists
 		List list = new ArrayList(getDetails().size());
-		for (Iterator iter = getDetails().iterator(); iter.hasNext();)
-		{
+		for (Iterator iter = getDetails().iterator(); iter.hasNext();) {
 			PropertyDetail d = (PropertyDetail) iter.next();
-			if (d.isIndex()  && !d.isDeleted())
-			{
+			if (d.isIndex() && !d.isDeleted()) {
 				list.add(d);
 			}
 		}
 		return list;
 	}
-	
-	public List findAiSearchableProperties()
-	{
+
+	public List findAiSearchableProperties() {
 		List list = new ArrayList(getDetails().size());
-		for (Iterator iter = getDetails().iterator(); iter.hasNext();)
-		{
+		for (Iterator iter = getDetails().iterator(); iter.hasNext();) {
 			PropertyDetail d = (PropertyDetail) iter.next();
-			if (d.isIndex() && !d.isDeleted() && !d.getBoolean("internalfield") )
-			{
-				if(!d.isList())
-				{
+			if (d.isIndex() && !d.isDeleted() && !d.getBoolean("internalfield")) {
+				if (!d.isList()) {
 					list.add(d);
 				}
 			}
 		}
 		return list;
 	}
-	
-	public List findAiAutoCreatedProperties()
-	{
+
+	public List findAiAutoCreatedProperties() {
 		List list = new ArrayList();
-		for (Iterator iter = getDetails().iterator(); iter.hasNext();)
-		{
+		for (Iterator iter = getDetails().iterator(); iter.hasNext();) {
 			PropertyDetail d = (PropertyDetail) iter.next();
-			if (d.isIndex() && !d.isDeleted() && d.getBoolean("aiautocreated") )
-			{
+			if (d.isIndex() && !d.isDeleted() && d.getBoolean("aiautocreated")) {
 				list.add(d);
 			}
 		}
 		return list;
 	}
 
-	public List findKeywordProperties()
-	{
+	public List findKeywordProperties() {
 		List list = new ArrayList(getDetails().size());
-		for (Iterator iter = getDetails().iterator(); iter.hasNext();)
-		{
+		for (Iterator iter = getDetails().iterator(); iter.hasNext();) {
 			PropertyDetail d = (PropertyDetail) iter.next();
-			if (d.isKeyword() || d.getId() == "name")
-			{
+			if (d.isKeyword() || d.getId() == "name") {
 				list.add(d);
 			}
 		}
 		return list;
 	}
 
-//	public List findStoredProperties()
-//	{
-//		List list = new ArrayList(getDetails().size());
-//		for (Iterator iter = getDetails().iterator(); iter.hasNext();)
-//		{
-//			PropertyDetail d = (PropertyDetail) iter.next();
-//			if (d.isStored())
-//			{
-//				list.add(d);
-//			}
-//		}
-//		return list;
-//	}
-	
-	public List findBadgesProperties()
-	{
+	// public List findStoredProperties()
+	// {
+	// List list = new ArrayList(getDetails().size());
+	// for (Iterator iter = getDetails().iterator(); iter.hasNext();)
+	// {
+	// PropertyDetail d = (PropertyDetail) iter.next();
+	// if (d.isStored())
+	// {
+	// list.add(d);
+	// }
+	// }
+	// return list;
+	// }
+
+	public List findBadgesProperties() {
 		List list = new ArrayList(getDetails().size());
-		for (Iterator iter = getDetails().iterator(); iter.hasNext();)
-		{
+		for (Iterator iter = getDetails().iterator(); iter.hasNext();) {
 			PropertyDetail d = (PropertyDetail) iter.next();
-			if (d.isBadge() )
-			{
+			if (d.isBadge()) {
 				list.add(d);
 			}
 		}
 		return list;
 	}
-
 
 	// public List findSearchProperties()
 	// {
 	// List list = new ArrayList(getDetails().size());
-	//		
+	//
 	// for (Iterator iter = getDetails().iterator(); iter.hasNext();)
 	// {
 	// Detail d = (Detail) iter.next();
-	//			
+	//
 	// if ( d.isSearchable() )
 	// {
 	// list.add(d);
@@ -370,22 +304,18 @@ public class PropertyDetails implements Collection<PropertyDetail>
 	// }
 	// return list;
 	// }
-	//	
+	//
 
-	public boolean contains(String inKey)
-	{
+	public boolean contains(String inKey) {
 		PropertyDetail det = getDetail(inKey);
 
 		return det != null;
 	}
 
-	public Map<String, PropertyDetail> getDetailsCached()
-	{
-		if (fieldDetailsCached == null)
-		{
+	public Map<String, PropertyDetail> getDetailsCached() {
+		if (fieldDetailsCached == null) {
 			fieldDetailsCached = new HashMap(getDetails().size());
-			for (Iterator iter = getDetails().iterator(); iter.hasNext();)
-			{
+			for (Iterator iter = getDetails().iterator(); iter.hasNext();) {
 				PropertyDetail detail = (PropertyDetail) iter.next();
 				fieldDetailsCached.put(detail.getId(), detail);
 			}
@@ -393,61 +323,51 @@ public class PropertyDetails implements Collection<PropertyDetail>
 		return fieldDetailsCached;
 	}
 
-	public PropertyDetail getDetail(String inId)
-	{
-		if (inId == null || inId.startsWith("."))
-		{
+	public PropertyDetail getDetail(String inId) {
+		if (inId == null || inId.startsWith(".")) {
 			return null;
 		}
-		if( inId.contains("."))
-		{
+		if (inId.contains(".")) {
 			String[] type = inId.split("\\.");
-			if( type[1].length() == 2) //language.en
+			if (type[1].length() == 2) // language.en
 			{
 				PropertyDetail localinfo = getDetail(type[0]);
-				if(localinfo != null && !(localinfo.isDataType("nested")|| localinfo.isDataType("objectarray")) && localinfo.isMultiLanguage()){
-						inId = type[0];
+				if (localinfo != null && !(localinfo.isDataType("nested") || localinfo.isDataType("objectarray"))
+						&& localinfo.isMultiLanguage()) {
+					inId = type[0];
 				}
-			}
-			else
-			{
-				//Remote lookup
-				//By searchtype
-				//See if there is one local
+			} else {
+				// Remote lookup
+				// By searchtype
+				// See if there is one local
 				PropertyDetail localinfo = getDetail(type[0]);
-				if( localinfo == null)
-				{
+				if (localinfo == null) {
 					PropertyDetails otherdetails = getArchive().getPropertyDetailsCached(type[0]);
-					if( otherdetails != null)
-					{
+					if (otherdetails != null) {
 						PropertyDetail shareddetail = otherdetails.getDetail(type[1]);
 						return shareddetail;
 					}
 				}
-				if(localinfo != null)
-				{
-					if( localinfo.isList() )
-					{
+				if (localinfo != null) {
+					if (localinfo.isList()) {
 						PropertyDetails remotedetails = getArchive().getPropertyDetails(localinfo.getListId());
 						PropertyDetail shareddetail = remotedetails.getDetail(type[1]);
-						if(shareddetail != null){
+						if (shareddetail != null) {
 							return shareddetail;
 						}
 					}
-					if( localinfo.isDataType("nested")|| localinfo.isDataType("objectarray"))
-					{
+					if (localinfo.isDataType("nested") || localinfo.isDataType("objectarray")) {
 						localinfo = localinfo.getChildDetail(type[1]);
-						if( localinfo != null)
-						{
+						if (localinfo != null) {
 							PropertyDetail copy = localinfo.copy();
 							copy.setId(inId);
 							return copy;
 						}
 					}
 				}
-				//Object stuff
-				log.info("Loading " + inId );
-				
+				// Object stuff
+				log.info("Loading " + inId);
+
 			}
 		}
 
@@ -456,19 +376,15 @@ public class PropertyDetails implements Collection<PropertyDetail>
 		return detail;
 	}
 
-	public void removeDetail(String inId)
-	{
+	public void removeDetail(String inId) {
 		PropertyDetail toRemove = null;
-		for (Iterator iterator = getDetails().iterator(); iterator.hasNext();)
-		{
+		for (Iterator iterator = getDetails().iterator(); iterator.hasNext();) {
 			PropertyDetail detail = (PropertyDetail) iterator.next();
-			if (inId.equals(detail.getId()))
-			{
+			if (inId.equals(detail.getId())) {
 				toRemove = detail;
 			}
 		}
-		if (toRemove != null)
-		{
+		if (toRemove != null) {
 			getDetails().remove(toRemove);
 		}
 	}
@@ -479,30 +395,23 @@ public class PropertyDetails implements Collection<PropertyDetail>
 	 * @param inName
 	 * @return
 	 */
-	public PropertyDetail getDetailByExternalId(String inName)
-	{
+	public PropertyDetail getDetailByExternalId(String inName) {
 		PropertyDetail found = (PropertyDetail) getExternalIdCache().get(inName);
-		if (found == null)
-		{
-			for (Iterator iter = getDetails().iterator(); iter.hasNext();)
-			{
+		if (found == null) {
+			for (Iterator iter = getDetails().iterator(); iter.hasNext();) {
 				PropertyDetail detail = (PropertyDetail) iter.next();
 				String[] all = detail.getExternalIds();
 
-				if (all != null)
-				{
-					for (int i = 0; i < all.length; i++)
-					{
+				if (all != null) {
+					for (int i = 0; i < all.length; i++) {
 						String id = all[i].toLowerCase();
 						String targetname = inName.toLowerCase();
-						//strip off the : from XMP-dc:Title
+						// strip off the : from XMP-dc:Title
 						int index = id.indexOf(':');
-						if (index > 0)
-						{
+						if (index > 0) {
 							id = id.substring(index + 1);
 						}
-						if (targetname.equals(id) || targetname.equals(id.replace(" ", "")))
-						{
+						if (targetname.equals(id) || targetname.equals(id.replace(" ", ""))) {
 							found = detail;
 							getExternalIdCache().put(inName, found);
 							break;
@@ -514,152 +423,120 @@ public class PropertyDetails implements Collection<PropertyDetail>
 		return found;
 	}
 
-	public List getDetailsByProperty(String property, String value)
-	{
-		//TODO: Add a cache here. 
+	public List getDetailsByProperty(String property, String value) {
+		// TODO: Add a cache here.
 
 		List properties = new ArrayList();
-		for (Iterator iter = getDetails().iterator(); iter.hasNext();)
-		{
+		for (Iterator iter = getDetails().iterator(); iter.hasNext();) {
 			PropertyDetail detail = (PropertyDetail) iter.next();
 			String val = detail.get(property);
-			if (value.equals(val))
-			{
+			if (value.equals(val)) {
 				properties.add(detail);
 			}
 		}
 		return properties;
 	}
-	
 
-	public PropertyDetail getDetailByProperty(String property, String value)
-	{
-		//TODO: Add a cache here. 
+	public PropertyDetail getDetailByProperty(String property, String value) {
+		// TODO: Add a cache here.
 
 		List properties = new ArrayList();
-		for (Iterator iter = getDetails().iterator(); iter.hasNext();)
-		{
+		for (Iterator iter = getDetails().iterator(); iter.hasNext();) {
 			PropertyDetail detail = (PropertyDetail) iter.next();
 			String val = detail.get(property);
-			if (value.equals(val))
-			{
+			if (value.equals(val)) {
 				return detail;
 			}
 		}
 		return null;
 	}
-	
-	
 
-	public List getDetailsByType(String property, String value)
-	{
+	public List getDetailsByType(String property, String value) {
 		List properties = new ArrayList();
-		for (Iterator iter = getDetails().iterator(); iter.hasNext();)
-		{
+		for (Iterator iter = getDetails().iterator(); iter.hasNext();) {
 			PropertyDetail detail = (PropertyDetail) iter.next();
 			String val = detail.get(property);
-			if (value.equals(val))
-			{
+			if (value.equals(val)) {
 				properties.add(detail);
 			}
 		}
 		return properties;
 	}
 
-	public long getLastLoaded()
-	{
+	public long getLastLoaded() {
 		return fieldLastLoaded;
 	}
 
-	public void setLastLoaded(long inLastLoaded)
-	{
+	public void setLastLoaded(long inLastLoaded) {
 		fieldLastLoaded = inLastLoaded;
 	}
 
-	public Iterator iterator()
-	{
+	public Iterator iterator() {
 		return getDetails().iterator();
 	}
 
-	public int size()
-	{
+	public int size() {
 		return getDetails().size();
 	}
 
-	public void setDetails(List inNewdetails)
-	{
+	public void setDetails(List inNewdetails) {
 		fieldDetails = new ArrayList(inNewdetails);
 	}
 
-	public Map getExternalIdCache()
-	{
-		if (fieldExternalIdCache == null)
-		{
+	public Map getExternalIdCache() {
+		if (fieldExternalIdCache == null) {
 			fieldExternalIdCache = new HashMap();
 		}
 
 		return fieldExternalIdCache;
 	}
 
-	public String getPrefix()
-	{
-		if (fieldPrefix == null)
-		{
-			if( fieldBaseSettings != null && getBaseSettings().getRoot() != null)
-			{
+	public String getPrefix() {
+		if (fieldPrefix == null) {
+			if (fieldBaseSettings != null && getBaseSettings().getRoot() != null) {
 				return getBaseSettings().getRoot().attributeValue("prefix");
-			}
-			else if (getInputFile() != null && getInputFile().getRoot() != null)
-			{
+			} else if (getInputFile() != null && getInputFile().getRoot() != null) {
 				fieldPrefix = getInputFile().getRoot().attributeValue("prefix");
 			}
 		}
 		return fieldPrefix;
 	}
 
-	public void setPrefix(String fieldPrefix)
-	{
+	public void setPrefix(String fieldPrefix) {
 		this.fieldPrefix = fieldPrefix;
 	}
 
-	public Collection findAutoIncludeProperties()
-	{
+	public Collection findAutoIncludeProperties() {
 		List list = new ArrayList(getDetails().size());
-		for (Iterator iter = getDetails().iterator(); iter.hasNext();)
-		{
+		for (Iterator iter = getDetails().iterator(); iter.hasNext();) {
 			PropertyDetail d = (PropertyDetail) iter.next();
-			if (d.isAutoInclude())
-			{
+			if (d.isAutoInclude()) {
 				list.add(d);
 			}
 		}
 		return list;
 	}
-	
-	
-	public int getMultilanguageFieldCount(){
+
+	public int getMultilanguageFieldCount() {
 		int count = 0;
-		for (Iterator iterator = getDetails().iterator(); iterator.hasNext();)
-		{
+		for (Iterator iterator = getDetails().iterator(); iterator.hasNext();) {
 			PropertyDetail detail = (PropertyDetail) iterator.next();
-			if(detail.isMultiLanguage()){
+			if (detail.isMultiLanguage()) {
 				count++;
 			}
-			
+
 		}
-		return count;	
-		
+		return count;
+
 	}
-	
-	
-	public PropertyDetail findCurrentFromLegacy(String inId){
-		for (Iterator iterator = getDetails().iterator(); iterator.hasNext();)
-		{
+
+	public PropertyDetail findCurrentFromLegacy(String inId) {
+		for (Iterator iterator = getDetails().iterator(); iterator.hasNext();) {
 			PropertyDetail detail = (PropertyDetail) iterator.next();
-			if(inId == null){
+			if (inId == null) {
 				return null;
 			}
-			if(inId.equals(detail.get("legacy"))){
+			if (inId.equals(detail.get("legacy"))) {
 				return detail;
 			}
 		}
@@ -669,58 +546,45 @@ public class PropertyDetails implements Collection<PropertyDetail>
 	public PropertyDetail getLegacyDetail(String inPropid) {
 		for (Iterator iterator = getDetails().iterator(); iterator.hasNext();) {
 			PropertyDetail detail = (PropertyDetail) iterator.next();
-			if(inPropid.equals(detail.get("legacy"))) {
+			if (inPropid.equals(detail.get("legacy"))) {
 				return detail;
 			}
 		}
 		return null;
 	}
 
-	public String getSearchTypes()
-	{
-		if (fieldSearchTypes == null)
-		{
-			if( fieldBaseSettings != null && getBaseSettings().getRoot() != null)
-			{
+	public String getSearchTypes() {
+		if (fieldSearchTypes == null) {
+			if (fieldBaseSettings != null && getBaseSettings().getRoot() != null) {
 				return getBaseSettings().getRoot().attributeValue("searchtypes");
-			}
-			else if (getInputFile() != null && getInputFile().getRoot() != null)
-			{
+			} else if (getInputFile() != null && getInputFile().getRoot() != null) {
 				return getInputFile().getRoot().attributeValue("searchtypes");
 			}
-			//			if( fieldBeanName == null )
-			//			{
-			//				fieldBeanName = "dynamicSearcher";
-			//			}
+			// if( fieldBeanName == null )
+			// {
+			// fieldBeanName = "dynamicSearcher";
+			// }
 		}
 		return fieldSearchTypes;
 	}
 
-	
 	public String getBaseSetting(String inSetting) {
 		String val = null;
-		if( fieldBaseSettings != null && getBaseSettings().getRoot() != null)
-		{
+		if (fieldBaseSettings != null && getBaseSettings().getRoot() != null) {
 			val = getBaseSettings().getRoot().attributeValue(inSetting);
-		}
-		else if (getInputFile() != null && getInputFile().getRoot() != null)
-		{
+		} else if (getInputFile() != null && getInputFile().getRoot() != null) {
 			val = getInputFile().getRoot().attributeValue(inSetting);
 		}
 		return val;
-		
+
 	}
 
-	public PropertyDetail getDetailByName(String inName)
-	{
+	public PropertyDetail getDetailByName(String inName) {
 		PropertyDetail found = (PropertyDetail) getExternalIdCache().get(inName);
-		if (found == null)
-		{
-			for (Iterator iter = getDetails().iterator(); iter.hasNext();)
-			{
+		if (found == null) {
+			for (Iterator iter = getDetails().iterator(); iter.hasNext();) {
 				PropertyDetail detail = (PropertyDetail) iter.next();
-				if( detail.getName() != null && detail.getName().equals(inName))
-				{
+				if (detail.getName() != null && detail.getName().equals(inName)) {
 					found = detail;
 					getExternalIdCache().put(inName, found);
 					break;
@@ -731,42 +595,36 @@ public class PropertyDetails implements Collection<PropertyDetail>
 	}
 
 	public List findRequiredProperties() {
-			List list = new ArrayList(getDetails().size());
-			for (Iterator iter = getDetails().iterator(); iter.hasNext();)
-			{
-				PropertyDetail d = (PropertyDetail) iter.next();
-				if (d.isRequired()  && !d.isDeleted())
-				{
-					list.add(d);
-				}
-			}
-			return list;
-	}
-	
-	public List findAiCreationProperties() {
 		List list = new ArrayList(getDetails().size());
-		for (Iterator iter = getDetails().iterator(); iter.hasNext();)
-		{
+		for (Iterator iter = getDetails().iterator(); iter.hasNext();) {
 			PropertyDetail d = (PropertyDetail) iter.next();
-			if (d.getValue("aicreationcommand") != null && d.getValue("aicreationcommand") != "")
-			{
+			if (d.isRequired() && !d.isDeleted()) {
 				list.add(d);
 			}
 		}
 		return list;
 	}
-	
-	
-	public PropertyDetail createDetail(String inId)
-	{
+
+	public List findAiCreationProperties() {
+		List list = new ArrayList(getDetails().size());
+		for (Iterator iter = getDetails().iterator(); iter.hasNext();) {
+			PropertyDetail d = (PropertyDetail) iter.next();
+			if (d.getValue("aicreationcommand") != null && d.getValue("aicreationcommand") != "") {
+				list.add(d);
+			}
+		}
+		return list;
+	}
+
+	public PropertyDetail createDetail(String inId) {
 		PropertyDetail detail = null;
-		//If this contains a . we actually want to search on that.  Not the parent ID of an object.		
-		//if(!inId.contains(".")) 
+		// If this contains a . we actually want to search on that. Not the parent ID of
+		// an object.
+		// if(!inId.contains("."))
 		{
 			detail = getDetail(inId);
 		}
-		if( detail == null )
-		{
+		if (detail == null) {
 			detail = new PropertyDetail();
 			ElementData element = new ElementData();
 			element.setPropertyDetails(this);
@@ -776,88 +634,75 @@ public class PropertyDetails implements Collection<PropertyDetail>
 		}
 		return detail;
 	}
-	
-	
 
 	@Override
-	public boolean isEmpty()
-	{
+	public boolean isEmpty() {
 		// TODO Auto-generated method stub
 		return getDetails().isEmpty();
 	}
 
 	@Override
-	public boolean contains(Object inO)
-	{
+	public boolean contains(Object inO) {
 		// TODO Auto-generated method stub
-		return  getDetails().contains(inO);
+		return getDetails().contains(inO);
 	}
 
 	@Override
-	public Object[] toArray()
-	{
+	public Object[] toArray() {
 		// TODO Auto-generated method stub
-		return  getDetails().toArray();
+		return getDetails().toArray();
 	}
 
 	@Override
-	public Object[] toArray(Object[] inA)
-	{
+	public Object[] toArray(Object[] inA) {
 		// TODO Auto-generated method stub
-		return  getDetails().toArray(inA);
+		return getDetails().toArray(inA);
 	}
 
 	@Override
-	public boolean add(PropertyDetail inE)
-	{
+	public boolean add(PropertyDetail inE) {
 		// TODO Auto-generated method stub
-		return  getDetails().add(inE);
+		return getDetails().add(inE);
 	}
 
 	@Override
-	public boolean remove(Object inO)
-	{
+	public boolean remove(Object inO) {
 		// TODO Auto-generated method stub
-		return  getDetails().remove(inO);
+		return getDetails().remove(inO);
 	}
 
 	@Override
-	public boolean containsAll(Collection inC)
-	{
+	public boolean containsAll(Collection inC) {
 		// TODO Auto-generated method stub
-		return  getDetails().containsAll(inC);
+		return getDetails().containsAll(inC);
 	}
 
 	@Override
-	public boolean addAll(Collection inC)
-	{
+	public boolean addAll(Collection inC) {
 		// TODO Auto-generated method stub
-		return  getDetails().addAll(inC);
+		return getDetails().addAll(inC);
 	}
 
 	@Override
-	public boolean removeAll(Collection inC)
-	{
+	public boolean removeAll(Collection inC) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public boolean retainAll(Collection inC)
-	{
+	public boolean retainAll(Collection inC) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public void clear()
-	{
+	public void clear() {
 		// TODO Auto-generated method stub
 		getDetails().clear();
 	}
+
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		// TODO Auto-generated method stub
 		return getDetails().toString();
 	}

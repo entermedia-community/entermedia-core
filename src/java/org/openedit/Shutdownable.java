@@ -3,7 +3,6 @@
  */
 package org.openedit;
 
-public interface Shutdownable
-{
+public interface Shutdownable {
 	public void shutdown();
 }

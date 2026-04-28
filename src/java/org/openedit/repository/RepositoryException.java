@@ -11,11 +11,10 @@ import org.openedit.OpenEditException;
 /**
  * @author avery
  *
- * To change the template for this generated type comment go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
+ *         To change the template for this generated type comment go to
+ *         Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
-public class RepositoryException extends OpenEditException
-{
+public class RepositoryException extends OpenEditException {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -25,8 +24,7 @@ public class RepositoryException extends OpenEditException
 	/**
 	 * 
 	 */
-	public RepositoryException()
-	{
+	public RepositoryException() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
@@ -34,8 +32,7 @@ public class RepositoryException extends OpenEditException
 	/**
 	 * @param message
 	 */
-	public RepositoryException(String message)
-	{
+	public RepositoryException(String message) {
 		super(message);
 		// TODO Auto-generated constructor stub
 	}
@@ -43,8 +40,7 @@ public class RepositoryException extends OpenEditException
 	/**
 	 * @param cause
 	 */
-	public RepositoryException(Throwable cause)
-	{
+	public RepositoryException(Throwable cause) {
 		super(cause);
 		// TODO Auto-generated constructor stub
 	}
@@ -53,8 +49,7 @@ public class RepositoryException extends OpenEditException
 	 * @param message
 	 * @param cause
 	 */
-	public RepositoryException(String message, Throwable cause)
-	{
+	public RepositoryException(String message, Throwable cause) {
 		super(message, cause);
 		// TODO Auto-generated constructor stub
 	}

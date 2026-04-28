@@ -16,49 +16,45 @@ import org.openedit.WebPageRequest;
 import org.openedit.profile.UserProfile;
 
 /**
- * Uses properties on the logged in user 
+ * Uses properties on the logged in user
+ * 
  * @author imiller
  */
 
-public class UserProfileFilter extends BaseFilter
-{	
-	public UserProfileFilter()
-	{
+public class UserProfileFilter extends BaseFilter {
+	public UserProfileFilter() {
 		super();
 	}
-	public UserProfileFilter(String inPropertyName, String inValue)
-	{
-		setProperty("name",inPropertyName);
+
+	public UserProfileFilter(String inPropertyName, String inValue) {
+		setProperty("name", inPropertyName);
 		setValue(inValue);
 	}
 
 	/**
 	 * @see org.openedit.util.strainer.Filter#passes(java.lang.Object)
 	 */
-	public boolean passes(Object inObj) throws FilterException, ClassCastException
-	{
+	public boolean passes(Object inObj) throws FilterException, ClassCastException {
 		WebPageRequest req = (WebPageRequest) inObj;
 
 		UserProfile data = req.getUserProfile();
 
-		if (data == null)
-		{
+		if (data == null) {
 			return false;
 		}
-		//Collection values = data.getValues("permissions"); 
-		boolean contains = data.hasPermission(getPropertyName());//values.contains( getPropertyName() );
-		if( Boolean.parseBoolean(getValue()) && contains)
-		{
+		// Collection values = data.getValues("permissions");
+		boolean contains = data.hasPermission(getPropertyName());// values.contains( getPropertyName() );
+		if (Boolean.parseBoolean(getValue()) && contains) {
 			return true;
 		}
 		return false;
 	}
-	public String toString()
-	{
-		return "Role." + getPropertyName() + "="+ getValue();
+
+	public String toString() {
+		return "Role." + getPropertyName() + "=" + getValue();
 	}
-	public String getPropertyName()
-	{
+
+	public String getPropertyName() {
 		return get("name");
 	}
 }

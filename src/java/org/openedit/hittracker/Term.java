@@ -21,210 +21,172 @@ abstract public class Term implements Cloneable {
 	protected Object[] fieldValues;
 	protected Object fieldData;
 	protected boolean fieldUserFilter;
-	
-	public boolean isUserFilter()
-	{
+
+	public boolean isUserFilter() {
 		return fieldUserFilter;
 	}
 
-	public void setUserFilter(boolean inUserFilter)
-	{
+	public void setUserFilter(boolean inUserFilter) {
 		fieldUserFilter = inUserFilter;
 	}
 
-	public Object getData()
-	{
+	public Object getData() {
 		return fieldData;
 	}
 
-	public void setData(Object inData)
-	{
+	public void setData(Object inData) {
 		fieldData = inData;
 	}
 
-	public Object[] getValues()
-	{
-//		if( fieldValues == null && fieldValue != null)
-//		{
-//			return new Object[] { getValue() };
-//		}
+	public Object[] getValues() {
+		// if( fieldValues == null && fieldValue != null)
+		// {
+		// return new Object[] { getValue() };
+		// }
 		return fieldValues;
 	}
-	public Collection getValueCollection()
-	{
-		if( fieldValues != null)
-		{
+
+	public Collection getValueCollection() {
+		if (fieldValues != null) {
 			return Arrays.asList(fieldValues);
 		}
-		if( fieldValue != null)
-		{
+		if (fieldValue != null) {
 			return Arrays.asList(fieldValue);
 		}
 		return Collections.EMPTY_LIST;
 	}
-	public List getValueList()
-	{
-		if( fieldValues != null)
-		{
+
+	public List getValueList() {
+		if (fieldValues != null) {
 			return Arrays.asList(fieldValues);
 		}
-		if( fieldValue != null)
-		{
+		if (fieldValue != null) {
 			return Arrays.asList(fieldValue);
 		}
 		return Collections.EMPTY_LIST;
 	}
-	public void setValues(Object[] inValues)
-	{
+
+	public void setValues(Object[] inValues) {
 		fieldValues = inValues;
 	}
 
-	public boolean containsValue(String inValue)
-	{
-		if( inValue.equals( fieldValue) )
-		{
+	public boolean containsValue(String inValue) {
+		if (inValue.equals(fieldValue)) {
 			return true;
 		}
-		if( getValues() != null)
-		{
-			for (int i = 0; i < getValues().length; i++)
-			{
-				if( inValue.equals( getValues()[i]) )
-				{
+		if (getValues() != null) {
+			for (int i = 0; i < getValues().length; i++) {
+				if (inValue.equals(getValues()[i])) {
 					return true;
 				}
 			}
 		}
 		return false;
 	}
+
 	protected ValuesMap fieldParameters;
 
-	public ValuesMap getParameters()
-	{
-		if (fieldParameters == null)
-		{
+	public ValuesMap getParameters() {
+		if (fieldParameters == null) {
 			fieldParameters = new ValuesMap();
 		}
 		return fieldParameters;
 	}
 
-	public void setParameters(ValuesMap inParameters)
-	{
+	public void setParameters(ValuesMap inParameters) {
 		fieldParameters = inParameters;
 	}
 
-	public String getId()
-	{
-		if( fieldId == null && getDetail() != null)
-		{
+	public String getId() {
+		if (fieldId == null && getDetail() != null) {
 			return getDetail().getId();
 		}
 		return fieldId;
 	}
 
-	public void setId(String inId)
-	{
+	public void setId(String inId) {
 		fieldId = inId;
 	}
 
-	public String getOperation()
-	{
-		if( fieldOperation == null)
-		{
-			return (String)getParameters().get("op");
+	public String getOperation() {
+		if (fieldOperation == null) {
+			return (String) getParameters().get("op");
 		}
 		return fieldOperation;
 	}
 
-	public void setOperation(String inOperation)
-	{
+	public void setOperation(String inOperation) {
 		fieldOperation = inOperation;
 	}
 
-	public String getValue()
-	{
+	public String getValue() {
 		return fieldValue;
 	}
 
-	public void setValue(String inValue)
-	{
+	public void setValue(String inValue) {
 		fieldValue = inValue;
 	}
 
 	abstract public String toQuery();
-	public Element toXml()
-	{
+
+	public Element toXml() {
 		Element term = DocumentHelper.createElement("term");
 		term.addAttribute("id", getDetail().getId());
 		term.addAttribute("val", getValue());
 		term.addAttribute("op", getOperation());
-		for (Iterator iterator = getParameters().keySet().iterator(); iterator.hasNext();)
-		{
+		for (Iterator iterator = getParameters().keySet().iterator(); iterator.hasNext();) {
 			String key = (String) iterator.next();
 			term.addAttribute(key, (String) getValue(key));
 		}
-//		if (getParameter("op") != null)
-//			term.addAttribute("realop", getParameter("op"));
-		
+		// if (getParameter("op") != null)
+		// term.addAttribute("realop", getParameter("op"));
+
 		return term;
-	}	
-	
-	public PropertyDetail getDetail()
-	{
+	}
+
+	public PropertyDetail getDetail() {
 		return fieldDetail;
 	}
 
-	public void setDetail(PropertyDetail inDetail)
-	{
+	public void setDetail(PropertyDetail inDetail) {
 		fieldDetail = inDetail;
-		//fieldId = inDetail.getId() + "_" + System.currentTimeMillis();
+		// fieldId = inDetail.getId() + "_" + System.currentTimeMillis();
 	}
 
-	public void setFieldParameters(Map inParameters)
-	{
+	public void setFieldParameters(Map inParameters) {
 		this.fieldParameters = new ValuesMap(inParameters);
 	}
 
-	public Object getValue(String inKey)
-	{
-		Object val =  getParameters().getValue(inKey);
-		if( val == null && "op".equals(inKey))
-		{
+	public Object getValue(String inKey) {
+		Object val = getParameters().getValue(inKey);
+		if (val == null && "op".equals(inKey)) {
 			val = getOperation();
 		}
 		return val;
 	}
 
-	public void addValue(String inKey, Object value)
-	{
+	public void addValue(String inKey, Object value) {
 		getParameters().put(inKey, value);
 	}
-	
-	public String toString()
-	{
+
+	public String toString() {
 		return toQuery();
 	}
 
-	public void setParameter(String inKey,Object inValue)
-	{
-		getParameters().put(inKey,inValue);
+	public void setParameter(String inKey, Object inValue) {
+		getParameters().put(inKey, inValue);
 	}
 
-	public Term copy()
-	{
-		Term term = (Term)clone();
-		
+	public Term copy() {
+		Term term = (Term) clone();
+
 		return term;
 	}
-	
-	public Object clone()
-	{
-		try
-		{
+
+	public Object clone() {
+		try {
 			return super.clone();
-		}
-		catch (CloneNotSupportedException e)
-		{
+		} catch (CloneNotSupportedException e) {
 			throw new OpenEditException(e);
 		}
 	}

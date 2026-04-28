@@ -4,53 +4,43 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-public class BaseDataIterator implements Iterator
-{
-		protected List fieldHits;
-		protected int hitCount = 0;
-		protected int startOffset = 0;
+public class BaseDataIterator implements Iterator {
+	protected List fieldHits;
+	protected int hitCount = 0;
+	protected int startOffset = 0;
 
-		public BaseDataIterator(List inHits)
-		{
-			setHits(inHits);
-		}
+	public BaseDataIterator(List inHits) {
+		setHits(inHits);
+	}
 
-		public BaseDataIterator()
-		{
-		}
-		public void setStartOffset( int inStart)
-		{
-			startOffset = inStart;
-		}
-		public void setHits(List inHits)
-		{
-			fieldHits = inHits;
-		}
+	public BaseDataIterator() {
+	}
 
-		public List getHits()
-		{
-			return fieldHits;
-		}
+	public void setStartOffset(int inStart) {
+		startOffset = inStart;
+	}
 
-		public boolean hasNext()
-		{
-			if (hitCount < getHits().size())
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
+	public void setHits(List inHits) {
+		fieldHits = inHits;
+	}
 
-		public Object next()
-		{
-			return new BaseData((Map)getHits().get(startOffset + hitCount++));
-		}
+	public List getHits() {
+		return fieldHits;
+	}
 
-		public void remove()
-		{
+	public boolean hasNext() {
+		if (hitCount < getHits().size()) {
+			return true;
+		} else {
+			return false;
 		}
-	
+	}
+
+	public Object next() {
+		return new BaseData((Map) getHits().get(startOffset + hitCount++));
+	}
+
+	public void remove() {
+	}
+
 }

@@ -18,18 +18,16 @@ import java.util.Map;
 
 import org.openedit.Data;
 
-
 /**
  * This interface represents a user.
  *
  * @author Eric and Matt
  */
-public interface User extends Data
-{
+public interface User extends Data {
 	public static final String FIRST_NAME_PROPERTY = "firstName";
 	public static final String LAST_NAME_PROPERTY = "lastName";
 	public static final String EMAIL_PROPERTY = "email";
-	
+
 	/**
 	 * Not a real property, just a string that can be used to refer to the
 	 * username in, e.g., search indices.
@@ -37,55 +35,61 @@ public interface User extends Data
 	public static final String USERNAME_PROPERTY = "user-name";
 
 	/**
-	 * Retrieve this user's first name.  This is a convenience method that is the same as calling
+	 * Retrieve this user's first name. This is a convenience method that is the
+	 * same as calling
 	 * <code>get( FIRST_NAME_PROPERTY )</code>.
 	 *
-	 * @return The user's first name, or <code>null</code> if the user has no first name
+	 * @return The user's first name, or <code>null</code> if the user has no first
+	 *         name
 	 */
 	String getFirstName();
 
 	/**
-	 * Retrieve this user's last name.  This is a convenience method that is the same as calling
+	 * Retrieve this user's last name. This is a convenience method that is the same
+	 * as calling
 	 * <code>get( LAST_NAME_PROPERTY )</code>.
 	 *
-	 * @return The user's last name, or <code>null</code> if the user has no last name
+	 * @return The user's last name, or <code>null</code> if the user has no last
+	 *         name
 	 */
 	String getLastName();
 
 	/**
-	 * Retrieve this user's email address.  This is a convenience method that is the same as
+	 * Retrieve this user's email address. This is a convenience method that is the
+	 * same as
 	 * calling <code>get( EMAIL_PROPERTY )</code>.
 	 *
-	 * @return The user's email address, or <code>null</code> if the user has no last name
+	 * @return The user's email address, or <code>null</code> if the user has no
+	 *         last name
 	 */
 	String getEmail();
-	
+
 	/**
-	 * Set this user's first name.  This is a convenience method that is the
+	 * Set this user's first name. This is a convenience method that is the
 	 * same as calling <code>put( FIRST_NAME_PROPERTY, inFirstName )</code>.
 	 * 
-	 * @param inFirstName  The user's first name, or <code>null</code> to clear
-	 *                     the first name
+	 * @param inFirstName The user's first name, or <code>null</code> to clear
+	 *                    the first name
 	 */
-	void setFirstName( String inFirstName );
-	
+	void setFirstName(String inFirstName);
+
 	/**
-	 * Set this user's last name.  This is a convenience method that is the
+	 * Set this user's last name. This is a convenience method that is the
 	 * same as calling <code>put( LAST_NAME_PROPERTY, inLastName )</code>.
 	 * 
-	 * @param inFirstName  The user's last name, or <code>null</code> to clear
-	 *                     the last name
+	 * @param inFirstName The user's last name, or <code>null</code> to clear
+	 *                    the last name
 	 */
-	void setLastName( String inLastName );
-	
+	void setLastName(String inLastName);
+
 	/**
-	 * Set this user's email address.  This is a convenience method that is the
+	 * Set this user's email address. This is a convenience method that is the
 	 * same as calling <code>put( EMAIL_PROPERTY, inEmail )</code>.
 	 * 
-	 * @param inFirstName  The user's email address, or <code>null</code> to
-	 *                     clear the email address
+	 * @param inFirstName The user's email address, or <code>null</code> to
+	 *                    clear the email address
 	 */
-	void setEmail( String inEmail );
+	void setEmail(String inEmail);
 
 	/**
 	 * Retrieve all the groups of which this user is a member.
@@ -93,16 +97,18 @@ public interface User extends Data
 	 * @return A collection of {@link Group}s
 	 */
 	Collection<Group> getGroups();
-	
-	public boolean isInGroup(String inGroupId); 
+
+	public boolean isInGroup(String inGroupId);
+
 	/**
 	 * DOCUMENT ME!
+	 * 
 	 * @return
 	 */
 	public String getPassword();
-	
-	//public String getClearPassword();
-	
+
+	// public String getClearPassword();
+
 	/**
 	 * Set this user's password to the given password.
 	 * 
@@ -122,28 +128,31 @@ public interface User extends Data
 	 * @return The login name
 	 */
 	String getUserName();
-	
-	
+
 	/**
 	 * Determines whethwer or not this user is allowed to login.
+	 * 
 	 * @return
 	 */
 	public boolean isEnabled();
-	
+
 	/**
 	 * Enables or disables this user. A disabled user will not be allowed to login.
-	 * @param inEnabled <code>true</code> to enable the user to login. <code>false</code> otherwise. 
+	 * 
+	 * @param inEnabled <code>true</code> to enable the user to login.
+	 *                  <code>false</code> otherwise.
 	 */
 	public void setEnabled(boolean inEnabled);
-	
-	
+
 	/**
-	 * Determine whether or not this user has the given permission, by looking through the user's
+	 * Determine whether or not this user has the given permission, by looking
+	 * through the user's
 	 * groups.
 	 *
 	 * @param inPermission The permission
 	 *
-	 * @return <code>true</code> if this user has the given permission, <code>false</code> if not
+	 * @return <code>true</code> if this user has the given permission,
+	 *         <code>false</code> if not
 	 */
 	boolean hasPermission(String inPermission);
 
@@ -152,19 +161,21 @@ public interface User extends Data
 	public String getShortDescription();
 
 	void setUserName(String inUserName);
-	
+
 	public List listGroupPermissions();
 
 	public void addGroup(Group inGroup);
-	
+
 	void removeGroup(Group inGroup);
 
 	boolean isInGroup(Group inGroup);
-	
+
 	public boolean isVirtual();
+
 	public void setVirtual(boolean inVirtual);
 
 	public String getScreenName();
+
 	Map listAllProperties();
 
 	Collection getValues(String inString);
@@ -172,15 +183,9 @@ public interface User extends Data
 	boolean getBoolean(String inString);
 
 	void setGroups(Collection<Group> inGroupslist);
-	
-	
-	public String getEnterMediaKey(); //Hash
+
+	public String getEnterMediaKey(); // Hash
 
 	boolean isInGroup(Collection<String> inEditorgroups);
-	
 
-
-	
-	
-	
 }

@@ -13,18 +13,17 @@ See the GNU Lesser General Public License for more details.
 package org.openedit.users;
 
 /**
- * This exception is thrown whenever one attempts to set a property of an unsupported type on a
+ * This exception is thrown whenever one attempts to set a property of an
+ * unsupported type on a
  * {@link User}.
  *
  * @author Eric Galluzzo
  */
-public class UnsupportedPropertyTypeException extends UserManagerException
-{
+public class UnsupportedPropertyTypeException extends UserManagerException {
 	/**
 	 * Constructor for UnsupportedPropertyTypeException.
 	 */
-	public UnsupportedPropertyTypeException()
-	{
+	public UnsupportedPropertyTypeException() {
 		super();
 	}
 
@@ -33,8 +32,7 @@ public class UnsupportedPropertyTypeException extends UserManagerException
 	 *
 	 * @param message
 	 */
-	public UnsupportedPropertyTypeException(String message)
-	{
+	public UnsupportedPropertyTypeException(String message) {
 		super(message);
 	}
 
@@ -44,8 +42,7 @@ public class UnsupportedPropertyTypeException extends UserManagerException
 	 * @param message
 	 * @param cause
 	 */
-	public UnsupportedPropertyTypeException(String message, Throwable cause)
-	{
+	public UnsupportedPropertyTypeException(String message, Throwable cause) {
 		super(message, cause);
 	}
 
@@ -54,8 +51,7 @@ public class UnsupportedPropertyTypeException extends UserManagerException
 	 *
 	 * @param cause
 	 */
-	public UnsupportedPropertyTypeException(Throwable cause)
-	{
+	public UnsupportedPropertyTypeException(Throwable cause) {
 		super(cause);
 	}
 }

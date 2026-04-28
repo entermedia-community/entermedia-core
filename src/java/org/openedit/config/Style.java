@@ -1,49 +1,50 @@
 package org.openedit.config;
 
-public class Style
-{
+public class Style {
 	protected String fieldHref;
 	protected String fieldId;
 	protected boolean fieldCancel;
 	protected boolean fieldPreload;
-	
-	public boolean isPreload()
-	{
+
+	public boolean isPreload() {
 		return fieldPreload;
 	}
-	public void setPreload(boolean inPreload)
-	{
+
+	public void setPreload(boolean inPreload) {
 		fieldPreload = inPreload;
 	}
-	public String getHref()
-	{
+
+	public String getHref() {
 		return fieldHref;
 	}
-	public void setHref(String inSrc)
-	{
+
+	public void setHref(String inSrc) {
 		fieldHref = inSrc;
 	}
-	public String getId()
-	{
+
+	public String getId() {
 		return fieldId;
 	}
-	public void setId(String inId)
-	{
+
+	public void setId(String inId) {
 		fieldId = inId;
 	}
+
 	protected Boolean fieldExternal;
-	
+
 	public Boolean getExternal() {
 		return fieldExternal;
 	}
+
 	public void setExternal(Boolean fieldExternal) {
 		this.fieldExternal = fieldExternal;
 	}
+
 	public boolean isCancel() {
 		return fieldCancel;
 	}
-	public void setCancel(boolean inCancel)
-	{
+
+	public void setCancel(boolean inCancel) {
 		fieldCancel = inCancel;
 	}
 }

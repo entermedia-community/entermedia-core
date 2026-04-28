@@ -65,22 +65,19 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-
 /**
  * Utility class for working with request paths.
  *
  * @author Anthony Eden
  */
-public final class PathUtilities
-{
+public final class PathUtilities {
 	private static final Log log = LogFactory.getLog(PathUtilities.class);
 	private static final String WILDCARD = "*";
 
 	/**
 	 * Internal constructor.
 	 */
-	public PathUtilities()
-	{
+	public PathUtilities() {
 		// no op
 	}
 
@@ -89,105 +86,93 @@ public final class PathUtilities
 	 *
 	 * @param path The path for which to retrieve the parent
 	 *
-	 * @return The parent path. /sub/sub2/index.html -> /sub/sub2 If the given path is the root path ("/" or ""), return a blank string.
+	 * @return The parent path. /sub/sub2/index.html -> /sub/sub2 If the given path
+	 *         is the root path ("/" or ""), return a blank string.
 	 */
-	public static String extractDirectoryPath(String path)
-	{
-		if ((path == null) || path.equals("") || path.equals("/"))
-		{
+	public static String extractDirectoryPath(String path) {
+		if ((path == null) || path.equals("") || path.equals("/")) {
 			return "";
 		}
 
 		int lastSlashPos = path.lastIndexOf('/');
 
-		if (lastSlashPos >= 0)
-		{
-			return path.substring(0, lastSlashPos); //strip off the slash
-		}
-		else
-		{
-			return ""; //we expect people to add  + "/somedir on their own
+		if (lastSlashPos >= 0) {
+			return path.substring(0, lastSlashPos); // strip off the slash
+		} else {
+			return ""; // we expect people to add + "/somedir on their own
 		}
 	}
-	
-	public static String extractOSDirectoryPath(String path)
-	{
+
+	public static String extractOSDirectoryPath(String path) {
 		String sep = File.separator;
-		if ((path == null) || path.equals("") || path.equals(sep))
-		{
+		if ((path == null) || path.equals("") || path.equals(sep)) {
 			return "";
 		}
 
 		int lastSlashPos = path.lastIndexOf(sep);
 
-		if (lastSlashPos >= 0)
-		{
-			return path.substring(0, lastSlashPos); //strip off the slash
-		}
-		else
-		{
-			return ""; //we expect people to add  + "/somedir on their own
+		if (lastSlashPos >= 0) {
+			return path.substring(0, lastSlashPos); // strip off the slash
+		} else {
+			return ""; // we expect people to add + "/somedir on their own
 		}
 	}
-	
+
 	/**
 	 * Get the name of the parent of the given path.
 	 *
 	 * @param path The path for which to retrieve the parent
 	 *
-	 * @return The parent path's name. /sub/sub2/index.html -> sub2 If the given path is the root path ("/" or ""), return a blank string.
+	 * @return The parent path's name. /sub/sub2/index.html -> sub2 If the given
+	 *         path is the root path ("/" or ""), return a blank string.
 	 */
-	public static String extractDirectoryName(String path)
-	{
-		if ((path == null) || path.equals("") || path.equals("/"))
-		{
+	public static String extractDirectoryName(String path) {
+		if ((path == null) || path.equals("") || path.equals("/")) {
 			return "";
 		}
-		
+
 		String dirpath = extractDirectoryPath(path);
 		String name = extractFileName(dirpath);
 		return name;
 	}
-	
+
 	/**
-	 * Get the path parameters from <property name="route-template">/path/to/:something</property>
+	 * Get the path parameters from
+	 * <property name="route-template">/path/to/:something</property>
 	 *
 	 * @param template The url template from "route-template" page variable
-	 * @param path The path from which to retrieve the parameters
+	 * @param path     The path from which to retrieve the parameters
 	 *
 	 * @return The parameters as a map
 	 */
-	public static Map<String, String> extractPathParams(String template, String path)
-	{
+	public static Map<String, String> extractPathParams(String template, String path) {
 		template = template.replaceAll("^/|/$", "");
 		path = path.replaceAll("^/|/$", "");
-		
+
 		String[] templateParts = template.split("/");
 		String[] urlParts = path.split("/");
 
-	    if (templateParts.length != urlParts.length) 
-	    {
-	        throw new Error("URL structure does not match the template");
-	    }
-	    
-	    Map<String, String> params = new HashMap<String, String>();
+		if (templateParts.length != urlParts.length) {
+			throw new Error("URL structure does not match the template");
+		}
 
-	    for(int i = 0; i < templateParts.length; i++) 
-	    {
-	    	String part = templateParts[i];
-	    	
-	    	if(part.startsWith(":")) 
-	    	{
-	    		params.put(part.substring(1), urlParts[i]);
-	    	}
-	    }
-	    
+		Map<String, String> params = new HashMap<String, String>();
+
+		for (int i = 0; i < templateParts.length; i++) {
+			String part = templateParts[i];
+
+			if (part.startsWith(":")) {
+				params.put(part.substring(1), urlParts[i]);
+			}
+		}
+
 		return params;
 	}
 
 	/**
 	 * Builds a path that might be within or one above a parent path String ret =
-	 * buildRelative("../junk.txt","/a/b/c/something.html") Will return /a/b/junk.txt This code
+	 * buildRelative("../junk.txt","/a/b/c/something.html") Will return
+	 * /a/b/junk.txt This code
 	 * only returns a changed endPart if it starts with a dot .
 	 *
 	 * @param endPart
@@ -195,65 +180,56 @@ public final class PathUtilities
 	 *
 	 * @return
 	 */
-	public static String buildRelative(String endPart, String fullParentPath)
-	{
+	public static String buildRelative(String endPart, String fullParentPath) {
 		String basepath = null;
-		if ( fullParentPath != null)
-		{
-			fullParentPath = fullParentPath.replace('\\','/');
+		if (fullParentPath != null) {
+			fullParentPath = fullParentPath.replace('\\', '/');
 		}
-		//TODO: Make this work with random number of dots
-		
-		//if we are dealing with relative path then we need to make sure the basepath ends with a /
-		if (endPart.startsWith(".") && (fullParentPath != null) && !fullParentPath.endsWith("/"))
-		{
-			//so with this function /examples/benchmark -> /examples/benchmark/
-			//is this parent a directory or a file, lets check for a .
+		// TODO: Make this work with random number of dots
+
+		// if we are dealing with relative path then we need to make sure the basepath
+		// ends with a /
+		if (endPart.startsWith(".") && (fullParentPath != null) && !fullParentPath.endsWith("/")) {
+			// so with this function /examples/benchmark -> /examples/benchmark/
+			// is this parent a directory or a file, lets check for a .
 			int lastslash = fullParentPath.lastIndexOf("/");
 			int lastperiod = fullParentPath.lastIndexOf(".");
 
-			if (lastslash > lastperiod)
-			{
-				//must be a directory				
+			if (lastslash > lastperiod) {
+				// must be a directory
 				basepath = fullParentPath;
 			}
 		}
 
-		if (basepath == null)
-		{
+		if (basepath == null) {
 			basepath = PathUtilities.extractDirectoryPath(fullParentPath);
 		}
-		if ( basepath == null )
-		{
+		if (basepath == null) {
 			basepath = "";
 		}
 
 		String relative = endPart;
 
-		if (endPart.startsWith(".."))
-		{
-			//strip the filename
-			if (basepath.endsWith("/"))
-			{
+		if (endPart.startsWith("..")) {
+			// strip the filename
+			if (basepath.endsWith("/")) {
 				basepath = basepath.substring(0, basepath.length() - 1);
 			}
 
 			basepath = basepath.substring(0, basepath.lastIndexOf("/"));
 			relative = basepath + endPart.substring(2);
-		}
-		else if (endPart.startsWith("."))
-		{
+		} else if (endPart.startsWith(".")) {
 			relative = basepath + endPart.substring(1);
 		}
-		if ( !relative.startsWith("/"))
-		{
+		if (!relative.startsWith("/")) {
 			relative = "/" + relative;
 		}
 		return relative;
 	}
 
 	/**
-	 * Extract the page name from the given path.  The page name is the  name of the file in the
+	 * Extract the page name from the given path. The page name is the name of the
+	 * file in the
 	 * path without its suffix.
 	 * i.e. /subpath/index.html -> index
 	 *
@@ -261,40 +237,33 @@ public final class PathUtilities
 	 *
 	 * @return The page name
 	 */
-	public static String extractPageName(String path)
-	{
-		if ( path == null)
-		{
+	public static String extractPageName(String path) {
+		if (path == null) {
 			return null;
 		}
-		String newpath = path.replace('\\','/');
+		String newpath = path.replace('\\', '/');
 		int start = newpath.lastIndexOf("/");
-		if ( start == -1)
-		{
+		if (start == -1) {
 			start = 0;
+		} else {
+			start++; // to remove slash
 		}
-		else
-		{
-			start++; //to remove slash
-		}
-		//int dotIndex = newpath.indexOf(".",start);   //bad logic
+		// int dotIndex = newpath.indexOf(".",start); //bad logic
 		int dotIndex = newpath.lastIndexOf(".");
-//		if(dotIndex > 0 && start > dotIndex)
-//		{
-//			return newpath;  //bad logic
-//		}
-		if (dotIndex == -1 || dotIndex < start )
-		{
+		// if(dotIndex > 0 && start > dotIndex)
+		// {
+		// return newpath; //bad logic
+		// }
+		if (dotIndex == -1 || dotIndex < start) {
 			return newpath.substring(start);
-		}
-		else
-		{
+		} else {
 			return newpath.substring(start, dotIndex);
 		}
 	}
 
 	/**
-	 * Extract the page path from the given request path.  This method will return the path from
+	 * Extract the page path from the given request path. This method will return
+	 * the path from
 	 * the page root to the page descriptor file.
 	 *
 	 * /some/sub/dir/test.html -> /some/sub/dir/test
@@ -303,59 +272,53 @@ public final class PathUtilities
 	 * @see extractDirectory
 	 * @return The page path
 	 */
-	public static String extractPagePath(String path)
-	{
-		if ( path != null && path.length() > 0)
-		{
+	public static String extractPagePath(String path) {
+		if (path != null && path.length() > 0) {
 			int lastDot = path.lastIndexOf(".");
-			if( lastDot >= 1)
-			{
-				String pagePath = path.substring(0,lastDot);		
+			if (lastDot >= 1) {
+				String pagePath = path.substring(0, lastDot);
 				return pagePath;
 			}
 		}
 		return path;
 	}
-	
+
 	public static String extractNonIndexPagePath(String path) {
 		path = extractPagePath(path);
-		if(path.endsWith("/index")) 
-		{
+		if (path.endsWith("/index")) {
 			path = path.substring(0, path.length() - 6);
 		}
 		return path;
 	}
 
 	/**
-	 * Return the page type extracting it from the path.  For example: index.html would return
-	 * "html" as the page type.  If the type cannot be determined then this method returns null.
+	 * Return the page type extracting it from the path. For example: index.html
+	 * would return
+	 * "html" as the page type. If the type cannot be determined then this method
+	 * returns null.
 	 *
 	 * @param path The path
 	 *
 	 * @return The page type
 	 */
-	public static String extractPageType(String path)
-	{
-		return extractPageType(path,false);
+	public static String extractPageType(String path) {
+		return extractPageType(path, false);
 	}
-	public static String extractPageType(String path, boolean toLower)
-	{
-		if (path == null)
-		{
+
+	public static String extractPageType(String path, boolean toLower) {
+		if (path == null) {
 			return null;
 		}
-		
+
 		int dotIndex = path.lastIndexOf(".");
 
-		if (dotIndex == -1)
-		{
+		if (dotIndex == -1) {
 			return null;
 		}
 
 		String pageType = path.substring(dotIndex + 1);
 
-		if( toLower )
-		{
+		if (toLower) {
 			return pageType.toLowerCase();
 		}
 		return pageType;
@@ -365,62 +328,50 @@ public final class PathUtilities
 	 * Match a path which may contain a wildcard.
 	 *
 	 * @param requestPath The request path submitted by the client
-	 * @param exPath The match path with * wildcard
+	 * @param exPath      The match path with * wildcard
 	 *
 	 * @return DOCME
 	 */
-	public static boolean match(String requestPath, String wildcardPath)
-	{
-		//  *somestuffhereverylong*  != stuff
-		if( wildcardPath.length() - 2 > requestPath.length())
-		{
+	public static boolean match(String requestPath, String wildcardPath) {
+		// *somestuffhereverylong* != stuff
+		if (wildcardPath.length() - 2 > requestPath.length()) {
 			return false;
 		}
-		
-		//log.debug("match(" + requestPath + "," + exPath + ")");
+
+		// log.debug("match(" + requestPath + "," + exPath + ")");
 		int wildcardIndex = wildcardPath.indexOf(WILDCARD);
 
-		if (wildcardIndex == -1)
-		{
+		if (wildcardIndex == -1) {
 			return requestPath.equalsIgnoreCase(wildcardPath);
-		}
-		else if( wildcardPath.length() == 1 && wildcardPath.charAt(0) == '*' )
-		{
+		} else if (wildcardPath.length() == 1 && wildcardPath.charAt(0) == '*') {
 			return true;
-		}
-		else if( wildcardPath.charAt(0) == '*' && wildcardPath.charAt(wildcardPath.length()-1) == '*' )
-		{
-			String path = wildcardPath.substring(1,wildcardPath.length()-1);
+		} else if (wildcardPath.charAt(0) == '*' && wildcardPath.charAt(wildcardPath.length() - 1) == '*') {
+			String path = wildcardPath.substring(1, wildcardPath.length() - 1);
 			return requestPath.indexOf(path) > -1;
-		}
-		else if (wildcardIndex == (wildcardPath.length() - 1)) //ends with *
+		} else if (wildcardIndex == (wildcardPath.length() - 1)) // ends with *
 		{
-				//log.debug("Wildcard appears at end of match path.");
-				String checkString = wildcardPath.substring(0, wildcardPath.length() - 1);
+			// log.debug("Wildcard appears at end of match path.");
+			String checkString = wildcardPath.substring(0, wildcardPath.length() - 1);
 
-				//  /stuff/* -> /stuff     /stuff/abc* != /stuff/ab
-				
-				if( checkString.charAt(checkString.length()-1) == '/')
-				{
-					checkString = checkString.substring(0,checkString.length() - 1);
-				}
-				//log.debug("String after wildcard removed: " + checkString);
-				boolean answer = requestPath.startsWith(checkString);
+			// /stuff/* -> /stuff /stuff/abc* != /stuff/ab
 
-				//log.debug("Does " + requestPath + " start with " + checkString + "? " + answer);
-				return answer;
-		}
-		else if( wildcardPath.charAt(0) == '*')
-		{
+			if (checkString.charAt(checkString.length() - 1) == '/') {
+				checkString = checkString.substring(0, checkString.length() - 1);
+			}
+			// log.debug("String after wildcard removed: " + checkString);
+			boolean answer = requestPath.startsWith(checkString);
+
+			// log.debug("Does " + requestPath + " start with " + checkString + "? " +
+			// answer);
+			return answer;
+		} else if (wildcardPath.charAt(0) == '*') {
 			String checkString = wildcardPath.substring(1);
 
-			//log.debug("String after wildcard removed: " + checkString);
+			// log.debug("String after wildcard removed: " + checkString);
 			boolean answer = requestPath.endsWith(checkString);
 			return answer;
-		}
-		else
-		{
-			//log.debug("Wildcard appears in the middle of the string");
+		} else {
+			// log.debug("Wildcard appears in the middle of the string");
 			String preMatch = wildcardPath.substring(0, wildcardIndex);
 			String postMatch = wildcardPath.substring(wildcardIndex + 1);
 
@@ -433,22 +384,30 @@ public final class PathUtilities
 	 *
 	 * This method was adapted from the CalCom library at http://www.calcom.de
 	 *
-	 * <p>the absolute URL string is the start point for the
-	 * relative path.</p>
+	 * <p>
+	 * the absolute URL string is the start point for the
+	 * relative path.
+	 * </p>
 	 *
-	 * <p><b>Example:</b></p>
+	 * <p>
+	 * <b>Example:</b>
+	 * </p>
+	 * 
 	 * <pre>
 	 *   relative path:  ../images/test.jpg
 	 *   absolute path:  /eigene dateien/eigene bilder/
 	 *   result:         /eigene dateien/images/test.jpg
 	 * </pre>
 	 *
-	 * @param relPath  The relative URL string to resolve.  Unlike the Calcom version, this may be
-	 *				   an absolute path, if it starts with "/".
-	 * @param absPath  The absolute URL string to start at.  Unlike the CalCom version, this may be a filename
-	 *				   rather than just a path.
+	 * @param relPath The relative URL string to resolve. Unlike the Calcom version,
+	 *                this may be
+	 *                an absolute path, if it starts with "/".
+	 * @param absPath The absolute URL string to start at. Unlike the CalCom
+	 *                version, this may be a filename
+	 *                rather than just a path.
 	 *
-	 * @return the absolute URL string resulting from resolving relPath against absPath
+	 * @return the absolute URL string resulting from resolving relPath against
+	 *         absPath
 	 * 
 	 * @author Ulrich Hilger
 	 * @author CalCom
@@ -456,165 +415,128 @@ public final class PathUtilities
 	 * @author <a href="mailto:info@calcom.de">info@calcom.de</a>
 	 * @author Dennis Brown (eInnovation)
 	 */
-	public static String resolveRelativePath(String relPath, String absPath)
-	{
-		//This might be a path with no / in it such as files.html
-		
-//		if( !relPath.startsWith("."))
-//		{
-//			return relPath;
-//		}
-		//	if relative path is really absolute, then ignore absPath (eInnovation change)
-		if ( relPath.startsWith( "/" ) || relPath.startsWith( "$" ) ) //$ is for variables ${innerlayout}
+	public static String resolveRelativePath(String relPath, String absPath) {
+		// This might be a path with no / in it such as files.html
+
+		// if( !relPath.startsWith("."))
+		// {
+		// return relPath;
+		// }
+		// if relative path is really absolute, then ignore absPath (eInnovation change)
+		if (relPath.startsWith("/") || relPath.startsWith("$")) // $ is for variables ${innerlayout}
 		{
 			return relPath;
 		}
 
 		String newAbsPath = absPath;
 		String newRelPath = relPath;
-		if (absPath.endsWith("/"))
-		{
+		if (absPath.endsWith("/")) {
 			newAbsPath = absPath.substring(0, absPath.length() - 1);
-		}
-		else
-		{
-			//	absPath ends with a filename, remove it (eInnovation change)
+		} else {
+			// absPath ends with a filename, remove it (eInnovation change)
 			int lastSlashIndex = absPath.lastIndexOf('/');
-			if ( lastSlashIndex >= 0 )
-			{
-				newAbsPath = absPath.substring( 0, lastSlashIndex );
-			}
-			else
-			{
+			if (lastSlashIndex >= 0) {
+				newAbsPath = absPath.substring(0, lastSlashIndex);
+			} else {
 				newAbsPath = "";
 			}
 		}
 
 		int relPos = newRelPath.indexOf("../");
-		while (relPos > -1)
-		{
+		while (relPos > -1) {
 			newRelPath = newRelPath.substring(relPos + 3);
-			int lastSlashInAbsPath = newAbsPath.lastIndexOf( "/" );
-			if ( lastSlashInAbsPath >= 0 )
-			{
+			int lastSlashInAbsPath = newAbsPath.lastIndexOf("/");
+			if (lastSlashInAbsPath >= 0) {
 				newAbsPath = newAbsPath.substring(0, newAbsPath.lastIndexOf("/"));
-			}
-			else
-			{
-				//	eInnovation change: fix potential exception
+			} else {
+				// eInnovation change: fix potential exception
 				newAbsPath = "";
 			}
 			relPos = newRelPath.indexOf("../");
 		}
 		String returnedPath;
-		if (newRelPath.startsWith("/"))
-		{
+		if (newRelPath.startsWith("/")) {
 			returnedPath = newAbsPath + newRelPath;
-		}
-		else
-		{
+		} else {
 			returnedPath = newAbsPath + "/" + newRelPath;
 		}
 
-
-		//	remove any "." references to current directory (eInnovation change)
-		//	For example:
-		//		"./junk" becomes "junk"
-		//		"/./junk" becomes "/junk"
-		//		"junk/." becomes "junk"
-		while ( returnedPath.endsWith( "/." ) )
-		{
-			returnedPath = returnedPath.substring( 0, returnedPath.length() - 2 );
+		// remove any "." references to current directory (eInnovation change)
+		// For example:
+		// "./junk" becomes "junk"
+		// "/./junk" becomes "/junk"
+		// "junk/." becomes "junk"
+		while (returnedPath.endsWith("/.")) {
+			returnedPath = returnedPath.substring(0, returnedPath.length() - 2);
 		}
-		do
-		{
-			int dotSlashIndex = returnedPath.lastIndexOf( "./" );
-			if ( dotSlashIndex < 0 )
-			{
+		do {
+			int dotSlashIndex = returnedPath.lastIndexOf("./");
+			if (dotSlashIndex < 0) {
 				break;
-			}
-			else if ( dotSlashIndex == 0 || returnedPath.charAt( dotSlashIndex - 1 ) != '.' )
-			{
+			} else if (dotSlashIndex == 0 || returnedPath.charAt(dotSlashIndex - 1) != '.') {
 				String firstSubstring;
-				if ( dotSlashIndex > 0 )
-				{
-					firstSubstring = returnedPath.substring( 0, dotSlashIndex );
-				}
-				else
-				{
+				if (dotSlashIndex > 0) {
+					firstSubstring = returnedPath.substring(0, dotSlashIndex);
+				} else {
 					firstSubstring = "";
 				}
 				String secondSubstring;
-				if ( dotSlashIndex + 2 < returnedPath.length() )
-				{
-					secondSubstring = returnedPath.substring( dotSlashIndex + 2, returnedPath.length() );
-				}
-				else
-				{
+				if (dotSlashIndex + 2 < returnedPath.length()) {
+					secondSubstring = returnedPath.substring(dotSlashIndex + 2, returnedPath.length());
+				} else {
 					secondSubstring = "";
 				}
 				returnedPath = firstSubstring + secondSubstring;
 			}
-		} while ( true );
+		} while (true);
 
 		return returnedPath;
 	}
 
 	/**
 	 * Pass in /sub/dir/path.html returns path.html
+	 * 
 	 * @param inPath
 	 * @return
 	 */
 	public static String extractFileName(String path) {
 		return extractFileName(path, true);
-	
+
 	}
 
 	public static String extractFileName(String path, boolean removeparams) {
 
-		if ( path == null)
-		{
+		if (path == null) {
 			return null;
 		}
-		if( path.endsWith("/"))
-		{
-			path = path.substring(0,path.length() - 1);
+		if (path.endsWith("/")) {
+			path = path.substring(0, path.length() - 1);
 		}
-		if( path.isEmpty() )
-		{
+		if (path.isEmpty()) {
 			return "";
 		}
-		String newpath = path.replace('\\','/');
+		String newpath = path.replace('\\', '/');
 		int start = newpath.lastIndexOf("/");
-		if ( start == -1)
-		{
+		if (start == -1) {
 			start = 0;
-		}
-		else
-		{
+		} else {
 			start = start + 1;
 		}
-		
+
 		String pageName = newpath.substring(start, newpath.length());
-		if(removeparams){
-		int params = pageName.lastIndexOf("?");
-		if( params > -1)
-		{
-			pageName = pageName.substring(0,params);
-		}
+		if (removeparams) {
+			int params = pageName.lastIndexOf("?");
+			if (params > -1) {
+				pageName = pageName.substring(0, params);
+			}
 
 		}
 		return pageName;
 	}
-	
-	
-	
-	public static String createDraftPath(String inPath)
-	{
-		if ( inPath != null)
-		{
-			if( !inPath.contains(".draft."))
-			{
+
+	public static String createDraftPath(String inPath) {
+		if (inPath != null) {
+			if (!inPath.contains(".draft.")) {
 				String root = PathUtilities.extractPagePath(inPath);
 				String p = root + ".draft." + PathUtilities.extractPageType(inPath);
 				return p;
@@ -622,100 +544,77 @@ public final class PathUtilities
 		}
 		return inPath;
 	}
-	
-	public static String createLivePath(String inDraftPath)
-	{
-		if ( inDraftPath != null)
-		{
-			if( inDraftPath.contains(".draft."))
-			{
+
+	public static String createLivePath(String inDraftPath) {
+		if (inDraftPath != null) {
+			if (inDraftPath.contains(".draft.")) {
 				return inDraftPath.replace(".draft", "");
 			}
 		}
 		return inDraftPath;
 	}
+
 	/**
 	 * @deprecated Use extract ID
 	 * @param inText
 	 * @return
 	 */
-	public static String makeId(String inText)
-	{
+	public static String makeId(String inText) {
 		String id = inText;
-		id = id.replace("/","_");		
-		id = id.replace("\\","_");		
-		id = id.replace(".","_");		
-		id = id.replace(" ","_");		
-		if( id.charAt(0) == '_')
-		{
-			id = id.substring(1,id.length());
+		id = id.replace("/", "_");
+		id = id.replace("\\", "_");
+		id = id.replace(".", "_");
+		id = id.replace(" ", "_");
+		if (id.charAt(0) == '_') {
+			id = id.substring(1, id.length());
 		}
 		return id;
 	}
-	public static String extractId( String inName)
-	{
-		return extractId(inName,true);
+
+	public static String extractId(String inName) {
+		return extractId(inName, true);
 	}
-	
-	public static String dash( String inName)
-	{
-		if( inName == null)
-		{
+
+	public static String dash(String inName) {
+		if (inName == null) {
 			return null;
 		}
 		String trim = inName.trim();
 		StringBuffer out = new StringBuffer(trim.length());
-		for (int i = 0; i < trim.length(); i++)
-		{
+		for (int i = 0; i < trim.length(); i++) {
 			char c = trim.charAt(i);
-			if( Character.isLetterOrDigit(c) )
-			{
+			if (Character.isLetterOrDigit(c)) {
+				out.append(c);
+			} else {
+				if (c == '_') {
 					out.append(c);
-			}
-			else
-			{
-				 if( c == '_' )
-				 {
-					out.append(c);
-				 }
-				 else if( c == ' ')
-				 {
-					 out.append("-");
-				 }
+				} else if (c == ' ') {
+					out.append("-");
+				}
 			}
 		}
 		String result = URLUtilities.removeAccents(out.toString());
-				result = URLUtilities.urlEscape(result);
-		result = result.replaceAll("&amp;","-");
+		result = URLUtilities.urlEscape(result);
+		result = result.replaceAll("&amp;", "-");
 		return result;
 	}
 
-	
-	public static String extractId( String inName, boolean inAllowUnderstores)
-	{
-		if( inName == null)
-		{
+	public static String extractId(String inName, boolean inAllowUnderstores) {
+		if (inName == null) {
 			return null;
 		}
 		String trim = inName.trim();
 		StringBuffer out = new StringBuffer(trim.length());
-		for (int i = 0; i < trim.length(); i++)
-		{
+		for (int i = 0; i < trim.length(); i++) {
 			char c = trim.charAt(i);
-			if( Character.isLetterOrDigit(c) )
-			{
+			if (Character.isLetterOrDigit(c)) {
+				out.append(c);
+			} else if (inAllowUnderstores) {
+				if (c == '_') {
 					out.append(c);
-			}
-			else if( inAllowUnderstores )
-			{
-				 if( c == '_' )
-				 {
-					out.append(c);
-				 }
-				 else if( c == ' ')
-				 {
-					 out.append("_");
-				 }
+				} else if (c == ' ') {
+					out.append("_");
+				}
 			}
 		}
 		String result = out.toString().toLowerCase();
@@ -724,34 +623,25 @@ public final class PathUtilities
 		return result;
 	}
 
-	public static Map extractArguments(String inArgs)
-	{
+	public static Map extractArguments(String inArgs) {
 		String[] args = inArgs.split("&");
 		Map arguments = new HashMap(args.length);
-		
-		for (int i = 0; i < args.length; i++)
-		{
-			String[] pairs = args[i].split("=");						
-			if( pairs.length > 0)
-			{
-				String[] values = (String[])arguments.get(pairs[0]);
-				if( values == null)
-				{
+
+		for (int i = 0; i < args.length; i++) {
+			String[] pairs = args[i].split("=");
+			if (pairs.length > 0) {
+				String[] values = (String[]) arguments.get(pairs[0]);
+				if (values == null) {
 					values = new String[1];
-				}
-				else
-				{
+				} else {
 					String[] newvalues = new String[values.length + 1];
-					System.arraycopy(values,0, newvalues,0, values.length);
+					System.arraycopy(values, 0, newvalues, 0, values.length);
 					values = newvalues;
 				}
-				if( pairs.length > 1)
-				{
-					values[values.length -1] = pairs[1];
-				}
-				else
-				{
-					values[values.length -1] = null;
+				if (pairs.length > 1) {
+					values[values.length - 1] = pairs[1];
+				} else {
+					values[values.length - 1] = null;
 				}
 				arguments.put(pairs[0], values);
 			}
@@ -760,24 +650,21 @@ public final class PathUtilities
 		return arguments;
 	}
 
-	
 	/**
 	 * Get the name of the root of the given path.
 	 *
 	 * @param path The path for which to retrieve the parent
 	 *
-	 * @return The parent path's name. /sub/sub2/index.html -> /sub If the given path is the root path ("/" or ""), return a blank string.
+	 * @return The parent path's name. /sub/sub2/index.html -> /sub If the given
+	 *         path is the root path ("/" or ""), return a blank string.
 	 */
-	public static String extractRootDirectory(String path)
-	{
-		if ((path == null) || path.equals("") || path.equals("/"))
-		{
+	public static String extractRootDirectory(String path) {
+		if ((path == null) || path.equals("") || path.equals("/")) {
 			return "/";
 		}
-		int second = path.indexOf("/",2);
-		if(second > 0)
-		{
-			String root = path.substring(0,second);
+		int second = path.indexOf("/", 2);
+		if (second > 0) {
+			String root = path.substring(0, second);
 			return root;
 		}
 		return "/";

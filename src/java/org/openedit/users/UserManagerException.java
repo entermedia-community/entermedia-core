@@ -19,25 +19,20 @@ import org.openedit.OpenEditRuntimeException;
  *
  * @author Eric and Matt
  */
-public class UserManagerException extends OpenEditRuntimeException
-{
-	public UserManagerException()
-	{
+public class UserManagerException extends OpenEditRuntimeException {
+	public UserManagerException() {
 		super();
 	}
 
-	public UserManagerException(String message)
-	{
+	public UserManagerException(String message) {
 		super(message);
 	}
 
-	public UserManagerException(String message, Throwable cause)
-	{
+	public UserManagerException(String message, Throwable cause) {
 		super(message, cause);
 	}
 
-	public UserManagerException(Throwable cause)
-	{
+	public UserManagerException(Throwable cause) {
 		super(cause);
 	}
 }

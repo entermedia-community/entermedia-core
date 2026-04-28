@@ -20,113 +20,93 @@ import org.openedit.users.User;
 /**
  * @author Matthew Avery, mavery@einnovation.com
  */
-public abstract class BaseModule implements BeanLoaderAware, Secured
-{
+public abstract class BaseModule implements BeanLoaderAware, Secured {
 	protected BeanLoader fieldBeanLoader;
 	protected List fieldPermissions;
 	protected List fieldRestrictedMethods;
-	
-	public PageManager getPageManager()
-	{
-		return (PageManager)getBeanLoader().getBean( "pageManager" );
+
+	public PageManager getPageManager() {
+		return (PageManager) getBeanLoader().getBean("pageManager");
 	}
 
-//	public UserManager getUserManager(WebPageRequest inReq)
-//	{
-//		String catalogid = inReq.findPathValue("catalogid");
-//		
-//		return (UserManager) getModuleManager().getBean(catalogid, "userManager");
-//		
-//	}
-	
-	
-	
-	protected SearcherManager getSearcherManager()
-	{
-		return (SearcherManager)getBeanLoader().getBean( "searcherManager" );
+	// public UserManager getUserManager(WebPageRequest inReq)
+	// {
+	// String catalogid = inReq.findPathValue("catalogid");
+	//
+	// return (UserManager) getModuleManager().getBean(catalogid, "userManager");
+	//
+	// }
+
+	protected SearcherManager getSearcherManager() {
+		return (SearcherManager) getBeanLoader().getBean("searcherManager");
 	}
 
-	public BeanLoader getBeanLoader()
-	{
+	public BeanLoader getBeanLoader() {
 		return fieldBeanLoader;
 	}
-	public void setBeanLoader( BeanLoader beanFactory ) 
-	{
+
+	public void setBeanLoader(BeanLoader beanFactory) {
 		fieldBeanLoader = beanFactory;
 	}
-	
-	public ModuleManager getModuleManager()
-	{
-		return (ModuleManager) getBeanLoader().getBean( "moduleManager" );
+
+	public ModuleManager getModuleManager() {
+		return (ModuleManager) getBeanLoader().getBean("moduleManager");
 	}
-	public BaseModule getModule(String inName)
-	{
-		return getModuleManager().getModule( inName );
+
+	public BaseModule getModule(String inName) {
+		return getModuleManager().getModule(inName);
 	}
-	
-	public File getRoot()
-	{
-		return (File) getBeanLoader().getBean( "root" );
+
+	public File getRoot() {
+		return (File) getBeanLoader().getBean("root");
 	}
 
 	/**
 	 * 
 	 */
-	public void shutdown()
-	{
+	public void shutdown() {
 	}
 
-	public List getPermissions()
-	{
+	public List getPermissions() {
 		return fieldPermissions;
 	}
 
-	public void setPermissions(List inPermissions)
-	{
+	public void setPermissions(List inPermissions) {
 		fieldPermissions = inPermissions;
 	}
-	
-	public void setPermission(String inPermission)
-	{
+
+	public void setPermission(String inPermission) {
 		fieldPermissions = new ArrayList();
 		fieldPermissions.add(inPermission);
 	}
-	
-	public void setRestrictedMethods(List inMethods)
-	{
+
+	public void setRestrictedMethods(List inMethods) {
 		fieldRestrictedMethods = inMethods;
 	}
-	
-	public boolean canRun(WebPageRequest inReq, String inMethodName)
-	{
-		if (fieldPermissions == null)
-		{
+
+	public boolean canRun(WebPageRequest inReq, String inMethodName) {
+		if (fieldPermissions == null) {
 			return true;
 		}
-		
-		if (getRestrictedMethods() == null || getRestrictedMethods().contains(inMethodName))
-		{
+
+		if (getRestrictedMethods() == null || getRestrictedMethods().contains(inMethodName)) {
 			User user = inReq.getUser();
-			if (user == null)
-			{
+			if (user == null) {
 				return false;
 			}
-			
-			for (Iterator iter = getPermissions().iterator(); iter.hasNext();)
-			{
+
+			for (Iterator iter = getPermissions().iterator(); iter.hasNext();) {
 				String permission = (String) iter.next();
-				if (!user.hasPermission(permission))
-				{
+				if (!user.hasPermission(permission)) {
 					return false;
 				}
 			}
 		}
-		
+
 		return true;
 	}
 
-	public List getRestrictedMethods()
-	{
+	public List getRestrictedMethods() {
 		return fieldRestrictedMethods;
 	}
 
@@ -137,8 +117,7 @@ public abstract class BaseModule implements BeanLoaderAware, Secured
 	 * @param inRequest
 	 * @return
 	 */
-	protected String findValue(String inName, WebPageRequest inRequest)
-	{
+	protected String findValue(String inName, WebPageRequest inRequest) {
 		return inRequest.findValue(inName);
 	}
 

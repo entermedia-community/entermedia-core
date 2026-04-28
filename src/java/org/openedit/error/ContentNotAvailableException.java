@@ -17,16 +17,13 @@ package org.openedit.error;
 
 import org.openedit.OpenEditException;
 
-
 /**
  * DOCUMENT ME!
  *
  * @author cburkey
  */
-public class ContentNotAvailableException extends OpenEditException
-{
-	public ContentNotAvailableException(String inMsg, String inPath)
-	{
+public class ContentNotAvailableException extends OpenEditException {
+	public ContentNotAvailableException(String inMsg, String inPath) {
 		super(inMsg, inPath);
 	}
 }

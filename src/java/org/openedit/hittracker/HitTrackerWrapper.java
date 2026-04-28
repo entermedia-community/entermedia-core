@@ -17,12 +17,11 @@ import org.openedit.data.Searcher;
 public class HitTrackerWrapper extends HitTracker {
 
 	protected HitTracker fieldParentTracker;
-	
-	public HitTrackerWrapper(HitTracker inParent)
-	{
+
+	public HitTrackerWrapper(HitTracker inParent) {
 		fieldParentTracker = inParent;
 	}
-	
+
 	public void enableBulkOperations() {
 		fieldParentTracker.enableBulkOperations();
 	}
@@ -94,14 +93,15 @@ public class HitTrackerWrapper extends HitTracker {
 	public Object previousById(String inId) {
 		return fieldParentTracker.previousById(inId);
 	}
-/*
-	public int pageOfId(String inId) 
-	{
-		int parentpage = fieldParentTracker.pageOfId(inId);
-		int parenthitsperpage = fieldParentTracker.getHitsPerPage();
-		
-	}
-*/
+
+	/*
+	 * public int pageOfId(String inId)
+	 * {
+	 * int parentpage = fieldParentTracker.pageOfId(inId);
+	 * int parenthitsperpage = fieldParentTracker.getHitsPerPage();
+	 * 
+	 * }
+	 */
 	public int parseInt(Object inValue) {
 		return fieldParentTracker.parseInt(inValue);
 	}
@@ -251,11 +251,11 @@ public class HitTrackerWrapper extends HitTracker {
 	}
 
 	/*
-	public int findRow(String inField, String inValue) {
-		return fieldParentTracker.findRow(inField, inValue);
-	}
-	*/
-	
+	 * public int findRow(String inField, String inValue) {
+	 * return fieldParentTracker.findRow(inField, inValue);
+	 * }
+	 */
+
 	public FilterNode findFilterNode(String inType) {
 		return fieldParentTracker.findFilterNode(inType);
 	}
@@ -344,13 +344,13 @@ public class HitTrackerWrapper extends HitTracker {
 		return fieldParentTracker.retainAll(arg0);
 	}
 
-//	public Object[] toArray() {
-//		return fieldParentTracker.toArray();
-//	}
-//
-//	public Object[] toArray(Object[] all) {
-//		return fieldParentTracker.toArray(all);
-//	}
+	// public Object[] toArray() {
+	// return fieldParentTracker.toArray();
+	// }
+	//
+	// public Object[] toArray(Object[] all) {
+	// return fieldParentTracker.toArray(all);
+	// }
 
 	public Collection getSelectedHits() {
 		return fieldParentTracker.getSelectedHits();
@@ -428,52 +428,49 @@ public class HitTrackerWrapper extends HitTracker {
 		fieldParentTracker.setSessionId(inSessionId);
 	}
 
-
 	/*
-	public void setHitsPerPageHeight(String pageHeight, int inRowHeight) {
-		fieldParentTracker.setHitsPerPageHeight(pageHeight, inRowHeight);
-	}
-
-	public String idOnPreviousPage() {
-		return fieldParentTracker.idOnPreviousPage();
-	}
-
-	public String idOnThisPage() {
-		return fieldParentTracker.idOnThisPage();
-	}
-
-	public String idOnNextPage() {
-		return fieldParentTracker.idOnNextPage();
-	}
-*/
+	 * public void setHitsPerPageHeight(String pageHeight, int inRowHeight) {
+	 * fieldParentTracker.setHitsPerPageHeight(pageHeight, inRowHeight);
+	 * }
+	 * 
+	 * public String idOnPreviousPage() {
+	 * return fieldParentTracker.idOnPreviousPage();
+	 * }
+	 * 
+	 * public String idOnThisPage() {
+	 * return fieldParentTracker.idOnThisPage();
+	 * }
+	 * 
+	 * public String idOnNextPage() {
+	 * return fieldParentTracker.idOnNextPage();
+	 * }
+	 */
 	public boolean hasChanged(HitTracker inTracker) {
 		return fieldParentTracker.hasChanged(inTracker);
 	}
 
-//	public Spliterator spliterator() {
-//		return fieldParentTracker.spliterator();
-//	}
+	// public Spliterator spliterator() {
+	// return fieldParentTracker.spliterator();
+	// }
 
-//	public Stream stream() {
-//		return fieldParentTracker.stream();
-//	}
-//
-//	public Object[] toArray(IntFunction generator) {
-//		return fieldParentTracker.toArray(generator);
-//	}
+	// public Stream stream() {
+	// return fieldParentTracker.stream();
+	// }
+	//
+	// public Object[] toArray(IntFunction generator) {
+	// return fieldParentTracker.toArray(generator);
+	// }
 
 	public String toString() {
 		return fieldParentTracker.toString();
 	}
 
-	protected HitTracker getParent()
-	{
+	protected HitTracker getParent() {
 		return fieldParentTracker;
 	}
-	
+
 	@Override
-	public Data get(int count) 
-	{
+	public Data get(int count) {
 		return getParent().get(count);
 	}
 
@@ -498,8 +495,7 @@ public class HitTrackerWrapper extends HitTracker {
 	}
 
 	@Override
-	public Map getActiveFilterValues()
-	{
+	public Map getActiveFilterValues() {
 		return getParent().getActiveFilterValues();
 	}
 

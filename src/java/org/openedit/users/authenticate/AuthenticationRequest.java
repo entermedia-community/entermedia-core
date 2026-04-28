@@ -6,78 +6,63 @@ import java.util.Map;
 import org.openedit.CatalogEnabled;
 import org.openedit.users.User;
 
-public class AuthenticationRequest implements CatalogEnabled
-{
+public class AuthenticationRequest implements CatalogEnabled {
 	protected User fieldUser;
 	protected String fieldPassword;
 	protected Map fieldProperties;
 	protected String fieldCatalogId;
 
-	public String getCatalogId()
-	{
+	public String getCatalogId() {
 		return fieldCatalogId;
 	}
 
-	public void setCatalogId(String inCatalogId)
-	{
+	public void setCatalogId(String inCatalogId) {
 		fieldCatalogId = inCatalogId;
 	}
 
-	public User getUser()
-	{
+	public User getUser() {
 		return fieldUser;
 	}
 
-	public void setUser(User inUser)
-	{
+	public void setUser(User inUser) {
 		fieldUser = inUser;
 	}
 
-	public String getPassword()
-	{
+	public String getPassword() {
 		return fieldPassword;
 	}
 
-	public void setPassword(String inPassword)
-	{
+	public void setPassword(String inPassword) {
 		fieldPassword = inPassword;
 	}
 
-	public Map getProperties()
-	{
-		if (fieldProperties == null)
-		{
+	public Map getProperties() {
+		if (fieldProperties == null) {
 			fieldProperties = new HashMap();
 		}
 		return fieldProperties;
 	}
 
-	public void setProperties(Map inProperties)
-	{
+	public void setProperties(Map inProperties) {
 		fieldProperties = inProperties;
 	}
 
-	public String get(String inKey)
-	{
-		if (fieldProperties != null)
-		{
+	public String get(String inKey) {
+		if (fieldProperties != null) {
 			return (String) fieldProperties.get(inKey);
 		}
 		return null;
 	}
 
-	public String getUserName()
-	{
+	public String getUserName() {
 		return getUser().getUserName();
 	}
 
-	public void putProperty(String inKey, String inValue)
-	{
+	public void putProperty(String inKey, String inValue) {
 		getProperties().put(inKey, inValue);
 	}
 
-	public void setValue(String key, String value)
-	{
+	public void setValue(String key, String value) {
 		getProperties().put(key, value);
 
 	}

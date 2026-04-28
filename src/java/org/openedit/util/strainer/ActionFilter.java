@@ -24,7 +24,7 @@ public class ActionFilter extends BaseFilter {
 	public boolean passes(Object inObj) throws FilterException {
 		WebPageRequest req = (WebPageRequest) inObj;
 		try {
-			if(getActionName() == null){
+			if (getActionName() == null) {
 				return true;//
 			}
 			PageAction action = new PageAction(getActionName());
@@ -84,7 +84,7 @@ public class ActionFilter extends BaseFilter {
 	}
 
 	public void addProperty(String inKey, String inValue) {
-		if("name".equals(inKey)){
+		if ("name".equals(inKey)) {
 			setActionName(inValue);
 			return;
 		}

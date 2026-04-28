@@ -9,15 +9,15 @@ import java.util.Comparator;
  * @author cburkey
  *
  */
-public class GroupComparator implements Comparator
-{
+public class GroupComparator implements Comparator {
 
-	/* (non-javadoc)
+	/*
+	 * (non-javadoc)
+	 * 
 	 * @see java.util.Comparator#compare(T, T)
 	 */
-	public int compare(Object inO1, Object inO2)
-	{
-		return String.valueOf( inO1 ).toLowerCase().compareTo(String.valueOf(inO2).toLowerCase());
+	public int compare(Object inO1, Object inO2) {
+		return String.valueOf(inO1).toLowerCase().compareTo(String.valueOf(inO2).toLowerCase());
 	}
 
 }

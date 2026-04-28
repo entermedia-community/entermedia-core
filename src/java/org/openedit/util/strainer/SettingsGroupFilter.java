@@ -15,31 +15,28 @@ package org.openedit.util.strainer;
 import org.openedit.WebPageRequest;
 import org.openedit.profile.UserProfile;
 
-
 /**
  * This filter only passes users who are members of a certain group.
  *
  */
-public class SettingsGroupFilter extends BaseFilter
-{
+public class SettingsGroupFilter extends BaseFilter {
 
 	/**
 	 * Construct a filter that passes all users.
 	 *
 	 * @see #setGroupName(String)
 	 */
-	public SettingsGroupFilter()
-	{
+	public SettingsGroupFilter() {
 		super();
 	}
 
 	/**
-	 * Construct a filter that only passes users that are part of the group with the given name.
+	 * Construct a filter that only passes users that are part of the group with the
+	 * given name.
 	 *
 	 * @param inGroupName The group name to check for
 	 */
-	public SettingsGroupFilter(String inGroupId)
-	{
+	public SettingsGroupFilter(String inGroupId) {
 		setGroupId(inGroupId);
 	}
 
@@ -48,8 +45,7 @@ public class SettingsGroupFilter extends BaseFilter
 	 *
 	 * @param groupName The group name to set
 	 */
-	public void setGroupId(String groupId)
-	{
+	public void setGroupId(String groupId) {
 		setValue(groupId);
 	}
 
@@ -58,46 +54,40 @@ public class SettingsGroupFilter extends BaseFilter
 	 *
 	 * @return String
 	 */
-	public String getGroupId()
-	{
+	public String getGroupId() {
 		return fieldValue;
 	}
 
 	/**
 	 * @see org.openedit.util.strainer.Filter#passes(java.lang.Object)
 	 */
-	public boolean passes(Object inObj) throws FilterException, ClassCastException
-	{
+	public boolean passes(Object inObj) throws FilterException, ClassCastException {
 		WebPageRequest req = (WebPageRequest) inObj;
 
 		UserProfile profile = req.getUserProfile();
 
-		if (profile == null || profile.getSettingsGroup() == null)
-		{
+		if (profile == null || profile.getSettingsGroup() == null) {
 			return false;
 		}
 
-		if (getGroupId() == null)
-		{
+		if (getGroupId() == null) {
 			return true;
 		}
 		String id = profile.getSettingsGroup().getId();
-		if (id.equalsIgnoreCase(getGroupId()))
-		{
-				return true;
+		if (id.equalsIgnoreCase(getGroupId())) {
+			return true;
 		}
 
 		return false;
 	}
-	public String toString()
-	{
+
+	public String toString() {
 		return "Role= " + getGroupId();
 	}
-	public boolean equals(Object inObj)
-	{
-		if (inObj instanceof SettingsGroupFilter)
-		{
-			SettingsGroupFilter toCompare = (SettingsGroupFilter)inObj;
+
+	public boolean equals(Object inObj) {
+		if (inObj instanceof SettingsGroupFilter) {
+			SettingsGroupFilter toCompare = (SettingsGroupFilter) inObj;
 			return getGroupId().equals(toCompare.getGroupId());
 		}
 		return false;

@@ -38,7 +38,7 @@ public class FilterReader {
 	 * Read the given configuration as a parent of a collection of filters.
 	 * 
 	 * @param inConfig
-	 *            The configuration
+	 *                 The configuration
 	 * 
 	 * @return A filter, or <code>null</code>, depending on the configuration
 	 *         passed in:
@@ -60,29 +60,29 @@ public class FilterReader {
 		if (inConfig != null) {
 			List elements = inConfig.getChildren();
 			switch (elements.size()) {
-			case 0:
-				// this means that this config is letting everything pass
-				// filter = new BlankFilter();
-				break;
+				case 0:
+					// this means that this config is letting everything pass
+					// filter = new BlankFilter();
+					break;
 
-			case 1:
-				filter = readFilter((Configuration) elements.get(0),
-						inPermission);
-
-				break;
-
-			default:
-
-				Filter[] filters = new Filter[elements.size()];
-
-				for (int i = 0; i < filters.length; i++) {
-					filters[i] = readFilter((Configuration) elements.get(i),
+				case 1:
+					filter = readFilter((Configuration) elements.get(0),
 							inPermission);
-				}
 
-				filter = new AndFilter(filters);
+					break;
 
-				break;
+				default:
+
+					Filter[] filters = new Filter[elements.size()];
+
+					for (int i = 0; i < filters.length; i++) {
+						filters[i] = readFilter((Configuration) elements.get(i),
+								inPermission);
+					}
+
+					filter = new AndFilter(filters);
+
+					break;
 			}
 		}
 
@@ -93,19 +93,20 @@ public class FilterReader {
 	 * Read the given configuration, and deserialize it into a filter.
 	 * 
 	 * @param inConfig
-	 *            The configuration
+	 *                 The configuration
 	 * 
 	 * @return Filter The decoded filter
 	 * 
 	 * @throws ConfigurationException
-	 *             If the configuration could not be decoded successfully
+	 *                                If the configuration could not be decoded
+	 *                                successfully
 	 */
 	protected Filter readFilter(Configuration inConfig, String inPermission)
 			throws OpenEditException {
 		if (inConfig == null) {
 			return null;
 		}
-		
+
 		// FIXME: Should make these into XML factories.
 		Filter result = null;
 		String elemName = inConfig.getName();
@@ -179,30 +180,31 @@ public class FilterReader {
 			{
 				action.setConfiguration(inConfig);
 			}
-//			if (inConfig.getChildren("property") != null) {
-//				for (Iterator iterator = inConfig.getChildIterator("property"); iterator
-//						.hasNext();) {
-//					Configuration config = (Configuration) iterator.next();
-//					String key = config.get("id");
-//					String value = config.getValue();
-//					if (key != null && value != null) {
-//						action.setProperty(key, value);
-//					}
-//
-//				}
-//			}
+			// if (inConfig.getChildren("property") != null) {
+			// for (Iterator iterator = inConfig.getChildIterator("property"); iterator
+			// .hasNext();) {
+			// Configuration config = (Configuration) iterator.next();
+			// String key = config.get("id");
+			// String value = config.getValue();
+			// if (key != null && value != null) {
+			// action.setProperty(key, value);
+			// }
+			//
+			// }
+			// }
 			result = action;
 		} else if (elemName.equals("referer")) {
 			String target = inConfig.getAttribute("value");
 			RefererFilter filter = new RefererFilter(target);
 			result = filter;
 		} else if (elemName.equals("dataproperty")) {
-			DataPropertyFilter datafilter = new DataPropertyFilter(inConfig.getAttribute("property"),inConfig.getAttribute("value"));
+			DataPropertyFilter datafilter = new DataPropertyFilter(inConfig.getAttribute("property"),
+					inConfig.getAttribute("value"));
 			String beanname = inConfig.getAttribute("beanname");
 			datafilter.setBeanName(beanname);
 			datafilter.setSearcherManager(getSearcherManager());
 			result = datafilter;
-					
+
 		} else if (elemName.equals("userproperty")) {
 			result = new UserPropertyFilter(inConfig.getAttribute("name"),
 					inConfig.getAttribute("value"));
@@ -211,36 +213,34 @@ public class FilterReader {
 					inConfig.getAttribute("value"));
 		}
 
-		if( result == null)
-		{
+		if (result == null) {
 			result = (Filter) getModuleManager().getBean(
 					elemName + "Filter");
-		} 
-		if( result == null)
-		{
-				throw new OpenEditException("Unrecognized filter element <"
-						+ elemName + ">");
+		}
+		if (result == null) {
+			throw new OpenEditException("Unrecognized filter element <"
+					+ elemName + ">");
 		}
 		result.setConfiguration(inConfig);
 
 		return result;
 	}
 
-	protected SearcherManager getSearcherManager()
-	{
-		return (SearcherManager)getModuleManager().getBean("searcherManager");
+	protected SearcherManager getSearcherManager() {
+		return (SearcherManager) getModuleManager().getBean("searcherManager");
 	}
 
 	/**
 	 * Read the children of the given configuration as an array of filters.
 	 * 
 	 * @param inConfig
-	 *            The configuration whose children should be parsed
+	 *                 The configuration whose children should be parsed
 	 * 
 	 * @return Filter[] The decoded filters
 	 * 
 	 * @throws ConfigurationException
-	 *             If the configuration could not be decoded successfully
+	 *                                If the configuration could not be decoded
+	 *                                successfully
 	 */
 	protected Filter[] readSubFilters(Configuration inConfig,
 			String inPermission) throws OpenEditException {

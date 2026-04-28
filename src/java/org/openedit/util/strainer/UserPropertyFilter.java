@@ -16,20 +16,19 @@ import org.openedit.WebPageRequest;
 import org.openedit.users.User;
 
 /**
- * Uses properties on the logged in user 
+ * Uses properties on the logged in user
+ * 
  * @author imiller
  */
 
-public class UserPropertyFilter extends BaseFilter
-{
+public class UserPropertyFilter extends BaseFilter {
 	protected String fieldPropertyName;
-	
-	public UserPropertyFilter()
-	{
+
+	public UserPropertyFilter() {
 		super();
 	}
-	public UserPropertyFilter(String inPropertyName, String inValue)
-	{
+
+	public UserPropertyFilter(String inPropertyName, String inValue) {
 		setPropertyName(inPropertyName);
 		setValue(inValue);
 	}
@@ -37,44 +36,39 @@ public class UserPropertyFilter extends BaseFilter
 	/**
 	 * @see org.openedit.util.strainer.Filter#passes(java.lang.Object)
 	 */
-	public boolean passes(Object inObj) throws FilterException, ClassCastException
-	{
+	public boolean passes(Object inObj) throws FilterException, ClassCastException {
 		WebPageRequest req = (WebPageRequest) inObj;
 
-		User data = (User)req.getPageValue("user");
+		User data = (User) req.getPageValue("user");
 
-		if (data == null)
-		{
+		if (data == null) {
 			return false;
 		}
 		String value = data.get(getPropertyName());
-		if( value == null && getValue() == null)
-		{
+		if (value == null && getValue() == null) {
 			return true;
 		}
-		if(value == null){
+		if (value == null) {
 			return true;
 		}
 		String[] values = value.split(" ");
-		for (String string : values)
-		{		
-			if( value != null && string.equals(getValue()))
-			{
+		for (String string : values) {
+			if (value != null && string.equals(getValue())) {
 				return true;
 			}
 		}
 		return false;
 	}
-	public String toString()
-	{
-		return "UserProperty" + getPropertyName() + "="+ getValue();
+
+	public String toString() {
+		return "UserProperty" + getPropertyName() + "=" + getValue();
 	}
-	public String getPropertyName()
-	{
+
+	public String getPropertyName() {
 		return fieldPropertyName;
 	}
-	public void setPropertyName(String inPropertyName)
-	{
+
+	public void setPropertyName(String inPropertyName) {
 		fieldPropertyName = inPropertyName;
 	}
 }

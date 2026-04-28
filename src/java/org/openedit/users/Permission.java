@@ -17,73 +17,57 @@ package org.openedit.users;
  *
  * @author Dennis Brown
  */
-public class Permission
-{
+public class Permission {
 	protected String fieldName;
 	protected String fieldDisplayName;
 	protected String fieldDescription;
-	
-	public Permission()
-	{
+
+	public Permission() {
 	}
 
-	public Permission( String inName )
-	{
+	public Permission(String inName) {
 		fieldName = inName;
 	}
 
-	public Permission( String inName, String inDisplayName )
-	{
+	public Permission(String inName, String inDisplayName) {
 		fieldName = inName;
 		fieldDisplayName = inDisplayName;
 	}
 
-	public String getName()
-	{
+	public String getName() {
 		return fieldName;
 	}
 
-	public String getDisplayName()
-	{
+	public String getDisplayName() {
 		return fieldDisplayName;
 	}
 
-	public void setName( String inName )
-	{
+	public void setName(String inName) {
 		fieldName = inName;
 	}
 
-	public void setDisplayName( String inDisplayName )
-	{
+	public void setDisplayName(String inDisplayName) {
 		fieldDisplayName = inDisplayName;
 	}
 
 	/**
 	 * Two <code>Permission</code>s are equal if their names are equal.
 	 */
-	public boolean equals( Object o )
-	{
-		if ( o instanceof Permission )
-		{
+	public boolean equals(Object o) {
+		if (o instanceof Permission) {
 			Permission p = (Permission) o;
-			if ( fieldName != null )
-			{
-				return fieldName.equals( p.fieldName );
+			if (fieldName != null) {
+				return fieldName.equals(p.fieldName);
+			} else {
+				return (p.fieldName == null);
 			}
-			else
-			{
-				return ( p.fieldName == null );
-			}
-		}
-		else
-		{
+		} else {
 			return false;
 		}
 	}
 
 	public String getDescription() {
-		if (fieldDescription == null)
-		{
+		if (fieldDescription == null) {
 			fieldDescription = "No description available";
 		}
 		return fieldDescription.replace("\n", " ");
@@ -93,15 +77,11 @@ public class Permission
 		fieldDescription = description;
 	}
 
-	public int hashCode()
-	{
-		return ( fieldName != null ) ?
-				fieldName.hashCode() :
-				0;
+	public int hashCode() {
+		return (fieldName != null) ? fieldName.hashCode() : 0;
 	}
 
-	public String toString()
-	{
+	public String toString() {
 		return fieldName;
 	}
 }

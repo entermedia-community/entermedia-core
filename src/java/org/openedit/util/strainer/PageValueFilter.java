@@ -14,14 +14,12 @@ package org.openedit.util.strainer;
 
 import org.openedit.WebPageRequest;
 
-
 /**
  * This filter only passes users that have a certain permission.
  *
  * @author Eric Galluzzo
  */
-public class PageValueFilter extends BaseFilter 
-{
+public class PageValueFilter extends BaseFilter {
 	protected String fieldProperty;
 
 	/**
@@ -29,8 +27,7 @@ public class PageValueFilter extends BaseFilter
 	 *
 	 * @see #setPermission(String)
 	 */
-	public PageValueFilter()
-	{
+	public PageValueFilter() {
 		super();
 	}
 
@@ -38,10 +35,9 @@ public class PageValueFilter extends BaseFilter
 	 * Construct a filter that only passes users that have the given permission.
 	 *
 	 * @param inPermission The permission to check for
-	 * @param inEQ DOCME
+	 * @param inEQ         DOCME
 	 */
-	public PageValueFilter(String inPermission, String inEQ)
-	{
+	public PageValueFilter(String inPermission, String inEQ) {
 		setProperty(inPermission);
 		setEquals(inEQ);
 	}
@@ -51,8 +47,7 @@ public class PageValueFilter extends BaseFilter
 	 *
 	 * @param inString
 	 */
-	public void setEquals(String inString)
-	{
+	public void setEquals(String inString) {
 		setValue(inString);
 	}
 
@@ -61,8 +56,7 @@ public class PageValueFilter extends BaseFilter
 	 *
 	 * @return
 	 */
-	public String getEquals()
-	{
+	public String getEquals() {
 		return fieldValue;
 	}
 
@@ -71,8 +65,7 @@ public class PageValueFilter extends BaseFilter
 	 *
 	 * @param permission The permission to check for
 	 */
-	public void setProperty(String permission)
-	{
+	public void setProperty(String permission) {
 		fieldProperty = permission;
 	}
 
@@ -81,34 +74,30 @@ public class PageValueFilter extends BaseFilter
 	 *
 	 * @return String
 	 */
-	public String getProperty()
-	{
+	public String getProperty() {
 		return fieldProperty;
 	}
 
 	/**
 	 * @see org.openedit.util.strainer.Filter#passes(java.lang.Object)
 	 */
-	public boolean passes(Object inObj) throws FilterException, ClassCastException
-	{
+	public boolean passes(Object inObj) throws FilterException, ClassCastException {
 		WebPageRequest req = (WebPageRequest) inObj;
 
 		Object compare = req.getPageValue(getProperty());
-		if( compare != null)
-		{
+		if (compare != null) {
 			boolean val = getEquals().equalsIgnoreCase(String.valueOf(compare));
 			return val;
 		}
 		return false;
 	}
-	
+
 	public String toString() {
-		return  "Page Value " + getProperty() + "=" + getValue();
+		return "Page Value " + getProperty() + "=" + getValue();
 	}
-	public void setProperty(String inKey, String inValue)
-	{
+
+	public void setProperty(String inKey, String inValue) {
 		fieldProperty = inValue;
 	}
 
-	
 }

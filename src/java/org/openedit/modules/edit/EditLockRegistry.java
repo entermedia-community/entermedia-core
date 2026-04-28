@@ -18,14 +18,13 @@ import java.util.Map;
 
 import org.openedit.users.User;
 
-
 /**
- * This registry allows clients to claim, query, and release edit locks for paths.
+ * This registry allows clients to claim, query, and release edit locks for
+ * paths.
  *
  * @author Eric Galluzzo
  */
-public class EditLockRegistry
-{
+public class EditLockRegistry {
 	/** Locks expire in 30 minutes. */
 	protected static final long LOCK_EXPIRATION_DURATION = 30 * 60 * 1000;
 	protected Map fieldPathToLockMap;
@@ -33,8 +32,7 @@ public class EditLockRegistry
 	/**
 	 * Constructor for EditLockRegistry.
 	 */
-	public EditLockRegistry()
-	{
+	public EditLockRegistry() {
 		super();
 	}
 
@@ -45,8 +43,7 @@ public class EditLockRegistry
 	 *
 	 * @return The user who has the given path locked, or <code>null</code> if none
 	 */
-	public User getLockOwner(String inPath)
-	{
+	public User getLockOwner(String inPath) {
 		unlockIfExpired(inPath);
 
 		EditLock lock = getEditLock(inPath);
@@ -61,25 +58,23 @@ public class EditLockRegistry
 	 *
 	 * @return <code>true</code> if the path is locked, <code>false</code> if not
 	 */
-	public boolean isLocked(String inPath)
-	{
+	public boolean isLocked(String inPath) {
 		unlockIfExpired(inPath);
 
 		return getPathToLockMap().containsKey(inPath);
 	}
 
 	/**
-	 * Determine whether the given user can lock the given path via this edit lock registry.
+	 * Determine whether the given user can lock the given path via this edit lock
+	 * registry.
 	 *
 	 * @param inPath The path
 	 * @param inUser The user
 	 *
 	 * @return <code>true</code> if so, <code>false</code> if not
 	 */
-	public boolean canLock(String inPath, User inUser)
-	{
-		if ((inPath == null) || (inUser == null))
-		{
+	public boolean canLock(String inPath, User inUser) {
+		if ((inPath == null) || (inUser == null)) {
 			return false;
 		}
 
@@ -88,21 +83,20 @@ public class EditLockRegistry
 		User owner = getLockOwner(inPath);
 
 		boolean ok = (owner == null) || owner.equals(inUser);
-		if ( !ok )
-		{
-			
+		if (!ok) {
+
 		}
 		return ok;
 	}
 
 	/**
-	 * Lock the given path with the given user, regardless of who already has the path locked.
+	 * Lock the given path with the given user, regardless of who already has the
+	 * path locked.
 	 *
 	 * @param inPath The path to lock
 	 * @param inUser The user with which to lock the path
 	 */
-	public synchronized void forciblyLockPath(String inPath, User inUser)
-	{
+	public synchronized void forciblyLockPath(String inPath, User inUser) {
 		forciblyLockPath(inPath, inUser, new Date());
 	}
 
@@ -112,11 +106,11 @@ public class EditLockRegistry
 	 * @param inPath The path to lock
 	 * @param inUser The user with which to lock the path
 	 *
-	 * @throws AlreadyLockedException If the path is already locked by a different user
+	 * @throws AlreadyLockedException If the path is already locked by a different
+	 *                                user
 	 */
 	public synchronized void lockPath(String inPath, User inUser)
-		throws AlreadyLockedException
-	{
+			throws AlreadyLockedException {
 		lockPath(inPath, inUser, new Date());
 	}
 
@@ -126,22 +120,19 @@ public class EditLockRegistry
 	 * @param inPath The path to conditionally unlock
 	 * @param inUser The user to check for
 	 *
-	 * @return <code>true</code> if the path was unlocked, <code>false</code> otherwise
+	 * @return <code>true</code> if the path was unlocked, <code>false</code>
+	 *         otherwise
 	 */
-	public synchronized boolean unlockPath(String inPath, User inUser)
-	{
+	public synchronized boolean unlockPath(String inPath, User inUser) {
 		unlockIfExpired(inPath);
 
 		User oldUser = getLockOwner(inPath);
 
-		if ((oldUser != null) && oldUser.equals(inUser))
-		{
+		if ((oldUser != null) && oldUser.equals(inUser)) {
 			getPathToLockMap().remove(inPath);
 
 			return true;
-		}
-		else
-		{
+		} else {
 			return false;
 		}
 	}
@@ -153,10 +144,8 @@ public class EditLockRegistry
 	 *
 	 * @return The edit lock, or <code>null</code> if the given path is not locked
 	 */
-	protected EditLock getEditLock(String inPath)
-	{
-		if (inPath == null)
-		{
+	protected EditLock getEditLock(String inPath) {
+		if (inPath == null) {
 			return null;
 		}
 
@@ -168,10 +157,8 @@ public class EditLockRegistry
 	 *
 	 * @return Map
 	 */
-	protected Map getPathToLockMap()
-	{
-		if (fieldPathToLockMap == null)
-		{
+	protected Map getPathToLockMap() {
+		if (fieldPathToLockMap == null) {
 			fieldPathToLockMap = new HashMap();
 		}
 
@@ -179,7 +166,8 @@ public class EditLockRegistry
 	}
 
 	/**
-	 * Lock the given path with the given user, regardless of who already has the path locked, and
+	 * Lock the given path with the given user, regardless of who already has the
+	 * path locked, and
 	 * setting the lock creation date to the given date.
 	 *
 	 * @param inPath The path to lock
@@ -188,15 +176,12 @@ public class EditLockRegistry
 	 *
 	 * @throws IllegalArgumentException DOCUMENT ME!
 	 */
-	protected synchronized void forciblyLockPath(String inPath, User inUser, Date inDate)
-	{
-		if (inUser == null)
-		{
+	protected synchronized void forciblyLockPath(String inPath, User inUser, Date inDate) {
+		if (inUser == null) {
 			throw new IllegalArgumentException("Cannot claim an edit lock without a user");
 		}
 
-		if (inPath == null)
-		{
+		if (inPath == null) {
 			throw new IllegalArgumentException("Cannot claim a lock on a null path");
 		}
 
@@ -204,26 +189,25 @@ public class EditLockRegistry
 	}
 
 	/**
-	 * Claim a lock for the given path with the given user, setting the lock creation date to the
+	 * Claim a lock for the given path with the given user, setting the lock
+	 * creation date to the
 	 * given date.
 	 *
 	 * @param inPath The path to lock
 	 * @param inUser The user with which to lock the path
 	 * @param inDate The lock creation date
 	 *
-	 * @throws AlreadyLockedException If the path is already locked by a different user
+	 * @throws AlreadyLockedException   If the path is already locked by a different
+	 *                                  user
 	 * @throws IllegalArgumentException DOCUMENT ME!
 	 */
 	protected synchronized void lockPath(String inPath, User inUser, Date inDate)
-		throws AlreadyLockedException
-	{
-		if (inUser == null)
-		{
+			throws AlreadyLockedException {
+		if (inUser == null) {
 			throw new IllegalArgumentException("Cannot claim an edit lock without a user");
 		}
 
-		if (inPath == null)
-		{
+		if (inPath == null) {
 			throw new IllegalArgumentException("Cannot claim a lock on a null path");
 		}
 
@@ -231,8 +215,7 @@ public class EditLockRegistry
 
 		User oldUser = getLockOwner(inPath);
 
-		if (!canLock(inPath, inUser))
-		{
+		if (!canLock(inPath, inUser)) {
 			throw new AlreadyLockedException(inPath, oldUser);
 		}
 
@@ -244,50 +227,46 @@ public class EditLockRegistry
 	 *
 	 * @param inPath The path whose lock to conditionally remove
 	 */
-	protected void unlockIfExpired(String inPath)
-	{
+	protected void unlockIfExpired(String inPath) {
 		EditLock lock = getEditLock(inPath);
 
-		if ((lock != null) && lock.isExpired())
-		{
+		if ((lock != null) && lock.isExpired()) {
 			getPathToLockMap().remove(inPath);
 		}
 	}
 
-	protected class EditLock
-	{
+	protected class EditLock {
 		protected Date fieldCreationDate;
 		protected String fieldPath;
 		protected User fieldLockedUser;
 
 		/**
-		 * Create a new edit lock.  The path and user must be filled in later.
+		 * Create a new edit lock. The path and user must be filled in later.
 		 */
-		public EditLock()
-		{
+		public EditLock() {
 			this(null, null);
 		}
 
 		/**
-		 * Create a new edit lock for the given path and user, locked at the present moment.
+		 * Create a new edit lock for the given path and user, locked at the present
+		 * moment.
 		 *
-		 * @param inPath The path to lock
+		 * @param inPath       The path to lock
 		 * @param inLockedUser The user locking the path
 		 */
-		public EditLock(String inPath, User inLockedUser)
-		{
+		public EditLock(String inPath, User inLockedUser) {
 			this(inPath, inLockedUser, new Date());
 		}
 
 		/**
-		 * Create a new edit lock for the given path and user, created at the given date.
+		 * Create a new edit lock for the given path and user, created at the given
+		 * date.
 		 *
-		 * @param inPath The path to lock
-		 * @param inLockedUser The user locking the path
+		 * @param inPath         The path to lock
+		 * @param inLockedUser   The user locking the path
 		 * @param inCreationDate The date at which this lock was created
 		 */
-		public EditLock(String inPath, User inLockedUser, Date inCreationDate)
-		{
+		public EditLock(String inPath, User inLockedUser, Date inCreationDate) {
 			setPath(inPath);
 			setCreationDate(inCreationDate);
 			setLockedUser(inLockedUser);
@@ -298,8 +277,7 @@ public class EditLockRegistry
 		 *
 		 * @param creationDate The creationDate to set
 		 */
-		public void setCreationDate(Date creationDate)
-		{
+		public void setCreationDate(Date creationDate) {
 			fieldCreationDate = creationDate;
 		}
 
@@ -308,8 +286,7 @@ public class EditLockRegistry
 		 *
 		 * @return Date
 		 */
-		public Date getCreationDate()
-		{
+		public Date getCreationDate() {
 			return fieldCreationDate;
 		}
 
@@ -318,8 +295,7 @@ public class EditLockRegistry
 		 *
 		 * @return <code>true</code> if it has expired, <code>false</code> otherwise
 		 */
-		public boolean isExpired()
-		{
+		public boolean isExpired() {
 			return (new Date().getTime() - getCreationDate().getTime()) >= LOCK_EXPIRATION_DURATION;
 		}
 
@@ -328,8 +304,7 @@ public class EditLockRegistry
 		 *
 		 * @param lockedUser The user to set
 		 */
-		public void setLockedUser(User lockedUser)
-		{
+		public void setLockedUser(User lockedUser) {
 			fieldLockedUser = lockedUser;
 		}
 
@@ -338,8 +313,7 @@ public class EditLockRegistry
 		 *
 		 * @return User
 		 */
-		public User getLockedUser()
-		{
+		public User getLockedUser() {
 			return fieldLockedUser;
 		}
 
@@ -348,8 +322,7 @@ public class EditLockRegistry
 		 *
 		 * @param path The path to set
 		 */
-		public void setPath(String path)
-		{
+		public void setPath(String path) {
 			fieldPath = path;
 		}
 
@@ -358,8 +331,7 @@ public class EditLockRegistry
 		 *
 		 * @return String
 		 */
-		public String getPath()
-		{
+		public String getPath() {
 			return fieldPath;
 		}
 	}

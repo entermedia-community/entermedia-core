@@ -19,57 +19,47 @@ import java.io.StringWriter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-
-
 /**
  * This is the superclass of all exceptions thrown from Open Edit.
  *
  * @author Eric Galluzzo
  */
-public class OpenEditException extends OpenEditRuntimeException implements Serializable
-{
+public class OpenEditException extends OpenEditRuntimeException implements Serializable {
 	private static final long serialVersionUID = 1630227379714618008L;
-	
+
 	private static final Log log = LogFactory.getLog(OpenEditException.class);
 	protected String fieldPathWithError;
 
-	public OpenEditException()
-	{
+	public OpenEditException() {
 		this("No Error Entered");
 	}
-	public OpenEditException(String inMsg)
-	{
+
+	public OpenEditException(String inMsg) {
 		this(inMsg, (Throwable) null);
 	}
 
-	public OpenEditException(String inMsg, String inPath)
-	{
+	public OpenEditException(String inMsg, String inPath) {
 		this(inMsg, null, inPath);
 	}
 
-	public OpenEditException(String inMsg, Throwable inRootCause, String inPath)
-	{
+	public OpenEditException(String inMsg, Throwable inRootCause, String inPath) {
 		super(inMsg, inRootCause);
 
-		if (inRootCause instanceof OpenEditException)
-		{
+		if (inRootCause instanceof OpenEditException) {
 			log.error("Should not wrap an exception of type OpenEditException ");
 		}
 		setPathWithError(inPath);
 	}
 
-	public OpenEditException(String inMsg, Throwable inRootCause)
-	{
+	public OpenEditException(String inMsg, Throwable inRootCause) {
 		this(inMsg, inRootCause, null);
 	}
 
-	public OpenEditException(Throwable inRootCause, String inPath)
-	{
+	public OpenEditException(Throwable inRootCause, String inPath) {
 		this(inPath + " " + inRootCause.getMessage(), inRootCause, inPath);
 	}
 
-	public OpenEditException(Throwable inRootCause)
-	{
+	public OpenEditException(Throwable inRootCause) {
 		this(inRootCause.getMessage(), inRootCause);
 	}
 
@@ -78,23 +68,16 @@ public class OpenEditException extends OpenEditRuntimeException implements Seria
 	 *
 	 * @return DOCME
 	 */
-	public String getMessage()
-	{
+	public String getMessage() {
 		String message = super.getMessage();
 
-		if ((message == null) || (message.length() == 0))
-		{
-			if (getCause() != null)
-			{
+		if ((message == null) || (message.length() == 0)) {
+			if (getCause() != null) {
 				return getCause().getMessage();
-			}
-			else
-			{
+			} else {
 				return "No error message";
 			}
-		}
-		else
-		{
+		} else {
 			return message;
 		}
 	}
@@ -104,8 +87,7 @@ public class OpenEditException extends OpenEditRuntimeException implements Seria
 	 *
 	 * @param fieldPathWithError The fieldPathWithError to set
 	 */
-	public void setPathWithError(String fieldPathWithError)
-	{
+	public void setPathWithError(String fieldPathWithError) {
 		this.fieldPathWithError = fieldPathWithError;
 	}
 
@@ -114,8 +96,7 @@ public class OpenEditException extends OpenEditRuntimeException implements Seria
 	 *
 	 * @return String
 	 */
-	public String getPathWithError()
-	{
+	public String getPathWithError() {
 		return fieldPathWithError;
 	}
 
@@ -124,8 +105,7 @@ public class OpenEditException extends OpenEditRuntimeException implements Seria
 	 *
 	 * @return
 	 */
-	public String toStackTrace()
-	{
+	public String toStackTrace() {
 		StringWriter out = new StringWriter();
 		PrintWriter writer = new PrintWriter(out);
 		printStackTrace(writer);

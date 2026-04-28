@@ -71,85 +71,72 @@ import org.openedit.WebPageRequest;
 /**
  * @author Matthew Avery, mavery@einnovation.com
  * 
- * This class was derived from a class I found on the Velocity
- * mailing list (see notes above) and adds some convenience methods for
- * use with Open Edit specific implementation.  It is still referenced
- * from Velocity pages as "$classtool".
+ *         This class was derived from a class I found on the Velocity
+ *         mailing list (see notes above) and adds some convenience methods for
+ *         use with Open Edit specific implementation. It is still referenced
+ *         from Velocity pages as "$classtool".
  * 
- * December 4, 2004 - Check the Spring PluginManager first when constructing objects.
+ *         December 4, 2004 - Check the Spring PluginManager first when
+ *         constructing objects.
  */
-public class SessionTool
-{
-	protected WebPageRequest fieldContext;
-	protected ModuleManager fieldModuleManager;
-	
-	public SessionTool( WebPageRequest inContext, ModuleManager inManager)
-	{
-		fieldContext = inContext;
-		fieldModuleManager = inManager;
-	}
-	
-	public Object sessionInstance( String inSessionKey, String inClassName ) throws Exception
-	{
-		Object instance = getContext().getSessionValue( inSessionKey );
-		if ( instance == null )
-		{
-			instance = construct( inSessionKey, inClassName );
-			getContext().putSessionValue( inSessionKey, instance );
-		}
-		return instance;
-	}
+public class SessionTool {
+    protected WebPageRequest fieldContext;
+    protected ModuleManager fieldModuleManager;
 
-	protected WebPageRequest getContext()
-	{
-		return fieldContext;
-	}
-	
-	public Object construct( String inKey, String inClassName ) throws Exception
-	{
-		if ( getModuleManager().contains( inKey ) )
-		{
-			return getModuleManager().getBean( inKey );
-		}
-		Class newClass = Class.forName( inClassName );
-		Constructor[] constructors = newClass.getConstructors();
-		for ( int i = 0; i < constructors.length; i++ )
-		{
-			Class[] argumentClasses = constructors[i].getParameterTypes();
-			if ( argumentClasses.length == 0 )
-			{
-				return constructors[i].newInstance( null );
-			}
-			if ( argumentClasses.length == 1 
-			  && argumentClasses[0].equals( WebPageRequest.class ) )
-			{
-				return constructors[i].newInstance( new Object[] { getContext() } );
-			}
-		}
-		return newClass.newInstance();
-	}
-	
+    public SessionTool(WebPageRequest inContext, ModuleManager inManager) {
+        fieldContext = inContext;
+        fieldModuleManager = inManager;
+    }
+
+    public Object sessionInstance(String inSessionKey, String inClassName) throws Exception {
+        Object instance = getContext().getSessionValue(inSessionKey);
+        if (instance == null) {
+            instance = construct(inSessionKey, inClassName);
+            getContext().putSessionValue(inSessionKey, instance);
+        }
+        return instance;
+    }
+
+    protected WebPageRequest getContext() {
+        return fieldContext;
+    }
+
+    public Object construct(String inKey, String inClassName) throws Exception {
+        if (getModuleManager().contains(inKey)) {
+            return getModuleManager().getBean(inKey);
+        }
+        Class newClass = Class.forName(inClassName);
+        Constructor[] constructors = newClass.getConstructors();
+        for (int i = 0; i < constructors.length; i++) {
+            Class[] argumentClasses = constructors[i].getParameterTypes();
+            if (argumentClasses.length == 0) {
+                return constructors[i].newInstance(null);
+            }
+            if (argumentClasses.length == 1
+                    && argumentClasses[0].equals(WebPageRequest.class)) {
+                return constructors[i].newInstance(new Object[] { getContext() });
+            }
+        }
+        return newClass.newInstance();
+    }
+
     /**
      * Instantiates a class by specifying its name (via empty constructor).
      *
      * @param className The name of the class to instantiates.
      * @return A new instance of the requested class.
      */
-    public static Object newInstance(String className) throws Exception
-    {
+    public static Object newInstance(String className) throws Exception {
         Class cls = Class.forName(className);
-        Class[] params =  new Class[0];
+        Class[] params = new Class[0];
 
-        try
-        {
+        try {
             Constructor constructor = cls.getConstructor(params);
-            return constructor.newInstance( new Object[0] );
-        } 
-        catch (Exception ex) 
-        {
+            return constructor.newInstance(new Object[0]);
+        } catch (Exception ex) {
             Constructor constructor = cls.getDeclaredConstructor(params);
-            if ( Modifier.isPrivate( constructor.getModifiers() ) )
-                return cls;  // class with static methods
+            if (Modifier.isPrivate(constructor.getModifiers()))
+                return cls; // class with static methods
         }
         return null;
     }
@@ -159,25 +146,23 @@ public class SessionTool
      * its name and one parameter.
      *
      * @param className The name of the class to instantiates.
-     * @param param A single parameters used to call the constructor.
+     * @param param     A single parameters used to call the constructor.
      * @return A new instance of the requested class.
      */
     public static Object newInstance(String className, Object param)
-           throws Exception
-    {
-        return newInstance( className, new Object[] {param} );
+            throws Exception {
+        return newInstance(className, new Object[] { param });
     }
 
     /**
      * Instantiates a class by specifying its name and parameters.
      *
      * @param className The name of the class to instantiates.
-     * @param params Array of parameters used to call the constructor.
+     * @param params    Array of parameters used to call the constructor.
      * @return A new instance of the requested class.
      */
     public static Object newInstance(String className, Object[] params)
-           throws Exception
-    {
+            throws Exception {
         Class cls = Class.forName(className);
         Constructor constructor = getConstructor(cls, params);
         return constructor.newInstance(params);
@@ -191,46 +176,39 @@ public class SessionTool
      * order. If params is null, it is treated as if it were an empty
      * array.
      *
-     * @param cls        the class to search for a matching constructor
-     * @param params     the array of parameters that will be used to
-     *                   invoke the constructor
-     * @return           the Method object of the public constructor that
-     *                   matches the above
-     * @see              java.lang.Class#getConstructor(Class[])
+     * @param cls    the class to search for a matching constructor
+     * @param params the array of parameters that will be used to
+     *               invoke the constructor
+     * @return the Method object of the public constructor that
+     *         matches the above
+     * @see java.lang.Class#getConstructor(Class[])
      **/
-    public static Constructor getConstructor(Class cls, Object[] params)
-    {
+    public static Constructor getConstructor(Class cls, Object[] params) {
         Constructor[] constructors = cls.getConstructors();
 
-        for (int i = 0; i < constructors.length; ++i )
-        {
+        for (int i = 0; i < constructors.length; ++i) {
             Class[] parameterTypes = constructors[i].getParameterTypes();
 
             // The methods we are trying to compare must
             // the same number of arguments.
-            if (parameterTypes.length == params.length)
-            {
+            if (parameterTypes.length == params.length) {
                 // Make sure the given parameter is a valid
                 // subclass of the method parameter in question.
-                for (int j = 0; ; j++)
-                {
+                for (int j = 0;; j++) {
                     if (j >= parameterTypes.length)
                         return constructors[i]; // found
 
                     Class c = parameterTypes[j];
                     Object p = params[j];
-                    if ( c.isPrimitive() )
-                    {
-                        try
-                        {
-                            if ( c != p.getClass().getField("TYPE").get(p) )
+                    if (c.isPrimitive()) {
+                        try {
+                            if (c != p.getClass().getField("TYPE").get(p))
                                 break;
                         } catch (Exception ex) {
                             break; // p is not a primitive derivate
                         }
-                    }
-                    else if ( (p != null) &&
-                              !c.isAssignableFrom( p.getClass() ) )
+                    } else if ((p != null) &&
+                            !c.isAssignableFrom(p.getClass()))
                         break;
                 } // for all parameters
             } // if same length
@@ -238,9 +216,8 @@ public class SessionTool
 
         return null;
     }
-	
-	public ModuleManager getModuleManager()
-	{
-		return fieldModuleManager;
-	}
+
+    public ModuleManager getModuleManager() {
+        return fieldModuleManager;
+    }
 }

@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
  * waiting for the process to complete, preventing deadlocks.
  */
 public class BinaryStreamingProcessBuilder {
-    
+
     private ProcessBuilder processBuilder;
     private long timeout = 0;
     private TimeUnit timeoutUnit = TimeUnit.SECONDS;
@@ -25,30 +25,28 @@ public class BinaryStreamingProcessBuilder {
     private InputStream inputStream;
     private OutputStream outputStream;
     private OutputStream errorStream;
-    
+
     public BinaryStreamingProcessBuilder(String... command) {
         this.processBuilder = new ProcessBuilder(command);
         this.executorService = Executors.newFixedThreadPool(2);
     }
-    
+
     public BinaryStreamingProcessBuilder(List<String> command) {
         this.processBuilder = new ProcessBuilder(command);
         this.executorService = Executors.newFixedThreadPool(2);
     }
-  
+
     protected ExecutorService executorService;
-    
-    public ExecutorService getExecutorService()
-	{
-		return executorService;
-	}
 
-	public void setExecutorService(ExecutorService inExecutorService)
-	{
-		executorService = inExecutorService;
-	}
+    public ExecutorService getExecutorService() {
+        return executorService;
+    }
 
-	/**
+    public void setExecutorService(ExecutorService inExecutorService) {
+        executorService = inExecutorService;
+    }
+
+    /**
      * Set input data to send to the process's stdin
      */
     public BinaryStreamingProcessBuilder withInput(byte[] inputData) {
@@ -56,7 +54,7 @@ public class BinaryStreamingProcessBuilder {
         this.inputStream = null;
         return this;
     }
-    
+
     /**
      * Set input stream to send to the process's stdin
      */
@@ -65,7 +63,7 @@ public class BinaryStreamingProcessBuilder {
         this.inputData = null;
         return this;
     }
-    
+
     /**
      * Set input string to send to the process's stdin
      */
@@ -74,7 +72,7 @@ public class BinaryStreamingProcessBuilder {
         this.inputStream = null;
         return this;
     }
-    
+
     /**
      * Set output stream to receive the process's stdout
      */
@@ -82,7 +80,7 @@ public class BinaryStreamingProcessBuilder {
         this.outputStream = outputStream;
         return this;
     }
-    
+
     /**
      * Set error stream to receive the process's stderr
      */
@@ -90,7 +88,7 @@ public class BinaryStreamingProcessBuilder {
         this.errorStream = errorStream;
         return this;
     }
-    
+
     /**
      * Set timeout for process execution
      */
@@ -99,28 +97,28 @@ public class BinaryStreamingProcessBuilder {
         this.timeoutUnit = unit;
         return this;
     }
-    
+
     /**
      * Get the underlying ProcessBuilder for additional configuration
      */
     public ProcessBuilder getProcessBuilder() {
         return processBuilder;
     }
-    
+
     /**
      * Execute the process and return the result containing exit code and streams
      */
     public ProcessResult execute() throws IOException, InterruptedException {
         Process process = processBuilder.start();
-        
+
         // Submit stream reading tasks to executor
-        Future<byte[]> outputFuture = executorService.submit(() -> 
-            outputStream != null ? streamToOutputStream(process.getInputStream(), outputStream) : readStream(process.getInputStream())
-        );
-        Future<byte[]> errorFuture = executorService.submit(() -> 
-            errorStream != null ? streamToOutputStream(process.getErrorStream(), errorStream) : readStream(process.getErrorStream())
-        );
-        
+        Future<byte[]> outputFuture = executorService
+                .submit(() -> outputStream != null ? streamToOutputStream(process.getInputStream(), outputStream)
+                        : readStream(process.getInputStream()));
+        Future<byte[]> errorFuture = executorService
+                .submit(() -> errorStream != null ? streamToOutputStream(process.getErrorStream(), errorStream)
+                        : readStream(process.getErrorStream()));
+
         // Submit input writing task if input is provided
         Future<Void> inputFuture = null;
         if (inputData != null || inputStream != null) {
@@ -129,18 +127,18 @@ public class BinaryStreamingProcessBuilder {
                 return null;
             });
         }
-        
+
         int exitCode;
         try {
             // Wait for input to be written first if provided
             if (inputFuture != null) {
                 inputFuture.get();
             }
-            
+
             // Wait for streams to be consumed first
             byte[] outputData = outputFuture.get();
             byte[] errorData = errorFuture.get();
-            
+
             // Now wait for process to complete
             if (timeout > 0) {
                 boolean completed = process.waitFor(timeout, timeoutUnit);
@@ -151,22 +149,22 @@ public class BinaryStreamingProcessBuilder {
             } else {
                 process.waitFor();
             }
-            
+
             exitCode = process.exitValue();
-            
+
             return new ProcessResult(exitCode, outputData, errorData);
-            
+
         } catch (Exception e) {
             process.destroyForcibly();
             throw new IOException("Error executing process: " + e.getMessage(), e);
-//        } finally {
-//            if (shutdownExecutorOnComplete) {
-//                executorService.shutdown();
-//                executorService.awaitTermination(5, TimeUnit.SECONDS);
-//            }
+            // } finally {
+            // if (shutdownExecutorOnComplete) {
+            // executorService.shutdown();
+            // executorService.awaitTermination(5, TimeUnit.SECONDS);
+            // }
         }
     }
-    
+
     /**
      * Read all bytes from an InputStream
      */
@@ -174,30 +172,30 @@ public class BinaryStreamingProcessBuilder {
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
         byte[] data = new byte[8192];
         int bytesRead;
-        
+
         while ((bytesRead = inputStream.read(data, 0, data.length)) != -1) {
             buffer.write(data, 0, bytesRead);
         }
-        
+
         buffer.flush();
         return buffer.toByteArray();
     }
-    
+
     /**
      * Stream data from input to output stream without buffering in memory
      */
     private byte[] streamToOutputStream(InputStream inputStream, OutputStream targetStream) throws IOException {
         byte[] data = new byte[8192];
         int bytesRead;
-        
+
         while ((bytesRead = inputStream.read(data, 0, data.length)) != -1) {
             targetStream.write(data, 0, bytesRead);
         }
-        
+
         targetStream.flush();
         return new byte[0]; // Return empty array when streaming to avoid memory overhead
     }
-    
+
     /**
      * Write input data to the process's stdin
      */
@@ -217,7 +215,7 @@ public class BinaryStreamingProcessBuilder {
             outputStream.close();
         }
     }
-    
+
     /**
      * Result object containing exit code and stream data
      */
@@ -225,56 +223,59 @@ public class BinaryStreamingProcessBuilder {
         private final int exitCode;
         private final byte[] outputData;
         private final byte[] errorData;
-        
+
         public ProcessResult(int exitCode, byte[] outputData, byte[] errorData) {
             this.exitCode = exitCode;
             this.outputData = outputData;
             this.errorData = errorData;
         }
-        
+
         public int getExitCode() {
             return exitCode;
         }
-        
+
         /**
-         * Get output data. Returns empty array if output was streamed to an OutputStream.
+         * Get output data. Returns empty array if output was streamed to an
+         * OutputStream.
          */
         public byte[] getOutputData() {
             return outputData;
         }
-        
+
         /**
          * Get error data. Returns empty array if error was streamed to an OutputStream.
          */
         public byte[] getErrorData() {
             return errorData;
         }
-        
+
         /**
-         * Get output as string. Returns empty string if output was streamed to an OutputStream.
+         * Get output as string. Returns empty string if output was streamed to an
+         * OutputStream.
          */
         public String getOutputAsString() {
             return new String(outputData);
         }
-        
+
         /**
-         * Get error as string. Returns empty string if error was streamed to an OutputStream.
+         * Get error as string. Returns empty string if error was streamed to an
+         * OutputStream.
          */
         public String getErrorAsString() {
             return new String(errorData);
         }
-        
+
         public boolean isSuccess() {
             return exitCode == 0;
         }
-        
+
         /**
          * Check if output data was buffered in memory
          */
         public boolean hasOutputData() {
             return outputData != null && outputData.length > 0;
         }
-        
+
         /**
          * Check if error data was buffered in memory
          */
@@ -282,7 +283,7 @@ public class BinaryStreamingProcessBuilder {
             return errorData != null && errorData.length > 0;
         }
     }
-    
+
     /**
      * Builder-style method to add command arguments
      */
@@ -290,7 +291,7 @@ public class BinaryStreamingProcessBuilder {
         processBuilder.command(command);
         return this;
     }
-    
+
     /**
      * Builder-style method to add command arguments
      */
@@ -298,7 +299,7 @@ public class BinaryStreamingProcessBuilder {
         processBuilder.command(command);
         return this;
     }
-    
+
     /**
      * Add a single argument to the command
      */

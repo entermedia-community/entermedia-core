@@ -8,90 +8,75 @@ import org.dom4j.Element;
 import org.openedit.Data;
 import org.openedit.hittracker.HitTracker;
 
-public class XmlHitTracker extends HitTracker
-{
+public class XmlHitTracker extends HitTracker {
 	protected XmlFile fieldXmlFile;
-	
-	public XmlHitTracker()
-	{
-		
+
+	public XmlHitTracker() {
+
 	}
-	public XmlHitTracker(XmlFile inXmlFile)
-	{
+
+	public XmlHitTracker(XmlFile inXmlFile) {
 		setXmlFile(inXmlFile);
 	}
 
-	public boolean contains(Object inHit)
-	{
+	public boolean contains(Object inHit) {
 		return getXmlFile().getElements().contains(inHit);
 	}
 
-	public Data get(int inCount) 
-	{
-		Element element = (Element)getXmlFile().getElements().get(inCount);
-		if( element == null)
-		{
+	public Data get(int inCount) {
+		Element element = (Element) getXmlFile().getElements().get(inCount);
+		if (element == null) {
 			return null;
 		}
 		return new ElementData(element, getSearcher().getPropertyDetails());
 	}
-	//Use getByID
-	public Object get(String inId) throws IOException
-	{
+
+	// Use getByID
+	public Object get(String inId) throws IOException {
 		return getById(inId);
 	}
 
-	public Data getById(String inId)
-	{
+	public Data getById(String inId) {
 		Element element = getXmlFile().getElementById(inId);
-		if( element == null)
-		{
+		if (element == null) {
 			return null;
 		}
 		return toData(element);
-		
+
 	}
-	public int size()
-	{
+
+	public int size() {
 		return getXmlFile().size();
 	}
 
-	public Iterator iterator()
-	{
+	public Iterator iterator() {
 		return new ElementDataIterator(getXmlFile().getElements());
 	}
 
-	public XmlFile getXmlFile()
-	{
+	public XmlFile getXmlFile() {
 		return fieldXmlFile;
 	}
 
-	public void setXmlFile(XmlFile inXmlFile)
-	{
+	public void setXmlFile(XmlFile inXmlFile) {
 		fieldXmlFile = inXmlFile;
 		setPage(1);
 	}
-	public List keys()
-	{
+
+	public List keys() {
 		return getXmlFile().keys();
 	}
-	public Data toData(Object inHit)
-	{
-		if( inHit instanceof Data)
-		{
-			return (Data)inHit;
+
+	public Data toData(Object inHit) {
+		if (inHit instanceof Data) {
+			return (Data) inHit;
 		}
 		return new ElementData(inHit, getSearcher().getPropertyDetails());
 	}
-	
-	public String getValue(Object inHit, String inString)
-	{
-		Element target = (Element)inHit;
+
+	public String getValue(Object inHit, String inString) {
+		Element target = (Element) inHit;
 		return target.attributeValue(inString);
-		
 
 	}
 
-	
-	
 }

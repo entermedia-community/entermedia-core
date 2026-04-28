@@ -3,33 +3,32 @@ package org.openedit.profile;
 import org.openedit.Data;
 import org.openedit.MultiValued;
 
-public class ModuleData
-{
+public class ModuleData {
 	protected String fieldModuleId;
-	
-	public ModuleData()
-	{
+
+	public ModuleData() {
 	}
-	public ModuleData(String inId, MultiValued inData)
-	{
+
+	public ModuleData(String inId, MultiValued inData) {
 		setModuleId(inId);
 		setData(inData);
 	}
-	public String getModuleId()
-	{
+
+	public String getModuleId() {
 		return fieldModuleId;
 	}
-	public void setModuleId(String inModuleId)
-	{
+
+	public void setModuleId(String inModuleId) {
 		fieldModuleId = inModuleId;
 	}
-	public MultiValued getData()
-	{
+
+	public MultiValued getData() {
 		return fieldData;
 	}
-	public void setData(MultiValued inData)
-	{
+
+	public void setData(MultiValued inData) {
 		fieldData = inData;
 	}
+
 	protected MultiValued fieldData;
 }

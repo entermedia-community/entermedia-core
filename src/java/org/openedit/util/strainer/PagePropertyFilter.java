@@ -15,14 +15,12 @@ package org.openedit.util.strainer;
 import org.openedit.WebPageRequest;
 import org.openedit.page.Page;
 
-
 /**
  * This filter only passes users that have a certain permission.
  *
  * @author Eric Galluzzo
  */
-public class PagePropertyFilter extends BaseFilter 
-{
+public class PagePropertyFilter extends BaseFilter {
 	protected String fieldProperty;
 
 	/**
@@ -30,8 +28,7 @@ public class PagePropertyFilter extends BaseFilter
 	 *
 	 * @see #setPermission(String)
 	 */
-	public PagePropertyFilter()
-	{
+	public PagePropertyFilter() {
 		super();
 	}
 
@@ -39,10 +36,9 @@ public class PagePropertyFilter extends BaseFilter
 	 * Construct a filter that only passes users that have the given permission.
 	 *
 	 * @param inPermission The permission to check for
-	 * @param inEQ DOCME
+	 * @param inEQ         DOCME
 	 */
-	public PagePropertyFilter(String inPermission, String inEQ)
-	{
+	public PagePropertyFilter(String inPermission, String inEQ) {
 		setProperty(inPermission);
 		setEquals(inEQ);
 	}
@@ -52,8 +48,7 @@ public class PagePropertyFilter extends BaseFilter
 	 *
 	 * @param inString
 	 */
-	public void setEquals(String inString)
-	{
+	public void setEquals(String inString) {
 		setValue(inString);
 	}
 
@@ -62,8 +57,7 @@ public class PagePropertyFilter extends BaseFilter
 	 *
 	 * @return
 	 */
-	public String getEquals()
-	{
+	public String getEquals() {
 		return fieldValue;
 	}
 
@@ -72,8 +66,7 @@ public class PagePropertyFilter extends BaseFilter
 	 *
 	 * @param permission The permission to check for
 	 */
-	public void setProperty(String permission)
-	{
+	public void setProperty(String permission) {
 		fieldProperty = permission;
 	}
 
@@ -82,34 +75,31 @@ public class PagePropertyFilter extends BaseFilter
 	 *
 	 * @return String
 	 */
-	public String getProperty()
-	{
+	public String getProperty() {
 		return fieldProperty;
 	}
 
 	/**
 	 * @see org.openedit.util.strainer.Filter#passes(java.lang.Object)
 	 */
-	public boolean passes(Object inObj) throws FilterException, ClassCastException
-	{
+	public boolean passes(Object inObj) throws FilterException, ClassCastException {
 		WebPageRequest req = (WebPageRequest) inObj;
 
 		Page page = req.getPage();
 		Object compare = page.get(getProperty());
-		if( compare != null)
-		{
+		if (compare != null) {
 			return getEquals().equalsIgnoreCase(String.valueOf(compare));
 		}
 		return false;
 	}
+
 	public String toString() {
 		return getProperty() + " Property=" + getValue();
-		
+
 	}
-	public void setProperty(String inKey, String inValue)
-	{
+
+	public void setProperty(String inKey, String inValue) {
 		fieldProperty = inValue;
 	}
 
-	
 }

@@ -26,137 +26,120 @@ import org.openedit.repository.ReaderItem;
 
 /**
  * TODO: Just make this track a list of generators
+ * 
  * @author Matthew Avery, mavery@einnovation.com
  */
-public class CompositeGenerator extends BaseGenerator implements Generator
-{
+public class CompositeGenerator extends BaseGenerator implements Generator {
 	protected List fieldAllGenerators;
-	
+
 	private static final Log log = LogFactory.getLog(CompositeGenerator.class);
-	public CompositeGenerator(  )
-	{
+
+	public CompositeGenerator() {
 	}
 
-	protected List getGenerators()
-	{
-		if ( fieldAllGenerators == null)
-		{
-			fieldAllGenerators =new ArrayList(2);
+	protected List getGenerators() {
+		if (fieldAllGenerators == null) {
+			fieldAllGenerators = new ArrayList(2);
 		}
 		return fieldAllGenerators;
 	}
-	public void addGenerator(Generator inGen)
-	{
-		if ( inGen == null)
-		{
+
+	public void addGenerator(Generator inGen) {
+		if (inGen == null) {
 			throw new OpenEditRuntimeException("No such generator");
 		}
 		getGenerators().add(inGen);
 	}
-	public void generate( WebPageRequest inContext, Page inPage, Output inOut ) throws OpenEditException
-	{		
+
+	public void generate(WebPageRequest inContext, Page inPage, Output inOut) throws OpenEditException {
 		PageStreamer pages = inContext.getPageStreamer();
-		Output old = pages.getOutput(); //They might write out the streamer so we need to capture this
+		Output old = pages.getOutput(); // They might write out the streamer so we need to capture this
 		Page resultsThuFar = inPage;
 
-		//This class only support String composite generation. No byte[] stuff allowed
-		
+		// This class only support String composite generation. No byte[] stuff allowed
+
 		Reader content = null;
-		for (Iterator iter = getGenerators().iterator(); iter.hasNext();)
-		{
+		for (Iterator iter = getGenerators().iterator(); iter.hasNext();) {
 			Generator gen = (Generator) iter.next();
 
 			content = captureAllOutput(inContext, gen, resultsThuFar);
-			//make fake page and keep processing
-			resultsThuFar  = new Page( resultsThuFar );
-			resultsThuFar.setContentItem( new ReaderItem( inPage.getPath(), content, inPage.getCharacterEncoding() ) );
+			// make fake page and keep processing
+			resultsThuFar = new Page(resultsThuFar);
+			resultsThuFar.setContentItem(new ReaderItem(inPage.getPath(), content, inPage.getCharacterEncoding()));
 		}
-		
-		try
-		{
+
+		try {
 			pages.setOutput(old);
-			getOutputFiller().fill(content,inOut.getWriter());
-		//	inOut.getWriter().write(content);
+			getOutputFiller().fill(content, inOut.getWriter());
+			// inOut.getWriter().write(content);
 			inOut.getWriter().flush();
-		}
-		catch (IOException ex)
-		{
-			log.error( ex );
+		} catch (IOException ex) {
+			log.error(ex);
 		}
 	}
-	protected Reader captureAllOutput(WebPageRequest inContext, Generator inGen, Page inResultsThuFar ) throws OpenEditException
-	{
-		//We have to replace the streamer with one that has our context and writer
-		
-		//Cant copy because the action are editing the parent version
+
+	protected Reader captureAllOutput(WebPageRequest inContext, Generator inGen, Page inResultsThuFar)
+			throws OpenEditException {
+		// We have to replace the streamer with one that has our context and writer
+
+		// Cant copy because the action are editing the parent version
 		WebPageRequest copy = inContext.copy();
 
-		//This allows the $pages.stream method to keep working with our fake output
+		// This allows the $pages.stream method to keep working with our fake output
 		PageStreamer streamer = inContext.getPageStreamer().copy();
 
-		//allows capture of any output on our tmp streamer
+		// allows capture of any output on our tmp streamer
 		ByteArrayOutputStream scapture = new ByteArrayOutputStream();
 		Writer capture = null;
-		try
-		{
-			capture = new OutputStreamWriter(scapture, inResultsThuFar.getCharacterEncoding() );
-			Output out = new Output(capture, scapture );
+		try {
+			capture = new OutputStreamWriter(scapture, inResultsThuFar.getCharacterEncoding());
+			Output out = new Output(capture, scapture);
 			streamer.setOutput(out);
-			
+
 			copy.putPageStreamer(streamer);
 			streamer.setWebPageRequest(copy);
-			
-			//kicks the proces off without running any actions again
-			inGen.generate( copy, inResultsThuFar , out);
-	
+
+			// kicks the proces off without running any actions again
+			inGen.generate(copy, inResultsThuFar, out);
+
 			capture.flush();
-			//String value = scapture.toString(inResultsThuFar.getCharacterEncoding());
-			//return value;
-			
-			//Need a way to pull data from generators?
-			return new InputStreamReader(new ByteArrayInputStream(scapture.toByteArray()),inResultsThuFar.getCharacterEncoding());
-		}
-		catch (IOException ex)
-		{
+			// String value = scapture.toString(inResultsThuFar.getCharacterEncoding());
+			// return value;
+
+			// Need a way to pull data from generators?
+			return new InputStreamReader(new ByteArrayInputStream(scapture.toByteArray()),
+					inResultsThuFar.getCharacterEncoding());
+		} catch (IOException ex) {
 			throw new OpenEditException(ex);
 		}
 
 	}
 
-	public boolean canGenerate(WebPageRequest inReq)
-	{
-		for (Iterator iter = getGenerators().iterator(); iter.hasNext();)
-		{
+	public boolean canGenerate(WebPageRequest inReq) {
+		for (Iterator iter = getGenerators().iterator(); iter.hasNext();) {
 			Generator gen = (Generator) iter.next();
-			if (  !gen.canGenerate( inReq ))
-			{
+			if (!gen.canGenerate(inReq)) {
 				return false;
 			}
 		}
 		return true;
 	}
 
-	public void setGenerators(List inMorefound)
-	{
+	public void setGenerators(List inMorefound) {
 		fieldAllGenerators = inMorefound;
 	}
 
-	public boolean contains(Generator inClass)
-	{
+	public boolean contains(Generator inClass) {
 		return getGenerators().contains(inClass);
 	}
-	
-	public boolean hasGenerator(Generator inChild)
-	{
-		if( inChild == this )
-		{
+
+	public boolean hasGenerator(Generator inChild) {
+		if (inChild == this) {
 			return true;
 		}
-		for (Iterator iter = getGenerators().iterator(); iter.hasNext();)
-		{
+		for (Iterator iter = getGenerators().iterator(); iter.hasNext();) {
 			Generator gen = (Generator) iter.next();
-			if ( gen.hasGenerator(inChild))
-			{
+			if (gen.hasGenerator(inChild)) {
 				return true;
 			}
 		}

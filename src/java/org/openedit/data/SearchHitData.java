@@ -1,6 +1,5 @@
 package org.openedit.data;
 
-public interface SearchHitData
-{
+public interface SearchHitData {
 
 }

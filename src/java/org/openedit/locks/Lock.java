@@ -7,64 +7,57 @@ import org.openedit.data.DataLoaded;
 import org.openedit.data.SaveableData;
 import org.openedit.util.DateStorageUtil;
 
-public class Lock extends BaseData implements SaveableData, DataLoaded
-{
-	public String getOwnerId()
-	{
+public class Lock extends BaseData implements SaveableData, DataLoaded {
+	public String getOwnerId() {
 		return get("ownerid");
 	}
-	public void setOwnerId(String inOwnerId)
-	{
+
+	public void setOwnerId(String inOwnerId) {
 		setProperty("ownerid", inOwnerId);
 	}
-	public Date getDate()
-	{
+
+	public Date getDate() {
 		String date = get("date");
 		Date thedate = DateStorageUtil.getStorageUtil().parseFromStorage(date);
 		return thedate;
 	}
-	public void setDate(Date inDate)
-	{
+
+	public void setDate(Date inDate) {
 		setValue("date", inDate);
 	}
-	public boolean isLockedBy(String inNodeId, String inOwnerId)
-	{
+
+	public boolean isLockedBy(String inNodeId, String inOwnerId) {
 		boolean owner = inOwnerId.equals(getOwnerId());
-		if(owner)
-		{
-			if( inNodeId.equals(getNodeId()) )
-			{
+		if (owner) {
+			if (inNodeId.equals(getNodeId())) {
 				return true;
 			}
 		}
 		return false;
 	}
-	public String getName()
-	{
+
+	public String getName() {
 		return getSourcePath();
 	}
-	public void setNodeId(String inId)
-	{
+
+	public void setNodeId(String inId) {
 		setValue("nodeid", inId);
 	}
-	public String getNodeId()
-	{
+
+	public String getNodeId() {
 		return get("nodeid");
 	}
-	
-	public String getVersion()
-	{
+
+	public String getVersion() {
 		return get("version");
 	}
 
-	public boolean isLocked()
-	{
+	public boolean isLocked() {
 		return getBoolean("locked");
 	}
 
-	public void setLocked(boolean isLocked)
-	{
+	public void setLocked(boolean isLocked) {
 		setProperty("locked", String.valueOf(isLocked));
 	}
-	
+
 }

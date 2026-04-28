@@ -29,8 +29,7 @@ import org.openedit.users.UserManager;
  * @author Eric Broyles <eric@sandra.com>
  * @version $Id: WebServer.java,v 1.23 2010/09/08 18:40:37 cburkey Exp $
  */
-public interface WebServer
-{
+public interface WebServer {
     public BeanLoader getBeanLoader();
 
     public PageManager getPageManager();
@@ -42,17 +41,17 @@ public interface WebServer
     public OpenEditEngine getOpenEditEngine();
 
     public File getRootDirectory();
-    
+
     public void setRootDirectory(File inFile);
 
-	public List getAllPlugIns();
+    public List getAllPlugIns();
 
-	public void reloadMounts();
-	
-	public void saveMounts(List inConfigs);
+    public void reloadMounts();
 
-	public String getNodeId();
+    public void saveMounts(List inConfigs);
 
-	public void checkMounts();
-	
+    public String getNodeId();
+
+    public void checkMounts();
+
 }

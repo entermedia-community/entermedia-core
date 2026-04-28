@@ -35,111 +35,118 @@ import org.openedit.users.User;
 /**
  * @author Matt Avery, mavery@einnovation.com
  */
-public interface WebPageRequest
-{
+public interface WebPageRequest {
 	HttpServletRequest getRequest();
-	
+
 	HttpServletResponse getResponse();
-	
+
 	Map getJsonRequest();
+
 	Map configureFields();
 
-	
 	void setJsonRequest(Map inReq);
-	
+
 	HttpSession getSession();
-	
+
 	/**
 	 * The redirect will send the browser to a new page
 	 * This looses any parameters to the original page
-	 * @param inInUrl can begin with http or be a path /index.html you do not need $home in there
+	 * 
+	 * @param inInUrl can begin with http or be a path /index.html you do not need
+	 *                $home in there
 	 */
-	void redirect( String inUrl );
-	
-	/**
-	 * This is used to tell search engines to use the new links
-	 * @param inPath
-	 */
-	public void redirectPermanently( String inPath);
+	void redirect(String inUrl);
 
 	/**
-	 * This will simply render a new page instead of the page the user 
+	 * This is used to tell search engines to use the new links
+	 * 
+	 * @param inPath
+	 */
+	public void redirectPermanently(String inPath);
+
+	/**
+	 * This will simply render a new page instead of the page the user
 	 * was expecting
 	 * 
 	 * @param inInUrl should be a path such as /index.html
 	 */
-	void forward( String inUrl )throws OpenEditException;
-	
+	void forward(String inUrl) throws OpenEditException;
+
 	/**
 	 * Convenience methods for managing Velocity context objects.
 	 */
-	Object getPageValue( String inKey );
-	
+	Object getPageValue(String inKey);
+
 	/**
 	 * Looks in the action, page and parameter for a value
+	 * 
 	 * @param inName
-	 *  
+	 * 
 	 * @return
 	 */
 	String findValue(String inName);
+
 	String findPathValue(String inName);
+
 	public String findActionValue(String inName);
-	
-	String getPageProperty(String inKey );
 
-	String getContentProperty(String inKey );
+	String getPageProperty(String inKey);
 
-	void putPageValue( String inKey, Object inObject );
-    
-    /**
-     * <p>
-     * Add a protected page value to this page request.  Protected values are 
-     * reserved for use by OpenEdit itself and should not be overriden in 
-     * general practice.
-     * </p>
-     * @param inKey
-     * @param inObject
-     */
-    void putProtectedPageValue(String inKey, Object inObject);
-	
-	void removePageValue( String inKey );
-	
+	String getContentProperty(String inKey);
+
+	void putPageValue(String inKey, Object inObject);
+
+	/**
+	 * <p>
+	 * Add a protected page value to this page request. Protected values are
+	 * reserved for use by OpenEdit itself and should not be overriden in
+	 * general practice.
+	 * </p>
+	 * 
+	 * @param inKey
+	 * @param inObject
+	 */
+	void putProtectedPageValue(String inKey, Object inObject);
+
+	void removePageValue(String inKey);
+
 	Map getPageMap();
-	
+
 	/**
 	 * Convenience methods for managing session objects.
 	 */
-	Object getSessionValue( String inKey );
-	
-	void putSessionValue( String inKey, Object inObject );
-	
-	void removeSessionValue( String inKey );
-		
-	String getRequestParameter( String inKey );
+	Object getSessionValue(String inKey);
+
+	void putSessionValue(String inKey, Object inObject);
+
+	void removeSessionValue(String inKey);
+
+	String getRequestParameter(String inKey);
 
 	/**
 	 * The returned values are escaped and suitable to show in a web browser
+	 * 
 	 * @param inKey
 	 * @return
 	 */
 	public String getParam(String inKey);
 
-	String[] getRequestParameters( String inKey );
-	
+	String[] getRequestParameters(String inKey);
+
 	Collection<String> getRequestCollection(String inKey);
-		
-	void setRequestParameter( String inKey, String inValue );
-	
-	void setRequestParameter( String inKey, String[] inValue );
+
+	void setRequestParameter(String inKey, String inValue);
+
+	void setRequestParameter(String inKey, String[] inValue);
 
 	/**
 	 * 
 	 * @return a mutable map of the request parameters
 	 */
 	Map getParameterMap();
-	
+
 	// This may not be necessary
-	String getRequiredParameter( String inParameterName ) throws OpenEditException;
+	String getRequiredParameter(String inParameterName) throws OpenEditException;
 
 	User getUser();
 
@@ -147,50 +154,64 @@ public interface WebPageRequest
 	 * @param inObject
 	 */
 	void setUser(User inUser);
+
 	public void setUserProfile(UserProfile inUserProfile);
+
 	/**
 	 * This is the path to the content
 	 */
 	String getPath();
-	
+
 	/**
 	 * This is the page that this context refers to in the getPath() method
+	 * 
 	 * @return
-	 */	
+	 */
 	Page getPage();
+
 	/**
-	 * Is the full path to the page you are on. This includes any arguments or parameters
+	 * Is the full path to the page you are on. This includes any arguments or
+	 * parameters
+	 * 
 	 * @return fullpath
 	 */
 	String getPathUrl();
-    String getPathUrlWithoutContext();
+
+	String getPathUrlWithoutContext();
+
 	OutputStream getOutputStream();
-	
+
 	Writer getWriter();
-	
+
 	void setWriter(Writer inW);
-	
+
 	PageStreamer getPageStreamer();
-	
-	void putPageStreamer( PageStreamer inStreamer );
+
+	void putPageStreamer(PageStreamer inStreamer);
 
 	/**
 	 * @return
 	 */
 	boolean hasRedirected();
+
 	boolean hasForwarded();
+
 	void setHasRedirected(boolean inB);
+
 	void setHasForwarded(boolean inB);
 
 	boolean hasCancelActions();
+
 	void setCancelActions(boolean inB);
+
 	/**
 	 * @return
 	 */
 	Page getContentPage();
-	
+
 	/**
-	 * Determine whether this page can be edited by the given user.  The page is editable if:
+	 * Determine whether this page can be edited by the given user. The page is
+	 * editable if:
 	 * 
 	 * <ul>
 	 * <li>
@@ -205,18 +226,19 @@ public interface WebPageRequest
 	 * </ul>
 	 * 
 	 *
-	 * @param inUser The user to query
+	 * @param inUser    The user to query
 	 * @param inContext DOCME
 	 *
-	 * @return boolean  <code>true</code> if the page is editable by the user, <code>false</code>
-	 * 		   if not
+	 * @return boolean <code>true</code> if the page is editable by the user,
+	 *         <code>false</code>
+	 *         if not
 	 *
 	 * @throws OpenEditException DOCME
 	 */
 	public boolean isEditable();
 
 	public void setEditable(boolean inEdi);
-	
+
 	public String[] getRequestActions();
 
 	/**
@@ -239,6 +261,7 @@ public interface WebPageRequest
 
 	/**
 	 * TODO: Make this a list of actions that have been run
+	 * 
 	 * @param inAction
 	 */
 	void setCurrentAction(PageAction inAction);
@@ -252,29 +275,29 @@ public interface WebPageRequest
 	String getUserName();
 
 	String getLocalRequestParameter(String inKey);
-	
+
 	public String getReferringPage();
-	
+
 	public String getRequestParamsAsList();
 
-//	public void unpackageVariables();
-	
+	// public void unpackageVariables();
+
 	public String getText(Object inObj);
-	
+
 	public String getSiteRoot();
-	
+
 	public String getUserProfileValue(String inKey);
-	
+
 	public UserProfile getUserProfile();
 
-	void putAllRequestParameters(Map<String,Object> inArgs);
-	
+	void putAllRequestParameters(Map<String, Object> inArgs);
+
 	public String getMethod();
+
 	public void setMethod(String inMethod);
-	
-	
+
 	public String getSiteUrl();
-	
+
 	public Data getData();
 
 	boolean hasPermission(String inString);
@@ -288,5 +311,5 @@ public interface WebPageRequest
 	public boolean getRequestParameterBoolean(String inKey, boolean inDefault);
 
 	public TimeZone getTimeZone();
-	
+
 }

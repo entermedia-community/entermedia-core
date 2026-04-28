@@ -16,14 +16,12 @@ public class Position {
 	private Double longitude;
 	private Double accuracy;
 	protected Element result;
-	
-	public Element getResult()
-	{
+
+	public Element getResult() {
 		return result;
 	}
 
-	public void setResult(Element inResult)
-	{
+	public void setResult(Element inResult) {
 		result = inResult;
 	}
 
@@ -35,9 +33,9 @@ public class Position {
 	 * not known.
 	 * 
 	 * @param latitude
-	 *            a <code>Double</code>
+	 *                  a <code>Double</code>
 	 * @param longitude
-	 *            a <code>Double</code>
+	 *                  a <code>Double</code>
 	 */
 	public Position(Double latitude, Double longitude) {
 		this.latitude = latitude;
@@ -50,18 +48,17 @@ public class Position {
 	 * copy of the argument position.
 	 * 
 	 * @param p
-	 *            a <code>Position</code>
+	 *          a <code>Position</code>
 	 */
 	public Position(Position p) {
 		longitude = p.longitude;
 		latitude = p.latitude;
 	}
 
-	public Position(Map inValue)
-	{
-		Double lat = (Double)inValue.get("lat");
+	public Position(Map inValue) {
+		Double lat = (Double) inValue.get("lat");
 		latitude = lat;
-		Double lon = (Double)inValue.get("lon");
+		Double lon = (Double) inValue.get("lon");
 		longitude = lon;
 	}
 
@@ -87,7 +84,7 @@ public class Position {
 	 * Sets the latitude.
 	 * 
 	 * @param latitude
-	 *            a <code>Double</code>
+	 *                 a <code>Double</code>
 	 */
 	public void setLatitude(Double latitude) {
 		this.latitude = latitude;
@@ -97,7 +94,7 @@ public class Position {
 	 * Sets the longitude.
 	 * 
 	 * @param longitude
-	 *            a <code>Double</code>
+	 *                  a <code>Double</code>
 	 */
 	public void setLongitude(Double longitude) {
 		this.longitude = longitude;
@@ -107,7 +104,7 @@ public class Position {
 	 * Finds the distance in meters between two positions on earth.
 	 * 
 	 * @param position
-	 *            a <code>Position</code>
+	 *                 a <code>Position</code>
 	 * 
 	 * @return the distance between two positions
 	 */
@@ -123,20 +120,17 @@ public class Position {
 
 		double x_B = RADIUS_EARTH
 				* Math
-						.cos(Math.toRadians(position.getLatitude()
-								))
+						.cos(Math.toRadians(position.getLatitude()))
 				* Math.cos(Math
 						.toRadians(position.getLongitude()));
 		double y_B = RADIUS_EARTH
 				* Math
-						.cos(Math.toRadians(position.getLatitude()
-								))
+						.cos(Math.toRadians(position.getLatitude()))
 				* Math.sin(Math
 						.toRadians(position.getLongitude()));
 		double z_B = RADIUS_EARTH
 				* Math
-						.sin(Math.toRadians(position.getLatitude()
-								));
+						.sin(Math.toRadians(position.getLatitude()));
 
 		double distance = Math.sqrt((x_A - x_B) * (x_A - x_B) + (y_A - y_B)
 				* (y_A - y_B) + (z_A - z_B) * (z_A - z_B));
@@ -149,7 +143,7 @@ public class Position {
 	 * points on a flat plane.
 	 * 
 	 * @param position
-	 *            a <code>Position</code>
+	 *                 a <code>Position</code>
 	 * 
 	 * @return the distance between two positions treated as points on a flat
 	 *         plane
@@ -186,7 +180,7 @@ public class Position {
 	 * @return a string representation of this <code>Position</code>
 	 */
 	public String toString() {
-		return "{lat: "+ latitude + ", lng: " +  longitude + "}";
+		return "{lat: " + latitude + ", lng: " + longitude + "}";
 	}
 
 	public Double getAccuracy() {
@@ -196,11 +190,9 @@ public class Position {
 	public void setAccuracy(Double accuracy) {
 		this.accuracy = accuracy;
 	}
-	
-	public String getFormatedAddress()
-	{
-		if( result == null)
-		{
+
+	public String getFormatedAddress() {
+		if (result == null) {
 			return null;
 		}
 		return result.elementTextTrim("formatted_address");

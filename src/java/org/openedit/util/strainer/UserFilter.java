@@ -16,22 +16,19 @@ import org.openedit.WebPageRequest;
 import org.openedit.users.User;
 import org.openedit.util.Replacer;
 
-
 /**
  * This filter only passes users whose names match a given name.
  *
  * @author Eric Galluzzo
  */
-public class UserFilter extends BaseFilter
-{
+public class UserFilter extends BaseFilter {
 
 	/**
 	 * Construct a filter that passes all users.
 	 *
 	 * @see #setUsername(String)
 	 */
-	public UserFilter()
-	{
+	public UserFilter() {
 		super();
 	}
 
@@ -40,8 +37,7 @@ public class UserFilter extends BaseFilter
 	 *
 	 * @param inUsername The username to pass
 	 */
-	public UserFilter(String inUsername)
-	{
+	public UserFilter(String inUsername) {
 		setUsername(inUsername);
 	}
 
@@ -50,8 +46,7 @@ public class UserFilter extends BaseFilter
 	 *
 	 * @param username The username to set
 	 */
-	public void setUsername(String username)
-	{
+	public void setUsername(String username) {
 		setValue(username);
 	}
 
@@ -60,50 +55,42 @@ public class UserFilter extends BaseFilter
 	 *
 	 * @return String
 	 */
-	public String getUsername()
-	{
+	public String getUsername() {
 		return fieldValue;
 	}
 
 	/**
 	 * @see org.openedit.util.strainer.Filter#passes(java.lang.Object)
 	 */
-	public boolean passes(Object inObj) throws FilterException, ClassCastException
-	{
+	public boolean passes(Object inObj) throws FilterException, ClassCastException {
 		WebPageRequest req = (WebPageRequest) inObj;
 
 		User user = req.getUser();
 
-		if (user != null)
-		{
-			if ((getUsername() == null) || user.getUserName().equalsIgnoreCase(getUsername()))
-			{
+		if (user != null) {
+			if ((getUsername() == null) || user.getUserName().equalsIgnoreCase(getUsername())) {
 				return true;
 			}
-			if( getUsername().startsWith("${"))
-			{
+			if (getUsername().startsWith("${")) {
 				String username = new Replacer().replace(getUsername(), req.getPageMap());
-				 if( user.getUserName().equalsIgnoreCase(username) )
-				 {
-					 return true;
-				 }
+				if (user.getUserName().equalsIgnoreCase(username)) {
+					return true;
+				}
 			}
 		}
 		return false;
 	}
-	public String toString() 
-	{
-		if( getUsername() == null)
-		{
+
+	public String toString() {
+		if (getUsername() == null) {
 			return "User";
 		}
 		return "User=" + getUsername();
 	}
-	public boolean equals(Object inObj)
-	{
-		if (inObj instanceof UserFilter)
-		{
-			UserFilter toCompare = (UserFilter)inObj;
+
+	public boolean equals(Object inObj) {
+		if (inObj instanceof UserFilter) {
+			UserFilter toCompare = (UserFilter) inObj;
 			return getUsername().equals(toCompare.getUsername());
 		}
 		return false;

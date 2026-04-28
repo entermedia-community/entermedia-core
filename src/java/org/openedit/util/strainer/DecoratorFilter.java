@@ -6,19 +6,18 @@ package org.openedit.util.strainer;
  *
  * @author Eric Galluzzo
  */
-public interface DecoratorFilter extends Filter
-{
+public interface DecoratorFilter extends Filter {
 	/**
 	 * Retrieve this filter's sub-filter.
 	 * 
-	 * @return  This filter's sub-filter
+	 * @return This filter's sub-filter
 	 */
 	public Filter getFilter();
-	
+
 	/**
 	 * Set this filter's sub-filter.
 	 * 
-	 * @param newFilter  The new filter
+	 * @param newFilter The new filter
 	 */
-	public void setFilter( Filter newFilter );
+	public void setFilter(Filter newFilter);
 }

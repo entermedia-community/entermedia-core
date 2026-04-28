@@ -6,36 +6,33 @@ package org.openedit.generators;
 import java.io.OutputStream;
 import java.io.Writer;
 
-public class Output
-{
+public class Output {
 	Writer fieldWriter;
 	OutputStream fieldStream;
-	
-	public Output()
-	{
-		
+
+	public Output() {
+
 	}
-	
-	public Output(Writer inOut, OutputStream inStream)
-	{
+
+	public Output(Writer inOut, OutputStream inStream) {
 		fieldWriter = inOut;
 		fieldStream = inStream;
 	}
-	public OutputStream getStream()
-	{
+
+	public OutputStream getStream() {
 		return fieldStream;
 	}
-	public void setStream(OutputStream inStream)
-	{
+
+	public void setStream(OutputStream inStream) {
 		fieldStream = inStream;
 	}
-	public Writer getWriter()
-	{
+
+	public Writer getWriter() {
 		return fieldWriter;
 	}
-	public void setWriter(Writer inWriter)
-	{
+
+	public void setWriter(Writer inWriter) {
 		fieldWriter = inWriter;
 	}
-	
+
 }

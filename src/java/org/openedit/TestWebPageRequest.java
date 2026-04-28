@@ -9,12 +9,11 @@ import java.util.Map;
 /**
  * @author cburkey
  */
-public class TestWebPageRequest extends BaseWebPageRequest
-{
+public class TestWebPageRequest extends BaseWebPageRequest {
 	Map fieldFakeSession = new HashMap();
 	Map fieldFakeProperties = new HashMap();
 	protected String fieldMethod = "GET";
-	
+
 	public String getMethod() {
 		return fieldMethod;
 	}
@@ -26,76 +25,71 @@ public class TestWebPageRequest extends BaseWebPageRequest
 	/**
 	 * @param inContext
 	 */
-	public TestWebPageRequest(WebPageRequest inContext)
-	{
+	public TestWebPageRequest(WebPageRequest inContext) {
 		super(inContext);
 	}
 
 	/**
 	 * 
 	 */
-	public TestWebPageRequest()
-	{
+	public TestWebPageRequest() {
 	}
 
-	/* (non-javadoc)
+	/*
+	 * (non-javadoc)
+	 * 
 	 * @see org.openedit.WebPageContext#getSessionValue(java.lang.String)
 	 */
-	public Object getSessionValue(String inInKey)
-	{
+	public Object getSessionValue(String inInKey) {
 		return fieldFakeSession.get(inInKey);
 	}
 
-	/* (non-javadoc)
-	 * @see org.openedit.WebPageContext#putSessionValue(java.lang.String, java.lang.Object)
+	/*
+	 * (non-javadoc)
+	 * 
+	 * @see org.openedit.WebPageContext#putSessionValue(java.lang.String,
+	 * java.lang.Object)
 	 */
-	public void putSessionValue(String inInKey, Object inInObject)
-	{
+	public void putSessionValue(String inInKey, Object inInObject) {
 		fieldFakeSession.put(inInKey, inInObject);
 		putPageValue(inInKey, inInObject);
 	}
 
-	public String getRequestParameter(String inKey)
-	{
-		if (getLocalParameters().containsKey(inKey))
-		{
+	public String getRequestParameter(String inKey) {
+		if (getLocalParameters().containsKey(inKey)) {
 			Object val = getLocalParameters().get(inKey);
-			if( val instanceof String)
-			{
-				return (String)val;
+			if (val instanceof String) {
+				return (String) val;
 			}
-			String[] vals = (String[])val;
-			if( vals.length > 0)
-			{
+			String[] vals = (String[]) val;
+			if (vals.length > 0) {
 				return vals[0];
 			}
 			return null;
-		}
-		else
-		{
+		} else {
 			return null;
 		}
 
 	}
-	public String[] getRequestParameters( String inKey )
-	{
+
+	public String[] getRequestParameters(String inKey) {
 		Object parameter = null;
-		if (getLocalParameters().containsKey(inKey))
-		{
+		if (getLocalParameters().containsKey(inKey)) {
 			parameter = getLocalParameters().get(inKey);
 		}
-		
-		if (parameter instanceof String[] || parameter == null)
-		{
+
+		if (parameter instanceof String[] || parameter == null) {
 			return (String[]) parameter;
 		}
-		return new String[] {(String) parameter };
+		return new String[] { (String) parameter };
 	}
-	/* (non-javadoc)
+
+	/*
+	 * (non-javadoc)
+	 * 
 	 * @see org.openedit.DefaultPageContext#removeSessionValue(java.lang.String)
 	 */
-	public void removeSessionValue(String inKey)
-	{
+	public void removeSessionValue(String inKey) {
 		fieldFakeSession.remove(inKey);
 	}
 }

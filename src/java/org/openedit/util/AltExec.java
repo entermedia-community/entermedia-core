@@ -9,149 +9,117 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openedit.OpenEditException;
 
-public class AltExec
-{
+public class AltExec {
 	private static final Log log = LogFactory.getLog(AltExec.class);
 	protected String fieldErrorOutput;
 	protected String fieldStandardOutput;
 	protected int timelimit; // an optional timelimit on the exececution time
 	protected boolean fieldTimeLimited = false;// set a time limit for this process to complete
 
-	public int getTimelimit()
-	{
+	public int getTimelimit() {
 		return timelimit;
 	}
 
-	public void setTimelimit(int inTimelimit)
-	{
-		setTimeLimited( inTimelimit > 0 );
+	public void setTimelimit(int inTimelimit) {
+		setTimeLimited(inTimelimit > 0);
 		timelimit = inTimelimit;
 	}
 
-	public boolean isTimeLimited()
-	{
+	public boolean isTimeLimited() {
 		return fieldTimeLimited;
 	}
 
-	public void setTimeLimited(boolean inTimeLimited)
-	{
+	public void setTimeLimited(boolean inTimeLimited) {
 		fieldTimeLimited = inTimeLimited;
 	}
 
-	public boolean runExec(List args) throws OpenEditException
-	{
+	public boolean runExec(List args) throws OpenEditException {
 		setErrorOutput(null);
 		setStandardOutput(null);
 		long start = System.currentTimeMillis();
 		final ProcessContainer container = new ProcessContainer();
-		container.setCommands( args );
-		try
-		{
+		container.setCommands(args);
+		try {
 			log.info("Running: " + args);
-			
-			
+
 			Thread execThread = container.getThread();
-			
-			if( isTimeLimited() )
-			{
+
+			if (isTimeLimited()) {
 				// wait for notification from the execThread
-				Thread timerThread = createTimerThread( container );
+				Thread timerThread = createTimerThread(container);
 				timerThread.start();
 				execThread.start();
-				synchronized ( container )
-				{
+				synchronized (container) {
 					container.wait();
 				}
-				
-			}
-			else
-			{
+
+			} else {
 				execThread.start();
 				execThread.join();
 			}
-		}
-		catch (Exception ex)
-		{
+		} catch (Exception ex) {
 			throw new OpenEditException(ex);
 		}
-		setStandardOutput( container.getStandardOut() );
-		setErrorOutput( container.getErrors() );
+		setStandardOutput(container.getStandardOut());
+		setErrorOutput(container.getErrors());
 		long duration = System.currentTimeMillis() - start;
-		log.info( "Exec process " + args + " exiting with return code " + container.getReturnCode() + " in " + duration + "ms" );
+		log.info("Exec process " + args + " exiting with return code " + container.getReturnCode() + " in " + duration
+				+ "ms");
 		return container.getReturnCode() == 0;
 	}
 
-	protected Thread createTimerThread( final ProcessContainer container )
-	{
-		Thread timerThread = new Thread( new Runnable( )
-		{
-			public void run()
-			{
+	protected Thread createTimerThread(final ProcessContainer container) {
+		Thread timerThread = new Thread(new Runnable() {
+			public void run() {
 				boolean timedOut = false;
 				int count = 0;
-				try
-				{
-					log.info( "Starting " + getTimelimit() + "ms process timer..." );
+				try {
+					log.info("Starting " + getTimelimit() + "ms process timer...");
 					// Neat... if the increment is too small (<10ms), the timer
 					// accuracy suffers because this thread does not permit the process
 					// thread time to execute.
 					int increment = 100;
-					
-					while ( !container.isFinished() && count < getTimelimit() )
-					{
+
+					while (!container.isFinished() && count < getTimelimit()) {
 						count = count + increment;
-						Thread.sleep( increment );
+						Thread.sleep(increment);
 					}
 					timedOut = count >= getTimelimit();
-				}
-				catch ( InterruptedException e )
-				{
-					log.error( e );
-				}
-				finally
-				{
-					if ( timedOut )
-					{
-						log.info( "Process timed out, terminating... "  );
+				} catch (InterruptedException e) {
+					log.error(e);
+				} finally {
+					if (timedOut) {
+						log.info("Process timed out, terminating... ");
 					}
 					container.terminate();
-					synchronized ( container )
-					{
+					synchronized (container) {
 						container.notify();
 					}
-					if ( !timedOut )
-					{
-						log.info( "Exiting timer thread in " + count + "ms" );
+					if (!timedOut) {
+						log.info("Exiting timer thread in " + count + "ms");
 					}
 				}
 			}
 
-		} );
-		
+		});
+
 		return timerThread;
 	}
 
-	public String getErrorOutput()
-	{
+	public String getErrorOutput() {
 		return fieldErrorOutput;
 	}
 
-	public void setErrorOutput(String inErrorOutput)
-	{
+	public void setErrorOutput(String inErrorOutput) {
 		fieldErrorOutput = inErrorOutput;
 	}
 
-	public String getStandardOutput()
-	{
+	public String getStandardOutput() {
 		return fieldStandardOutput;
 	}
 
-	public void setStandardOutput(String inStandardOutput)
-	{
+	public void setStandardOutput(String inStandardOutput) {
 		fieldStandardOutput = inStandardOutput;
 	}
 
-	
-
-	
 }

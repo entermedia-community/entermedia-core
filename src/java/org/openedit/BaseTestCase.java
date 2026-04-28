@@ -25,64 +25,59 @@ import org.openedit.page.Page;
 
 import junit.framework.TestCase;
 
-
 /**
  * DOCUMENT ME!!
  *
  * @author cburkey
  */
-public class BaseTestCase extends TestCase
-{
-	protected  TestFixture fieldFixture;
-	protected  static TestFixture fieldStaticFixture;
+public class BaseTestCase extends TestCase {
+	protected TestFixture fieldFixture;
+	protected static TestFixture fieldStaticFixture;
 	private static final Log log = LogFactory.getLog(BaseTestCase.class);
+
 	/**
 	 * 
 	 */
-	public BaseTestCase()
-	{
-		super(""); //this is not needed in newer versions of JUnit
+	public BaseTestCase() {
+		super(""); // this is not needed in newer versions of JUnit
 	}
+
 	/**
 	 * Constructor for BaseTestCase.
 	 *
 	 * @param arg0
 	 */
-	public BaseTestCase(String arg0)
-	{
+	public BaseTestCase(String arg0) {
 		super(arg0);
 	}
 
-	public Page getPage( String inPath ) throws OpenEditException
-	{
-		return getFixture().getPageManager().getPage( inPath, true );
+	public Page getPage(String inPath) throws OpenEditException {
+		return getFixture().getPageManager().getPage(inPath, true);
 	}
+
 	/**
 	 * DOCUMENT ME!
 	 *
 	 * @param inFixture
 	 */
-	public void setFixture(TestFixture inFixture)
-	{
+	public void setFixture(TestFixture inFixture) {
 		fieldFixture = inFixture;
 	}
 
-	public TestFixture getFixture()
-	{
-//		if (fieldFixture == null)
-//		{
-//			fieldFixture = new TestFixture();
-//		}
-//		return fieldFixture;
+	public TestFixture getFixture() {
+		// if (fieldFixture == null)
+		// {
+		// fieldFixture = new TestFixture();
+		// }
+		// return fieldFixture;
 		return getStaticFixture();
 	}
-	public TestFixture getStaticFixture()
-	{
-		if (fieldStaticFixture == null)
-		{
+
+	public TestFixture getStaticFixture() {
+		if (fieldStaticFixture == null) {
 			fieldStaticFixture = new TestFixture();
 			try {
-				log.info("Initi one time " + getClass() );
+				log.info("Initi one time " + getClass());
 				oneTimeSetup();
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
@@ -91,61 +86,49 @@ public class BaseTestCase extends TestCase
 		}
 		return fieldStaticFixture;
 	}
-	
+
 	protected void oneTimeSetup() throws Exception {
 		// TODO Auto-generated method stub
-		
+
 	}
-	protected void tearDown() throws Exception
-	{
+
+	protected void tearDown() throws Exception {
 		super.tearDown();
-		if ( fieldFixture != null)
-		{
+		if (fieldFixture != null) {
 			getFixture().getWebServer().getOpenEditEngine().shutdown();
 		}
 	}
-	/**	Delete the specified directory and all files within it */
-	protected void deleteDirectory(File directory)
-	{
+
+	/** Delete the specified directory and all files within it */
+	protected void deleteDirectory(File directory) {
 		File[] containedFiles = directory.listFiles();
-		if (containedFiles != null)
-		{
-			for (int n = 0; n < containedFiles.length; n++)
-			{
-				File file = containedFiles[ n ];
-				if (file.isDirectory())
-				{
-					deleteDirectory( file );
-				}
-				else
-				{
+		if (containedFiles != null) {
+			for (int n = 0; n < containedFiles.length; n++) {
+				File file = containedFiles[n];
+				if (file.isDirectory()) {
+					deleteDirectory(file);
+				} else {
 					file.delete();
 				}
 			}
 		}
 		directory.delete();
 	}
-	
-	protected File getRoot()
-	{
+
+	protected File getRoot() {
 		return getFixture().getWebServer().getRootDirectory();
 	}
-	
-	protected BaseModule getModule( String inKey )
-	{
-		return getFixture().getModuleManager().getModule( inKey );
+
+	protected BaseModule getModule(String inKey) {
+		return getFixture().getModuleManager().getModule(inKey);
 	}
-	
-	protected Object getBean( String inKey )
-	{
-		return getFixture().getModuleManager().getBean( inKey );
+
+	protected Object getBean(String inKey) {
+		return getFixture().getModuleManager().getBean(inKey);
 	}
-	
-	protected Object getBean(String inCatalogId,  String inKey )
-	{
-		return getFixture().getModuleManager().getBean(inCatalogId,  inKey );
+
+	protected Object getBean(String inCatalogId, String inKey) {
+		return getFixture().getModuleManager().getBean(inCatalogId, inKey);
 	}
-	
-	
-	
+
 }

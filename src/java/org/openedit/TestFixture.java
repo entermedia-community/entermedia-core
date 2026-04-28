@@ -28,33 +28,25 @@ import org.openedit.users.UserManager;
 import org.openedit.util.PathUtilities;
 import org.openedit.web.Browser;
 
-
 /**
  * This class is a text fixture for JPublish/Open Edit.
  *
  * @author Eric Galluzzo
  */
-public class TestFixture
-{
+public class TestFixture {
 	protected String fieldPath = null;
-	protected BaseWebServer fieldWebServer;	
+	protected BaseWebServer fieldWebServer;
 	protected String fieldCategoryId = "entermedia/catalogs/testcatalog";
 	protected String fieldRootPath;
-	
-	public String getRootPath()
-	{
-		if( fieldRootPath == null)
-		{
+
+	public String getRootPath() {
+		if (fieldRootPath == null) {
 			String rootPath = System.getProperty("oe.root.path");
-			if ( rootPath == null )
-			{
-				File found = new File( "resources/test");
-				if( found.exists())
-				{
+			if (rootPath == null) {
+				File found = new File("resources/test");
+				if (found.exists()) {
 					rootPath = "resources/test";
-				}
-				else
-				{
+				} else {
 					rootPath = "webapp";
 				}
 			}
@@ -63,144 +55,128 @@ public class TestFixture
 		return fieldRootPath;
 	}
 
-	public void setRootPath(String inRootPath)
-	{
+	public void setRootPath(String inRootPath) {
 		fieldRootPath = inRootPath;
 	}
 
-	public String getCategoryId()
-	{
+	public String getCategoryId() {
 		return fieldCategoryId;
 	}
 
-	public void setCategoryId(String inCategoryId)
-	{
+	public void setCategoryId(String inCategoryId) {
 		fieldCategoryId = inCategoryId;
 	}
 
 	/**
 	 * Constructor for TestFixture.
 	 */
-	public TestFixture()
-	{
+	public TestFixture() {
 		super();
 	}
 
 	/**
 	 * @return
 	 */
-	public String getPath()
-	{
+	public String getPath() {
 		return fieldPath;
 	}
 
 	/**
 	 * @param inPath
 	 */
-	public void setPath(String inPath)
-	{
+	public void setPath(String inPath) {
 		fieldPath = inPath;
 	}
 
-
-
-	public WebPageRequest createPageRequest() throws OpenEditException
-	{
+	public WebPageRequest createPageRequest() throws OpenEditException {
 		BaseWebPageRequest context = new TestWebPageRequest();
 
 		Browser browser = new Browser("Mozilla/4.0 (compatible; MSIE 5.5; Windows NT 5.0)");
 
 		Page page = getPageManager().getPage("/index.html");
-		context.putPageValue( PageRequestKeys.PAGE, page);
-		context.putPageValue( PageRequestKeys.CONTENT, page);
-		context.putPageValue( PageRequestKeys.BROWSER, browser);
-		context.putPageValue( PageRequestKeys.HOME, "");
+		context.putPageValue(PageRequestKeys.PAGE, page);
+		context.putPageValue(PageRequestKeys.CONTENT, page);
+		context.putPageValue(PageRequestKeys.BROWSER, browser);
+		context.putPageValue(PageRequestKeys.HOME, "");
 
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		context.putPageValue( PageRequestKeys.OUTPUT_STREAM, out);
-		context.putPageValue( PageRequestKeys.OUTPUT_WRITER, new StringWriter());
+		context.putPageValue(PageRequestKeys.OUTPUT_STREAM, out);
+		context.putPageValue(PageRequestKeys.OUTPUT_WRITER, new StringWriter());
 		User admin = getUserManager().getUser("admin");
-		//FileSystemUserManager userManager = (FileSystemUserManager)getUserManager();
-		//System.out.println( "Group directory: " + userManager.getGroupDirectory().getAbsolutePath() );
-		//System.out.println( "User directory: " + userManager.getUserDirectory().getAbsolutePath() );
-		if ( admin != null )
-		{
-			context.putPageValue( PageRequestKeys.USER, admin );
-			SearcherManager manager = (SearcherManager)getModuleManager().getBean("searcherManager");
-			UserProfile profile = (UserProfile)manager.getData(getCategoryId(), "userprofile","admin");
-			context.putPageValue( "userprofile", profile );
+		// FileSystemUserManager userManager = (FileSystemUserManager)getUserManager();
+		// System.out.println( "Group directory: " +
+		// userManager.getGroupDirectory().getAbsolutePath() );
+		// System.out.println( "User directory: " +
+		// userManager.getUserDirectory().getAbsolutePath() );
+		if (admin != null) {
+			context.putPageValue(PageRequestKeys.USER, admin);
+			SearcherManager manager = (SearcherManager) getModuleManager().getBean("searcherManager");
+			UserProfile profile = (UserProfile) manager.getData(getCategoryId(), "userprofile", "admin");
+			context.putPageValue("userprofile", profile);
 		}
 		context.putPageValue("username", "admin");
 
-		//URLUtilities util = (URLUtilities) inContext.getPageValue( "url_util" );
-		context.putPageValue(PageRequestKeys.WEB_SERVER_PATH,"http://localhost:8080");
-		//SessionTool sessionTool = new SessionTool( context, getModuleManager() );
-		//context.putPageValue( PageRequestKeys.CLASSTOOL, sessionTool );
+		// URLUtilities util = (URLUtilities) inContext.getPageValue( "url_util" );
+		context.putPageValue(PageRequestKeys.WEB_SERVER_PATH, "http://localhost:8080");
+		// SessionTool sessionTool = new SessionTool( context, getModuleManager() );
+		// context.putPageValue( PageRequestKeys.CLASSTOOL, sessionTool );
 
-		getEngine().createPageStreamer( page,  context);
+		getEngine().createPageStreamer(page, context);
 
 		return context;
 	}
-	
+
 	public WebPageRequest createPageRequest(String inPath)
-		throws OpenEditException
-	{
+			throws OpenEditException {
 		WebPageRequest context = (WebPageRequest) createPageRequest();
 
 		String[] parts = inPath.split("[?]");
-		if( parts.length > 1)
-		{
+		if (parts.length > 1) {
 			Map args = PathUtilities.extractArguments(parts[1]);
 			context.putAllRequestParameters(args);
 		}
 		String path = parts[0];
-		
+
 		context.putPageValue("path", path);
 
 		Page dynamicpage = getPageManager().getPage(path);
-		context.putPageValue( PageRequestKeys.PAGE, dynamicpage);
-		context.putPageValue( PageRequestKeys.CONTENT, dynamicpage);
-		context.putPageValue( PageRequestKeys.USER, getUserManager().getUser("admin"));
+		context.putPageValue(PageRequestKeys.PAGE, dynamicpage);
+		context.putPageValue(PageRequestKeys.CONTENT, dynamicpage);
+		context.putPageValue(PageRequestKeys.USER, getUserManager().getUser("admin"));
 
 		User admin = getUserManager().getUser("admin");
-		if ( admin != null )
-		{
-			context.putPageValue( PageRequestKeys.USER, admin );
+		if (admin != null) {
+			context.putPageValue(PageRequestKeys.USER, admin);
 			String catid = dynamicpage.get("catalogid");
-			context.putSessionValue(catid + "user",admin);
+			context.putSessionValue(catid + "user", admin);
 		}
 
-		
-
-		getEngine().createPageStreamer( dynamicpage,  context);
+		getEngine().createPageStreamer(dynamicpage, context);
 
 		return context;
 	}
 
-	public OpenEditEngine getEngine()
-	{
+	public OpenEditEngine getEngine() {
 		return getWebServer().getOpenEditEngine();
 	}
-	public ModuleManager getModuleManager()
-	{
+
+	public ModuleManager getModuleManager() {
 		return getWebServer().getModuleManager();
 	}
-	
-	public PageManager getPageManager()
-	{
+
+	public PageManager getPageManager() {
 		return getWebServer().getPageManager();
 	}
-	public UserManager getUserManager()
-	{
+
+	public UserManager getUserManager() {
 		return getWebServer().getUserManager();
 	}
-	public WebServer getWebServer()
-	{
-		if (fieldWebServer == null)
-		{
+
+	public WebServer getWebServer() {
+		if (fieldWebServer == null) {
 			fieldWebServer = new BaseWebServer();
-		
-			fieldWebServer.setRootDirectory(new File( getRootPath()).getAbsoluteFile());
+
+			fieldWebServer.setRootDirectory(new File(getRootPath()).getAbsoluteFile());
 			fieldWebServer.initialize();
 		}
 

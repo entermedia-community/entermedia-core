@@ -15,63 +15,52 @@ import java.util.TimeZone;
 
 import org.openedit.page.manage.TextLabelManager;
 
-public class LocaleManager
-{
+public class LocaleManager {
 	protected Map fieldCache;
 	protected DateStorageUtil fieldDateStorageUtil;
-	public LocaleManager()
-	{
+
+	public LocaleManager() {
 	}
-	public DateStorageUtil getDateStorageUtil()
-	{
-		if( fieldDateStorageUtil == null)
-		{
+
+	public DateStorageUtil getDateStorageUtil() {
+		if (fieldDateStorageUtil == null) {
 			fieldDateStorageUtil = DateStorageUtil.getStorageUtil();
 		}
 		return fieldDateStorageUtil;
 	}
 
-	public void setDateStorageUtil(DateStorageUtil inDateStorageUtil)
-	{
+	public void setDateStorageUtil(DateStorageUtil inDateStorageUtil) {
 		fieldDateStorageUtil = inDateStorageUtil;
 	}
 
-	public Map getCache()
-	{
-		if (fieldCache == null)
-		{
+	public Map getCache() {
+		if (fieldCache == null) {
 			fieldCache = new HashMap();
 		}
 		return fieldCache;
 	}
 
-	public void setCache(Map inCache)
-	{
+	public void setCache(Map inCache) {
 		fieldCache = inCache;
 	}
 
-	public Locale getLocale(String inLocale)
-	{
+	public Locale getLocale(String inLocale) {
 		Locale loc = (Locale) getCache().get(inLocale);
-		if (loc == null)
-		{
-			//TODO: parse out the parts of the string
+		if (loc == null) {
+			// TODO: parse out the parts of the string
 			loc = parseLocaleString(inLocale);
 			getCache().put(inLocale, loc);
 		}
 		return loc;
 	}
 
-	public final String getLang(String inLocale)
-	{
-		if (inLocale == null)
-		{
+	public final String getLang(String inLocale) {
+		if (inLocale == null) {
 			return "en";
 		}
 
 		Locale locale = getLocale(inLocale);
-		if(locale == null)
-		{
+		if (locale == null) {
 			return "en";
 		}
 		return locale.getLanguage();
@@ -80,28 +69,25 @@ public class LocaleManager
 	/**
 	 * Parse the given localeString into a {@link java.util.Locale}.
 	 * 
-	 * This is the inverse operation of {@link java.util.Locale#toString 
+	 * This is the inverse operation of {@link java.util.Locale#toString
 	 * Locale's toString}.
 	 * 
 	 * @param localeString
-	 *            the locale string
+	 *                     the locale string
 	 * @return a corresponding Locale instance
 	 */
-	public static Locale parseLocaleString(String localeString)
-	{
+	public static Locale parseLocaleString(String localeString) {
 		String[] parts = tokenizeToStringArray(localeString, "_ ", false, false);
 		String language = (parts.length > 0 ? parts[0] : "");
 		String country = (parts.length > 1 ? parts[1] : "");
 		String variant = "";
-		if (parts.length >= 2)
-		{
+		if (parts.length >= 2) {
 			// There is definitely a variant, and it is everything after the country
 			// code sans the separator between the country code and the variant.
 			int endIndexOfCountryCode = localeString.indexOf(country) + country.length();
 			// Strip off any leading '_' and whitespace, what's left is the variant.
 			variant = trimLeadingCharacter(localeString.substring(endIndexOfCountryCode));
-			if (variant.startsWith("_"))
-			{
+			if (variant.startsWith("_")) {
 				variant = trimLeadingCharacter(variant);
 			}
 		}
@@ -117,35 +103,35 @@ public class LocaleManager
 	 * delimiters, consider using delimitedListToStringArray
 	 * 
 	 * @param str
-	 *            the String to tokenize
+	 *                          the String to tokenize
 	 * @param delimiters
-	 *            the delimiter characters, assembled as String (each of those
-	 *            characters is individually considered as delimiter)
+	 *                          the delimiter characters, assembled as String (each
+	 *                          of those
+	 *                          characters is individually considered as delimiter)
 	 * @param trimTokens
-	 *            trim the tokens via String's trim
+	 *                          trim the tokens via String's trim
 	 * @param ignoreEmptyTokens
-	 *            omit empty tokens from the result array (only applies to
-	 *            tokens that are empty after trimming; StringTokenizer will not
-	 *            consider subsequent delimiters as token in the first place).
+	 *                          omit empty tokens from the result array (only
+	 *                          applies to
+	 *                          tokens that are empty after trimming;
+	 *                          StringTokenizer will not
+	 *                          consider subsequent delimiters as token in the first
+	 *                          place).
 	 * @return an array of the tokens (null if the input String was null)
 	 */
-	public static String[] tokenizeToStringArray(String str, String delimiters, boolean trimTokens, boolean ignoreEmptyTokens)
-	{
-		if (str == null)
-		{
+	public static String[] tokenizeToStringArray(String str, String delimiters, boolean trimTokens,
+			boolean ignoreEmptyTokens) {
+		if (str == null) {
 			return null;
 		}
 		StringTokenizer st = new StringTokenizer(str, delimiters);
 		List<String> tokens = new ArrayList<String>();
-		while (st.hasMoreTokens())
-		{
+		while (st.hasMoreTokens()) {
 			String token = st.nextToken();
-			if (trimTokens)
-			{
+			if (trimTokens) {
 				token = token.trim();
 			}
-			if (!ignoreEmptyTokens || token.length() > 0)
-			{
+			if (!ignoreEmptyTokens || token.length() > 0) {
 				tokens.add(token);
 			}
 		}
@@ -157,21 +143,18 @@ public class LocaleManager
 	 * String.
 	 * 
 	 * @param str
-	 *            the string to check
+	 *                the string to check
 	 * @param checker
-	 *            the character checker
+	 *                the character checker
 	 * @return the trimmed String
 	 */
-	public static String trimLeadingCharacter(String str)
-	{
-		if (hasLength(str) == false)
-		{
+	public static String trimLeadingCharacter(String str) {
+		if (hasLength(str) == false) {
 			return str;
 		}
 
 		StringBuffer buf = new StringBuffer(str);
-		while (buf.length() > 0 && Character.isLetterOrDigit(buf.charAt(0)))
-		{
+		while (buf.length() > 0 && Character.isLetterOrDigit(buf.charAt(0))) {
 			buf.deleteCharAt(0);
 		}
 		return buf.toString();
@@ -181,140 +164,115 @@ public class LocaleManager
 	 * Check that the given string param is neither null nor of length 0.
 	 * 
 	 * @param string
-	 *            the string
+	 *               the string
 	 * @return true if the String is not null and has length
 	 */
-	public static boolean hasLength(String string)
-	{
+	public static boolean hasLength(String string) {
 		return (string != null && string.length() > 0);
 	}
-	public String formatDateForDisplay(String inStoredDate, String inLocale)
-	{
+
+	public String formatDateForDisplay(String inStoredDate, String inLocale) {
 		Date stored = getDateStorageUtil().parseFromStorage(inStoredDate);
 		return formatDateForDisplay(stored, inLocale);
 	}
-	public String formatDateForDisplay(Date inDate, String inLocale)
-	{
-		if( inDate == null)
-		{
+
+	public String formatDateForDisplay(Date inDate, String inLocale) {
+		if (inDate == null) {
 			return "";
 		}
 
 		Locale loc = getLocale(inLocale);
-		DateFormat format = DateFormat.getDateInstance(DateFormat.SHORT, loc); 
-				//new SimpleDateFormat("MM/dd/yyyy", loc);
+		DateFormat format = DateFormat.getDateInstance(DateFormat.SHORT, loc);
+		// new SimpleDateFormat("MM/dd/yyyy", loc);
 		String formated = format.format(inDate);
 		return formated;
 	}
-	public String formatDateTimeForDisplay(String inStoredDate, String inLocale)
-	{
+
+	public String formatDateTimeForDisplay(String inStoredDate, String inLocale) {
 		Date stored = getDateStorageUtil().parseFromStorage(inStoredDate);
 		return formatDateTimeForDisplay(stored, inLocale);
 	}
-	public String formatDateTimeForDisplay(Date inDate, String inLocale)
-	{
+
+	public String formatDateTimeForDisplay(Date inDate, String inLocale) {
 		String formated = formatDateTimeForDisplay(inDate, inLocale, null);
 		return formated;
 	}
-	public String formatDateTimeForDisplay(Date inDate, String inLocale, TimeZone inTimeZone)
-	{
-		if( inDate == null)
-		{
+
+	public String formatDateTimeForDisplay(Date inDate, String inLocale, TimeZone inTimeZone) {
+		if (inDate == null) {
 			return "";
 		}
 		Locale loc = getLocale(inLocale);
-		DateFormat format = SimpleDateFormat.getDateTimeInstance(SimpleDateFormat.SHORT, SimpleDateFormat.LONG,loc);
+		DateFormat format = SimpleDateFormat.getDateTimeInstance(SimpleDateFormat.SHORT, SimpleDateFormat.LONG, loc);
 		format.setTimeZone(inTimeZone);
 		String formated = format.format(inDate);
 		return formated;
 	}
-	
-	public String getAge(Date inDate, String inLocale )
-	{
+
+	public String getAge(Date inDate, String inLocale) {
 		long diff = System.currentTimeMillis() - inDate.getTime();
 		diff = Math.abs(diff);
 		String label = null;
 		Double minute = org.openedit.util.MathUtils.divide(diff, (1000L * 60L)) % 60L;
 		Double hour = org.openedit.util.MathUtils.divide(diff, (1000 * 60 * 60));
 		Double time = null;
-		if( hour < 1)
-		{
-			//Now or minutes
-			if( minute < 1)
-			{
-				if ( minute < 0.05) 
-				{
+		if (hour < 1) {
+			// Now or minutes
+			if (minute < 1) {
+				if (minute < 0.05) {
 					label = "Seconds";
 					time = 0D;
-				}
-				else {
+				} else {
 					label = "Seconds";
 					time = minute * 60D;
 				}
-				
-			}
-			else
-			{
-				if (minute < 2)
-				{
+
+			} else {
+				if (minute < 2) {
 					label = "Minute";
-				}
-				else 
-				{
+				} else {
 					label = "Minutes";
 				}
 				time = minute;
 			}
-		}
-		else if( hour < 24)
-		{
-			if (hour < 2)
-			{
+		} else if (hour < 24) {
+			if (hour < 2) {
 				label = "Hour";
-			}
-			else 
-			{
+			} else {
 				label = "Hours";
 			}
-			time = hour ;
-		}
-		else
-		{
-			double days = (double)hour / 24d;
-			time =  days;
+			time = hour;
+		} else {
+			double days = (double) hour / 24d;
+			time = days;
 			label = "Day";
-			
-			if( (int)days > 1)
-			{
-				label =  label + "s";
+
+			if ((int) days > 1) {
+				label = label + "s";
 			}
 		}
-		
-		String translated = getTextLabelManager().getAutoText("/system/data/",label, inLocale);
-		if (time != null ) 
-		{
+
+		String translated = getTextLabelManager().getAutoText("/system/data/", label, inLocale);
+		if (time != null) {
 			return MathUtils.roundUp(time) + " " + translated;
-		}
-		else 
-		{
+		} else {
 			return translated;
 		}
-		
+
 	}
+
 	protected TextLabelManager fieldTextLabelManager;
-	public TextLabelManager getTextLabelManager()
-	{
+
+	public TextLabelManager getTextLabelManager() {
 		return fieldTextLabelManager;
 	}
 
-	public void setTextLabelManager(TextLabelManager inTextLabelManager)
-	{
+	public void setTextLabelManager(TextLabelManager inTextLabelManager) {
 		fieldTextLabelManager = inTextLabelManager;
 	}
-	
-	
+
 	public String getMonthName(Date date, String inLocale) {
-		if( date!= null) {
+		if (date != null) {
 			Calendar c = Calendar.getInstance();
 			c.setTime(date);
 			String[] mons = new DateFormatSymbols(getLocale(inLocale)).getMonths();
@@ -323,16 +281,15 @@ public class LocaleManager
 		}
 		return null;
 	}
+
 	Sizer sizer;
-	
-	public String getFileSize(long inSize)
-	{
-		if( sizer == null)
-		{
+
+	public String getFileSize(long inSize) {
+		if (sizer == null) {
 			sizer = new Sizer();
 		}
 		String size = sizer.inEnglish(inSize);
 		return size;
 	}
-	
+
 }

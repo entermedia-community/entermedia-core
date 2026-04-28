@@ -30,233 +30,177 @@ import org.openedit.repository.ContentItem;
  * @author cburkey
  *
  */
-public class XmlUtil
-{
+public class XmlUtil {
 	protected PerThreadSingleton fieldReaderPool;
 	protected XmlWriterPool fieldWriterPool;
 
-	public Element getXml(File inFile, String inEncode )
-	{
-		try
-		{
+	public Element getXml(File inFile, String inEncode) {
+		try {
 			return getXml(new FileReader(inFile), inEncode);
-		}
-		catch (Exception ex)
-		{
+		} catch (Exception ex) {
 			throw new RuntimeException(inFile.toString(), ex);
 		}
 	}
-	public Element getXml(ContentItem inItem, String inEncoding)
-	{
-		Element root = getXml(inItem.getInputStream(),inEncoding);
+
+	public Element getXml(ContentItem inItem, String inEncoding) {
+		Element root = getXml(inItem.getInputStream(), inEncoding);
 		return root;
-	}	
-	public Element getXml(InputStream inXmlReader, String inEncoding)
-	{
-		try
-		{
-			if( inEncoding == null)
-			{
+	}
+
+	public Element getXml(InputStream inXmlReader, String inEncoding) {
+		try {
+			if (inEncoding == null) {
 				inEncoding = "UTF-8";
 			}
-			return getXml(new InputStreamReader(inXmlReader,inEncoding), inEncoding );
-		}
-		catch (Exception ex)
-		{
+			return getXml(new InputStreamReader(inXmlReader, inEncoding), inEncoding);
+		} catch (Exception ex) {
 			throw new RuntimeException(ex);
 		}
 	}
-	public Element getXml(Reader inXmlReader, String inEncode)
-	{
+
+	public Element getXml(Reader inXmlReader, String inEncode) {
 		SAXReader reader = getReader();
-		try
-		{
+		try {
 			reader.setEncoding(inEncode);
 			reader.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
 
 			Document document = reader.read(inXmlReader);
 			Element root = document.getRootElement();
 			return root;
-		}
-		catch ( Exception ex)
-		{
+		} catch (Exception ex) {
 			throw new OpenEditRuntimeException(ex.getMessage(), ex);
-		}
-		finally
-		{
+		} finally {
 			FileUtils.safeClose(inXmlReader);
 		}
 	}
-	public Element getXml(String inXml, String inEncode)
-	{
+
+	public Element getXml(String inXml, String inEncode) {
 		StringReader reader = new StringReader(inXml);
-		return getXml(reader,inEncode);
+		return getXml(reader, inEncode);
 
 	}
-	
-	public void saveXml(Element inRoot, Writer inWriter, String inEncoding)
-	{
-		if( inRoot.getDocument() != null)
-		{
+
+	public void saveXml(Element inRoot, Writer inWriter, String inEncoding) {
+		if (inRoot.getDocument() != null) {
 			saveXml(inRoot.getDocument(), inWriter, inEncoding);
 			return;
 		}
-		try
-		{
+		try {
 			XMLWriter writer = getWriter(inEncoding);
 			writer.setWriter(inWriter);
 			writer.write(inRoot);
-		}
-		catch ( Exception ex)
-		{
+		} catch (Exception ex) {
 			throw new RuntimeException(ex.getMessage(), ex);
-		}
-		finally
-		{
-			FileUtils.safeClose(inWriter);
-		}
-	}
-	
-	public void saveXml(Document inRoot, Writer inWriter, String inEncoding)
-	{
-		try
-		{
-			XMLWriter writer = getWriter(inEncoding);
-			writer.setWriter(inWriter);
-			writer.write(inRoot);
-		}
-		catch ( Exception ex)
-		{
-			throw new RuntimeException(ex.getMessage(), ex);
-		}
-		finally
-		{
+		} finally {
 			FileUtils.safeClose(inWriter);
 		}
 	}
 
-	
-	public void saveXml(Document inRoot, OutputStream inStream, String inEncoding)
-	{
-
-		try
-		{
-			Writer inWriter = new OutputStreamWriter(inStream,inEncoding);
-		saveXml(inRoot,inWriter,inEncoding);
-	}
-	catch ( Exception ex )
-	{
-		throw new RuntimeException(ex);
-	}
+	public void saveXml(Document inRoot, Writer inWriter, String inEncoding) {
+		try {
+			XMLWriter writer = getWriter(inEncoding);
+			writer.setWriter(inWriter);
+			writer.write(inRoot);
+		} catch (Exception ex) {
+			throw new RuntimeException(ex.getMessage(), ex);
+		} finally {
+			FileUtils.safeClose(inWriter);
+		}
 	}
 
-	public void saveXmlConfiguration(XMLConfiguration inConfig, File inFile)
-	{
+	public void saveXml(Document inRoot, OutputStream inStream, String inEncoding) {
+
+		try {
+			Writer inWriter = new OutputStreamWriter(inStream, inEncoding);
+			saveXml(inRoot, inWriter, inEncoding);
+		} catch (Exception ex) {
+			throw new RuntimeException(ex);
+		}
+	}
+
+	public void saveXmlConfiguration(XMLConfiguration inConfig, File inFile) {
 		Document doc = DocumentHelper.createDocument();
 		Element root = doc.addElement(inConfig.getName());
-		inConfig.appendXml(inConfig,root);
-		saveXml( doc,inFile);
+		inConfig.appendXml(inConfig, root);
+		saveXml(doc, inFile);
 	}
-	
+
 	/**
 	 * @param inStockQuoteDocument
 	 * @param inFile
 	 */
-	public void saveXml(Document inStockQuoteDocument, File inFile)
-	{
-		try
-		{
+	public void saveXml(Document inStockQuoteDocument, File inFile) {
+		try {
 			saveXml(inStockQuoteDocument, new FileWriter(inFile), "UTF-8");
-		}
-		catch ( Exception ex )
-		{
+		} catch (Exception ex) {
 			throw new RuntimeException(ex);
 		}
 	}
-	public String xmlEscape(String inCode)
-	{
+
+	public String xmlEscape(String inCode) {
 		return URLUtilities.xmlEscape(inCode);
 	}
 
-	public SAXReader getReader()
-	{
-		return (SAXReader)getReaderPool().instance();
+	public SAXReader getReader() {
+		return (SAXReader) getReaderPool().instance();
 	}
-	public XMLWriter  getWriter(String inEncoding)
-	{
+
+	public XMLWriter getWriter(String inEncoding) {
 		return getWriterPool().instance(inEncoding);
 	}
 
-	public PerThreadSingleton getReaderPool()
-	{
-		if (fieldReaderPool == null)
-		{
+	public PerThreadSingleton getReaderPool() {
+		if (fieldReaderPool == null) {
 			fieldReaderPool = new PerThreadSingleton();
 			fieldReaderPool.setSingletonClassName(SAXReader.class.getName());
 		}
 		return fieldReaderPool;
 	}
 
-	public XmlWriterPool getWriterPool()
-	{
-		if (fieldWriterPool == null)
-		{
+	public XmlWriterPool getWriterPool() {
+		if (fieldWriterPool == null) {
 			fieldWriterPool = new XmlWriterPool();
 		}
 		return fieldWriterPool;
 	}
 
-	public void saveXml(XMLConfiguration inConfig, Writer inOut, String inCharacterEncoding)
-	{
+	public void saveXml(XMLConfiguration inConfig, Writer inOut, String inCharacterEncoding) {
 		Document doc = DocumentHelper.createDocument();
 		Element root = doc.addElement(inConfig.getName());
-		inConfig.appendXml(inConfig,root);
+		inConfig.appendXml(inConfig, root);
 		saveXml(root, inOut, inCharacterEncoding);
-		
+
 	}
 
-	public void saveXml(Element inRoot, OutputStream inOutputStream, String inCharacterEncoding)
-	{
-		try
-		{
+	public void saveXml(Element inRoot, OutputStream inOutputStream, String inCharacterEncoding) {
+		try {
 			XMLWriter writer = getWriter(inCharacterEncoding);
 			writer.setOutputStream(inOutputStream);
-			if( inRoot.getDocument() != null )
-			{
+			if (inRoot.getDocument() != null) {
 				writer.write(inRoot.getDocument());
-			}
-			else
-			{
+			} else {
 				writer.write(inRoot);
 			}
-		}
-		catch ( Exception ex)
-		{
+		} catch (Exception ex) {
 			throw new OpenEditException(ex.getMessage(), ex);
-		}
-		finally
-		{
+		} finally {
 			FileUtils.safeClose(inOutputStream);
 		}
-		
+
 	}
 
-	public Element getElementById(Element inElement, String inId)
-	{
-		if(inElement == null || inId == null)
-		{
+	public Element getElementById(Element inElement, String inId) {
+		if (inElement == null || inId == null) {
 			return null;
 		}
-		
-		for(Iterator i = inElement.elementIterator(); i.hasNext();)
-		{
+
+		for (Iterator i = inElement.elementIterator(); i.hasNext();) {
 			Element e = (Element) i.next();
-			if(inId.equals(e.attributeValue("id")))
-			{
+			if (inId.equals(e.attributeValue("id"))) {
 				return e;
 			}
 		}
-		
+
 		return null;
 	}
 }

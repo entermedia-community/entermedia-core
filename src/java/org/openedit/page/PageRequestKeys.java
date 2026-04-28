@@ -3,11 +3,10 @@ package org.openedit.page;
 /**
  * @author Matthew Avery
  * 
- * Created on Feb 15, 2004
+ *         Created on Feb 15, 2004
  *
  */
-public interface PageRequestKeys
-{
+public interface PageRequestKeys {
 	/**
 	 * The HttpServletRequest
 	 * 
@@ -32,7 +31,7 @@ public interface PageRequestKeys
 	 * Use "$application" in the Velocity page.
 	 */
 	public static final String SERVLET_CONTEXT = "application";
-	/** 
+	/**
 	 * The Servlet output stream
 	 * 
 	 * Use "$out" in the Velocity page.
@@ -59,13 +58,14 @@ public interface PageRequestKeys
 	 * Use "$home" in the Velocity page.
 	 */
 	public static final String HOME = "home";
-	
+
 	/**
 	 * This is the full address of the web server. i.e. http://www.abc.com:80
 	 */
 	public static final String WEB_SERVER_PATH = "webserverpath";
-/**
-	 * This is a relative chunk of the URL path used to help locate relative resources.
+	/**
+	 * This is a relative chunk of the URL path used to help locate relative
+	 * resources.
 	 * If a resource is located at http://mydomain.org/oesite/foo/index.html, the
 	 * urlpath variable will contain the String "oesite/foo" so that we can easily
 	 * find, for instance, oesite/foo/navbar.html
@@ -73,9 +73,11 @@ public interface PageRequestKeys
 	 * Use "$urlpath" in the Velocity page.
 	 */
 	public static final String URL_PATH = "urlpath";
-	/** 
-	 * This is a relative chunk of the filepath used to help locate relative resources
-	 * within a Velocity page. for a url of /content/about/about.html -> /content/about
+	/**
+	 * This is a relative chunk of the filepath used to help locate relative
+	 * resources
+	 * within a Velocity page. for a url of /content/about/about.html ->
+	 * /content/about
 	 * 
 	 * Use "$filepath" in the Velocity page.
 	 */
@@ -97,7 +99,7 @@ public interface PageRequestKeys
 	 */
 	public static final String USER = "user";
 	/**
-	 * A DynamicPage object representing the current page.  Page properties 
+	 * A DynamicPage object representing the current page. Page properties
 	 * can be accessed by the "get" method of this object.
 	 * 
 	 * Use "$page" in the Velocity page.
@@ -115,12 +117,12 @@ public interface PageRequestKeys
 	public static final String CONTENT = "content";
 	/**
 	 * This nifty class instantiation tool is something we found on the Velocity
-	 * mailing list.  It is used for instantiating new classes within a Velocity
+	 * mailing list. It is used for instantiating new classes within a Velocity
 	 * page.
 	 * 
 	 * Use "$classtool" in the Velocity page.
 	 */
-	public static final String CLASSTOOL = "classtool"; 
+	public static final String CLASSTOOL = "classtool";
 
 	/**
 	 * A PageStreamer object which allows dynamic pages to make a callback to the
@@ -129,22 +131,23 @@ public interface PageRequestKeys
 	 * Use "$page" in the Velocity page.
 	 */
 	public static final String PAGES = "pages";
-	
+
 	/**
-	 * Since not all path actions can be reliably secured we allow all actions to be turned off by
+	 * Since not all path actions can be reliably secured we allow all actions to be
+	 * turned off by
 	 * default.
 	 */
 	public static final String ALLOWPATHREQUESTACTIONS = "allowpathrequestactions";
-	
-	
+
 	/**
-	 * Allows an action to specify an alternative layout. 
+	 * Allows an action to specify an alternative layout.
 	 * NOLAYOUT is a valid value
 	 */
 	public static final String LAYOUTOVERRIDE = "layoutoverride";
 
 	/**
-	 * Allows an action to specify an alternative inner layout. This applies to all inner pages
+	 * Allows an action to specify an alternative inner layout. This applies to all
+	 * inner pages
 	 * NOLAYOUT is a valid value
 	 */
 	public static final String INNERLAYOUTOVERRIDE = "innerlayoutoverride";

@@ -14,103 +14,87 @@ import org.openedit.users.User;
 import org.openedit.users.UserManagerException;
 import org.openedit.util.LDAP;
 
-public class LdapAuthenticator extends BaseAuthenticator
-{
+public class LdapAuthenticator extends BaseAuthenticator {
 	private static final Log log = LogFactory.getLog(LdapAuthenticator.class);
 
 	protected Map fieldServers;
 	protected SearcherManager fieldSearcherManager;
-	
-	public SearcherManager getSearcherManager()
-	{
+
+	public SearcherManager getSearcherManager() {
 		return fieldSearcherManager;
 	}
 
-	public void setSearcherManager(SearcherManager inSearcherManager)
-	{
+	public void setSearcherManager(SearcherManager inSearcherManager) {
 		fieldSearcherManager = inSearcherManager;
 	}
 
-	protected Map getServers()
-	{
-		if (fieldServers == null)
-		{
+	protected Map getServers() {
+		if (fieldServers == null) {
 			fieldServers = new HashMap();
 		}
 
 		return fieldServers;
 	}
-	
-	protected LDAP getServer(String inServerName)
-	{
-		LDAP server = (LDAP)getServers().get(inServerName);
-		if (server == null)
-		{
+
+	protected LDAP getServer(String inServerName) {
+		LDAP server = (LDAP) getServers().get(inServerName);
+		if (server == null) {
 			server = new LDAP(inServerName);
 			getServers().put(inServerName, server);
 		}
 		return server;
 	}
-	
-	
-	public boolean authenticate(AuthenticationRequest inAReq) throws UserManagerException
-	{
+
+	public boolean authenticate(AuthenticationRequest inAReq) throws UserManagerException {
 		User inUser = inAReq.getUser();
 
-    	Data server = getSearcherManager().getData(inAReq.getCatalogId(), "catalogsettings", "ldapserver");
-        if( server == null || server.get("value") == null)
-        {
-        	return false;
-        }
-        LDAP ldap = null;
-        try
-        {
-	        ldap = new LDAP( server.get("value"));
-			
-	        Data prefix = getSearcherManager().getData(inAReq.getCatalogId(), "catalogsettings", "ldapserverprefix");
-	        
+		Data server = getSearcherManager().getData(inAReq.getCatalogId(), "catalogsettings", "ldapserver");
+		if (server == null || server.get("value") == null) {
+			return false;
+		}
+		LDAP ldap = null;
+		try {
+			ldap = new LDAP(server.get("value"));
+
+			Data prefix = getSearcherManager().getData(inAReq.getCatalogId(), "catalogsettings", "ldapserverprefix");
+
 			String inPassword = inAReq.getPassword();
-			
+
 			String sprefix = null;
-			if( prefix != null)
-			{
+			if (prefix != null) {
 				sprefix = prefix.get("value");
 			}
-	        Data postfix = getSearcherManager().getData(inAReq.getCatalogId(), "catalogsettings", "ldapserverpostfix");
+			Data postfix = getSearcherManager().getData(inAReq.getCatalogId(), "catalogsettings", "ldapserverpostfix");
 			String spostfix = null;
-			if( spostfix != null)
-			{
+			if (spostfix != null) {
 				spostfix = postfix.get("value");
 			}
-			//NaiveTrustManager.disableHttps();
-			ldap.authenticate(sprefix,inUser.getUserName().toLowerCase(), spostfix, inPassword);
-        }
-        catch( Throwable ex)
-        {
-        	log.error("Could not init LDAP " + server,ex);
-        	return false;
-        }
-		if (ldap.connect())
-		{
-//	        Data usersearch = getSearcherManager().getData(inAReq.getCatalogId(), "catalogsettings", "ldapserverusersearch");
-//	        if( usersearch != null)
-//	        {
-//	        	ldap.search("userdetails", inUser.getUserName());
-//	        }
-			
-			if(!inUser.isEnabled() || inUser.isVirtual())
-			{
+			// NaiveTrustManager.disableHttps();
+			ldap.authenticate(sprefix, inUser.getUserName().toLowerCase(), spostfix, inPassword);
+		} catch (Throwable ex) {
+			log.error("Could not init LDAP " + server, ex);
+			return false;
+		}
+		if (ldap.connect()) {
+			// Data usersearch = getSearcherManager().getData(inAReq.getCatalogId(),
+			// "catalogsettings", "ldapserverusersearch");
+			// if( usersearch != null)
+			// {
+			// ldap.search("userdetails", inUser.getUserName());
+			// }
+
+			if (!inUser.isEnabled() || inUser.isVirtual()) {
 				inUser.setEnabled(true);
 				inUser.setVirtual(false);
-				
+
 				getSearcherManager().getSearcher(inAReq.getCatalogId(), "user").saveData(inUser);
 			}
-			
+
 			return true;
 		}
-		
+
 		return false;
-		
+
 	}
 
 }

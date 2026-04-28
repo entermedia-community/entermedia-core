@@ -13,32 +13,28 @@ See the GNU Lesser General Public License for more details.
 package org.openedit.users;
 
 /**
- * This exception is thrown when an attempt is made to add a property to a user using an invalid
+ * This exception is thrown when an attempt is made to add a property to a user
+ * using an invalid
  * property name.
  *
  * @author Eric Galluzzo
  *
  * @see User#put(String, Object)
  */
-public class InvalidPropertyNameException extends UserManagerException
-{
-	public InvalidPropertyNameException()
-	{
+public class InvalidPropertyNameException extends UserManagerException {
+	public InvalidPropertyNameException() {
 		super();
 	}
 
-	public InvalidPropertyNameException(String message)
-	{
+	public InvalidPropertyNameException(String message) {
 		super(message);
 	}
 
-	public InvalidPropertyNameException(String message, Throwable cause)
-	{
+	public InvalidPropertyNameException(String message, Throwable cause) {
 		super(message, cause);
 	}
 
-	public InvalidPropertyNameException(Throwable cause)
-	{
+	public InvalidPropertyNameException(Throwable cause) {
 		super(cause);
 	}
 }

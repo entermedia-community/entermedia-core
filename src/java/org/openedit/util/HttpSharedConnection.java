@@ -57,464 +57,386 @@ import org.openedit.HttpException;
 import org.openedit.OpenEditException;
 import org.openedit.repository.ContentItem;
 
+public class HttpSharedConnection {
 
-
-
-public class HttpSharedConnection
-{
-	
 	private static final Log log = LogFactory.getLog(HttpSharedConnection.class);
-	
+
 	Charset UTF8 = Charset.forName("UTF-8");
 	ContentType contentType = ContentType.create("text/plain", UTF8);
 	ContentType octectType = ContentType.create("application/octect-stream", UTF8);
-	
+
 	public boolean DEBUG = false;
-	
+
 	protected HttpClient fieldHttpClient;
 	protected Collection fieldSharedHeaders;
-    protected BasicCookieStore cookieStore = new BasicCookieStore();
+	protected BasicCookieStore cookieStore = new BasicCookieStore();
 
-	public Collection getSharedHeaders()
-	{
-		if (fieldSharedHeaders == null)
-		{
+	public Collection getSharedHeaders() {
+		if (fieldSharedHeaders == null) {
 			fieldSharedHeaders = new ArrayList();
 		}
 
 		return fieldSharedHeaders;
 	}
 
-
-	public void setSharedHeaders(Collection inSharedHeaders)
-	{
+	public void setSharedHeaders(Collection inSharedHeaders) {
 		fieldSharedHeaders = inSharedHeaders;
 	}
-	
-	public HttpClient getSharedClient()
-	{
-		if (fieldHttpClient == null)
-		{
+
+	public HttpClient getSharedClient() {
+		if (fieldHttpClient == null) {
 
 			try {
 				SSLContext sslContext;
 				sslContext = SSLContextBuilder.create().useProtocol("TLSv1.2").build();
 				RequestConfig globalConfig = RequestConfig.custom()
-			            .setCookieSpec(CookieSpecs.STANDARD)
-			            .setConnectTimeout(15 * 1000)
-			            .setSocketTimeout(1200 * 1000)
-			            .build();
-				
+						.setCookieSpec(CookieSpecs.STANDARD)
+						.setConnectTimeout(15 * 1000)
+						.setSocketTimeout(1200 * 1000)
+						.build();
+
 				/**
 				 * 
 				 */
-				
+
 				ConnectionKeepAliveStrategy myStrategy = new ConnectionKeepAliveStrategy() {
-				    @Override
-				    public long getKeepAliveDuration(HttpResponse response, HttpContext context) {
-				        // 1. Honor 'keep-alive' header from the server first
-				        HeaderElementIterator it = new BasicHeaderElementIterator(
-				                response.headerIterator(HTTP.CONN_KEEP_ALIVE));
-				        while (it.hasNext()) {
-				            HeaderElement he = it.nextElement();
-				            String param = he.getName();
-				            String value = he.getValue();
-				            if (value != null && param.equalsIgnoreCase("timeout")) {
-				                return Long.parseLong(value) * 1000;
-				            }
-				        }
-				        // 2. If the server is silent, keep it alive for 30 seconds as a default
-				        return 2 * 60 * 1000; //120 second defaults
-				        //return 500;
-				    }
+					@Override
+					public long getKeepAliveDuration(HttpResponse response, HttpContext context) {
+						// 1. Honor 'keep-alive' header from the server first
+						HeaderElementIterator it = new BasicHeaderElementIterator(
+								response.headerIterator(HTTP.CONN_KEEP_ALIVE));
+						while (it.hasNext()) {
+							HeaderElement he = it.nextElement();
+							String param = he.getName();
+							String value = he.getValue();
+							if (value != null && param.equalsIgnoreCase("timeout")) {
+								return Long.parseLong(value) * 1000;
+							}
+						}
+						// 2. If the server is silent, keep it alive for 30 seconds as a default
+						return 2 * 60 * 1000; // 120 second defaults
+						// return 500;
+					}
 				};
-				
+
 				PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager();
 				cm.setMaxTotal(200);
 				cm.setDefaultMaxPerRoute(20);
-				
+
 				fieldHttpClient = HttpClients.custom().useSystemProperties()
-			            .setDefaultRequestConfig(globalConfig)
-			            .setSSLContext(sslContext)
-			            .setConnectionManager(cm)
-			            .setKeepAliveStrategy(myStrategy)
-			            .build();
-			} catch ( Throwable e )
-			{
+						.setDefaultRequestConfig(globalConfig)
+						.setSSLContext(sslContext)
+						.setConnectionManager(cm)
+						.setKeepAliveStrategy(myStrategy)
+						.build();
+			} catch (Throwable e) {
 				throw new OpenEditException(e);
 			}
 		}
 		return fieldHttpClient;
 	}
 
-
-
-	public void reset()
-	{
+	public void reset() {
 		fieldHttpClient = null;
 	}
-	
-	public CloseableHttpResponse sharedPost(String path, Map<String,String> inParams)
-	{
-			HttpPost method = new HttpPost(path);
-			method.setEntity(build(inParams));
-			CloseableHttpResponse response2 = sharedExecute(method);
-			return response2;
-	
+
+	public CloseableHttpResponse sharedPost(String path, Map<String, String> inParams) {
+		HttpPost method = new HttpPost(path);
+		method.setEntity(build(inParams));
+		CloseableHttpResponse response2 = sharedExecute(method);
+		return response2;
+
 	}
-	public CloseableHttpResponse sharedPostWithJson(String inUrl,JSONObject inBody)
-	{
+
+	public CloseableHttpResponse sharedPostWithJson(String inUrl, JSONObject inBody) {
 		HttpPost post = new HttpPost(inUrl);
-		
+
 		post.addHeader("Content-Type", "application/json");
 		post.setEntity(new StringEntity(inBody.toString(), "UTF-8"));
 		post.setProtocolVersion(HttpVersion.HTTP_1_1);
-		
+
 		return sharedPost(post);
-		
+
 	}
-	
-	
-	public CloseableHttpResponse sharedPost(HttpPost inPost)
-	{
+
+	public CloseableHttpResponse sharedPost(HttpPost inPost) {
 		CloseableHttpResponse response2 = sharedExecute(inPost);
 		return response2;
-		
+
 	}
-	public void release(CloseableHttpResponse response2)
-	{
-		if( response2 == null)
-		{
+
+	public void release(CloseableHttpResponse response2) {
+		if (response2 == null) {
 			return;
 		}
 
-		try
-		{
+		try {
 			response2.close();
-		}
-		catch (IOException e)
-		{
-			log.error("Could not close" ,e);
+		} catch (IOException e) {
+			log.error("Could not close", e);
 		}
 	}
-	public CloseableHttpResponse sharedGet(String inUrl)
-	{
-		return sharedGet(inUrl,null);
+
+	public CloseableHttpResponse sharedGet(String inUrl) {
+		return sharedGet(inUrl, null);
 	}
-	public CloseableHttpResponse sharedGet(String inUrl,Map extraHeaders)
-	{
-		//Escape before this, avoid double-encoding
-		//String escaped = URLUtilities.urlEscape(inUrl);
-		//escaped = escaped.replace("+","%20");
-		//log.info("Escaped URL: "+escaped);	 
+
+	public CloseableHttpResponse sharedGet(String inUrl, Map extraHeaders) {
+		// Escape before this, avoid double-encoding
+		// String escaped = URLUtilities.urlEscape(inUrl);
+		// escaped = escaped.replace("+","%20");
+		// log.info("Escaped URL: "+escaped);
 		HttpGet method = new HttpGet(inUrl);
 		CloseableHttpResponse response2 = (CloseableHttpResponse) sharedExecute(method);
 		return response2;
 	}
-	
-	protected HttpEntity build(Map <String, String> inMap){
-		
+
+	protected HttpEntity build(Map<String, String> inMap) {
+
 		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 
-		for (Iterator iterator = inMap.keySet().iterator(); iterator.hasNext();)
-		{
+		for (Iterator iterator = inMap.keySet().iterator(); iterator.hasNext();) {
 			String key = (String) iterator.next();
 			String val = inMap.get(key);
-			  nameValuePairs.add(new BasicNameValuePair(key, val));
+			nameValuePairs.add(new BasicNameValuePair(key, val));
 
-			
 		}
-		 return new UrlEncodedFormEntity(nameValuePairs, UTF8);
-		
+		return new UrlEncodedFormEntity(nameValuePairs, UTF8);
+
 	}
-//	public String getText(String inUrl) 
-//	{
-//
-//	}
-	//httpmethod.addHeader("authorization", "Bearer " + inAccessToken);
-	public JSONObject getJson(String inUrl) 
-	{
-		return getJson(inUrl,null);
-	}	
-	public JSONObject getJson(String inUrl,Map extraHeaders) 
-	{
-		CloseableHttpResponse resp = sharedGet(inUrl,extraHeaders);
+
+	// public String getText(String inUrl)
+	// {
+	//
+	// }
+	// httpmethod.addHeader("authorization", "Bearer " + inAccessToken);
+	public JSONObject getJson(String inUrl) {
+		return getJson(inUrl, null);
+	}
+
+	public JSONObject getJson(String inUrl, Map extraHeaders) {
+		CloseableHttpResponse resp = sharedGet(inUrl, extraHeaders);
 		JSONObject elem = (JSONObject) parseJson(resp);
 		return elem;
 	}
-	public JSONArray getJsonCollection(String inUrl,Map extraHeaders) 
-	{
-		CloseableHttpResponse resp = sharedGet(inUrl,extraHeaders);
+
+	public JSONArray getJsonCollection(String inUrl, Map extraHeaders) {
+		CloseableHttpResponse resp = sharedGet(inUrl, extraHeaders);
 		JSONArray elem = (JSONArray) parseJson(resp);
 		return elem;
 	}
-	
-	public String getResponseString(String inUrl) 
-	{
+
+	public String getResponseString(String inUrl) {
 		return getResponseString(inUrl, null);
 	}
-	
-	public String getResponseString(String inUrl,Map extraHeaders) 
-	{
-		CloseableHttpResponse resp = sharedGet(inUrl,extraHeaders);
+
+	public String getResponseString(String inUrl, Map extraHeaders) {
+		CloseableHttpResponse resp = sharedGet(inUrl, extraHeaders);
 		String text = parseText(resp);
 		return text;
 	}
 
-
-	public String parseText(CloseableHttpResponse inCreaterequest)
-	{
+	public String parseText(CloseableHttpResponse inCreaterequest) {
 		String errormessage = null;
-		try
-		{
+		try {
 			StatusLine statusLine = inCreaterequest.getStatusLine();
-			if (statusLine.getStatusCode() != 200)
-			{
+			if (statusLine.getStatusCode() != 200) {
 				String returned = EntityUtils.toString(inCreaterequest.getEntity());
-				errormessage = "HTTP Error:" + statusLine.getStatusCode() + ":" + statusLine.getReasonPhrase() + " Body: \n" + returned;
-			}
-			else
-			{
+				errormessage = "HTTP Error:" + statusLine.getStatusCode() + ":" + statusLine.getReasonPhrase()
+						+ " Body: \n" + returned;
+			} else {
 				return EntityUtils.toString(inCreaterequest.getEntity());
 			}
-		}
-		catch (Throwable e) 
-		{
+		} catch (Throwable e) {
 			throw new OpenEditException(e);
-		}
-		finally
-		{
+		} finally {
 			release(inCreaterequest);
 		}
 		throw new OpenEditException(errormessage);
 	}
-	public JSONObject parseMap(CloseableHttpResponse resp) 
-	{
+
+	public JSONObject parseMap(CloseableHttpResponse resp) {
 		Object res = parseJson(resp);
 		return (JSONObject) res;
 	}
-	public Collection parseCollection(CloseableHttpResponse resp) 
-	{
+
+	public Collection parseCollection(CloseableHttpResponse resp) {
 		Object res = parseJson(resp);
 		return (Collection) res;
 	}
-	
-	public Object parseJson(CloseableHttpResponse resp) 
-	{
+
+	public Object parseJson(CloseableHttpResponse resp) {
 		try {
-			
-			if (resp.getStatusLine().getStatusCode() == 404)
-			{
+
+			if (resp.getStatusLine().getStatusCode() == 404) {
 				return null;
-			}
-			else if (resp.getStatusLine().getStatusCode() ==  422)
-			{
-				throw new  HttpException("HTTP Error:" + resp.getStatusLine().getStatusCode() + ":" + resp.getStatusLine().getReasonPhrase(), 
-						null, 
-						resp.getStatusLine().getStatusCode()  );
-			}
-			else if (resp.getStatusLine().getStatusCode() < 200 || resp.getStatusLine().getStatusCode() > 206)
-			{
+			} else if (resp.getStatusLine().getStatusCode() == 422) {
+				throw new HttpException(
+						"HTTP Error:" + resp.getStatusLine().getStatusCode() + ":"
+								+ resp.getStatusLine().getReasonPhrase(),
+						null,
+						resp.getStatusLine().getStatusCode());
+			} else if (resp.getStatusLine().getStatusCode() < 200 || resp.getStatusLine().getStatusCode() > 206) {
 				String returned = EntityUtils.toString(resp.getEntity());
-				
-				throw new HttpException("HTTP Error:" + resp.getStatusLine().getStatusCode() + ":" + resp.getStatusLine().getReasonPhrase() + " Body: \n" + returned, 
-						null, 
-						resp.getStatusLine().getStatusCode()  );
-				//throw new OpenEditException("Could not process " + returned);
+
+				throw new HttpException(
+						"HTTP Error:" + resp.getStatusLine().getStatusCode() + ":"
+								+ resp.getStatusLine().getReasonPhrase() + " Body: \n" + returned,
+						null,
+						resp.getStatusLine().getStatusCode());
+				// throw new OpenEditException("Could not process " + returned);
 			}
-			
-			
+
 			HttpEntity entity = resp.getEntity();
-			
+
 			Object json = null;
 			JSONParser parser = new JSONParser();
 
-			if (DEBUG)
-			{
+			if (DEBUG) {
 				String returned = EntityUtils.toString(resp.getEntity());
 				log.info(returned);
 				json = parser.parse(returned);
-			}
-			else
-			{
+			} else {
 				String charset = "utf-8";
-				if( entity.getContentEncoding() != null )
-				{
+				if (entity.getContentEncoding() != null) {
 					charset = entity.getContentEncoding().getValue();
 				}
-				InputStreamReader reader = new InputStreamReader(entity.getContent(),charset);
+				InputStreamReader reader = new InputStreamReader(entity.getContent(), charset);
 				json = parser.parse(reader);
-				
+
 			}
 			// log.info(content);
 			return json;
-		}
-		catch (Throwable e) 
-		{
-			if (e instanceof OpenEditException)
-			{
+		} catch (Throwable e) {
+			if (e instanceof OpenEditException) {
 				throw (OpenEditException) e;
-			}
-			else 
-			{
+			} else {
 				throw new OpenEditException("Could not parse", e);
 			}
-		}
-		finally
-		{
+		} finally {
 			release(resp);
 		}
 	}
-	public File parseFile(CloseableHttpResponse inCreaterequest,String inAbsolutePath)
-	{
+
+	public File parseFile(CloseableHttpResponse inCreaterequest, String inAbsolutePath) {
 		String errormessage = null;
-		try
-		{
+		try {
 			StatusLine statusLine = inCreaterequest.getStatusLine();
-			if (statusLine.getStatusCode() != 200)
-			{
+			if (statusLine.getStatusCode() != 200) {
 				String returned = EntityUtils.toString(inCreaterequest.getEntity());
-				errormessage = "HTTP Error:" + statusLine.getStatusCode() + ":" + statusLine.getReasonPhrase() + " Body: \n" + returned;
-			}
-			else
-			{
+				errormessage = "HTTP Error:" + statusLine.getStatusCode() + ":" + statusLine.getReasonPhrase()
+						+ " Body: \n" + returned;
+			} else {
 				InputStream input = inCreaterequest.getEntity().getContent();
 				OutputFiller filler = new OutputFiller();
 				File outfile = new File(inAbsolutePath);
-				filler.fill(input,outfile);
+				filler.fill(input, outfile);
 
 				log.info("Saved to: " + outfile.getAbsolutePath());
 				return outfile;
 			}
-		}
-		catch (Throwable e) 
-		{
+		} catch (Throwable e) {
 			throw new OpenEditException(e);
-		}
-		finally
-		{
+		} finally {
 			release(inCreaterequest);
 		}
 		throw new OpenEditException(errormessage);
 	}
 
-	public CloseableHttpResponse sharedPost(String path,HttpEntity inBuild)
-	{
-			HttpPost method = new HttpPost(URLUtilities.urlEscape(path));
-			method.setEntity(inBuild);
-			
-			CloseableHttpResponse response2 = sharedExecute(method);
-			return response2;
-		
+	public CloseableHttpResponse sharedPost(String path, HttpEntity inBuild) {
+		HttpPost method = new HttpPost(URLUtilities.urlEscape(path));
+		method.setEntity(inBuild);
+
+		CloseableHttpResponse response2 = sharedExecute(method);
+		return response2;
+
 	}
 
-	public CloseableHttpResponse sharedExecute(HttpRequestBase method) 
-	{
+	public CloseableHttpResponse sharedExecute(HttpRequestBase method) {
 		CloseableHttpResponse resp = null;
-		try 
-		{
-			for (Iterator iterator = getSharedHeaders().iterator(); iterator.hasNext();)
-			{
-				Header header =  (Header)iterator.next();
+		try {
+			for (Iterator iterator = getSharedHeaders().iterator(); iterator.hasNext();) {
+				Header header = (Header) iterator.next();
 				method.addHeader(header);
 			}
-			//log.info(method);
-			resp = (CloseableHttpResponse)getSharedClient().execute(method);
+			// log.info(method);
+			resp = (CloseableHttpResponse) getSharedClient().execute(method);
 			return resp;
-		} 
-		catch (Throwable e)
-		{
+		} catch (Throwable e) {
 			log.info(resp);
 			release(resp);
 			throw new OpenEditException(e);
 		}
 	}
-	
-	public CloseableHttpResponse sharedMimePost(String path, Map<String,Object> inParams)
-	{
+
+	public CloseableHttpResponse sharedMimePost(String path, Map<String, Object> inParams) {
 		HttpEntity entity = buildMime(inParams);
-		return sharedPost(path,entity);
+		return sharedPost(path, entity);
 	}
-	
-	protected HttpEntity buildMime(Map <String, Object> inMap)
-	{
+
+	protected HttpEntity buildMime(Map<String, Object> inMap) {
 		HttpMimeBuilder builder = new HttpMimeBuilder();
 
-		for (Iterator iterator = inMap.keySet().iterator(); iterator.hasNext();)
-		{
+		for (Iterator iterator = inMap.keySet().iterator(); iterator.hasNext();) {
 			String key = (String) iterator.next();
 			Object value = inMap.get(key);
-			if( value instanceof String)
-			{
-				builder.addPart(key, (String)value);
-			}
-			else if(value instanceof File)
-			{
-				builder.addPart(key, (File)value);
-			}
-			else if(value instanceof ContentItem)
-			{
-				ContentItem item = (ContentItem)value;
+			if (value instanceof String) {
+				builder.addPart(key, (String) value);
+			} else if (value instanceof File) {
+				builder.addPart(key, (File) value);
+			} else if (value instanceof ContentItem) {
+				ContentItem item = (ContentItem) value;
 				File file = new File(item.getAbsolutePath());
 				builder.addPart(key, file);
+			} else if (value instanceof JSONObject) {
+				builder.addPart(key, ((JSONObject) value).toJSONString(), "application/json");
+			} else if (value instanceof ByteArrayBody) {
+				// ByteArrayBody bin = new ByteArrayBody(bytes, fileName);
+				builder.addPart(key, (ByteArrayBody) value);
 			}
-			else if( value instanceof JSONObject)
-			{
-				builder.addPart(key, ((JSONObject) value).toJSONString(), "application/json" );
-			}
-			else if( value instanceof ByteArrayBody)
-			{
-				//ByteArrayBody bin = new ByteArrayBody(bytes, fileName);
-				builder.addPart(key,(ByteArrayBody)value);
-			}
-			
+
 		}
 		return builder.build();
 	}
-	
+
 	/**
 	 * @Deprecated
 	 */
 
-	public void addSharedHeader(String inType, String inVal)
-	{
-		/*BasicHeader header = new BasicHeader(inType, inVal);
-		getSharedHeaders().add(header);*/
+	public void addSharedHeader(String inType, String inVal) {
+		/*
+		 * BasicHeader header = new BasicHeader(inType, inVal);
+		 * getSharedHeaders().add(header);
+		 */
 		putSharedHeader(inType, inVal);
-		
+
 	}
-	
-	public synchronized void putSharedHeader(String inType, String inVal)
-	{
+
+	public synchronized void putSharedHeader(String inType, String inVal) {
 		Collection copy = new ArrayList(getSharedHeaders());
-		for (Iterator iterator = copy.iterator(); iterator.hasNext();)
-		{
+		for (Iterator iterator = copy.iterator(); iterator.hasNext();) {
 			BasicHeader header = (BasicHeader) iterator.next();
-			if( header.getName().equals(inType) )
-			{
+			if (header.getName().equals(inType)) {
 				getSharedHeaders().remove(header);
 			}
 		}
-		
+
 		BasicHeader header = new BasicHeader(inType, inVal);
 		getSharedHeaders().add(header);
 	}
 
-	public void addSharedCookie(String domain, String inKey,String inVal)
-	{
+	public void addSharedCookie(String domain, String inKey, String inVal) {
 		BasicClientCookie cookie = new BasicClientCookie(inKey, inVal);
 		cookie.setPath("/");
 		cookie.setDomain(domain);
-    	Calendar cal = new GregorianCalendar();
-    	cal.add(Calendar.MONTH, 1);
-    	cookie.setExpiryDate(cal.getTime());
-    	cookieStore.addCookie(cookie);
+		Calendar cal = new GregorianCalendar();
+		cal.add(Calendar.MONTH, 1);
+		cookie.setExpiryDate(cal.getTime());
+		cookieStore.addCookie(cookie);
 	}
 
-
-	public void clearSharedHeaders()
-	{
+	public void clearSharedHeaders() {
 		fieldSharedHeaders = null;
 	}
-	
+
 }

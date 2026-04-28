@@ -5,8 +5,7 @@ import java.util.List;
 
 import org.openedit.MultiValued;
 
-public interface Category extends MultiValued, Comparable
-{
+public interface Category extends MultiValued, Comparable {
 
 	String getIndexId();
 
@@ -15,8 +14,7 @@ public interface Category extends MultiValued, Comparable
 	void sortChildren(boolean inRecursive);
 
 	boolean hasLoadedChildren();
-	
-	
+
 	List getRelatedCategoryIds();
 
 	void setRelatedCategoryIds(List fieldRelatedCategoryIds);
@@ -33,14 +31,14 @@ public interface Category extends MultiValued, Comparable
 	 * @return Returns the children.
 	 */
 	List getChildren();
-	
+
 	List getChildren(boolean inReloadifNeeded);
 
 	public List<Category> getDescendants();
 
 	/**
 	 * @param children
-	 *            The children to set.
+	 *                 The children to set.
 	 */
 	void setChildren(List inChildren);
 
@@ -51,7 +49,7 @@ public interface Category extends MultiValued, Comparable
 	void removeChild(Category inChild);
 
 	boolean hasParent(String inId);
-	
+
 	boolean hasParentCategory(Category inId);
 
 	/**
@@ -74,8 +72,9 @@ public interface Category extends MultiValued, Comparable
 	 * catalog at the given level and ending at this catalog itself.
 	 * 
 	 * @param inStartLevel
-	 *            The level at which to start listing ancestors (0 is the root,
-	 *            1 is the first-level children, etc.)
+	 *                     The level at which to start listing ancestors (0 is the
+	 *                     root,
+	 *                     1 is the first-level children, etc.)
 	 * 
 	 * @return The list of ancestors of this catalog
 	 */
@@ -136,14 +135,13 @@ public interface Category extends MultiValued, Comparable
 	Object findValue(String inString);
 
 	Collection findValues(String inString);
-	
+
 	Collection<String> collectValues(String inKey);
-	
+
 	void collectValues(String inKey, Collection<String> inValue);
-	
+
 	boolean hasLoadedParent();
 
 	boolean hasSelfCategory(Collection<Category> inViewcategories);
-
 
 }

@@ -18,102 +18,82 @@ import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.HttpClients;
 
-public class HttpMimeBuilder
-{
+public class HttpMimeBuilder {
 	MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-	
+
 	Charset UTF8 = Charset.forName("UTF-8");
 	ContentType contentType = ContentType.create("text/plain", UTF8);
 	ContentType octectType = ContentType.create("application/octect-stream", UTF8);
 	ContentType jsonType = ContentType.create("application/json", UTF8);
 
-	public void addPart(String inKey, String inValue, String inType)
-	{
-		if( inValue == null)
-		{
+	public void addPart(String inKey, String inValue, String inType) {
+		if (inValue == null) {
 			return;
 		}
 		ContentType type = ContentType.create(inType, UTF8);
 
-		builder.addPart(inKey,new StringBody(inValue, type));
-	}
-	
-	
-	public void addPart(String inKey, String inValue)
-	{
-		if( inValue == null)
-		{
-			return;
-		}
-		builder.addPart(inKey,new StringBody(inValue,contentType));
-	}
-	public void addPart(String inKey, File file)
-	{
-		addPart(inKey, file, file.getName());
-	}
-	public void addPart(String inKey, File file, String inName)
-	{
-		FileBody fileBody = new FileBody(file, octectType, inName);
-		builder.addPart(inKey, fileBody);
-	}	
-	public void addPart(String inKey, File file,  ContentType inType)
-	{
-		FileBody fileBody = new FileBody(file, inType);
-		builder.addPart(inKey, fileBody);
-	}	
-	
-	public void addPart(String inKey, ByteArrayBody inPart)
-	{
-		builder.addPart(inKey,inPart);
+		builder.addPart(inKey, new StringBody(inValue, type));
 	}
 
-	public HttpEntity build()
-	{
+	public void addPart(String inKey, String inValue) {
+		if (inValue == null) {
+			return;
+		}
+		builder.addPart(inKey, new StringBody(inValue, contentType));
+	}
+
+	public void addPart(String inKey, File file) {
+		addPart(inKey, file, file.getName());
+	}
+
+	public void addPart(String inKey, File file, String inName) {
+		FileBody fileBody = new FileBody(file, octectType, inName);
+		builder.addPart(inKey, fileBody);
+	}
+
+	public void addPart(String inKey, File file, ContentType inType) {
+		FileBody fileBody = new FileBody(file, inType);
+		builder.addPart(inKey, fileBody);
+	}
+
+	public void addPart(String inKey, ByteArrayBody inPart) {
+		builder.addPart(inKey, inPart);
+	}
+
+	public HttpEntity build() {
 		return builder.build();
 	}
-	
-	
-	public HttpResponse post(String inUrl)
-	{
-		try
-		{
+
+	public HttpResponse post(String inUrl) {
+		try {
 			RequestConfig globalConfig = RequestConfig.custom()
-		            .setCookieSpec(CookieSpecs.DEFAULT)
-		            .build();
+					.setCookieSpec(CookieSpecs.DEFAULT)
+					.build();
 			HttpClient client = HttpClients.custom()
-		            .setDefaultRequestConfig(globalConfig)
-		            .build();
-	
+					.setDefaultRequestConfig(globalConfig)
+					.build();
+
 			HttpPost method = new HttpPost(inUrl);
 
 			method.setEntity(builder.build());
 			HttpResponse response2 = client.execute(method);
 			return response2;
-		}
-		catch ( Exception ex )
-		{
+		} catch (Exception ex) {
 			throw new RuntimeException(ex);
 		}
 	}
 
-
-	public void addParts(Map inParams)
-	{
-		for (Iterator iterator = inParams.keySet().iterator(); iterator.hasNext();)
-		{
+	public void addParts(Map inParams) {
+		for (Iterator iterator = inParams.keySet().iterator(); iterator.hasNext();) {
 			String key = (String) iterator.next();
 			Object value = inParams.get(key);
-			if( value instanceof String)
-			{
-				addPart(key,(String)value);
-			}
-			else if ( value instanceof File)
-			{
-				addPart(key,(File)value);
+			if (value instanceof String) {
+				addPart(key, (String) value);
+			} else if (value instanceof File) {
+				addPart(key, (File) value);
 			}
 		}
-		
+
 	}
-	
 
 }

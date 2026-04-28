@@ -27,52 +27,43 @@ import org.openedit.util.XmlUtil;
  * @author cburkey
  *
  */
-public class XMLConfiguration implements Configuration
-{
+public class XMLConfiguration implements Configuration {
 	private static final Log log = LogFactory.getLog(XMLConfiguration.class);
 	protected HashMap fieldAttributes;
 	protected String fieldText;
 	protected String fieldName;
 	protected List fieldChildren;
 	protected Configuration fieldParent;
-	
+
 	/**
 	 * 
 	 */
-	public XMLConfiguration()
-	{
+	public XMLConfiguration() {
 	}
 
-	public String getText()
-	{
+	public String getText() {
 		return fieldText;
 	}
 
-	
-
-	public XMLConfiguration(String inName)
-	{
+	public XMLConfiguration(String inName) {
 		setName(inName);
 	}
-	
+
 	/**
 	 * @param inRootElement
 	 */
-	public void populate(Element inRootElement)
-	{
+	public void populate(Element inRootElement) {
 		setName(inRootElement.getName());
 		setValue(inRootElement.getText());
-		
-		for (Iterator iter = inRootElement.attributeIterator(); iter.hasNext();)
-		{
+
+		for (Iterator iter = inRootElement.attributeIterator(); iter.hasNext();) {
 			Attribute attrib = (Attribute) iter.next();
-			addAttribute(attrib.getName(),attrib.getValue());
+			addAttribute(attrib.getName(), attrib.getValue());
 		}
-		
-		for (Iterator iter = inRootElement.elementIterator(); iter.hasNext();)
-		{
-			Element	 element = (Element) iter.next();
-			
+
+		for (Iterator iter = inRootElement.elementIterator(); iter.hasNext();) {
+			Element element = (Element) iter.next();
+
 			addChild(new XMLConfiguration(element));
 		}
 
@@ -81,13 +72,11 @@ public class XMLConfiguration implements Configuration
 	/**
 	 * @param inConfiguration
 	 */
-	public Configuration addChild(Configuration inConfiguration)
-	{
-		if ( fieldChildren == null)
-		{
+	public Configuration addChild(Configuration inConfiguration) {
+		if (fieldChildren == null) {
 			fieldChildren = new ArrayList();
 		}
-		fieldChildren.add( inConfiguration);
+		fieldChildren.add(inConfiguration);
 		inConfiguration.setParent(this);
 		return inConfiguration;
 	}
@@ -96,128 +85,121 @@ public class XMLConfiguration implements Configuration
 	 * @param inName
 	 * @param inValue
 	 */
-	private void addAttribute(String inName, String inValue)
-	{
-		if ( fieldAttributes == null)
-		{
+	private void addAttribute(String inName, String inValue) {
+		if (fieldAttributes == null) {
 			fieldAttributes = new HashMap();
 		}
-		fieldAttributes.put( inName, inValue);
+		fieldAttributes.put(inName, inValue);
 	}
-	
+
 	/**
 	 * @param inChild
 	 */
-	public XMLConfiguration(Element inChild)
-	{
+	public XMLConfiguration(Element inChild) {
 		populate(inChild);
 	}
 
-	public XMLConfiguration(Reader inRead)
-	{
-		readXML( inRead);
+	public XMLConfiguration(Reader inRead) {
+		readXML(inRead);
 	}
 
-	/* (non-javadoc)
+	/*
+	 * (non-javadoc)
+	 * 
 	 * @see com.anthonyeden.lib.config.Configuration#getChildren(java.lang.String)
 	 */
-	public List getChildren(String inString)
-	{
-		//this is annoying. We are going to create fake dom4j nodes
+	public List getChildren(String inString) {
+		// this is annoying. We are going to create fake dom4j nodes
 		List hits = new ArrayList(realChildren().size());
-		for (Iterator iter = realChildren().iterator(); iter.hasNext();)
-		{
+		for (Iterator iter = realChildren().iterator(); iter.hasNext();) {
 			XMLConfiguration element = (XMLConfiguration) iter.next();
-			if ( inString.equals( element.getName()) )
-			{
-				hits.add( element);
+			if (inString.equals(element.getName())) {
+				hits.add(element);
 			}
 		}
-		
-		
+
 		return hits;
 	}
 
-
-	/* (non-javadoc)
+	/*
+	 * (non-javadoc)
+	 * 
 	 * @see com.anthonyeden.lib.config.Configuration#getAttribute(java.lang.String)
 	 */
-	public String get(String inKey)
-	{
+	public String get(String inKey) {
 		return getAttribute(inKey);
 	}
-	public String getAttribute(String inString)
-	{
-		return (String)getAttributes().get( inString);
+
+	public String getAttribute(String inString) {
+		return (String) getAttributes().get(inString);
 	}
-	public void setAttribute(String inKey, String inValue)
-	{
-		getAttributes().put(inKey,inValue);
+
+	public void setAttribute(String inKey, String inValue) {
+		getAttributes().put(inKey, inValue);
 	}
-	/* (non-javadoc)
+
+	/*
+	 * (non-javadoc)
+	 * 
 	 * @see com.anthonyeden.lib.config.Configuration#getValue()
 	 */
-	public String getValue()
-	{
+	public String getValue() {
 		return fieldText;
 	}
-	public void setValue( String inValue)
-	{
+
+	public void setValue(String inValue) {
 		fieldText = inValue;
-		if ( fieldText != null)
-		{
+		if (fieldText != null) {
 			fieldText = fieldText.trim();
-			if ( fieldText.length() == 0)
-			{
+			if (fieldText.length() == 0) {
 				fieldText = null;
 			}
 		}
 	}
 
-	/* (non-javadoc)
+	/*
+	 * (non-javadoc)
+	 * 
 	 * @see com.anthonyeden.lib.config.Configuration#getChild(java.lang.String)
 	 */
-	public Configuration getChild(String inString)
-	{
-		for (Iterator iter = realChildren().iterator(); iter.hasNext();)
-		{
+	public Configuration getChild(String inString) {
+		for (Iterator iter = realChildren().iterator(); iter.hasNext();) {
 			XMLConfiguration config = (XMLConfiguration) iter.next();
-			if ( inString.equals( config.getName()  ) )
-			{
+			if (inString.equals(config.getName())) {
 				return config;
 			}
 		}
 		return null;
 	}
-	protected List realChildren()
-	{
-		if (fieldChildren == null)
-		{
+
+	protected List realChildren() {
+		if (fieldChildren == null) {
 			fieldChildren = new ArrayList();
-			
+
 		}
 
 		return fieldChildren;
 	}
 
-	/* (non-javadoc)
+	/*
+	 * (non-javadoc)
+	 * 
 	 * @see com.anthonyeden.lib.config.Configuration#getChildren()
 	 */
-	public List getChildren()
-	{
+	public List getChildren() {
 
 		return realChildren();
-		
+
 	}
 
-	/* (non-javadoc)
+	/*
+	 * (non-javadoc)
+	 * 
 	 * @see com.anthonyeden.lib.config.Configuration#getChildValue(java.lang.String)
 	 */
-	public String getChildValue(String inString)
-	{
+	public String getChildValue(String inString) {
 		Configuration config = getChild(inString);
-		if ( config != null)
-		{
+		if (config != null) {
 			return config.getValue();
 		}
 		return null;
@@ -226,38 +208,33 @@ public class XMLConfiguration implements Configuration
 	/**
 	 * @return
 	 */
-	public List getAttributeNames()
-	{
+	public List getAttributeNames() {
 		Set attribs = getAttributes().keySet();
 		List names = new ArrayList(attribs.size());
-		
-		for (Iterator iter = attribs.iterator(); iter.hasNext();)
-		{
+
+		for (Iterator iter = attribs.iterator(); iter.hasNext();) {
 			String a = (String) iter.next();
-			names.add( a );
+			names.add(a);
 		}
 		return names;
 	}
 
-
-	public HashMap getAttributes()
-	{
-		if (fieldAttributes == null)
-		{
+	public HashMap getAttributes() {
+		if (fieldAttributes == null) {
 			fieldAttributes = new HashMap(2);
 		}
 		return fieldAttributes;
 	}
-	public void setAttributes(HashMap inAttributes)
-	{
+
+	public void setAttributes(HashMap inAttributes) {
 		fieldAttributes = inAttributes;
 	}
-	public String getName()
-	{
+
+	public String getName() {
 		return fieldName;
 	}
-	public void setName(String inName)
-	{
+
+	public void setName(String inName) {
 		fieldName = inName;
 	}
 
@@ -265,100 +242,89 @@ public class XMLConfiguration implements Configuration
 	 * @param inString
 	 * @return
 	 */
-	public Configuration addChild(String inString)
-	{
+	public Configuration addChild(String inString) {
 		XMLConfiguration config = new XMLConfiguration(inString);
 		addChild(config);
-		return config; 
+		return config;
 	}
 
 	/**
 	 * @param inString
 	 * @return
 	 */
-	public Iterator getChildIterator(String inString)
-	{
+	public Iterator getChildIterator(String inString) {
 		return getChildren(inString).iterator();
 	}
+
 	/**
 	 * @param inElement
 	 */
-	public void removeChild(Configuration inElement)
-	{
+	public void removeChild(Configuration inElement) {
 		getChildren().remove(inElement);
 	}
 
-	public Configuration getParent()
-	{
+	public Configuration getParent() {
 		return fieldParent;
 	}
-	public void setParent(Configuration inParent)
-	{
+
+	public void setParent(Configuration inParent) {
 		fieldParent = inParent;
 	}
-	public String toString()
-	{
+
+	public String toString() {
 		return toXml("UTF-8");
 	}
+
 	/**
 	 * Returns this configuration as an XML document with the specified
 	 * encoding.
 	 * 
-	 * @param inEncoding  The encoding
+	 * @param inEncoding The encoding
 	 * 
-	 * @return  An XML document
+	 * @return An XML document
 	 */
-	public String toXml( String inEncoding )
-	{
+	public String toXml(String inEncoding) {
 		Document doc = DocumentHelper.createDocument();
 		Element root = doc.addElement(getName());
-		appendXml(this,root);
+		appendXml(this, root);
 		StringWriter text = new StringWriter();
 		OutputFormat format = OutputFormat.createPrettyPrint();
 		format.setEncoding(inEncoding);
 		XMLWriter out = new XMLWriter(text, format);
-		try
-		{
+		try {
 			out.write(doc);
-		}
-		catch (IOException ex)
-		{
+		} catch (IOException ex) {
 			throw new OpenEditRuntimeException(ex);
 		}
 		return text.toString();
 	}
-	public Document asXml()
-	{
+
+	public Document asXml() {
 		Document doc = DocumentHelper.createDocument();
 		Element root = doc.addElement(getName());
-		appendXml(this,root);
+		appendXml(this, root);
 		return doc;
 	}
 
-	
 	/**
 	 * @param inConfiguration
 	 * @param inRoot
 	 */
-	public void appendXml(XMLConfiguration inConfiguration, Element inElement)
-	{
-		for (Iterator iter = inConfiguration.getAttributeNames().iterator(); iter.hasNext();)
-		{
+	public void appendXml(XMLConfiguration inConfiguration, Element inElement) {
+		for (Iterator iter = inConfiguration.getAttributeNames().iterator(); iter.hasNext();) {
 			String id = (String) iter.next();
-			inElement.addAttribute(id,inConfiguration.getAttribute(id));
-		}		
-		for (Iterator iter = inConfiguration.getChildren().iterator(); iter.hasNext();)
-		{
-			XMLConfiguration child = (XMLConfiguration) iter.next();
-			appendXml(child,inElement.addElement(child.getName()));
+			inElement.addAttribute(id, inConfiguration.getAttribute(id));
 		}
-		if ( inConfiguration.getValue() != null && inConfiguration.getValue().trim().length() > 0)
-		{
+		for (Iterator iter = inConfiguration.getChildren().iterator(); iter.hasNext();) {
+			XMLConfiguration child = (XMLConfiguration) iter.next();
+			appendXml(child, inElement.addElement(child.getName()));
+		}
+		if (inConfiguration.getValue() != null && inConfiguration.getValue().trim().length() > 0) {
 			inElement.setText(inConfiguration.getValue());
 		}
 	}
-	public boolean hasChildren()
-	{
+
+	public boolean hasChildren() {
 		return fieldChildren != null && getChildren().size() > 0;
 	}
 
@@ -366,21 +332,19 @@ public class XMLConfiguration implements Configuration
 	 * @param inString
 	 * @return
 	 */
-	public boolean hasChild(String inString)
-	{
+	public boolean hasChild(String inString) {
 		return getChild(inString) != null;
 	}
+
 	/**
 	 * Method should be avoided due to slow performance without shared SaxReader
+	 * 
 	 * @param inReader
 	 */
-	public void readXML(Reader inReader)
-	{
+	public void readXML(Reader inReader) {
 		XmlUtil util = new XmlUtil();
 		Element root = util.getXml(inReader, "UTF-8");
 		populate(root);
 	}
-	
-	
-	
+
 }

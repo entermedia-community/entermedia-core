@@ -17,8 +17,7 @@ package org.openedit.modules.edit;
  *
  * @author Eric Galluzzo
  */
-public interface EditConstants
-{
+public interface EditConstants {
 	/**
 	 * The permission that allows a user to edit pages on a WSP site.
 	 *

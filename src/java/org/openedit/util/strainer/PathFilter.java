@@ -15,22 +15,19 @@ package org.openedit.util.strainer;
 import org.openedit.WebPageRequest;
 import org.openedit.util.PathUtilities;
 
-
 /**
  * This filter only passes users that have a certain permission.
  *
  * @author Eric Galluzzo
  */
-public class PathFilter extends BaseFilter
-{
+public class PathFilter extends BaseFilter {
 
 	/**
 	 * Construct a filter that passes all users.
 	 *
 	 * @see #setPermission(String)
 	 */
-	public PathFilter()
-	{
+	public PathFilter() {
 		super();
 	}
 
@@ -39,8 +36,7 @@ public class PathFilter extends BaseFilter
 	 *
 	 * @param inPermission The permission to check for
 	 */
-	public PathFilter(String inPermission)
-	{
+	public PathFilter(String inPermission) {
 		setPath(inPermission);
 	}
 
@@ -49,8 +45,7 @@ public class PathFilter extends BaseFilter
 	 *
 	 * @param inValue The permission to check for
 	 */
-	public void setPath(String inPath)
-	{
+	public void setPath(String inPath) {
 		setValue(inPath);
 	}
 
@@ -59,25 +54,22 @@ public class PathFilter extends BaseFilter
 	 *
 	 * @return String
 	 */
-	public String getPath()
-	{
+	public String getPath() {
 		return fieldValue;
 	}
 
 	/**
 	 * @see org.openedit.util.strainer.Filter#passes(java.lang.Object)
 	 */
-	public boolean passes(Object inObj) throws FilterException, ClassCastException
-	{
+	public boolean passes(Object inObj) throws FilterException, ClassCastException {
 		WebPageRequest req = (WebPageRequest) inObj;
 		String path = req.getContentPage().replaceProperty(getPath());
 		boolean ok = PathUtilities.match(req.getPage().getPath(), path);
 		return ok;
-		//return (getPath() == null) || .startsWith(getPath());
+		// return (getPath() == null) || .startsWith(getPath());
 	}
 
-	public String toString() 
-	{
+	public String toString() {
 		return "Path=" + getPath();
 	}
 }

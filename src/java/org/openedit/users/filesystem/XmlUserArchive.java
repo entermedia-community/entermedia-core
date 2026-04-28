@@ -58,7 +58,7 @@ import org.openedit.xml.XmlFile;
  * @see #setGroupDirectory(File)
  * @see #load()
  */
-public class XmlUserArchive implements CatalogEnabled  {
+public class XmlUserArchive implements CatalogEnabled {
 	protected String fieldCatalogId;
 
 	public String getCatalogId() {
@@ -68,13 +68,14 @@ public class XmlUserArchive implements CatalogEnabled  {
 	public void setCatalogId(String inCatalogId) {
 		fieldCatalogId = inCatalogId;
 	}
+
 	public String nextId() {
 		int id = getUserIdCounter().incrementCount();
 		return String.valueOf(id);
 	}
-	
-	//protected String fieldGroupDirectory;
-	//protected String fieldUserDirectory;
+
+	// protected String fieldGroupDirectory;
+	// protected String fieldUserDirectory;
 	protected IntCounter fieldUserIdCounter;
 	protected XmlArchive fieldXmlArchive;
 
@@ -96,11 +97,11 @@ public class XmlUserArchive implements CatalogEnabled  {
 		super();
 	}
 
-//	public FileSystemUserManager(String inUserDirectory, String inGroupDirectory)
-//			throws UserManagerException {
-//		setUserDirectory(inUserDirectory);
-//		setGroupDirectory(inGroupDirectory);
-//	}
+	// public FileSystemUserManager(String inUserDirectory, String inGroupDirectory)
+	// throws UserManagerException {
+	// setUserDirectory(inUserDirectory);
+	// setGroupDirectory(inGroupDirectory);
+	// }
 
 	public List getPermissions() throws UserManagerException {
 		return getPermissionsManager().getSystemPermissions();
@@ -113,8 +114,7 @@ public class XmlUserArchive implements CatalogEnabled  {
 	/**
 	 * @see org.openedit.users.UserManager#getGroup(String)
 	 */
-	public Group loadGroup(Group loadgroup) 
-	{
+	public Group loadGroup(Group loadgroup) {
 		String inGroupId = loadgroup.getId();
 		File find = loadGroupFile(inGroupId);
 		log.info("Loading group xml: " + inGroupId);
@@ -126,7 +126,7 @@ public class XmlUserArchive implements CatalogEnabled  {
 		if (!find.exists()) {
 			return null;
 		}
-		//inGroup.setLastModified(find.lastModified());
+		// inGroup.setLastModified(find.lastModified());
 
 		Element root = getXmlUtil().getXml(find, "UTF-8");
 
@@ -160,11 +160,11 @@ public class XmlUserArchive implements CatalogEnabled  {
 	 * Sets the directory in which all the group XML files reside.
 	 *
 	 * @param groupDirectory
-	 *            The new group directory
+	 *                       The new group directory
 	 */
-//	public void setGroupDirectory(String groupDirectory) {
-//		fieldGroupDirectory = groupDirectory;
-//	}
+	// public void setGroupDirectory(String groupDirectory) {
+	// fieldGroupDirectory = groupDirectory;
+	// }
 
 	/**
 	 * Returns the directory in which all the group XML files reside.
@@ -187,11 +187,11 @@ public class XmlUserArchive implements CatalogEnabled  {
 	 * Sets the directory in which all the user XML files reside.
 	 *
 	 * @param userDirectory
-	 *            The new user directory
+	 *                      The new user directory
 	 */
-//	public void setUserDirectory(String userDirectory) {
-//		fieldUserDirectory = userDirectory;
-//	}
+	// public void setUserDirectory(String userDirectory) {
+	// fieldUserDirectory = userDirectory;
+	// }
 
 	/**
 	 * Returns the directory in which all the user XML files reside.
@@ -216,7 +216,7 @@ public class XmlUserArchive implements CatalogEnabled  {
 	public HitTracker getUserIds() {
 		List col = listUserNames();
 		HitTracker tracker = new ListHitTracker(col);
-		
+
 		return tracker;
 	}
 
@@ -236,29 +236,29 @@ public class XmlUserArchive implements CatalogEnabled  {
 			for (int i = 0; i < files.length; i++) {
 				String username = PathUtilities.extractPageName(files[i]
 						.getName());
-				log.info("Found username: " + username );
+				log.info("Found username: " + username);
 				all.add(username);
 			}
 		}
 
-//		// Temporary
-//		item = getPageManager().getRepository().get("/WEB-INF/users");
-//		users = new File(item.getAbsolutePath());
-//
-//		files = users.listFiles(new FilenameFilter() {
-//			public boolean accept(File dir, String name) {
-//				return name.endsWith(".xml");
-//			}
-//		});
-//		if (files != null) {
-//			for (int i = 0; i < files.length; i++) {
-//				String username = PathUtilities.extractPageName(files[i]
-//						.getName());
-//				if (!all.contains(username)) {
-//					all.add(username);
-//				}
-//			}
-//		}
+		// // Temporary
+		// item = getPageManager().getRepository().get("/WEB-INF/users");
+		// users = new File(item.getAbsolutePath());
+		//
+		// files = users.listFiles(new FilenameFilter() {
+		// public boolean accept(File dir, String name) {
+		// return name.endsWith(".xml");
+		// }
+		// });
+		// if (files != null) {
+		// for (int i = 0; i < files.length; i++) {
+		// String username = PathUtilities.extractPageName(files[i]
+		// .getName());
+		// if (!all.contains(username)) {
+		// all.add(username);
+		// }
+		// }
+		// }
 
 		return all;
 	}
@@ -267,10 +267,10 @@ public class XmlUserArchive implements CatalogEnabled  {
 	 * May be subclassed
 	 */
 	public User loadUser(User user, GroupSearcher inGroupSearcher) throws UserManagerException {
-		
+
 		ContentItem userfolder = getPageManager().getRepository().getStub(
-				getUserDirectory() + "/" );
-		if(!userfolder.exists()){
+				getUserDirectory() + "/");
+		if (!userfolder.exists()) {
 			File userfolderfile = new File(userfolder.getAbsolutePath());
 			userfolderfile.mkdirs();
 
@@ -291,12 +291,11 @@ public class XmlUserArchive implements CatalogEnabled  {
 		MapPropertyContainer container = new MapPropertyContainer();
 		container.loadProperties(root.element("properties"));
 		user.getProperties().putAll(container.toMap());
-		if( user.getValue("creationdate") == null)
-		{
-			user.setValue("creationdate", new Date(userFile.lastModified()) );
+		if (user.getValue("creationdate") == null) {
+			user.setValue("creationdate", new Date(userFile.lastModified()));
 		}
-		
-		//user.setEnabled(true);  //TODO: How do we know this?
+
+		// user.setEnabled(true); //TODO: How do we know this?
 		// String enabled = root.attributeValue("enabled");
 		// if (enabled != null && Boolean.parseBoolean(enabled) == false)
 		// {
@@ -312,27 +311,25 @@ public class XmlUserArchive implements CatalogEnabled  {
 			user.setPassword(passwordElem.getText());
 		}
 
-//		Element lastLoginElem = root.element("lastLogined-Time");
-//		if (lastLoginElem != null) {
-//			user.setLastLoginTime(lastLoginElem.getText());
-//		}
+		// Element lastLoginElem = root.element("lastLogined-Time");
+		// if (lastLoginElem != null) {
+		// user.setLastLoginTime(lastLoginElem.getText());
+		// }
 
 		Collection groups = new ArrayList();
-		for (Iterator iter = root.elementIterator("group"); iter.hasNext();) 
-		{
+		for (Iterator iter = root.elementIterator("group"); iter.hasNext();) {
 			Element groupid = (Element) iter.next();
 			Group group = inGroupSearcher.getGroup(groupid.attributeValue("id"));
-			if( group != null)
-			{
+			if (group != null) {
 				groups.add(group);
 			}
 		}
 		Element lastlogin = root.element("lastLogined-Time");
-		if(lastlogin != null) {
+		if (lastlogin != null) {
 			user.setValue("lastlogin", DateStorageUtil.getStorageUtil().parseFromStorage(lastlogin.getText()));
 		}
 		user.setValue("groups", groups);
-		
+
 		return user;
 	}
 
@@ -379,7 +376,6 @@ public class XmlUserArchive implements CatalogEnabled  {
 		}
 	}
 
-	
 	public Collection listGroupIds() {
 		List ids = new ArrayList();
 		ContentItem item = getPageManager().getRepository().get(
@@ -404,25 +400,25 @@ public class XmlUserArchive implements CatalogEnabled  {
 
 		}
 
-//		// Temporary
-//		item = getPageManager().getRepository().get("/WEB-INF/groups");
-//		groups = new File(item.getAbsolutePath());
-//
-//		groupfiles = groups.listFiles(new FilenameFilter() {
-//			public boolean accept(File inDir, String inName) {
-//				return inName.endsWith(".xml");
-//			}
-//		});
-//
-//		if (groupfiles != null) {
-//			for (int i = 0; i < groupfiles.length; i++) {
-//				String name = PathUtilities.extractPageName(groupfiles[i]
-//						.getName());
-//				if (!ids.contains(name)) {
-//					ids.add(name);
-//				}
-//			}
-//		}
+		// // Temporary
+		// item = getPageManager().getRepository().get("/WEB-INF/groups");
+		// groups = new File(item.getAbsolutePath());
+		//
+		// groupfiles = groups.listFiles(new FilenameFilter() {
+		// public boolean accept(File inDir, String inName) {
+		// return inName.endsWith(".xml");
+		// }
+		// });
+		//
+		// if (groupfiles != null) {
+		// for (int i = 0; i < groupfiles.length; i++) {
+		// String name = PathUtilities.extractPageName(groupfiles[i]
+		// .getName());
+		// if (!ids.contains(name)) {
+		// ids.add(name);
+		// }
+		// }
+		// }
 
 		Collections.sort(ids);
 		return ids;
@@ -432,12 +428,12 @@ public class XmlUserArchive implements CatalogEnabled  {
 	 * Create a file representing the given group on disk.
 	 *
 	 * @param inGroupName
-	 *            The name of the new group
+	 *                    The name of the new group
 	 *
 	 * @return The new file
 	 *
 	 * @throws UserManagerException
-	 *             If the new file could not be created
+	 *                              If the new file could not be created
 	 */
 	protected File createGroupFile(String inGroupId)
 			throws UserManagerException {
@@ -463,14 +459,14 @@ public class XmlUserArchive implements CatalogEnabled  {
 	 * Create a file representing the given user on disk.
 	 *
 	 * @param inUserName
-	 *            The username of the new user
+	 *                   The username of the new user
 	 * @param inPassword
-	 *            The password of the new user
+	 *                   The password of the new user
 	 *
 	 * @return The new file
 	 *
 	 * @throws UserManagerException
-	 *             If the new file could not be created
+	 *                              If the new file could not be created
 	 */
 	protected File createUserFile(String inUserName, String inPassword)
 			throws UserManagerException {
@@ -510,9 +506,7 @@ public class XmlUserArchive implements CatalogEnabled  {
 		ContentItem stub = getPageManager().getRepository().getStub(
 				getUserDirectory() + "/" + inUserName + ".xml");
 		File file = new File(stub.getAbsolutePath());
-		
-		
-		
+
 		return file;
 	}
 
@@ -531,7 +525,7 @@ public class XmlUserArchive implements CatalogEnabled  {
 			throw new UserManagerException(ex);
 		}
 	}
-	
+
 	public void saveUser(User user) throws UserManagerException {
 		if (user.isVirtual()) {
 			log.error("Cannot save virtual users: " + user.getUserName());
@@ -544,13 +538,12 @@ public class XmlUserArchive implements CatalogEnabled  {
 		if (user.getUserName() == null) {
 			int id = 0;
 			boolean doesexist = false;
-			do
-			{
+			do {
 				id = getUserIdCounter().incrementCount();
 				doesexist = getPageManager().getRepository().doesExist(getUserDirectory() + "/" + id + ".xml");
-				
-			} while( doesexist);
-			
+
+			} while (doesexist);
+
 			String newid = String.valueOf(id);
 			user.setUserName(newid);
 		}
@@ -559,8 +552,7 @@ public class XmlUserArchive implements CatalogEnabled  {
 
 		Element passwordElem = userElem.addElement("password");
 		//
-		if (user.getPassword() == null || user.getPassword().isEmpty()) 
-		{
+		if (user.getPassword() == null || user.getPassword().isEmpty()) {
 			String tmppassword = new PasswordGenerator().generate();
 			user.setPassword(tmppassword);
 		}
@@ -571,16 +563,16 @@ public class XmlUserArchive implements CatalogEnabled  {
 		user.setPassword(ps);
 		passwordElem.addCDATA(ps);
 
-//		// Tuan add property lastLogined-Time
-//		Element lastLoginTime = userElem.addElement("lastLogined-Time");
-//		Object lastlogin = 
-//		Date current = (Date) user.getValue("lastlogin");
-//		if(current != null) {
-//		
-//				user.setValue("lastlogin",current);
-//				lastLoginTime.setText(DateStorageUtil.getStorageUtil()
-//						.formatForStorage(current));
-//		}
+		// // Tuan add property lastLogined-Time
+		// Element lastLoginTime = userElem.addElement("lastLogined-Time");
+		// Object lastlogin =
+		// Date current = (Date) user.getValue("lastlogin");
+		// if(current != null) {
+		//
+		// user.setValue("lastlogin",current);
+		// lastLoginTime.setText(DateStorageUtil.getStorageUtil()
+		// .formatForStorage(current));
+		// }
 		MapPropertyContainer map = new MapPropertyContainer();
 		map.putAll(user.getProperties());
 		if (map != null) {
@@ -594,14 +586,13 @@ public class XmlUserArchive implements CatalogEnabled  {
 				child.addAttribute("id", group.getId());
 			}
 		}
-		synchronized (user)
-		{
+		synchronized (user) {
 			// File file = loadUserFile(user.getUserName());
 			XmlFile xfile = new XmlFile();
 			xfile.setRoot(doc.getRootElement());
 			xfile.setPath(getUserDirectory() + "/" + user.getUserName() + ".xml");
 			getXmlArchive().saveXml(xfile, null);
-		}	
+		}
 	}
 
 	public XmlArchive getXmlArchive() {
@@ -635,7 +626,7 @@ public class XmlUserArchive implements CatalogEnabled  {
 			permissionElem.setText(permission.toString());
 		}
 
-		MapPropertyContainer map =  new MapPropertyContainer();
+		MapPropertyContainer map = new MapPropertyContainer();
 		map.putAll(inGroup.getProperties());
 		if (map != null) {
 			Element propertiesElem = map.createPropertiesElement("properties");
@@ -644,7 +635,6 @@ public class XmlUserArchive implements CatalogEnabled  {
 		File file = loadGroupFile(inGroup.getId());
 		getXmlUtil().saveXml(doc, file);
 	}
-
 
 	public IntCounter getUserIdCounter() {
 		if (fieldUserIdCounter == null) {
@@ -658,6 +648,7 @@ public class XmlUserArchive implements CatalogEnabled  {
 		}
 		return fieldUserIdCounter;
 	}
+
 	public PermissionsManager getPermissionsManager() {
 		if (fieldPermissionsManager == null) {
 			fieldPermissionsManager = new PermissionsManager();
@@ -706,6 +697,4 @@ public class XmlUserArchive implements CatalogEnabled  {
 		return pw;
 	}
 
-	
-	
 }

@@ -12,25 +12,23 @@ See the GNU Lesser General Public License for more details.
 
 package org.openedit;
 
-
-
 /**
  * DOCUMENT ME!
  *
- * @author cburkey To change this generated comment edit the template variable "typecomment":
- * 		   Window>Preferences>Java>Templates. To enable and disable the creation of type comments
- * 		   go to Window>Preferences>Java>Code Generation.
+ * @author cburkey To change this generated comment edit the template variable
+ *         "typecomment":
+ *         Window>Preferences>Java>Templates. To enable and disable the creation
+ *         of type comments
+ *         go to Window>Preferences>Java>Code Generation.
  */
-public class OpenEditRuntimeException extends RuntimeException
-{
+public class OpenEditRuntimeException extends RuntimeException {
 
 	private static final long serialVersionUID = -2930548912472035638L;
 
 	/**
 	 * Constructor for OpenEditRuntimeException.
 	 */
-	public OpenEditRuntimeException()
-	{
+	public OpenEditRuntimeException() {
 		super();
 	}
 
@@ -39,8 +37,7 @@ public class OpenEditRuntimeException extends RuntimeException
 	 *
 	 * @param message
 	 */
-	public OpenEditRuntimeException(String message)
-	{
+	public OpenEditRuntimeException(String message) {
 		super(message);
 	}
 
@@ -50,8 +47,7 @@ public class OpenEditRuntimeException extends RuntimeException
 	 * @param message
 	 * @param t
 	 */
-	public OpenEditRuntimeException(String message, Throwable t)
-	{
+	public OpenEditRuntimeException(String message, Throwable t) {
 		super(message, t);
 	}
 
@@ -60,8 +56,7 @@ public class OpenEditRuntimeException extends RuntimeException
 	 *
 	 * @param t
 	 */
-	public OpenEditRuntimeException(Throwable t)
-	{
+	public OpenEditRuntimeException(Throwable t) {
 		super(t);
 	}
 }

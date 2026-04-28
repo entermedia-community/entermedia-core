@@ -15,20 +15,17 @@ import org.openedit.users.User;
 import org.openedit.util.FileUtils;
 import org.openedit.util.XmlUtil;
 
-public class XmlArchive
-{
+public class XmlArchive {
 	private static final Log log = LogFactory.getLog(XmlArchive.class);
 	protected PageManager fieldPageManager;
 	protected XmlUtil fieldXmlUtil;
 	protected ModuleManager fieldModuleManager;
 
-	public ModuleManager getModuleManager()
-	{
+	public ModuleManager getModuleManager() {
 		return fieldModuleManager;
 	}
 
-	public void setModuleManager(ModuleManager inModuleManager)
-	{
+	public void setModuleManager(ModuleManager inModuleManager) {
 		fieldModuleManager = inModuleManager;
 	}
 
@@ -40,13 +37,11 @@ public class XmlArchive
 	 * @return
 	 * @throws OpenEditException
 	 */
-	public XmlFile getXml(String inPath, String inElementName) throws OpenEditException
-	{
+	public XmlFile getXml(String inPath, String inElementName) throws OpenEditException {
 		return getXml(inPath, inPath, inElementName);
 	}
 
-	public XmlFile getXml(String inPath) throws OpenEditException
-	{
+	public XmlFile getXml(String inPath) throws OpenEditException {
 		return getXml(inPath, inPath, null);
 	}
 
@@ -58,33 +53,24 @@ public class XmlArchive
 	 * @return
 	 * @throws OpenEditException
 	 */
-	public XmlFile getXml(String inId, String path, String inElementName) throws OpenEditException
-	{
-		try
-		{// This can be specified within the page action with a <property
-			// name="xmlfile">./data.xml</property>
+	public XmlFile getXml(String inId, String path, String inElementName) throws OpenEditException {
+		try {// This can be specified within the page action with a <property
+				// name="xmlfile">./data.xml</property>
 			XmlFile element = null;
-			if (path.startsWith("/WEB-INF/data"))
-			{
+			if (path.startsWith("/WEB-INF/data")) {
 				ContentItem input = getPageManager().getRepository().get(path);
 				element = load(inId, path, inElementName, input);
-			}
-			else
-			{
+			} else {
 				Page input = getPageManager().getPage(path, true);
-				if (element == null || element.getLastModified() != input.lastModified())
-				{
+				if (element == null || element.getLastModified() != input.lastModified()) {
 					element = load(inId, path, inElementName, input.getContentItem());
 				}
 
 			}
 			return element;
-		}
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 			String actual = getPageManager().getPage(path).getContentItem().getAbsolutePath();
-			if (actual == null)
-			{
+			if (actual == null) {
 				actual = path;
 			}
 			throw new OpenEditException("Path was: " + actual + " Error:  " + e.getMessage(), e);
@@ -95,72 +81,51 @@ public class XmlArchive
 	/**
 	 * @deprecated
 	 */
-	public XmlFile createXmlFile(String inId, String path) throws OpenEditException
-	{
+	public XmlFile createXmlFile(String inId, String path) throws OpenEditException {
 		return getXml(inId, path, null);
 	}
 
 	/**
 	 * @deprecated use getXml(String)
 	 */
-	public XmlFile loadXmlFile(String inId) throws OpenEditException
-	{
+	public XmlFile loadXmlFile(String inId) throws OpenEditException {
 		return getXml(inId);
 	}
 
-	public long getLastModified(String inPath) throws OpenEditException
-	{
-		if (inPath.startsWith("/WEB-INF/data"))
-		{
+	public long getLastModified(String inPath) throws OpenEditException {
+		if (inPath.startsWith("/WEB-INF/data")) {
 			ContentItem input = getPageManager().getRepository().get(inPath);
 			return input.getLastModified();
-		}
-		else
-		{
+		} else {
 			return getPageManager().getPage(inPath).lastModified();
 		}
 	}
 
-	protected XmlFile load(String inId, String path, String inElementName, ContentItem input) throws OpenEditException
-	{
+	protected XmlFile load(String inId, String path, String inElementName, ContentItem input) throws OpenEditException {
 		// log.info("Loading " + path);
 		boolean found = false;
 
 		XmlFile element;
 		Element root = null;
-		if (!input.exists())
-		{
-			if (inElementName == null)
-			{
+		if (!input.exists()) {
+			if (inElementName == null) {
 				root = DocumentHelper.createElement("root");
-			}
-			else
-			{
-				if (inElementName.endsWith("y"))
-				{
+			} else {
+				if (inElementName.endsWith("y")) {
 					root = DocumentHelper.createElement(inElementName.substring(0, inElementName.length() - 1) + "ies");
-				}
-				else
-				{
+				} else {
 					root = DocumentHelper.createElement(inElementName + "s");
 				}
 			}
-		}
-		else
-		{
+		} else {
 			found = true;
 			InputStream in = input.getInputStream();
-			try
-			{
+			try {
 				root = getXmlUtil().getXml(in, "UTF-8");
-			}
-			catch (OpenEditException ex)
-			{
+			} catch (OpenEditException ex) {
 				log.error("file problem: " + path, ex);
 				throw ex;
-			}
-			finally
-			{
+			} finally {
 				FileUtils.safeClose(in);
 			}
 		}
@@ -176,12 +141,10 @@ public class XmlArchive
 		return element;
 	}
 
-	public void saveXml(XmlFile inFile, User inUser) throws OpenEditException
-	{
+	public void saveXml(XmlFile inFile, User inUser) throws OpenEditException {
 		Page page = getPageManager().getPage(inFile.getPath(), false);
 
-		synchronized (page)
-		{
+		synchronized (page) {
 			ContentItem tmp = getPageManager().getRepository().getStub(inFile.getPath() + ".tmp.xml");
 			getXmlUtil().saveXml(inFile.getRoot(), tmp.getOutputStream(), page.getCharacterEncoding());
 
@@ -201,7 +164,8 @@ public class XmlArchive
 	// public void saveXml(XmlFile inFile, User inUser) throws OpenEditException
 	// {
 	//
-	//// Lock lock = getLockManager().lock(inFile.getPath(), null ); //this will retry 10 times then
+	//// Lock lock = getLockManager().lock(inFile.getPath(), null ); //this will
+	// retry 10 times then
 	// timeout and throw an exception
 	//// try
 	//// {
@@ -217,7 +181,8 @@ public class XmlArchive
 
 	// public LockManager getLockManager(String inCatalogId)
 	// {
-	// LockManager manager = (LockManager)getModuleManager().getBean(inCatalogId,"lockManager");
+	// LockManager manager =
+	// (LockManager)getModuleManager().getBean(inCatalogId,"lockManager");
 	// return manager;
 	// }
 
@@ -226,32 +191,26 @@ public class XmlArchive
 	// return getLockManager("system");
 	// }
 
-	public PageManager getPageManager()
-	{
+	public PageManager getPageManager() {
 		return fieldPageManager;
 	}
 
-	public void setPageManager(PageManager inPageManager)
-	{
+	public void setPageManager(PageManager inPageManager) {
 		fieldPageManager = inPageManager;
 	}
 
-	public XmlUtil getXmlUtil()
-	{
-		if (fieldXmlUtil == null)
-		{
+	public XmlUtil getXmlUtil() {
+		if (fieldXmlUtil == null) {
 			fieldXmlUtil = new XmlUtil();
 		}
 		return fieldXmlUtil;
 	}
 
-	public void setXmlUtil(XmlUtil inXmlUtil)
-	{
+	public void setXmlUtil(XmlUtil inXmlUtil) {
 		fieldXmlUtil = inXmlUtil;
 	}
 
-	public void deleteXmlFile(XmlFile inSettings) throws OpenEditException
-	{
+	public void deleteXmlFile(XmlFile inSettings) throws OpenEditException {
 		Page page = getPageManager().getPage(inSettings.getPath(), true);
 		getPageManager().removePage(page);
 

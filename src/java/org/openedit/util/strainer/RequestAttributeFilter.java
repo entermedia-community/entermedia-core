@@ -16,14 +16,12 @@ import javax.servlet.ServletRequest;
 
 import org.openedit.WebPageRequest;
 
-
 /**
  * This filter only passes users that have a certain permission.
  *
  * @author Eric Galluzzo
  */
-public class RequestAttributeFilter extends BaseFilter
-{
+public class RequestAttributeFilter extends BaseFilter {
 	protected String fieldAttribute;
 
 	/**
@@ -31,8 +29,7 @@ public class RequestAttributeFilter extends BaseFilter
 	 *
 	 * @see #setPermission(String)
 	 */
-	public RequestAttributeFilter()
-	{
+	public RequestAttributeFilter() {
 		super();
 	}
 
@@ -40,10 +37,9 @@ public class RequestAttributeFilter extends BaseFilter
 	 * Construct a filter that only passes users that have the given permission.
 	 *
 	 * @param inPermission The permission to check for
-	 * @param inEq DOCME
+	 * @param inEq         DOCME
 	 */
-	public RequestAttributeFilter(String inPermission, String inEq)
-	{
+	public RequestAttributeFilter(String inPermission, String inEq) {
 		setAttribute(inPermission);
 		setEquals(inEq);
 	}
@@ -53,8 +49,7 @@ public class RequestAttributeFilter extends BaseFilter
 	 *
 	 * @param permission The permission to check for
 	 */
-	public void setAttribute(String permission)
-	{
+	public void setAttribute(String permission) {
 		fieldAttribute = permission;
 	}
 
@@ -63,8 +58,7 @@ public class RequestAttributeFilter extends BaseFilter
 	 *
 	 * @return String
 	 */
-	public String getAttribute()
-	{
+	public String getAttribute() {
 		return fieldAttribute;
 	}
 
@@ -73,8 +67,7 @@ public class RequestAttributeFilter extends BaseFilter
 	 *
 	 * @param inString
 	 */
-	public void setEquals(String inString)
-	{
+	public void setEquals(String inString) {
 		setValue(inString);
 	}
 
@@ -83,21 +76,18 @@ public class RequestAttributeFilter extends BaseFilter
 	 *
 	 * @return
 	 */
-	public String getEquals()
-	{
+	public String getEquals() {
 		return fieldValue;
 	}
 
 	/**
 	 * @see org.openedit.util.strainer.Filter#passes(java.lang.Object)
 	 */
-	public boolean passes(Object inObj) throws FilterException, ClassCastException
-	{
+	public boolean passes(Object inObj) throws FilterException, ClassCastException {
 		WebPageRequest req = (WebPageRequest) inObj;
 		ServletRequest request = req.getRequest();
 
-		if (request == null)
-		{
+		if (request == null) {
 			return false;
 		}
 
@@ -106,8 +96,7 @@ public class RequestAttributeFilter extends BaseFilter
 		return (getAttribute() == null) || getEquals().equalsIgnoreCase(att);
 	}
 
-	public String toString() 
-	{
+	public String toString() {
 		return getAttribute() + " Parameter=" + getEquals();
 	}
 }

@@ -100,8 +100,7 @@ public class FilterWriter {
 			DataPropertyFilter filter = (DataPropertyFilter) inFilter;
 			newChild.setAttribute("value", filter.getValue());
 			newChild.setAttribute("property", filter.getPropertyName());
-		}
-		else if (elemName.equals("userproperty")) {
+		} else if (elemName.equals("userproperty")) {
 			UserPropertyFilter filter = (UserPropertyFilter) inFilter;
 			newChild.setAttribute("value", filter.getValue());
 			newChild.setAttribute("name", filter.getPropertyName());
@@ -119,21 +118,21 @@ public class FilterWriter {
 					newChild.addChild(conf);
 				}
 			}
-//			if(action.getProperties() != null){
-//				for (Iterator iterator = action.getProperties().keySet().iterator(); iterator
-//						.hasNext();) {
-//					String key = (String) iterator.next();
-//					String value = action.get(key);
-//					if(key != null && value != null){
-//						Configuration prop=  newChild.addChild("property");
-//						
-//						prop.setAttribute("id", key);
-//						prop.setValue(value);
-//						
-//					}
-//				}
-//			}
-			
+			// if(action.getProperties() != null){
+			// for (Iterator iterator = action.getProperties().keySet().iterator(); iterator
+			// .hasNext();) {
+			// String key = (String) iterator.next();
+			// String value = action.get(key);
+			// if(key != null && value != null){
+			// Configuration prop= newChild.addChild("property");
+			//
+			// prop.setAttribute("id", key);
+			// prop.setValue(value);
+			//
+			// }
+			// }
+			// }
+
 		} else {
 
 			if (inFilter.getConfiguration() != null) {
@@ -143,18 +142,17 @@ public class FilterWriter {
 					String value = inFilter.getConfiguration().get(type);
 					newChild.setAttribute(type, value);
 				}
-				
 
 			}
-			
+
 			for (Iterator iterator = inFilter.getProperties().keySet().iterator(); iterator
 					.hasNext();) {
 				String key = (String) iterator.next();
 				String value = inFilter.get(key);
-				if(value != null){
-				newChild.setAttribute(key, value);
+				if (value != null) {
+					newChild.setAttribute(key, value);
 				}
-				
+
 			}
 		}
 		// throw new OpenEditRuntimeException("Unrecognized filter element <" +

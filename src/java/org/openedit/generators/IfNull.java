@@ -30,35 +30,39 @@ import org.apache.velocity.runtime.parser.node.Node;
  * @author <a href="mailto:shinobu@ieee.org">Shinobu Kawai</a>
  * @version $Id: $
  */
-public class IfNull extends Directive
-{
+public class IfNull extends Directive {
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.apache.velocity.runtime.directive.Directive#getName()
      */
-    public String getName()
-    {
+    public String getName() {
         return "ifnull";
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.apache.velocity.runtime.directive.Directive#getType()
      */
-    public int getType()
-    {
+    public int getType() {
         return BLOCK;
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.velocity.runtime.directive.Directive#render(org.apache.velocity.context.InternalContextAdapter, java.io.Writer, org.apache.velocity.runtime.parser.node.Node)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.apache.velocity.runtime.directive.Directive#render(org.apache.velocity.
+     * context.InternalContextAdapter, java.io.Writer,
+     * org.apache.velocity.runtime.parser.node.Node)
      */
     public boolean render(InternalContextAdapter context, Writer writer,
             Node node) throws IOException, ResourceNotFoundException,
-            ParseErrorException, MethodInvocationException
-    {
+            ParseErrorException, MethodInvocationException {
         Object value = node.jjtGetChild(0).value(context);
-        if (value == null)
-        {
+        if (value == null) {
             Node content = node.jjtGetChild(1);
             content.render(context, writer);
         }
@@ -66,4 +70,3 @@ public class IfNull extends Directive
     }
 
 }
-

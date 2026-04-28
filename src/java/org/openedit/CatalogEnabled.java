@@ -1,6 +1,5 @@
 package org.openedit;
 
-public interface CatalogEnabled
-{
+public interface CatalogEnabled {
 	void setCatalogId(String inId);
 }

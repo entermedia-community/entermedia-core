@@ -12,36 +12,28 @@ import org.openedit.util.SessionTool;
 /**
  * @author Matthew Avery, mavery@einnovation.com
  */
-public class SessionValueModule extends BaseModule
-{
-	public void loadSessionVariable( WebPageRequest inContext ) throws Exception
-	{
+public class SessionValueModule extends BaseModule {
+	public void loadSessionVariable(WebPageRequest inContext) throws Exception {
 		PageAction inAction = inContext.getCurrentAction();
 		String key = inAction.getConfig().getAttribute("bean");
 		Object bean = inContext.getSessionValue(key);
-		if( bean != null)
-		{
+		if (bean != null) {
 			return;
 		}
 		String className = inAction.getConfig().getAttribute("class");
-		if ( className != null)
-		{
-			SessionTool classTool = (SessionTool)inContext.getPageValue( PageRequestKeys.CLASSTOOL );
-			if( classTool == null)
-			{
-				classTool = new SessionTool(inContext,getModuleManager());
+		if (className != null) {
+			SessionTool classTool = (SessionTool) inContext.getPageValue(PageRequestKeys.CLASSTOOL);
+			if (classTool == null) {
+				classTool = new SessionTool(inContext, getModuleManager());
 				inContext.putSessionValue(PageRequestKeys.CLASSTOOL, classTool);
 			}
 
-			inContext.putPageValue( key, classTool.construct( key, className ) );
+			inContext.putPageValue(key, classTool.construct(key, className));
 			return;
-		}
-		else
-		{
+		} else {
 			bean = getBeanLoader().getBean(key);
-			if ( bean != null)
-			{
-				inContext.putSessionValue(key,bean);
+			if (bean != null) {
+				inContext.putSessionValue(key, bean);
 				return;
 			}
 		}

@@ -13,29 +13,25 @@ See the GNU Lesser General Public License for more details.
 package org.openedit.users;
 
 /**
- * This exception is thrown when one attempts to create a user whose username is already taken.
+ * This exception is thrown when one attempts to create a user whose username is
+ * already taken.
  *
  * @author Eric and Matt
  */
-public class DuplicateUserException extends UserManagerException
-{
-	public DuplicateUserException()
-	{
+public class DuplicateUserException extends UserManagerException {
+	public DuplicateUserException() {
 		super();
 	}
 
-	public DuplicateUserException(String message)
-	{
+	public DuplicateUserException(String message) {
 		super(message);
 	}
 
-	public DuplicateUserException(String message, Throwable cause)
-	{
+	public DuplicateUserException(String message, Throwable cause) {
 		super(message, cause);
 	}
 
-	public DuplicateUserException(Throwable cause)
-	{
+	public DuplicateUserException(Throwable cause) {
 		super(cause);
 	}
 }

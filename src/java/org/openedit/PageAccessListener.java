@@ -18,14 +18,12 @@ package org.openedit;
 
 import org.openedit.page.Page;
 
-
 /**
  * DOCUMENT ME!
  *
  * @author cburkey
  */
-public interface PageAccessListener
-{
+public interface PageAccessListener {
 	/**
 	 * DOCUMENT ME!
 	 *

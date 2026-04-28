@@ -38,27 +38,26 @@ import org.openedit.OpenEditException;
 /**
  * Some file utility methods such as recursive delete.
  */
-public class FileUtils
-{
-	
+public class FileUtils {
+
 	protected Set fieldInvalidChars;
 	OutputFiller fieldFiller = new OutputFiller();
 	private static final Log log = LogFactory.getLog(FileUtils.class);
+
 	/**
 	 * Create a temporary directory with a unique name beginning with the given
 	 * prefix.
 	 * 
 	 * @param inPrefix
-	 *            The prefix for the created directory
+	 *                 The prefix for the created directory
 	 * 
 	 * @return DOCME
 	 * 
 	 * @throws IOException
-	 *             DOCME
+	 *                     DOCME
 	 */
-	public File createTempDir( String inPrefix ) throws IOException
-	{
-		File tempDir = File.createTempFile( inPrefix, null );
+	public File createTempDir(String inPrefix) throws IOException {
+		File tempDir = File.createTempFile(inPrefix, null);
 		tempDir.delete();
 		tempDir.mkdir();
 
@@ -69,87 +68,70 @@ public class FileUtils
 	 * DOCME
 	 * 
 	 * @param fname
-	 *            DOCME
+	 *              DOCME
 	 */
-	public void deleteAll( String fname )
-	{
-		File f = new File( fname );
-		deleteAll( f );
+	public void deleteAll(String fname) {
+		File f = new File(fname);
+		deleteAll(f);
 	}
-	
-	
 
 	/**
 	 * Deletes any files in this directory that match the wildcard
+	 * 
 	 * @param inMatch
 	 */
-	public void deleteMatch( String inMatch )
-	{
-		//get the parent, list the children, find the match, delete
-		File search = new File( inMatch );
+	public void deleteMatch(String inMatch) {
+		// get the parent, list the children, find the match, delete
+		File search = new File(inMatch);
 		File dir = search.getParentFile();
 
 		File[] all = dir.listFiles();
-		if ( all != null)
-		{
-			for (int i = 0; i < all.length; i++)
-			{
+		if (all != null) {
+			for (int i = 0; i < all.length; i++) {
 				File f = all[i];
-				if ( PathUtilities.match(f.getName(), search.getName() ) )
-				{
+				if (PathUtilities.match(f.getName(), search.getName())) {
 					log.info("deleted " + f.getName());
-					f.delete(); //should this do dirs?
+					f.delete(); // should this do dirs?
 				}
 			}
 		}
 	}
-	
-	public boolean deleteOlderVersions( String inDir )
-	{
+
+	public boolean deleteOlderVersions(String inDir) {
 		System.gc();
 		boolean requiresRestart = false;
 		Map map = new HashMap();
-		//get the parent, list the children, find the match, delete
-		File dir = new File( inDir );
+		// get the parent, list the children, find the match, delete
+		File dir = new File(inDir);
 
 		File[] all = dir.listFiles();
-		if ( all != null)
-		{
-			for (int i = 0; i < all.length; i++)
-			{
+		if (all != null) {
+			for (int i = 0; i < all.length; i++) {
 				File f = all[i];
 				String fileName = f.getName();
 				int dashIndex = fileName.lastIndexOf('-');
-				if (dashIndex >= 0)
-				{
+				if (dashIndex >= 0) {
 					String base = fileName.substring(0, dashIndex);
-					String version = fileName.substring(dashIndex + 1 );
-					String highestVersion = (String)map.get(base);
-					if (highestVersion == null || highestVersion.compareTo(version) < 0)
-					{
+					String version = fileName.substring(dashIndex + 1);
+					String highestVersion = (String) map.get(base);
+					if (highestVersion == null || highestVersion.compareTo(version) < 0) {
 						map.put(base, version);
 					}
 				}
 			}
 
-			for (int i = 0; i < all.length; i++)
-			{
+			for (int i = 0; i < all.length; i++) {
 				File f = all[i];
 				String fileName = f.getName();
 				int dashIndex = fileName.lastIndexOf('-');
-				if (dashIndex >= 0)
-				{
+				if (dashIndex >= 0) {
 					String base = fileName.substring(0, dashIndex);
 					String version = fileName.substring(dashIndex + 1);
-					String highestVersion = (String)map.get(base);
-					if (!version.equals(highestVersion))
-					{
-						if (f.delete())
-						{
+					String highestVersion = (String) map.get(base);
+					if (!version.equals(highestVersion)) {
+						if (f.delete()) {
 							log.info("deleting " + f.getName());
-						}
-						else
-						{
+						} else {
 							log.info("deleting " + f.getName() + " on exit");
 							f.deleteOnExit();
 							requiresRestart = true;
@@ -159,44 +141,38 @@ public class FileUtils
 			}
 		}
 		return requiresRestart;
-	}		
-	
-	public void deleteAll( File file )
-	{
-		if (file.isDirectory())
-		{
+	}
+
+	public void deleteAll(File file) {
+		if (file.isDirectory()) {
 			// If it's a dir, then delete everything in it.
 			File[] fileList = file.listFiles();
 
-			if (fileList != null)
-			{
-				for ( int idx = 0; idx < fileList.length; idx++ )
-					deleteAll( fileList[idx] );
+			if (fileList != null) {
+				for (int idx = 0; idx < fileList.length; idx++)
+					deleteAll(fileList[idx]);
 			}
 		}
-		
+
 		// Now delete ourselves, whether a file or a dir.
 		file.delete();
 	}
-	public void copyFileByMatch( String inMatch, String outDir) throws IOException
-	{
-		File out = new File( outDir );
+
+	public void copyFileByMatch(String inMatch, String outDir) throws IOException {
+		File out = new File(outDir);
 		out.mkdirs();
-		copyFileByMatch(inMatch, out );
-	} 
-	public void copyFileByMatch( String inMatch, File outDir) throws IOException
-	{
-		File file = new File( inMatch ); 
+		copyFileByMatch(inMatch, out);
+	}
+
+	public void copyFileByMatch(String inMatch, File outDir) throws IOException {
+		File file = new File(inMatch);
 		File dir = file.getParentFile();
 
 		File[] all = dir.listFiles();
-		if ( all != null)
-		{
-			for (int i = 0; i < all.length; i++)
-			{
+		if (all != null) {
+			for (int i = 0; i < all.length; i++) {
 				File f = all[i];
-				if ( PathUtilities.match(f.getName(), file.getName() ) )
-				{
+				if (PathUtilities.match(f.getName(), file.getName())) {
 					copyFiles(f, outDir);
 				}
 			}
@@ -207,201 +183,166 @@ public class FileUtils
 	 * DOCME
 	 * 
 	 * @param inSource
-	 *            DOCME
+	 *                 DOCME
 	 * @param inDest
-	 *            DOCME
+	 *                 DOCME
 	 * @param inBuffer
-	 *            DOCME
+	 *                 DOCME
 	 * 
 	 * @throws IOException
-	 *             DOCME
+	 *                     DOCME
 	 */
-	public void dirCopy( File inSource, File inDest ) throws IOException
-	{
-		if (inSource.isDirectory())
-		{
+	public void dirCopy(File inSource, File inDest) throws IOException {
+		if (inSource.isDirectory()) {
 			inDest.mkdirs();
 
 			File[] files = inSource.listFiles();
-			if( files != null)
-			{
-				for ( int i = 0; i < files.length; i++ )
-				{
+			if (files != null) {
+				for (int i = 0; i < files.length; i++) {
 					// The child directory
-					File newDest = new File( inDest, files[i].getName() );
-	
-					if (files[i].isDirectory())
-					{
-						dirCopy( files[i], newDest );
-					}
-					else
-					{
-						fileCopy( files[i], newDest );
+					File newDest = new File(inDest, files[i].getName());
+
+					if (files[i].isDirectory()) {
+						dirCopy(files[i], newDest);
+					} else {
+						fileCopy(files[i], newDest);
 					}
 				}
 			}
 		}
 	}
+
 	/**
 	 * Does a move even if the directory already exist
 	 * Also creates a directory for file to be moved into
+	 * 
 	 * @param inSource
 	 * @param inDest
 	 * @throws IOException
 	 */
-	public void move( String inSource, String inDest ) 
-	{
-		move( new File( inSource), new File( inDest));
+	public void move(String inSource, String inDest) {
+		move(new File(inSource), new File(inDest));
 	}
-	public void move( File inSource, File inDest )
-	{
+
+	public void move(File inSource, File inDest) {
 		move(inSource, inDest, true);
 	}
-		
-	public void move(File inSource, File inDest, boolean inForce) 
-	{
-		if (inSource.isDirectory())
-		{
+
+	public void move(File inSource, File inDest, boolean inForce) {
+		if (inSource.isDirectory()) {
 			inDest.mkdirs();
 
 			File[] files = inSource.listFiles();
-			if( files != null)
-			{
-				for ( int i = 0; i < files.length; i++ )
-				{
+			if (files != null) {
+				for (int i = 0; i < files.length; i++) {
 					// The child directory
-					File newDest = new File( inDest, files[i].getName() );
-	
-					if (files[i].isDirectory())
-					{
-						move( files[i], newDest, inForce );
-					}
-					else
-					{
-						renameFile(files[i], newDest, inForce );
+					File newDest = new File(inDest, files[i].getName());
+
+					if (files[i].isDirectory()) {
+						move(files[i], newDest, inForce);
+					} else {
+						renameFile(files[i], newDest, inForce);
 					}
 				}
 			}
 			inSource.delete();
-		}
-		else
-		{
-			if( inDest.isDirectory())
-			{
-				inDest = new File( inDest, inSource.getName());
-			}
-			else
-			{
+		} else {
+			if (inDest.isDirectory()) {
+				inDest = new File(inDest, inSource.getName());
+			} else {
 				inDest.getParentFile().mkdirs();
 			}
 			renameFile(inSource, inDest, inForce);
 		}
 	}
 
-	protected void renameFile(File inSource, File inDest, boolean inForce) 
-	{
-		if( !inSource.renameTo( inDest ) )
-		{
-			if(inForce)
-			{
-				copyFiles(inSource,inDest);
+	protected void renameFile(File inSource, File inDest, boolean inForce) {
+		if (!inSource.renameTo(inDest)) {
+			if (inForce) {
+				copyFiles(inSource, inDest);
 				boolean deleted = inSource.delete();
-				if(!deleted){
+				if (!deleted) {
 					log.info("could not delete file - " + inSource);
 				}
 				return;
 			}
-			throw new OpenEditException("Could not move " + inSource.getPath() + " to " + inDest.getPath() + " file may already exist or the folders are on different mounts.  Use forced=true");
+			throw new OpenEditException("Could not move " + inSource.getPath() + " to " + inDest.getPath()
+					+ " file may already exist or the folders are on different mounts.  Use forced=true");
 		}
-		
+
 	}
 
 	/**
 	 * DOCME
 	 * 
 	 * @param src
-	 *            DOCME
+	 *               DOCME
 	 * @param dst
-	 *            DOCME
+	 *               DOCME
 	 * @param buffer
-	 *            DOCME
+	 *               DOCME
 	 * 
 	 * @throws IOException
-	 *             DOCME
+	 *                     DOCME
 	 */
-	public void fileCopy( File src, File dst ) throws IOException
-	{
-		fieldFiller.fill(src,dst);
+	public void fileCopy(File src, File dst) throws IOException {
+		fieldFiller.fill(src, dst);
 
 		// Preserve the modification date of the original file.
-		dst.setLastModified( src.lastModified() );
+		dst.setLastModified(src.lastModified());
 	}
-	public void copyFiles( String source, String destination ) throws IOException
-	{
-		copyFiles( new File( source ), new File( destination ) );
+
+	public void copyFiles(String source, String destination) throws IOException {
+		copyFiles(new File(source), new File(destination));
 	}
-	public void copyFiles( File source, File destination )
-	{
-		if (source.isDirectory())
-		{
-			if( destination.exists() && !destination.isDirectory() )
-			{
+
+	public void copyFiles(File source, File destination) {
+		if (source.isDirectory()) {
+			if (destination.exists() && !destination.isDirectory()) {
 				destination.delete();
 			}
 			destination.mkdirs();
 
-			//loop over all the sub files
+			// loop over all the sub files
 			File[] children = source.listFiles();
 
-			for ( int i = 0; i < children.length; i++ )
-			{
-				copyFiles( children[i], new File( destination, children[i].getName() ) );
+			for (int i = 0; i < children.length; i++) {
+				copyFiles(children[i], new File(destination, children[i].getName()));
 			}
-		}
-		else
-		{
-			if( destination.isDirectory() )
-			{
-				copyFiles( source,new File( destination , source.getName() ) );
-			}
-			else
-			{
+		} else {
+			if (destination.isDirectory()) {
+				copyFiles(source, new File(destination, source.getName()));
+			} else {
 				destination.getParentFile().mkdirs();
-				try
-				{
-					fieldFiller.fill( source,destination );
-				}
-				catch (IOException e)
-				{
+				try {
+					fieldFiller.fill(source, destination);
+				} catch (IOException e) {
 					throw new OpenEditException(e);
 				}
 				destination.setLastModified(source.lastModified());
 			}
 		}
 	}
+
 	/**
 	 * This closes the input stream
+	 * 
 	 * @param inInput
 	 * @param inOutputFile
 	 * @throws IOException
 	 */
-	public void writeFile( InputStream inInput, File inOutputFile ) throws IOException
-	{
-		//TODO: Could probably start using java.nio classes
+	public void writeFile(InputStream inInput, File inOutputFile) throws IOException {
+		// TODO: Could probably start using java.nio classes
 		// Write the content
-		
-//		 Create any parent directories, if necessary.
+
+		// Create any parent directories, if necessary.
 		inOutputFile.getParentFile().mkdirs();
-		OutputStream out = new FileOutputStream( inOutputFile );
-		try
-		{
-			fieldFiller.fill( inInput, out );
+		OutputStream out = new FileOutputStream(inOutputFile);
+		try {
+			fieldFiller.fill(inInput, out);
 			out.flush();
-		}
-		finally
-		{
-			if ( inInput != null)
-			{
+		} finally {
+			if (inInput != null) {
 				inInput.close();
 			}
 			out.close();
@@ -411,109 +352,80 @@ public class FileUtils
 	/**
 	 * @param inIn
 	 */
-	public static void safeClose(Reader inIn)
-	{
-		if ( inIn != null)
-		{
-			try
-			{
+	public static void safeClose(Reader inIn) {
+		if (inIn != null) {
+			try {
 				inIn.close();
-			}
-			catch (IOException ex)
-			{
+			} catch (IOException ex) {
 				log.error(ex);
 			}
 		}
-	}
-	public static void safeClose(InputStream inIn)
-	{
-		if ( inIn != null)
-		{
-			try
-			{
-				inIn.close();
-			}
-			catch (IOException ex)
-			{
-				log.error(ex);
-			}
-		}
-	}
-	public static void safeClose(OutputStream inIn)
-	{
-		if ( inIn != null)
-		{
-			try
-			{
-				inIn.close();
-			}
-			catch (IOException ex)
-			{
-				log.error(ex);
-			}
-		}
-	}
-	public static void safeClose(Writer inIn)
-	{
-		if ( inIn != null)
-		{
-			try
-			{
-				inIn.close();
-			}
-			catch (IOException ex)
-			{
-				log.error(ex);
-			}
-		}
-	}
-	
-	public static void safeClose(ImageInputStream inStream)
-	{
-		if ( inStream != null)
-		{
-			try
-			{
-				inStream.close();
-			}
-			catch (IOException ex)
-			{
-				log.error(ex);
-			}
-		}
-	}
-	
-	public void replace(File inFile, String inKey, String inNewKey) throws Exception
-	{
-		FileReader filereader = new FileReader(inFile);
-		StringWriter out = new StringWriter();
-	    new OutputFiller().fill( filereader, out );
-	    filereader.close();
-	    String readstring = out.toString();
-	    readstring = readstring.replace(inKey, inNewKey  ); 
-	    FileWriter filewriter = new FileWriter(inFile);
-	    new OutputFiller().fill( new StringReader(readstring), filewriter);
-	    filewriter.close();
 	}
 
-	public void copyFiles(InputStream inInputStream, FileOutputStream inFileOutputStream) throws IOException
-	{
-		try
-		{	
-			fieldFiller.fill(inInputStream, inFileOutputStream);
+	public static void safeClose(InputStream inIn) {
+		if (inIn != null) {
+			try {
+				inIn.close();
+			} catch (IOException ex) {
+				log.error(ex);
+			}
 		}
-		finally
-		{
+	}
+
+	public static void safeClose(OutputStream inIn) {
+		if (inIn != null) {
+			try {
+				inIn.close();
+			} catch (IOException ex) {
+				log.error(ex);
+			}
+		}
+	}
+
+	public static void safeClose(Writer inIn) {
+		if (inIn != null) {
+			try {
+				inIn.close();
+			} catch (IOException ex) {
+				log.error(ex);
+			}
+		}
+	}
+
+	public static void safeClose(ImageInputStream inStream) {
+		if (inStream != null) {
+			try {
+				inStream.close();
+			} catch (IOException ex) {
+				log.error(ex);
+			}
+		}
+	}
+
+	public void replace(File inFile, String inKey, String inNewKey) throws Exception {
+		FileReader filereader = new FileReader(inFile);
+		StringWriter out = new StringWriter();
+		new OutputFiller().fill(filereader, out);
+		filereader.close();
+		String readstring = out.toString();
+		readstring = readstring.replace(inKey, inNewKey);
+		FileWriter filewriter = new FileWriter(inFile);
+		new OutputFiller().fill(new StringReader(readstring), filewriter);
+		filewriter.close();
+	}
+
+	public void copyFiles(InputStream inInputStream, FileOutputStream inFileOutputStream) throws IOException {
+		try {
+			fieldFiller.fill(inInputStream, inFileOutputStream);
+		} finally {
 			safeClose(inInputStream);
 			safeClose(inFileOutputStream);
 		}
-		
+
 	}
-	
-	public Set getInvalidChars()
-	{
-		if (fieldInvalidChars == null)
-		{
+
+	public Set getInvalidChars() {
+		if (fieldInvalidChars == null) {
 			fieldInvalidChars = new HashSet();
 			fieldInvalidChars.add("?");
 			fieldInvalidChars.add("*");
@@ -522,7 +434,7 @@ public class FileUtils
 			fieldInvalidChars.add(">");
 			fieldInvalidChars.add(":");
 			fieldInvalidChars.add("|");
-			//fieldInvalidChars.add(" \\");
+			// fieldInvalidChars.add(" \\");
 			fieldInvalidChars.add(" /");
 			fieldInvalidChars.add("/ ");
 			fieldInvalidChars.add("/ ");
@@ -533,58 +445,48 @@ public class FileUtils
 			fieldInvalidChars.add("\u2219");
 			fieldInvalidChars.add("[");
 			fieldInvalidChars.add("]");
-			
+
 		}
 		return fieldInvalidChars;
 	}
-	
+
 	/**
 	 * Tests for illegal characters in the input path.
+	 * 
 	 * @param inPath = string to be tested for bad characters
 	 * @return
 	 */
-	public boolean isLegalFilename(String inPath)
-	{
-		for (Iterator iterator = getInvalidChars().iterator(); iterator.hasNext();) 
-		{
-			String value=(String) iterator.next();
-			if(inPath.contains(value))
-			{
+	public boolean isLegalFilename(String inPath) {
+		for (Iterator iterator = getInvalidChars().iterator(); iterator.hasNext();) {
+			String value = (String) iterator.next();
+			if (inPath.contains(value)) {
 				return false;
 			}
 		}
-		//log.info(inPath);
+		// log.info(inPath);
 		return true;
 	}
 
-	public long sizeOf( File fname )
-	{
+	public long sizeOf(File fname) {
 		long size = 0;
-		if( fname.isDirectory() )
-		{
+		if (fname.isDirectory()) {
 			File[] children = fname.listFiles();
-			if( children != null)
-			{
-				for (int i = 0; i < children.length; i++)
-				{
+			if (children != null) {
+				for (int i = 0; i < children.length; i++) {
 					size = size + sizeOf(children[i]);
 				}
-			}	
-		}
-		else
-		{
+			}
+		} else {
 			size = fname.length();
 		}
 		return size;
 	}
-	
-	public static boolean isSameDate(long inOne, long inTwo)
-	{
-		long fixed1 = inOne/1000 * 1000;
-		long fixed2 = inTwo/1000 * 1000;
+
+	public static boolean isSameDate(long inOne, long inTwo) {
+		long fixed1 = inOne / 1000 * 1000;
+		long fixed2 = inTwo / 1000 * 1000;
 		boolean same = (fixed1 == fixed2);
 		return same;
 	}
 
-	
 }

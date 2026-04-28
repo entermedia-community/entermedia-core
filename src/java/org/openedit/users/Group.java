@@ -16,15 +16,13 @@ import java.util.Collection;
 
 import org.openedit.Data;
 
-
 /**
  * This interface represents a group, which may have certain permissions.
  *
  * @author Eric Galluzzo
  */
-public interface Group extends Data, Comparable
-{
-	
+public interface Group extends Data, Comparable {
+
 	/**
 	 * Not a real property, just a string that can be used to refer to the
 	 * username in, e.g., search indices.
@@ -51,10 +49,12 @@ public interface Group extends Data, Comparable
 	 * @return A collection of <code>String</code>s
 	 */
 	Collection getPermissions();
+
 	void setPermissions(Collection inPermissions);
 
 	/**
-	 * Add the given permission to this group.  If the permission is already part of this group,
+	 * Add the given permission to this group. If the permission is already part of
+	 * this group,
 	 * this method does nothing.
 	 *
 	 * @param inPermission The name of the permission to add
@@ -63,7 +63,6 @@ public interface Group extends Data, Comparable
 	 */
 	void addPermission(String inPermission) throws UserManagerException;
 
-	
 	/**
 	 * Determine whether this group has the given permission.
 	 *
@@ -74,7 +73,8 @@ public interface Group extends Data, Comparable
 	boolean hasPermission(String inPermission);
 
 	/**
-	 * Remove the given permission from this group.  If the permission is not part of this group,
+	 * Remove the given permission from this group. If the permission is not part of
+	 * this group,
 	 * this method does nothing.
 	 *
 	 * @param inPermission The name of the permission to remove
@@ -82,6 +82,5 @@ public interface Group extends Data, Comparable
 	 * @throws UserManagerException If the permission could not be removed
 	 */
 	void removePermission(String inPermission) throws UserManagerException;
-
 
 }

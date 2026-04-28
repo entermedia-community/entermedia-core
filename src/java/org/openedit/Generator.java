@@ -19,29 +19,32 @@ package org.openedit;
 import org.openedit.generators.Output;
 import org.openedit.page.Page;
 
-
-
-
 /**
- * A generator is responsible for rendering content (HTML, PDF, etc.) back to the client.
+ * A generator is responsible for rendering content (HTML, PDF, etc.) back to
+ * the client.
  *
  * @author Chris Burkey
  */
-public interface Generator
-{
+public interface Generator {
 	/**
-	 * This method should retrieve the response from the context and write content to it based on
-	 * the information in the page and its generator data (which will have come from this
+	 * This method should retrieve the response from the context and write content
+	 * to it based on
+	 * the information in the page and its generator data (which will have come from
+	 * this
 	 * generator).
 	 *
-	 * @param inContext The context for the given page
+	 * @param inContext   The context for the given page
 	 * @param inGenConfig The generator's configuration for the given page
-	 * @param inOutput The output stream to which to write output
-	 //FIXME
+	 * @param inOutput    The output stream to which to write output
+	 *                    //FIXME
 	 */
-	public void generate( WebPageRequest inContext, Page inPage, Output inOut ) throws OpenEditException;
+	public void generate(WebPageRequest inContext, Page inPage, Output inOut) throws OpenEditException;
+
 	public String getName();
+
 	public void setName(String inName);
+
 	public boolean canGenerate(WebPageRequest inReq);
+
 	public boolean hasGenerator(Generator inChild);
 }

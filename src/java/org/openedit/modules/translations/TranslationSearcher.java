@@ -6,84 +6,66 @@ import org.openedit.data.PropertyDetails;
 import org.openedit.hittracker.HitTracker;
 import org.openedit.xml.XmlSearcher;
 
-public class TranslationSearcher extends XmlSearcher
-{
+public class TranslationSearcher extends XmlSearcher {
 
-	
-
-	public String getEntryForLocale(String inLocale, String inKey, boolean auto)
-	{
-		if(inKey == null){
+	public String getEntryForLocale(String inLocale, String inKey, boolean auto) {
+		if (inKey == null) {
 			return null;
 		}
 		HitTracker hits = fieldSearch("id", inKey);
-		if (hits.size() > 0)
-		{
+		if (hits.size() > 0) {
 			Data hit = hits.get(0);
-			if(hit.get(inLocale) != null){
+			if (hit.get(inLocale) != null) {
 				return hit.get(inLocale);
-			} else{
-				if(auto) {
+			} else {
+				if (auto) {
 					return translate(inLocale, inKey, true);
 				}
 			}
-			
-			
+
 		}
-		if(auto) {
+		if (auto) {
 			return translate(inLocale, inKey, true);
 		}
 		return inKey;
 	}
-	
-	
-	public String getEntryForLocale(String inLocale, String inKey)
-	{
-	return	getEntryForLocale(inLocale, inKey, true);
-	}
 
-	
+	public String getEntryForLocale(String inLocale, String inKey) {
+		return getEntryForLocale(inLocale, inKey, true);
+	}
 
 	protected Translation fieldTranslation;
 
-	public Translation getTranslation()
-	{
-		if (fieldTranslation == null)
-		{
-			fieldTranslation = (Translation)getModuleManager().getBean("translator");
+	public Translation getTranslation() {
+		if (fieldTranslation == null) {
+			fieldTranslation = (Translation) getModuleManager().getBean("translator");
 		}
 
 		return fieldTranslation;
 	}
 
-	public void setTranslation(Translation inTranslation)
-	{
+	public void setTranslation(Translation inTranslation) {
 		fieldTranslation = inTranslation;
 	}
 
-	public String translate(String locale, String value, boolean save)
-	{
+	public String translate(String locale, String value, boolean save) {
 
 		// comment this back in once we get web translation working again
 		String translation = getTranslation().webTranslate(value, locale);
 
-		if (translation == null)
-		{
+		if (translation == null) {
 			return null;
 		}
-		
 
-		if (save)
-		{
+		if (save) {
 			Data entry = (Data) searchById(value);
-			if (entry == null)
-			{
+			if (entry == null) {
 				entry = createNewData();
 				String tostore = getXmlArchive().getXmlUtil().xmlEscape(value);
 				entry.setId(tostore);
 
 			}
-			
+
 			entry.setProperty(locale, translation);
 			entry.setName(value);
 			saveData(entry, null);
@@ -93,12 +75,10 @@ public class TranslationSearcher extends XmlSearcher
 
 	}
 
-	public PropertyDetails getDefaultDetails()
-	{
-		if (fieldDefaultDetails == null)
-		{
-			//fake one
-			PropertyDetails details = new PropertyDetails(getPropertyDetailsArchive(),getSearchType());
+	public PropertyDetails getDefaultDetails() {
+		if (fieldDefaultDetails == null) {
+			// fake one
+			PropertyDetails details = new PropertyDetails(getPropertyDetailsArchive(), getSearchType());
 			PropertyDetail id = details.createDetail("id");
 			id.setIndex(true);
 			id.setStored(true);
@@ -120,9 +100,7 @@ public class TranslationSearcher extends XmlSearcher
 		return fieldDefaultDetails;
 	}
 
-	
-	public HitTracker getLanguages()
-	{
+	public HitTracker getLanguages() {
 
 		return getSearcherManager().getList(getCatalogId(), "languages");
 	}

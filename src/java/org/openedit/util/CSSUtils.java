@@ -3,19 +3,17 @@
  */
 package org.openedit.util;
 
-
 /**
  * @author sxakil
  *
  */
-public class CSSUtils
-{
-	public static int[] hexToRgb(String hex) {
+public class CSSUtils {
+    public static int[] hexToRgb(String hex) {
         hex = hex.replace("#", "");
         int r = Integer.parseInt(hex.substring(0, 2), 16);
         int g = Integer.parseInt(hex.substring(2, 4), 16);
         int b = Integer.parseInt(hex.substring(4, 6), 16);
-        return new int[]{r, g, b};
+        return new int[] { r, g, b };
     }
 
     public static String rgbToHex(int r, int g, int b) {
@@ -45,7 +43,7 @@ public class CSSUtils
             h /= 6;
         }
 
-        return new float[]{h * 360, s * 100, l * 100};
+        return new float[] { h * 360, s * 100, l * 100 };
     }
 
     public static int[] hslToRgb(float h, float s, float l) {
@@ -65,19 +63,24 @@ public class CSSUtils
             b = hueToRgb(p, q, h - 1f / 3f);
         }
 
-        return new int[]{
-            Math.round(r * 255),
-            Math.round(g * 255),
-            Math.round(b * 255)
+        return new int[] {
+                Math.round(r * 255),
+                Math.round(g * 255),
+                Math.round(b * 255)
         };
     }
 
     private static float hueToRgb(float p, float q, float t) {
-        if (t < 0) t += 1;
-        if (t > 1) t -= 1;
-        if (t < 1f / 6f) return p + (q - p) * 6 * t;
-        if (t < 1f / 2f) return q;
-        if (t < 2f / 3f) return p + (q - p) * (2f / 3f - t) * 6;
+        if (t < 0)
+            t += 1;
+        if (t > 1)
+            t -= 1;
+        if (t < 1f / 6f)
+            return p + (q - p) * 6 * t;
+        if (t < 1f / 2f)
+            return q;
+        if (t < 2f / 3f)
+            return p + (q - p) * (2f / 3f - t) * 6;
         return p;
     }
 
@@ -92,10 +95,9 @@ public class CSSUtils
     private static String adjustLightness(String hex, float percent) {
         int[] rgb = hexToRgb(hex);
         float[] hsl = rgbToHsl(rgb[0], rgb[1], rgb[2]);
-        
-        if(hsl[2] + percent > 100 || hsl[2] + percent < 0)
-        {
-        	percent *= -1;
+
+        if (hsl[2] + percent > 100 || hsl[2] + percent < 0) {
+            percent *= -1;
         }
 
         hsl[2] = clamp(hsl[2] + percent, 0, 100); // Adjust lightness
@@ -107,9 +109,10 @@ public class CSSUtils
     private static float clamp(float value, float min, float max) {
         return Math.max(min, Math.min(max, value));
     }
-    
+
     public static String normalizeHex(String hex) {
-        if (hex == null) return null;
+        if (hex == null)
+            return null;
 
         hex = hex.trim().replace("#", "");
 
@@ -129,14 +132,13 @@ public class CSSUtils
     }
 
     public static double getLuminance(int[] rgb) {
-    	double[] srgb = {0, 0, 0};
-    	for (int i = 0; i < rgb.length; i++)
-    	{
-    		
-    		float c = rgb[i] / 255;
-    		srgb[i] = c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
-    	}
-    	return 0.2126 * srgb[0] + 0.7152 * srgb[1] + 0.0722 * srgb[2];
+        double[] srgb = { 0, 0, 0 };
+        for (int i = 0; i < rgb.length; i++) {
+
+            float c = rgb[i] / 255;
+            srgb[i] = c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+        }
+        return 0.2126 * srgb[0] + 0.7152 * srgb[1] + 0.0722 * srgb[2];
 
     }
 
@@ -161,24 +163,24 @@ public class CSSUtils
     }
 
     public static String makeContrast(String hex) {
-//        hex = normalizeHex(hex);
-//        if (hex == null) return null;
-//        
-//        int[] rgb = hexToRgb(hex);
-//        double luminance = getLuminance(rgb);
-//
-//        // Try increasing lightness for light text
-//        for (let testL = 100; testL >= 0; testL -= 1) {
-//          const testRgb = hslToRgb(h, s, testL);
-//          const testLum = getLuminance(testRgb);
-//          const cr = contrastRatio(bgLum, testLum);
-//          if (cr >= requiredContrast) {
-//            return `hsl(${h}, ${s}%, ${testL}%)`;
-//          }
-//        }
-//
-//        // As fallback, just return white
-//        return `hsl(${h}, ${s}%, ${l > 50 ? 0 : 100}%)`;
+        // hex = normalizeHex(hex);
+        // if (hex == null) return null;
+        //
+        // int[] rgb = hexToRgb(hex);
+        // double luminance = getLuminance(rgb);
+        //
+        // // Try increasing lightness for light text
+        // for (let testL = 100; testL >= 0; testL -= 1) {
+        // const testRgb = hslToRgb(h, s, testL);
+        // const testLum = getLuminance(testRgb);
+        // const cr = contrastRatio(bgLum, testLum);
+        // if (cr >= requiredContrast) {
+        // return `hsl(${h}, ${s}%, ${testL}%)`;
+        // }
+        // }
+        //
+        // // As fallback, just return white
+        // return `hsl(${h}, ${s}%, ${l > 50 ? 0 : 100}%)`;
 
         int[] rgb = hexToRgb(hex);
 
@@ -190,7 +192,8 @@ public class CSSUtils
 
     public static String makeHover(String hex) {
         hex = normalizeHex(hex);
-        if (hex == null) return null;
+        if (hex == null)
+            return null;
 
         return lightenColor(hex, 10);
     }

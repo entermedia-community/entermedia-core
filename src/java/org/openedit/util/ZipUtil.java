@@ -97,10 +97,10 @@ public class ZipUtil {
 			in = new FileInputStream(inPage);
 			try {
 				unzippedFiles = unzip(in, inDest, null);
-			} catch(Exception e) {
+			} catch (Exception e) {
 				FileUtils.safeClose(in);
 				in = new FileInputStream(inPage);
-				unzippedFiles = unzip(in, inDest,null,"Cp437");
+				unzippedFiles = unzip(in, inDest, null, "Cp437");
 			}
 		} finally {
 			FileUtils.safeClose(in);
@@ -111,8 +111,7 @@ public class ZipUtil {
 	public List unzip(InputStream inZip, File inDest) throws IOException {
 		return unzip(inZip, inDest, null);
 	}
-	
-	
+
 	public List unzip(InputStream inZip, File inDest, String inCutOffLeadingPath) throws IOException {
 		return unzip(inZip, inDest, inCutOffLeadingPath, null);
 	}
@@ -132,15 +131,14 @@ public class ZipUtil {
 	 */
 	public List unzip(InputStream inZip, File inDest, String inCutOffLeadingPath, String charset) throws IOException {
 		ZipInputStream unzip = null;
-		if(charset != null) {
-			 unzip = new ZipInputStream(inZip, Charset.forName(charset));	
-		}else {
-			 unzip = new ZipInputStream(inZip);
+		if (charset != null) {
+			unzip = new ZipInputStream(inZip, Charset.forName(charset));
+		} else {
+			unzip = new ZipInputStream(inZip);
 		}
-		
-		
+
 		ZipEntry entry = unzip.getNextEntry();
-		
+
 		List unzippedFiles = new ArrayList();
 
 		while (entry != null) {

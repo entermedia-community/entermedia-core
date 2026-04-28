@@ -17,63 +17,72 @@ package org.openedit.repository;
 import java.util.List;
 import java.util.Map;
 
-
-
 /**
  * This is a generic interface to store web content, e.g HTML, XML, images
  * or other documents.
  * 
  * @author Matt Avery, mavery@einnovation.com
  */
-public interface Repository 
-{
+public interface Repository {
 	boolean matches(String inPath);
+
 	/*
 	 * This should never return null, it can return a blank ContentItem though.
 	 */
-	ContentItem get( String inPath ) throws RepositoryException;
-	ContentItem getStub( String inPath ) throws RepositoryException;
-	
-	boolean doesExist( String inPath) throws RepositoryException;
-	
-	void put( ContentItem inContent ) throws RepositoryException;
-	
-	void copy( ContentItem inSource, ContentItem inDestination ) throws RepositoryException;
+	ContentItem get(String inPath) throws RepositoryException;
 
-	void move( ContentItem inSource, ContentItem inDestination ) throws RepositoryException;
-	
-	void move( ContentItem inSource, Repository inSourceRepository, ContentItem inDestination ) throws RepositoryException;
+	ContentItem getStub(String inPath) throws RepositoryException;
 
-	
-	void remove( ContentItem inPath ) throws RepositoryException;
-		
-	void setPath( String inPath);
+	boolean doesExist(String inPath) throws RepositoryException;
+
+	void put(ContentItem inContent) throws RepositoryException;
+
+	void copy(ContentItem inSource, ContentItem inDestination) throws RepositoryException;
+
+	void move(ContentItem inSource, ContentItem inDestination) throws RepositoryException;
+
+	void move(ContentItem inSource, Repository inSourceRepository, ContentItem inDestination)
+			throws RepositoryException;
+
+	void remove(ContentItem inPath) throws RepositoryException;
+
+	void setPath(String inPath);
+
 	String getPath();
+
 	/**
 	 * This is the external URL root full path that is saved in the configuration.
 	 * 
 	 * @param inRootAbsolutePath
 	 */
 	void setExternalPath(String inRootAbsolutePath);
+
 	String getExternalPath();
-	
-	
+
 	void setFilterIn(String inFilters);
+
 	void setFilterOut(String inFilters);
 
 	String getFilterIn();
+
 	String getFilterOut();
 
 	List getChildrenNames(String inParent) throws RepositoryException;
+
 	void deleteOldVersions(String inPath) throws RepositoryException;
-	
+
 	String getRepositoryType();
+
 	void setRepositoryType(String inType);
-	
+
 	public String getMatchesPostFix();
+
 	public void setMatchesPostFix(String inMatchesPostFix);
+
 	public void setProperty(String inPropName, String inValue);
+
 	public String getProperty(String inPropName);
+
 	public Map getProperties();
-	
+
 }

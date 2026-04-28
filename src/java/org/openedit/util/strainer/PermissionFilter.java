@@ -15,21 +15,18 @@ package org.openedit.util.strainer;
 import org.openedit.WebPageRequest;
 import org.openedit.users.User;
 
-
 /**
  * This filter only passes users that have a certain permission.
  *
  * @author Eric Galluzzo
  */
-public class PermissionFilter extends BaseFilter
-{
+public class PermissionFilter extends BaseFilter {
 	/**
 	 * Construct a filter that passes all users.
 	 *
 	 * @see #setPermission(String)
 	 */
-	public PermissionFilter()
-	{
+	public PermissionFilter() {
 		super();
 	}
 
@@ -38,8 +35,7 @@ public class PermissionFilter extends BaseFilter
 	 *
 	 * @param inPermission The permission to check for
 	 */
-	public PermissionFilter(String inPermission)
-	{
+	public PermissionFilter(String inPermission) {
 		setPermission(inPermission);
 	}
 
@@ -48,8 +44,7 @@ public class PermissionFilter extends BaseFilter
 	 *
 	 * @param permission The permission to check for
 	 */
-	public void setPermission(String permission)
-	{
+	public void setPermission(String permission) {
 		setValue(permission);
 	}
 
@@ -58,26 +53,24 @@ public class PermissionFilter extends BaseFilter
 	 *
 	 * @return String
 	 */
-	public String getPermission()
-	{
+	public String getPermission() {
 		return fieldValue;
 	}
 
 	/**
 	 * @see org.openedit.util.strainer.Filter#passes(java.lang.Object)
 	 */
-	public boolean passes(Object inObj) throws FilterException, ClassCastException
-	{
+	public boolean passes(Object inObj) throws FilterException, ClassCastException {
 		WebPageRequest req = (WebPageRequest) inObj;
 
 		User user = req.getUser();
 
 		return ((user != null) &&
-		((getPermission() == null) || user.hasPermission(getPermission())));
+				((getPermission() == null) || user.hasPermission(getPermission())));
 	}
-	public String toString() 
-	{
+
+	public String toString() {
 		return "Permission=" + getPermission();
 	}
-	
+
 }

@@ -17,31 +17,25 @@ package org.openedit.modules.html;
 /**
  * @author Matt Avery, mavery@einnovation.com
  */
-public class Token
-{
+public class Token {
 	protected boolean fieldInQuotes;
 	protected boolean fieldInTag;
 	protected boolean fieldInComment;
 	protected boolean fieldInParagraph;
-	
+
 	protected String fieldText;
-	
-	public Token( String inTokenString )
-	{
+
+	public Token(String inTokenString) {
 		fieldText = inTokenString;
 	}
 
-	public boolean isAttribute()
-	{
-		if ( isInQuotes() || isInComment() )
-		{
+	public boolean isAttribute() {
+		if (isInQuotes() || isInComment()) {
 			return false;
 		}
-		if ( isInTag() )
-		{
-			if ( getText().indexOf( '<' ) >= 0 
-			  || getText().indexOf( '>' ) >= 0 )
-			{
+		if (isInTag()) {
+			if (getText().indexOf('<') >= 0
+					|| getText().indexOf('>') >= 0) {
 				return false;
 			}
 			return true;
@@ -49,59 +43,48 @@ public class Token
 		return false;
 	}
 
-	public boolean isEntity()
-	{
-		return getText().indexOf( '&' ) == 0 
-			&& getText().indexOf( ';' ) == ( getText().length() - 1 );
+	public boolean isEntity() {
+		return getText().indexOf('&') == 0
+				&& getText().indexOf(';') == (getText().length() - 1);
 	}
 
-	public boolean isInComment()
-	{
+	public boolean isInComment() {
 		return fieldInComment;
 	}
 
-	public boolean isInQuotes()
-	{
+	public boolean isInQuotes() {
 		return fieldInQuotes;
 	}
 
-	public boolean isInTag()
-	{
+	public boolean isInTag() {
 		return fieldInTag;
 	}
 
-	public String getText()
-	{
+	public String getText() {
 		return fieldText;
 	}
 
-	public void setInComment(boolean b)
-	{
+	public void setInComment(boolean b) {
 		fieldInComment = b;
 	}
 
-	public void setInQuotes(boolean b)
-	{
+	public void setInQuotes(boolean b) {
 		fieldInQuotes = b;
 	}
 
-	public void setInTag(boolean b)
-	{
+	public void setInTag(boolean b) {
 		fieldInTag = b;
 	}
 
-	public void setText(String string)
-	{
+	public void setText(String string) {
 		fieldText = string;
 	}
 
-	public boolean isInParagraph()
-	{
+	public boolean isInParagraph() {
 		return fieldInParagraph;
 	}
 
-	public void setInParagraph(boolean b)
-	{
+	public void setInParagraph(boolean b) {
 		fieldInParagraph = b;
 	}
 

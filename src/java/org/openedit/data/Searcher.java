@@ -14,12 +14,10 @@ import org.openedit.hittracker.SearchQuery;
 import org.openedit.profile.UserProfile;
 import org.openedit.users.User;
 
+public interface Searcher extends CatalogEnabled {
 
-public interface Searcher extends CatalogEnabled
-{
-	
 	public String nextId();
-	
+
 	public abstract HitTracker cachedSearch(WebPageRequest inPageRequest, SearchQuery inQuery) throws OpenEditException;
 
 	public abstract HitTracker loadHits(WebPageRequest inReq) throws OpenEditException;
@@ -35,42 +33,40 @@ public interface Searcher extends CatalogEnabled
 
 	public HitTracker fieldSearch(String attr, String value);
 
-	public HitTracker fieldSearch(String attr, String value, String orderby); 
+	public HitTracker fieldSearch(String attr, String value, String orderby);
 
 	public abstract SearchQuery addStandardSearchTerms(WebPageRequest inPageRequest) throws OpenEditException;
 
 	public Data updateData(WebPageRequest inReq, String[] fields, Data data);
-	
+
 	public Collection<PropertyDetail> findSummaryFields(SearchQuery inQuery, UserProfile userprofile);
 
-	
-	
-	
 	public abstract List deselect(String inField, String[] toremove) throws OpenEditException;
 
 	public QueryBuilder query();
 
 	/**
-	 * Use this to automatically filter a search with the .xconf that declares the action.
-	 * Example: 
-	 * 	 <page-action name="OrderModule.getOrdersForUser">
-	 *	 	<not>
-	 *			<orderstatus>completed</orderstatus>
-	 *   	</not>
-	 *	 </page-action>
+	 * Use this to automatically filter a search with the .xconf that declares the
+	 * action.
+	 * Example:
+	 * <page-action name="OrderModule.getOrdersForUser">
+	 * <not>
+	 * <orderstatus>completed</orderstatus>
+	 * </not>
+	 * </page-action>
+	 * 
 	 * @param inReq
 	 * @param search
 	 * @return
 	 */
-	
-	public void addShowOnlyFilter(WebPageRequest inPageRequest, String querystring, SearchQuery search);
 
+	public void addShowOnlyFilter(WebPageRequest inPageRequest, String querystring, SearchQuery search);
 
 	public abstract SearchQuery addActionFilters(WebPageRequest inReq, SearchQuery search);
 
 	public abstract HitTracker loadPageOfSearch(WebPageRequest inPageRequest) throws OpenEditException;
 
-	//Some of these may be able to become protected
+	// Some of these may be able to become protected
 	public abstract void reIndexAll() throws OpenEditException;
 
 	public SearchQuery createSearchQuery();
@@ -80,20 +76,20 @@ public interface Searcher extends CatalogEnabled
 	public Data loadCachedData(String inId);
 
 	public Data loadData(Data inHit);
-	
-	public Data loadData(WebPageRequest inReq,String inDataid);
+
+	public Data loadData(WebPageRequest inReq, String inDataid);
 
 	public Data loadData(String inId);
-	
-	public Object searchByField(String inField,String inValue);
+
+	public Object searchByField(String inField, String inValue);
 
 	public Data searchByQuery(SearchQuery inQuery);
 
-//	public abstract HitTracker search(String inQuery);
+	// public abstract HitTracker search(String inQuery);
 
 	public abstract HitTracker search(SearchQuery inQuery);
 
-//	public abstract HitTracker search(String inQuery, String inOrdering);
+	// public abstract HitTracker search(String inQuery, String inOrdering);
 
 	public abstract String getIndexId();
 
@@ -106,9 +102,11 @@ public interface Searcher extends CatalogEnabled
 	public PropertyDetails getPropertyDetails();
 
 	public ViewFieldList getDetailsForView(String inViewId);
+
 	public ViewFieldList getDetailsForView(Data inViewData);
-	
+
 	public ViewFieldList getDetailsForView(String inViewId, UserProfile inProfile);
+
 	public ViewFieldList getDetailsForView(Data inViewData, UserProfile inUserProfile);
 
 	public Collection getProperties();
@@ -136,7 +134,7 @@ public interface Searcher extends CatalogEnabled
 	public abstract void setSearchType(String inFieldName);
 
 	public abstract String getCatalogId();
-	
+
 	public abstract void setCatalogId(String inCatalogId);
 
 	public abstract void saveData(Data inData, User inUser);
@@ -148,13 +146,13 @@ public interface Searcher extends CatalogEnabled
 	public abstract void delete(Data inData, User inUser);
 
 	public abstract void saveAllData(Collection<Data> inAll, User inUser);
-	
+
 	public abstract Data cloneData(Data inHit);
-	
+
 	public PropertyDetail getDetail(String inId);
-	
+
 	public void changeSort(WebPageRequest inReq);
-	
+
 	public void addChildQuery(WebPageRequest inReq);
 
 	/**
@@ -169,9 +167,9 @@ public interface Searcher extends CatalogEnabled
 	public void clearFilter(WebPageRequest inReq);
 
 	public void restoreSettings();
-	
+
 	public void reloadSettings();
-	
+
 	public boolean initialize();
 
 	public void setAllowRemoteDetails(boolean inB);
@@ -181,19 +179,17 @@ public interface Searcher extends CatalogEnabled
 	public boolean putMappings();
 
 	public void reindexInternal();
-	
-	
-	public void saveData(Data inData);
 
+	public void saveData(Data inData);
 
 	public void setForceBulk(boolean inForceBulk);
 
 	public Object createValue(String inHeaderid, String inVal);
 
 	public void deleteAll(Collection toDelete, User inUser);
-	
 
 	public void saveJson(Collection inJsonArray);
+
 	public SearchSecurity getSearchSecurity();
 
 	public void saveJson(String inId, JSONObject inObject);
@@ -206,5 +202,4 @@ public interface Searcher extends CatalogEnabled
 
 	public SearchQuery copyQuery(SearchQuery inSearch);
 
-    
 }

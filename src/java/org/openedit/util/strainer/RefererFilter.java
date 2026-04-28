@@ -17,52 +17,43 @@ import javax.servlet.http.HttpServletRequest;
 import org.openedit.WebPageRequest;
 import org.openedit.util.PathUtilities;
 
-
 /**
  * This filter only passes users that have a certain permission.
  *
  */
-public class RefererFilter extends BaseFilter
-{
-	public RefererFilter()
-	{
+public class RefererFilter extends BaseFilter {
+	public RefererFilter() {
 		super();
 	}
-	public RefererFilter(String inURl)
-	{
+
+	public RefererFilter(String inURl) {
 		setValue(inURl);
 	}
 
-	public void setUrlMatches(String inUrlMatches)
-	{
+	public void setUrlMatches(String inUrlMatches) {
 		setValue(inUrlMatches);
 	}
 
 	/**
 	 * @see org.openedit.util.strainer.Filter#passes(java.lang.Object)
 	 */
-	public boolean passes(Object inObj) throws FilterException, ClassCastException
-	{
+	public boolean passes(Object inObj) throws FilterException, ClassCastException {
 		WebPageRequest req = (WebPageRequest) inObj;
 		HttpServletRequest request = req.getRequest();
 
-		if (request == null)
-		{
+		if (request == null) {
 			return false;
 		}
 		String att = (String) request.getHeader("Referer");
-		if( att != null )
-		{
-			if( PathUtilities.match(att, getValue() ) )
-			{
+		if (att != null) {
+			if (PathUtilities.match(att, getValue())) {
 				return true;
 			}
 		}
 		return false;
 	}
 
-	public String toString() 
-	{
+	public String toString() {
 		return " Referer=" + getValue();
 	}
 }

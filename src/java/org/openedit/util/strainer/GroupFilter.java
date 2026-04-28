@@ -18,32 +18,29 @@ import org.openedit.WebPageRequest;
 import org.openedit.users.Group;
 import org.openedit.users.User;
 
-
 /**
  * This filter only passes users who are members of a certain group.
  *
  * @author Eric Galluzzo
  */
-public class GroupFilter extends BaseFilter
-{
+public class GroupFilter extends BaseFilter {
 
 	/**
 	 * Construct a filter that passes all users.
 	 *
 	 * @see #setGroupName(String)
 	 */
-	public GroupFilter()
-	{
+	public GroupFilter() {
 		super();
 	}
 
 	/**
-	 * Construct a filter that only passes users that are part of the group with the given name.
+	 * Construct a filter that only passes users that are part of the group with the
+	 * given name.
 	 *
 	 * @param inGroupName The group name to check for
 	 */
-	public GroupFilter(String inGroupId)
-	{
+	public GroupFilter(String inGroupId) {
 		setGroupId(inGroupId);
 	}
 
@@ -52,8 +49,7 @@ public class GroupFilter extends BaseFilter
 	 *
 	 * @param groupName The group name to set
 	 */
-	public void setGroupId(String groupId)
-	{
+	public void setGroupId(String groupId) {
 		setValue(groupId);
 	}
 
@@ -62,51 +58,44 @@ public class GroupFilter extends BaseFilter
 	 *
 	 * @return String
 	 */
-	public String getGroupId()
-	{
+	public String getGroupId() {
 		return fieldValue;
 	}
 
 	/**
 	 * @see org.openedit.util.strainer.Filter#passes(java.lang.Object)
 	 */
-	public boolean passes(Object inObj) throws FilterException, ClassCastException
-	{
+	public boolean passes(Object inObj) throws FilterException, ClassCastException {
 		WebPageRequest req = (WebPageRequest) inObj;
 
 		User user = req.getUser();
 
-		if (user == null)
-		{
+		if (user == null) {
 			return false;
 		}
 
-		if (getGroupId() == null)
-		{
+		if (getGroupId() == null) {
 			return true;
 		}
 
-		for (Iterator iter = user.getGroups().iterator(); iter.hasNext();)
-		{
+		for (Iterator iter = user.getGroups().iterator(); iter.hasNext();) {
 			Group group = (Group) iter.next();
 
-			if (group.getId().equalsIgnoreCase(getGroupId()))
-			{
+			if (group.getId().equalsIgnoreCase(getGroupId())) {
 				return true;
 			}
 		}
 
 		return false;
 	}
-	public String toString()
-	{
+
+	public String toString() {
 		return "Group= " + getGroupId();
 	}
-	public boolean equals(Object inObj)
-	{
-		if (inObj instanceof GroupFilter)
-		{
-			GroupFilter toCompare = (GroupFilter)inObj;
+
+	public boolean equals(Object inObj) {
+		if (inObj instanceof GroupFilter) {
+			GroupFilter toCompare = (GroupFilter) inObj;
 			return getGroupId().equals(toCompare.getGroupId());
 		}
 		return false;

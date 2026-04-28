@@ -2,34 +2,35 @@ package org.openedit.hittracker;
 
 import java.util.List;
 
-public class Links
-{
+public class Links {
 	List fieldBefore;
-	public List getBefore()
-	{
+
+	public List getBefore() {
 		return fieldBefore;
 	}
-	public void setBefore(List inBefore)
-	{
+
+	public void setBefore(List inBefore) {
 		fieldBefore = inBefore;
 	}
-	public int getCurrentPosition()
-	{
+
+	public int getCurrentPosition() {
 		return fieldCurrentPosition;
 	}
-	public void setCurrentPosition(int inCurrentPosition)
-	{
+
+	public void setCurrentPosition(int inCurrentPosition) {
 		fieldCurrentPosition = inCurrentPosition;
 	}
+
 	List fieldAfter;
-	public List getAfter()
-	{
+
+	public List getAfter() {
 		return fieldAfter;
 	}
-	public void setAfter(List inAfter)
-	{
+
+	public void setAfter(List inAfter) {
 		fieldAfter = inAfter;
 	}
+
 	int fieldCurrentPosition;
-	
+
 }

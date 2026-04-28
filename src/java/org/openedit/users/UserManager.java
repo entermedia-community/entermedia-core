@@ -22,15 +22,13 @@ import org.openedit.hittracker.HitTracker;
 import org.openedit.users.authenticate.AuthenticationRequest;
 import org.openedit.util.StringEncryption;
 
-
 /**
  * This interface allows the caller to retrieve users.
  *
  * @author Eric and Matt
  */
-public interface UserManager extends CatalogEnabled
-{
-	
+public interface UserManager extends CatalogEnabled {
+
 	/**
 	 * Retrieve the group with the given name.
 	 *
@@ -38,7 +36,8 @@ public interface UserManager extends CatalogEnabled
 	 *
 	 * @return The group, or <code>null</code> if there is no such group
 	 *
-	 * @throws UserManagerException If something went wrong trying to retrieve the group
+	 * @throws UserManagerException If something went wrong trying to retrieve the
+	 *                              group
 	 */
 	Group getGroup(String inGroupId) throws UserManagerException;
 
@@ -58,7 +57,8 @@ public interface UserManager extends CatalogEnabled
 	 *
 	 * @return The user, or <code>null</code> if there is no such user
 	 *
-	 * @throws UserManagerException If something went wrong trying to retrieve the user
+	 * @throws UserManagerException If something went wrong trying to retrieve the
+	 *                              user
 	 */
 	User getUser(String inUserName) throws UserManagerException;
 
@@ -78,10 +78,12 @@ public interface UserManager extends CatalogEnabled
 	 *
 	 * @param inUser The user to authenticate
 	 *
-	 * @return <code>true</code> if the user was authenticated successfully, <code>false</code> if
-	 * 		   not
+	 * @return <code>true</code> if the user was authenticated successfully,
+	 *         <code>false</code> if
+	 *         not
 	 *
-	 * @throws UserManagerException If something went wrong trying to authenticate the user
+	 * @throws UserManagerException If something went wrong trying to authenticate
+	 *                              the user
 	 */
 	boolean authenticate(AuthenticationRequest inReq);
 
@@ -95,9 +97,11 @@ public interface UserManager extends CatalogEnabled
 	 * @return The new group
 	 *
 	 * @throws DuplicateGroupException If there is already a group with the given Id
-	 * @throws UserManagerException If the group could not be created for some reason
+	 * @throws UserManagerException    If the group could not be created for some
+	 *                                 reason
 	 */
 	Group createGroup() throws UserManagerException;
+
 	Group createGroup(String inGroupId, String inGroupName) throws UserManagerException;
 
 	/**
@@ -108,11 +112,13 @@ public interface UserManager extends CatalogEnabled
 	 *
 	 * @return The new user
 	 *
-	 * @throws DuplicateUserException If there is already a user with the given username
-	 * @throws UserManagerException If the user could not be created for some reason
+	 * @throws DuplicateUserException If there is already a user with the given
+	 *                                username
+	 * @throws UserManagerException   If the user could not be created for some
+	 *                                reason
 	 */
 	User createUser(String inUserName, String inPassword)
-		throws UserManagerException;
+			throws UserManagerException;
 
 	/**
 	 * Delete the given group.
@@ -149,66 +155,65 @@ public interface UserManager extends CatalogEnabled
 	 * @throws UserManagerException If the users could not be deleted
 	 */
 	public void deleteUsers(List inUsers) throws UserManagerException;
-	
 
 	/**
 	 * @param emailaddress
 	 * @return
 	 */
 	public User getUserByEmail(String emailaddress) throws UserManagerException;
-	
-	
+
 	/**
 	 * Saves the given user to persistent storage.
 	 * 
-	 * @param inUser  The user to save
+	 * @param inUser The user to save
 	 */
-	void saveUser( User inUser );
+	void saveUser(User inUser);
 
 	/**
 	 * Saves the given group to persistent storage.
 	 * 
-	 * @param inGroup  The group to save
+	 * @param inGroup The group to save
 	 */
-	void saveGroup( Group inGroup );
+	void saveGroup(Group inGroup);
 
 	HitTracker getUsersInGroup(Group inGroup);
 
 	HitTracker getUsersInGroup(String inString);
-	
+
 	Authenticator getAuthenticator();
-	
+
 	StringEncryption getStringEncryption();
 
-	public String encryptPassword( User inUser ) throws OpenEditException;
+	public String encryptPassword(User inUser) throws OpenEditException;
 
-	public String decryptPassword( User inUser ) throws OpenEditException;
-	
-	public void setEventManager( EventManager inHandler);
-	
+	public String decryptPassword(User inUser) throws OpenEditException;
+
+	public void setEventManager(EventManager inHandler);
+
 	public void logout(User inUser);
 
 	User createGuestUser(String inAccount, String inPassword, String inGroupname);
-	
+
 	public User createTempUserFromEmail(String email);
-	
+
 	public String getScreenName(String userName);
+
 	void flush();
 
-
 	UserSearcher getUserSearcher();
+
 	GroupSearcher getGroupSearcher();
 
 	AuthenticationRequest createAuthenticationRequest(WebPageRequest inReq, String inPassword, User inUser);
 
-	public void fireUserEvent(User inUser, String inOperation) ;
+	public void fireUserEvent(User inUser, String inOperation);
 
 	String getEnterMediaKey(User user);
 
-	void logIntoApp(WebPageRequest inReq,User inUser);
+	void logIntoApp(WebPageRequest inReq, User inUser);
 
-	String createNewTempLoginKey(String userid, String email, String first,String last, boolean force);
+	String createNewTempLoginKey(String userid, String email, String first, String last, boolean force);
 
 	User checkForNewUser(String inEmail, String inTemplogincode, String groupid);
-	
+
 }
