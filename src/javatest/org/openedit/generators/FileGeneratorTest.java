@@ -12,9 +12,8 @@ import org.openedit.WebPageRequest;
 public class FileGeneratorTest extends BaseTestCase
 {
 
-	public FileGeneratorTest( String name )
-	{
-		super( name );
+	public FileGeneratorTest(String name) {
+		super(name);
 	}
 
 	public void testGenerate() throws Exception
@@ -22,7 +21,7 @@ public class FileGeneratorTest extends BaseTestCase
 		WebPageRequest context = getFixture().createPageRequest("generators/file.html");
 		context.getPageStreamer().render();
 		String result = context.getWriter().toString();
-		assertTrue(result.contains("$variable") );
-		
+		assertTrue(result.contains("$variable"));
+
 	}
 }

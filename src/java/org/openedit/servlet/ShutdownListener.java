@@ -5,19 +5,23 @@ import javax.servlet.ServletContextListener;
 
 import org.openedit.WebServer;
 
-public class ShutdownListener implements ServletContextListener {
+public class ShutdownListener implements ServletContextListener
+{
 
-	public void contextDestroyed(ServletContextEvent inArg0) {
+	public void contextDestroyed(ServletContextEvent inArg0)
+	{
 		// TODO Auto-generated method stub
 		WebServer server = (WebServer) inArg0.getServletContext().getAttribute(WebServer.class.getName());
-		if (server != null) {
+		if (server != null)
+		{
 			OpenEditEngine engine = server.getOpenEditEngine();
 			engine.shutdown();
 		}
 	}
 
 	@Override
-	public void contextInitialized(ServletContextEvent inArg0) {
+	public void contextInitialized(ServletContextEvent inArg0)
+	{
 		// TODO Auto-generated method stub
 
 	}

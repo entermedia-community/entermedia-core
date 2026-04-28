@@ -10,7 +10,8 @@ import java.util.Date;
  * 
  *         This is class is just a page-value for testing.
  */
-public class Uptime {
+public class Uptime
+{
 	private static final long DAY = 3600000 * 24;
 	private static final long HOUR = 3600000;
 	private static final long MINUTE = 60000;
@@ -21,7 +22,8 @@ public class Uptime {
 		fieldStartDate = new Date();
 	}
 
-	public String toString() {
+	public String toString()
+	{
 		Date now = new Date();
 		long uptime = now.getTime() - getStartDate().getTime();
 		long days = uptime / DAY;
@@ -34,7 +36,8 @@ public class Uptime {
 		return days + " days, " + hours + " hours, " + minutes + " minutes, " + seconds + " seconds";
 	}
 
-	public Date getStartDate() {
+	public Date getStartDate()
+	{
 		return fieldStartDate;
 	}
 }

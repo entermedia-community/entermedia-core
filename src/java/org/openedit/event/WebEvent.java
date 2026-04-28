@@ -5,7 +5,8 @@ import java.util.Date;
 import org.openedit.data.BaseData;
 import org.openedit.users.User;
 
-public class WebEvent extends BaseData {
+public class WebEvent extends BaseData
+{
 	protected String fieldId; // optional
 	protected String fieldSearchType; // user search
 	protected String fieldOperation; // login logout
@@ -14,11 +15,13 @@ public class WebEvent extends BaseData {
 	protected User fieldUser;
 	protected boolean fieldCancelEvent;
 
-	public boolean isCancelEvent() {
+	public boolean isCancelEvent()
+	{
 		return fieldCancelEvent;
 	}
 
-	public void setCancelEvent(boolean inCancelEvent) {
+	public void setCancelEvent(boolean inCancelEvent)
+	{
 		fieldCancelEvent = inCancelEvent;
 	}
 
@@ -27,27 +30,31 @@ public class WebEvent extends BaseData {
 	 * 
 	 * @return
 	 */
-	public User getUser() {
+	public User getUser()
+	{
 		return fieldUser;
 	}
 
-	public void setUser(User inUser) {
+	public void setUser(User inUser)
+	{
 		fieldUser = inUser;
-		if (inUser != null) {
+		if (inUser != null)
+		{
 			setUsername(inUser.getUserName());
 		}
 	}
 
 	protected String fieldUsername;
 
-	public WebEvent() {
-	}
+	public WebEvent() {}
 
-	public String getSearchType() {
+	public String getSearchType()
+	{
 		return fieldSearchType;
 	}
 
-	public void setSearchType(String inType) {
+	public void setSearchType(String inType)
+	{
 		fieldSearchType = inType;
 	}
 
@@ -57,65 +64,80 @@ public class WebEvent extends BaseData {
 	 * @param inValue
 	 */
 
-	public void addDetail(String inKey, String inValue) {
+	public void addDetail(String inKey, String inValue)
+	{
 		setProperty(inKey, inValue);
 	}
 
-	public Object getSource() {
+	public Object getSource()
+	{
 		return fieldSource;
 	}
 
-	public void setSource(Object inSource) {
+	public void setSource(Object inSource)
+	{
 		fieldSource = inSource;
 	}
 
-	public String getOperation() {
+	public String getOperation()
+	{
 		return fieldOperation;
 	}
 
-	public void setOperation(String inOperation) {
+	public void setOperation(String inOperation)
+	{
 		fieldOperation = inOperation;
 	}
 
-	public String getUsername() {
+	public String getUsername()
+	{
 		return fieldUsername;
 	}
 
-	public void setUsername(String inUser) {
+	public void setUsername(String inUser)
+	{
 		fieldUsername = inUser;
 	}
 
-	public String getCatalogId() {
+	public String getCatalogId()
+	{
 		return get("catalogid");
 	}
 
-	public void setCatalogId(String inCatalogId) {
+	public void setCatalogId(String inCatalogId)
+	{
 		setProperty("catalogid", inCatalogId);
 	}
 
-	public Date getDate() {
+	public Date getDate()
+	{
 		return fieldDate;
 	}
 
-	public void setDate(Date inDate) {
+	public void setDate(Date inDate)
+	{
 		fieldDate = inDate;
 	}
 
-	public String getId() {
+	public String getId()
+	{
 		return fieldId;
 	}
 
-	public void setId(String inId) {
+	public void setId(String inId)
+	{
 		fieldId = inId;
 	}
 
 	// part of the API
-	public String getSourcePath() {
+	public String getSourcePath()
+	{
 		return get("sourcepath");
 	}
 
 	/** This is more like a path */
-	public void setSourcePath(String inSourcepath) {
+	public void setSourcePath(String inSourcepath)
+	{
 		setProperty("sourcepath", inSourcepath);
 	}
 

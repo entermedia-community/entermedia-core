@@ -10,13 +10,13 @@ import org.openedit.WebPageRequest;
  * 
  * @author Eric Galluzzo
  */
-public class OrFilter extends BaseFilter implements CompositeFilter {
+public class OrFilter extends BaseFilter implements CompositeFilter
+{
 
 	/**
 	 * This constructor should only be used for JavaBean-style creation.
 	 */
-	public OrFilter() {
-	}
+	public OrFilter() {}
 
 	/**
 	 * Create a filter that ORs together all the given sub-filters.
@@ -34,7 +34,7 @@ public class OrFilter extends BaseFilter implements CompositeFilter {
 	 * @param inFilter2 The second sub-filter
 	 */
 	public OrFilter(Filter inFilter1, Filter inFilter2) {
-		fieldFilters = new Filter[] { inFilter1, inFilter2 };
+		fieldFilters = new Filter[] {inFilter1, inFilter2};
 	}
 
 	/**
@@ -42,7 +42,8 @@ public class OrFilter extends BaseFilter implements CompositeFilter {
 	 * 
 	 * @return This filter's sub-filters
 	 */
-	public Filter[] getFilters() {
+	public Filter[] getFilters()
+	{
 		return fieldFilters;
 	}
 
@@ -51,36 +52,45 @@ public class OrFilter extends BaseFilter implements CompositeFilter {
 	 * 
 	 * @param newFilters The new sub-filters
 	 */
-	public void setFilters(Filter[] newFilters) {
+	public void setFilters(Filter[] newFilters)
+	{
 		fieldFilters = newFilters;
 	}
 
 	/**
-	 * Determine whether the given object passes this filter by ORing together
-	 * all the sub-filters.
+	 * Determine whether the given object passes this filter by ORing together all the sub-filters.
 	 *
 	 * @param inObj The object to check
 	 *
-	 * @return <code>true</code> if the object passes at least one of the
-	 *         sub-filters, <code>false</code> otherwise.
+	 * @return <code>true</code> if the object passes at least one of the sub-filters,
+	 *         <code>false</code> otherwise.
 	 */
-	public boolean passes(Object inObj) throws FilterException {
+	public boolean passes(Object inObj) throws FilterException
+	{
 		String method = null;
-		if (inObj instanceof WebPageRequest) {
+		if (inObj instanceof WebPageRequest)
+		{
 			WebPageRequest inParent = (WebPageRequest) inObj;
 			method = inParent.getMethod();
 		}
 
-		for (int i = 0; i < fieldFilters.length; i++) {
+		for (int i = 0; i < fieldFilters.length; i++)
+		{
 			Filter filter = fieldFilters[i];
-			if (method == null) {
-				if (filter.passes(inObj)) {
+			if (method == null)
+			{
+				if (filter.passes(inObj))
+				{
 					return true;
 				}
-			} else {
+			}
+			else
+			{
 				String onlymethod = filter.get("method");
-				if (onlymethod == null || method.equalsIgnoreCase(onlymethod)) {
-					if (filter.passes(inObj)) {
+				if (onlymethod == null || method.equalsIgnoreCase(onlymethod))
+				{
+					if (filter.passes(inObj))
+					{
 						return true;
 					}
 				}
@@ -94,14 +104,18 @@ public class OrFilter extends BaseFilter implements CompositeFilter {
 	 * 
 	 * @see java.lang.Object#toString()
 	 */
-	public String toString() {
+	public String toString()
+	{
 		Filter[] filters = getFilters();
-		if (filters == null || filters.length == 0) {
+		if (filters == null || filters.length == 0)
+		{
 			return "false";
 		}
 		StringBuffer buffer = new StringBuffer();
-		for (int i = 0; i < filters.length; i++) {
-			if (i > 0) {
+		for (int i = 0; i < filters.length; i++)
+		{
+			if (i > 0)
+			{
 				buffer.append(" Or ");
 			}
 			buffer.append("(");
@@ -111,18 +125,24 @@ public class OrFilter extends BaseFilter implements CompositeFilter {
 		return buffer.toString();
 	}
 
-	public boolean equals(Object inObj) {
-		if (inObj instanceof OrFilter) {
+	public boolean equals(Object inObj)
+	{
+		if (inObj instanceof OrFilter)
+		{
 			OrFilter toCompare = (OrFilter) inObj;
-			for (int i = 0; i < fieldFilters.length; i++) {
+			for (int i = 0; i < fieldFilters.length; i++)
+			{
 				boolean matchFound = false;
-				for (int j = 0; j < toCompare.fieldFilters.length; j++) {
-					if (fieldFilters[i].equals(toCompare.fieldFilters[j])) {
+				for (int j = 0; j < toCompare.fieldFilters.length; j++)
+				{
+					if (fieldFilters[i].equals(toCompare.fieldFilters[j]))
+					{
 						matchFound = true;
 						break;
 					}
 				}
-				if (!matchFound) {
+				if (!matchFound)
+				{
 					return false;
 				}
 			}

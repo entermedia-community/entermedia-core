@@ -1,14 +1,14 @@
 /*
-Copyright (c) 2003 eInnovation Inc. All rights reserved
-
-This library is free software; you can redistribute it and/or modify it under the terms
-of the GNU Lesser General Public License as published by the Free Software Foundation;
-either version 2.1 of the License, or (at your option) any later version.
-
-This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-See the GNU Lesser General Public License for more details.
-*/
+ * Copyright (c) 2003 eInnovation Inc. All rights reserved
+ * 
+ * This library is free software; you can redistribute it and/or modify it under the terms of the
+ * GNU Lesser General Public License as published by the Free Software Foundation; either version
+ * 2.1 of the License, or (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ */
 
 /*
  * Created on Jun 18, 2003
@@ -30,7 +30,8 @@ import junit.framework.TestCase;
  *
  * @author cburkey
  */
-public class BaseTestCase extends TestCase {
+public class BaseTestCase extends TestCase
+{
 	protected TestFixture fieldFixture;
 	protected static TestFixture fieldStaticFixture;
 	private static final Log log = LogFactory.getLog(BaseTestCase.class);
@@ -51,7 +52,8 @@ public class BaseTestCase extends TestCase {
 		super(arg0);
 	}
 
-	public Page getPage(String inPath) throws OpenEditException {
+	public Page getPage(String inPath) throws OpenEditException
+	{
 		return getFixture().getPageManager().getPage(inPath, true);
 	}
 
@@ -60,11 +62,13 @@ public class BaseTestCase extends TestCase {
 	 *
 	 * @param inFixture
 	 */
-	public void setFixture(TestFixture inFixture) {
+	public void setFixture(TestFixture inFixture)
+	{
 		fieldFixture = inFixture;
 	}
 
-	public TestFixture getFixture() {
+	public TestFixture getFixture()
+	{
 		// if (fieldFixture == null)
 		// {
 		// fieldFixture = new TestFixture();
@@ -73,13 +77,18 @@ public class BaseTestCase extends TestCase {
 		return getStaticFixture();
 	}
 
-	public TestFixture getStaticFixture() {
-		if (fieldStaticFixture == null) {
+	public TestFixture getStaticFixture()
+	{
+		if (fieldStaticFixture == null)
+		{
 			fieldStaticFixture = new TestFixture();
-			try {
+			try
+			{
 				log.info("Initi one time " + getClass());
 				oneTimeSetup();
-			} catch (Exception e) {
+			}
+			catch (Exception e)
+			{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -87,27 +96,36 @@ public class BaseTestCase extends TestCase {
 		return fieldStaticFixture;
 	}
 
-	protected void oneTimeSetup() throws Exception {
+	protected void oneTimeSetup() throws Exception
+	{
 		// TODO Auto-generated method stub
 
 	}
 
-	protected void tearDown() throws Exception {
+	protected void tearDown() throws Exception
+	{
 		super.tearDown();
-		if (fieldFixture != null) {
+		if (fieldFixture != null)
+		{
 			getFixture().getWebServer().getOpenEditEngine().shutdown();
 		}
 	}
 
 	/** Delete the specified directory and all files within it */
-	protected void deleteDirectory(File directory) {
+	protected void deleteDirectory(File directory)
+	{
 		File[] containedFiles = directory.listFiles();
-		if (containedFiles != null) {
-			for (int n = 0; n < containedFiles.length; n++) {
+		if (containedFiles != null)
+		{
+			for (int n = 0; n < containedFiles.length; n++)
+			{
 				File file = containedFiles[n];
-				if (file.isDirectory()) {
+				if (file.isDirectory())
+				{
 					deleteDirectory(file);
-				} else {
+				}
+				else
+				{
 					file.delete();
 				}
 			}
@@ -115,19 +133,23 @@ public class BaseTestCase extends TestCase {
 		directory.delete();
 	}
 
-	protected File getRoot() {
+	protected File getRoot()
+	{
 		return getFixture().getWebServer().getRootDirectory();
 	}
 
-	protected BaseModule getModule(String inKey) {
+	protected BaseModule getModule(String inKey)
+	{
 		return getFixture().getModuleManager().getModule(inKey);
 	}
 
-	protected Object getBean(String inKey) {
+	protected Object getBean(String inKey)
+	{
 		return getFixture().getModuleManager().getBean(inKey);
 	}
 
-	protected Object getBean(String inCatalogId, String inKey) {
+	protected Object getBean(String inCatalogId, String inKey)
+	{
 		return getFixture().getModuleManager().getBean(inCatalogId, inKey);
 	}
 

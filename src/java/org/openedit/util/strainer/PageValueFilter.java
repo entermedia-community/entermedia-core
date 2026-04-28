@@ -1,14 +1,14 @@
 /*
-Copyright (c) 2003 eInnovation Inc. All rights reserved
-
-This library is free software; you can redistribute it and/or modify it under the terms
-of the GNU Lesser General Public License as published by the Free Software Foundation;
-either version 2.1 of the License, or (at your option) any later version.
-
-This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-See the GNU Lesser General Public License for more details.
-*/
+ * Copyright (c) 2003 eInnovation Inc. All rights reserved
+ * 
+ * This library is free software; you can redistribute it and/or modify it under the terms of the
+ * GNU Lesser General Public License as published by the Free Software Foundation; either version
+ * 2.1 of the License, or (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ */
 
 package org.openedit.util.strainer;
 
@@ -19,7 +19,8 @@ import org.openedit.WebPageRequest;
  *
  * @author Eric Galluzzo
  */
-public class PageValueFilter extends BaseFilter {
+public class PageValueFilter extends BaseFilter
+{
 	protected String fieldProperty;
 
 	/**
@@ -35,7 +36,7 @@ public class PageValueFilter extends BaseFilter {
 	 * Construct a filter that only passes users that have the given permission.
 	 *
 	 * @param inPermission The permission to check for
-	 * @param inEQ         DOCME
+	 * @param inEQ DOCME
 	 */
 	public PageValueFilter(String inPermission, String inEQ) {
 		setProperty(inPermission);
@@ -47,7 +48,8 @@ public class PageValueFilter extends BaseFilter {
 	 *
 	 * @param inString
 	 */
-	public void setEquals(String inString) {
+	public void setEquals(String inString)
+	{
 		setValue(inString);
 	}
 
@@ -56,7 +58,8 @@ public class PageValueFilter extends BaseFilter {
 	 *
 	 * @return
 	 */
-	public String getEquals() {
+	public String getEquals()
+	{
 		return fieldValue;
 	}
 
@@ -65,7 +68,8 @@ public class PageValueFilter extends BaseFilter {
 	 *
 	 * @param permission The permission to check for
 	 */
-	public void setProperty(String permission) {
+	public void setProperty(String permission)
+	{
 		fieldProperty = permission;
 	}
 
@@ -74,29 +78,34 @@ public class PageValueFilter extends BaseFilter {
 	 *
 	 * @return String
 	 */
-	public String getProperty() {
+	public String getProperty()
+	{
 		return fieldProperty;
 	}
 
 	/**
 	 * @see org.openedit.util.strainer.Filter#passes(java.lang.Object)
 	 */
-	public boolean passes(Object inObj) throws FilterException, ClassCastException {
+	public boolean passes(Object inObj) throws FilterException, ClassCastException
+	{
 		WebPageRequest req = (WebPageRequest) inObj;
 
 		Object compare = req.getPageValue(getProperty());
-		if (compare != null) {
+		if (compare != null)
+		{
 			boolean val = getEquals().equalsIgnoreCase(String.valueOf(compare));
 			return val;
 		}
 		return false;
 	}
 
-	public String toString() {
+	public String toString()
+	{
 		return "Page Value " + getProperty() + "=" + getValue();
 	}
 
-	public void setProperty(String inKey, String inValue) {
+	public void setProperty(String inKey, String inValue)
+	{
 		fieldProperty = inValue;
 	}
 

@@ -33,7 +33,8 @@ import org.openedit.data.SearcherManager;
 import org.openedit.util.DateStorageUtil;
 import org.openedit.util.GenericsUtil;
 
-public class SearchQuery extends BaseData implements Cloneable, Serializable, Comparable, CatalogEnabled {
+public class SearchQuery extends BaseData implements Cloneable, Serializable, Comparable, CatalogEnabled
+{
 	private static final Log log = LogFactory.getLog(SearchQuery.class);
 
 	protected transient List fieldTerms = new ArrayList();
@@ -67,61 +68,74 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	protected String fieldTimeZone;
 	protected int fieldDefaultAggregationCount = 50;
 
-	public int getDefaultAggregationCount() {
+	public int getDefaultAggregationCount()
+	{
 		return fieldDefaultAggregationCount;
 	}
 
-	public void setDefaultAggregationCount(int inDefaultAggregationCount) {
+	public void setDefaultAggregationCount(int inDefaultAggregationCount)
+	{
 		fieldDefaultAggregationCount = inDefaultAggregationCount;
 	}
 
 	protected boolean fieldForceEmpty = false;
 
-	public boolean isForceEmpty() {
+	public boolean isForceEmpty()
+	{
 		return fieldForceEmpty;
 	}
 
-	public void setForceEmpty(boolean inForceEmpty) {
+	public void setForceEmpty(boolean inForceEmpty)
+	{
 		fieldForceEmpty = inForceEmpty;
 	}
 
-	public String getTimeZone() {
+	public String getTimeZone()
+	{
 		return fieldTimeZone;
 	}
 
-	public void setTimeZone(String inTimeZone) {
+	public void setTimeZone(String inTimeZone)
+	{
 		fieldTimeZone = inTimeZone;
 	}
 
-	public boolean isIncludeDeleted() {
+	public boolean isIncludeDeleted()
+	{
 		return fieldIncludeDeleted;
 	}
 
-	public void setIncludeDeleted(boolean inIncludeDeleted) {
+	public void setIncludeDeleted(boolean inIncludeDeleted)
+	{
 		fieldIncludeDeleted = inIncludeDeleted;
 	}
 
 	protected Collection<String> fieldExcludeFields;
 
-	public Collection<String> getExcludeFields() {
+	public Collection<String> getExcludeFields()
+	{
 		return fieldExcludeFields;
 	}
 
-	public void setExcludeFields(Collection<String> inExcludeFields) {
+	public void setExcludeFields(Collection<String> inExcludeFields)
+	{
 		fieldExcludeFields = inExcludeFields;
 	}
 
-	public void setIncludeDescription(boolean inIncludeDescription) {
+	public void setIncludeDescription(boolean inIncludeDescription)
+	{
 		fieldIncludeDescription = inIncludeDescription;
 	}
 
 	protected Collection<String> fieldIncludeOnly;
 
-	public Collection getIncludeOnly() {
+	public Collection getIncludeOnly()
+	{
 		return fieldIncludeOnly;
 	}
 
-	public void setIncludeOnly(Collection inIncludeOnly) {
+	public void setIncludeOnly(Collection inIncludeOnly)
+	{
 		fieldIncludeOnly = inIncludeOnly;
 	}
 
@@ -131,39 +145,50 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		// TODO Auto-generated constructor stub
 	}
 
-	public boolean isSortUp() {
-		if (getSortBy() == null) {
+	public boolean isSortUp()
+	{
+		if (getSortBy() == null)
+		{
 			return false;
 
 		}
-		if (getSortBy().endsWith("Up")) {
+		if (getSortBy().endsWith("Up"))
+		{
 			return true;
 
-		} else {
+		}
+		else
+		{
 			return false;
 		}
 
 	}
 
-	public PropertyDetail findFacet(String inId) {
-		for (Iterator iterator = getFacets().iterator(); iterator.hasNext();) {
+	public PropertyDetail findFacet(String inId)
+	{
+		for (Iterator iterator = getFacets().iterator(); iterator.hasNext();)
+		{
 			PropertyDetail detail = (PropertyDetail) iterator.next();
-			if (inId.equals(detail.getId())) {
+			if (inId.equals(detail.getId()))
+			{
 				return detail;
 			}
 		}
 		return null;
 	}
 
-	public Collection<PropertyDetail> getFacets() {
-		if (fieldUserFacets == null) {
+	public Collection<PropertyDetail> getFacets()
+	{
+		if (fieldUserFacets == null)
+		{
 			fieldUserFacets = new HashSet<PropertyDetail>();
 		}
 
 		return fieldUserFacets;
 	}
 
-	public void setFacets(Collection<PropertyDetail> facets) {
+	public void setFacets(Collection<PropertyDetail> facets)
+	{
 		fieldUserFacets = facets;
 		// //UserProfile profile = inPageRequest.getUserProfile();
 		// if (facets != null && facets.size() > 0)
@@ -179,27 +204,33 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 
 	}
 
-	public String getSortLanguage() {
+	public String getSortLanguage()
+	{
 		return fieldSortLanguage;
 	}
 
-	public void setSortLanguage(String inSortLanguage) {
+	public void setSortLanguage(String inSortLanguage)
+	{
 		fieldSortLanguage = inSortLanguage;
 	}
 
-	public boolean isEndUserSearch() {
+	public boolean isEndUserSearch()
+	{
 		return fieldEndUserSearch;
 	}
 
-	public void setEndUserSearch(boolean inEndUserSearch) {
+	public void setEndUserSearch(boolean inEndUserSearch)
+	{
 		fieldEndUserSearch = inEndUserSearch;
 	}
 
-	public int getHitsPerPage() {
+	public int getHitsPerPage()
+	{
 		return fieldHitsPerPage;
 	}
 
-	public void setHitsPerPage(int inHitsPerPage) {
+	public void setHitsPerPage(int inHitsPerPage)
+	{
 		fieldHitsPerPage = inHitsPerPage;
 	}
 
@@ -208,108 +239,136 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		return fieldResultType;
 	}
 
-	public void setResultType(String inSearchType) {
+	public void setResultType(String inSearchType)
+	{
 		fieldResultType = inSearchType;
 	}
 
 	protected boolean fieldSecurityAttached = false;
 
-	public String getHitsName() {
+	public String getHitsName()
+	{
 		return fieldHitsName;
 	}
 
-	public void setHitsName(String inHitsName) {
+	public void setHitsName(String inHitsName)
+	{
 		fieldHitsName = inHitsName;
 	}
 
-	public String getSessionId() {
+	public String getSessionId()
+	{
 		return getHitsName() + getResultType() + getCatalogId();
 	}
 
-	public SearcherManager getSearcherManager() {
+	public SearcherManager getSearcherManager()
+	{
 		return fieldSearcherManager;
 	}
 
-	public void setSearcherManager(SearcherManager inSearcherManager) {
+	public void setSearcherManager(SearcherManager inSearcherManager)
+	{
 		fieldSearcherManager = inSearcherManager;
 	}
 
-	public String getCatalogId() {
+	public String getCatalogId()
+	{
 		return fieldCatalogId;
 	}
 
-	public void setCatalogId(String inCatalogId) {
+	public void setCatalogId(String inCatalogId)
+	{
 		fieldCatalogId = inCatalogId;
 	}
 
-	public PropertyDetails getPropertyDetails() {
+	public PropertyDetails getPropertyDetails()
+	{
 		return fieldPropertyDetails;
 	}
 
-	public void setPropertyDetails(PropertyDetails propertDetails) {
+	public void setPropertyDetails(PropertyDetails propertDetails)
+	{
 		fieldPropertyDetails = propertDetails;
 	}
 
-	public String getDescription() {
+	public String getDescription()
+	{
 		return fieldDescription;
 	}
 
-	public void setDescription(String inDescription) {
+	public void setDescription(String inDescription)
+	{
 		fieldDescription = inDescription;
 	}
 
-	public DateFormat getDateFormat() {
+	public DateFormat getDateFormat()
+	{
 		return fieldDateFormat;
 	}
 
-	public void setDateFormat(DateFormat inDateFormat) {
+	public void setDateFormat(DateFormat inDateFormat)
+	{
 		fieldDateFormat = inDateFormat;
 	}
 
-	public Map getSuggestedSearches() {
+	public Map getSuggestedSearches()
+	{
 		return fieldSuggestedSearches;
 	}
 
-	public void setSuggestedSearches(Map suggestedSearches) {
+	public void setSuggestedSearches(Map suggestedSearches)
+	{
 		fieldSuggestedSearches = suggestedSearches;
 	}
 
-	public void addGroup(SearchQuery inGroup) {
-		for (Iterator iterator = inGroup.getTerms().iterator(); iterator.hasNext();) {
+	public void addGroup(SearchQuery inGroup)
+	{
+		for (Iterator iterator = inGroup.getTerms().iterator(); iterator.hasNext();)
+		{
 			Term term = (Term) iterator.next();
 			fieldTerms.add(term);
 		}
 	}
 
-	public List<Term> getTerms() {
+	public List<Term> getTerms()
+	{
 		return fieldTerms;
 	}
 
-	public boolean contains(String inField) {
-		for (Iterator iterator = getTerms().iterator(); iterator.hasNext();) {
+	public boolean contains(String inField)
+	{
+		for (Iterator iterator = getTerms().iterator(); iterator.hasNext();)
+		{
 			Term term = (Term) iterator.next();
-			if (term.getDetail().getId().equals(inField)) {
+			if (term.getDetail().getId().equals(inField))
+			{
 				return true;
 			}
 		}
 		return false;
 	}
 
-	public Term addOrsGroup(PropertyDetail inField, Collection inValues) {
+	public Term addOrsGroup(PropertyDetail inField, Collection inValues)
+	{
 		String[] ids = extractIds(inValues);
 		return addOrsGroup(inField, ids);
 	}
 
-	public Term addOrsGroup(PropertyDetail inField, String[] inValues) {
+	public Term addOrsGroup(PropertyDetail inField, String[] inValues)
+	{
 		Term term = new Term() {
-			public String toQuery() {
+			public String toQuery()
+			{
 				StringBuffer orString = new StringBuffer();
 				Object[] values = getValues();
-				if (values.length > 0) {
+				if (values.length > 0)
+				{
 					orString.append("(");
-					for (int i = 0; i < values.length - 1; i++) {
+					for (int i = 0; i < values.length - 1; i++)
+					{
 						Object val = values[i];
-						if (val != null && val.toString().length() > 0) {
+						if (val != null && val.toString().length() > 0)
+						{
 							orString.append(values[i]);
 							orString.append(" OR ");
 						}
@@ -329,15 +388,20 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		return term;
 	}
 
-	public Term addOrsGroup(PropertyDetail inField, String inValue) {
+	public Term addOrsGroup(PropertyDetail inField, String inValue)
+	{
 		Term term = new Term() {
-			public String toQuery() {
+			public String toQuery()
+			{
 				StringBuffer orString = new StringBuffer();
 				Object[] values = getValues();
-				if (values.length > 0) {
+				if (values.length > 0)
+				{
 					orString.append("(");
-					for (int i = 0; i < values.length - 1; i++) {
-						if (values[i].toString().length() > 0) {
+					for (int i = 0; i < values.length - 1; i++)
+					{
+						if (values[i].toString().length() > 0)
+						{
 							orString.append(values[i]);
 							orString.append(" OR ");
 						}
@@ -358,20 +422,26 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		return term;
 	}
 
-	public Term addAndGroup(String inDetailId, final String[] inValues) {
+	public Term addAndGroup(String inDetailId, final String[] inValues)
+	{
 		PropertyDetail detail = createDetail(inDetailId);
 		detail.setId(inDetailId);
 		return addAndGroup(detail, inValues);
 	}
 
-	public Term addAndGroup(PropertyDetail inDetail, final String[] inValues) {
+	public Term addAndGroup(PropertyDetail inDetail, final String[] inValues)
+	{
 		Term term = new Term() {
-			public String toQuery() {
+			public String toQuery()
+			{
 				StringBuffer orString = new StringBuffer();
-				if (inValues.length > 0) {
+				if (inValues.length > 0)
+				{
 					orString.append("(");
-					for (int i = 0; i < inValues.length; i++) {
-						if (inValues[i].length() > 0) {
+					for (int i = 0; i < inValues.length; i++)
+					{
+						if (inValues[i].length() > 0)
+						{
 							orString.append("+");
 							orString.append(inValues[i]);
 							orString.append(" ");
@@ -389,54 +459,71 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		return term;
 	}
 
-	public Term addNots(String inId, String inNots) {
+	public Term addNots(String inId, String inNots)
+	{
 		PropertyDetail detail = createDetail(inId);
 		detail.setId(inId);
 		return addNots(detail, inNots);
 	}
 
-	public Term addNot(String inNot) {
+	public Term addNot(String inNot)
+	{
 		return addNots((PropertyDetail) null, inNot);
 	}
 
-	public String toString() {
+	public String toString()
+	{
 		return toFriendly();
 	}
 
-	public String toFriendly() {
+	public String toFriendly()
+	{
 		String op = " or ";
-		if (isAndTogether()) {
+		if (isAndTogether())
+		{
 			op = " and ";
 		}
 		StringBuffer done = new StringBuffer();
-		for (int i = 0; i < fieldTerms.size(); i++) {
+		for (int i = 0; i < fieldTerms.size(); i++)
+		{
 			Term term = (Term) fieldTerms.get(i);
 			PropertyDetail detail = term.getDetail();
-			if (detail != null) {
-				if (!detail.isFilter()) {
-					if (i > 0) {
+			if (detail != null)
+			{
+				if (!detail.isFilter())
+				{
+					if (i > 0)
+					{
 						done.append(op);
 					}
 					String q = detail.getName();
-					if (q == null) {
+					if (q == null)
+					{
 						q = detail.getName();
 
 					}
-					if (q == null) {
+					if (q == null)
+					{
 						q = detail.getId();
 
 					}
 
 					done.append(q);
-					if ("not".equals(term.getOperation())) {
+					if ("not".equals(term.getOperation()))
+					{
 						done.append(" not ");
-					} else {
+					}
+					else
+					{
 						done.append(":");
 					}
 					done.append(getFriendlyValue(term, detail));
 				}
-			} else {
-				if (i > 0) {
+			}
+			else
+			{
+				if (i > 0)
+				{
 					done.append(op);
 				}
 				String q = term.getId();
@@ -445,9 +532,11 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 				done.append(term.getValue());
 			}
 		}
-		if (getSorts().size() > 0) {
+		if (getSorts().size() > 0)
+		{
 			done.append(" sort ");
-			for (Iterator iterator = getSorts().iterator(); iterator.hasNext();) {
+			for (Iterator iterator = getSorts().iterator(); iterator.hasNext();)
+			{
 				String sort = (String) iterator.next();
 				done.append(sort);
 				done.append(" ");
@@ -457,25 +546,32 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		return done.toString();
 	}
 
-	public String getFriendlyValue(Term inTerm, PropertyDetail inDetail) {
-		if (inTerm == null || inDetail == null) {
+	public String getFriendlyValue(Term inTerm, PropertyDetail inDetail)
+	{
+		if (inTerm == null || inDetail == null)
+		{
 			return null;
 		}
 
-		if (inDetail.isDate()) {
+		if (inDetail.isDate())
+		{
 			return getFriendlyDateValue(inTerm, inDetail);
 		}
 
 		String value = inTerm.getValue();
-		if (value != null) {
+		if (value != null)
+		{
 			return getFriendlyValue(value, inDetail);
 		}
 		StringBuffer out = new StringBuffer();
 		Object[] values = inTerm.getValues();
-		if (values != null) {
-			for (int i = 0; i < values.length; i++) {
+		if (values != null)
+		{
+			for (int i = 0; i < values.length; i++)
+			{
 				Object val = values[i];
-				if (val instanceof String) {
+				if (val instanceof String)
+				{
 					out.append(getFriendlyValue((String) val, inDetail));
 					out.append(", ");
 				}
@@ -484,33 +580,46 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		return out.toString();
 	}
 
-	public String getFriendlyDateValue(Term inTerm, PropertyDetail inDetail) {
-		if (inTerm == null || inDetail == null) {
+	public String getFriendlyDateValue(Term inTerm, PropertyDetail inDetail)
+	{
+		if (inTerm == null || inDetail == null)
+		{
 			return "";
 		}
 
 		String after = getInput(inDetail.getId() + ".after");
 		String before = getInput(inDetail.getId() + ".before");
 
-		if (after == null || before == null) {
+		if (after == null || before == null)
+		{
 			after = getInput(inDetail.getId());
 		}
 
-		if ("betweendates".equals(inTerm.getOperation())) {
-			if (after != null && before != null) {
+		if ("betweendates".equals(inTerm.getOperation()))
+		{
+			if (after != null && before != null)
+			{
 				return after + " - " + before;
-			} else if (after != null) {
-				return "After " + after;
-			} else if (before != null) {
-				return "Before " + before;
 			}
+			else
+				if (after != null)
+				{
+					return "After " + after;
+				}
+				else
+					if (before != null)
+					{
+						return "Before " + before;
+					}
 		}
 
-		if ("beforedate".equals(inTerm.getOperation()) && before != null) {
+		if ("beforedate".equals(inTerm.getOperation()) && before != null)
+		{
 			return "< " + before;
 		}
 
-		if ("afterdate".equals(inTerm.getOperation()) && after != null) {
+		if ("afterdate".equals(inTerm.getOperation()) && after != null)
+		{
 			return "> " + after;
 		}
 
@@ -521,17 +630,15 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	/**
 	 * Transforms a list ID value into a human-readable value.
 	 * 
-	 * @param inRawValue
-	 *                          could be a list value ID.
-	 * @param inDetail
-	 *                          details for the property.
-	 * @param inSearcherManager
-	 *                          to get a searcher for the property (if it is a
-	 *                          list).
+	 * @param inRawValue could be a list value ID.
+	 * @param inDetail details for the property.
+	 * @param inSearcherManager to get a searcher for the property (if it is a list).
 	 * @return the friendly value if it can get one. inRawValue otherwise.
 	 */
-	public String getFriendlyValue(String inRawValue, PropertyDetail inDetail) {
-		if (!inDetail.isViewType("list") && !inDetail.isViewType("category")) {
+	public String getFriendlyValue(String inRawValue, PropertyDetail inDetail)
+	{
+		if (!inDetail.isViewType("list") && !inDetail.isViewType("category"))
+		{
 
 			// if(inDetail.isDate())
 			// {
@@ -545,48 +652,59 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 			return inRawValue;
 		}
 
-		Searcher searcher = getSearcherManager().getSearcher(inDetail.getCatalogId(getCatalogId()),
-				inDetail.getListId());
-		if (searcher == null) {
+		Searcher searcher = getSearcherManager().getSearcher(inDetail.getCatalogId(getCatalogId()), inDetail.getListId());
+		if (searcher == null)
+		{
 			return inRawValue;
 		}
 
 		Data data = (Data) searcher.searchById(inRawValue);
-		if (data == null) {
+		if (data == null)
+		{
 			return inRawValue;
 		}
 		return data.getName();
 	}
 
-	public boolean isAndTogether() {
+	public boolean isAndTogether()
+	{
 		return fieldAndTogether;
 	}
 
-	public void setAndTogether(boolean inAndTogether) {
+	public void setAndTogether(boolean inAndTogether)
+	{
 		fieldAndTogether = inAndTogether;
 	}
 
-	public SearchQuery append(String inKey, String inVal) {
+	public SearchQuery append(String inKey, String inVal)
+	{
 		addMatches(inKey, inVal);
 		return this;
 	}
 
-	public SearchQuery appendNot(String inKey, String inVal) {
+	public SearchQuery appendNot(String inKey, String inVal)
+	{
 		addNot(inKey, inVal);
 		return this;
 	}
 
-	public Term addContains(PropertyDetail inDetail, String inVal) {
+	public Term addContains(PropertyDetail inDetail, String inVal)
+	{
 		Term term = new Term() {
-			public String toQuery() {
-				if (getDetail().getId() != null) {
+			public String toQuery()
+			{
+				if (getDetail().getId() != null)
+				{
 					return getDetail().getId() + ":*" + getValue() + "*";
-				} else {
+				}
+				else
+				{
 					return getValue();
 				}
 			}
 
-			public Element toXml() {
+			public Element toXml()
+			{
 				Element term = DocumentHelper.createElement("term");
 				term.addAttribute("id", getDetail().getId());
 				term.addAttribute("val", getValue());
@@ -604,15 +722,20 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		return term;
 	}
 
-	public boolean isEmpty() {
-		if (fieldTerms.isEmpty()) {
+	public boolean isEmpty()
+	{
+		if (fieldTerms.isEmpty())
+		{
 			// String fullq = toQuery();
 			// if( fullq == null || fullq.length() == 0 )
 			// {
-			if (hasChildren()) {
-				for (Iterator iterator = getChildren().iterator(); iterator.hasNext();) {
+			if (hasChildren())
+			{
+				for (Iterator iterator = getChildren().iterator(); iterator.hasNext();)
+				{
 					SearchQuery q = (SearchQuery) iterator.next();
-					if (!q.isEmpty()) {
+					if (!q.isEmpty())
+					{
 						return false;
 					}
 				}
@@ -624,22 +747,29 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	}
 
 	@Override
-	public boolean equals(Object inObj) {
-		if (inObj == this) {
+	public boolean equals(Object inObj)
+	{
+		if (inObj == this)
+		{
 			return true;
 		}
-		if (inObj instanceof SearchQuery) {
+		if (inObj instanceof SearchQuery)
+		{
 			SearchQuery q = (SearchQuery) inObj;
 			Collection searchmodules = getValues("searchtypes");
-			if (searchmodules != null) {
+			if (searchmodules != null)
+			{
 				Collection searchmodules2 = q.getValues("searchtypes");
-				if (!searchmodules.equals(searchmodules2)) {
+				if (!searchmodules.equals(searchmodules2))
+				{
 					return false;
 				}
 			}
 			String one = q.toQuery();
-			if (one != null) {
-				if (!one.equals(toQuery())) {
+			if (one != null)
+			{
+				if (!one.equals(toQuery()))
+				{
 					return false;
 				}
 			}
@@ -651,31 +781,44 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	/**
 	 * This is the user input (!= term.value)
 	 */
-	public String getInput(String inKey) {
+	public String getInput(String inKey)
+	{
 		Object input = get(inKey);
-		if (input != null) {
-			if (input instanceof String) {
+		if (input != null)
+		{
+			if (input instanceof String)
+			{
 				return (String) input;
-			} else {
+			}
+			else
+			{
 				String[] vals = (String[]) input;
 				return vals[0];
 			}
 		}
 		Term term = getTermByDetailId(inKey);
-		if (term == null) {
+		if (term == null)
+		{
 			term = getTerm(inKey);
 		}
-		if (term != null) {
+		if (term != null)
+		{
 			return term.getValue();
 		}
-		if (hasChildren()) {
-			for (Iterator iterator = getChildren().iterator(); iterator.hasNext();) {
+		if (hasChildren())
+		{
+			for (Iterator iterator = getChildren().iterator(); iterator.hasNext();)
+			{
 				SearchQuery child = (SearchQuery) iterator.next();
 				input = child.getInput(inKey);
-				if (input != null) {
-					if (input instanceof String) {
+				if (input != null)
+				{
+					if (input instanceof String)
+					{
 						return (String) input;
-					} else {
+					}
+					else
+					{
 						String[] vals = (String[]) input;
 						return vals[0];
 					}
@@ -686,14 +829,18 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		return null;
 	}
 
-	public Collection getInputs(String inKey) {
+	public Collection getInputs(String inKey)
+	{
 		Collection input = getValues(inKey);
-		if (input == null) {
+		if (input == null)
+		{
 			Term term = getTermByDetailId(inKey);
-			if (term == null) {
+			if (term == null)
+			{
 				term = getTerm(inKey);
 			}
-			if (term != null && term.getValues() != null) {
+			if (term != null && term.getValues() != null)
+			{
 				return Arrays.asList(term.getValues());
 			}
 			return null;
@@ -701,33 +848,42 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		return input;
 	}
 
-	public String getSortBy() {
-		if (getSorts().size() == 0) {
+	public String getSortBy()
+	{
+		if (getSorts().size() == 0)
+		{
 			return null;
 		}
-		if (getSorts().size() == 1) {
+		if (getSorts().size() == 1)
+		{
 			return (String) getSorts().get(0);
 		}
 		StringBuffer sorts = new StringBuffer();
-		for (Iterator iterator = getSorts().iterator(); iterator.hasNext();) {
+		for (Iterator iterator = getSorts().iterator(); iterator.hasNext();)
+		{
 			String sort = (String) iterator.next();
 			sorts.append(sort);
-			if (iterator.hasNext()) {
+			if (iterator.hasNext())
+			{
 				sorts.append(",");
 			}
 		}
 		return sorts.toString();
 	}
 
-	public PropertyDetail getSortByDetail() {
+	public PropertyDetail getSortByDetail()
+	{
 		String id = null;
-		for (Iterator iterator = getSorts().iterator(); iterator.hasNext();) {
+		for (Iterator iterator = getSorts().iterator(); iterator.hasNext();)
+		{
 			String sort = (String) iterator.next();
-			if (sort.endsWith("Up")) {
+			if (sort.endsWith("Up"))
+			{
 				id = sort.substring(0, sort.length() - 2);
 				break;
 			}
-			if (sort.endsWith("Down")) {
+			if (sort.endsWith("Down"))
+			{
 				id = sort.substring(0, sort.length() - 4);
 				break;
 			}
@@ -737,23 +893,30 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		return detail;
 	}
 
-	public void setSortBy(String inSortBy) {
-		if (inSortBy != null) {
+	public void setSortBy(String inSortBy)
+	{
+		if (inSortBy != null)
+		{
 			getSorts().clear();
 			String[] sorts = inSortBy.split(",");
-			for (int i = 0; i < sorts.length; i++) {
+			for (int i = 0; i < sorts.length; i++)
+			{
 				addSortBy(sorts[i]);
 			}
 		}
 
 	}
 
-	public void addSortBy(String inSortBy) {
-		if (inSortBy != null) {
+	public void addSortBy(String inSortBy)
+	{
+		if (inSortBy != null)
+		{
 
-			for (Iterator iterator = getSorts().iterator(); iterator.hasNext();) {
+			for (Iterator iterator = getSorts().iterator(); iterator.hasNext();)
+			{
 				String sort = (String) iterator.next();
-				if (sort.contains(inSortBy)) {
+				if (sort.contains(inSortBy))
+				{
 					return;
 				}
 			}
@@ -762,31 +925,40 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		}
 	}
 
-	public List<String> getSorts() {
-		if (fieldSorts == null) {
+	public List<String> getSorts()
+	{
+		if (fieldSorts == null)
+		{
 			fieldSorts = new ArrayList(2);
 		}
 		return fieldSorts;
 	}
 
-	public boolean isSortedBy(String inKey) {
-		for (Iterator iterator = getSorts().iterator(); iterator.hasNext();) {
+	public boolean isSortedBy(String inKey)
+	{
+		for (Iterator iterator = getSorts().iterator(); iterator.hasNext();)
+		{
 			String sort = (String) iterator.next();
-			if (sort.contains(inKey)) {
+			if (sort.contains(inKey))
+			{
 				return true;
 			}
 		}
 		return false;
 	}
 
-	public Term addQuery(PropertyDetail inId, String inFilter) {
-		if (inFilter != null && inFilter.length() > 1) {
+	public Term addQuery(PropertyDetail inId, String inFilter)
+	{
+		if (inFilter != null && inFilter.length() > 1)
+		{
 			Term term = new Term() {
-				public String toQuery() {
+				public String toQuery()
+				{
 					return getValue();
 				}
 
-				public Element toXml() {
+				public Element toXml()
+				{
 					Element term = DocumentHelper.createElement("term");
 					term.addAttribute("id", getDetail().getId());
 					term.addAttribute("val", getValue());
@@ -805,52 +977,65 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		return null;
 	}
 
-	public void addCategoryFilter(List inRemaining) {
+	public void addCategoryFilter(List inRemaining)
+	{
 		throw new OpenEditRuntimeException("Not implemented");
 	}
 
-	public void removeTerm(Term inTerm) {
-		if (inTerm == null) {
+	public void removeTerm(Term inTerm)
+	{
+		if (inTerm == null)
+		{
 			log.error("inTerm was null");
 			return;
 		}
 		getTerms().remove(inTerm);
 
 		setProperty(inTerm.getDetail().getId(), null);
-		for (Iterator iterator = getChildren().iterator(); iterator.hasNext();) {
+		for (Iterator iterator = getChildren().iterator(); iterator.hasNext();)
+		{
 			SearchQuery query = (SearchQuery) iterator.next();
 			query.removeTerm(inTerm);
-			if (query.getTerms().size() == 0) {
+			if (query.getTerms().size() == 0)
+			{
 				getChildren().remove(query);
 				return;
 			}
 		}
 	}
 
-	public void removeTerm(String inTermid) {
+	public void removeTerm(String inTermid)
+	{
 		Term term = getTermByTermId(inTermid);
 		removeTerm(term);
 	}
 
-	public void removeTerms(String inFieldId) {
+	public void removeTerms(String inFieldId)
+	{
 		List terms = new ArrayList(getTerms());
-		for (Iterator iter = terms.iterator(); iter.hasNext();) {
+		for (Iterator iter = terms.iterator(); iter.hasNext();)
+		{
 			Term term = (Term) iter.next();
-			if (term.getDetail().getId().equals(inFieldId)) {
+			if (term.getDetail().getId().equals(inFieldId))
+			{
 				removeTerm(term);
 			}
 		}
 	}
 
-	public PropertyDetail getDetail(String inId) {
-		if (getPropertyDetails() == null) {
+	public PropertyDetail getDetail(String inId)
+	{
+		if (getPropertyDetails() == null)
+		{
 			return null;
 		}
 		return getPropertyDetails().getDetail(inId);
 	}
 
-	public List<String> getCatalogs() {
-		if (fieldCatalogs == null) {
+	public List<String> getCatalogs()
+	{
+		if (fieldCatalogs == null)
+		{
 			fieldCatalogs = GenericsUtil.createList();
 
 		}
@@ -858,25 +1043,31 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		return fieldCatalogs;
 	}
 
-	public void addCatalog(String inCat) {
-		if (!getCatalogs().contains(inCat)) {
+	public void addCatalog(String inCat)
+	{
+		if (!getCatalogs().contains(inCat))
+		{
 			getCatalogs().add(inCat);
 		}
 	}
 
-	public void removeCatalog(String inCat) {
+	public void removeCatalog(String inCat)
+	{
 		getCatalogs().remove(inCat);
-		if (getCatalogs().size() == 0) {
+		if (getCatalogs().size() == 0)
+		{
 			setTerms(new ArrayList());
 		}
 
 	}
 
-	public void setCatalogs(List<String> inCatalogs) {
+	public void setCatalogs(List<String> inCatalogs)
+	{
 		fieldCatalogs = inCatalogs;
 	}
 
-	public Term addMatches(PropertyDetail inDetail) {
+	public Term addMatches(PropertyDetail inDetail)
+	{
 		// this is a generic add
 		return addMatches(inDetail, "");
 	}
@@ -884,17 +1075,22 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	/**
 	 * @deprecated use getTermByDetailId(String) instead
 	 */
-	public Term getTerm(String inFieldId) {
-		if (inFieldId == null) {
+	public Term getTerm(String inFieldId)
+	{
+		if (inFieldId == null)
+		{
 			return null;
 		}
-		if (getTerms() == null) {
+		if (getTerms() == null)
+		{
 			return null;
 		}
-		for (Iterator iterator = getTerms().iterator(); iterator.hasNext();) {
+		for (Iterator iterator = getTerms().iterator(); iterator.hasNext();)
+		{
 			Term term = (Term) iterator.next();
 			PropertyDetail detail = term.getDetail();
-			if (detail != null && detail.getId() != null && detail.getId().equals(inFieldId)) {
+			if (detail != null && detail.getId() != null && detail.getId().equals(inFieldId))
+			{
 				return term;
 			}
 		}
@@ -907,61 +1103,75 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	 * @param inFieldId the field's Id.
 	 * @return a list with all the found terms. An empty list if none was found.
 	 */
-	public List getTerms(String inFieldId) {
+	public List getTerms(String inFieldId)
+	{
 		List terms = new ArrayList();
-		for (Iterator iterator = getTerms().iterator(); iterator.hasNext();) {
+		for (Iterator iterator = getTerms().iterator(); iterator.hasNext();)
+		{
 			Term term = (Term) iterator.next();
-			if (term.getDetail().getId().equals(inFieldId)) {
+			if (term.getDetail().getId().equals(inFieldId))
+			{
 				terms.add(term);
 			}
 		}
 		return terms;
 	}
 
-	public Collection getExtraTerms(Collection<PropertyDetail> inDetails) {
-		if (getTerms() == null || getTerms().isEmpty() || inDetails == null) {
+	public Collection getExtraTerms(Collection<PropertyDetail> inDetails)
+	{
+		if (getTerms() == null || getTerms().isEmpty() || inDetails == null)
+		{
 			return Collections.EMPTY_LIST;
 		}
 
 		Set detailids = new HashSet();
-		for (Iterator iterator = inDetails.iterator(); iterator.hasNext();) {
+		for (Iterator iterator = inDetails.iterator(); iterator.hasNext();)
+		{
 			PropertyDetail detail = (PropertyDetail) iterator.next();
 			detailids.add(detail.getId());
 		}
 
 		List terms = new ArrayList();
-		for (Iterator iterator = getTerms().iterator(); iterator.hasNext();) {
+		for (Iterator iterator = getTerms().iterator(); iterator.hasNext();)
+		{
 			Term term = (Term) iterator.next();
-			if (!detailids.contains(term.getDetail().getId())) {
+			if (!detailids.contains(term.getDetail().getId()))
+			{
 				terms.add(term);
 			}
 		}
 		return terms;
 	}
 
-	public Term addMatches(String inString, String value) {
+	public Term addMatches(String inString, String value)
+	{
 		PropertyDetail detail = createDetail(inString);
 		return addMatches(detail, value);
 	}
 
-	public Term addOrsGroup(String inString, Collection values) {
+	public Term addOrsGroup(String inString, Collection values)
+	{
 		PropertyDetail detail = createDetail(inString);
 		String[] array = extractIds(values);
 		return addOrsGroup(detail, array);
 	}
 
-	public Term addContains(String inString, String value) {
+	public Term addContains(String inString, String value)
+	{
 		PropertyDetail detail = createDetail(inString);
 		return addContains(detail, value);
 	}
 
-	public Term addVector(String inKey, double[] inValue, double min_score) {
+	public Term addVector(String inKey, double[] inValue, double min_score)
+	{
 		PropertyDetail inField = createDetail(inKey);
-		if (inValue == null) {
+		if (inValue == null)
+		{
 			return null;
 		}
 		Term term = new Term() {
-			public String toQuery() {
+			public String toQuery()
+			{
 				return null;
 			}
 		};
@@ -973,59 +1183,71 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		return term;
 	}
 
-	public Term addExact(String inKey, String inValue) {
+	public Term addExact(String inKey, String inValue)
+	{
 
 		PropertyDetail detail = createDetail(inKey);
 		return addExact(detail, inValue);
 	}
 
-	public Term addExact(PropertyDetail inField, double inParseInt) {
+	public Term addExact(PropertyDetail inField, double inParseInt)
+	{
 		String inString = String.valueOf(inParseInt);
 		return addExact(inField, inString);
 	}
 
-	public Term addStartsWith(String inString, String inQuery) {
+	public Term addStartsWith(String inString, String inQuery)
+	{
 		PropertyDetail detail = createDetail(inString);
 		detail.setId(inString);
 		return addStartsWith(detail, inQuery);
 	}
 
-	public Term addMatches(String inInQuery) {
+	public Term addMatches(String inInQuery)
+	{
 		PropertyDetail detail = createDetail("description");
 		return addMatches(detail, inInQuery);
 	}
 
-	public Term addNot(String inId, String inQuery) {
+	public Term addNot(String inId, String inQuery)
+	{
 		PropertyDetail detail = createDetail(inId);
 		detail.setId(inId);
 		return addNot(detail, inQuery);
 	}
 
-	public Term addOrsGroup(String inId, String inQuery) {
+	public Term addOrsGroup(String inId, String inQuery)
+	{
 		PropertyDetail detail = createDetail(inId);
 		return addOrsGroup(detail, inQuery);
 	}
 
-	private PropertyDetail createDetail(String inId) {
+	private PropertyDetail createDetail(String inId)
+	{
 		// TODO Auto-generated method stub
 		return getPropertyDetails().createDetail(inId);
 	}
 
-	public Term addQuery(String inString, String inValue) {
+	public Term addQuery(String inString, String inValue)
+	{
 		PropertyDetail detail = createDetail(inString);
 		detail.setId(inString);
 		return addQuery(detail, inValue);
 
 	}
 
-	public List getTerms(String inCatalogid, String inView, String inField) {
+	public List getTerms(String inCatalogid, String inView, String inField)
+	{
 		// returns matching terms.
 		List termList = new ArrayList();
-		for (Iterator iterator = getTerms().iterator(); iterator.hasNext();) {
+		for (Iterator iterator = getTerms().iterator(); iterator.hasNext();)
+		{
 			Term term = (Term) iterator.next();
 			PropertyDetail detail = term.getDetail();
-			if (detail != null) {
-				if (inCatalogid.equals(detail.getCatalogId()) && inField.equals(detail.getId())) {
+			if (detail != null)
+			{
+				if (inCatalogid.equals(detail.getCatalogId()) && inField.equals(detail.getId()))
+				{
 					termList.add(term);
 				}
 			}
@@ -1033,12 +1255,16 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		return termList;
 	}
 
-	public Term getTerm(String inCatalogid, String inView, String inField) {
-		for (Iterator iterator = getTerms().iterator(); iterator.hasNext();) {
+	public Term getTerm(String inCatalogid, String inView, String inField)
+	{
+		for (Iterator iterator = getTerms().iterator(); iterator.hasNext();)
+		{
 			Term term = (Term) iterator.next();
 			PropertyDetail detail = term.getDetail();
-			if (detail != null) {
-				if (inCatalogid.equals(detail.getCatalogId()) && inField.equals(detail.getId())) {
+			if (detail != null)
+			{
+				if (inCatalogid.equals(detail.getCatalogId()) && inField.equals(detail.getId()))
+				{
 					return term;
 				}
 			}
@@ -1046,18 +1272,24 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		return null;
 	}
 
-	public Term getTermByTermId(String inTermId) {
-		for (Iterator iterator = getTerms().iterator(); iterator.hasNext();) {
+	public Term getTermByTermId(String inTermId)
+	{
+		for (Iterator iterator = getTerms().iterator(); iterator.hasNext();)
+		{
 			Term term = (Term) iterator.next();
-			if (term.getId().equals(inTermId)) {
+			if (term.getId().equals(inTermId))
+			{
 				return term;
 			}
 		}
-		if (hasChildren()) {
-			for (Iterator iterator = getChildren().iterator(); iterator.hasNext();) {
+		if (hasChildren())
+		{
+			for (Iterator iterator = getChildren().iterator(); iterator.hasNext();)
+			{
 				SearchQuery child = (SearchQuery) iterator.next();
 				Term term = child.getTermByTermId(inTermId);
-				if (term != null) {
+				if (term != null)
+				{
 					return term;
 				}
 			}
@@ -1065,12 +1297,15 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		return null;
 	}
 
-	public Term getTermByDetailId(String inTermId) {
-		for (Iterator iterator = getTerms().iterator(); iterator.hasNext();) {
+	public Term getTermByDetailId(String inTermId)
+	{
+		for (Iterator iterator = getTerms().iterator(); iterator.hasNext();)
+		{
 			Term term = (Term) iterator.next();
 
 			PropertyDetail detail = term.getDetail();
-			if (detail != null && detail.getId() != null && detail.getId().equals(inTermId)) {
+			if (detail != null && detail.getId() != null && detail.getId().equals(inTermId))
+			{
 				return term;
 			}
 			// if( term.getId().equals(inTermId))
@@ -1081,18 +1316,21 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		return null;
 	}
 
-	protected void addTermByDataType(Term inTerm) {
+	protected void addTermByDataType(Term inTerm)
+	{
 		addTerm(inTerm);
 	}
 
 	/**
-	 * A better way to do this is to have "or" composite terms
-	 * Then flag the term as a composite for saving to the database
+	 * A better way to do this is to have "or" composite terms Then flag the term as a composite for
+	 * saving to the database
 	 * 
 	 * @param inTerm
 	 */
-	public void addTerm(Term inTerm) {
-		if (!isAndTogether()) {
+	public void addTerm(Term inTerm)
+	{
+		if (!isAndTogether())
+		{
 			// You can OR anything together
 			getTerms().add(inTerm);
 			return;
@@ -1100,14 +1338,21 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 
 		List existing = getTerms(inTerm.getDetail().getId());
 		SearchQuery child = getChildQueryWithDetail(inTerm.getDetail().getId());
-		if (existing.size() == 0 && child == null) {
+		if (existing.size() == 0 && child == null)
+		{
 			// inTerm.setId(inTerm.getDetail().getId() + "_0");
 			getTerms().add(inTerm);
-		} else {
-			if (child == null) {
-				try {
+		}
+		else
+		{
+			if (child == null)
+			{
+				try
+				{
 					child = (SearchQuery) getClass().newInstance();
-				} catch (Exception e) {
+				}
+				catch (Exception e)
+				{
 					// should never happen
 					throw new OpenEditException(e);
 				}
@@ -1125,11 +1370,15 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		}
 	}
 
-	protected SearchQuery getChildQueryWithDetail(String inId) {
-		if (hasChildren()) {
-			for (Iterator iterator = getChildren().iterator(); iterator.hasNext();) {
+	protected SearchQuery getChildQueryWithDetail(String inId)
+	{
+		if (hasChildren())
+		{
+			for (Iterator iterator = getChildren().iterator(); iterator.hasNext();)
+			{
 				SearchQuery query = (SearchQuery) iterator.next();
-				if (query.getTermByDetailId(inId) != null) {
+				if (query.getTermByDetailId(inId) != null)
+				{
 					return query;
 				}
 			}
@@ -1137,44 +1386,56 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		return null;
 	}
 
-	public void addChildQuery(SearchQuery inQuery) {
+	public void addChildQuery(SearchQuery inQuery)
+	{
 		getChildren().add(inQuery);
 	}
 
-	public SearchQuery getChildQuery(String inId) {
-		for (Iterator iterator = getChildren().iterator(); iterator.hasNext();) {
+	public SearchQuery getChildQuery(String inId)
+	{
+		for (Iterator iterator = getChildren().iterator(); iterator.hasNext();)
+		{
 			SearchQuery query = (SearchQuery) iterator.next();
-			if (inId.equals(query.getId())) {
+			if (inId.equals(query.getId()))
+			{
 				return query;
 			}
 		}
 		return null;
 	}
 
-	public boolean hasChildren() {
-		if (fieldChildren == null || fieldChildren.size() == 0) {
+	public boolean hasChildren()
+	{
+		if (fieldChildren == null || fieldChildren.size() == 0)
+		{
 			return false;
 		}
 		return true;
 	}
 
-	public List getChildren() {
-		if (fieldChildren == null) {
+	public List getChildren()
+	{
+		if (fieldChildren == null)
+		{
 			fieldChildren = new ArrayList();
 		}
 
 		return fieldChildren;
 	}
 
-	public void setChildren(List inChildren) {
+	public void setChildren(List inChildren)
+	{
 		fieldChildren = inChildren;
 	}
 
-	public Element toXml() {
+	public Element toXml()
+	{
 		Element query = DocumentHelper.createElement("query");
-		if (fieldCatalogs != null && fieldCatalogs.size() > 0) {
+		if (fieldCatalogs != null && fieldCatalogs.size() > 0)
+		{
 			Element cats = query.addElement("catalogs");
-			for (Iterator iterator = getCatalogs().iterator(); iterator.hasNext();) {
+			for (Iterator iterator = getCatalogs().iterator(); iterator.hasNext();)
+			{
 				String catid = (String) iterator.next();
 				cats.addElement("catalog").addAttribute("id", catid);
 			}
@@ -1182,15 +1443,18 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		query.addAttribute("description", getDescription());
 		query.addAttribute("id", getId());
 		query.addAttribute("name", getName());
-		if (!isAndTogether()) {
+		if (!isAndTogether())
+		{
 			query.addAttribute("ortogether", "true");
 		}
 
-		for (Iterator iterator = getTerms().iterator(); iterator.hasNext();) {
+		for (Iterator iterator = getTerms().iterator(); iterator.hasNext();)
+		{
 			Term term = (Term) iterator.next();
 			Element termelem = term.toXml();
 			PropertyDetail detail = term.getDetail();
-			if (detail != null) {
+			if (detail != null)
+			{
 				String catalogid = detail.getCatalogId();
 				termelem.addAttribute("catalogid", catalogid);
 				termelem.addAttribute("searchtype", detail.getSearchType());
@@ -1198,7 +1462,8 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 			query.add(termelem);
 			// add the property detail
 		}
-		for (Iterator iterator = getChildren().iterator(); iterator.hasNext();) {
+		for (Iterator iterator = getChildren().iterator(); iterator.hasNext();)
+		{
 			SearchQuery child = (SearchQuery) iterator.next();
 			query.add(child.toXml());
 		}
@@ -1206,11 +1471,13 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		return query;
 	}
 
-	public void setTerms(List inTerms) {
+	public void setTerms(List inTerms)
+	{
 		fieldTerms = inTerms;
 	}
 
-	public SearchQuery copy() {
+	public SearchQuery copy()
+	{
 		SearchQuery query = (SearchQuery) clone();
 		// query.setHitsName(getHitsName());
 		//
@@ -1222,52 +1489,56 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		// copy the search terms if this was java 1.5, I would use list's static copy
 		// method
 		query.setTerms(new ArrayList());
-		for (int i = 0; i < fieldTerms.size(); i++) {
+		for (int i = 0; i < fieldTerms.size(); i++)
+		{
 			query.addTerm((Term) fieldTerms.get(i));
 		}
 		/*
-		 * query.setCatalogs(getCatalogs());
-		 * query.setSuggestedSearches(getSuggestedSearches());
-		 * // query.setSortBy(getSortBy());
-		 * query.setInputs(getInputs());
-		 * query.setDateFormat(getDateFormat());
-		 * query.setPropertyDetails(fieldPropertyDetails);
-		 * query.setSearcherManager(fieldSearcherManager);
+		 * query.setCatalogs(getCatalogs()); query.setSuggestedSearches(getSuggestedSearches()); //
+		 * query.setSortBy(getSortBy()); query.setInputs(getInputs()); query.setDateFormat(getDateFormat());
+		 * query.setPropertyDetails(fieldPropertyDetails); query.setSearcherManager(fieldSearcherManager);
 		 * query.setSecurityAttached(isSecurityAttached());
 		 */
 		return query;
 	}
 
-	public boolean isSecurityAttached() {
+	public boolean isSecurityAttached()
+	{
 		return fieldSecurityAttached;
 	}
 
-	public void setSecurityAttached(boolean inSecurityAttached) {
+	public void setSecurityAttached(boolean inSecurityAttached)
+	{
 		fieldSecurityAttached = inSecurityAttached;
 	}
 
-	public boolean isFireSearchEvent() {
+	public boolean isFireSearchEvent()
+	{
 		return fieldFireSearchEvent;
 	}
 
-	public void setFireSearchEvent(boolean inFireSearchEvent) {
+	public void setFireSearchEvent(boolean inFireSearchEvent)
+	{
 		fieldFireSearchEvent = inFireSearchEvent;
 	}
 
-	public void addBetween(String inString, Date inNow, Date inNext) {
+	public void addBetween(String inString, Date inNow, Date inNext)
+	{
 		PropertyDetail d = createDetail(inString);
 		d.setId(inString);
 		addBetween(d, inNow, inNext);
 
 	}
 
-	public void addGeoFilter(String inString, GeoFilter inLocation) {
+	public void addGeoFilter(String inString, GeoFilter inLocation)
+	{
 		PropertyDetail d = createDetail(inString);
 		d.setId(inString);
 		addGeoFilter(d, inLocation);
 	}
 
-	public Term addGeoFilter(PropertyDetail inD, GeoFilter inLocation) {
+	public Term addGeoFilter(PropertyDetail inD, GeoFilter inLocation)
+	{
 		// Term term = new Term()
 		// {
 		// public String toQuery()
@@ -1285,27 +1556,32 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 
 	}
 
-	public void addBetween(String string, long longValue, long longValue2) {
+	public void addBetween(String string, long longValue, long longValue2)
+	{
 		PropertyDetail d = createDetail(string);
 		d.setId(string);
 		addBetween(d, longValue, longValue2);
 	}
 
-	public void addBetween(String string, double longValue, double longValue2) {
+	public void addBetween(String string, double longValue, double longValue2)
+	{
 		PropertyDetail d = createDetail(string);
 		d.setId(string);
 		addBetween(d, longValue, longValue2);
 	}
 
-	public void addBefore(String inString, Date inDate) {
+	public void addBefore(String inString, Date inDate)
+	{
 		PropertyDetail detail = createDetail(inString);
 		detail.setId(inString);
 		addBefore(detail, inDate);
 	}
 
-	public Term addFreeFormQuery(PropertyDetail inField, String inValue) {
+	public Term addFreeFormQuery(PropertyDetail inField, String inValue)
+	{
 		Term term = new Term() {
-			public String toQuery() {
+			public String toQuery()
+			{
 				String inVal = getValue();
 				return inVal;
 			}
@@ -1317,48 +1593,56 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		return term;
 	}
 
-	public int compareTo(Object inO) {
+	public int compareTo(Object inO)
+	{
 		SearchQuery q1 = (SearchQuery) inO;
 
 		return super.getId().compareTo(q1.getId());
 	}
 
 	@Override
-	public String getName() {
+	public String getName()
+	{
 		String name = super.getName();
-		if (name == null) {
+		if (name == null)
+		{
 			name = getInput("description");
 		}
-		if (name == null && getTerms().size() > 0) {
+		if (name == null && getTerms().size() > 0)
+		{
 			Term term = (Term) getTerms().get(0);
-			if (!term.getDetail().isFilter()) {
+			if (!term.getDetail().isFilter())
+			{
 				name = getFriendlyValue(term.getValue(), term.getDetail());
 			}
 		}
-		if (name == null) {
+		if (name == null)
+		{
 			name = "All";
 		}
 		return name;
 	}
 
-	public boolean isFilter() {
+	public boolean isFilter()
+	{
 		return fieldFilter;
 	}
 
-	public void setFilter(boolean inVal) {
+	public void setFilter(boolean inVal)
+	{
 		fieldFilter = inVal;
 	}
 
 	/**
-	 * Searching the parent table
-	 * A child depends on a parent but a parent does not depend on a child
+	 * Searching the parent table A child depends on a parent but a parent does not depend on a child
 	 * The asset table is the parent table of many things
 	 * 
 	 * @param childtable
 	 * @param fieldname
 	 * @param inValue
 	 */
-	public void addChildFilter(String childtable, String fieldname, String inValue) {
+	public void addChildFilter(String childtable, String fieldname, String inValue)
+	{
 		ChildFilter join = new ChildFilter();
 		join.setChildTable(childtable);
 		join.setChildColumn(fieldname);
@@ -1368,11 +1652,14 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		addTerm(join);
 	}
 
-	public void addFilter(String inToaddType, String inToaddvalue, String toAddLabel) {
-		if (hasFilters()) {
-			for (FilterNode node : getFilters()) {
-				if (node.getId() != null && node.getId().equals(inToaddType) && node.get("value") != null
-						&& node.get("value").equals(inToaddvalue)) {
+	public void addFilter(String inToaddType, String inToaddvalue, String toAddLabel)
+	{
+		if (hasFilters())
+		{
+			for (FilterNode node : getFilters())
+			{
+				if (node.getId() != null && node.getId().equals(inToaddType) && node.get("value") != null && node.get("value").equals(inToaddvalue))
+				{
 					return;
 				}
 			}
@@ -1384,31 +1671,40 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		getFilters().add(node);
 	}
 
-	public Collection getUserFilters() {
+	public Collection getUserFilters()
+	{
 		Collection filters = new ArrayList();
-		for (Iterator iterator = getTerms().iterator(); iterator.hasNext();) {
+		for (Iterator iterator = getTerms().iterator(); iterator.hasNext();)
+		{
 			Term term = (Term) iterator.next();
-			if (isUserFilter(term)) {
+			if (isUserFilter(term))
+			{
 				filters.add(term);
 			}
 		}
 		return filters;
 	}
 
-	protected boolean isUserFilter(Term term) {
-		if (term.isUserFilter()) {
+	protected boolean isUserFilter(Term term)
+	{
+		if (term.isUserFilter())
+		{
 			return true;
 		}
-		if ("asset".equals(getResultType()) && term.getDetail().getId().equals("description")) {
+		if ("asset".equals(getResultType()) && term.getDetail().getId().equals("description"))
+		{
 			return true;
 		}
 		return false;
 	}
 
-	public boolean hasFilters() {
-		for (Iterator iterator = getTerms().iterator(); iterator.hasNext();) {
+	public boolean hasFilters()
+	{
+		for (Iterator iterator = getTerms().iterator(); iterator.hasNext();)
+		{
 			Term term = (Term) iterator.next();
-			if (isUserFilter(term)) {
+			if (isUserFilter(term))
+			{
 				return true;
 			}
 		}
@@ -1422,21 +1718,28 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	 * @deprecated dont use filters anymore, just flag a field as a user filter
 	 * @return
 	 */
-	public List<FilterNode> getFilters() {
-		if (fieldFilters == null) {
+	public List<FilterNode> getFilters()
+	{
+		if (fieldFilters == null)
+		{
 			fieldFilters = new ArrayList<FilterNode>();
 		}
 		return fieldFilters;
 	}
 
-	public void setFilters(List<FilterNode> inFilters) {
+	public void setFilters(List<FilterNode> inFilters)
+	{
 		fieldFilters = inFilters;
 	}
 
-	public void removeFilter(String inToremove) {
-		if (hasFilters()) {
-			for (FilterNode node : getFilters()) {
-				if (inToremove.equals(node.getId())) {
+	public void removeFilter(String inToremove)
+	{
+		if (hasFilters())
+		{
+			for (FilterNode node : getFilters())
+			{
+				if (inToremove.equals(node.getId()))
+				{
 					getFilters().remove(node);
 					break;
 				}
@@ -1444,30 +1747,39 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		}
 	}
 
-	public void clearFilters() {
-		if (!hasFilters()) {
+	public void clearFilters()
+	{
+		if (!hasFilters())
+		{
 			return;
 		}
 
 		List<FilterNode> nodes = getFilters();
 
-		if (nodes == null) {
+		if (nodes == null)
+		{
 			return;
 		}
 
 		int amtOfNodes = nodes.size();
 
-		for (int i = amtOfNodes - 1; i >= 0; --i) {
-			if (nodes.get(i) != null) {
+		for (int i = amtOfNodes - 1; i >= 0; --i)
+		{
+			if (nodes.get(i) != null)
+			{
 				nodes.remove(nodes.get(i));
 			}
 		}
 	}
 
-	public boolean hasFilter(String inId) {
-		if (hasFilters()) {
-			for (FilterNode node : getFilters()) {
-				if (inId.equals(node.getId())) {
+	public boolean hasFilter(String inId)
+	{
+		if (hasFilters())
+		{
+			for (FilterNode node : getFilters())
+			{
+				if (inId.equals(node.getId()))
+				{
 					return true;
 				}
 			}
@@ -1475,29 +1787,36 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		return false;
 	}
 
-	public Collection<String> getSecurityIds() {
+	public Collection<String> getSecurityIds()
+	{
 		return fieldSecurityIds;
 	}
 
-	public void setSecurityIds(Collection<String> inSecurityIds) {
+	public void setSecurityIds(Collection<String> inSecurityIds)
+	{
 		fieldSecurityIds = inSecurityIds;
 	}
 
-	public Object getAggregation() {
+	public Object getAggregation()
+	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public void setAggregation(Object inObject) {
+	public void setAggregation(Object inObject)
+	{
 		// TODO Auto-generated method stub
 	}
 
-	public Term addAfter(String inString, Date inSearchDate) {
+	public Term addAfter(String inString, Date inSearchDate)
+	{
 		PropertyDetail detail = null;
-		if (getPropertyDetails() != null) {
+		if (getPropertyDetails() != null)
+		{
 			detail = getPropertyDetails().getDetail(inString);
 		}
-		if (detail == null) {
+		if (detail == null)
+		{
 			detail = getPropertyDetails().createDetail(inString);
 			detail.setDataType("date");
 		}
@@ -1510,9 +1829,11 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	// https://www.elastic.co/guide/en/elasticsearch/guide/master/indexing-parent-child.html
 	// https://www.elastic.co/guide/en/elasticsearch/guide/master/has-child.html
 
-	public Term addAfter(PropertyDetail inFieldId, final Date inDate) {
+	public Term addAfter(PropertyDetail inFieldId, final Date inDate)
+	{
 		Term term = new Term() {
-			public String toQuery() {
+			public String toQuery()
+			{
 				// String date = DateTools.dateToString(inDate, Resolution.SECOND);
 				String fin = getDetail().getId() + ":[" + inDate.getTime() + " TO 99999999999999]";
 				return fin;
@@ -1527,9 +1848,11 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		return term;
 	}
 
-	public Term addBetween(PropertyDetail inFieldId, final Date inAfter, final Date inBefore) {
+	public Term addBetween(PropertyDetail inFieldId, final Date inAfter, final Date inBefore)
+	{
 		Term term = new Term() {
-			public String toQuery() {
+			public String toQuery()
+			{
 				String fin = getDetail().getId() + ":[" + inAfter + " TO " + inBefore + "]";
 				return fin;
 			}
@@ -1545,11 +1868,13 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		return term;
 	}
 
-	public Term addBefore(PropertyDetail inField, final Date inDate) {
+	public Term addBefore(PropertyDetail inField, final Date inDate)
+	{
 		final String valueof = DateStorageUtil.getStorageUtil().formatForStorage(inDate);
 
 		Term term = new Term() {
-			public String toQuery() {
+			public String toQuery()
+			{
 				String fin = getDetail().getId() + ":[00000000000000 TO " + valueof + "]";
 				return fin;
 			}
@@ -1563,15 +1888,18 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		return term;
 	}
 
-	public Term addOn(String inField, final Date inDate) {
+	public Term addOn(String inField, final Date inDate)
+	{
 		PropertyDetail detail = createDetail(inField);
 		return addOn(detail, inDate);
 	}
 
-	public Term addOn(PropertyDetail inField, final Date inDate) {
+	public Term addOn(PropertyDetail inField, final Date inDate)
+	{
 		final String valueof = DateStorageUtil.getStorageUtil().formatForStorage(inDate);
 		Term term = new Term() {
-			public String toQuery() {
+			public String toQuery()
+			{
 				String fin = getDetail().getId() + ":[00000000000000 TO " + valueof + "]";
 				return fin;
 			}
@@ -1585,17 +1913,23 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		return term;
 	}
 
-	public Term addMatches(PropertyDetail inField, String inValue) {
+	public Term addMatches(PropertyDetail inField, String inValue)
+	{
 		Term term = new Term() {
-			public String toQuery() {
+			public String toQuery()
+			{
 				String inVal = getValue();
-				if (inVal != null && inVal.startsWith("'") && inVal.endsWith("'")) {
+				if (inVal != null && inVal.startsWith("'") && inVal.endsWith("'"))
+				{
 					inVal = inVal.replace('\'', '\"');
 				}
 
-				if (getDetail().getId() != null) {
+				if (getDetail().getId() != null)
+				{
 					return getDetail().getId() + ":(" + inVal + ")";
-				} else {
+				}
+				else
+				{
 					return inVal;
 				}
 			}
@@ -1607,24 +1941,32 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		return term;
 	}
 
-	public Term addStartsWith(PropertyDetail inField, String inVal) {
+	public Term addStartsWith(PropertyDetail inField, String inVal)
+	{
 		Term term = new Term() {
-			public String toQuery() {
+			public String toQuery()
+			{
 				StringBuffer q = new StringBuffer();
 				q.append(getDetail().getId());
 				q.append(":(");
 
-				if (getValue().startsWith("\"")) {
+				if (getValue().startsWith("\""))
+				{
 					q.append(getValue());
-				} else {
+				}
+				else
+				{
 					String[] spaces = getValue().split("\\s+");
-					for (int i = 0; i < spaces.length; i++) {
+					for (int i = 0; i < spaces.length; i++)
+					{
 						String chunk = spaces[i];
 						q.append(chunk);
-						if (chunk.indexOf('*') == -1) {
+						if (chunk.indexOf('*') == -1)
+						{
 							q.append('*');
 						}
-						if (i + 1 < spaces.length) {
+						if (i + 1 < spaces.length)
+						{
 							q.append(' ');
 						}
 					}
@@ -1640,14 +1982,18 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		return term;
 	}
 
-	public Term addNots(PropertyDetail inField, String inNots) {
+	public Term addNots(PropertyDetail inField, String inNots)
+	{
 		Term term = new Term() {
-			public String toQuery() {
+			public String toQuery()
+			{
 				StringBuffer orString = new StringBuffer();
 
 				String[] notwords = getValue().split("\\s");
-				if (notwords.length > 0) {
-					for (int i = 0; i < notwords.length; i++) {
+				if (notwords.length > 0)
+				{
+					for (int i = 0; i < notwords.length; i++)
+					{
 						orString.append(" NOT " + notwords[i]);
 					}
 				}
@@ -1662,17 +2008,22 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		return term;
 	}
 
-	public Term addExact(PropertyDetail inField, String inValue) {
-		if (inValue == null) {
+	public Term addExact(PropertyDetail inField, String inValue)
+	{
+		if (inValue == null)
+		{
 			return null;
 		}
 		Term term = new Term() {
-			public String toQuery() {
+			public String toQuery()
+			{
 				String val = getValue();
-				if (val.startsWith("\"")) {
+				if (val.startsWith("\""))
+				{
 					val = val.substring(1);
 				}
-				if (val.endsWith("\"")) {
+				if (val.endsWith("\""))
+				{
 					val = val.substring(0, val.length() - 2);
 				}
 				val = val.replace("\"", "\\\"");
@@ -1686,9 +2037,11 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		return term;
 	}
 
-	public void addExact(String inValue) {
+	public void addExact(String inValue)
+	{
 		Term term = new Term() {
-			public String toQuery() {
+			public String toQuery()
+			{
 				return "\"" + getValue() + "\"";
 			}
 		};
@@ -1699,9 +2052,11 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 
 	}
 
-	public Term addNot(PropertyDetail inField, String inVal) {
+	public Term addNot(PropertyDetail inField, String inVal)
+	{
 		Term term = new Term() {
-			public String toQuery() {
+			public String toQuery()
+			{
 				return "-" + getDetail().getId() + ":" + getValue();
 			}
 		};
@@ -1712,52 +2067,29 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		return term;
 	}
 	/*
-	 * is this used anyplace?
-	 * public void addCategoryFilter(List inRemaining, String inFriendly)
-	 * {
-	 * final List categories = inRemaining;
-	 * Term term = new Term()
-	 * {
-	 * public String toQuery()
-	 * {
-	 * return "-" + getId() + ":" + getValue() + "";
-	 * }
+	 * is this used anyplace? public void addCategoryFilter(List inRemaining, String inFriendly) { final
+	 * List categories = inRemaining; Term term = new Term() { public String toQuery() { return "-" +
+	 * getId() + ":" + getValue() + ""; }
 	 * 
-	 * public Element toXml()
-	 * {
-	 * Element term = DocumentHelper.createElement("term");
-	 * term.addAttribute("id", getId());
-	 * term.addAttribute("val", getValue());
-	 * term.addAttribute("op", "categoryfilter");
+	 * public Element toXml() { Element term = DocumentHelper.createElement("term");
+	 * term.addAttribute("id", getId()); term.addAttribute("val", getValue()); term.addAttribute("op",
+	 * "categoryfilter");
 	 * 
-	 * for (Iterator iterator = categories.iterator(); iterator.hasNext();)
-	 * {
-	 * String category = (String) iterator.next();
-	 * Element cat = term.addElement("category");
-	 * cat.addAttribute("categoryid", category);
-	 * }
+	 * for (Iterator iterator = categories.iterator(); iterator.hasNext();) { String category = (String)
+	 * iterator.next(); Element cat = term.addElement("category"); cat.addAttribute("categoryid",
+	 * category); }
 	 * 
-	 * return term;
-	 * }
-	 * };
-	 * term.setId("category");
-	 * StringBuffer all = new StringBuffer();
-	 * all.append("(");
-	 * for (Iterator iter = inRemaining.iterator(); iter.hasNext();)
-	 * {
-	 * String cat = (String) iter.next();
-	 * all.append(cat);
-	 * all.append(" ");
-	 * }
-	 * all.append(")");
-	 * term.setValue(all.toString());
-	 * addTerm(term);
-	 * }
+	 * return term; } }; term.setId("category"); StringBuffer all = new StringBuffer(); all.append("(");
+	 * for (Iterator iter = inRemaining.iterator(); iter.hasNext();) { String cat = (String)
+	 * iter.next(); all.append(cat); all.append(" "); } all.append(")"); term.setValue(all.toString());
+	 * addTerm(term); }
 	 */
 
-	public Term addLessThan(PropertyDetail inFieldId, long val) {
+	public Term addLessThan(PropertyDetail inFieldId, long val)
+	{
 		Term term = new Term() {
-			public String toQuery() {
+			public String toQuery()
+			{
 				return getValue();
 			}
 		};
@@ -1768,9 +2100,11 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		return term;
 	}
 
-	public Term addGreaterThan(PropertyDetail inFieldId, final long high) {
+	public Term addGreaterThan(PropertyDetail inFieldId, final long high)
+	{
 		Term term = new Term() {
-			public String toQuery() {
+			public String toQuery()
+			{
 				return getValue();
 			}
 
@@ -1782,10 +2116,12 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		return term;
 	}
 
-	public Term addExact(PropertyDetail inField, long inParseInt) {
+	public Term addExact(PropertyDetail inField, long inParseInt)
+	{
 
 		Term term = new Term() {
-			public String toQuery() {
+			public String toQuery()
+			{
 				return getValue();
 			}
 
@@ -1798,13 +2134,15 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 
 	}
 
-	public Term addBetween(PropertyDetail inField, long lowval, long highval) {
+	public Term addBetween(PropertyDetail inField, long lowval, long highval)
+	{
 		// lowval = pad(lowval);
 		// highval = pad(highval);
 		Term term = new Term()
 
 		{
-			public String toQuery() {
+			public String toQuery()
+			{
 				return getValue();
 			}
 
@@ -1818,13 +2156,15 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		return term;
 	}
 
-	public Term addBetween(PropertyDetail inField, double lowval, double highval) {
+	public Term addBetween(PropertyDetail inField, double lowval, double highval)
+	{
 		// lowval = pad(lowval);
 		// highval = pad(highval);
 		Term term = new Term()
 
 		{
-			public String toQuery() {
+			public String toQuery()
+			{
 				return getValue();
 			}
 
@@ -1838,24 +2178,32 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		return term;
 	}
 
-	public String toQuery() {
+	public String toQuery()
+	{
 		StringBuffer done = new StringBuffer();
 		String op = null;
-		if (isAndTogether()) {
+		if (isAndTogether())
+		{
 			op = "+";
-		} else {
+		}
+		else
+		{
 			op = " OR ";
 		}
-		if (getTerms().size() > 0) {
+		if (getTerms().size() > 0)
+		{
 
-			for (int i = 0; i < fieldTerms.size(); i++) {
+			for (int i = 0; i < fieldTerms.size(); i++)
+			{
 				Term field = (Term) fieldTerms.get(i);
 				String q = field.toQuery();
-				if (i > 0 && !q.startsWith("+") && !q.startsWith("-")) {
+				if (i > 0 && !q.startsWith("+") && !q.startsWith("-"))
+				{
 					done.append(op);
 				}
 				done.append(q);
-				if (i + 1 < fieldTerms.size()) {
+				if (i + 1 < fieldTerms.size())
+				{
 					done.append(" ");
 				}
 			}
@@ -1865,15 +2213,20 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 			// done.append(")");
 			// }
 		}
-		if (fieldChildren != null && fieldChildren.size() > 0) {
-			for (int j = 0; j < getChildren().size(); j++) {
+		if (fieldChildren != null && fieldChildren.size() > 0)
+		{
+			for (int j = 0; j < getChildren().size(); j++)
+			{
 				SearchQuery child = (SearchQuery) getChildren().get(j);
 				String query = child.toQuery();
 				// && !query.startsWith("+") && !query.startsWith("-")
 				done.append(" ");
-				if (isAndTogether()) {
+				if (isAndTogether())
+				{
 					done.append("AND( ");
-				} else {
+				}
+				else
+				{
 					done.append("OR( ");
 				}
 				done.append(query);
@@ -1883,18 +2236,22 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		return done.toString();
 	}
 
-	public void addAggregation(String inFacet) {
+	public void addAggregation(String inFacet)
+	{
 
 		PropertyDetail detail = getDetail(inFacet);
-		if (detail == null) {
+		if (detail == null)
+		{
 			throw new OpenEditException("No such field " + inFacet);
 		}
 		getFacets().add(detail);
 	}
 
-	public void addAggregation(PropertyDetail inDetail) {
+	public void addAggregation(PropertyDetail inDetail)
+	{
 
-		if (inDetail == null) {
+		if (inDetail == null)
+		{
 			throw new OpenEditException("No such field " + inDetail);
 		}
 		Collection existing = getFacets();
@@ -1903,22 +2260,27 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	}
 
 	/**
-	 * Take a list of things and only OR the common ones
-	 * This can be called more than once
+	 * Take a list of things and only OR the common ones This can be called more than once
 	 * 
 	 * @param inKey
 	 * @param inIds
 	 */
-	public void appendOrGroup(PropertyDetail inKey, Collection<String> inIds) {
+	public void appendOrGroup(PropertyDetail inKey, Collection<String> inIds)
+	{
 		Term existing = getTermByDetailId(inKey.getId());
-		if (existing == null) {
+		if (existing == null)
+		{
 			addOrsGroup(inKey, (String[]) inIds.toArray(new String[inIds.size()]));
-		} else {
+		}
+		else
+		{
 			Set existingvalues = new HashSet(Arrays.asList(existing.getValues()));
 			Set goodvalues = new HashSet();
 
-			for (String id : inIds) {
-				if (existingvalues.contains(id)) {
+			for (String id : inIds)
+			{
+				if (existingvalues.contains(id))
+				{
 					goodvalues.add(id);
 				}
 			}
@@ -1926,31 +2288,40 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		}
 	}
 
-	public Term addNots(String inField, Collection inNotshown) {
+	public Term addNots(String inField, Collection inNotshown)
+	{
 		PropertyDetail detail = createDetail(inField);
 		return addNots(detail, inNotshown);
 	}
 
-	public Term addNots(PropertyDetail inField, Collection inNotshown) {
+	public Term addNots(PropertyDetail inField, Collection inNotshown)
+	{
 
 		String[] values = new String[inNotshown.size()];
 		int i = 0;
-		for (Iterator iterator = inNotshown.iterator(); iterator.hasNext();) {
+		for (Iterator iterator = inNotshown.iterator(); iterator.hasNext();)
+		{
 			Object object = (Object) iterator.next();
-			if (object instanceof Data) {
+			if (object instanceof Data)
+			{
 				values[i] = ((Data) object).getId();
-			} else {
+			}
+			else
+			{
 				values[i] = String.valueOf(object);
 			}
 			i++;
 		}
 
 		Term term = new Term() {
-			public String toQuery() {
+			public String toQuery()
+			{
 				StringBuffer orString = new StringBuffer();
 				orString.append(getDetail().getId() + " NOT = ");
-				for (int i = 0; i < getValues().length; i++) {
-					if (i < 0) {
+				for (int i = 0; i < getValues().length; i++)
+				{
+					if (i < 0)
+					{
 						orString.append("|");
 					}
 					orString.append(getValues()[i]);
@@ -1965,9 +2336,11 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		return term;
 	}
 
-	public Term addLessThan(PropertyDetail inField, double low) {
+	public Term addLessThan(PropertyDetail inField, double low)
+	{
 		Term term = new Term() {
-			public String toQuery() {
+			public String toQuery()
+			{
 				return getValue();
 			}
 		};
@@ -1978,9 +2351,11 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		return term;
 	}
 
-	public Term addGreaterThan(PropertyDetail inField, double high) {
+	public Term addGreaterThan(PropertyDetail inField, double high)
+	{
 		Term term = new Term() {
-			public String toQuery() {
+			public String toQuery()
+			{
 				return getValue();
 			}
 
@@ -1992,23 +2367,29 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		return term;
 	}
 
-	public void addFreeFormQuery(String inKey, String inValue) {
+	public void addFreeFormQuery(String inKey, String inValue)
+	{
 		PropertyDetail detail = createDetail(inKey);
 		addFreeFormQuery(detail, inValue);
 
 	}
 
-	public boolean hasMainInput() {
+	public boolean hasMainInput()
+	{
 		String input = getInput("description");
 		return input != null;
 	}
 
-	public boolean hasTermValue(String inDetailId, String inValue) {
+	public boolean hasTermValue(String inDetailId, String inValue)
+	{
 		List terms = getTerms(inDetailId);
-		if (terms != null && !terms.isEmpty()) {
-			for (Iterator iterator = terms.iterator(); iterator.hasNext();) {
+		if (terms != null && !terms.isEmpty())
+		{
+			for (Iterator iterator = terms.iterator(); iterator.hasNext();)
+			{
 				Term term = (Term) iterator.next();
-				if (term.containsValue(inValue)) {
+				if (term.containsValue(inValue))
+				{
 					return true;
 				}
 			}
@@ -2016,41 +2397,51 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		return false;
 	}
 
-	public String getMainInput() {
+	public String getMainInput()
+	{
 		String input = getInput("description");
 		return input;
 	}
 
-	public boolean isFilterSelected(String type, String value) {
+	public boolean isFilterSelected(String type, String value)
+	{
 
-		for (FilterNode node : getFilters()) {
-			if (type.equals(node.getId()) && value.equals(node.get("value"))) {
+		for (FilterNode node : getFilters())
+		{
+			if (type.equals(node.getId()) && value.equals(node.get("value")))
+			{
 				return true;
 			}
 		}
 		return false;
 	}
 
-	public ArrayList<FilterNode> getNodesForType(String inType) {
+	public ArrayList<FilterNode> getNodesForType(String inType)
+	{
 		ArrayList nodes = new ArrayList();
-		for (Iterator iterator = getFilters().iterator(); iterator.hasNext();) {
+		for (Iterator iterator = getFilters().iterator(); iterator.hasNext();)
+		{
 			FilterNode node = (FilterNode) iterator.next();
-			if (node.getId().equals(inType)) {
+			if (node.getId().equals(inType))
+			{
 				nodes.add(node);
 			}
 		}
 		return nodes;
 	}
 
-	public boolean isIncludeDescription() {
+	public boolean isIncludeDescription()
+	{
 		return fieldIncludeDescription;
 	}
 
-	public void addMissing(String inKey) {
+	public void addMissing(String inKey)
+	{
 		PropertyDetail detail = createDetail(inKey);
 
 		Term term = new Term() {
-			public String toQuery() {
+			public String toQuery()
+			{
 				return getDetail().getId();
 			}
 		};
@@ -2060,11 +2451,13 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 
 	}
 
-	public void addExists(String inKey) {
+	public void addExists(String inKey)
+	{
 		PropertyDetail detail = createDetail(inKey);
 
 		Term term = new Term() {
-			public String toQuery() {
+			public String toQuery()
+			{
 				return getDetail().getId();
 			}
 		};
@@ -2074,7 +2467,8 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 
 	}
 
-	public void addFunction(PropertyDetail inDetail, Object values) {
+	public void addFunction(PropertyDetail inDetail, Object values)
+	{
 		// Term term = new Term()
 		// {
 		// public String toQuery()
@@ -2088,8 +2482,10 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		// addTerm(term);
 	}
 
-	public String[] extractIds(Collection inDataCollection) {
-		if (inDataCollection == null || inDataCollection.isEmpty()) {
+	public String[] extractIds(Collection inDataCollection)
+	{
+		if (inDataCollection == null || inDataCollection.isEmpty())
+		{
 			return null;
 		}
 		Collection ids = null;
@@ -2097,64 +2493,81 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		if (iter.hasNext()) // TODO: This code is terrible. Just loop over the list
 		{
 			Object value = iter.next();
-			if (value instanceof Data) {
+			if (value instanceof Data)
+			{
 				ids = new ArrayList(inDataCollection.size());
 				Data data = (Data) value;
 				String id = data.getId();
-				if (id != null) {
+				if (id != null)
+				{
 					ids.add(id);
-					for (; iter.hasNext();) {
+					for (; iter.hasNext();)
+					{
 						data = (Data) iter.next();
 						id = data.getId();
-						if (id != null) {
+						if (id != null)
+						{
 							ids.add(id);
 						}
 					}
 				}
-			} else {
+			}
+			else
+			{
 				ids = inDataCollection;
 			}
 		}
 		return (String[]) ids.toArray(new String[ids.size()]);
 	}
 
-	public void setSearchTypes(Collection<String> inTypes) {
+	public void setSearchTypes(Collection<String> inTypes)
+	{
 		setValue("searchtypes", inTypes);
 
 	}
 
-	public boolean equalTerms(SearchQuery inSearchQuery) {
-		if (inSearchQuery == this) {
+	public boolean equalTerms(SearchQuery inSearchQuery)
+	{
+		if (inSearchQuery == this)
+		{
 			return true;
 		}
 		SearchQuery q = (SearchQuery) inSearchQuery;
 		Collection searchmodules = getValues("searchtypes");
-		if (searchmodules != null) {
+		if (searchmodules != null)
+		{
 			Collection searchmodules2 = q.getValues("searchtypes");
-			if (!searchmodules.equals(searchmodules2)) {
+			if (!searchmodules.equals(searchmodules2))
+			{
 				return false;
 			}
 		}
 		String one = q.toQuery();
-		if (one != null) {
-			if (!one.equals(toQuery())) {
+		if (one != null)
+		{
+			if (!one.equals(toQuery()))
+			{
 				return false;
 			}
 		}
 		return true;
 	}
 
-	public boolean isShowAll() {
+	public boolean isShowAll()
+	{
 		return fieldShowAll;
 	}
 
-	public void setShowAll(boolean inAll) {
+	public void setShowAll(boolean inAll)
+	{
 		fieldShowAll = inAll;
 	}
 
-	public void copyTerms(Collection<Term> inQueryTerms) {
+	public void copyTerms(Collection<Term> inQueryTerms)
+	{
 		List<Term> newTerms = new ArrayList();
-		for (Iterator iterator = inQueryTerms.iterator(); iterator.hasNext();) {
+		for (Iterator iterator = inQueryTerms.iterator(); iterator.hasNext();)
+		{
 			Term term = (Term) iterator.next();
 			term = term.copy();
 			String detailId = term.getDetail().getId();
@@ -2164,9 +2577,11 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		setTerms(newTerms);
 	}
 
-	public Term lessThan(String inId, int inNumber) {
+	public Term lessThan(String inId, int inNumber)
+	{
 		Term term = new Term() {
-			public String toQuery() {
+			public String toQuery()
+			{
 				String fin = getDetail().getId() + ":[ < " + inNumber + "]";
 				return fin;
 			}
@@ -2179,9 +2594,11 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 		return term;
 	}
 
-	public Term moreThan(String inId, int inNumber) {
+	public Term moreThan(String inId, int inNumber)
+	{
 		Term term = new Term() {
-			public String toQuery() {
+			public String toQuery()
+			{
 				String fin = getDetail().getId() + ":[ > " + inNumber + "]";
 				return fin;
 			}

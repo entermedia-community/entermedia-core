@@ -1,14 +1,14 @@
 /*
-Copyright (c) 2003 eInnovation Inc. All rights reserved
-
-This library is free software; you can redistribute it and/or modify it under the terms
-of the GNU Lesser General Public License as published by the Free Software Foundation;
-either version 2.1 of the License, or (at your option) any later version.
-
-This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-See the GNU Lesser General Public License for more details.
-*/
+ * Copyright (c) 2003 eInnovation Inc. All rights reserved
+ * 
+ * This library is free software; you can redistribute it and/or modify it under the terms of the
+ * GNU Lesser General Public License as published by the Free Software Foundation; either version
+ * 2.1 of the License, or (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ */
 
 package org.openedit.util.strainer;
 
@@ -20,7 +20,8 @@ import org.openedit.util.PathUtilities;
  *
  * @author Eric Galluzzo
  */
-public class PathFilter extends BaseFilter {
+public class PathFilter extends BaseFilter
+{
 
 	/**
 	 * Construct a filter that passes all users.
@@ -45,7 +46,8 @@ public class PathFilter extends BaseFilter {
 	 *
 	 * @param inValue The permission to check for
 	 */
-	public void setPath(String inPath) {
+	public void setPath(String inPath)
+	{
 		setValue(inPath);
 	}
 
@@ -54,14 +56,16 @@ public class PathFilter extends BaseFilter {
 	 *
 	 * @return String
 	 */
-	public String getPath() {
+	public String getPath()
+	{
 		return fieldValue;
 	}
 
 	/**
 	 * @see org.openedit.util.strainer.Filter#passes(java.lang.Object)
 	 */
-	public boolean passes(Object inObj) throws FilterException, ClassCastException {
+	public boolean passes(Object inObj) throws FilterException, ClassCastException
+	{
 		WebPageRequest req = (WebPageRequest) inObj;
 		String path = req.getContentPage().replaceProperty(getPath());
 		boolean ok = PathUtilities.match(req.getPage().getPath(), path);
@@ -69,7 +73,8 @@ public class PathFilter extends BaseFilter {
 		// return (getPath() == null) || .startsWith(getPath());
 	}
 
-	public String toString() {
+	public String toString()
+	{
 		return "Path=" + getPath();
 	}
 }

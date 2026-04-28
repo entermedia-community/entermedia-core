@@ -6,51 +6,62 @@ import java.util.Map;
 import org.openedit.Data;
 import org.openedit.page.Page;
 
-public class RightPage {
+public class RightPage
+{
 
 	Map fieldPageValues;
 
-	public Map getPageValues() {
-		if (fieldPageValues == null) {
+	public Map getPageValues()
+	{
+		if (fieldPageValues == null)
+		{
 			fieldPageValues = new HashMap();
 		}
 
 		return fieldPageValues;
 	}
 
-	public void setPageValues(Map inPageValues) {
+	public void setPageValues(Map inPageValues)
+	{
 		fieldPageValues = inPageValues;
 	}
 
 	protected Page fieldRightPage;
 
-	public Page getRightPage() {
+	public Page getRightPage()
+	{
 		return fieldRightPage;
 	}
 
-	public void setRightPage(Page inRightPage) {
+	public void setRightPage(Page inRightPage)
+	{
 		fieldRightPage = inRightPage;
 	}
 
-	public Map<String, Object> getParams() {
-		if (fieldParams == null) {
+	public Map<String, Object> getParams()
+	{
+		if (fieldParams == null)
+		{
 			fieldParams = new HashMap();
 		}
 
 		return fieldParams;
 	}
 
-	public void setParams(Map inParams) {
+	public void setParams(Map inParams)
+	{
 		fieldParams = inParams;
 	}
 
 	protected Map fieldParams;
 
-	public void putParam(String inString, Object inId) {
+	public void putParam(String inString, Object inId)
+	{
 		getParams().put(inString, inId);
 	}
 
-	public void putPageValue(String inString, Object inFirst) {
+	public void putPageValue(String inString, Object inFirst)
+	{
 		getPageValues().put(inString, inFirst);
 	}
 

@@ -10,12 +10,15 @@ import org.openedit.util.FileUtils;
 /**
  * @author Matthew Avery, mavery@einnovation.com
  */
-public class DirectoryTool {
+public class DirectoryTool
+{
 	protected File fieldRootDirectory;
 	protected FileUtils fieldFileUtils = new FileUtils();
 
-	public File getRootDirectory() {
-		if (fieldRootDirectory == null) {
+	public File getRootDirectory()
+	{
+		if (fieldRootDirectory == null)
+		{
 			String tempDir = System.getProperty("java.io.tmpdir");
 			fieldRootDirectory = new File(tempDir, "oe_version_test"); // use the same one each time
 			getFileUtils().deleteAll(fieldRootDirectory);
@@ -24,7 +27,8 @@ public class DirectoryTool {
 		return fieldRootDirectory;
 	}
 
-	public FileUtils getFileUtils() {
+	public FileUtils getFileUtils()
+	{
 		return fieldFileUtils;
 	}
 
@@ -33,7 +37,8 @@ public class DirectoryTool {
 	 * 
 	 * @see junit.framework.TestCase#tearDown()
 	 */
-	public void tearDown() throws Exception {
+	public void tearDown() throws Exception
+	{
 		getFileUtils().deleteAll(getRootDirectory());
 	}
 }

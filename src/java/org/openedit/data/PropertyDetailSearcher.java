@@ -12,64 +12,76 @@ import org.openedit.hittracker.ListHitTracker;
 import org.openedit.hittracker.SearchQuery;
 import org.openedit.users.User;
 
-public class PropertyDetailSearcher extends BaseSearcher implements NonExportable {
+public class PropertyDetailSearcher extends BaseSearcher implements NonExportable
+{
 
-	public void reIndexAll() throws OpenEditException {
+	public void reIndexAll() throws OpenEditException
+	{
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public SearchQuery createSearchQuery() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public HitTracker search(SearchQuery inQuery) {
+	public SearchQuery createSearchQuery()
+	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String getIndexId() {
+	public HitTracker search(SearchQuery inQuery)
+	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public void clearIndex() {
+	public String getIndexId()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void clearIndex()
+	{
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void deleteAll(User inUser) {
+	public void deleteAll(User inUser)
+	{
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void delete(Data inData, User inUser) {
+	public void delete(Data inData, User inUser)
+	{
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void saveAllData(Collection<Data> inAll, User inUser) {
+	public void saveAllData(Collection<Data> inAll, User inUser)
+	{
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public HitTracker getAllHits(WebPageRequest inReq) {
+	public HitTracker getAllHits(WebPageRequest inReq)
+	{
 
 		HitTracker hits = new ListHitTracker();
 		List sorted = getPropertyDetailsArchive().listSearchTypes();
-		for (Iterator iterator = sorted.iterator(); iterator.hasNext();) {
+		for (Iterator iterator = sorted.iterator(); iterator.hasNext();)
+		{
 			String searchtype = (String) iterator.next();
 			Searcher target = getSearcherManager().getSearcher(getCatalogId(), searchtype);
-			for (Iterator iterator2 = target.getPropertyDetails().iterator(); iterator2.hasNext();) {
+			for (Iterator iterator2 = target.getPropertyDetails().iterator(); iterator2.hasNext();)
+			{
 				PropertyDetail detail = (PropertyDetail) iterator2.next();
 				// detail.setId(searchtype + ":" + detail.getId());
 				hits.add(detail);
@@ -79,12 +91,14 @@ public class PropertyDetailSearcher extends BaseSearcher implements NonExportabl
 
 	}
 
-	public HitTracker getAllHits() {
+	public HitTracker getAllHits()
+	{
 
 		return getAllHits(null);
 	}
 
-	public void reindexInternal() throws OpenEditException {
+	public void reindexInternal() throws OpenEditException
+	{
 		// NOOP
 	}
 }

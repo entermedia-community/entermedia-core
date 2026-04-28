@@ -1,20 +1,19 @@
 /*
-Copyright (c) 2003 eInnovation Inc. All rights reserved
-
-This library is free software; you can redistribute it and/or modify it under the terms
-of the GNU Lesser General Public License as published by the Free Software Foundation;
-either version 2.1 of the License, or (at your option) any later version.
-
-This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-See the GNU Lesser General Public License for more details.
-*/
+ * Copyright (c) 2003 eInnovation Inc. All rights reserved
+ * 
+ * This library is free software; you can redistribute it and/or modify it under the terms of the
+ * GNU Lesser General Public License as published by the Free Software Foundation; either version
+ * 2.1 of the License, or (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ */
 
 /*
  * Created on Apr 22, 2003
  *
- * To change this generated comment go to
- * Window>Preferences>Java>Code Generation>Code Template
+ * To change this generated comment go to Window>Preferences>Java>Code Generation>Code Template
  */
 package org.openedit.modules.edit;
 
@@ -27,28 +26,33 @@ import java.util.Map;
  *
  * @author avery
  */
-public class SpecialCharacter {
+public class SpecialCharacter
+{
 	/**
-	 * This function is a work around to deal with non UTF-8 encoding
-	 * It will convert the most commonly found "strange" characters into
-	 * standard HTML text
+	 * This function is a work around to deal with non UTF-8 encoding It will convert the most commonly
+	 * found "strange" characters into standard HTML text
 	 *
 	 * @param s
 	 *
 	 * @return
 	 */
-	public static String escapeSpecialCharacters(String s) {
-		if (s == null) {
+	public static String escapeSpecialCharacters(String s)
+	{
+		if (s == null)
+		{
 			return null;
 		}
 		StringBuffer sb = new StringBuffer();
 		int n = s.length();
 
-		for (int i = 0; i < n; i++) {
+		for (int i = 0; i < n; i++)
+		{
 			char c = s.charAt(i);
 
-			if (c > 127) {
-				switch (c) {
+			if (c > 127)
+			{
+				switch (c)
+				{
 					// case '<': sb.append("&lt;"); break; //
 					// case '>': sb.append("&gt;"); break; // //
 					// case '&': sb.append("&amp;"); break; //
@@ -283,10 +287,14 @@ public class SpecialCharacter {
 			}
 
 			// end if
-			else {
-				if (c == '&') {
+			else
+			{
+				if (c == '&')
+				{
 					sb.append("&amp;");
-				} else {
+				}
+				else
+				{
 					sb.append(c);
 				}
 			}
@@ -302,14 +310,17 @@ public class SpecialCharacter {
 	 *
 	 * @return
 	 */
-	public static String toUnicode(String inString) {
+	public static String toUnicode(String inString)
+	{
 		Map matches = new HashMap();
 
 		// how big should this number be?
-		for (int i = 0; i < 10000; i++) {
+		for (int i = 0; i < 10000; i++)
+		{
 			String symbol = "&#" + Integer.toString(i) + ";";
 
-			if (inString.indexOf(symbol) > -1) {
+			if (inString.indexOf(symbol) > -1)
+			{
 				matches.put(symbol, Integer.toHexString(i));
 			}
 		}
@@ -358,7 +369,8 @@ public class SpecialCharacter {
 		addSpecialMatch(inString, matches, "&copy;", "\u00A9"); //
 		addSpecialMatch(inString, matches, "&euro;", "\u20AC"); // euro
 
-		for (Iterator iter = matches.keySet().iterator(); iter.hasNext();) {
+		for (Iterator iter = matches.keySet().iterator(); iter.hasNext();)
+		{
 			String symbol = (String) iter.next();
 			inString = inString.replaceAll(symbol, (String) matches.get(symbol));
 		}
@@ -366,9 +378,10 @@ public class SpecialCharacter {
 		return inString;
 	}
 
-	private static void addSpecialMatch(
-			String inString, Map matches, String inSymbol, String inUnicode) {
-		if (inString.indexOf(inSymbol) > -1) {
+	private static void addSpecialMatch(String inString, Map matches, String inSymbol, String inUnicode)
+	{
+		if (inString.indexOf(inSymbol) > -1)
+		{
 			matches.put(inSymbol, inUnicode);
 		}
 	}

@@ -10,7 +10,8 @@ import java.util.List;
  * @author cburkey
  *
  */
-public class Crumb {
+public class Crumb
+{
 	String fieldText;
 	String fieldPath;
 	Crumb fieldParent;
@@ -20,71 +21,80 @@ public class Crumb {
 
 	}
 
-	public Crumb getParent() {
+	public Crumb getParent()
+	{
 		return fieldParent;
 	}
 
-	public void setParent(Crumb inParent) {
+	public void setParent(Crumb inParent)
+	{
 		// look for myself in the list. If found then pull off old parent
 		/*
-		 * Crumb self = inParent;
-		 * while( self != null && self.getText() != null)
-		 * {
-		 * if( !getText().equals(self.getText() ) )
-		 * {
-		 * inParent = self.getParent();
-		 * break;
-		 * }
-		 * self = self.getParent();
-		 * }
+		 * Crumb self = inParent; while( self != null && self.getText() != null) { if(
+		 * !getText().equals(self.getText() ) ) { inParent = self.getParent(); break; } self =
+		 * self.getParent(); }
 		 */ fieldParent = inParent;
 	}
 
-	public String getPath() {
+	public String getPath()
+	{
 		return fieldPath;
 	}
 
-	public void setPath(String inPath) {
+	public void setPath(String inPath)
+	{
 		fieldPath = inPath;
 	}
 
-	public String getText() {
+	public String getText()
+	{
 		return fieldText;
 	}
 
-	public void setText(String inText) {
+	public void setText(String inText)
+	{
 		fieldText = inText;
 	}
 
-	String toLink() {
-		if (getText() == null) {
+	String toLink()
+	{
+		if (getText() == null)
+		{
 			return "";
 		}
 		return "<a href='" + getPath() + "'>" + getText() + "</a>";
 	}
 
-	public List getCrumbs() {
+	public List getCrumbs()
+	{
 		List parents = new ArrayList();
 		Crumb parent = this;
-		while (parent != null) {
+		while (parent != null)
+		{
 			parents.add(0, parent);
 			parent = parent.getParent();
 		}
 		return parents;
 	}
 
-	public boolean isFinal() {
+	public boolean isFinal()
+	{
 		return fieldFinal;
 	}
 
-	public void setFinal(boolean inFinal) {
+	public void setFinal(boolean inFinal)
+	{
 		fieldFinal = inFinal;
 	}
 
-	public String toString() {
-		if (getParent() == null) {
+	public String toString()
+	{
+		if (getParent() == null)
+		{
 			return toLink();
-		} else {
+		}
+		else
+		{
 			return getParent().toString() + " : " + toLink();
 		}
 	}

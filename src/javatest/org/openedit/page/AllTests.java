@@ -14,13 +14,13 @@ public class AllTests
 
 	public static Test suite()
 	{
-		TestSuite suite = new TestSuite( "Test for org.openedit.page" );
-		//$JUnit-BEGIN$
-		suite.addTest( new TestSuite( PageTest.class ) );
-		suite.addTest( new TestSuite( PageMetaDataTest.class ) );
-		suite.addTest( new TestSuite( PageRequestTest.class ) );
-		
-		//$JUnit-END$
+		TestSuite suite = new TestSuite("Test for org.openedit.page");
+		// $JUnit-BEGIN$
+		suite.addTest(new TestSuite(PageTest.class));
+		suite.addTest(new TestSuite(PageMetaDataTest.class));
+		suite.addTest(new TestSuite(PageRequestTest.class));
+
+		// $JUnit-END$
 		return suite;
 	}
 }

@@ -32,7 +32,8 @@ import org.openedit.users.User;
 import org.openedit.util.DateStorageUtil;
 import org.openedit.util.PathUtilities;
 
-public class XmlSearcher extends BaseSearcher implements Shutdownable, NonExportable {
+public class XmlSearcher extends BaseSearcher implements Shutdownable, NonExportable
+{
 	protected XmlArchive fieldXmlArchive;
 	private static final Log log = LogFactory.getLog(XmlSearcher.class);
 	protected PropertyDetails fieldDefaultDetails;
@@ -41,10 +42,13 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable, NonExport
 	protected long fieldEditCount = 0;
 	protected Boolean fieldLazyInit;
 
-	public boolean isLazyInit() {
-		if (fieldLazyInit == null) {
+	public boolean isLazyInit()
+	{
+		if (fieldLazyInit == null)
+		{
 			fieldLazyInit = getPropertyDetails().isLazyInit();
-			if (fieldLazyInit == null) {
+			if (fieldLazyInit == null)
+			{
 				fieldLazyInit = false;
 			}
 
@@ -53,28 +57,35 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable, NonExport
 		return fieldLazyInit;
 	}
 
-	public void setLazyInit(boolean inLazyInit) {
+	public void setLazyInit(boolean inLazyInit)
+	{
 		fieldLazyInit = inLazyInit;
 	}
 
-	public CacheManager getCacheManager() {
-		if (fieldCacheManager == null) {
+	public CacheManager getCacheManager()
+	{
+		if (fieldCacheManager == null)
+		{
 			fieldCacheManager = (CacheManager) getModuleManager().getBean(getCatalogId(), "systemExpireCacheManager");
 		}
 
 		return fieldCacheManager;
 	}
 
-	public void setCacheManager(CacheManager inCache) {
+	public void setCacheManager(CacheManager inCache)
+	{
 		fieldCacheManager = inCache;
 	}
 
-	public Object searchById(String inId) {
+	public Object searchById(String inId)
+	{
 		return searchById(inId, true);
 	}
 
-	public Object searchById(String inId, boolean inCache) {
-		if (inId != null) {
+	public Object searchById(String inId, boolean inCache)
+	{
+		if (inId != null)
+		{
 			SearchQuery query = createSearchQuery();
 			query.addMatches("id", inId);
 			HitTracker hits = search(query);
@@ -84,163 +95,223 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable, NonExport
 		return null;
 	}
 
-	protected String cacheId() {
+	protected String cacheId()
+	{
 		return getCatalogId() + getSearchType();
 	}
 
-	public void reindexInternal() throws OpenEditException {
+	public void reindexInternal() throws OpenEditException
+	{
 
 		reIndexAll();
 	}
 
-	public void reIndexAll() throws OpenEditException {
+	public void reIndexAll() throws OpenEditException
+	{
 		getCacheManager().clear(cacheId());
 		fieldXmlFile = null;
 	}
 
-	public boolean passes(Element inElement, SearchQuery inQuery) throws ParseException {
+	public boolean passes(Element inElement, SearchQuery inQuery) throws ParseException
+	{
 
-		if ("deleted".equals(inElement.attributeValue("recordstatus"))) {
+		if ("deleted".equals(inElement.attributeValue("recordstatus")))
+		{
 			return false;
 		}
 
-		for (Iterator iterator = inQuery.getTerms().iterator(); iterator.hasNext();) {
+		for (Iterator iterator = inQuery.getTerms().iterator(); iterator.hasNext();)
+		{
 			Term term = (Term) iterator.next();
-			if ("betweendates".equals(term.getOperation())) {
+			if ("betweendates".equals(term.getOperation()))
+			{
 				Date before = (Date) term.getValue("lowDate");
 				Date after = (Date) term.getValue("highDate");
 				String id = term.getDetail().getId();// effectivedate
 				String date = inElement.attributeValue(id);
-				if (date == null) {
+				if (date == null)
+				{
 					return false;
 				}
 				Date target = getDefaultDateFormat().parse(date);
-				if (!(before.before(target) && after.after(target))) {
+				if (!(before.before(target) && after.after(target)))
+				{
 					return false;
-				}
-			} else if ("afterdate".equals(term.getOperation())) {
-				Date after = inQuery.getDateFormat().parse((String) term.getValue("highDate"));
-				String id = term.getDetail().getId();// effectivedate
-				String date = inElement.attributeValue(id);
-				if (date == null) {
-					return false;
-				}
-				Date target = getDefaultDateFormat().parse(date);
-				if (!target.after(after)) {
-					return false;
-				}
-			} else if ("beforedate".equals(term.getOperation())) {
-				String low = (String) term.getValue("beforeDate");
-				Date before = null;
-				if (low != null) {
-					before = inQuery.getDateFormat().parse(low);
-				} else {
-					Object[] values = term.getValues();
-					if (values != null && values.length > 0) {
-						before = (Date) values[0];
-					}
-				}
-				String id = term.getDetail().getId();// effectivedate
-				String date = inElement.attributeValue(id);
-				if (date == null) {
-					return false;
-				}
-				Date target = DateStorageUtil.getStorageUtil().parseFromStorage(date);
-
-				if (before == null || !target.before(before)) {
-					return false;
-				}
-
-			} else if ("orgroup".equals(term.getOperation())) {
-				String value = term.getValue();
-				Object[] values = term.getValues();
-
-				String attribval = inElement.attributeValue(term.getDetail().getId());
-
-				if (value != null && (attribval == null || !value.contains(attribval))) {
-					return false;
-				}
-				if (values != null) {
-					boolean foundmatch = false;
-					for (int i = 0; i < values.length; i++) {
-						String val = (String) values[i];
-						if (attribval != null && val.contains(attribval)) {
-							foundmatch = true;
-						}
-					}
-					if (!foundmatch) {
-						return false;
-					}
-				}
-			} else {
-				String name = term.getDetail().getId();
-				String value = term.getValue();
-				if (name == null) {
-					name = "id";
-				} else if (name.equals("description")) {
-					if (value != null && "*".equals(value)) {
-						return true;
-					}
-					name = "name"; // This is temporary until we support isKeyword
-				}
-
-				if (value == null && term.getDetail().isBoolean()) {
-					value = "false";
-				}
-				if (value != null) {
-					value = value.toLowerCase();
-				}
-				String attribval = null;
-				if ("name".equals(name)) {
-					attribval = inElement.getTextTrim();
-					if (attribval == null || attribval.length() == 0) {
-						attribval = inElement.attributeValue("name");
-						if (attribval != null) {
-							attribval = attribval.trim();
-						}
-					}
-				} else {
-					attribval = inElement.attributeValue(name);
-				}
-				if (attribval != null) {
-					attribval = attribval.toLowerCase();
-				}
-
-				if (attribval == null && term.getDetail().isBoolean()) {
-					attribval = "false";
-				}
-				if ("not".equals(term.getOperation())) {
-					if (value != null && attribval != null
-							&& ("*".equals(value) || doesMatch(term.getOperation(), attribval, value))) {
-						return false;
-					}
-				} else {
-					if (value != null && attribval != null
-							&& ("*".equals(value) || doesMatch(term.getOperation(), attribval, value))) {
-						if (!inQuery.isAndTogether()) {
-							return true;
-						}
-					} else if (inQuery.isAndTogether()) {
-						return false;
-					}
 				}
 			}
+			else
+				if ("afterdate".equals(term.getOperation()))
+				{
+					Date after = inQuery.getDateFormat().parse((String) term.getValue("highDate"));
+					String id = term.getDetail().getId();// effectivedate
+					String date = inElement.attributeValue(id);
+					if (date == null)
+					{
+						return false;
+					}
+					Date target = getDefaultDateFormat().parse(date);
+					if (!target.after(after))
+					{
+						return false;
+					}
+				}
+				else
+					if ("beforedate".equals(term.getOperation()))
+					{
+						String low = (String) term.getValue("beforeDate");
+						Date before = null;
+						if (low != null)
+						{
+							before = inQuery.getDateFormat().parse(low);
+						}
+						else
+						{
+							Object[] values = term.getValues();
+							if (values != null && values.length > 0)
+							{
+								before = (Date) values[0];
+							}
+						}
+						String id = term.getDetail().getId();// effectivedate
+						String date = inElement.attributeValue(id);
+						if (date == null)
+						{
+							return false;
+						}
+						Date target = DateStorageUtil.getStorageUtil().parseFromStorage(date);
+
+						if (before == null || !target.before(before))
+						{
+							return false;
+						}
+
+					}
+					else
+						if ("orgroup".equals(term.getOperation()))
+						{
+							String value = term.getValue();
+							Object[] values = term.getValues();
+
+							String attribval = inElement.attributeValue(term.getDetail().getId());
+
+							if (value != null && (attribval == null || !value.contains(attribval)))
+							{
+								return false;
+							}
+							if (values != null)
+							{
+								boolean foundmatch = false;
+								for (int i = 0; i < values.length; i++)
+								{
+									String val = (String) values[i];
+									if (attribval != null && val.contains(attribval))
+									{
+										foundmatch = true;
+									}
+								}
+								if (!foundmatch)
+								{
+									return false;
+								}
+							}
+						}
+						else
+						{
+							String name = term.getDetail().getId();
+							String value = term.getValue();
+							if (name == null)
+							{
+								name = "id";
+							}
+							else
+								if (name.equals("description"))
+								{
+									if (value != null && "*".equals(value))
+									{
+										return true;
+									}
+									name = "name"; // This is temporary until we support isKeyword
+								}
+
+							if (value == null && term.getDetail().isBoolean())
+							{
+								value = "false";
+							}
+							if (value != null)
+							{
+								value = value.toLowerCase();
+							}
+							String attribval = null;
+							if ("name".equals(name))
+							{
+								attribval = inElement.getTextTrim();
+								if (attribval == null || attribval.length() == 0)
+								{
+									attribval = inElement.attributeValue("name");
+									if (attribval != null)
+									{
+										attribval = attribval.trim();
+									}
+								}
+							}
+							else
+							{
+								attribval = inElement.attributeValue(name);
+							}
+							if (attribval != null)
+							{
+								attribval = attribval.toLowerCase();
+							}
+
+							if (attribval == null && term.getDetail().isBoolean())
+							{
+								attribval = "false";
+							}
+							if ("not".equals(term.getOperation()))
+							{
+								if (value != null && attribval != null && ("*".equals(value) || doesMatch(term.getOperation(), attribval, value)))
+								{
+									return false;
+								}
+							}
+							else
+							{
+								if (value != null && attribval != null && ("*".equals(value) || doesMatch(term.getOperation(), attribval, value)))
+								{
+									if (!inQuery.isAndTogether())
+									{
+										return true;
+									}
+								}
+								else
+									if (inQuery.isAndTogether())
+									{
+										return false;
+									}
+							}
+						}
 		}
-		if (inQuery.isAndTogether()) {
+		if (inQuery.isAndTogether())
+		{
 			return true;
 		}
 		return false;
 	}
 
-	protected boolean doesMatch(String inOperation, String inAttribval, String inValue) {
-		if ("contains".equals(inOperation)) {
+	protected boolean doesMatch(String inOperation, String inAttribval, String inValue)
+	{
+		if ("contains".equals(inOperation))
+		{
 			return inAttribval.contains(inValue);
 		}
-		if (inAttribval.contains("|")) {
+		if (inAttribval.contains("|"))
+		{
 			String[] vals = BaseData.VALUEDELMITER.split(inAttribval);
-			for (int i = 0; i < vals.length; i++) {
+			for (int i = 0; i < vals.length; i++)
+			{
 				String val = vals[i];
-				if (PathUtilities.match(inValue, val)) {
+				if (PathUtilities.match(inValue, val))
+				{
 					return true;
 				}
 
@@ -250,25 +321,28 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable, NonExport
 		return PathUtilities.match(inAttribval.toLowerCase(), inValue);
 	}
 
-	public String getIndexId() {
+	public String getIndexId()
+	{
 		XmlFile settings = getXmlFile();
 		return getSearchType() + settings.getLastModified() + fieldEditCount;
 	}
 
 	/**
-	 * Because of the way SearchQuery is coded, we can't get to the operation
-	 * information.
-	 * So, this only supports exact matching.
+	 * Because of the way SearchQuery is coded, we can't get to the operation information. So, this only
+	 * supports exact matching.
 	 */
-	public HitTracker search(SearchQuery inQuery) {
-		if (inQuery == null) {
+	public HitTracker search(SearchQuery inQuery)
+	{
+		if (inQuery == null)
+		{
 			return null;
 		}
 		HitTracker hits = (HitTracker) getCacheManager().get(cacheId(), inQuery.toQuery() + inQuery.getSortBy());
-		if (hits != null) {
-			if (log.isDebugEnabled()) {
-				log.debug("Cached search " + getSearchType() + " " + inQuery.toQuery() + " (sorted by "
-						+ inQuery.getSortBy() + ") found " + hits.size() + " in " + getCatalogId());
+		if (hits != null)
+		{
+			if (log.isDebugEnabled())
+			{
+				log.debug("Cached search " + getSearchType() + " " + inQuery.toQuery() + " (sorted by " + inQuery.getSortBy() + ") found " + hits.size() + " in " + getCatalogId());
 			}
 			return hits;
 		}
@@ -276,19 +350,27 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable, NonExport
 
 		List results = new ArrayList();
 
-		if (settings.isExist()) {
-			for (Iterator iterator = settings.getElements().iterator(); iterator.hasNext();) {
+		if (settings.isExist())
+		{
+			for (Iterator iterator = settings.getElements().iterator(); iterator.hasNext();)
+			{
 				Element element = (Element) iterator.next();
-				try {
-					if (passes(element, inQuery)) {
+				try
+				{
+					if (passes(element, inQuery))
+					{
 						// log.info(element.asXML());
 						results.add(new ElementData(element, getPropertyDetails()));
 					}
-				} catch (ParseException e) {
+				}
+				catch (ParseException e)
+				{
 					throw new OpenEditRuntimeException(e);
 				}
 			}
-		} else {
+		}
+		else
+		{
 			log.info("Xml does not exist " + settings.getPath());
 		}
 
@@ -306,26 +388,31 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable, NonExport
 		getCacheManager().put(cacheId(), inQuery.toQuery() + inQuery.getSortBy(), hits);
 		// if( log.isDebugEnabled() )
 		{
-			log.debug("Search " + getSearchType() + " " + inQuery.toQuery() + " (sorted by " + inQuery.getSortBy()
-					+ ") found " + hits.size());
+			log.debug("Search " + getSearchType() + " " + inQuery.toQuery() + " (sorted by " + inQuery.getSortBy() + ") found " + hits.size());
 		}
 
 		return hits;
 	}
 
-	private void sortResults(SearchQuery inQuery, List results) {
+	private void sortResults(SearchQuery inQuery, List results)
+	{
 		final List sorts = inQuery.getSorts();
-		if (!sorts.isEmpty()) {
+		if (!sorts.isEmpty())
+		{
 			ElementSorter sorter = new ElementSorter(sorts);
 			Collections.sort(results, sorter);
 
 		}
 	}
 
-	protected XmlFile getXmlFile() {
-		if (fieldXmlFile == null) {
-			synchronized (this) {
-				if (fieldXmlFile == null) {
+	protected XmlFile getXmlFile()
+	{
+		if (fieldXmlFile == null)
+		{
+			synchronized (this)
+			{
+				if (fieldXmlFile == null)
+				{
 					fieldXmlFile = loadXmlFile();
 				}
 			}
@@ -333,37 +420,45 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable, NonExport
 		return fieldXmlFile;
 	}
 
-	public void setXmlFile(XmlFile inFile) {
+	public void setXmlFile(XmlFile inFile)
+	{
 		fieldXmlFile = inFile;
 	}
 
-	protected XmlFile loadXmlFile() {
-		try {
+	protected XmlFile loadXmlFile()
+	{
+		try
+		{
 			String inName = getSearchType();
-			String path = getPropertyDetailsArchive().findConfigurationFile("/lists"
-					+ "/" + inName + ".xml");
+			String path = getPropertyDetailsArchive().findConfigurationFile("/lists" + "/" + inName + ".xml");
 			// No sure why we do this.
 			PropertyDetails details = getPropertyDetailsArchive().getPropertyDetailsCached(inName);
-			if (details == null) {
+			if (details == null)
+			{
 				inName = "property";
 			}
 			inName = inName.replace('/', '_'); // if we load up foldername/name, we can't have a slash in the xml
 			XmlFile settings = getXmlArchive().getXml(path, path, inName);
 			return settings;
-		} catch (OpenEditException ex) {
+		}
+		catch (OpenEditException ex)
+		{
 			throw new OpenEditRuntimeException(ex);
 		}
 	}
 
-	public XmlArchive getXmlArchive() {
+	public XmlArchive getXmlArchive()
+	{
 		return fieldXmlArchive;
 	}
 
-	public void setXmlArchive(XmlArchive inXmlArchive) {
+	public void setXmlArchive(XmlArchive inXmlArchive)
+	{
 		fieldXmlArchive = inXmlArchive;
 	}
 
-	public SearchQuery createSearchQuery() {
+	public SearchQuery createSearchQuery()
+	{
 		SearchQuery query = new SearchQuery();
 		query.setPropertyDetails(getPropertyDetails());
 		query.setCatalogId(getCatalogId());
@@ -372,7 +467,8 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable, NonExport
 		return query;
 	}
 
-	public synchronized void saveData(Data inData, User inUser) {
+	public synchronized void saveData(Data inData, User inUser)
+	{
 		// If this element is manipulated then the instance is the same
 		// No need to read it ElementData data = (ElementData)inData;
 		XmlFile settings = getXmlFile();
@@ -381,24 +477,31 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable, NonExport
 		settings.setPath(path);
 
 		Element element = null;
-		if (inData.getId() == null) {
+		if (inData.getId() == null)
+		{
 			inData.setId(String.valueOf(new Date().getTime()));
-		} else {
+		}
+		else
+		{
 			element = settings.getElementById(inData.getId());
 		}
-		if (element == null) {
+		if (element == null)
+		{
 			// New element
 			element = settings.getRoot().addElement(settings.getElementName());
 			element.addAttribute("id", inData.getId());
 		}
-		if (inData instanceof ElementData) {
+		if (inData instanceof ElementData)
+		{
 			ElementData data = (ElementData) inData;
 			List attributes = data.getElement().attributes();
 			element.setAttributes(attributes);
 			// element.setText(inData.getName());
 			// existing row exists
 			element.setContent(data.getElement().content());
-		} else {
+		}
+		else
+		{
 			element.clearContent();
 			element.setAttributes(null);
 
@@ -407,7 +510,8 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable, NonExport
 			data.setName(inData.getName());
 			data.setSourcePath(inData.getSourcePath());
 			Set keys = inData.keySet();
-			for (Iterator iterator = inData.keySet().iterator(); iterator.hasNext();) {
+			for (Iterator iterator = inData.keySet().iterator(); iterator.hasNext();)
+			{
 				String key = (String) iterator.next();
 				data.setValue(key, inData.getValue(key));
 			}
@@ -420,9 +524,9 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable, NonExport
 
 	}
 
-	public void saveAllData(Collection inAll, User inUser) {
-		String path = "/WEB-INF/data/" + getCatalogId() + "/lists"
-				+ "/" + getSearchType() + ".xml";
+	public void saveAllData(Collection inAll, User inUser)
+	{
+		String path = "/WEB-INF/data/" + getCatalogId() + "/lists" + "/" + getSearchType() + ".xml";
 		saveAllData(inAll, inUser, path);
 	}
 
@@ -433,7 +537,8 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable, NonExport
 	 * @param inUser
 	 * @param path
 	 */
-	public void saveAllData(Collection inAll, User inUser, String path) {
+	public void saveAllData(Collection inAll, User inUser, String path)
+	{
 
 		// XmlFile settings = getXmlArchive().getXml(path);
 		//
@@ -446,33 +551,43 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable, NonExport
 		//
 		XmlFile settings = getXmlFile();
 		settings.setPath(path); // New custom path wins now
-		for (Iterator iterator = inAll.iterator(); iterator.hasNext();) {
+		for (Iterator iterator = inAll.iterator(); iterator.hasNext();)
+		{
 			Data data = (Data) iterator.next();
-			if (data.getId() == null) {
+			if (data.getId() == null)
+			{
 				// TODO: Use counter
 				data.setId(String.valueOf(new Date().getTime()));
 			}
-			if (data instanceof ElementData) {
+			if (data instanceof ElementData)
+			{
 				ElementData edata = (ElementData) data;
-				if (edata.getElement().getParent() == null) {
+				if (edata.getElement().getParent() == null)
+				{
 					settings.getRoot().add(edata.getElement());
 					continue;
 				}
-				if (edata.getElement().getParent() == settings.getRoot()) {
+				if (edata.getElement().getParent() == settings.getRoot())
+				{
 					continue;
 				}
 			}
 			Element contained = settings.getRoot().elementByID(data.getId()); // This only works for upper case ID
-			if (contained == null) {
+			if (contained == null)
+			{
 				Element newone = settings.addNewElement();
 				List details = getProperties();
 
-				for (Iterator iterator2 = details.iterator(); iterator2.hasNext();) {
+				for (Iterator iterator2 = details.iterator(); iterator2.hasNext();)
+				{
 					PropertyDetail field = (PropertyDetail) iterator2.next();
 					String value = data.get(field.getId());
-					if ("name".equals(field.getId())) {
+					if ("name".equals(field.getId()))
+					{
 						newone.setText(value);
-					} else {
+					}
+					else
+					{
 						newone.addAttribute(field.getId(), value);
 					}
 				}
@@ -483,7 +598,8 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable, NonExport
 		getXmlArchive().saveXml(settings, inUser);
 	}
 
-	public Data createNewData() {
+	public Data createNewData()
+	{
 		XmlFile settings = getXmlFile();
 
 		Element newone = DocumentHelper.createElement(settings.getElementName());
@@ -491,37 +607,44 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable, NonExport
 		return data;
 	}
 
-	public List getIndexProperties() {
+	public List getIndexProperties()
+	{
 		PropertyDetails details = getPropertyDetailsArchive().getPropertyDetailsCached(getSearchType());
-		if (details == null || details.size() == 0) {
+		if (details == null || details.size() == 0)
+		{
 			return getDefaultDetails().findIndexProperties();
 		}
 		return details.findIndexProperties();
 	}
 
-	public List getProperties() {
+	public List getProperties()
+	{
 		PropertyDetails details = getPropertyDetailsArchive().getPropertyDetailsCached(getSearchType());
-		if (details == null || details.size() == 0) {
+		if (details == null || details.size() == 0)
+		{
 			return getDefaultDetails().getDetails();
 		}
 		return details.getDetails();
 	}
 
-	public PropertyDetails getPropertyDetails() {
+	public PropertyDetails getPropertyDetails()
+	{
 
 		PropertyDetails details = getPropertyDetailsArchive().getPropertyDetailsCached(getSearchType());
-		if (details == null || details.size() == 0) {
+		if (details == null || details.size() == 0)
+		{
 			return getDefaultDetails();
 		}
 		return details;
 	}
 
-	public PropertyDetails getDefaultDetails() {
-		if (fieldDefaultDetails == null) {
+	public PropertyDetails getDefaultDetails()
+	{
+		if (fieldDefaultDetails == null)
+		{
 			// fake one
 			PropertyDetails details = new PropertyDetails(getPropertyDetailsArchive(), getSearchType());
-			PropertyDetail id = details.createDetail("id");
-			;
+			PropertyDetail id = details.createDetail("id");;
 			id.setIndex(true);
 			id.setStored(true);
 			id.setName("Id");
@@ -532,8 +655,7 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable, NonExport
 
 			details.addDetail(id);
 
-			id = details.createDetail("name");
-			;
+			id = details.createDetail("name");;
 			id.setIndex(true);
 			id.setStored(true);
 			id.setName("Name");
@@ -547,60 +669,74 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable, NonExport
 		return fieldDefaultDetails;
 	}
 
-	public void deleteAll(User inUser) {
+	public void deleteAll(User inUser)
+	{
 		String path = "/WEB-INF/data/" + getCatalogId() + "/lists" + "/" + getSearchType() + ".xml";
 		ContentItem item = getXmlArchive().getPageManager().getRepository().getStub(path);
 		getXmlArchive().getPageManager().getRepository().remove(item);
 		clearIndex();
 	}
 
-	public void delete(Data inData, User inUser) {
+	public void delete(Data inData, User inUser)
+	{
 		XmlFile settings = getXmlFile();
 		// TODO: Save this file to the data directory not the app
 		String path = "/WEB-INF/data/" + getCatalogId() + "/lists/" + getSearchType() + ".xml";
 		settings.setPath(path);
 
 		Element record = settings.getElementById(inData.getId());
-		if (record != null) {
+		if (record != null)
+		{
 			settings.getRoot().remove(record);
 			getXmlArchive().saveXml(settings, inUser);
 		}
 		clearIndex();
 	}
 
-	public void clearIndex() {
+	public void clearIndex()
+	{
 		fieldEditCount++;
-		synchronized (this) {
+		synchronized (this)
+		{
 			// fieldXmlFile = null; //reload it each time?
 			getCacheManager().clear(cacheId());
 		}
 	}
 
-	public void shutdown() {
+	public void shutdown()
+	{
 		clearIndex();
 	}
 
-	protected void updateOrAddElement(XmlFile settings, Data inData) {
+	protected void updateOrAddElement(XmlFile settings, Data inData)
+	{
 		Element element = null;
-		if (inData.getId() == null) {
+		if (inData.getId() == null)
+		{
 			inData.setId(String.valueOf(new Date().getTime()));
-		} else {
+		}
+		else
+		{
 			element = settings.getElementById(inData.getId());
 		}
-		if (element == null) {
+		if (element == null)
+		{
 			// New element
 			element = settings.getRoot().addElement(settings.getElementName());
 			element.addAttribute("id", inData.getId());
 		}
 
-		if (inData instanceof ElementData) {
+		if (inData instanceof ElementData)
+		{
 			ElementData data = (ElementData) inData;
 			List attributes = data.getElement().attributes();
 			element.setAttributes(attributes);
 			// element.setText(inData.getName());
 			// existing row exists
 			element.setContent(data.getElement().content());
-		} else {
+		}
+		else
+		{
 			element.clearContent();
 			element.setAttributes(null);
 
@@ -608,7 +744,8 @@ public class XmlSearcher extends BaseSearcher implements Shutdownable, NonExport
 			data.setId(inData.getId());
 			data.setName(inData.getName());
 			data.setSourcePath(inData.getSourcePath());
-			for (Iterator iterator = inData.keySet().iterator(); iterator.hasNext();) {
+			for (Iterator iterator = inData.keySet().iterator(); iterator.hasNext();)
+			{
 				String key = (String) iterator.next();
 				data.setValue(key, inData.getValue(key));
 			}

@@ -1,14 +1,14 @@
 /*
-Copyright (c) 2003 eInnovation Inc. All rights reserved
-
-This library is free software; you can redistribute it and/or modify it under the terms
-of the GNU Lesser General Public License as published by the Free Software Foundation;
-either version 2.1 of the License, or (at your option) any later version.
-
-This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-See the GNU Lesser General Public License for more details.
-*/
+ * Copyright (c) 2003 eInnovation Inc. All rights reserved
+ * 
+ * This library is free software; you can redistribute it and/or modify it under the terms of the
+ * GNU Lesser General Public License as published by the Free Software Foundation; either version
+ * 2.1 of the License, or (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ */
 
 package org.openedit.util.strainer;
 
@@ -21,7 +21,8 @@ import org.openedit.WebPageRequest;
  *
  * @author Eric Galluzzo
  */
-public class RequestAttributeFilter extends BaseFilter {
+public class RequestAttributeFilter extends BaseFilter
+{
 	protected String fieldAttribute;
 
 	/**
@@ -37,7 +38,7 @@ public class RequestAttributeFilter extends BaseFilter {
 	 * Construct a filter that only passes users that have the given permission.
 	 *
 	 * @param inPermission The permission to check for
-	 * @param inEq         DOCME
+	 * @param inEq DOCME
 	 */
 	public RequestAttributeFilter(String inPermission, String inEq) {
 		setAttribute(inPermission);
@@ -49,7 +50,8 @@ public class RequestAttributeFilter extends BaseFilter {
 	 *
 	 * @param permission The permission to check for
 	 */
-	public void setAttribute(String permission) {
+	public void setAttribute(String permission)
+	{
 		fieldAttribute = permission;
 	}
 
@@ -58,7 +60,8 @@ public class RequestAttributeFilter extends BaseFilter {
 	 *
 	 * @return String
 	 */
-	public String getAttribute() {
+	public String getAttribute()
+	{
 		return fieldAttribute;
 	}
 
@@ -67,7 +70,8 @@ public class RequestAttributeFilter extends BaseFilter {
 	 *
 	 * @param inString
 	 */
-	public void setEquals(String inString) {
+	public void setEquals(String inString)
+	{
 		setValue(inString);
 	}
 
@@ -76,18 +80,21 @@ public class RequestAttributeFilter extends BaseFilter {
 	 *
 	 * @return
 	 */
-	public String getEquals() {
+	public String getEquals()
+	{
 		return fieldValue;
 	}
 
 	/**
 	 * @see org.openedit.util.strainer.Filter#passes(java.lang.Object)
 	 */
-	public boolean passes(Object inObj) throws FilterException, ClassCastException {
+	public boolean passes(Object inObj) throws FilterException, ClassCastException
+	{
 		WebPageRequest req = (WebPageRequest) inObj;
 		ServletRequest request = req.getRequest();
 
-		if (request == null) {
+		if (request == null)
+		{
 			return false;
 		}
 
@@ -96,7 +103,8 @@ public class RequestAttributeFilter extends BaseFilter {
 		return (getAttribute() == null) || getEquals().equalsIgnoreCase(att);
 	}
 
-	public String toString() {
+	public String toString()
+	{
 		return getAttribute() + " Parameter=" + getEquals();
 	}
 }

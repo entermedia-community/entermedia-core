@@ -37,7 +37,8 @@ import org.openedit.util.FileUtils;
 import org.openedit.util.OutputFiller;
 import org.openedit.util.PathUtilities;
 
-public class Page implements Data, Comparable {
+public class Page implements Data, Comparable
+{
 	private static Log log = LogFactory.getLog(Page.class);
 	public static final String BLANK_LAYOUT = "NOLAYOUT";
 
@@ -47,7 +48,8 @@ public class Page implements Data, Comparable {
 	protected long fieldOriginalyModified;
 	protected Map fieldCache;
 
-	public Collection getValues(String inField) {
+	public Collection getValues(String inField)
+	{
 		Collection values = (Collection) getValue(inField);
 		return values;
 	}
@@ -60,54 +62,65 @@ public class Page implements Data, Comparable {
 	/**
 	 * 
 	 */
-	public Page() {
-	}
+	public Page() {}
 
 	public Page(Page inPage) {
 		this(inPage.getPath(), inPage.getPageSettings());
 		fieldContentItem = inPage.getContentItem();
 	}
 
-	protected Map getCache() {
-		if (fieldCache == null) {
+	protected Map getCache()
+	{
+		if (fieldCache == null)
+		{
 			fieldCache = new HashMap();
 		}
 		return fieldCache;
 	}
 
-	public boolean isBinary() {
-		if (getMimeType() == null) {
+	public boolean isBinary()
+	{
+		if (getMimeType() == null)
+		{
 			return false; // There are many more text formats we support
 		}
-		if (getMimeType().startsWith("text")) {
+		if (getMimeType().startsWith("text"))
+		{
 			return false;
 		}
-		if (getMimeType().indexOf("xml") > -1) {
+		if (getMimeType().indexOf("xml") > -1)
+		{
 			return false;
 		}
-		if (getMimeType().equals("application/x-mpegURL")) {
+		if (getMimeType().equals("application/x-mpegURL"))
+		{
 			return false;
 		}
-		if (getMimeType().equals("application/yaml")) {
+		if (getMimeType().equals("application/yaml"))
+		{
 			return false;
 		}
 		return true;
 
 	}
 
-	public boolean isFolder() {
+	public boolean isFolder()
+	{
 		return getContentItem().isFolder();
 	}
 
-	public boolean exists() {
+	public boolean exists()
+	{
 		return getContentItem().exists();
 	}
 
-	public Date getLastModified() {
+	public Date getLastModified()
+	{
 		return getContentItem().lastModified();
 	}
 
-	public long lastModified() {
+	public long lastModified()
+	{
 		return getContentItem().getLastModified();
 	}
 
@@ -117,7 +130,8 @@ public class Page implements Data, Comparable {
 	 * @return
 	 */
 
-	public boolean isCurrent() {
+	public boolean isCurrent()
+	{
 		// Content
 		long time = getContentItem().getLastModified();
 		// if ( time == -1)
@@ -125,7 +139,8 @@ public class Page implements Data, Comparable {
 		// return false; //is missing. This seems very wasteful
 		// }
 		boolean pageCurrent = time == getOriginalyModified();
-		if (!pageCurrent) {
+		if (!pageCurrent)
+		{
 			return false;
 		}
 		boolean metaDataCurrent = getPageSettings().isCurrent();
@@ -139,9 +154,11 @@ public class Page implements Data, Comparable {
 	 *
 	 * @return DOCME
 	 */
-	public String getLastModified(String inDateFormat) {
+	public String getLastModified(String inDateFormat)
+	{
 		Date date = getLastModified();
-		if (date == null) {
+		if (date == null)
+		{
 			return null;
 		}
 		SimpleDateFormat format = new SimpleDateFormat(inDateFormat);
@@ -154,28 +171,35 @@ public class Page implements Data, Comparable {
 	 *
 	 * @return DOCME
 	 */
-	public String getMimeType() {
+	public String getMimeType()
+	{
 		return getPageSettings().getMimeType();
 	}
 
 	/**
-	 * Get a List of page actions. To add an action to the page just add the action
-	 * to this List.
-	 * Page actions are triggered each time the page is requested.
+	 * Get a List of page actions. To add an action to the page just add the action to this List. Page
+	 * actions are triggered each time the page is requested.
 	 *
 	 * @return A List of page actions
 	 */
-	public List getPageActions() {
+	public List getPageActions()
+	{
 		List copy = (List) getCache().get("pageActions");
-		if (copy == null) {
+		if (copy == null)
+		{
 			List actions = getPageSettings().getPageActions();
-			if (isDynamic()) {
+			if (isDynamic())
+			{
 				copy = actions;
-			} else {
+			}
+			else
+			{
 				copy = new ArrayList(actions.size());
-				for (Iterator iter = actions.iterator(); iter.hasNext();) {
+				for (Iterator iter = actions.iterator(); iter.hasNext();)
+				{
 					PageAction action = (PageAction) iter.next();
-					if (action.isIncludesAll()) {
+					if (action.isIncludesAll())
+					{
 						copy.add(action);
 					}
 				}
@@ -185,27 +209,35 @@ public class Page implements Data, Comparable {
 		return copy;
 	}
 
-	public List<Style> getStyles() {
+	public List<Style> getStyles()
+	{
 		List<Style> styles = getPageSettings().getStyles();
 		// look for duplicate
 		List copy = new ArrayList(styles.size());
 		HashMap ids = new HashMap(styles.size());
 		// Set got = new HashSet(styles.size());
 		HashSet canceled = new HashSet();
-		for (Iterator iterator = styles.iterator(); iterator.hasNext();) {
+		for (Iterator iterator = styles.iterator(); iterator.hasNext();)
+		{
 			Style script = (Style) iterator.next();
 			ids.put(script.getId(), script);
 		}
-		for (Iterator iterator = styles.iterator(); iterator.hasNext();) {
+		for (Iterator iterator = styles.iterator(); iterator.hasNext();)
+		{
 			Style script = (Style) iterator.next();
 			Style goodone = (Style) ids.get(script.getId());
-			if (canceled.contains(goodone.getId())) {
+			if (canceled.contains(goodone.getId()))
+			{
 				continue;
 			}
-			if (!copy.contains(goodone)) {
-				if (goodone.isCancel()) {
+			if (!copy.contains(goodone))
+			{
+				if (goodone.isCancel())
+				{
 					canceled.add(goodone.getId());
-				} else {
+				}
+				else
+				{
 					copy.add(goodone);
 				}
 			}
@@ -214,27 +246,35 @@ public class Page implements Data, Comparable {
 		return copy;
 	}
 
-	public List<Script> getScripts() {
+	public List<Script> getScripts()
+	{
 		List scripts = getPageSettings().getScripts();
 		// look for duplicate
 		List copy = new ArrayList(scripts.size());
 		HashMap ids = new HashMap(scripts.size());
 		HashSet canceled = new HashSet();
-		for (Iterator iterator = scripts.iterator(); iterator.hasNext();) {
+		for (Iterator iterator = scripts.iterator(); iterator.hasNext();)
+		{
 			Script script = (Script) iterator.next();
 			ids.put(script.getId(), script);
 		}
-		for (Iterator iterator = scripts.iterator(); iterator.hasNext();) {
+		for (Iterator iterator = scripts.iterator(); iterator.hasNext();)
+		{
 			Script script = (Script) iterator.next();
 			Script goodone = (Script) ids.get(script.getId());
 			// goodone.setSrc(getPageSettings().replaceProperty(goodone.getSrc()));
-			if (canceled.contains(goodone.getId())) {
+			if (canceled.contains(goodone.getId()))
+			{
 				continue;
 			}
-			if (!copy.contains(goodone)) {
-				if (goodone.isCancel()) {
+			if (!copy.contains(goodone))
+			{
+				if (goodone.isCancel())
+				{
 					canceled.add(goodone.getId());
-				} else {
+				}
+				else
+				{
 					copy.add(goodone);
 				}
 			}
@@ -243,23 +283,29 @@ public class Page implements Data, Comparable {
 	}
 
 	/**
-	 * Get a List of page actions. To add an action to the page just add the action
-	 * to this List.
-	 * Page actions are triggered each time the page is requested.
+	 * Get a List of page actions. To add an action to the page just add the action to this List. Page
+	 * actions are triggered each time the page is requested.
 	 *
 	 * @return A List of page actions
 	 */
-	public List<PageAction> getPathActions() {
+	public List<PageAction> getPathActions()
+	{
 		List copy = (List) getCache().get("pathActions");
-		if (copy == null) {
+		if (copy == null)
+		{
 			List actions = getPageSettings().getPathActions();
-			if (isDynamic()) {
+			if (isDynamic())
+			{
 				copy = actions;
-			} else {
+			}
+			else
+			{
 				copy = new ArrayList(actions.size());
-				for (Iterator iter = actions.iterator(); iter.hasNext();) {
+				for (Iterator iter = actions.iterator(); iter.hasNext();)
+				{
 					PageAction action = (PageAction) iter.next();
-					if (action.isIncludesAll()) {
+					if (action.isIncludesAll())
+					{
 						copy.add(action);
 					}
 				}
@@ -274,73 +320,89 @@ public class Page implements Data, Comparable {
 	 *
 	 * @return The request path
 	 */
-	public String getPath() {
+	public String getPath()
+	{
 		return fieldPath;
 	}
 
-	public String getDirectory() {
+	public String getDirectory()
+	{
 		String path = PathUtilities.extractDirectoryPath(getPath());
 		// urlpath is the address the link came in on
 		return path;
 	}
 
-	public String getDirectoryName() {
+	public String getDirectoryName()
+	{
 		String path = PathUtilities.extractDirectoryPath(getPath());
 		// urlpath is the address the link came in on
-		if (path.length() > 1) {
+		if (path.length() > 1)
+		{
 			path = PathUtilities.extractFileName(path);
 		}
 		return path;
 	}
 
-	public String getDirectoryRoot() {
+	public String getDirectoryRoot()
+	{
 		int slash = getPath().indexOf('/', 1);
-		if (slash > 1) {
+		if (slash > 1)
+		{
 			return getPath().substring(0, slash);
 		}
 		// urlpath is the address the link came in on
 		return "";
 	}
 
-	public String getName() {
+	public String getName()
+	{
 		String path = PathUtilities.extractFileName(getPath());
 		// urlpath is the address the link came in on
 		return path;
 	}
 
-	public String getPageName() {
+	public String getPageName()
+	{
 		String path = PathUtilities.extractPageName(getPath());
 		return path;
 	}
 
-	public String getPageType() {
+	public String getPageType()
+	{
 		String type = PathUtilities.extractPageType(getPath());
 		return type;
 	}
 
 	/**
-	 * Get the named page property using the default Locale. If the property is not
-	 * found then
-	 * return null.
+	 * Get the named page property using the default Locale. If the property is not found then return
+	 * null.
 	 *
 	 * @param name The property name
 	 *
 	 * @return The value or null
 	 */
-	public String getProperty(String name) {
+	public String getProperty(String name)
+	{
 		return getProperty(name, (Locale) null);
 	}
 
-	public String getProperty(String name, String language) {
+	public String getProperty(String name, String language)
+	{
 		String val = null;
-		if (language != null) {
+		if (language != null)
+		{
 			PageProperty property = (PageProperty) getPageSettings().getProperty(name);
-			if (property != null) {
+			if (property != null)
+			{
 				val = property.getValue(language);
-			} else {
+			}
+			else
+			{
 				return null;
 			}
-		} else {
+		}
+		else
+		{
 			val = getProperty(name, (Locale) null);
 		}
 		val = getPageSettings().replaceProperty(val);
@@ -348,11 +410,9 @@ public class Page implements Data, Comparable {
 	}
 
 	/**
-	 * Get the Locale-specific value for the given named property. If the property
-	 * is not found
-	 * then return null. This method will try to find the most suitable locale by
-	 * searching the
-	 * property values in the following manner:
+	 * Get the Locale-specific value for the given named property. If the property is not found then
+	 * return null. This method will try to find the most suitable locale by searching the property
+	 * values in the following manner:
 	 * 
 	 * <p>
 	 * language + "_" + country + "_" + variant<br>
@@ -361,48 +421,57 @@ public class Page implements Data, Comparable {
 	 * ""
 	 * </p>
 	 *
-	 * @param name   The property name
+	 * @param name The property name
 	 * @param locale The locale
 	 *
 	 * @return The value
 	 */
-	public String getProperty(String name, Locale language) {
-		if (log.isDebugEnabled()) {
+	public String getProperty(String name, Locale language)
+	{
+		if (log.isDebugEnabled())
+		{
 			debug("Get property [name=" + name + ",locale=" + language + "]");
 		}
 		PageProperty property = (PageProperty) getPageSettings().getProperty(name);
 
-		if (property != null) {
+		if (property != null)
+		{
 			String value = property.getValue(language);
 			value = getPageSettings().replaceProperty(value);
 			return value;
-		} else {
+		}
+		else
+		{
 			return null;
 		}
 	}
 
-	public void debug(String inMessage) {
+	public void debug(String inMessage)
+	{
 		log.debug(inMessage);
 		// System.out.println( inMessage );
 	}
 
 	/**
-	 * Get the named property. This method is equivilent to the
-	 * <code>getProperty(name)</code>
-	 * method. This method is provided as a convenience to Velocity code.
+	 * Get the named property. This method is equivilent to the <code>getProperty(name)</code> method.
+	 * This method is provided as a convenience to Velocity code.
 	 *
 	 * @param name The property name
 	 *
 	 * @return The value
 	 */
-	public String get(String name) {
-		if (name.equals("name")) {
+	public String get(String name)
+	{
+		if (name.equals("name"))
+		{
 			return getName();
 		}
-		if (name.equals("path")) {
+		if (name.equals("path"))
+		{
 			return getPath();
 		}
-		if (name.equals("id")) {
+		if (name.equals("id"))
+		{
 			return getId();
 		}
 		String value = getProperty(name);
@@ -412,17 +481,21 @@ public class Page implements Data, Comparable {
 		return value;
 	}
 
-	public boolean isPropertyTrue(String inKey) {
+	public boolean isPropertyTrue(String inKey)
+	{
 		Object val = getProperty(inKey);
-		if (val != null) {
+		if (val != null)
+		{
 			return Boolean.parseBoolean(val.toString());
 		}
 		return false;
 	}
 
-	public boolean isPropertyTrue(String inKey, boolean inDefault) {
+	public boolean isPropertyTrue(String inKey, boolean inDefault)
+	{
 		Object val = getProperty(inKey);
-		if (val == null) {
+		if (val == null)
+		{
 			return inDefault;
 		}
 		return Boolean.parseBoolean(val.toString());
@@ -433,36 +506,45 @@ public class Page implements Data, Comparable {
 	 *
 	 * @return DOCME
 	 */
-	public String toString() {
+	public String toString()
+	{
 		return getPath();
 	}
 
-	public void setPageSettings(PageSettings inSettings) {
+	public void setPageSettings(PageSettings inSettings)
+	{
 		fieldPageSettings = inSettings;
 	}
 
-	public PageSettings getPageSettings() {
+	public PageSettings getPageSettings()
+	{
 		return fieldPageSettings;
 	}
 
 	/**
 	 * @return
 	 */
-	public String getAlternateContentPath() {
+	public String getAlternateContentPath()
+	{
 		return getPageSettings().getAlternateContentPath();
 	}
 
 	/**
 	 * @return
 	 */
-	public List getGenerator() {
+	public List getGenerator()
+	{
 		return getPageSettings().getGenerators();
 	}
 
-	public InputStream getInputStream() throws ContentNotAvailableException {
-		try {
+	public InputStream getInputStream() throws ContentNotAvailableException
+	{
+		try
+		{
 			return getContentItem().getInputStream();
-		} catch (RepositoryException e) {
+		}
+		catch (RepositoryException e)
+		{
 			throw new ContentNotAvailableException(e.getMessage(), getPath());
 		}
 	}
@@ -470,11 +552,13 @@ public class Page implements Data, Comparable {
 	/**
 	 * @return
 	 */
-	public String getLayout() {
+	public String getLayout()
+	{
 		return getPageSettings().getLayout();
 	}
 
-	public String getInnerLayout() {
+	public String getInnerLayout()
+	{
 		PageSettings parent = getPageSettings();
 		return parent.getInnerLayoutExcludeSelf(getPath());
 		// while( parent != null)
@@ -490,85 +574,113 @@ public class Page implements Data, Comparable {
 		// }
 	}
 
-	public void setInnerLayout(String innerLayout) {
+	public void setInnerLayout(String innerLayout)
+	{
 		PageSettings parent = getPageSettings();
 		parent.setInnerLayout(innerLayout);
 	}
 
-	public String findInnerLayout() {
+	public String findInnerLayout()
+	{
 		String il = getInnerLayout();
-		if (il == null) {
+		if (il == null)
+		{
 			return null;
 		}
-		if (il.equals(BLANK_LAYOUT)) {
+		if (il.equals(BLANK_LAYOUT))
+		{
 			return null;
 		}
-		if (il.equalsIgnoreCase(getPath())) {
+		if (il.equalsIgnoreCase(getPath()))
+		{
 			return null;
 		}
 		return il;
 	}
 
-	public boolean hasLayout() {
+	public boolean hasLayout()
+	{
 		String layout = getLayout();
 
 		return layout != null && !layout.equals(BLANK_LAYOUT);
 	}
 
-	public boolean hasInnerLayout() {
+	public boolean hasInnerLayout()
+	{
 		String il = getInnerLayout();
-		if (il == null) {
+		if (il == null)
+		{
 			return false;
 		}
-		if (il.equals(BLANK_LAYOUT)) {
+		if (il.equals(BLANK_LAYOUT))
+		{
 			return false;
 		}
-		if (il.equalsIgnoreCase(getPath())) {
+		if (il.equalsIgnoreCase(getPath()))
+		{
 			return false;
 		}
 		return true;
 	}
 
-	public ContentItem getContentItem() {
+	public ContentItem getContentItem()
+	{
 		return fieldContentItem;
 	}
 
-	public void setContentItem(ContentItem revision) {
+	public void setContentItem(ContentItem revision)
+	{
 		fieldContentItem = revision;
-		if (revision != null) {
+		if (revision != null)
+		{
 			fieldOriginalyModified = revision.getLastModified();
 		}
 	}
 
-	public Reader getReader() throws OpenEditException {
-		if (exists()) {
+	public Reader getReader() throws OpenEditException
+	{
+		if (exists())
+		{
 			InputStreamReader in = null;
-			try {
+			try
+			{
 				in = new InputStreamReader(getContentItem().getInputStream(), getCharacterEncoding());
-			} catch (Exception ex) {
+			}
+			catch (Exception ex)
+			{
 				throw new OpenEditException(ex);
 			}
 			return in;
-		} else {
+		}
+		else
+		{
 			throw new ContentNotAvailableException("No such page " + getPath(), getPath());
 		}
 	}
 
-	public Reader getReader(String inEncoding) throws OpenEditException {
-		if (exists()) {
+	public Reader getReader(String inEncoding) throws OpenEditException
+	{
+		if (exists())
+		{
 			InputStreamReader in = null;
-			try {
+			try
+			{
 				in = new InputStreamReader(getContentItem().getInputStream(), inEncoding);
-			} catch (Exception ex) {
+			}
+			catch (Exception ex)
+			{
 				throw new OpenEditException(ex);
 			}
 			return in;
-		} else {
+		}
+		else
+		{
 			throw new ContentNotAvailableException("No such page " + getPath(), getPath());
 		}
 	}
 
-	protected long getOriginalyModified() {
+	protected long getOriginalyModified()
+	{
 		return fieldOriginalyModified;
 	}
 
@@ -577,25 +689,33 @@ public class Page implements Data, Comparable {
 	 * 
 	 * @see org.jpublish.Page#getCharacterEncoding()
 	 */
-	public String getCharacterEncoding() {
+	public String getCharacterEncoding()
+	{
 		// Its UTF-8 unless otherwise setup in the xconf's
 		String encoding = getPageSettings().getPropertyValue("encoding", null);
-		if (encoding == null) {
+		if (encoding == null)
+		{
 			return "UTF-8";
 		}
 		return encoding;
 	}
 
-	public String getContent() throws OpenEditException {
+	public String getContent() throws OpenEditException
+	{
 		StringWriter out = new StringWriter();
 		Reader reader = null;
-		try {
+		try
+		{
 			reader = getReader();
 			new OutputFiller().fill(reader, out);
-		} catch (IOException ex) {
+		}
+		catch (IOException ex)
+		{
 			log.error(ex);
 			throw new OpenEditException(ex);
-		} finally {
+		}
+		finally
+		{
 			FileUtils.safeClose(reader);
 		}
 		return out.toString();
@@ -604,15 +724,20 @@ public class Page implements Data, Comparable {
 	/**
 	 * @param inReq
 	 */
-	public WebPageRequest generate(WebPageRequest inReq, Output inOut) throws OpenEditException {
+	public WebPageRequest generate(WebPageRequest inReq, Output inOut) throws OpenEditException
+	{
 		WebPageRequest req = inReq;
-		if (inReq.getPage() != this) {
+		if (inReq.getPage() != this)
+		{
 			req = inReq.copy(this);
 		}
-		if (!req.hasRedirected()) {
-			for (Iterator iter = getGenerator().iterator(); iter.hasNext();) {
+		if (!req.hasRedirected())
+		{
+			for (Iterator iter = getGenerator().iterator(); iter.hasNext();)
+			{
 				Generator gen = (Generator) iter.next();
-				if (gen.canGenerate(inReq)) {
+				if (gen.canGenerate(inReq))
+				{
 					gen.generate(req, this, inOut);
 					break;
 				}
@@ -627,11 +752,15 @@ public class Page implements Data, Comparable {
 	 * @param inWebPageContext
 	 * @param inOutputStream
 	 */
-	public void generate(WebPageRequest inWebPageContext, Writer inOutputStream) {
+	public void generate(WebPageRequest inWebPageContext, Writer inOutputStream)
+	{
 		WebPageRequest context = null;
-		if (inWebPageContext.getPage() == this) {
+		if (inWebPageContext.getPage() == this)
+		{
 			context = inWebPageContext.copy(this);
-		} else {
+		}
+		else
+		{
 			context = inWebPageContext;
 		}
 		context.putPageValue("content", this);
@@ -647,80 +776,100 @@ public class Page implements Data, Comparable {
 
 	}
 
-	public boolean isDynamic() {
+	public boolean isDynamic()
+	{
 		return isHtml() || isJson();
 	}
 
 	/**
 	 * @return
 	 */
-	public boolean isJson() {
+	public boolean isJson()
+	{
 		String mime = getMimeType();
-		if (mime != null && mime.endsWith("json")) {
+		if (mime != null && mime.endsWith("json"))
+		{
 			return true;
 		}
 		return false;
 	}
 
-	public boolean isHtml() {
+	public boolean isHtml()
+	{
 		String mime = getMimeType();
-		if (mime != null && mime.endsWith("html")) {
+		if (mime != null && mime.endsWith("html"))
+		{
 			return true;
 		}
 		return false;
 	}
 
-	public boolean isImage() {
+	public boolean isImage()
+	{
 		String mime = getMimeType();
-		if (mime != null && mime.startsWith("image")) {
+		if (mime != null && mime.startsWith("image"))
+		{
 			return true;
 		}
 		return false;
 	}
 
-	public boolean isVideo() {
+	public boolean isVideo()
+	{
 		String mime = getMimeType();
-		if (mime != null && mime.startsWith("video")) {
+		if (mime != null && mime.startsWith("video"))
+		{
 			return true;
 		}
 		return false;
 	}
 
-	public boolean isDraft() {
-		if (getContentItem().getActualPath().indexOf(".draft.") > -1 && exists()) {
+	public boolean isDraft()
+	{
+		if (getContentItem().getActualPath().indexOf(".draft.") > -1 && exists())
+		{
 			return true;
 		}
 		return false;
 	}
 
-	public Permission getPermission(String inName) {
+	public Permission getPermission(String inName)
+	{
 		return getPageSettings().getPermission(inName);
 	}
 
-	public List getPermissions() {
+	public List getPermissions()
+	{
 		return getPageSettings().getPermissions();
 	}
 
-	public List getParentPaths() {
+	public List getParentPaths()
+	{
 		List parents = new ArrayList();
 		String path = getPath();
-		while (true) {
-			if (path.length() == 0 || path.equals("/")) {
+		while (true)
+		{
+			if (path.length() == 0 || path.equals("/"))
+			{
 				break;
 			}
 			parents.add(0, path);
 			path = PathUtilities.extractDirectoryPath(path);
 		}
-		if (parents.size() > 0) {
+		if (parents.size() > 0)
+		{
 			parents.add(0, "/");
-		} else {
+		}
+		else
+		{
 			parents.add("/");
 		}
 		Collections.sort(parents);
 		return parents;
 	}
 
-	public String getId() {
+	public String getId()
+	{
 		String id = PathUtilities.makeId(getPath());
 		id = id.replace('/', '_');
 
@@ -728,73 +877,90 @@ public class Page implements Data, Comparable {
 
 	}
 
-	public String getParentPath() {
-		if (getPath().equals("/")) {
+	public String getParentPath()
+	{
+		if (getPath().equals("/"))
+		{
 			return null;
 		}
 		String path = PathUtilities.extractDirectoryPath(getPath());
 		// urlpath is the address the link came in on
-		if (path.equals("")) {
+		if (path.equals(""))
+		{
 			return "/";
 		}
 		return path;
 	}
 
-	public String getSourcePath() {
+	public String getSourcePath()
+	{
 		return getName();
 	}
 
-	public void setId(String inNewid) {
+	public void setId(String inNewid)
+	{
 
 	}
 
-	public void setName(String inName) {
+	public void setName(String inName)
+	{
 		// TODO Auto-generated method stub
 
 	}
 
-	public void setProperty(String inId, String inValue) {
+	public void setProperty(String inId, String inValue)
+	{
 		getPageSettings().setProperty(inId, inValue);
 
 	}
 
-	public void setProperties(Map inProperties) {
+	public void setProperties(Map inProperties)
+	{
 		getPageSettings().setProperties(inProperties);
 	}
 
-	public void setSourcePath(String inSourcepath) {
+	public void setSourcePath(String inSourcepath)
+	{
 		// TODO Auto-generated method stub
 
 	}
 
-	public long length() {
+	public long length()
+	{
 		return getContentItem().getLength();
 	}
 
-	public ValuesMap getProperties() {
+	public ValuesMap getProperties()
+	{
 		return getPageSettings().getProperties();
 	}
 
-	public int compareTo(Object inO) {
+	public int compareTo(Object inO)
+	{
 		Page other = (Page) inO;
 		return getPath().compareTo(other.getPath());
 	}
 
-	public String getText(String inKey, String inLocale) {
+	public String getText(String inKey, String inLocale)
+	{
 		String text = getPageSettings().getTextLabels().getAutoText(this, inKey, inLocale);
 		return text;
 	}
 
-	public String replaceProperty(String inValue) {
+	public String replaceProperty(String inValue)
+	{
 		return getPageSettings().replaceProperty(inValue);
 	}
 
-	public void setValues(String inKey, Collection<String> inValues) {
+	public void setValues(String inKey, Collection<String> inValues)
+	{
 		StringBuffer values = new StringBuffer();
-		for (Iterator iterator = inValues.iterator(); iterator.hasNext();) {
+		for (Iterator iterator = inValues.iterator(); iterator.hasNext();)
+		{
 			String detail = (String) iterator.next();
 			values.append(detail);
-			if (iterator.hasNext()) {
+			if (iterator.hasNext())
+			{
 				values.append(" | ");
 			}
 		}
@@ -802,34 +968,41 @@ public class Page implements Data, Comparable {
 	}
 
 	@Override
-	public Object getValue(String inKey) {
+	public Object getValue(String inKey)
+	{
 		return getProperty(inKey);
 	}
 
 	@Override
-	public void setValue(String inKey, Object inValue) {
+	public void setValue(String inKey, Object inValue)
+	{
 		setProperty(inKey, String.valueOf(inValue));
 	}
 
-	public String getName(String inLocale) {
+	public String getName(String inLocale)
+	{
 		return getName();
 	}
 
 	@Override
-	public Set keySet() {
+	public Set keySet()
+	{
 		return getProperties().keySet();
 	}
 
-	public List getPageLoaders() {
+	public List getPageLoaders()
+	{
 		List copy = (List) getCache().get("pageLoaders");
-		if (copy == null) {
+		if (copy == null)
+		{
 			copy = getPageSettings().getPageLoaders();
 			getCache().put("pageLoaders", copy);
 		}
 		return copy;
 	}
 
-	public String toJsonString() {
+	public String toJsonString()
+	{
 		throw new OpenEditException("NOT IMPLEMENTED");
 	}
 

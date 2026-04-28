@@ -6,10 +6,12 @@ import java.util.TimerTask;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-public class TaskRunner {
+public class TaskRunner
+{
 	protected Object fieldNotify = new Object();
 
-	public Object getNotify() {
+	public Object getNotify()
+	{
 		return fieldNotify;
 	}
 
@@ -20,38 +22,47 @@ public class TaskRunner {
 	protected boolean fieldHasHitMax;
 	protected int fieldMaxQueueSize = 200;
 
-	public Timer getQueue() {
-		if (fieldQueue == null) {
+	public Timer getQueue()
+	{
+		if (fieldQueue == null)
+		{
 			fieldQueue = new Timer(true);
 		}
 		return fieldQueue;
 	}
 
-	public void setQueue(Timer inQueue) {
+	public void setQueue(Timer inQueue)
+	{
 		fieldQueue = inQueue;
 	}
 
-	protected void reduce() {
+	protected void reduce()
+	{
 		fieldCount--;
-		if (fieldHasHitMax && fieldCount == 0) {
+		if (fieldHasHitMax && fieldCount == 0)
+		{
 			log.info("Image Queue is now empty");
 			fieldHasHitMax = false;
 		}
-		synchronized (getNotify()) {
+		synchronized (getNotify())
+		{
 			getNotify().notifyAll();
 		}
 
 	}
 
-	protected void increase() {
+	protected void increase()
+	{
 		fieldCount++;
 	}
 
-	public int getCount() {
+	public int getCount()
+	{
 		return fieldCount;
 	}
 
-	public void add(final Runnable inTask) {
+	public void add(final Runnable inTask)
+	{
 		if ((fieldCount > getMaxQueueSize())) // We dont want this queue to get too big in case they cancel
 		{
 			fieldHasHitMax = true;
@@ -61,11 +72,15 @@ public class TaskRunner {
 		increase();
 		log.debug("Adding " + inTask);
 		TimerTask task = new TimerTask() {
-			public void run() {
-				try {
+			public void run()
+			{
+				try
+				{
 					log.debug("Running " + inTask);
 					inTask.run();
-				} catch (Throwable ex) {
+				}
+				catch (Throwable ex)
+				{
 					log.error("task failed " + ex.getMessage() + " on  " + inTask);
 				}
 				reduce();
@@ -74,11 +89,13 @@ public class TaskRunner {
 		getQueue().schedule(task, 0);
 	}
 
-	public int getMaxQueueSize() {
+	public int getMaxQueueSize()
+	{
 		return fieldMaxQueueSize;
 	}
 
-	public void setMaxQueueSize(int inMaxQueueSize) {
+	public void setMaxQueueSize(int inMaxQueueSize)
+	{
 		fieldMaxQueueSize = inMaxQueueSize;
 	}
 }

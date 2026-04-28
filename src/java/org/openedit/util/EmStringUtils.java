@@ -3,9 +3,12 @@ package org.openedit.util;
 import java.util.Arrays;
 import java.util.List;
 
-public class EmStringUtils {
-	public static List<String> split(String inText) {
-		if (inText == null) {
+public class EmStringUtils
+{
+	public static List<String> split(String inText)
+	{
+		if (inText == null)
+		{
 			return null;
 		}
 		String text = inText.replace("\r", "");

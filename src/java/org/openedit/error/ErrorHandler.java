@@ -6,11 +6,11 @@ import org.openedit.WebPageRequest;
  * 
  * @author Matt Avery, mavery@einnovation.com
  */
-public interface ErrorHandler {
+public interface ErrorHandler
+{
 
 	/**
-	 * Handle the error.
-	 * Return if consumed
+	 * Handle the error. Return if consumed
 	 * 
 	 * @param error The error
 	 */

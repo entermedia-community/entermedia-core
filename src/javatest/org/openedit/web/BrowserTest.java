@@ -1,21 +1,20 @@
 /*
-Copyright (c) 2003 eInnovation Inc. All rights reserved
-
-This library is free software; you can redistribute it and/or modify it under the terms
-of the GNU Lesser General Public License as published by the Free Software Foundation;
-either version 2.1 of the License, or (at your option) any later version.
-
-This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-See the GNU Lesser General Public License for more details.
-*/
+ * Copyright (c) 2003 eInnovation Inc. All rights reserved
+ * 
+ * This library is free software; you can redistribute it and/or modify it under the terms of the
+ * GNU Lesser General Public License as published by the Free Software Foundation; either version
+ * 2.1 of the License, or (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ */
 
 package org.openedit.web;
 
 import org.openedit.web.Browser;
 
 import junit.framework.TestCase;
-
 
 /**
  * Test for Browser, parsing query strings for different browsers
@@ -24,19 +23,16 @@ import junit.framework.TestCase;
  */
 public class BrowserTest extends TestCase
 {
-	public BrowserTest(String inName)
-	{
+	public BrowserTest(String inName) {
 		super(inName);
 	}
-
 
 	/**
 		 *
 		 */
 	public void testGaleonLinux()
 	{
-		Browser browser = new Browser(
-				"Mozilla/5.0 Galeon/1.2.0 (X11; Linux i686; U;) Gecko/20020408");
+		Browser browser = new Browser("Mozilla/5.0 Galeon/1.2.0 (X11; Linux i686; U;) Gecko/20020408");
 		assertEquals(Browser.GECKO_BROWSER, browser.getBrowserType());
 		assertEquals("20020408", browser.getVersion());
 	}
@@ -94,8 +90,7 @@ public class BrowserTest extends TestCase
 		 */
 	public void testMozillaLinux()
 	{
-		Browser browser = new Browser(
-				"Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.1b) Gecko/20020722");
+		Browser browser = new Browser("Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.1b) Gecko/20020722");
 		assertEquals(Browser.GECKO_BROWSER, browser.getBrowserType());
 		assertEquals("20020722", browser.getVersion());
 	}
@@ -105,8 +100,7 @@ public class BrowserTest extends TestCase
 		 */
 	public void testMozillaMacOSX()
 	{
-		Browser browser = new Browser(
-				"Mozilla/5.0 (Macintosh; U; PPC Mac OS X; en-US; rv:1.0.0) Gecko/20020529");
+		Browser browser = new Browser("Mozilla/5.0 (Macintosh; U; PPC Mac OS X; en-US; rv:1.0.0) Gecko/20020529");
 		assertEquals(Browser.GECKO_BROWSER, browser.getBrowserType());
 		assertEquals("20020529", browser.getVersion());
 	}
@@ -116,8 +110,7 @@ public class BrowserTest extends TestCase
 		 */
 	public void testMozillaWinNT()
 	{
-		Browser browser = new Browser(
-				"Mozilla/5.0 (Windows; U; Windows NT 5.0; en-US; rv:1.0.0) Gecko/20020530");
+		Browser browser = new Browser("Mozilla/5.0 (Windows; U; Windows NT 5.0; en-US; rv:1.0.0) Gecko/20020530");
 		assertEquals(Browser.GECKO_BROWSER, browser.getBrowserType());
 		assertEquals("20020530", browser.getVersion());
 	}
@@ -127,8 +120,7 @@ public class BrowserTest extends TestCase
 		 */
 	public void testNetscape4OS9()
 	{
-		Browser browser = new Browser(
-				"Mozilla/4.75C-CCK-MCD {C-UDP; EBM-APPLE} (Macintosh; U; PPC)");
+		Browser browser = new Browser("Mozilla/4.75C-CCK-MCD {C-UDP; EBM-APPLE} (Macintosh; U; PPC)");
 		assertEquals(Browser.NETSCAPE_BROWSER, browser.getBrowserType());
 		assertEquals("4.75", browser.getVersion());
 		assertEquals(4, browser.getMajorVersion());
@@ -136,9 +128,7 @@ public class BrowserTest extends TestCase
 	}
 
 	/*
-	   public void testMSIEMac()
-	   {
-	   }
+	 * public void testMSIEMac() { }
 	 */
 	public void testNetscape4WinNT()
 	{

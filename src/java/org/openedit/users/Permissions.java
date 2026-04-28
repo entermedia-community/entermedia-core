@@ -14,7 +14,8 @@ import org.openedit.data.SearcherManager;
 import org.openedit.hittracker.HitTracker;
 import org.openedit.profile.UserProfile;
 
-public class Permissions implements CatalogEnabled {
+public class Permissions implements CatalogEnabled
+{
 	private static final Log log = LogFactory.getLog(Permissions.class);
 
 	protected UserProfile fieldUserProfile;
@@ -22,44 +23,52 @@ public class Permissions implements CatalogEnabled {
 	protected SearcherManager fieldSearcherManager;
 	protected String fieldCatalogId;
 
-	public Permissions() {
-	}
+	public Permissions() {}
 
 	// system wide
 
-	public String getCatalogId() {
+	public String getCatalogId()
+	{
 		return fieldCatalogId;
 	}
 
-	public void setCatalogId(String inCatalogId) {
+	public void setCatalogId(String inCatalogId)
+	{
 		fieldCatalogId = inCatalogId;
 	}
 
-	public SearcherManager getSearcherManager() {
+	public SearcherManager getSearcherManager()
+	{
 		return fieldSearcherManager;
 	}
 
-	public void setSearcherManager(SearcherManager inSearcherManager) {
+	public void setSearcherManager(SearcherManager inSearcherManager)
+	{
 		fieldSearcherManager = inSearcherManager;
 	}
 
-	public Set getSystemRolePermissions() {
+	public Set getSystemRolePermissions()
+	{
 		return fieldSystemRolePermissions; /// Default system permissions from the default entity?
 	}
 
-	public void setSystemRolePermissions(Set inSettingsGroupPermissions) {
+	public void setSystemRolePermissions(Set inSettingsGroupPermissions)
+	{
 		fieldSystemRolePermissions = inSettingsGroupPermissions;
 	}
 
-	public EntityPermissions getEntityPermissions() {
+	public EntityPermissions getEntityPermissions()
+	{
 		return getUserProfile().getEntityPermissions();
 	}
 
-	public UserProfile getUserProfile() {
+	public UserProfile getUserProfile()
+	{
 		return fieldUserProfile;
 	}
 
-	public void setUserProfile(UserProfile inUserProfile) {
+	public void setUserProfile(UserProfile inUserProfile)
+	{
 		fieldUserProfile = inUserProfile;
 	}
 
@@ -86,12 +95,14 @@ public class Permissions implements CatalogEnabled {
 	// return can;
 	// }
 
-	private Data loadModule(String inModuleId) {
+	private Data loadModule(String inModuleId)
+	{
 		Data module = getSearcherManager().getCachedData(getCatalogId(), "module", inModuleId);
 		return module;
 	}
 
-	private String findModulePermissionLevel(Data inModule) {
+	private String findModulePermissionLevel(Data inModule)
+	{
 		String roleid = getUserProfile().get("settingsgroup");
 		// String[] standardroles = new
 		// String[]{"editor","administrator","users","owner"};
@@ -105,65 +116,84 @@ public class Permissions implements CatalogEnabled {
 		return roleid;
 	}
 
-	protected boolean isEditorFor(Data inData) {
-		if (inData == null) {
+	protected boolean isEditorFor(Data inData)
+	{
+		if (inData == null)
+		{
 			return false;
 		}
 		Collection users = inData.getValues("editorusers");
-		if (users != null && !users.isEmpty()) {
-			if (users.contains(getUserProfile().getUserId())) {
+		if (users != null && !users.isEmpty())
+		{
+			if (users.contains(getUserProfile().getUserId()))
+			{
 				return true;
 			}
 		}
 		Collection groups = inData.getValues("editorgroups");
-		if (groups != null && !groups.isEmpty()) {
+		if (groups != null && !groups.isEmpty())
+		{
 			Collection<Group> usergroups = getUserProfile().getUser().getGroups();
-			for (Iterator iterator = usergroups.iterator(); iterator.hasNext();) {
+			for (Iterator iterator = usergroups.iterator(); iterator.hasNext();)
+			{
 				Group group = (Group) iterator.next();
-				if (groups.contains(group.getId())) {
+				if (groups.contains(group.getId()))
+				{
 					return true;
 				}
 			}
 		}
 		Collection roles = inData.getValues("editorroles");
-		if (roles != null && !roles.isEmpty()) {
-			if (roles.contains(getUserProfile().getId())) {
+		if (roles != null && !roles.isEmpty())
+		{
+			if (roles.contains(getUserProfile().getId()))
+			{
 				return true;
 			}
 		}
 		return false;
 	}
 
-	protected boolean isViewerOnlySet(Data inEntity) {
-		if (inEntity == null) {
+	protected boolean isViewerOnlySet(Data inEntity)
+	{
+		if (inEntity == null)
+		{
 			return false;
 		}
 		Collection users = inEntity.getValues("viewerusers");
-		if (users != null && !users.isEmpty()) {
-			if (users.contains(getUserProfile().getUserId())) {
+		if (users != null && !users.isEmpty())
+		{
+			if (users.contains(getUserProfile().getUserId()))
+			{
 				return true;
 			}
 		}
 		Collection groups = inEntity.getValues("viewergroups");
-		if (groups != null && !groups.isEmpty()) {
+		if (groups != null && !groups.isEmpty())
+		{
 			Collection<Group> usergroups = getUserProfile().getUser().getGroups();
-			for (Iterator iterator = usergroups.iterator(); iterator.hasNext();) {
+			for (Iterator iterator = usergroups.iterator(); iterator.hasNext();)
+			{
 				Group group = (Group) iterator.next();
-				if (groups.contains(group.getId())) {
+				if (groups.contains(group.getId()))
+				{
 					return true;
 				}
 			}
 		}
 		Collection roles = inEntity.getValues("viewerroles");
-		if (roles != null && !roles.isEmpty()) {
-			if (roles.contains(getUserProfile().getId())) {
+		if (roles != null && !roles.isEmpty())
+		{
+			if (roles.contains(getUserProfile().getId()))
+			{
 				return true;
 			}
 		}
 		return false;
 	}
 
-	protected boolean isEditorFor(Data inModule, Data inEntity) {
+	protected boolean isEditorFor(Data inModule, Data inEntity)
+	{
 		boolean iseditor = isEditorFor(inModule) || isEditorFor(inEntity);
 		return iseditor;
 	}
@@ -172,7 +202,8 @@ public class Permissions implements CatalogEnabled {
 
 	public Boolean can(String inKey) // System wide settings
 	{
-		if (getSystemRolePermissions() != null) {
+		if (getSystemRolePermissions() != null)
+		{
 			boolean can = getSystemRolePermissions().contains(inKey);
 			return can;
 		}
@@ -180,13 +211,16 @@ public class Permissions implements CatalogEnabled {
 	}
 
 	// Module Level
-	public Boolean can(String inModuleId, String inKey) {
+	public Boolean can(String inModuleId, String inKey)
+	{
 		return canModule(inModuleId, inKey);
 	}
 
-	public Boolean canModule(String inModuleId, String inKey) {
+	public Boolean canModule(String inModuleId, String inKey)
+	{
 		Data module = loadModule(inModuleId);
-		if (module == null) {
+		if (module == null)
+		{
 			log.error("No such module" + inModuleId);
 			return false;
 		}
@@ -194,14 +228,18 @@ public class Permissions implements CatalogEnabled {
 		return can;
 	}
 
-	public Boolean canModule(Data module, String inKey) {
-		if (module == null) {
+	public Boolean canModule(Data module, String inKey)
+	{
+		if (module == null)
+		{
 			return false;
 		}
 
-		if (inKey.equals("edit")) {
+		if (inKey.equals("edit"))
+		{
 			boolean istrue = isEditorFor(module);
-			if (istrue) {
+			if (istrue)
+			{
 				return true;
 			}
 		}
@@ -219,20 +257,21 @@ public class Permissions implements CatalogEnabled {
 	// return can;
 	// }
 
-	public Boolean canEntity(Data inModule, Data inEntity, String inKey) {
-		if (inModule == null || inEntity == null || inKey == null) {
+	public Boolean canEntity(Data inModule, Data inEntity, String inKey)
+	{
+		if (inModule == null || inEntity == null || inKey == null)
+		{
 			return false;
 		}
 
-		if (inKey.equals("edit")) {
+		if (inKey.equals("edit"))
+		{
 			/*
-			 * if( isViewerOnlySet(inEntity) )
-			 * {
-			 * return false;
-			 * }
+			 * if( isViewerOnlySet(inEntity) ) { return false; }
 			 */
 			boolean istrue = isEditorFor(inModule, inEntity);
-			if (istrue) {
+			if (istrue)
+			{
 				return true;
 			}
 		}
@@ -240,14 +279,16 @@ public class Permissions implements CatalogEnabled {
 		String userpermissionlevel = findEntityPermissionLevel(inModule, inEntity);
 		EntityPermissions entitypermissions = getEntityPermissions(inModule, userpermissionlevel);
 		boolean can = entitypermissions.can(inKey);
-		if (can) {
+		if (can)
+		{
 			return true;
 		}
 		// can = canModule(inModule,inKey);
 		return can;
 	}
 
-	private String findEntityPermissionLevel(Data inModule, Data inEntity) {
+	private String findEntityPermissionLevel(Data inModule, Data inEntity)
+	{
 		String roleid = getUserProfile().get("settingsgroup");
 		// if( "administrator".equals(roleid) )
 		// {
@@ -255,7 +296,8 @@ public class Permissions implements CatalogEnabled {
 		// }
 
 		boolean isowner = getUserProfile().getUserId().equals(inEntity.get("owner"));
-		if (isowner) {
+		if (isowner)
+		{
 			return "owner";
 		}
 		// TODO: Do we support custom roles?
@@ -276,16 +318,17 @@ public class Permissions implements CatalogEnabled {
 		return roleid;
 	}
 
-	public EntityPermissions getEntityPermissions(Data inModule, String inRole) {
+	public EntityPermissions getEntityPermissions(Data inModule, String inRole)
+	{
 		String id = inModule + "_" + inRole;
-		EntityPermissions modulepermissions = (EntityPermissions) getSearcherManager().getCacheManager()
-				.get("permissions" + getCatalogId(), id);
-		if (modulepermissions == null) {
+		EntityPermissions modulepermissions = (EntityPermissions) getSearcherManager().getCacheManager().get("permissions" + getCatalogId(), id);
+		if (modulepermissions == null)
+		{
 			Searcher searcher = getSearcherManager().getSearcher(getCatalogId(), "permissionentityassigned");
-			HitTracker grouppermissions = searcher.query().exact("settingsgroup", inRole)
-					.exact("moduleid", inModule.getId()).search();
+			HitTracker grouppermissions = searcher.query().exact("settingsgroup", inRole).exact("moduleid", inModule.getId()).search();
 			modulepermissions = new EntityPermissions();
-			for (Iterator iterator = grouppermissions.iterator(); iterator.hasNext();) {
+			for (Iterator iterator = grouppermissions.iterator(); iterator.hasNext();)
+			{
 				Data data = (Data) iterator.next();
 				String moduleid = data.get("moduleid");
 				String permissionname = data.get("permissionsentity");

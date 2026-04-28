@@ -7,11 +7,13 @@ import org.openedit.OpenEditException;
 import org.openedit.WebPageRequest;
 import org.openedit.page.Page;
 
-public class PipeLineGenerator extends BaseGenerator {
+public class PipeLineGenerator extends BaseGenerator
+{
 	protected Generator fieldPipeLineGenerator;
 	// This class is not finished yet
 
-	public void generate(WebPageRequest inContext, Page inPage, Output inOut) throws OpenEditException {
+	public void generate(WebPageRequest inContext, Page inPage, Output inOut) throws OpenEditException
+	{
 		// Run the convert generator then read in the stream and apply a water mark?
 
 		// Read in the stream and save it back out and apply a watermark?.. Seems dumb
@@ -20,33 +22,41 @@ public class PipeLineGenerator extends BaseGenerator {
 		// Loop over all the children pipeline generators along the way?
 		PipeLineGenerator gen = createPipe(this); // Like the stream API
 		byte[] vals = new byte[1024];
-		try {
-			while (gen.read() != null) {
+		try
+		{
+			while (gen.read() != null)
+			{
 				inOut.getStream().write(vals);
 			}
-		} catch (IOException ex) {
+		}
+		catch (IOException ex)
+		{
 			throw new OpenEditException(ex);
 		}
 
 	}
 
-	protected byte[] read() {
+	protected byte[] read()
+	{
 		// get data from child
 		// manipulae data
 		// return data
 		return null;
 	}
 
-	private PipeLineGenerator createPipe(PipeLineGenerator inPipeLineGenerator) {
+	private PipeLineGenerator createPipe(PipeLineGenerator inPipeLineGenerator)
+	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public Generator getPipeLineGenerator() {
+	public Generator getPipeLineGenerator()
+	{
 		return fieldPipeLineGenerator;
 	}
 
-	public void setPipeLineGenerator(Generator inPipeLineGenerator) {
+	public void setPipeLineGenerator(Generator inPipeLineGenerator)
+	{
 		fieldPipeLineGenerator = inPipeLineGenerator;
 	}
 

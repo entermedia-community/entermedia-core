@@ -6,24 +6,29 @@ import java.util.Date;
 import org.openedit.Data;
 import org.openedit.util.DateStorageUtil;
 
-public class DataWithSearcher {
+public class DataWithSearcher
+{
 
 	protected SearcherManager fieldSearcherManager;
 	protected String fieldCatalogId;
 
-	public String getCatalogId() {
+	public String getCatalogId()
+	{
 		return fieldCatalogId;
 	}
 
-	public void setCatalogId(String inCatalogId) {
+	public void setCatalogId(String inCatalogId)
+	{
 		fieldCatalogId = inCatalogId;
 	}
 
-	public String getSearchType() {
+	public String getSearchType()
+	{
 		return fieldSearchType;
 	}
 
-	public void setSearchType(String inSearchType) {
+	public void setSearchType(String inSearchType)
+	{
 		fieldSearchType = inSearchType;
 	}
 
@@ -37,57 +42,70 @@ public class DataWithSearcher {
 		setSearchType(inSearchType);
 	}
 
-	public SearcherManager getSearcherManager() {
+	public SearcherManager getSearcherManager()
+	{
 		return fieldSearcherManager;
 	}
 
-	public void setSearcherManager(SearcherManager inSearcherManager) {
+	public void setSearcherManager(SearcherManager inSearcherManager)
+	{
 		fieldSearcherManager = inSearcherManager;
 	}
 
-	public Data getData() {
+	public Data getData()
+	{
 		return fieldData;
 	}
 
-	public void setData(Data inData) {
+	public void setData(Data inData)
+	{
 		fieldData = inData;
 	}
 
-	public Object getChildValue(String inChildField) {
+	public Object getChildValue(String inChildField)
+	{
 		Searcher searcher = getSearcherManager().getSearcher(getCatalogId(), getSearchType());
 		PropertyDetail detail = searcher.getPropertyDetails().getDetail(inChildField);
-		if (detail == null) {
+		if (detail == null)
+		{
 			return null;
 		}
 		Object othervalue = null;
-		if (getData() != null) {
+		if (getData() != null)
+		{
 			othervalue = getData().getValue(inChildField);
 		}
-		if (othervalue != null) {
-			if (detail.isList()) {
-				if (searcher != null) {
-					if (othervalue instanceof Collection) {
+		if (othervalue != null)
+		{
+			if (detail.isList())
+			{
+				if (searcher != null)
+				{
+					if (othervalue instanceof Collection)
+					{
 						Collection others = (Collection) othervalue;
-						if (others.isEmpty()) {
+						if (others.isEmpty())
+						{
 							return null;
 						}
 						othervalue = others.iterator().next();
 					}
-					Data childdata = getSearcherManager().getCachedData(detail.getCatalogId(), detail.getListId(),
-							othervalue.toString());
-					if (childdata != null) {
-						DataWithSearcher newval = new DataWithSearcher(getSearcherManager(), detail.getCatalogId(),
-								detail.getListId(), childdata);
+					Data childdata = getSearcherManager().getCachedData(detail.getCatalogId(), detail.getListId(), othervalue.toString());
+					if (childdata != null)
+					{
+						DataWithSearcher newval = new DataWithSearcher(getSearcherManager(), detail.getCatalogId(), detail.getListId(), childdata);
 						return newval;
 					}
 				}
-			} else if (detail.isDate() && !(othervalue instanceof Date)) // Is this used?
-			{
-				Date date = DateStorageUtil.getStorageUtil().parseFromStorage(othervalue.toString());
-				// TODO: Support .year
-
-				return date;
 			}
+			else
+				if (detail.isDate() && !(othervalue instanceof Date)) // Is this used?
+				{
+					Date date = DateStorageUtil.getStorageUtil().parseFromStorage(othervalue.toString());
+					// TODO: Support .year
+
+					return date;
+				}
 
 		}
 		return othervalue;

@@ -12,11 +12,11 @@ public class TextFilterTest extends BaseTestCase
 	public void testTranslation() throws Exception
 	{
 		Page page = getFixture().getPageManager().getPage("/generators/translate.html");
-		
-		TranslationFilter filter = new TranslationFilter(page,"&locale=en");
+
+		TranslationFilter filter = new TranslationFilter(page, "&locale=en");
 		StringWriter out = new StringWriter();
 		new OutputFiller().fill(filter, out);
 		System.out.println(out.toString());
-		
+
 	}
 }

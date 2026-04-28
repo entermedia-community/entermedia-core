@@ -1,14 +1,14 @@
 /*
-Copyright (c) 2003 eInnovation Inc. All rights reserved
-
-This library is free software; you can redistribute it and/or modify it under the terms
-of the GNU Lesser General Public License as published by the Free Software Foundation;
-either version 2.1 of the License, or (at your option) any later version.
-
-This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-See the GNU Lesser General Public License for more details.
-*/
+ * Copyright (c) 2003 eInnovation Inc. All rights reserved
+ * 
+ * This library is free software; you can redistribute it and/or modify it under the terms of the
+ * GNU Lesser General Public License as published by the Free Software Foundation; either version
+ * 2.1 of the License, or (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ */
 
 package org.openedit.util.strainer;
 
@@ -21,7 +21,8 @@ import org.openedit.users.User;
  * @author imiller
  */
 
-public class UserPropertyFilter extends BaseFilter {
+public class UserPropertyFilter extends BaseFilter
+{
 	protected String fieldPropertyName;
 
 	public UserPropertyFilter() {
@@ -36,39 +37,48 @@ public class UserPropertyFilter extends BaseFilter {
 	/**
 	 * @see org.openedit.util.strainer.Filter#passes(java.lang.Object)
 	 */
-	public boolean passes(Object inObj) throws FilterException, ClassCastException {
+	public boolean passes(Object inObj) throws FilterException, ClassCastException
+	{
 		WebPageRequest req = (WebPageRequest) inObj;
 
 		User data = (User) req.getPageValue("user");
 
-		if (data == null) {
+		if (data == null)
+		{
 			return false;
 		}
 		String value = data.get(getPropertyName());
-		if (value == null && getValue() == null) {
+		if (value == null && getValue() == null)
+		{
 			return true;
 		}
-		if (value == null) {
+		if (value == null)
+		{
 			return true;
 		}
 		String[] values = value.split(" ");
-		for (String string : values) {
-			if (value != null && string.equals(getValue())) {
+		for (String string : values)
+		{
+			if (value != null && string.equals(getValue()))
+			{
 				return true;
 			}
 		}
 		return false;
 	}
 
-	public String toString() {
+	public String toString()
+	{
 		return "UserProperty" + getPropertyName() + "=" + getValue();
 	}
 
-	public String getPropertyName() {
+	public String getPropertyName()
+	{
 		return fieldPropertyName;
 	}
 
-	public void setPropertyName(String inPropertyName) {
+	public void setPropertyName(String inPropertyName)
+	{
 		fieldPropertyName = inPropertyName;
 	}
 }

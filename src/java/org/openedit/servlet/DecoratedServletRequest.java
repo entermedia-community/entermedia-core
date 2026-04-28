@@ -6,7 +6,8 @@ package org.openedit.servlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
-public class DecoratedServletRequest extends HttpServletRequestWrapper {
+public class DecoratedServletRequest extends HttpServletRequestWrapper
+{
 	protected String fieldRequestURI;
 	protected String fieldPathInfo;
 
@@ -14,23 +15,29 @@ public class DecoratedServletRequest extends HttpServletRequestWrapper {
 		super(inRequest);
 	}
 
-	public void setPathInfo(String inPath) {
+	public void setPathInfo(String inPath)
+	{
 		fieldPathInfo = inPath;
 	}
 
-	public void setrequestURI(String inUri) {
+	public void setrequestURI(String inUri)
+	{
 		fieldRequestURI = inUri;
 	}
 
-	public String getPathInfo() {
-		if (fieldPathInfo != null) {
+	public String getPathInfo()
+	{
+		if (fieldPathInfo != null)
+		{
 			return fieldPathInfo;
 		}
 		return super.getPathInfo();
 	}
 
-	public String getRequestURI() {
-		if (fieldRequestURI != null) {
+	public String getRequestURI()
+	{
+		if (fieldRequestURI != null)
+		{
 			return fieldRequestURI;
 		}
 		return super.getRequestURI();

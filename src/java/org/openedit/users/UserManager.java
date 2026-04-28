@@ -1,14 +1,14 @@
 /*
-Copyright (c) 2003 eInnovation Inc. All rights reserved
-
-This library is free software; you can redistribute it and/or modify it under the terms
-of the GNU Lesser General Public License as published by the Free Software Foundation;
-either version 2.1 of the License, or (at your option) any later version.
-
-This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-See the GNU Lesser General Public License for more details.
-*/
+ * Copyright (c) 2003 eInnovation Inc. All rights reserved
+ * 
+ * This library is free software; you can redistribute it and/or modify it under the terms of the
+ * GNU Lesser General Public License as published by the Free Software Foundation; either version
+ * 2.1 of the License, or (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ */
 
 package org.openedit.users;
 
@@ -27,7 +27,8 @@ import org.openedit.util.StringEncryption;
  *
  * @author Eric and Matt
  */
-public interface UserManager extends CatalogEnabled {
+public interface UserManager extends CatalogEnabled
+{
 
 	/**
 	 * Retrieve the group with the given name.
@@ -36,8 +37,7 @@ public interface UserManager extends CatalogEnabled {
 	 *
 	 * @return The group, or <code>null</code> if there is no such group
 	 *
-	 * @throws UserManagerException If something went wrong trying to retrieve the
-	 *                              group
+	 * @throws UserManagerException If something went wrong trying to retrieve the group
 	 */
 	Group getGroup(String inGroupId) throws UserManagerException;
 
@@ -57,8 +57,7 @@ public interface UserManager extends CatalogEnabled {
 	 *
 	 * @return The user, or <code>null</code> if there is no such user
 	 *
-	 * @throws UserManagerException If something went wrong trying to retrieve the
-	 *                              user
+	 * @throws UserManagerException If something went wrong trying to retrieve the user
 	 */
 	User getUser(String inUserName) throws UserManagerException;
 
@@ -78,12 +77,9 @@ public interface UserManager extends CatalogEnabled {
 	 *
 	 * @param inUser The user to authenticate
 	 *
-	 * @return <code>true</code> if the user was authenticated successfully,
-	 *         <code>false</code> if
-	 *         not
+	 * @return <code>true</code> if the user was authenticated successfully, <code>false</code> if not
 	 *
-	 * @throws UserManagerException If something went wrong trying to authenticate
-	 *                              the user
+	 * @throws UserManagerException If something went wrong trying to authenticate the user
 	 */
 	boolean authenticate(AuthenticationRequest inReq);
 
@@ -97,8 +93,7 @@ public interface UserManager extends CatalogEnabled {
 	 * @return The new group
 	 *
 	 * @throws DuplicateGroupException If there is already a group with the given Id
-	 * @throws UserManagerException    If the group could not be created for some
-	 *                                 reason
+	 * @throws UserManagerException If the group could not be created for some reason
 	 */
 	Group createGroup() throws UserManagerException;
 
@@ -112,13 +107,10 @@ public interface UserManager extends CatalogEnabled {
 	 *
 	 * @return The new user
 	 *
-	 * @throws DuplicateUserException If there is already a user with the given
-	 *                                username
-	 * @throws UserManagerException   If the user could not be created for some
-	 *                                reason
+	 * @throws DuplicateUserException If there is already a user with the given username
+	 * @throws UserManagerException If the user could not be created for some reason
 	 */
-	User createUser(String inUserName, String inPassword)
-			throws UserManagerException;
+	User createUser(String inUserName, String inPassword) throws UserManagerException;
 
 	/**
 	 * Delete the given group.

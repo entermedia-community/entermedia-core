@@ -23,7 +23,8 @@ import org.openedit.util.PathUtilities;
 /**
  * @author Matthew Avery, mavery@einnovation.com
  */
-public class PageStreamer {
+public class PageStreamer
+{
 	private static final Log log = LogFactory.getLog(PageStreamer.class);
 	protected OpenEditEngine fieldEngine;
 	protected Output fieldOutput;
@@ -39,58 +40,71 @@ public class PageStreamer {
 	}
 
 	/**
-	 * This is called only once
-	 * We need to exec all the page actions ahead of time
-	 * And check the read permissions ahead of time
-	 * Then we can do the rendering
+	 * This is called only once We need to exec all the page actions ahead of time And check the read
+	 * permissions ahead of time Then we can do the rendering
 	 * 
 	 * @throws OpenEditException
 	 */
 
-	public void render() throws OpenEditException {
+	public void render() throws OpenEditException
+	{
 		Page page = getWebPageRequest().getPage();
 		boolean runlayout = page.isHtml();
-		if (!runlayout) {
+		if (!runlayout)
+		{
 			runlayout = Boolean.parseBoolean(page.getProperty("forcelayout"));
 		}
-		if (runlayout) {
+		if (runlayout)
+		{
 			getChildContentList().add(getWebPageRequest().getContentPage());
 
 			// allow someone to programatically override the top level inner layout
 			String override = (String) getWebPageRequest().getPageValue(PageRequestKeys.INNERLAYOUTOVERRIDE);
-			if (override != null) {
-				if (!override.equals(Page.BLANK_LAYOUT)) {
+			if (override != null)
+			{
+				if (!override.equals(Page.BLANK_LAYOUT))
+				{
 					Page il = getPage(override);
 					addInnerLayout(il);
 				}
-			} else {
+			}
+			else
+			{
 				addInnerLayout(getWebPageRequest().getContentPage());
 			}
 			// handle layout
 			String layout = getLayout();
-			if (layout != null) {
+			if (layout != null)
+			{
 				Page layoutPage = getPage(layout);
 				getChildContentList().add(0, layoutPage);
 			}
 			User user = getWebPageRequest().getUser();
-			if (user != null) {
-				if ("debug".equals(user.get("oe_edit_mode"))) {
+			if (user != null)
+			{
+				if ("debug".equals(user.get("oe_edit_mode")))
+				{
 					setDebug(true);
 				}
 			}
 
-			if (getChildContentList().size() > 1) {
+			if (getChildContentList().size() > 1)
+			{
 				// This number starts at the content page and ends in the middle of the layouts
 				String maxlevels = getWebPageRequest().getRequestParameter("oemaxlevel");
-				if (maxlevels == null) {
+				if (maxlevels == null)
+				{
 					maxlevels = getWebPageRequest().getContentProperty("oemaxlevel");
 				}
 
-				if (maxlevels != null) {
-					if (!maxlevels.equals("null")) {
+				if (maxlevels != null)
+				{
+					if (!maxlevels.equals("null"))
+					{
 						int cut = Integer.parseInt(maxlevels);
 						List toCut = getChildContentList();
-						if (cut < toCut.size()) {
+						if (cut < toCut.size())
+						{
 							toCut = toCut.subList(toCut.size() - cut, toCut.size());
 							fieldChildContentList = toCut;
 						}
@@ -98,17 +112,21 @@ public class PageStreamer {
 				}
 			}
 
-			if (getChildContentList().size() > 1) {
+			if (getChildContentList().size() > 1)
+			{
 				// This number starts in the middle of the layout list and ends at the content
 				String maxlevels = getWebPageRequest().getRequestParameter("oemaxlayout");
-				if (maxlevels == null) {
+				if (maxlevels == null)
+				{
 					maxlevels = getWebPageRequest().getContentProperty("oemaxlayout");
 				}
 
-				if (maxlevels != null && !maxlevels.equals("null")) {
+				if (maxlevels != null && !maxlevels.equals("null"))
+				{
 					int cut = Integer.parseInt(maxlevels);
 					List toCut = getChildContentList();
-					if (cut < toCut.size()) {
+					if (cut < toCut.size())
+					{
 						toCut = toCut.subList(cut, toCut.size());
 						fieldChildContentList = toCut;
 					}
@@ -116,18 +134,23 @@ public class PageStreamer {
 			}
 
 			String cancel = getWebPageRequest().getPage().getPageSettings().getPropertyValueFixed("cancelinnerlayout");
-			if (cancel != null) {
+			if (cancel != null)
+			{
 				List toCut = getChildContentList();
-				for (int i = 0; i < toCut.size(); i++) {
+				for (int i = 0; i < toCut.size(); i++)
+				{
 					Page path = (Page) toCut.get(i);
-					if (path.getPath().equals(cancel)) {
+					if (path.getPath().equals(cancel))
+					{
 						toCut.remove(i);
 						break;
 					}
 				}
 			}
 			includeContent();
-		} else { // CSS files. Binary
+		}
+		else
+		{ // CSS files. Binary
 			WebPageRequest request = getWebPageRequest();
 			Page torender = getPageManager().getPage(page, getWebPageRequest());
 			if (torender != page) // This could be a draft version
@@ -139,32 +162,42 @@ public class PageStreamer {
 		}
 	}
 
-	protected void addInnerLayout(Page inContentPage) throws OpenEditException {
+	protected void addInnerLayout(Page inContentPage) throws OpenEditException
+	{
 		// log.info("Adding " + inContentPage);
 		String innerlayout = inContentPage.findInnerLayout();
-		if (innerlayout != null) {
+		if (innerlayout != null)
+		{
 			UserProfile profile = getWebPageRequest().getUserProfile();
-			if (profile != null) {
+			if (profile != null)
+			{
 				innerlayout = profile.replaceUserVariable(innerlayout);
 			}
 
-			if (!inContentPage.getPath().equalsIgnoreCase(innerlayout)) {
+			if (!inContentPage.getPath().equalsIgnoreCase(innerlayout))
+			{
 				// The contentpage has an inner layout set that is not itself
 				Page il = getPageManager().getPage(innerlayout, getWebPageRequest().getUser() != null);
-				if (!getChildContentList().contains(il)) {
+				if (!getChildContentList().contains(il))
+				{
 					// It is not in the list so we add it
-					if (getChildContentList().size() < getMaxLoop()) {
+					if (getChildContentList().size() < getMaxLoop())
+					{
 						getChildContentList().add(0, il);
 						addInnerLayout(il);
 					}
-				} else {
+				}
+				else
+				{
 					// Special case: It is aleady in the list so we try again using the parent
 					// layout
 					// We might have a directory that has two layouts inside it.
 					String parentpath = PathUtilities.extractDirectoryPath(il.getParentPath());
-					if (!parentpath.equals("")) {
+					if (!parentpath.equals(""))
+					{
 						Page parent = getPageManager().getPage(parentpath, getWebPageRequest().getUser() != null);
-						if (parent.hasInnerLayout()) {
+						if (parent.hasInnerLayout())
+						{
 							il = getPageManager().getPage(parent.getInnerLayout(), true);
 							if (!getChildContentList().contains(il)) // If we find two in a row we stop looking
 							{
@@ -179,12 +212,15 @@ public class PageStreamer {
 		// getChildContentList());
 	}
 
-	protected void renderLayout() throws OpenEditException {
+	protected void renderLayout() throws OpenEditException
+	{
 		Page inLayout = getEngine().getPageManager().getPage(getLayout(), getWebPageRequest().getUser() != null);
-		if (!inLayout.exists()) {
+		if (!inLayout.exists())
+		{
 			getWebPageRequest().putPageValue("missingLayoutPage", inLayout.getPath());
 			inLayout = getPage("/layoutnotfound.html");
-			if (!inLayout.exists()) {
+			if (!inLayout.exists())
+			{
 				inLayout = getPage("/openedit/layoutnotfound.html");
 			}
 		}
@@ -195,7 +231,8 @@ public class PageStreamer {
 	 * @deprecated use includeContent()
 	 * @throws OpenEditException
 	 */
-	public void streamContent() throws OpenEditException {
+	public void streamContent() throws OpenEditException
+	{
 		includeContent();
 	}
 
@@ -203,17 +240,21 @@ public class PageStreamer {
 	 * @deprecated use includeContent()
 	 * @throws OpenEditException
 	 */
-	public void renderContent() throws OpenEditException {
+	public void renderContent() throws OpenEditException
+	{
 		includeContent();
 	}
 
-	public void includeContent() throws OpenEditException {
+	public void includeContent() throws OpenEditException
+	{
 		includeContent(getWebPageRequest());
 	}
 
-	public void includeContent(WebPageRequest inContext) throws OpenEditException {
+	public void includeContent(WebPageRequest inContext) throws OpenEditException
+	{
 		// if I am being called from an inner layout make sure I am at the top first
-		if (getChildContentList().size() == 0) {
+		if (getChildContentList().size() == 0)
+		{
 			// throw new OpenEditException("Ran out of content on " +
 			// getWebPageRequest().getPath());
 			// stream(getPage());
@@ -223,22 +264,22 @@ public class PageStreamer {
 		include(topChild, inContext);
 	}
 
-	public void include(Page inPage) throws OpenEditException {
+	public void include(Page inPage) throws OpenEditException
+	{
 		include(inPage, getWebPageRequest());
 	}
 
 	/**
 	 * Allows a page to be streamed that uses this request as the parent request
 	 */
-	public void include(Page inPage, WebPageRequest inContext) throws OpenEditException {
+	public void include(Page inPage, WebPageRequest inContext) throws OpenEditException
+	{
 		int hitcount = incrementWebPageRequestedCount(inPage);
 		// This is used when viewing a layout page directly (i.e. /layout.html)
-		if (hitcount >= getMaxLoop()) {
+		if (hitcount >= getMaxLoop())
+		{
 			// ok its an infinite loop
-			throw new OpenEditException(
-					"Page loop detected calling "
-							+ inPage.getPath()
-							+ "more than " + getMaxLoop() + " times.");
+			throw new OpenEditException("Page loop detected calling " + inPage.getPath() + "more than " + getMaxLoop() + " times.");
 		}
 		// This is trickly to understand. The contents actions have already been run.
 		// Now we either
@@ -248,14 +289,17 @@ public class PageStreamer {
 		Page torender = null;
 		WebPageRequest request = inContext;
 
-		if (inPage == inContext.getContentPage()) {
+		if (inPage == inContext.getContentPage())
+		{
 			torender = getPageManager().getPage(inPage, request);
 			if (torender != inPage) // This could be a draft version
 			{
 				request = inContext.copy(torender);
 				getEngine().executePageActions(request);
 			}
-		} else {
+		}
+		else
+		{
 			// these are the included pages ie. /sidebar.html that may have their own
 			// actions
 			request = inContext.copy(inPage);
@@ -268,7 +312,8 @@ public class PageStreamer {
 			{
 				request = request.copy(torender);
 			}
-			if (!request.hasRedirected()) {
+			if (!request.hasRedirected())
+			{
 				getEngine().executePageActions(request);
 			}
 		}
@@ -276,10 +321,12 @@ public class PageStreamer {
 		torender.generate(request, getOutput());
 	}
 
-	public void include(String inPath, WebPageRequest inReq) throws OpenEditException {
+	public void include(String inPath, WebPageRequest inReq) throws OpenEditException
+	{
 		String[] parts = inPath.split("[?]");
 		Page userpage = inReq.getPage(); // Only support relative to itself. Not fallack
-		if (userpage.getPath().startsWith("/WEB-INF/base")) {
+		if (userpage.getPath().startsWith("/WEB-INF/base"))
+		{
 			// We ended up in base code. Need to stay relative the browser url
 			// throw exeception? We should never been loading pages with path in base
 			userpage = inReq.getContentPage();
@@ -289,15 +336,18 @@ public class PageStreamer {
 
 		boolean canedit = false;
 		User user = getWebPageRequest().getUser();
-		if (user != null) {
+		if (user != null)
+		{
 			String prop = (String) user.get("showeditor");
 			canedit = Boolean.parseBoolean(prop);
 		}
 		Page page = getEngine().getPageManager().getPage(fullPath, canedit);
 
-		if (parts.length > 1) {
+		if (parts.length > 1)
+		{
 			Map arguments = PathUtilities.extractArguments(parts[1]);
-			for (Iterator iterator = arguments.keySet().iterator(); iterator.hasNext();) {
+			for (Iterator iterator = arguments.keySet().iterator(); iterator.hasNext();)
+			{
 				String param = (String) iterator.next();
 				inReq.setRequestParameter(param, (String[]) arguments.get(param));
 			}
@@ -305,7 +355,8 @@ public class PageStreamer {
 		include(page, inReq);
 	}
 
-	public void include(String inPath) throws OpenEditException {
+	public void include(String inPath) throws OpenEditException
+	{
 		include(inPath, getWebPageRequest());
 	}
 
@@ -314,7 +365,8 @@ public class PageStreamer {
 	 * 
 	 * @deprecated
 	 */
-	public void stream(Page inPage) throws OpenEditException {
+	public void stream(Page inPage) throws OpenEditException
+	{
 		include(inPage);
 	}
 
@@ -323,7 +375,8 @@ public class PageStreamer {
 	 * 
 	 * @deprecated
 	 */
-	public void stream(Page inPage, WebPageRequest inContext) throws OpenEditException {
+	public void stream(Page inPage, WebPageRequest inContext) throws OpenEditException
+	{
 		include(inPage, inContext);
 	}
 
@@ -332,7 +385,8 @@ public class PageStreamer {
 	 * 
 	 * @deprecated
 	 */
-	public void stream(String inPath, WebPageRequest inReq) throws OpenEditException {
+	public void stream(String inPath, WebPageRequest inReq) throws OpenEditException
+	{
 		include(inPath, inReq);
 	}
 
@@ -341,22 +395,27 @@ public class PageStreamer {
 	 * 
 	 * @deprecated
 	 */
-	public void stream(String inPath) throws OpenEditException {
+	public void stream(String inPath) throws OpenEditException
+	{
 		include(inPath);
 	}
 
-	public Map getWebPageRequestedCount() {
-		if (fieldWebPageRequestedCount == null) {
+	public Map getWebPageRequestedCount()
+	{
+		if (fieldWebPageRequestedCount == null)
+		{
 			fieldWebPageRequestedCount = new HashMap();
 		}
 		return fieldWebPageRequestedCount;
 	}
 
-	protected int incrementWebPageRequestedCount(Page inPage) {
+	protected int incrementWebPageRequestedCount(Page inPage)
+	{
 		Integer count = (Integer) getWebPageRequestedCount().get(inPage);
 		int hitcount = 0;
 
-		if (count != null) {
+		if (count != null)
+		{
 			hitcount = count.intValue() + 1;
 		}
 
@@ -364,43 +423,53 @@ public class PageStreamer {
 		return hitcount;
 	}
 
-	public boolean doesExist(String inPath) throws OpenEditException {
-		if (inPath == null) {
+	public boolean doesExist(String inPath) throws OpenEditException
+	{
+		if (inPath == null)
+		{
 			return false;
 		}
 		return loadRelativePath(inPath).exists();
 	}
 
-	protected Page loadRelativePath(String inPath) throws OpenEditException {
+	protected Page loadRelativePath(String inPath) throws OpenEditException
+	{
 		String fullPath = PathUtilities.buildRelative(inPath, getWebPageRequest().getContentPage().getPath());
 		return getPage(fullPath);
 	}
 
-	public Page getPage(String inPath) throws OpenEditException {
+	public Page getPage(String inPath) throws OpenEditException
+	{
 		return getPageManager().getPage(inPath, getWebPageRequest().getUser() != null);
 	}
 
-	public PageManager getPageManager() {
+	public PageManager getPageManager()
+	{
 		return getEngine().getPageManager();
 	}
 
-	public OpenEditEngine getEngine() {
+	public OpenEditEngine getEngine()
+	{
 		return fieldEngine;
 	}
 
-	public void setEngine(OpenEditEngine engine) {
+	public void setEngine(OpenEditEngine engine)
+	{
 		fieldEngine = engine;
 	}
 
-	public WebPageRequest getWebPageRequest() {
+	public WebPageRequest getWebPageRequest()
+	{
 		return fieldWebPageRequest;
 	}
 
-	public void setWebPageRequest(WebPageRequest WebPageRequest) {
+	public void setWebPageRequest(WebPageRequest WebPageRequest)
+	{
 		fieldWebPageRequest = WebPageRequest;
 	}
 
-	public void forward(String path, WebPageRequest inReq) throws OpenEditException {
+	public void forward(String path, WebPageRequest inReq) throws OpenEditException
+	{
 		// if this is the error page then we can get into an infinite loop
 		// WebPageRequest WebPageRequest = getWebPageRequest().copy();
 		// WebPageRequest.setPage( getPage( path ) );
@@ -425,7 +494,8 @@ public class PageStreamer {
 		// Does not support custom layouts
 	}
 
-	public PageStreamer copy() {
+	public PageStreamer copy()
+	{
 		PageStreamer streamer = new PageStreamer();
 		streamer.setEngine(getEngine());
 		streamer.fieldChildContentList = getChildContentList();
@@ -434,17 +504,21 @@ public class PageStreamer {
 		return streamer;
 	}
 
-	protected String getLayout() {
+	protected String getLayout()
+	{
 		String override = (String) getWebPageRequest().getPageValue("layoutoverride");
-		if (override != null) {
-			if (override.equals(Page.BLANK_LAYOUT)) {
+		if (override != null)
+		{
+			if (override.equals(Page.BLANK_LAYOUT))
+			{
 				return null;
 			}
 			return override;
 		}
 		Page page = getWebPageRequest().getPage();
 
-		if (page.hasLayout()) {
+		if (page.hasLayout())
+		{
 			String layout = page.getLayout();
 			layout = page.getPageSettings().replaceProperty(layout);
 			return layout;
@@ -452,30 +526,38 @@ public class PageStreamer {
 		return null;
 	}
 
-	public List getChildContentList() {
-		if (fieldChildContentList == null) {
+	public List getChildContentList()
+	{
+		if (fieldChildContentList == null)
+		{
 			fieldChildContentList = new ArrayList();
 		}
 		return fieldChildContentList;
 	}
 
-	public Output getOutput() {
+	public Output getOutput()
+	{
 		return fieldOutput;
 	}
 
-	public void setOutput(Output inOutput) {
+	public void setOutput(Output inOutput)
+	{
 		fieldOutput = inOutput;
 	}
 
-	public boolean canView(String inPath) throws OpenEditException {
+	public boolean canView(String inPath) throws OpenEditException
+	{
 
-		if (inPath.contains("?")) {
+		if (inPath.contains("?"))
+		{
 			inPath = inPath.substring(0, inPath.indexOf("?"));
 		}
 		Page linkpage = getPageManager().getPage(inPath, getWebPageRequest().getUser() != null);
-		if (linkpage.exists() || Boolean.parseBoolean(linkpage.getProperty("virtual"))) {
+		if (linkpage.exists() || Boolean.parseBoolean(linkpage.getProperty("virtual")))
+		{
 			Permission filter = linkpage.getPermission("view");
-			if (filter != null) {
+			if (filter != null)
+			{
 				WebPageRequest req = getWebPageRequest().copy(linkpage);
 				boolean value = filter.passes(req);
 				return value;
@@ -485,10 +567,12 @@ public class PageStreamer {
 		return false;
 	}
 
-	public boolean canDo(String inDo, String inPath) throws OpenEditException {
+	public boolean canDo(String inDo, String inPath) throws OpenEditException
+	{
 		Page linkpage = getPageManager().getPage(inPath);
 		Permission filter = linkpage.getPermission(inDo);
-		if (filter != null) {
+		if (filter != null)
+		{
 			WebPageRequest req = getWebPageRequest().copy(linkpage);
 			boolean value = filter.passes(req);
 			return value;
@@ -496,7 +580,8 @@ public class PageStreamer {
 		return true;
 	}
 
-	public WebPageRequest canDoPermissions(String inPath) throws OpenEditException {
+	public WebPageRequest canDoPermissions(String inPath) throws OpenEditException
+	{
 		Page linkpage = getPageManager().getPage(inPath, getWebPageRequest().getUser() != null);
 		WebPageRequest request = getWebPageRequest().copy(linkpage);
 		request.putPageValue(PageRequestKeys.CONTENT, linkpage);
@@ -504,34 +589,42 @@ public class PageStreamer {
 		return request;
 	}
 
-	public boolean canEdit(String inPath) throws OpenEditException {
-		if (inPath == null) {
+	public boolean canEdit(String inPath) throws OpenEditException
+	{
+		if (inPath == null)
+		{
 			return false;
 		}
 
 		boolean value = canDo("edit", inPath);
-		if (value == false) {
+		if (value == false)
+		{
 			User user = getWebPageRequest().getUser();
-			if (user != null) {
+			if (user != null)
+			{
 				value = user.hasPermission("oe.filemanager.editall");
 			}
 		}
 		return value;
 	}
 
-	public int getMaxLoop() {
+	public int getMaxLoop()
+	{
 		return fieldMaxLoop;
 	}
 
-	public void setMaxLoop(int inMaxLoop) {
+	public void setMaxLoop(int inMaxLoop)
+	{
 		fieldMaxLoop = inMaxLoop;
 	}
 
-	public boolean isDebug() {
+	public boolean isDebug()
+	{
 		return fieldDebug;
 	}
 
-	public void setDebug(boolean inDebug) {
+	public void setDebug(boolean inDebug)
+	{
 		fieldDebug = inDebug;
 	}
 }

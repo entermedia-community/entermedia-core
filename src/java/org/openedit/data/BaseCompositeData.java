@@ -20,7 +20,8 @@ import org.openedit.hittracker.HitTracker;
 import org.openedit.hittracker.SearchQuery;
 import org.openedit.modules.translations.LanguageMap;
 
-public class BaseCompositeData extends BaseData implements Data, CompositeData {
+public class BaseCompositeData extends BaseData implements Data, CompositeData
+{
 	private static final Log log = LogFactory.getLog(BaseCompositeData.class);
 
 	private static final long serialVersionUID = -7154445212382362391L;
@@ -37,19 +38,23 @@ public class BaseCompositeData extends BaseData implements Data, CompositeData {
 	protected EventManager fieldEventManager;
 	protected Map<String, Object> commonCachedValues = new HashMap();
 
-	protected EventManager getEventManager() {
+	protected EventManager getEventManager()
+	{
 		return fieldEventManager;
 	}
 
-	protected void setEventManager(EventManager inEventManager) {
+	protected void setEventManager(EventManager inEventManager)
+	{
 		fieldEventManager = inEventManager;
 	}
 
-	public Collection getEditFields() {
+	public Collection getEditFields()
+	{
 		return fieldEditFields;
 	}
 
-	public void setEditFields(Collection inEditFields) {
+	public void setEditFields(Collection inEditFields)
+	{
 		fieldEditFields = inEditFields;
 	}
 
@@ -64,22 +69,27 @@ public class BaseCompositeData extends BaseData implements Data, CompositeData {
 		reloadData();
 	}
 
-	public HitTracker getInitialSearchResults() {
+	public HitTracker getInitialSearchResults()
+	{
 		return fieldInitialSearchResults;
 	}
 
-	public void setInitialSearchResults(HitTracker inInitialSearchResults) {
+	public void setInitialSearchResults(HitTracker inInitialSearchResults)
+	{
 		fieldInitialSearchResults = inInitialSearchResults;
 	}
 
-	public HitTracker getSelectedResults() {
-		if (fieldSelectedResults == null) {
+	public HitTracker getSelectedResults()
+	{
+		if (fieldSelectedResults == null)
+		{
 			reloadData();
 		}
 		return fieldSelectedResults;
 	}
 
-	public void setSelectedResults(HitTracker inCurrentSearchResults) {
+	public void setSelectedResults(HitTracker inCurrentSearchResults)
+	{
 		fieldSelectedResults = inCurrentSearchResults;
 	}
 
@@ -94,61 +104,73 @@ public class BaseCompositeData extends BaseData implements Data, CompositeData {
 	// return fieldPropertiesPreviouslySaved;
 	// }
 
-	public PropertyDetails getPropertyDetails() {
+	public PropertyDetails getPropertyDetails()
+	{
 		return getSearcher().getPropertyDetails();
 	}
 
-	public ValuesMap getPropertiesSet() {
-		if (fieldPropertiesSet == null) {
+	public ValuesMap getPropertiesSet()
+	{
+		if (fieldPropertiesSet == null)
+		{
 			fieldPropertiesSet = new ValuesMap();
 		}
 		return fieldPropertiesSet;
 	}
 
-	public void setPropertiesSet(ValuesMap inPropertiesSet) {
+	public void setPropertiesSet(ValuesMap inPropertiesSet)
+	{
 		fieldPropertiesSet = inPropertiesSet;
 	}
 
-	public List getRemovedCategories() {
-		if (fieldRemovedCategories == null) {
+	public List getRemovedCategories()
+	{
+		if (fieldRemovedCategories == null)
+		{
 			fieldRemovedCategories = new ArrayList();
 		}
 
 		return fieldRemovedCategories;
 	}
 
-	public void setRemovedCategories(List inRemovedCategories) {
+	public void setRemovedCategories(List inRemovedCategories)
+	{
 		fieldRemovedCategories = inRemovedCategories;
 	}
 
-	public List getRemovedKeywords() {
-		if (fieldRemovedKeywords == null) {
+	public List getRemovedKeywords()
+	{
+		if (fieldRemovedKeywords == null)
+		{
 			fieldRemovedKeywords = new ArrayList();
 		}
 
 		return fieldRemovedKeywords;
 	}
 
-	public void setRemovedKeywords(List inRemovedKeywords) {
+	public void setRemovedKeywords(List inRemovedKeywords)
+	{
 		fieldRemovedKeywords = inRemovedKeywords;
 	}
 
 	/**
-	 * This gets called quite often. 1st when we load the landing page
-	 * 2nd when we click on a link to edit something
-	 * 3rd when we go to save, we reload it again
-	 * 4th when we click to edit something again
-	 * Option is to store it in a session field but then it might get out of date
+	 * This gets called quite often. 1st when we load the landing page 2nd when we click on a link to
+	 * edit something 3rd when we go to save, we reload it again 4th when we click to edit something
+	 * again Option is to store it in a session field but then it might get out of date
 	 */
-	protected void reloadData() {
+	protected void reloadData()
+	{
 		HitTracker existing = getInitialSearchResults();
 		SearchQuery q = existing.getSearchQuery().copy();
 		q.setSortBy("id");
 		HitTracker selecteddata = getSearcher().search(q);
-		if (existing.isAllSelected()) {
+		if (existing.isAllSelected())
+		{
 			// rerun the search
 			selecteddata.selectAll();
-		} else {
+		}
+		else
+		{
 			selecteddata.setSelections(existing.getSelections());
 			selecteddata.setShowOnlySelected(true);
 		}
@@ -157,26 +179,33 @@ public class BaseCompositeData extends BaseData implements Data, CompositeData {
 		getProperties().clear();
 	}
 
-	public int size() {
+	public int size()
+	{
 		return getSelectedResults().size();
 	}
 
-	protected void checkSave(WebPageRequest inReq, List<Data> inTosave) {
-		if (inTosave.size() > 99) {
+	protected void checkSave(WebPageRequest inReq, List<Data> inTosave)
+	{
+		if (inTosave.size() > 99)
+		{
 			saveAll(inReq, inTosave);
 			inTosave.clear();
 		}
 	}
 
 	// TODO: remove this
-	public String getProperty(String inKey) {
+	public String getProperty(String inKey)
+	{
 		return get(inKey);
 	}
 
-	public Object getValue(String inId) {
-		if (size() > 0) {
+	public Object getValue(String inId)
+	{
+		if (size() > 0)
+		{
 			Object val = getPropertiesSet().getValue(inId); // set by the user since last save
-			if (val != null) {
+			if (val != null)
+			{
 				return val;
 			}
 
@@ -206,126 +235,147 @@ public class BaseCompositeData extends BaseData implements Data, CompositeData {
 		return null;
 	}
 
-	protected Object getValueFromResults(String inKey) {
+	protected Object getValueFromResults(String inKey)
+	{
 		Object val = commonCachedValues.get(inKey);
-		if (val != null || val == ValuesMap.NULLVALUE) {
-			if (ValuesMap.NULLVALUE == val) {
+		if (val != null || val == ValuesMap.NULLVALUE)
+		{
+			if (ValuesMap.NULLVALUE == val)
+			{
 				val = null;
 			}
 			return val; // This wins
 		}
 		Iterator iterator = getSelectedResults().iterator();
-		if (!iterator.hasNext()) {
+		if (!iterator.hasNext())
+		{
 			return null;
 		}
 		Data firstrow = (Data) iterator.next();
 		Object firstval = firstrow.getValue(inKey); // First value
-		if (firstval != null && firstval instanceof String) {
-			if (((String) firstval).isEmpty()) {
+		if (firstval != null && firstval instanceof String)
+		{
+			if (((String) firstval).isEmpty())
+			{
 				firstval = null; // treat as null
 			}
 		}
-		if (firstval != null && firstval instanceof LanguageMap) {
+		if (firstval != null && firstval instanceof LanguageMap)
+		{
 			firstval = new LanguageMap((Map) firstval);
 		}
-		while (iterator.hasNext()) {
+		while (iterator.hasNext())
+		{
 			Data data = (Data) iterator.next();
 			Object dataval = data.getValue(inKey);
-			if (firstval == null) {
-				if (dataval != null) {
+			if (firstval == null)
+			{
+				if (dataval != null)
+				{
 					firstval = ValuesMap.NULLVALUE; // They dont agree
 					break;
 				}
 				// or keep looking
-			} else if (dataval == null) {
-				firstval = ValuesMap.NULLVALUE; // They dont agree
-				break;
-			} else if (dataval != null) {
-				if (dataval instanceof LanguageMap && firstval instanceof LanguageMap) // How could this happen?
-				{
-					LanguageMap langs = (LanguageMap) firstval;
-					LanguageMap copy = new LanguageMap((Map) firstval);
-					for (Iterator iterator3 = langs.keySet().iterator(); iterator3.hasNext();) {
-						String code = (String) iterator3.next();
-						Object value = ((LanguageMap) firstval).get(code);
-						Object value2 = ((LanguageMap) dataval).get(code);
-						if (!value.equals(value2)) {
-							copy.remove(code);
-						}
-					}
-					if (copy.isEmpty()) {
-						firstval = ValuesMap.NULLVALUE; // They dont agree
-						break;
-					} else {
-						firstval = copy;
-						continue;
-					}
-				}
-				if (dataval instanceof List && firstval instanceof List) {
-					// check sizes, remove all from one and see whats left?
-					Collection firstvalc = (Collection) firstval;
-					Collection datavalc = (Collection) dataval;
-					// if( datavalc.size() != firstvalc.size())
-					// {
-					// firstval = ValuesMap.NULLVALUE; //They dont agree
-					// break;
-					// }
-					Collection copy = new ArrayList((Collection) firstvalc);
-
-					// Only leave common values
-					for (Iterator iterator2 = copy.iterator(); iterator2.hasNext();) {
-						Object value = (Object) iterator2.next();
-						if (!datavalc.contains(value)) {
-							firstvalc = new ArrayList(firstvalc); // Instance editing
-							firstvalc.remove(value);
-							firstval = firstvalc;
-						}
-					}
-					if (firstvalc.isEmpty()) {
-						firstval = ValuesMap.NULLVALUE; // They dont agree
-						break;
-					}
-					continue;
-				}
-
-				if (!dataval.equals(firstval)) // For LaguageMap, numbers and dates and strings
+			}
+			else
+				if (dataval == null)
 				{
 					firstval = ValuesMap.NULLVALUE; // They dont agree
 					break;
 				}
-				// Else the are equal so keep searching
-			}
+				else
+					if (dataval != null)
+					{
+						if (dataval instanceof LanguageMap && firstval instanceof LanguageMap) // How could this happen?
+						{
+							LanguageMap langs = (LanguageMap) firstval;
+							LanguageMap copy = new LanguageMap((Map) firstval);
+							for (Iterator iterator3 = langs.keySet().iterator(); iterator3.hasNext();)
+							{
+								String code = (String) iterator3.next();
+								Object value = ((LanguageMap) firstval).get(code);
+								Object value2 = ((LanguageMap) dataval).get(code);
+								if (!value.equals(value2))
+								{
+									copy.remove(code);
+								}
+							}
+							if (copy.isEmpty())
+							{
+								firstval = ValuesMap.NULLVALUE; // They dont agree
+								break;
+							}
+							else
+							{
+								firstval = copy;
+								continue;
+							}
+						}
+						if (dataval instanceof List && firstval instanceof List)
+						{
+							// check sizes, remove all from one and see whats left?
+							Collection firstvalc = (Collection) firstval;
+							Collection datavalc = (Collection) dataval;
+							// if( datavalc.size() != firstvalc.size())
+							// {
+							// firstval = ValuesMap.NULLVALUE; //They dont agree
+							// break;
+							// }
+							Collection copy = new ArrayList((Collection) firstvalc);
+
+							// Only leave common values
+							for (Iterator iterator2 = copy.iterator(); iterator2.hasNext();)
+							{
+								Object value = (Object) iterator2.next();
+								if (!datavalc.contains(value))
+								{
+									firstvalc = new ArrayList(firstvalc); // Instance editing
+									firstvalc.remove(value);
+									firstval = firstvalc;
+								}
+							}
+							if (firstvalc.isEmpty())
+							{
+								firstval = ValuesMap.NULLVALUE; // They dont agree
+								break;
+							}
+							continue;
+						}
+
+						if (!dataval.equals(firstval)) // For LaguageMap, numbers and dates and strings
+						{
+							firstval = ValuesMap.NULLVALUE; // They dont agree
+							break;
+						}
+						// Else the are equal so keep searching
+					}
 		}
 
 		val = firstval;
 		/*
-		 * if (firstval != null && !firstval.isEmpty())
-		 * {
+		 * if (firstval != null && !firstval.isEmpty()) {
 		 * 
-		 * PropertyDetail detail = getPropertyDetails().getDetail(inKey);
-		 * if (detail.isMultiLanguage())
-		 * {
+		 * PropertyDetail detail = getPropertyDetails().getDetail(inKey); if (detail.isMultiLanguage()) {
 		 * Object currentval = firstrow.getValue(inKey);
 		 * 
-		 * if (currentval instanceof LanguageMap)
-		 * {
-		 * val = currentval;
-		 * }
-		 * }
-		 * }
+		 * if (currentval instanceof LanguageMap) { val = currentval; } } }
 		 */
-		if (firstval == null) {
+		if (firstval == null)
+		{
 			val = ValuesMap.NULLVALUE;
 		}
 		commonCachedValues.put(inKey, val); // a blank string just means there is nothing in common, (not that its null)
-		if (val == ValuesMap.NULLVALUE) {
+		if (val == ValuesMap.NULLVALUE)
+		{
 			return null;
 		}
 		return val;
 	}
 
-	public void setProperty(String inKey, String inValue) {
-		if (inValue == null) {
+	public void setProperty(String inKey, String inValue)
+	{
+		if (inValue == null)
+		{
 			getPropertiesSet().put(inKey, ValuesMap.NULLVALUE);
 			return;
 		}
@@ -333,8 +383,10 @@ public class BaseCompositeData extends BaseData implements Data, CompositeData {
 		getPropertiesSet().put(inKey, inValue);
 	}
 
-	public void setValues(String inKey, Collection<String> inValues) {
-		if (inValues == null) {
+	public void setValues(String inKey, Collection<String> inValues)
+	{
+		if (inValues == null)
+		{
 			getPropertiesSet().put(inKey, ValuesMap.NULLVALUE);
 			return;
 		}
@@ -343,88 +395,101 @@ public class BaseCompositeData extends BaseData implements Data, CompositeData {
 	}
 
 	@Override
-	public void setValue(String inKey, Object inValue) {
-		if ("emrecordstatus".equals(inKey)) {
+	public void setValue(String inKey, Object inValue)
+	{
+		if ("emrecordstatus".equals(inKey))
+		{
 			return;// ignore
 		}
-		if (inValue == null) {
+		if (inValue == null)
+		{
 			inValue = "";
 		}
 		/*
-		 * TODO: should we use this?
-		 * if( inValue == null )
-		 * {
-		 * getPropertiesSet().put(inKey, ValuesMap.NULLVALUE);
-		 * return;
-		 * }
+		 * TODO: should we use this? if( inValue == null ) { getPropertiesSet().put(inKey,
+		 * ValuesMap.NULLVALUE); return; }
 		 */
 		getPropertiesSet().put(inKey, inValue);
 	}
 
-	public String getId() {
+	public String getId()
+	{
 		return fieldId;
 	}
 
-	public String getName() {
+	public String getName()
+	{
 		return "Multiple Data";
 	}
 
-	public void setName(String inName) {
+	public void setName(String inName)
+	{
 		// Nothing to do here
 	}
 
-	public void setId(String inNewid) {
+	public void setId(String inNewid)
+	{
 		fieldId = inNewid;
 	}
 
-	public String getSourcePath() {
-		if (size() > 0) {
+	public String getSourcePath()
+	{
+		if (size() > 0)
+		{
 			Data first = (Data) getSelectedResults().first();
 			return first.getSourcePath() + "multi" + size();
 		}
 		return null;
 	}
 
-	public void setSourcePath(String inSourcepath) {
+	public void setSourcePath(String inSourcepath)
+	{
 
 	}
 
-	public Iterator iterator() {
+	public Iterator iterator()
+	{
 		return new DataIterator(getSelectedResults().iterator());
 	}
 
-	public Searcher getSearcher() {
+	public Searcher getSearcher()
+	{
 		return fieldSearcher;
 	}
 
-	public void setSearcher(Searcher inSearcher) {
+	public void setSearcher(Searcher inSearcher)
+	{
 		fieldSearcher = inSearcher;
 	}
 
 	/**
-	 * Do not call this more than once!
-	 * Because we use the hit results to check on previous saved
+	 * Do not call this more than once! Because we use the hit results to check on previous saved
 	 */
-	public void saveChanges(WebPageRequest inReq) {
+	public void saveChanges(WebPageRequest inReq)
+	{
 		// compare keywords, categories and data.
 		List<Data> tosave = new ArrayList(100);
 
 		Map safevalues = new HashMap();
 
-		for (Iterator iterator = getEditFields().iterator(); iterator.hasNext();) {
+		for (Iterator iterator = getEditFields().iterator(); iterator.hasNext();)
+		{
 			String field = (String) iterator.next();
 			addSafeValue(field, safevalues);
 		}
 
 		long start = System.currentTimeMillis();
-		for (Iterator iterator = getSelectedResults().iterator(); iterator.hasNext();) {
+		for (Iterator iterator = getSelectedResults().iterator(); iterator.hasNext();)
+		{
 			Data data = (Data) iterator.next();
 			Data inloopasset = null;
 			getEventManager().fireDataEditEvent(inReq, getSearcher(), data);
 
-			for (Iterator iterator2 = safevalues.keySet().iterator(); iterator2.hasNext();) {
+			for (Iterator iterator2 = safevalues.keySet().iterator(); iterator2.hasNext();)
+			{
 				String key = (String) iterator2.next();
-				if ("id".equals(key)) {
+				if ("id".equals(key))
+				{
 					continue;
 				}
 
@@ -432,17 +497,21 @@ public class BaseCompositeData extends BaseData implements Data, CompositeData {
 				PropertyDetail detail = getSearcher().getDetail(key);
 				Object datavalue = data.getValue(key);
 
-				if (datavalue == newvalue) {
+				if (datavalue == newvalue)
+				{
 					continue;
 				}
-				if (datavalue != null && datavalue.equals(newvalue)) {
+				if (datavalue != null && datavalue.equals(newvalue))
+				{
 					continue;
 				}
 				Data loaded = loadData(inReq, inloopasset, data, tosave);
-				if (loaded != null) {
+				if (loaded != null)
+				{
 					boolean multi = isMulti(key);
 
-					if (multi) {
+					if (multi)
+					{
 						// Need to add any that are set by user in value
 						Set added = collect((String) getPropertiesSet().getString(key));
 						Set existing = collect(datavalue);
@@ -452,27 +521,35 @@ public class BaseCompositeData extends BaseData implements Data, CompositeData {
 						saveMultiValues((MultiValued) loaded, key, added, existing, previousCommonOnes);
 					}
 
-					else if (detail.isMultiLanguage()) {
-						LanguageMap map = null;
-						if (datavalue instanceof LanguageMap) {
-							map = new LanguageMap((Map) datavalue);
+					else
+						if (detail.isMultiLanguage())
+						{
+							LanguageMap map = null;
+							if (datavalue instanceof LanguageMap)
+							{
+								map = new LanguageMap((Map) datavalue);
+							}
+							if (map == null)
+							{
+								map = new LanguageMap();
+							}
+							LanguageMap langs = (LanguageMap) newvalue;
+							for (Iterator iterator3 = langs.keySet().iterator(); iterator3.hasNext();)
+							{
+								String code = (String) iterator3.next();
+								map.setText(code, langs.getText(code));
+							}
+							setValue(loaded, key, map);
 						}
-						if (map == null) {
-							map = new LanguageMap();
+						else
+						{
+							setValue(loaded, key, newvalue);
 						}
-						LanguageMap langs = (LanguageMap) newvalue;
-						for (Iterator iterator3 = langs.keySet().iterator(); iterator3.hasNext();) {
-							String code = (String) iterator3.next();
-							map.setText(code, langs.getText(code));
-						}
-						setValue(loaded, key, map);
-					} else {
-						setValue(loaded, key, newvalue);
-					}
 					inloopasset = loaded;
 				}
 			}
-			if (tosave.size() > 1000) {
+			if (tosave.size() > 1000)
+			{
 				saveAll(inReq, tosave);
 				tosave.clear();
 			}
@@ -488,65 +565,80 @@ public class BaseCompositeData extends BaseData implements Data, CompositeData {
 		getPropertiesSet().clear();
 	}
 
-	protected void addSafeValue(String field, Map safevalues) {
+	protected void addSafeValue(String field, Map safevalues)
+	{
 		Object newval = getPropertiesSet().getValue(field); // set by the user since last save
 		// See if the values changed
 		Object commonval = getValueFromResults(field);
 		// A blank string means no common value.
 		// A null means empty
 
-		if (newval == null && commonval == null) {
+		if (newval == null && commonval == null)
+		{
 			return;
 		}
 
 		if (newval != null && newval instanceof String) // Clean up the newval
 		{
 			String snewval = newval.toString();
-			if (snewval.isEmpty()) {
+			if (snewval.isEmpty())
+			{
 				newval = null;
 			}
 		}
 
-		if (commonval != null && commonval.toString().isEmpty()) {
+		if (commonval != null && commonval.toString().isEmpty())
+		{
 			commonval = null;
 		}
 		PropertyDetail detail = getPropertyDetails().getDetail(field);
 		// See if there is a newval
-		if (newval != null && !newval.equals(commonval)) {
+		if (newval != null && !newval.equals(commonval))
+		{
 
-			if (detail.isMultiLanguage()) {
+			if (detail.isMultiLanguage())
+			{
 				LanguageMap newval1 = (LanguageMap) newval;
-				if (newval1.isEmpty()) {
+				if (newval1.isEmpty())
+				{
 					return;
 				}
 
 				LanguageMap commonval1 = new LanguageMap();
-				for (Iterator iterator3 = newval1.keySet().iterator(); iterator3.hasNext();) {
+				for (Iterator iterator3 = newval1.keySet().iterator(); iterator3.hasNext();)
+				{
 					String code = (String) iterator3.next();
 					String newvaltext = newval1.getText(code);
-					if (newvaltext != null) {
+					if (newvaltext != null)
+					{
 						commonval1.setText(code, newvaltext);
 					}
 				}
 				safevalues.put(field, commonval1);
-			} else {
+			}
+			else
+			{
 				safevalues.put(field, newval);
 			}
 		}
 	}
 
-	protected void setValue(Data inLoaded, String inKey, Object inValue) {
+	protected void setValue(Data inLoaded, String inKey, Object inValue)
+	{
 		// TODO Auto-generated method stub
-		if ("---".equals(inValue)) {
+		if ("---".equals(inValue))
+		{
 			inValue = null;
 		}
 		inLoaded.setValue(inKey, inValue);
 
 	}
 
-	protected void saveAll(WebPageRequest inReq, Collection<Data> tosave) {
+	protected void saveAll(WebPageRequest inReq, Collection<Data> tosave)
+	{
 		getSearcher().saveAllData(tosave, null);
-		for (Data savedata : tosave) {
+		for (Data savedata : tosave)
+		{
 			getEventManager().fireDataSavedEvent(inReq, getSearcher(), savedata);
 		}
 	}
@@ -554,17 +646,19 @@ public class BaseCompositeData extends BaseData implements Data, CompositeData {
 	/**
 	 * @param asset
 	 * @param key
-	 * @param added    Ones that needs to be added
+	 * @param added Ones that needs to be added
 	 * @param existing Ones that are already on the asset
-	 * @param old      Ones that need to be removed?
+	 * @param old Ones that need to be removed?
 	 */
-	protected void saveMultiValues(MultiValued asset, String key, Collection added, Collection existing,
-			Collection previousCommonOnes) {
+	protected void saveMultiValues(MultiValued asset, String key, Collection added, Collection existing, Collection previousCommonOnes)
+	{
 
 		HashSet set = new HashSet();
-		for (Iterator iterator = existing.iterator(); iterator.hasNext();) {
+		for (Iterator iterator = existing.iterator(); iterator.hasNext();)
+		{
 			Object object = (Object) iterator.next();
-			if (object instanceof String && ((String) object).isEmpty()) {
+			if (object instanceof String && ((String) object).isEmpty())
+			{
 				continue;
 			}
 			set.add(object);
@@ -580,8 +674,10 @@ public class BaseCompositeData extends BaseData implements Data, CompositeData {
 
 	}
 
-	protected boolean isMulti(String key) {
-		if (key.equals("libraries")) {
+	protected boolean isMulti(String key)
+	{
+		if (key.equals("libraries"))
+		{
 			return true;
 		}
 		PropertyDetail detail = getPropertyDetails().getDetail(key);
@@ -590,95 +686,124 @@ public class BaseCompositeData extends BaseData implements Data, CompositeData {
 		return multi;
 	}
 
-	protected Set collect(Object existingvalue) {
-		if (existingvalue == null) {
+	protected Set collect(Object existingvalue)
+	{
+		if (existingvalue == null)
+		{
 			return new HashSet();
 		}
-		if (existingvalue instanceof Collection) {
+		if (existingvalue instanceof Collection)
+		{
 			// likely be strings in here
 			Collection<String> existingvalues = (Collection) existingvalue;
 			return new HashSet(existingvalues);
-		} else if (existingvalue instanceof String) {
-			if (((String) existingvalue).isEmpty()) {
-				return new HashSet();
-			}
-
-			String[] vals = VALUEDELMITER.split(existingvalue.toString());
-			Set set = new HashSet(vals.length);
-			for (int i = 0; i < vals.length; i++) {
-				set.add(vals[i]);
-			}
-			return set;
 		}
+		else
+			if (existingvalue instanceof String)
+			{
+				if (((String) existingvalue).isEmpty())
+				{
+					return new HashSet();
+				}
+
+				String[] vals = VALUEDELMITER.split(existingvalue.toString());
+				Set set = new HashSet(vals.length);
+				for (int i = 0; i < vals.length; i++)
+				{
+					set.add(vals[i]);
+				}
+				return set;
+			}
 		return new HashSet();
 
 	}
 
 	//
-	class DataIterator implements Iterator {
+	class DataIterator implements Iterator
+	{
 		Iterator fieldDataIterator;
 
 		public DataIterator(Iterator inHitsIterator) {
 			fieldDataIterator = inHitsIterator;
 		}
 
-		public boolean hasNext() {
+		public boolean hasNext()
+		{
 			return fieldDataIterator.hasNext();
 		}
 
 		@Override
-		public Object next() {
+		public Object next()
+		{
 			Data next = (Data) fieldDataIterator.next();
 			return getSearcher().searchById(next.getId());
 		}
 
-		public void remove() {
-		}
+		public void remove()
+		{}
 
 	}
 
-	protected Data loadData(WebPageRequest inReq, Data inFieldCurrentAsset, Data inData, List toSave) {
-		if (inFieldCurrentAsset == null) {
+	protected Data loadData(WebPageRequest inReq, Data inFieldCurrentAsset, Data inData, List toSave)
+	{
+		if (inFieldCurrentAsset == null)
+		{
 			inFieldCurrentAsset = (Data) getSearcher().searchById(inData.getId());
-		} else {
+		}
+		else
+		{
 			return inFieldCurrentAsset;
 		}
-		if (inFieldCurrentAsset != null) {
+		if (inFieldCurrentAsset != null)
+		{
 			checkSave(inReq, toSave);
 			toSave.add(inFieldCurrentAsset);
 		}
 		return inFieldCurrentAsset;
 	}
 
-	public String toString() {
+	public String toString()
+	{
 		return getId();
 	}
 
-	public void refresh() {
+	public void refresh()
+	{
 		getPropertiesSet().clear();
 
 	}
 
 	@Override
-	public Collection<String> getValues(String inPreference) {
+	public Collection<String> getValues(String inPreference)
+	{
 
 		Object val = getPropertiesSet().getValue(inPreference); // set by the user since last save
-		if (val != null) {
-			if (val.equals("")) {
+		if (val != null)
+		{
+			if (val.equals(""))
+			{
 				return null;
-			} else if (val instanceof Collection) {
-				return (Collection<String>) val;
-			} else {
-				String[] vals = null;
-				String value = (String) val;
-				if (value.contains("|")) {
-					vals = MultiValued.VALUEDELMITER.split(value);
-				} else {
-					vals = new String[] { value };
-				}
-				Collection collection = new ArrayList(Arrays.asList(vals)); // To make it editable
-				return collection;
 			}
+			else
+				if (val instanceof Collection)
+				{
+					return (Collection<String>) val;
+				}
+				else
+				{
+					String[] vals = null;
+					String value = (String) val;
+					if (value.contains("|"))
+					{
+						vals = MultiValued.VALUEDELMITER.split(value);
+					}
+					else
+					{
+						vals = new String[] {value};
+					}
+					Collection collection = new ArrayList(Arrays.asList(vals)); // To make it editable
+					return collection;
+				}
 		}
 
 		Object currentlist = getValueFromResults(inPreference);

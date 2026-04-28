@@ -1,14 +1,14 @@
 /*
-Copyright (c) 2003 eInnovation Inc. All rights reserved
-
-This library is free software; you can redistribute it and/or modify it under the terms
-of the GNU Lesser General Public License as published by the Free Software Foundation;
-either version 2.1 of the License, or (at your option) any later version.
-
-This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-See the GNU Lesser General Public License for more details.
-*/
+ * Copyright (c) 2003 eInnovation Inc. All rights reserved
+ * 
+ * This library is free software; you can redistribute it and/or modify it under the terms of the
+ * GNU Lesser General Public License as published by the Free Software Foundation; either version
+ * 2.1 of the License, or (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ */
 
 package org.openedit.users;
 
@@ -21,11 +21,12 @@ import org.openedit.Data;
  *
  * @author Eric Galluzzo
  */
-public interface Group extends Data, Comparable {
+public interface Group extends Data, Comparable
+{
 
 	/**
-	 * Not a real property, just a string that can be used to refer to the
-	 * username in, e.g., search indices.
+	 * Not a real property, just a string that can be used to refer to the username in, e.g., search
+	 * indices.
 	 */
 	public static final String GROUPNAME_PROPERTY = "name";
 	public static final String GROUPID_PROPERTY = "id";
@@ -53,9 +54,8 @@ public interface Group extends Data, Comparable {
 	void setPermissions(Collection inPermissions);
 
 	/**
-	 * Add the given permission to this group. If the permission is already part of
-	 * this group,
-	 * this method does nothing.
+	 * Add the given permission to this group. If the permission is already part of this group, this
+	 * method does nothing.
 	 *
 	 * @param inPermission The name of the permission to add
 	 *
@@ -73,9 +73,8 @@ public interface Group extends Data, Comparable {
 	boolean hasPermission(String inPermission);
 
 	/**
-	 * Remove the given permission from this group. If the permission is not part of
-	 * this group,
-	 * this method does nothing.
+	 * Remove the given permission from this group. If the permission is not part of this group, this
+	 * method does nothing.
 	 *
 	 * @param inPermission The name of the permission to remove
 	 *

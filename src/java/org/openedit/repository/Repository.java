@@ -1,29 +1,28 @@
 /*
  * Created on Aug 10, 2003
  *
-/*
-Copyright (c) 2003 eInnovation Inc. All rights reserved
-
-This library is free software; you can redistribute it and/or modify it under the terms
-of the GNU Lesser General Public License as published by the Free Software Foundation;
-either version 2.1 of the License, or (at your option) any later version.
-
-This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-See the GNU Lesser General Public License for more details.
-*/
+ * /* Copyright (c) 2003 eInnovation Inc. All rights reserved
+ * 
+ * This library is free software; you can redistribute it and/or modify it under the terms of the
+ * GNU Lesser General Public License as published by the Free Software Foundation; either version
+ * 2.1 of the License, or (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ */
 package org.openedit.repository;
 
 import java.util.List;
 import java.util.Map;
 
 /**
- * This is a generic interface to store web content, e.g HTML, XML, images
- * or other documents.
+ * This is a generic interface to store web content, e.g HTML, XML, images or other documents.
  * 
  * @author Matt Avery, mavery@einnovation.com
  */
-public interface Repository {
+public interface Repository
+{
 	boolean matches(String inPath);
 
 	/*
@@ -41,8 +40,7 @@ public interface Repository {
 
 	void move(ContentItem inSource, ContentItem inDestination) throws RepositoryException;
 
-	void move(ContentItem inSource, Repository inSourceRepository, ContentItem inDestination)
-			throws RepositoryException;
+	void move(ContentItem inSource, Repository inSourceRepository, ContentItem inDestination) throws RepositoryException;
 
 	void remove(ContentItem inPath) throws RepositoryException;
 

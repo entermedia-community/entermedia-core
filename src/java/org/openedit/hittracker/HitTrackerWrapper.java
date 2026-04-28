@@ -14,7 +14,8 @@ import java.util.stream.Stream;
 import org.openedit.Data;
 import org.openedit.data.Searcher;
 
-public class HitTrackerWrapper extends HitTracker {
+public class HitTrackerWrapper extends HitTracker
+{
 
 	protected HitTracker fieldParentTracker;
 
@@ -22,325 +23,399 @@ public class HitTrackerWrapper extends HitTracker {
 		fieldParentTracker = inParent;
 	}
 
-	public void enableBulkOperations() {
+	public void enableBulkOperations()
+	{
 		fieldParentTracker.enableBulkOperations();
 	}
 
-	public boolean isUseServerCursor() {
+	public boolean isUseServerCursor()
+	{
 		return fieldParentTracker.isUseServerCursor();
 	}
 
-	public boolean isShowOnlySelected() {
+	public boolean isShowOnlySelected()
+	{
 		return fieldParentTracker.isShowOnlySelected();
 	}
 
-	public List linkRange() {
+	public List linkRange()
+	{
 		return fieldParentTracker.linkRange();
 	}
 
-	public List linksBefore() {
+	public List linksBefore()
+	{
 		return fieldParentTracker.linksBefore();
 	}
 
-	public List linksAfter() {
+	public List linksAfter()
+	{
 		return fieldParentTracker.linksAfter();
 	}
 
-	public boolean isEmpty() {
+	public boolean isEmpty()
+	{
 		return fieldParentTracker.isEmpty();
 	}
 
-	public List keys() {
+	public List keys()
+	{
 		return fieldParentTracker.keys();
 	}
 
-	public boolean isSelected(String inId) {
+	public boolean isSelected(String inId)
+	{
 		return fieldParentTracker.isSelected(inId);
 	}
 
-	public boolean isSelectedOnPage(String inId) {
+	public boolean isSelectedOnPage(String inId)
+	{
 		return fieldParentTracker.isSelectedOnPage(inId);
 	}
 
-	public Object previous(int inIndex) {
+	public Object previous(int inIndex)
+	{
 		return fieldParentTracker.previous(inIndex);
 	}
 
-	public int previousIndex(String inIndex) {
+	public int previousIndex(String inIndex)
+	{
 		return fieldParentTracker.previousIndex(inIndex);
 	}
 
-	public Object previous(String inCatalogId, String inId) {
+	public Object previous(String inCatalogId, String inId)
+	{
 		return fieldParentTracker.previous(inCatalogId, inId);
 	}
 
-	public Object next(int inIndex) {
+	public Object next(int inIndex)
+	{
 		return fieldParentTracker.next(inIndex);
 	}
 
-	public int nextIndex(String inIndex) {
+	public int nextIndex(String inIndex)
+	{
 		return fieldParentTracker.nextIndex(inIndex);
 	}
 
-	public Object next(String inCatalogId, String inId) {
+	public Object next(String inCatalogId, String inId)
+	{
 		return fieldParentTracker.next(inCatalogId, inId);
 	}
 
-	public Object nextById(String inId) {
+	public Object nextById(String inId)
+	{
 		return fieldParentTracker.nextById(inId);
 	}
 
-	public Object previousById(String inId) {
+	public Object previousById(String inId)
+	{
 		return fieldParentTracker.previousById(inId);
 	}
 
 	/*
-	 * public int pageOfId(String inId)
-	 * {
-	 * int parentpage = fieldParentTracker.pageOfId(inId);
-	 * int parenthitsperpage = fieldParentTracker.getHitsPerPage();
+	 * public int pageOfId(String inId) { int parentpage = fieldParentTracker.pageOfId(inId); int
+	 * parenthitsperpage = fieldParentTracker.getHitsPerPage();
 	 * 
 	 * }
 	 */
-	public int parseInt(Object inValue) {
+	public int parseInt(Object inValue)
+	{
 		return fieldParentTracker.parseInt(inValue);
 	}
 
-	public boolean isAllSelected() {
+	public boolean isAllSelected()
+	{
 		return fieldParentTracker.isAllSelected();
 	}
 
-	public void loadPreviousSelections(HitTracker inOld) {
+	public void loadPreviousSelections(HitTracker inOld)
+	{
 		fieldParentTracker.loadPreviousSelections(inOld);
 	}
 
-	public boolean isChildFacetSelected(FilterNode inNode) {
+	public boolean isChildFacetSelected(FilterNode inNode)
+	{
 		return fieldParentTracker.isChildFacetSelected(inNode);
 	}
 
-	public void invalidate() {
+	public void invalidate()
+	{
 		fieldParentTracker.invalidate();
 	}
 
-	public void refresh() {
+	public void refresh()
+	{
 		fieldParentTracker.refresh();
 	}
 
-	public boolean isRecentSearch() {
+	public boolean isRecentSearch()
+	{
 		return fieldParentTracker.isRecentSearch();
 	}
 
-	public boolean isInputEquals(String inDetail, String inValue) {
+	public boolean isInputEquals(String inDetail, String inValue)
+	{
 		return fieldParentTracker.isInputEquals(inDetail, inValue);
 	}
 
-	public boolean isSortedBy(String inKey) {
+	public boolean isSortedBy(String inKey)
+	{
 		return fieldParentTracker.isSortedBy(inKey);
 	}
 
-	public Stream parallelStream() {
+	public Stream parallelStream()
+	{
 		return fieldParentTracker.parallelStream();
 	}
 
-	public void setShowOnlySelected(boolean inShowOnlySelected) {
+	public void setShowOnlySelected(boolean inShowOnlySelected)
+	{
 		fieldParentTracker.setShowOnlySelected(inShowOnlySelected);
 	}
 
-	public void setCurrentHit(int inCurrentHit) {
+	public void setCurrentHit(int inCurrentHit)
+	{
 		fieldParentTracker.setCurrentHit(inCurrentHit);
 	}
 
-	public boolean wasInput(String inKey, String inValue) {
+	public boolean wasInput(String inKey, String inValue)
+	{
 		return fieldParentTracker.wasInput(inKey, inValue);
 	}
 
-	public boolean remove(Object inO) {
+	public boolean remove(Object inO)
+	{
 		return fieldParentTracker.remove(inO);
 	}
 
-	public boolean removeAll(Collection arg0) {
+	public boolean removeAll(Collection arg0)
+	{
 		return fieldParentTracker.removeAll(arg0);
 	}
 
-	public boolean removeIf(Predicate filter) {
+	public boolean removeIf(Predicate filter)
+	{
 		return fieldParentTracker.removeIf(filter);
 	}
 
-	public void setUseServerCursor(boolean inUseServerCursor) {
+	public void setUseServerCursor(boolean inUseServerCursor)
+	{
 		fieldParentTracker.setUseServerCursor(inUseServerCursor);
 	}
 
-	public Data getById(String inId) {
+	public Data getById(String inId)
+	{
 		return fieldParentTracker.getById(inId);
 	}
 
-	public Collection getLast(int inCount) {
+	public Collection getLast(int inCount)
+	{
 		return fieldParentTracker.getLast(inCount);
 	}
 
-	public Iterator getAllHits() {
+	public Iterator getAllHits()
+	{
 		return fieldParentTracker.getAllHits();
 	}
 
-	public int getCurrentHit() {
+	public int getCurrentHit()
+	{
 		return fieldParentTracker.getCurrentHit();
 	}
 
-	public boolean containsById(String inId) {
+	public boolean containsById(String inId)
+	{
 		return fieldParentTracker.containsById(inId);
 	}
 
-	public String getInput(String inKey) {
+	public String getInput(String inKey)
+	{
 		return fieldParentTracker.getInput(inKey);
 	}
 
-	public String getIndexId() {
+	public String getIndexId()
+	{
 		return fieldParentTracker.getIndexId();
 	}
 
-	public String getFriendlyQuery() {
+	public String getFriendlyQuery()
+	{
 		return fieldParentTracker.getFriendlyQuery();
 	}
 
-	public void clear() {
+	public void clear()
+	{
 		fieldParentTracker.clear();
 	}
 
-	public boolean containsAll(Collection arg0) {
+	public boolean containsAll(Collection arg0)
+	{
 		return fieldParentTracker.containsAll(arg0);
 	}
 
-	public boolean add(Object arg0) {
+	public boolean add(Object arg0)
+	{
 		return fieldParentTracker.add(arg0);
 	}
 
-	public boolean addAll(Collection arg0) {
+	public boolean addAll(Collection arg0)
+	{
 		return fieldParentTracker.addAll(arg0);
 	}
 
-	public Date getDateValue(Data inHit, String inField) {
+	public Date getDateValue(Data inHit, String inField)
+	{
 		return fieldParentTracker.getDateValue(inHit, inField);
 	}
 
-	public void addSelection(String inId) {
+	public void addSelection(String inId)
+	{
 		fieldParentTracker.addSelection(inId);
 	}
 
-	public void deselectAll() {
+	public void deselectAll()
+	{
 		fieldParentTracker.deselectAll();
 	}
 
-	public String getFirstSelected() {
+	public String getFirstSelected()
+	{
 		return fieldParentTracker.getFirstSelected();
 	}
 
-	public void deselectCurrentPage() throws Exception {
+	public void deselectCurrentPage() throws Exception
+	{
 		fieldParentTracker.deselectCurrentPage();
 	}
 
-	public String getCatalogId() {
+	public String getCatalogId()
+	{
 		return fieldParentTracker.getCatalogId();
 	}
 
-	public Object first() {
+	public Object first()
+	{
 		return fieldParentTracker.first();
 	}
 
-	public String getDataSource() {
+	public String getDataSource()
+	{
 		return fieldParentTracker.getDataSource();
 	}
 
 	/*
-	 * public int findRow(String inField, String inValue) {
-	 * return fieldParentTracker.findRow(inField, inValue);
-	 * }
+	 * public int findRow(String inField, String inValue) { return fieldParentTracker.findRow(inField,
+	 * inValue); }
 	 */
 
-	public FilterNode findFilterNode(String inType) {
+	public FilterNode findFilterNode(String inType)
+	{
 		return fieldParentTracker.findFilterNode(inType);
 	}
 
-	public HitTracker copy() {
+	public HitTracker copy()
+	{
 		return fieldParentTracker.copy();
 	}
 
-	public boolean equals(Object obj) {
+	public boolean equals(Object obj)
+	{
 		return fieldParentTracker.equals(obj);
 	}
 
-	public Data findData(String inField, String inValue) {
+	public Data findData(String inField, String inValue)
+	{
 		return fieldParentTracker.findData(inField, inValue);
 	}
 
-	public void forEach(Consumer arg0) {
+	public void forEach(Consumer arg0)
+	{
 		fieldParentTracker.forEach(arg0);
 	}
 
-	public String getResultType() {
+	public String getResultType()
+	{
 		return fieldParentTracker.getResultType();
 	}
 
-	public Data getRandomHit() {
+	public Data getRandomHit()
+	{
 		return fieldParentTracker.getRandomHit();
 	}
 
-	public String getSearchType() {
+	public String getSearchType()
+	{
 		return fieldParentTracker.getSearchType();
 	}
 
-	public int indexOf(int count) {
+	public int indexOf(int count)
+	{
 		return fieldParentTracker.indexOf(count);
 	}
 
-	public Collection getSourcePaths() {
+	public Collection getSourcePaths()
+	{
 		return fieldParentTracker.getSourcePaths();
 	}
 
-	public int getMaxPageListing() {
+	public int getMaxPageListing()
+	{
 		return fieldParentTracker.getMaxPageListing();
 	}
 
-	public int getTotal() {
+	public int getTotal()
+	{
 		return fieldParentTracker.getTotal();
 	}
 
-	public SearchQuery getSearchQuery() {
+	public SearchQuery getSearchQuery()
+	{
 		return fieldParentTracker.getSearchQuery();
 	}
 
-	public String getQuery() {
+	public String getQuery()
+	{
 		return fieldParentTracker.getQuery();
 	}
 
-	public String getUserQuery() {
+	public String getUserQuery()
+	{
 		return fieldParentTracker.getUserQuery();
 	}
 
-	public String getOrdering() {
+	public String getOrdering()
+	{
 		return fieldParentTracker.getOrdering();
 	}
 
-	public void setIndexId(String inIndexCounter) {
+	public void setIndexId(String inIndexCounter)
+	{
 		fieldParentTracker.setIndexId(inIndexCounter);
 	}
 
-	public void setSearchQuery(SearchQuery inQuery) {
+	public void setSearchQuery(SearchQuery inQuery)
+	{
 		fieldParentTracker.setSearchQuery(inQuery);
 	}
 
-	public String highlight(Object inDoc, String inField) {
+	public String highlight(Object inDoc, String inField)
+	{
 		return fieldParentTracker.highlight(inDoc, inField);
 	}
 
-	public String getValue(Object inHit, String inString) {
+	public String getValue(Object inHit, String inString)
+	{
 		return fieldParentTracker.getValue(inHit, inString);
 	}
 
-	public String getValue(Data inHit, String inString) {
+	public String getValue(Data inHit, String inString)
+	{
 		return fieldParentTracker.getValue(inHit, inString);
 	}
 
-	public boolean retainAll(Collection arg0) {
+	public boolean retainAll(Collection arg0)
+	{
 		return fieldParentTracker.retainAll(arg0);
 	}
 
@@ -352,100 +427,113 @@ public class HitTrackerWrapper extends HitTracker {
 	// return fieldParentTracker.toArray(all);
 	// }
 
-	public Collection getSelectedHits() {
+	public Collection getSelectedHits()
+	{
 		return fieldParentTracker.getSelectedHits();
 	}
 
-	public HitTracker getSelectedHitracker() {
+	public HitTracker getSelectedHitracker()
+	{
 		return fieldParentTracker.getSelectedHitracker();
 	}
 
-	public boolean hasMultipleSelections() {
+	public boolean hasMultipleSelections()
+	{
 		return fieldParentTracker.hasMultipleSelections();
 	}
 
-	public int getSelectionSize() {
+	public int getSelectionSize()
+	{
 		return fieldParentTracker.getSelectionSize();
 	}
 
-	public boolean hasSelections() {
+	public boolean hasSelections()
+	{
 		return fieldParentTracker.hasSelections();
 	}
 
-	public Collection getSelections() {
+	public Collection getSelections()
+	{
 		return fieldParentTracker.getSelections();
 	}
 
-	public void setSelections(Collection inSelections) {
+	public void setSelections(Collection inSelections)
+	{
 		fieldParentTracker.setSelections(inSelections);
 	}
 
-	public void removeSelection(String inId) {
+	public void removeSelection(String inId)
+	{
 		fieldParentTracker.removeSelection(inId);
 	}
 
-	public void toggleSelected(String inId) {
+	public void toggleSelected(String inId)
+	{
 		fieldParentTracker.toggleSelected(inId);
 	}
 
-	public void selectAll() {
+	public void selectAll()
+	{
 		fieldParentTracker.selectAll();
 	}
 
-	public String getSessionId() {
+	public String getSessionId()
+	{
 		return fieldParentTracker.getSessionId();
 	}
 
-	public void setHitsName(String inHitsname) {
+	public void setHitsName(String inHitsname)
+	{
 		fieldParentTracker.setHitsName(inHitsname);
 	}
 
-	public void setCatalogId(String inCatalogid) {
+	public void setCatalogId(String inCatalogid)
+	{
 		fieldParentTracker.setCatalogId(inCatalogid);
 	}
 
-	public int indexOf(String inCatalogId, String inId) {
+	public int indexOf(String inCatalogId, String inId)
+	{
 		return fieldParentTracker.indexOf(inCatalogId, inId);
 	}
 
-	public int indexOfId(String inId) {
+	public int indexOfId(String inId)
+	{
 		return fieldParentTracker.indexOfId(inId);
 	}
 
-	public void setDataSource(String inDataSource) {
+	public void setDataSource(String inDataSource)
+	{
 		fieldParentTracker.setDataSource(inDataSource);
 	}
 
-	public Searcher getSearcher() {
+	public Searcher getSearcher()
+	{
 		return fieldParentTracker.getSearcher();
 	}
 
-	public void setSearcher(Searcher inSearcher) {
+	public void setSearcher(Searcher inSearcher)
+	{
 		fieldParentTracker.setSearcher(inSearcher);
 	}
 
-	public void setSessionId(String inSessionId) {
+	public void setSessionId(String inSessionId)
+	{
 		fieldParentTracker.setSessionId(inSessionId);
 	}
 
 	/*
 	 * public void setHitsPerPageHeight(String pageHeight, int inRowHeight) {
-	 * fieldParentTracker.setHitsPerPageHeight(pageHeight, inRowHeight);
-	 * }
+	 * fieldParentTracker.setHitsPerPageHeight(pageHeight, inRowHeight); }
 	 * 
-	 * public String idOnPreviousPage() {
-	 * return fieldParentTracker.idOnPreviousPage();
-	 * }
+	 * public String idOnPreviousPage() { return fieldParentTracker.idOnPreviousPage(); }
 	 * 
-	 * public String idOnThisPage() {
-	 * return fieldParentTracker.idOnThisPage();
-	 * }
+	 * public String idOnThisPage() { return fieldParentTracker.idOnThisPage(); }
 	 * 
-	 * public String idOnNextPage() {
-	 * return fieldParentTracker.idOnNextPage();
-	 * }
+	 * public String idOnNextPage() { return fieldParentTracker.idOnNextPage(); }
 	 */
-	public boolean hasChanged(HitTracker inTracker) {
+	public boolean hasChanged(HitTracker inTracker)
+	{
 		return fieldParentTracker.hasChanged(inTracker);
 	}
 
@@ -461,41 +549,49 @@ public class HitTrackerWrapper extends HitTracker {
 	// return fieldParentTracker.toArray(generator);
 	// }
 
-	public String toString() {
+	public String toString()
+	{
 		return fieldParentTracker.toString();
 	}
 
-	protected HitTracker getParent() {
+	protected HitTracker getParent()
+	{
 		return fieldParentTracker;
 	}
 
 	@Override
-	public Data get(int count) {
+	public Data get(int count)
+	{
 		return getParent().get(count);
 	}
 
 	@Override
-	public Iterator iterator() {
+	public Iterator iterator()
+	{
 		return getParent().iterator();
 	}
 
 	@Override
-	public boolean contains(Object inHit) {
+	public boolean contains(Object inHit)
+	{
 		return getParent().contains(inHit);
 	}
 
 	@Override
-	public int size() {
+	public int size()
+	{
 		return getParent().size();
 	}
 
 	@Override
-	public String getHitsName() {
+	public String getHitsName()
+	{
 		return getParent().getHitsName();
 	}
 
 	@Override
-	public Map getActiveFilterValues() {
+	public Map getActiveFilterValues()
+	{
 		return getParent().getActiveFilterValues();
 	}
 

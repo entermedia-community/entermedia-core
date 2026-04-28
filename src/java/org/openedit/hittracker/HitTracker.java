@@ -23,7 +23,8 @@ import org.openedit.data.Searcher;
 import org.openedit.profile.UserProfile;
 import org.openedit.util.DateStorageUtil;
 
-public abstract class HitTracker<T> implements Serializable, Collection, CatalogEnabled {
+public abstract class HitTracker<T> implements Serializable, Collection, CatalogEnabled
+{
 	private static final Log log = LogFactory.getLog(HitTracker.class);
 	protected boolean fieldAllSelected;
 	protected Collection<String> fieldSelections;
@@ -50,17 +51,20 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 	protected boolean fieldUseServerCursor;
 	protected long fieldSearchTime;
 
-	public void enableBulkOperations() {
+	public void enableBulkOperations()
+	{
 		setUseServerCursor(true);
 		setHitsPerPage(1000);
 		setIndexId(getIndexId() + System.currentTimeMillis());
 	}
 
-	public boolean isUseServerCursor() {
+	public boolean isUseServerCursor()
+	{
 		return fieldUseServerCursor;
 	}
 
-	public void setUseServerCursor(boolean inUseServerCursor) {
+	public void setUseServerCursor(boolean inUseServerCursor)
+	{
 		fieldUseServerCursor = inUseServerCursor;
 	}
 
@@ -70,40 +74,50 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 
 	public HitTracker(Searcher inSearcher) {
 		this();
-		if (inSearcher == null) {
+		if (inSearcher == null)
+		{
 			throw new OpenEditException("Server must not be null");
 		}
 		setSearcher(inSearcher);
 	}
 
-	protected void setAllSelected(boolean inSelectAll) {
+	protected void setAllSelected(boolean inSelectAll)
+	{
 		fieldAllSelected = inSelectAll;
 
-		if (inSelectAll && !isUseServerCursor()) {
+		if (inSelectAll && !isUseServerCursor())
+		{
 			clear();
 			setUseServerCursor(inSelectAll);
 
-		} else {
+		}
+		else
+		{
 			setUseServerCursor(inSelectAll);
 		}
 
 	}
 
-	public boolean isShowOnlySelected() {
+	public boolean isShowOnlySelected()
+	{
 		return fieldShowOnlySelected;
 	}
 
-	public void setShowOnlySelected(boolean inShowOnlySelected) {
+	public void setShowOnlySelected(boolean inShowOnlySelected)
+	{
 		fieldShowOnlySelected = inShowOnlySelected;
 	}
 
-	public String getResultType() {
+	public String getResultType()
+	{
 		return getSearchQuery().getResultType();
 	}
 
-	public Data getRandomHit() {
+	public Data getRandomHit()
+	{
 		int max = size();
-		if (max > 10000) {
+		if (max > 10000)
+		{
 			max = 10000;
 		}
 		Random rand = new Random();
@@ -112,26 +126,15 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 
 	}
 
-	public String getSearchType() {
+	public String getSearchType()
+	{
 		return getSearcher().getSearchType();
 	}
 	/*
-	 * public List getPartOfPageOfHits(int inStart, int inEnd) throws Exception
-	 * {
-	 * List page = new ArrayList();
-	 * int count = (getPage() - 1) * getHitsPerPage(); // this is the start of
-	 * // the count
-	 * count = count + inStart; // tack on the offset
-	 * for (int i = inStart; i < getHitsPerPage() && i < inEnd; i++)
-	 * {
-	 * if (count < getTotal())
-	 * {
-	 * page.add(get(count));
-	 * count++;
-	 * }
-	 * }
-	 * return page;
-	 * }
+	 * public List getPartOfPageOfHits(int inStart, int inEnd) throws Exception { List page = new
+	 * ArrayList(); int count = (getPage() - 1) * getHitsPerPage(); // this is the start of // the count
+	 * count = count + inStart; // tack on the offset for (int i = inStart; i < getHitsPerPage() && i <
+	 * inEnd; i++) { if (count < getTotal()) { page.add(get(count)); count++; } } return page; }
 	 */
 
 	/**
@@ -140,7 +143,8 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 	 * @param count
 	 * @return
 	 */
-	public int indexOf(int count) {
+	public int indexOf(int count)
+	{
 
 		int bottom = (getPage() - 1) * getHitsPerPage(); // this is the start of
 		return bottom + count; // the offset
@@ -148,11 +152,14 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 
 	public abstract Data get(int count);
 
-	public Data getById(String inId) {
-		for (int i = 0; i < size(); i++) {
+	public Data getById(String inId)
+	{
+		for (int i = 0; i < size(); i++)
+		{
 			Data hit = get(i);
 			String id = getValue(hit, "id");
-			if (id.equals(inId)) {
+			if (id.equals(inId))
+			{
 				return hit;
 			}
 		}
@@ -160,27 +167,35 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 		// throw new OpenEditException("getById Not implemented");
 	}
 
-	public Collection<String> getSourcePaths() {
+	public Collection<String> getSourcePaths()
+	{
 		List paths = new ArrayList();
-		for (Iterator iterator = iterator(); iterator.hasNext();) {
+		for (Iterator iterator = iterator(); iterator.hasNext();)
+		{
 			Data data = (Data) iterator.next();
 			paths.add(data.getSourcePath());
 		}
 		return paths;
 	}
 
-	public List<Data> getPageOfHits() {
-		if (fieldCurrentPage == null) {
+	public List<Data> getPageOfHits()
+	{
+		if (fieldCurrentPage == null)
+		{
 			int inHitsPerPage = getHitsPerPage();
 			List page = new ArrayList(inHitsPerPage);
 			int count = (getPage() - 1) * inHitsPerPage; // pick up from here
 			fieldCurrentPage = page;
 			int total = size();
-			for (int i = 0; i < inHitsPerPage; i++) {
-				if (count < total) {
+			for (int i = 0; i < inHitsPerPage; i++)
+			{
+				if (count < total)
+				{
 					page.add(get(count));
 					count++;
-				} else {
+				}
+				else
+				{
 					break;
 				}
 			}
@@ -188,28 +203,35 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 		return fieldCurrentPage;
 	}
 
-	public Collection getLast(int inCount) {
+	public Collection getLast(int inCount)
+	{
 		List page = new ArrayList(inCount);
 		int total = size() - 1;
-		for (int i = 0; i < inCount; i++) {
+		for (int i = 0; i < inCount; i++)
+		{
 			int index = total - i;
-			if (index > -1) {
+			if (index > -1)
+			{
 				page.add(get(index));
-			} else {
+			}
+			else
+			{
 				break;
 			}
 		}
 		return page;
 	}
 
-	public List getPageInRows(int inColCount) throws Exception {
+	public List getPageInRows(int inColCount) throws Exception
+	{
 		List page = getPageOfHits();
 
 		// Now break up the page into rows by dividing the count they wanted
 		double rowscount = (double) page.size() / (double) inColCount;
 
 		List rows = new ArrayList();
-		for (int i = 0; i < rowscount; i++) {
+		for (int i = 0; i < rowscount; i++)
+		{
 			int start = i * inColCount;
 			int end = i * inColCount + inColCount;
 			List sublist = page.subList(start, Math.min(page.size(), end));
@@ -218,21 +240,27 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 		return rows;
 	}
 
-	public int getHitsPerPage() {
-		if (fieldHitsPerPage > -1) {
+	public int getHitsPerPage()
+	{
+		if (fieldHitsPerPage > -1)
+		{
 			return fieldHitsPerPage;
 		}
-		if (fieldSearchQuery != null) {
+		if (fieldSearchQuery != null)
+		{
 			return getSearchQuery().getHitsPerPage();
 		}
 		return 15;
 	}
 
-	public void setHitsPerPage(int inHitsPerPage) {
-		if (inHitsPerPage > 0 && inHitsPerPage != fieldHitsPerPage) {
+	public void setHitsPerPage(int inHitsPerPage)
+	{
+		if (inHitsPerPage > 0 && inHitsPerPage != fieldHitsPerPage)
+		{
 			clear();
 			fieldHitsPerPage = inHitsPerPage;
-			if (fieldPage > 1) {
+			if (fieldPage > 1)
+			{
 				setPage(1);
 			}
 		}
@@ -243,155 +271,199 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 	 * 
 	 * @return
 	 */
-	public int getPage() {
+	public int getPage()
+	{
 		return fieldPage;
 	}
 
-	public void setPageByIndex(int inIndex) {
-		if (inIndex < getHitsPerPage()) {
+	public void setPageByIndex(int inIndex)
+	{
+		if (inIndex < getHitsPerPage())
+		{
 			setPage(1);
-		} else {
+		}
+		else
+		{
 			int page = size() / inIndex;
 			setPage(page);
 		}
 	}
 
-	public void setPage(int inPageOneBased) {
-		if (inPageOneBased == -1) {
+	public void setPage(int inPageOneBased)
+	{
+		if (inPageOneBased == -1)
+		{
 			return;
 		}
-		if (fieldPage != inPageOneBased) {
+		if (fieldPage != inPageOneBased)
+		{
 			fieldCurrentPage = null;
 			fieldPage = inPageOneBased;
 		}
 
 	}
 
-	public int getMaxPageListing() {
+	public int getMaxPageListing()
+	{
 		return fieldMaxPageListing;
 	}
 
-	public void setMaxPageListing(int inMaxPageListing) {
+	public void setMaxPageListing(int inMaxPageListing)
+	{
 		fieldMaxPageListing = inMaxPageListing;
 	}
 
 	/**
 	 * @deprecated use iterator()
 	 */
-	public Iterator getAllHits() {
+	public Iterator getAllHits()
+	{
 		return iterator();
 	}
 
 	public abstract Iterator iterator();
 
-	public int getCurrentHit() {
+	public int getCurrentHit()
+	{
 		return fieldCurrentHit;
 	}
 
-	public void setCurrentHit(int inCurrentHit) {
+	public void setCurrentHit(int inCurrentHit)
+	{
 		fieldCurrentHit = inCurrentHit;
 	}
 
-	public boolean containsById(String inId) {
+	public boolean containsById(String inId)
+	{
 		return getById(inId) != null;
 	}
 
 	public abstract boolean contains(Object inHit);
 
-	public int getTotal() {
+	public int getTotal()
+	{
 		return size();
 	}
 
 	public abstract int size();
 
-	public int getTotalPages() {
+	public int getTotalPages()
+	{
 		double pages = (double) getTotal() / (double) getHitsPerPage();
-		if (pages % 1 > 0) {
+		if (pages % 1 > 0)
+		{
 			pages++;
 		}
 		return (int) pages;
 	}
 
 	// 1 One based
-	public Integer getPosition() {
+	public Integer getPosition()
+	{
 		int totalpositions = getTotalPages();
 		// reverse sorted. So the first ones are the largest numbers
 		return totalpositions - getPage() + 1;
 	}
 
 	// Reversed If we are on 3 previous would be 4
-	public Integer prevPosition() {
+	public Integer prevPosition()
+	{
 		int page = getPosition() + 1;
-		if (page > getTotalPages()) {
+		if (page > getTotalPages())
+		{
 			return null;
-		} else {
+		}
+		else
+		{
 			return page;
 		}
 	}
 
 	// Reversed If we are on 3 next would be 2
-	public Integer nextPosition() {
+	public Integer nextPosition()
+	{
 		int page = getPosition() - 1;
-		if (page < 1) {
+		if (page < 1)
+		{
 			return null;
-		} else {
+		}
+		else
+		{
 			return page;
 		}
 	}
 
-	public Integer nextPage() {
+	public Integer nextPage()
+	{
 		int page = getPage() + 1;
-		if (page > getTotalPages()) {
+		if (page > getTotalPages())
+		{
 			return null;
-		} else {
+		}
+		else
+		{
 			return page;
 		}
 	}
 
-	public Integer prevPage() {
+	public Integer prevPage()
+	{
 		int page = getPage() - 1;
-		if (page < 1) {
+		if (page < 1)
+		{
 			return null;
-		} else {
+		}
+		else
+		{
 			return page;
 		}
 	}
 
-	public Integer getPageStart() {
-		if (getTotal() == 0) {
+	public Integer getPageStart()
+	{
+		if (getTotal() == 0)
+		{
 			return null;
 		}
 		int start = (getPage() - 1) * getHitsPerPage();
 		return (start + 1);
 	}
 
-	public Integer getPageEnd() {
-		if (getTotal() == 0) {
+	public Integer getPageEnd()
+	{
+		if (getTotal() == 0)
+		{
 			return null;
 		}
 		int start = getPage() * getHitsPerPage();
-		if (start > getTotal()) {
+		if (start > getTotal())
+		{
 			return getTotal();
 		}
 		return start;
 
 	}
 
-	public SearchQuery getSearchQuery() {
-		if (fieldSearchQuery == null) {
+	public SearchQuery getSearchQuery()
+	{
+		if (fieldSearchQuery == null)
+		{
 			fieldSearchQuery = new SearchQuery();
 		}
 		return fieldSearchQuery;
 	}
 
-	public String getQuery() {
-		if (getSearchQuery() != null) {
+	public String getQuery()
+	{
+		if (getSearchQuery() != null)
+		{
 			return getSearchQuery().toQuery();
 		}
 		return null;
 	}
 
-	public List linkRange() {
+	public List linkRange()
+	{
 		int totalPages = getTotalPages();
 		int page = getPage();
 		int start = 1;
@@ -399,61 +471,48 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 		if (page < getMaxPageListing() / 2) // under the first 5 records
 		{
 			start = 1;// - getMaxPageListing()/2;
-		} else if (page + getMaxPageListing() / 2 + 1 >= totalPages) // near
-		// the
-		// end +
-		// 1 for
-		// the
-		// selected
-		// one
-		{
-			start = 1 + totalPages - getMaxPageListing(); // Make it start 10
-			// from the end
-			start = Math.max(1, start); // dont go below 1
-		} else {
-			start = 1 + page - getMaxPageListing() / 2;
 		}
+		else
+			if (page + getMaxPageListing() / 2 + 1 >= totalPages) // near
+			// the
+			// end +
+			// 1 for
+			// the
+			// selected
+			// one
+			{
+				start = 1 + totalPages - getMaxPageListing(); // Make it start 10
+				// from the end
+				start = Math.max(1, start); // dont go below 1
+			}
+			else
+			{
+				start = 1 + page - getMaxPageListing() / 2;
+			}
 
 		int count = Math.min(totalPages, getMaxPageListing()); // what is
 		// higher the
 		// total count
 		// or 10
 		List hits = new ArrayList(count);
-		for (int i = 0; i < count; i++) {
+		for (int i = 0; i < count; i++)
+		{
 			hits.add(new Integer(start + i));
 		}
 		return hits;
 	}
 
 	/*
-	 * public List positionsBefore()
-	 * {
-	 * List<Integer> hits = linksBefore();
-	 * int totalpages = getTotalPages();
-	 * for (int i = 0; i < hits.size(); i++)
-	 * {
-	 * int page = hits.get(i);
-	 * int position = totalpages - page + 1;
-	 * hits.set(i, position);
-	 * }
-	 * //Collections.reverse(hits);
-	 * return hits;
-	 * }
-	 * public List positionsAfter()
-	 * {
-	 * List<Integer> hits = linksAfter();
-	 * int totalpages = getTotalPages();
-	 * for (int i = 0; i < hits.size(); i++)
-	 * {
-	 * int page = hits.get(i);
-	 * int position = totalpages - page + 1;
-	 * hits.set(i, position);
-	 * }
-	 * return hits;
-	 * }
+	 * public List positionsBefore() { List<Integer> hits = linksBefore(); int totalpages =
+	 * getTotalPages(); for (int i = 0; i < hits.size(); i++) { int page = hits.get(i); int position =
+	 * totalpages - page + 1; hits.set(i, position); } //Collections.reverse(hits); return hits; }
+	 * public List positionsAfter() { List<Integer> hits = linksAfter(); int totalpages =
+	 * getTotalPages(); for (int i = 0; i < hits.size(); i++) { int page = hits.get(i); int position =
+	 * totalpages - page + 1; hits.set(i, position); } return hits; }
 	 * 
 	 */
-	public int toPosition(int inPage) {
+	public int toPosition(int inPage)
+	{
 		// String sorted = getSearchQuery().getSortBy();
 		int position = getTotalPages() - inPage + 1;
 		// if( sorted != null)
@@ -466,53 +525,67 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 		return position;
 	}
 
-	public boolean isAscending() {
+	public boolean isAscending()
+	{
 		String sorted = getSearchQuery().getSortBy();
-		if (sorted != null && sorted.endsWith("Up")) {
+		if (sorted != null && sorted.endsWith("Up"))
+		{
 			return true;
 		}
 		return false;
 	}
 
-	public int toPositionLabel(int inPage) {
+	public int toPositionLabel(int inPage)
+	{
 		String sorted = getSearchQuery().getSortBy();
 		int position = getTotalPages() - inPage + 1;
-		if (sorted != null) {
-			if (sorted.endsWith("Up")) {
+		if (sorted != null)
+		{
+			if (sorted.endsWith("Up"))
+			{
 				position = inPage;
 			}
 		}
 		return position;
 	}
 
-	public int getStartingPosition() {
+	public int getStartingPosition()
+	{
 		String sorted = getSearchQuery().getSortBy();
 		int position = getTotalPages();
-		if (sorted != null) {
-			if (sorted.endsWith("Up")) {
+		if (sorted != null)
+		{
+			if (sorted.endsWith("Up"))
+			{
 				position = 1;
 			}
 		}
 		return position;
 	}
 
-	public int getEndingPosition() {
+	public int getEndingPosition()
+	{
 		String sorted = getSearchQuery().getSortBy();
 		int position = 1;
-		if (sorted != null) {
-			if (sorted.endsWith("Up")) {
+		if (sorted != null)
+		{
+			if (sorted.endsWith("Up"))
+			{
 				position = getTotalPages();
 			}
 		}
 		return position;
 	}
 
-	public List linksBefore() {
+	public List linksBefore()
+	{
 		List range = linkRange();
 		int i = 0;
-		for (; i < range.size(); i++) {
+		for (; i < range.size(); i++)
+		{
 			Integer in = (Integer) range.get(i);
-			if (in.intValue() >= getPage()) {
+			if (in.intValue() >= getPage())
+			{
 				break;
 			}
 		}
@@ -520,8 +593,10 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 		return range.subList(0, i);
 	}
 
-	public List linksAfter() {
-		if (getTotalPages() == getPage()) {
+	public List linksAfter()
+	{
+		if (getTotalPages() == getPage())
+		{
 			return Collections.EMPTY_LIST;
 		}
 		List range = linkRange();
@@ -530,9 +605,11 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 			return Collections.EMPTY_LIST;
 		}
 		int start = 0;
-		for (int i = 0; i < range.size(); i++) {
+		for (int i = 0; i < range.size(); i++)
+		{
 			Integer in = (Integer) range.get(i);
-			if (in.intValue() > getPage()) {
+			if (in.intValue() > getPage())
+			{
 				start = i;
 				break;
 			}
@@ -544,26 +621,33 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 	/**
 	 * @deprecated Use getSearchQuery().getInput("nameof field")
 	 */
-	public String getUserQuery() {
+	public String getUserQuery()
+	{
 		return getSearchQuery().getInput("description");
 	}
 
-	public String getInput(String inKey) {
+	public String getInput(String inKey)
+	{
 		SearchQuery query = getSearchQuery();
-		if (query != null) {
+		if (query != null)
+		{
 			String value = query.getInput(inKey);
 			return value;
 		}
 		return null;
 	}
 
-	public boolean wasInput(String inKey, String inValue) {
+	public boolean wasInput(String inKey, String inValue)
+	{
 		SearchQuery query = getSearchQuery();
 
-		if (query != null && inValue != null && inKey != null) {
+		if (query != null && inValue != null && inKey != null)
+		{
 			Collection inputs = query.getInputs(inKey);
-			if (inputs != null) {
-				if (inputs.contains(inValue)) {
+			if (inputs != null)
+			{
+				if (inputs.contains(inValue))
+				{
 					return true;
 				}
 			}
@@ -572,50 +656,61 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 		return false;
 	}
 
-	public String getOrdering() {
-		if (getSearchQuery() == null) {
+	public String getOrdering()
+	{
+		if (getSearchQuery() == null)
+		{
 			return null;
 		}
 		return getSearchQuery().getSortBy();
 	}
 
-	public String getIndexId() {
+	public String getIndexId()
+	{
 		return fieldIndexId;
 	}
 
-	public void setIndexId(String inIndexCounter) {
+	public void setIndexId(String inIndexCounter)
+	{
 		fieldIndexId = inIndexCounter;
 	}
 
-	public String getFriendlyQuery() {
+	public String getFriendlyQuery()
+	{
 		SearchQuery query = getSearchQuery();
-		if (query != null) {
+		if (query != null)
+		{
 			return getSearchQuery().toFriendly();
 		}
 		return null;
 	}
 
-	public void setSearchQuery(SearchQuery inQuery) {
+	public void setSearchQuery(SearchQuery inQuery)
+	{
 
 		fieldSearchQuery = inQuery;
 	}
 
-	public boolean isEmpty() {
+	public boolean isEmpty()
+	{
 		return size() == 0;
 	}
 
 	// Remaining API are not implemented
-	public List keys() {
+	public List keys()
+	{
 		// All the ID's we can find
 		return null;
 	}
 
-	public String highlight(Object inHit, String inField) {
+	public String highlight(Object inHit, String inField)
+	{
 		String highlight = highlight(inHit, inField, 50, true);
 		return highlight;
 	}
 
-	public String highlight(Object inHit, String inField, int cutoff, boolean addhtml) {
+	public String highlight(Object inHit, String inField, int cutoff, boolean addhtml)
+	{
 		// StringBuffer output = new StringBuffer();
 		String input = getInput("description");
 		String text = getValue(inHit, inField);
@@ -624,30 +719,40 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 
 	}
 
-	public String getValue(Object inHit, String inString) {
+	public String getValue(Object inHit, String inString)
+	{
 		return getValue((Data) inHit, inString);
 	}
 
-	public String getValue(Data inHit, String inString) {
+	public String getValue(Data inHit, String inString)
+	{
 		return inHit.get(inString);
 	}
 
-	public Collection<String> collectValues(String inString) {
-		if (getHitsPerPage() < 1000 && size() > 10000) {
+	public Collection<String> collectValues(String inString)
+	{
+		if (getHitsPerPage() < 1000 && size() > 10000)
+		{
 			throw new OpenEditException("Cant get values across large data sets " + getQuery());
 		}
 		Set allvalues = new HashSet();
-		for (Iterator iterator = iterator(); iterator.hasNext();) {
+		for (Iterator iterator = iterator(); iterator.hasNext();)
+		{
 			Data data = (Data) iterator.next();
 			Object value = data.getValue(inString);
-			if (value instanceof Collection) {
-				for (Iterator iterator2 = ((Collection) value).iterator(); iterator2.hasNext();) {
+			if (value instanceof Collection)
+			{
+				for (Iterator iterator2 = ((Collection) value).iterator(); iterator2.hasNext();)
+				{
 					Object object = (Object) iterator2.next();
 					allvalues.add(object);
 				}
-			} else if (value != null) {
-				allvalues.add(value);
 			}
+			else
+				if (value != null)
+				{
+					allvalues.add(value);
+				}
 
 		}
 		return allvalues;
@@ -698,57 +803,70 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 	// }
 	// }
 
-	public void clear() {
+	public void clear()
+	{
 		fieldCurrentPage = null;
 	}
 
-	public boolean containsAll(Collection arg0) {
+	public boolean containsAll(Collection arg0)
+	{
 		// TODO Auto-generated method stub
 		return false;
 	}
 
-	public boolean remove(Object inO) {
+	public boolean remove(Object inO)
+	{
 		return false;
 	}
 
-	public boolean removeAll(Collection arg0) {
+	public boolean removeAll(Collection arg0)
+	{
 		return false;
 	}
 
-	public boolean retainAll(Collection arg0) {
+	public boolean retainAll(Collection arg0)
+	{
 		return false;
 	}
 
-	public Object[] toArray() {
+	public Object[] toArray()
+	{
 		Object[] all = new Object[size()];
 		return toArray(all);
 	}
 
-	public Object[] toArray(Object[] all) {
+	public Object[] toArray(Object[] all)
+	{
 		Iterator iter = iterator();
 		int c = 0;
-		while (iter.hasNext()) {
+		while (iter.hasNext())
+		{
 			all[c] = iter.next();
 			c++;
 		}
 		return all;
 	}
 
-	public boolean add(Object arg0) {
+	public boolean add(Object arg0)
+	{
 		return false;
 	}
 
-	public boolean addAll(Collection arg0) {
+	public boolean addAll(Collection arg0)
+	{
 		return false;
 	}
 
-	public Date getDateValue(Data inHit, String inField) {
+	public Date getDateValue(Data inHit, String inField)
+	{
 		String value = getValue(inHit, inField);
-		if (value == null) {
+		if (value == null)
+		{
 			return null;
 		}
 		SearchQuery q = getSearchQuery();
-		if (q != null) {
+		if (q != null)
+		{
 			PropertyDetail detail = q.getPropertyDetails().getDetail(inField);
 			Date date = DateStorageUtil.getStorageUtil().parseFromStorage(value);
 			return date;
@@ -758,28 +876,35 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 	}
 
 	@Deprecated
-	public Collection getSelectedHits() {
+	public Collection getSelectedHits()
+	{
 		return getSelectedHitracker();
 	}
 
-	public HitTracker getSelectedHitracker() {
+	public HitTracker getSelectedHitracker()
+	{
 		// if( isAllSelected() )
 		// {
 		// return this;
 		// }
-		if (getSessionId().startsWith("selected")) {
+		if (getSessionId().startsWith("selected"))
+		{
 			return this;
 		}
 		HitTracker selecteddata = null;
 		SearchQuery query = getSearchQuery();
-		if (query != null) {
+		if (query != null)
+		{
 			selecteddata = getSearcher().search(query);
 		}
 
-		if (isAllSelected()) {
+		if (isAllSelected())
+		{
 			// rerun the search
 			selecteddata.selectAll();
-		} else {
+		}
+		else
+		{
 			selecteddata.deselectAll();
 			selecteddata.setSelections(getSelections());
 			selecteddata.setShowOnlySelected(true);
@@ -805,65 +930,83 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 	// }
 	// return getSelectedHitracker();
 	// }
-	public boolean hasMultipleSelections() {
-		if (isAllSelected()) {
+	public boolean hasMultipleSelections()
+	{
+		if (isAllSelected())
+		{
 			return true;
 		}
 
-		if (fieldSelections != null && fieldSelections.size() > 1) {
+		if (fieldSelections != null && fieldSelections.size() > 1)
+		{
 			return true;
 		}
 		return false;
 	}
 
-	public int getSelectionSize() {
-		if (isAllSelected()) {
+	public int getSelectionSize()
+	{
+		if (isAllSelected())
+		{
 			return size();
 		}
-		if (fieldSelections != null) {
+		if (fieldSelections != null)
+		{
 			return fieldSelections.size();
 		}
 		return 0;
 	}
 
-	public boolean hasSelections() {
-		if (isAllSelected()) {
+	public boolean hasSelections()
+	{
+		if (isAllSelected())
+		{
 			return true;
 		}
-		if (fieldSelections != null && fieldSelections.size() > 0) {
+		if (fieldSelections != null && fieldSelections.size() > 0)
+		{
 			return true;
 		}
 		return false;
 	}
 
-	public Collection<String> getSelections() {
-		if (fieldSelections == null) {
+	public Collection<String> getSelections()
+	{
+		if (fieldSelections == null)
+		{
 			fieldSelections = new ArrayList<String>();
 		}
 		return fieldSelections;
 	}
 
-	public void setSelections(Collection<String> inSelections) {
+	public void setSelections(Collection<String> inSelections)
+	{
 		fieldSelections = inSelections;
 	}
 
-	public void addSelection(String inId) {
-		if (inId == null) {
+	public void addSelection(String inId)
+	{
+		if (inId == null)
+		{
 			return;
 		}
-		if (!getSelections().contains(inId)) {
+		if (!getSelections().contains(inId))
+		{
 			getSelections().add(inId);
 		}
 	}
 
-	public void removeSelection(String inId) {
-		if (isAllSelected()) {
+	public void removeSelection(String inId)
+	{
+		if (isAllSelected())
+		{
 			setAllSelected(false);
 			getSelections().clear();
 
 			// TODO: Get one page worth?
 			// add everything into the selections
-			for (Iterator iterator = iterator(); iterator.hasNext();) {
+			for (Iterator iterator = iterator(); iterator.hasNext();)
+			{
 				Data data = (Data) iterator.next();
 				getSelections().add(data.getId());
 			}
@@ -871,8 +1014,10 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 		getSelections().remove(inId);
 	}
 
-	public boolean isSelected(String inId) {
-		if (isAllSelected()) {
+	public boolean isSelected(String inId)
+	{
+		if (isAllSelected())
+		{
 			return true;
 		}
 		return getSelections().contains(inId);
@@ -885,7 +1030,8 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 	 * @return
 	 */
 
-	public boolean isSelectedOnPage(String inId) {
+	public boolean isSelectedOnPage(String inId)
+	{
 		// int bottom = (getPage() - 1) * getHitsPerPage(); // this is the start of
 		// int index = bottom + count; // the offset
 		//
@@ -894,80 +1040,100 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 		return isSelected(inId);
 	}
 
-	public void toggleSelected(String inId) {
-		if (isSelected(inId)) {
+	public void toggleSelected(String inId)
+	{
+		if (isSelected(inId))
+		{
 			removeSelection(inId);
-		} else {
+		}
+		else
+		{
 			addSelection(inId);
 		}
 
 	}
 
-	public void selectAll() {
+	public void selectAll()
+	{
 
 		setAllSelected(true);
 	}
 
-	public void deselectAll() {
+	public void deselectAll()
+	{
 		getSelections().clear();
 		fieldAllSelected = false;
 		setUseServerCursor(false);
 
 	}
 
-	public String getFirstSelected() {
-		if (hasSelections()) {
-			if (isAllSelected()) {
+	public String getFirstSelected()
+	{
+		if (hasSelections())
+		{
+			if (isAllSelected())
+			{
 				return get(0).getId();
 			}
 			String first = getSelections().iterator().next();
-			if (first != null) {
+			if (first != null)
+			{
 				return first;
 			}
 		}
 		return null;
 	}
 
-	public void deselectCurrentPage() throws Exception {
+	public void deselectCurrentPage() throws Exception
+	{
 		// deselectAll();
 		List page = getPageOfHits();
-		for (Iterator iterator = page.iterator(); iterator.hasNext();) {
+		for (Iterator iterator = page.iterator(); iterator.hasNext();)
+		{
 			Data row = (Data) iterator.next();
 			removeSelection(row.getId());
 		}
 
 	}
 
-	public boolean isPageSelected() throws Exception {
+	public boolean isPageSelected() throws Exception
+	{
 		// deselectAll();
 		List page = getPageOfHits();
-		for (Iterator iterator = page.iterator(); iterator.hasNext();) {
+		for (Iterator iterator = page.iterator(); iterator.hasNext();)
+		{
 			Data row = (Data) iterator.next();
-			if (!isSelected(row.getId())) {
+			if (!isSelected(row.getId()))
+			{
 				return false;
 			}
 		}
 		return true;
 	}
 
-	public void selectCurrentPage() throws Exception {
+	public void selectCurrentPage() throws Exception
+	{
 		// deselectAll();
 		List page = getPageOfHits();
-		for (Iterator iterator = page.iterator(); iterator.hasNext();) {
+		for (Iterator iterator = page.iterator(); iterator.hasNext();)
+		{
 			Data row = (Data) iterator.next();
 			addSelection(row.getId());
 		}
 
 	}
 
-	public String getSessionId() {
-		if (fieldTempSessionId != null) {
+	public String getSessionId()
+	{
+		if (fieldTempSessionId != null)
+		{
 			return fieldTempSessionId;
 		}
 		return getSearchQuery().getSessionId();
 	}
 
-	public String getHitsName() {
+	public String getHitsName()
+	{
 		if (fieldHitsName != null) // This may be not needed
 		{
 			return fieldHitsName;
@@ -975,134 +1141,170 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 		return getSearchQuery().getHitsName();
 	}
 
-	public void setHitsName(String inHitsname) {
+	public void setHitsName(String inHitsname)
+	{
 		fieldHitsName = inHitsname;
 	}
 
-	public String getCatalogId() {
+	public String getCatalogId()
+	{
 		return getSearchQuery().getCatalogId();
 	}
 
-	public void setCatalogId(String inCatalogid) {
+	public void setCatalogId(String inCatalogid)
+	{
 		getSearchQuery().setCatalogId(inCatalogid);
 	}
 
-	public int indexOf(String inCatalogId, String inId) {
-		if (inCatalogId == null) {
+	public int indexOf(String inCatalogId, String inId)
+	{
+		if (inCatalogId == null)
+		{
 			inCatalogId = getCatalogId();
 		}
-		if (inId == null) {
+		if (inId == null)
+		{
 			return -1;
 		}
-		for (int i = 0; i < size(); i++) {
+		for (int i = 0; i < size(); i++)
+		{
 			Data hit = get(i);
 			String catalogId = getValue(hit, "catalogid");
 			String id = getValue(hit, "id");
-			if (inCatalogId.equals(catalogId) && inId.equals(id)) {
+			if (inCatalogId.equals(catalogId) && inId.equals(id))
+			{
 				return i;
 			}
 		}
 		return -1;
 	}
 
-	public int getPageForIndexLocation(int inIndex) {
+	public int getPageForIndexLocation(int inIndex)
+	{
 		int page = inIndex / getHitsPerPage();
 		page++;
 		return page;
 	}
 
-	public Object previous(int inIndex) {
-		if (inIndex == -1) {
+	public Object previous(int inIndex)
+	{
+		if (inIndex == -1)
+		{
 			return null;
 		}
-		if (inIndex == 0) {
+		if (inIndex == 0)
+		{
 			return null;
 		}
 		return get(inIndex - 1);
 	}
 
-	public int previousIndex(String inIndex) {
+	public int previousIndex(String inIndex)
+	{
 		int index = Integer.parseInt(inIndex);
-		if (index <= 1) {
+		if (index <= 1)
+		{
 			return -1;
 		}
 		return index - 1;
 	}
 
-	public Object previous(String inCatalogId, String inId) {
+	public Object previous(String inCatalogId, String inId)
+	{
 		int indexOfCurrent = indexOf(inCatalogId, inId);
 		return previous(indexOfCurrent);
 	}
 
-	public Object first() {
-		if (size() == 0) {
+	public Object first()
+	{
+		if (size() == 0)
+		{
 			return null;
 		}
 		return get(0);
 	}
 
-	public Object next(int inIndex) {
-		if (inIndex == -1) {
+	public Object next(int inIndex)
+	{
+		if (inIndex == -1)
+		{
 			return null;
 		}
-		if (inIndex >= size() - 1) {
+		if (inIndex >= size() - 1)
+		{
 			return null;
 		}
 		return get(inIndex + 1);
 	}
 
-	public int nextIndex(String inIndex) {
+	public int nextIndex(String inIndex)
+	{
 		int index = Integer.parseInt(inIndex);
-		if (index >= size()) {
+		if (index >= size())
+		{
 			return -1;
 		}
 		return index + 1;
 	}
 
-	public Object next(String inCatalogId, String inId) {
+	public Object next(String inCatalogId, String inId)
+	{
 		int indexOfCurrent = indexOf(inCatalogId, inId);
 		return next(indexOfCurrent);
 	}
 
-	public Object nextById(String inId) {
+	public Object nextById(String inId)
+	{
 		int current = indexOfId(inId);
-		if (current != -1) {
-			if (current < size() - 1) {
+		if (current != -1)
+		{
+			if (current < size() - 1)
+			{
 				return get(current + 1);
 			}
 		}
 		return null;
 	}
 
-	public Object previousById(String inId) {
+	public Object previousById(String inId)
+	{
 		int current = indexOfId(inId);
-		if (current != -1) {
-			if (current > 0) {
+		if (current != -1)
+		{
+			if (current > 0)
+			{
 				return get(current - 1);
 			}
 		}
 		return null;
 	}
 
-	public int indexOfId(String inId) {
-		if (inId == null || inId.startsWith("multiedit:") || inId.trim().isEmpty()) {
+	public int indexOfId(String inId)
+	{
+		if (inId == null || inId.startsWith("multiedit:") || inId.trim().isEmpty())
+		{
 			return -1;
 		}
 		int found = findIdOnPage(inId, getPage());
-		if (found > -1) {
+		if (found > -1)
+		{
 			return found;
 		}
-		if (getTotalPages() > getPage()) {
+		if (getTotalPages() > getPage())
+		{
 			// Look one after
 			found = findIdOnPage(inId, getPage() + 1);
-			if (found > -1) {
+			if (found > -1)
+			{
 				return found;
 			}
 		}
 		// Look one before
-		if (getPage() > 1) {
+		if (getPage() > 1)
+		{
 			found = findIdOnPage(inId, getPage() - 1);
-			if (found > -1) {
+			if (found > -1)
+			{
 				return found;
 			}
 		}
@@ -1111,112 +1313,142 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 
 	}
 
-	public int pageOfId(String inId) {
+	public int pageOfId(String inId)
+	{
 		int index = findRow("id", inId);
 		int hitsperpage = getHitsPerPage();
 		int pagenumb = index / hitsperpage;
 		return pagenumb + 1;
 	}
 
-	protected int findIdOnPage(String inId, int inPage) {
+	protected int findIdOnPage(String inId, int inPage)
+	{
 		int size = size();
 		int start = (inPage - 1) * getHitsPerPage();
 		int end = (inPage) * getHitsPerPage();
 		end = Math.min(size, end);
-		for (int i = start; i < end; i++) {
+		for (int i = start; i < end; i++)
+		{
 			Data hit = get(i);
 			String id = getValue(hit, "id");
-			if (id.equals(inId)) {
+			if (id.equals(inId))
+			{
 				return i;
 			}
 		}
 		return -1;
 	}
 
-	public String getDataSource() {
+	public String getDataSource()
+	{
 		return fieldDataSource;
 	}
 
-	public void setDataSource(String inDataSource) {
+	public void setDataSource(String inDataSource)
+	{
 		fieldDataSource = inDataSource;
 	}
 
-	public int parseInt(Object inValue) {
-		if (inValue == null) {
+	public int parseInt(Object inValue)
+	{
+		if (inValue == null)
+		{
 			return 0;
 		}
 		String text = String.valueOf(inValue);
-		if (text.length() == 0) {
+		if (text.length() == 0)
+		{
 			return 0;
 		}
-		if (Character.isDigit(text.charAt(0))) {
+		if (Character.isDigit(text.charAt(0)))
+		{
 			return Integer.parseInt(text);
 		}
 		return 0;
 	}
 
-	public boolean isAllSelected() {
+	public boolean isAllSelected()
+	{
 		return fieldAllSelected;
 	}
 
-	public Data findData(String inField, String inValue) {
-		if (inValue == null || inField == null) {
+	public Data findData(String inField, String inValue)
+	{
+		if (inValue == null || inField == null)
+		{
 			return null;
 		}
-		for (Data hit : getPageOfHits()) {
-			if (inValue.equals(hit.get(inField))) {
+		for (Data hit : getPageOfHits())
+		{
+			if (inValue.equals(hit.get(inField)))
+			{
 				return hit;
 			}
 		}
-		for (int i = 0; i < size(); i++) {
+		for (int i = 0; i < size(); i++)
+		{
 			Data hit = get(i);
-			if (inValue.equals(hit.get(inField))) {
+			if (inValue.equals(hit.get(inField)))
+			{
 				return hit;
 			}
 		}
 		return null;
 	}
 
-	public int findRow(String inField, String inValue) {
-		if (inValue == null || inField == null) {
+	public int findRow(String inField, String inValue)
+	{
+		if (inValue == null || inField == null)
+		{
 			return -1;
 		}
-		for (int i = 0; i < size(); i++) {
+		for (int i = 0; i < size(); i++)
+		{
 			Data hit = get(i);
-			if (inValue.equals(hit.get(inField))) {
+			if (inValue.equals(hit.get(inField)))
+			{
 				return i;
 			}
 		}
 		return -1;
 	}
 
-	public void loadPreviousSelections(HitTracker inOld) {
+	public void loadPreviousSelections(HitTracker inOld)
+	{
 		setSelections(inOld.getSelections());
 		// setAllSelected(inOld.isAllSelected()); This is dangerous behaviour -
 		// if I've done a search and had 10 hits and selected all, I don't want to still
 		// have all selected when I then do another search for totally different assets
 	}
 
-	public Searcher getSearcher() {
+	public Searcher getSearcher()
+	{
 		return fieldSearcher;
 	}
 
-	public void setSearcher(Searcher inSearcher) {
+	public void setSearcher(Searcher inSearcher)
+	{
 		fieldSearcher = inSearcher;
 	}
 
-	public void setSessionId(String inSessionId) {
+	public void setSessionId(String inSessionId)
+	{
 		fieldTempSessionId = inSessionId;
 	}
 
-	public FilterNode findFilterNode(String inType) {
+	public FilterNode findFilterNode(String inType)
+	{
 		Map<String, FilterNode> filters = getActiveFilterValues();
-		if (filters != null) {
+		if (filters != null)
+		{
 			Collection<FilterNode> nodes = filters.values();
-			if (nodes != null) {
-				for (Iterator iterator = nodes.iterator(); iterator.hasNext();) {
+			if (nodes != null)
+			{
+				for (Iterator iterator = nodes.iterator(); iterator.hasNext();)
+				{
 					FilterNode filterNode = (FilterNode) iterator.next();
-					if (filterNode.getId().endsWith(inType)) {
+					if (filterNode.getId().endsWith(inType))
+					{
 						return filterNode;
 					}
 				}
@@ -1277,11 +1509,14 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 	//
 	// }
 
-	public boolean isChildFacetSelected(FilterNode inNode) {
+	public boolean isChildFacetSelected(FilterNode inNode)
+	{
 		List selectedfilters = getSearchQuery().getFilters();
-		for (Iterator iterator = selectedfilters.iterator(); iterator.hasNext();) {
+		for (Iterator iterator = selectedfilters.iterator(); iterator.hasNext();)
+		{
 			FilterNode selected = (FilterNode) iterator.next();
-			if (selected.getId().equals(inNode.getId())) {
+			if (selected.getId().equals(inNode.getId()))
+			{
 				return true;
 			}
 
@@ -1290,30 +1525,36 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 
 	}
 
-	public void invalidate() {
+	public void invalidate()
+	{
 		setIndexId(getIndexId() + 1);
 	}
 
-	public void refresh() {
+	public void refresh()
+	{
 		// TODO Auto-generated method stub
 
 	}
 
-	public boolean isRecentSearch() {
+	public boolean isRecentSearch()
+	{
 		long now = System.currentTimeMillis();
 		long min5 = 1000L * 60l * 5l;
 		return now - fieldSearchTime < min5;
 	}
 
-	public HitTracker copy() {
+	public HitTracker copy()
+	{
 		SearchQuery q = getSearchQuery().copy();
 		HitTracker selecteddata = getSearcher().search(q);
 		selecteddata.setHitsPerPage(getHitsPerPage());
 		return selecteddata;
 	}
 
-	public void setHitsPerPageHeight(String pageHeight, int inRowHeight) {
-		if (pageHeight == null) {
+	public void setHitsPerPageHeight(String pageHeight, int inRowHeight)
+	{
+		if (pageHeight == null)
+		{
 			return;
 		}
 		int height = Integer.parseInt(pageHeight);
@@ -1322,27 +1563,33 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 		setHitsPerPage(roundedup);
 	}
 
-	public String idOnPreviousPage() {
+	public String idOnPreviousPage()
+	{
 		int page = getPage();
 		page = page - 1;
 		int index = 0;
-		if (page > 1) {
+		if (page > 1)
+		{
 			index = (page - 1) * getHitsPerPage();
 		}
 		if (size() > index) // 1 > 0
 		{
 			Data first = get(index);
 			return first.getId();
-		} else {
+		}
+		else
+		{
 			return null;
 		}
 
 	}
 
-	public String idOnThisPage() {
+	public String idOnThisPage()
+	{
 		int page = getPage();
 		int index = 0;
-		if (page > 1) {
+		if (page > 1)
+		{
 			page = page - 1;
 			index = page * getHitsPerPage();
 		}
@@ -1350,13 +1597,16 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 		{
 			Data next = get(index);
 			return next.getId();
-		} else {
+		}
+		else
+		{
 			return null;
 		}
 
 	}
 
-	public String idOnNextPage() {
+	public String idOnNextPage()
+	{
 		int page = getPage();
 		int index = page * getHitsPerPage();
 		// if( index > size())
@@ -1367,35 +1617,40 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 		{
 			Data next = get(index);
 			return next.getId();
-		} else {
+		}
+		else
+		{
 			return null;
 		}
 
 	}
 
-	public boolean isInputEquals(String inDetail, String inValue) {
+	public boolean isInputEquals(String inDetail, String inValue)
+	{
 		Collection values = getSearchQuery().getInputs(inDetail);
-		if (values.contains(inValue)) {
+		if (values.contains(inValue))
+		{
 			return true;
 		}
 		return false;
 	}
 
-	public boolean isSortedBy(String inKey) {
+	public boolean isSortedBy(String inKey)
+	{
 		return getSearchQuery().isSortedBy(inKey);
 	}
 
-	public boolean hasChanged(HitTracker inTracker) {
-		if (inTracker != null &&
-				inTracker.getQuery().equals(getQuery()) &&
-				inTracker.getIndexId().equals(getIndexId()) &&
-				inTracker.size() == size() &&
-				inTracker.isAllSelected() == isAllSelected() &&
-				inTracker.getSelectionSize() == getSelectionSize()) {
-			if (hasSelections()) {
+	public boolean hasChanged(HitTracker inTracker)
+	{
+		if (inTracker != null && inTracker.getQuery().equals(getQuery()) && inTracker.getIndexId().equals(getIndexId()) && inTracker.size() == size() && inTracker.isAllSelected() == isAllSelected()
+			&& inTracker.getSelectionSize() == getSelectionSize())
+		{
+			if (hasSelections())
+			{
 				Set selected = new HashSet(getSelections());
 				selected.removeAll(inTracker.getSelections());
-				if (selected.isEmpty()) {
+				if (selected.isEmpty())
+				{
 					return true;
 				}
 			}
@@ -1405,23 +1660,29 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 		return true;
 	}
 
-	public List<String> getSuggestions() {
+	public List<String> getSuggestions()
+	{
 		// Look over the description field that they are using.
 		// Check all the agregations for any hits
 		List<String> matches = new ArrayList();
 		Term term = getSearchQuery().getTermByDetailId("description");
-		if (term != null && term.getValue() != null) {
+		if (term != null && term.getValue() != null)
+		{
 			Collection<FilterNode> options = getActiveFilterValues().values();
 			// check each child for matches
-			if (options != null) {
+			if (options != null)
+			{
 				String text = term.getValue().toLowerCase();
-				for (Iterator iterator = options.iterator(); iterator.hasNext();) {
+				for (Iterator iterator = options.iterator(); iterator.hasNext();)
+				{
 					FilterNode filterNode = (FilterNode) iterator.next();
 					Collection values = filterNode.getChildren();
-					for (Iterator iterator2 = values.iterator(); iterator2.hasNext();) {
+					for (Iterator iterator2 = values.iterator(); iterator2.hasNext();)
+					{
 						FilterNode child = (FilterNode) iterator2.next();
 						String value = child.getName();
-						if (value.toLowerCase().startsWith(text)) {
+						if (value.toLowerCase().startsWith(text))
+						{
 							if (!matches.contains(value)) // TODO: Speed up with ordered hash
 							{
 								matches.add(value);
@@ -1434,24 +1695,27 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 		return matches;
 	}
 
-	public FilterNode findFilterValue(PropertyDetail inDetail) {
+	public FilterNode findFilterValue(PropertyDetail inDetail)
+	{
 		FilterNode found = null;
-		if (getActiveFilterValues() != null && !getActiveFilterValues().isEmpty()) {
+		if (getActiveFilterValues() != null && !getActiveFilterValues().isEmpty())
+		{
 			found = getActiveFilterValues().get(inDetail.getId()); // we must be running a filter beyond just main input
 		}
-		if (found == null) {
-			if (!getSearchType().equals(inDetail.getSearchType())) {
+		if (found == null)
+		{
+			if (!getSearchType().equals(inDetail.getSearchType()))
+			{
 				// get all values
-				Searcher childsearcher = getSearcher().getSearcherManager().getSearcher(inDetail.getCatalogId(),
-						inDetail.getSearchType());
+				Searcher childsearcher = getSearcher().getSearcherManager().getSearcher(inDetail.getCatalogId(), inDetail.getSearchType());
 				PropertyDetail childdetail = childsearcher.getDetail(inDetail.getId());
-				Collection values = getSearcher().getSearcherManager().getList(childdetail.getListCatalogId(),
-						childdetail.getListId());
+				Collection values = getSearcher().getSearcherManager().getList(childdetail.getListCatalogId(), childdetail.getListId());
 				found = new FilterNode();
 				found.setId(inDetail.getId());
 				found.setPropertyDetail(childdetail);
 				// Max size?
-				for (Iterator iterator = values.iterator(); iterator.hasNext();) {
+				for (Iterator iterator = values.iterator(); iterator.hasNext();)
+				{
 					Data node = (Data) iterator.next();
 					FilterNode child = new FilterNode();
 					child.setProperties(node.getProperties());
@@ -1463,86 +1727,108 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 		return found;
 	}
 
-	public FilterNode findFilterValue(String inId) {
+	public FilterNode findFilterValue(String inId)
+	{
 		FilterNode found = null;
-		if (getActiveFilterValues() != null && !getActiveFilterValues().isEmpty()) {
+		if (getActiveFilterValues() != null && !getActiveFilterValues().isEmpty())
+		{
 			found = getActiveFilterValues().get(inId); // we must be running a filter beyond just main input
 		}
 		return found;
 	}
 
-	public FilterNode findFilterChildValue(String inField, String inChildId) {
-		if (getActiveFilterValues() != null && !getActiveFilterValues().isEmpty()) {
+	public FilterNode findFilterChildValue(String inField, String inChildId)
+	{
+		if (getActiveFilterValues() != null && !getActiveFilterValues().isEmpty())
+		{
 			FilterNode found = getActiveFilterValues().get(inField);
-			if (found != null) {
+			if (found != null)
+			{
 				return found.getChild(inChildId);
 			}
 		}
 		return null;
 	}
 
-	public Map<String, FilterNode> getCleanFilterValues() {
+	public Map<String, FilterNode> getCleanFilterValues()
+	{
 		return fieldCleanFilterValues;
 	}
 
-	public void setCleanFilterValues(Map<String, FilterNode> inActualFilterValues) {
+	public void setCleanFilterValues(Map<String, FilterNode> inActualFilterValues)
+	{
 		fieldCleanFilterValues = inActualFilterValues;
 	}
 
-	public Map<String, FilterNode> getActiveFilterValues() {
+	public Map<String, FilterNode> getActiveFilterValues()
+	{
 		return fieldActiveFilterValues;
 	}
 
-	public void setActiveFilterValues(Map<String, FilterNode> inActualFilterValues) {
+	public void setActiveFilterValues(Map<String, FilterNode> inActualFilterValues)
+	{
 		fieldActiveFilterValues = inActualFilterValues;
-		if (inActualFilterValues != null) {
-			if (getSearchQuery().isShowAll()) {
+		if (inActualFilterValues != null)
+		{
+			if (getSearchQuery().isShowAll())
+			{
 				fieldCleanFilterValues = inActualFilterValues;
 			}
 		}
 	}
 
-	public boolean hasFiltersChanged() {
-		if (fieldCleanFilterValues != null && fieldCleanFilterValues != fieldActiveFilterValues) {
+	public boolean hasFiltersChanged()
+	{
+		if (fieldCleanFilterValues != null && fieldCleanFilterValues != fieldActiveFilterValues)
+		{
 			return true;
 		}
 		return false;
 	}
 
 	@Override
-	public String toString() {
+	public String toString()
+	{
 		String text = "";
-		if (getSearcher() != null) {
+		if (getSearcher() != null)
+		{
 			text = "[" + getSearchType() + "]";
 		}
 		text = text + " size:" + size() + " query: " + getSearchQuery().toQuery();
-		if (getSearchQuery() != null) {
+		if (getSearchQuery() != null)
+		{
 			text = text + " sorted by: " + getSearchQuery().getSorts();
 		}
-		if (getPage() > 1) {
+		if (getPage() > 1)
+		{
 			text = text + " page: " + getPage();
 		}
 		return text;
 	}
 
-	public List getFilteredTerms(String inViewId, UserProfile inProfile) {
+	public List getFilteredTerms(String inViewId, UserProfile inProfile)
+	{
 		List terms = new ArrayList();
 
-		if (getSearcher() == null) {
+		if (getSearcher() == null)
+		{
 			log.error("Searcher is missing");
 			return null;
 		}
 
 		List<PropertyDetail> details = getSearcher().getDetailsForView(inViewId, inProfile);
 
-		if (details == null) {
+		if (details == null)
+		{
 			return Collections.EMPTY_LIST;
 		}
 
-		for (Iterator iterator = details.iterator(); iterator.hasNext();) {
+		for (Iterator iterator = details.iterator(); iterator.hasNext();)
+		{
 			PropertyDetail propertyDetail = (PropertyDetail) iterator.next();
 			Term term = getSearchQuery().getTermByDetailId(propertyDetail.getId());
-			if (term != null) {
+			if (term != null)
+			{
 				term.setUserFilter(true);
 				terms.add(term);
 			}
@@ -1550,7 +1836,8 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 		return terms;
 	}
 
-	public PositionRender getPositionRender() {
+	public PositionRender getPositionRender()
+	{
 		PositionRender render = new PositionRender(isAscending());
 		render.setPageOneBased(getPage());
 		render.setHitsPerPage(getHitsPerPage());
@@ -1559,13 +1846,16 @@ public abstract class HitTracker<T> implements Serializable, Collection, Catalog
 		return render;
 	}
 
-	public double getSum(String inField, String inSummarizer) {
+	public double getSum(String inField, String inSummarizer)
+	{
 
 		return -1;
 	}
 
-	public String getSortBy() {
-		if (getSearchQuery() != null) {
+	public String getSortBy()
+	{
+		if (getSearchQuery() != null)
+		{
 			return getSearchQuery().getSortBy();
 		}
 		return null;

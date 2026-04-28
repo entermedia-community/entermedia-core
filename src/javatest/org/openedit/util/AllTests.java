@@ -14,12 +14,12 @@ public class AllTests
 
 	public static Test suite()
 	{
-		TestSuite suite = new TestSuite( "Test for org.openedit.util" );
-		//$JUnit-BEGIN$
-		suite.addTest( new TestSuite( PathUtilitiesTest.class ));
-		suite.addTest( new TestSuite( URLUtilitiesTest.class ));
-		//This is prone to errors due to down server
-		//$JUnit-END$
+		TestSuite suite = new TestSuite("Test for org.openedit.util");
+		// $JUnit-BEGIN$
+		suite.addTest(new TestSuite(PathUtilitiesTest.class));
+		suite.addTest(new TestSuite(URLUtilitiesTest.class));
+		// This is prone to errors due to down server
+		// $JUnit-END$
 		return suite;
 	}
 }

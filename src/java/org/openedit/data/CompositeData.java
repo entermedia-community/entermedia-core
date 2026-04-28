@@ -8,7 +8,8 @@ import org.openedit.Data;
 import org.openedit.WebPageRequest;
 import org.openedit.hittracker.HitTracker;
 
-public interface CompositeData extends Data {
+public interface CompositeData extends Data
+{
 
 	public String get(String inId);
 

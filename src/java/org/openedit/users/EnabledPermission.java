@@ -2,7 +2,8 @@ package org.openedit.users;
 
 import java.io.Serializable;
 
-public class EnabledPermission implements Serializable {
+public class EnabledPermission implements Serializable
+{
 	int fieldId;
 	String fieldPermissionId;
 	String fieldGroupId;
@@ -15,36 +16,44 @@ public class EnabledPermission implements Serializable {
 		setPermissionId(inPermission);
 	}
 
-	public String getPermissionId() {
+	public String getPermissionId()
+	{
 		return fieldPermissionId;
 	}
 
-	public void setPermissionId(String inPermissionId) {
+	public void setPermissionId(String inPermissionId)
+	{
 		fieldPermissionId = inPermissionId;
 	}
 
-	public String getGroupId() {
+	public String getGroupId()
+	{
 		return fieldGroupId;
 	}
 
-	public void setGroupId(String inGroupId) {
+	public void setGroupId(String inGroupId)
+	{
 		fieldGroupId = inGroupId;
 	}
 
-	public boolean equals(Object inObj) {
+	public boolean equals(Object inObj)
+	{
 		String val = inObj.toString();
 		return getPermissionId().equals(val);
 	}
 
-	public String toString() {
+	public String toString()
+	{
 		return getPermissionId();
 	}
 
-	public int getId() {
+	public int getId()
+	{
 		return fieldId;
 	}
 
-	public void setId(int inId) {
+	public void setId(int inId)
+	{
 		fieldId = inId;
 	}
 }

@@ -1,8 +1,10 @@
 package org.openedit.data;
 
-public class NullObject {
+public class NullObject
+{
 	@Override
-	public String toString() {
+	public String toString()
+	{
 		return "null object";
 	}
 }

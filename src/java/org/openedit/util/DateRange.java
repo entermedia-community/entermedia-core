@@ -15,7 +15,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openedit.util.DateStorageUtil;
 
-public class DateRange {
+public class DateRange
+{
 	private static final Log log = LogFactory.getLog(DateRange.class);
 
 	Date fieldStartDate;
@@ -23,51 +24,62 @@ public class DateRange {
 	boolean fieldAllTime;
 	int fieldYearPicked;
 
-	public int getYearPicked() {
+	public int getYearPicked()
+	{
 		return fieldYearPicked;
 	}
 
-	public void setYearPicked(int inYearPicked) {
+	public void setYearPicked(int inYearPicked)
+	{
 		fieldYearPicked = inYearPicked;
 	}
 
-	public int getMonthPicked() {
+	public int getMonthPicked()
+	{
 		return fieldMonthPicked;
 	}
 
-	public void setMonthPicked(int inMonthPicked) {
+	public void setMonthPicked(int inMonthPicked)
+	{
 		fieldMonthPicked = inMonthPicked;
 	}
 
 	int fieldMonthPicked;
 
-	public boolean isAllTime() {
+	public boolean isAllTime()
+	{
 		return fieldAllTime;
 	}
 
-	public void setAllTime(boolean inAllTime) {
+	public void setAllTime(boolean inAllTime)
+	{
 		fieldAllTime = inAllTime;
 	}
 
-	public Date getStartDate() {
+	public Date getStartDate()
+	{
 		return fieldStartDate;
 	}
 
-	public void setStartDate(Date inStartDate) {
+	public void setStartDate(Date inStartDate)
+	{
 		fieldStartDate = inStartDate;
 	}
 
-	public Date getEndDate() {
+	public Date getEndDate()
+	{
 		return fieldEndDate;
 	}
 
-	public void setEndDate(Date inEndDate) {
+	public void setEndDate(Date inEndDate)
+	{
 		fieldEndDate = inEndDate;
 	}
 
 	Date fieldEndDate;
 
-	public void setYearAndMonth(int yearsback, int inMonth) {
+	public void setYearAndMonth(int yearsback, int inMonth)
+	{
 		setYearPicked(yearsback);
 		setMonthPicked(inMonth);
 		Calendar cal = DateStorageUtil.getStorageUtil().createCalendar(); // Use the server time. That is what they are
@@ -88,7 +100,8 @@ public class DateRange {
 		setEndDate(onemonth);
 	}
 
-	public void setYearToDate(int yearsback) {
+	public void setYearToDate(int yearsback)
+	{
 		setYearPicked(yearsback);
 		setMonthPicked(0);
 		Calendar cal = DateStorageUtil.getStorageUtil().createCalendar();
@@ -110,9 +123,8 @@ public class DateRange {
 		setEndDate(onemonth);
 	}
 
-	protected LocalDateTime toLocalDate(Date inDate) {
-		return Instant.ofEpochMilli(inDate.getTime())
-				.atZone(ZoneId.systemDefault())
-				.toLocalDateTime();
+	protected LocalDateTime toLocalDate(Date inDate)
+	{
+		return Instant.ofEpochMilli(inDate.getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
 	}
 }

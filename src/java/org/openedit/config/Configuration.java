@@ -11,7 +11,8 @@ import java.util.List;
  * @author cburkey
  *
  */
-public interface Configuration extends Serializable {
+public interface Configuration extends Serializable
+{
 
 	/**
 	 * @param inString

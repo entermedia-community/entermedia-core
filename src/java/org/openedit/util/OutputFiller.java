@@ -23,16 +23,19 @@ import org.apache.commons.logging.LogFactory;
  * 
  * @author: CSB
  */
-public class OutputFiller {
+public class OutputFiller
+{
 	private static final Log log = LogFactory.getLog(OutputFiller.class);
 	protected int fieldBufferSize = 2048; // 2048 Seems to be 4% faster than 1024 for larger files
 	protected long fieldMaxSize = -1;
 
-	public long getMaxSize() {
+	public long getMaxSize()
+	{
 		return fieldMaxSize;
 	}
 
-	public void setMaxSize(long inMaxSize) {
+	public void setMaxSize(long inMaxSize)
+	{
 		fieldMaxSize = inMaxSize;
 	}
 
@@ -52,17 +55,22 @@ public class OutputFiller {
 		setBufferSize(inBufferSize);
 	}
 
-	public void fill(java.io.Reader in, java.io.Writer out) throws java.io.IOException {
+	public void fill(java.io.Reader in, java.io.Writer out) throws java.io.IOException
+	{
 		char[] bytes = new char[getBufferSize()];
 
 		int iRead = -1;
 
-		while (true) {
+		while (true)
+		{
 			iRead = in.read(bytes);
 
-			if (iRead != -1) {
+			if (iRead != -1)
+			{
 				out.write(bytes, 0, iRead);
-			} else {
+			}
+			else
+			{
 				break;
 			}
 
@@ -70,18 +78,25 @@ public class OutputFiller {
 		out.flush();
 	}
 
-	public void fill(File inSource, File inOut) throws IOException {
+	public void fill(File inSource, File inOut) throws IOException
+	{
 		FileInputStream in = null;
-		try {
+		try
+		{
 			in = new FileInputStream(inSource);
 			inOut.getParentFile().mkdirs();
 			FileOutputStream out = new FileOutputStream(inOut);
-			try {
+			try
+			{
 				fill(in, out);
-			} finally {
+			}
+			finally
+			{
 				FileUtils.safeClose(out);
 			}
-		} finally {
+		}
+		finally
+		{
 			FileUtils.safeClose(in);
 		}
 	}
@@ -91,7 +106,8 @@ public class OutputFiller {
 	 * 
 	 * @return int
 	 */
-	public int getBufferSize() {
+	public int getBufferSize()
+	{
 		return fieldBufferSize;
 	}
 
@@ -100,151 +116,200 @@ public class OutputFiller {
 	 * 
 	 * @param newBufferSize int
 	 */
-	public void setBufferSize(int newBufferSize) {
+	public void setBufferSize(int newBufferSize)
+	{
 		fieldBufferSize = newBufferSize;
 	}
 
 	/**
 	 * @param inIn
 	 */
-	public void close(InputStream inIn) {
-		if (inIn != null) {
-			try {
+	public void close(InputStream inIn)
+	{
+		if (inIn != null)
+		{
+			try
+			{
 				inIn.close();
-			} catch (IOException ex) {
+			}
+			catch (IOException ex)
+			{
 				// fail silently
 			}
 		}
 	}
 
-	public void close(OutputStream inIn) {
-		if (inIn != null) {
-			try {
+	public void close(OutputStream inIn)
+	{
+		if (inIn != null)
+		{
+			try
+			{
 				inIn.close();
-			} catch (IOException ex) {
+			}
+			catch (IOException ex)
+			{
 				// fail silently
 			}
 		}
 	}
 
-	public void close(Reader inIn) {
-		if (inIn != null) {
-			try {
+	public void close(Reader inIn)
+	{
+		if (inIn != null)
+		{
+			try
+			{
 				inIn.close();
-			} catch (IOException ex) {
+			}
+			catch (IOException ex)
+			{
 				// fail silently
 			}
 		}
 	}
 
-	public void close(Writer inIn) {
-		if (inIn != null) {
-			try {
+	public void close(Writer inIn)
+	{
+		if (inIn != null)
+		{
+			try
+			{
 				inIn.close();
-			} catch (IOException ex) {
+			}
+			catch (IOException ex)
+			{
 				// fail silently
 			}
 		}
 	}
 
-	public void fill(InputStream inIn, File inOutput) throws IOException {
+	public void fill(InputStream inIn, File inOutput) throws IOException
+	{
 		inOutput.getParentFile().mkdirs();
 		FileOutputStream out = new FileOutputStream(inOutput);
-		try {
+		try
+		{
 			fill(inIn, out);
-		} finally {
+		}
+		finally
+		{
 			close(out);
 		}
 	}
 
-	public void fill(java.io.InputStream in, java.io.OutputStream out, boolean autoclose) throws java.io.IOException {
+	public void fill(java.io.InputStream in, java.io.OutputStream out, boolean autoclose) throws java.io.IOException
+	{
 		fill(in, out);
-		if (autoclose) {
+		if (autoclose)
+		{
 			FileUtils.safeClose(in);
 			FileUtils.safeClose(out);
 		}
 	}
 
-	public void fill(java.io.InputStream in, java.io.OutputStream out) throws java.io.IOException {
+	public void fill(java.io.InputStream in, java.io.OutputStream out) throws java.io.IOException
+	{
 		byte[] bytes = new byte[getBufferSize()];
 
 		long totalread = 0;
 		int iRead = -1;
 
-		while (true) {
+		while (true)
+		{
 			iRead = in.read(bytes);
 
-			if (iRead != -1) {
+			if (iRead != -1)
+			{
 				out.write(bytes, 0, iRead);
 				totalread = totalread + iRead;
-			} else {
+			}
+			else
+			{
 				break;
 			}
-			if (getMaxSize() > 0 && totalread > getMaxSize()) {
+			if (getMaxSize() > 0 && totalread > getMaxSize())
+			{
 				break;
 			}
 		}
 		out.flush();
 	}
 
-	public void fill(InputStream in, OutputStream out, long inToSend) throws IOException {
+	public void fill(InputStream in, OutputStream out, long inToSend) throws IOException
+	{
 		byte[] bytes = new byte[getBufferSize()];
 
 		int iRead = -1;
 		long sentsofar = 0;
-		while (true) {
+		while (true)
+		{
 			iRead = in.read(bytes);
 			// 10b - 5b, 5b + 1b
-			if (iRead != -1 && iRead + sentsofar > inToSend) {
+			if (iRead != -1 && iRead + sentsofar > inToSend)
+			{
 				// we have a problem, have to cut iRead down
 				iRead = (int) (inToSend - sentsofar);
 			}
-			if (iRead != -1) {
+			if (iRead != -1)
+			{
 				out.write(bytes, 0, iRead);
 				sentsofar = sentsofar + iRead;
 				if (sentsofar == inToSend) // should never be >
 				{
 					break;
 				}
-			} else {
+			}
+			else
+			{
 				break;
 			}
 		}
 		out.flush();
 	}
 
-	public byte[] readAll(InputStream in) throws IOException {
+	public byte[] readAll(InputStream in) throws IOException
+	{
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		fill(in, out);
 		return out.toByteArray();
 	}
 
-	public String readAllText(InputStream in) {
+	public String readAllText(InputStream in)
+	{
 		Reader input = null;
-		try {
+		try
+		{
 			input = new InputStreamReader(in, "UTF-8");
 			StringWriter output = new StringWriter();
 			fill(input, output);
 			return output.toString();
-		} catch (IOException ex) {
+		}
+		catch (IOException ex)
+		{
 			log.error(ex);
 			return null;
-		} finally {
+		}
+		finally
+		{
 			close(input);
 		}
 
 	}
 
-	public List<String> splitUtf8(String input, int maxBytes) {
+	public List<String> splitUtf8(String input, int maxBytes)
+	{
 		List<String> chunks = new ArrayList<>();
 		StringBuilder current = new StringBuilder();
 		int currentBytes = 0;
 
-		for (int i = 0; i < input.length(); i++) {
+		for (int i = 0; i < input.length(); i++)
+		{
 			String ch = String.valueOf(input.charAt(i));
 			int chBytes = ch.getBytes(StandardCharsets.UTF_8).length;
 
-			if (currentBytes + chBytes > maxBytes) {
+			if (currentBytes + chBytes > maxBytes)
+			{
 				chunks.add(current.toString());
 				current.setLength(0);
 				currentBytes = 0;
@@ -254,7 +319,8 @@ public class OutputFiller {
 			currentBytes += chBytes;
 		}
 
-		if (!current.isEmpty()) {
+		if (!current.isEmpty())
+		{
 			chunks.add(current.toString());
 		}
 

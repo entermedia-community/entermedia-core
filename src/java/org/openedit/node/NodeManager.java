@@ -3,7 +3,8 @@ package org.openedit.node;
 import java.util.Collection;
 import java.util.List;
 
-public interface NodeManager {
+public interface NodeManager
+{
 	Node getLocalNode();
 
 	String getLocalNodeId();

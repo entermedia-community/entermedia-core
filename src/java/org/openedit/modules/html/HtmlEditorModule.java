@@ -1,8 +1,8 @@
 /*
  * Created on Jan 20, 2004
  *
- * To change the template for this generated file go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
+ * To change the template for this generated file go to Window&gt;Preferences&gt;Java&gt;Code
+ * Generation&gt;Code and Comments
  */
 package org.openedit.modules.html;
 
@@ -24,7 +24,8 @@ import org.openedit.util.URLUtilities;
  * @author dbrown
  * @author Matt Avery, mavery@einnovation.com
  */
-public class HtmlEditorModule extends BaseEditorModule {
+public class HtmlEditorModule extends BaseEditorModule
+{
 	private static final Log log = LogFactory.getLog(HtmlEditorModule.class);
 
 	/**
@@ -33,9 +34,11 @@ public class HtmlEditorModule extends BaseEditorModule {
 	 * @param inReq
 	 * @throws Exception
 	 */
-	public void loadView(WebPageRequest inReq) throws Exception {
+	public void loadView(WebPageRequest inReq) throws Exception
+	{
 		EditorSession session = startEditSession(inReq);
-		if (session != null) {
+		if (session != null)
+		{
 
 			// inReq.putPageValue("viewcontent", session.getWysiwygSourceVariable() );
 			// inReq.putPageValue("rawviewcontent", session.getWysiwygSource() );
@@ -52,16 +55,12 @@ public class HtmlEditorModule extends BaseEditorModule {
 	 * @param inReq
 	 * @throws Exception
 	 */
-	public void loadSource(WebPageRequest inReq) throws Exception {
+	public void loadSource(WebPageRequest inReq) throws Exception
+	{
 		EditorSession session = startEditSession(inReq);
 		/*
-		 * String type = inReq.getRequestParameter("type");
-		 * if ( "text".equals( type ))
-		 * {
-		 * inReq.putPageValue( "sourcecontent", session.getOriginalSource() );
-		 * }
-		 * else
-		 * {
+		 * String type = inReq.getRequestParameter("type"); if ( "text".equals( type )) {
+		 * inReq.putPageValue( "sourcecontent", session.getOriginalSource() ); } else {
 		 */ inReq.putPageValue("sourcecontent", session.getEscapedSource());
 		// }
 		inReq.putPageValue("documentModified", new Boolean(session.isDocumentModified()));
@@ -71,14 +70,17 @@ public class HtmlEditorModule extends BaseEditorModule {
 	 * @param inEditorSession
 	 * @param inEditPath
 	 */
-	protected EditorSession startEditSession(WebPageRequest inReq) throws OpenEditException {
+	protected EditorSession startEditSession(WebPageRequest inReq) throws OpenEditException
+	{
 		String editPath = inReq.getRequestParameter("editPath");
 
-		if (editPath == null) {
+		if (editPath == null)
+		{
 			editPath = inReq.getRequestParameter("path");
 		}
 
-		if (editPath == null) {
+		if (editPath == null)
+		{
 			return null;
 		}
 		EditorSession inEditorSession = new EditorSession();
@@ -87,20 +89,26 @@ public class HtmlEditorModule extends BaseEditorModule {
 
 		boolean multipleLang = true;
 		String savein = inReq.getPageProperty("usemultiplelanguages");
-		if (savein != null) {
+		if (savein != null)
+		{
 			multipleLang = Boolean.parseBoolean(savein);
-		} else {
+		}
+		else
+		{
 			multipleLang = false;
 		}
 
 		String selectedcode = inReq.getLanguage();
 		String rootdir = "/translations/" + selectedcode;
-		if (multipleLang) {
-			if (selectedcode == null || selectedcode.equals("default") || editPath.startsWith(rootdir)) {
+		if (multipleLang)
+		{
+			if (selectedcode == null || selectedcode.equals("default") || editPath.startsWith(rootdir))
+			{
 				multipleLang = false;
 			}
 		}
-		if (multipleLang) {
+		if (multipleLang)
+		{
 			editPath = rootdir + editPath;
 		}
 		boolean useDraft = createDraft(editPage, inReq);
@@ -111,7 +119,8 @@ public class HtmlEditorModule extends BaseEditorModule {
 		inEditorSession.setOriginalUrl(origUrl);
 
 		URLUtilities urlUtilities = (URLUtilities) inReq.getPageValue("url_util");
-		if (urlUtilities != null) {
+		if (urlUtilities != null)
+		{
 			inEditorSession.setBasePath(urlUtilities.buildStandard(editPath));
 		}
 		// Is this being used anymore?
@@ -119,19 +128,23 @@ public class HtmlEditorModule extends BaseEditorModule {
 		inEditorSession.setParentName(parentName);
 
 		String location = editPage.get("editstylesheet");
-		if (location == null) {
+		if (location == null)
+		{
 			String il = editPage.getInnerLayout();
-			if (il != null) {
+			if (il != null)
+			{
 				location = PathUtilities.extractDirectoryPath(il) + "/style.css";
 			}
 		}
-		if (location == null) {
+		if (location == null)
+		{
 			location = "/_styles.css";
 		}
 		inEditorSession.setCssPath(location);
 
 		Page styles = getPageManager().getPage(location);
-		if (!styles.exists()) {
+		if (!styles.exists())
+		{
 			log.debug("No CSS file used in editor: " + location);
 		}
 		inReq.putPageValue("editorSession", inEditorSession);
@@ -140,21 +153,25 @@ public class HtmlEditorModule extends BaseEditorModule {
 		return inEditorSession;
 	}
 
-	public void save(WebPageRequest inReq) throws Exception {
+	public void save(WebPageRequest inReq) throws Exception
+	{
 		// Strip the body junk
 		EditorSession session = startEditSession(inReq);
 		String content = inReq.getRequestParameter("content");
-		if (content == null) {
+		if (content == null)
+		{
 			content = "";
 		}
 		String type = inReq.getRequestParameter("contenttype");
-		if (!"text".equals(type)) {
+		if (!"text".equals(type))
+		{
 			content = session.removeBaseHrefAndFixQuotes(content);
 		}
 		inReq.setRequestParameter("content", content);
 		session.setWorkingSource(content);
 		String path = inReq.getRequestParameter("savepath");
-		if (path == null) {
+		if (path == null)
+		{
 			inReq.setRequestParameter("savepath", session.getEditPath());
 		}
 		inReq.setRequestParameter("editPath", session.getEditPath());
@@ -162,15 +179,18 @@ public class HtmlEditorModule extends BaseEditorModule {
 
 	}
 
-	protected String getContent(String inPath) throws Exception {
+	protected String getContent(String inPath) throws Exception
+	{
 		Page page = getPageManager().getPage(inPath);
-		if (page.exists()) {
+		if (page.exists())
+		{
 			return page.getContent();
 		}
 		return "";
 	}
 
-	public void loadEditor(WebPageRequest inReq) {
+	public void loadEditor(WebPageRequest inReq)
+	{
 		String openeditid = inReq.findValue("openeditid");
 		inReq.putPageValue("openeditid", openeditid);
 		inReq.putPageValue("oehome", "/" + openeditid);
@@ -179,21 +199,23 @@ public class HtmlEditorModule extends BaseEditorModule {
 
 	}
 
-	public void loadCatalogPermissions(WebPageRequest inReq) {
+	public void loadCatalogPermissions(WebPageRequest inReq)
+	{
 
 		String linkedcatalog = inReq.findPathValue("linkedcatalog");
 
 		String path = "/" + linkedcatalog + "/";
 
-		List names = Arrays
-				.asList(new String[] { "upload", "download", "forcewatermark", "editasset", "viewasset", "view" });
+		List names = Arrays.asList(new String[] {"upload", "download", "forcewatermark", "editasset", "viewasset", "view"});
 
 		Page page = getPageManager().getPage(path);
 		WebPageRequest req = inReq.copy(page);
-		for (Iterator iterator = names.iterator(); iterator.hasNext();) {
+		for (Iterator iterator = names.iterator(); iterator.hasNext();)
+		{
 			String pername = (String) iterator.next();
 			Permission per = page.getPermission(pername);
-			if (per != null) {
+			if (per != null)
+			{
 				boolean value = per.passes(req);
 				// log.info(getCatalogId() + " " + pername + " = " + value + " " +
 				// per.getPath());

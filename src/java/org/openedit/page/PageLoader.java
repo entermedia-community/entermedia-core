@@ -4,7 +4,8 @@ import org.openedit.servlet.RightPage;
 import org.openedit.servlet.Site;
 import org.openedit.util.URLUtilities;
 
-public interface PageLoader {
+public interface PageLoader
+{
 
 	public RightPage getRightPage(URLUtilities url, Site site, Page inPage);
 	// {

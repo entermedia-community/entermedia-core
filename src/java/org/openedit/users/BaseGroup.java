@@ -1,14 +1,14 @@
 /*
-Copyright (c) 2003 eInnovation Inc. All rights reserved
-
-This library is free software; you can redistribute it and/or modify it under the terms
-of the GNU Lesser General Public License as published by the Free Software Foundation;
-either version 2.1 of the License, or (at your option) any later version.
-
-This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-See the GNU Lesser General Public License for more details.
-*/
+ * Copyright (c) 2003 eInnovation Inc. All rights reserved
+ * 
+ * This library is free software; you can redistribute it and/or modify it under the terms of the
+ * GNU Lesser General Public License as published by the Free Software Foundation; either version
+ * 2.1 of the License, or (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ */
 
 package org.openedit.users;
 
@@ -24,17 +24,19 @@ import org.openedit.data.BaseData;
 /**
  * DOCUMENT ME!
  *
- * @author avery To change this generated comment edit the template variable
- *         "typecomment":
+ * @author avery To change this generated comment edit the template variable "typecomment":
  *         Window>Preferences>Java>Templates.
  */
-public class BaseGroup extends BaseData implements Group, Serializable, Comparable {
+public class BaseGroup extends BaseData implements Group, Serializable, Comparable
+{
 	protected long fieldLastModified;
 
 	private transient static Log log = null;
 
-	private Log getLog() {
-		if (log == null) {
+	private Log getLog()
+	{
+		if (log == null)
+		{
 			log = LogFactory.getLog(BaseGroup.class);
 		}
 		return log;
@@ -42,14 +44,15 @@ public class BaseGroup extends BaseData implements Group, Serializable, Comparab
 
 	protected Collection fieldPermissions;
 
-	public BaseGroup() {
-	}
+	public BaseGroup() {}
 
 	/**
 	 * @see org.openedit.users.Group#getPermissions()
 	 */
-	public Collection getPermissions() {
-		if (fieldPermissions == null) {
+	public Collection getPermissions()
+	{
+		if (fieldPermissions == null)
+		{
 			fieldPermissions = new HashSet();
 		}
 		return fieldPermissions;
@@ -60,23 +63,29 @@ public class BaseGroup extends BaseData implements Group, Serializable, Comparab
 	 * 
 	 * @see org.openedit.users.Group#addPermission(String)
 	 */
-	public void addPermission(String inPermission) throws UserManagerException {
-		if (hasPermission(inPermission)) {
+	public void addPermission(String inPermission) throws UserManagerException
+	{
+		if (hasPermission(inPermission))
+		{
 			return;
 		}
 		getPermissions().add(new EnabledPermission(inPermission));
 	}
 
-	public boolean hasPermission(String inPermission) {
-		for (Iterator iterator = getPermissions().iterator(); iterator.hasNext();) {
+	public boolean hasPermission(String inPermission)
+	{
+		for (Iterator iterator = getPermissions().iterator(); iterator.hasNext();)
+		{
 			Object existingpermission = (Object) iterator.next();
-			if (existingpermission.equals(inPermission)) {
+			if (existingpermission.equals(inPermission))
+			{
 				return true;
 			}
 		}
 		String ok = getProperties().getString(inPermission);
 
-		if (Boolean.parseBoolean(ok)) {
+		if (Boolean.parseBoolean(ok))
+		{
 			return true;
 		}
 		return false;
@@ -87,11 +96,13 @@ public class BaseGroup extends BaseData implements Group, Serializable, Comparab
 	 * 
 	 * @see org.openedit.users.Group#removePermission(String)
 	 */
-	public void removePermission(String inPermission)
-			throws UserManagerException {
-		for (Iterator iterator = getPermissions().iterator(); iterator.hasNext();) {
+	public void removePermission(String inPermission) throws UserManagerException
+	{
+		for (Iterator iterator = getPermissions().iterator(); iterator.hasNext();)
+		{
 			Object existingpermission = (Object) iterator.next();
-			if (existingpermission.equals(inPermission)) {
+			if (existingpermission.equals(inPermission))
+			{
 				getPermissions().remove(existingpermission);
 				break;
 			}
@@ -100,31 +111,35 @@ public class BaseGroup extends BaseData implements Group, Serializable, Comparab
 	}
 
 	/**
-	 * Returns the string representation of this object, that can be used when
-	 * sorting groups
+	 * Returns the string representation of this object, that can be used when sorting groups
 	 * alphabetically.
 	 * 
 	 * @return string representing this group
 	 */
-	public String toString() {
+	public String toString()
+	{
 		return getName();
 	}
 
-	public long getLastModified() {
+	public long getLastModified()
+	{
 		return fieldLastModified;
 	}
 
-	public void setLastModified(long inLastModified) {
+	public void setLastModified(long inLastModified)
+	{
 		fieldLastModified = inLastModified;
 	}
 
-	public void setPermissions(Collection inPermissions) {
+	public void setPermissions(Collection inPermissions)
+	{
 		fieldPermissions = inPermissions;
 
 	}
 
 	@Override
-	public int compareTo(Object g1) {
+	public int compareTo(Object g1)
+	{
 		Group group = (Group) g1;
 		// compare by name
 		return this.getName().compareToIgnoreCase(group.getName());

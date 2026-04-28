@@ -26,7 +26,8 @@ import org.openedit.node.NodeManager;
 import org.openedit.util.DateStorageUtil;
 import org.openedit.util.Replacer;
 
-public class SearcherManager {
+public class SearcherManager
+{
 	private static final Log log = LogFactory.getLog(SearcherManager.class);
 
 	protected ModuleManager fieldModuleManager;
@@ -34,43 +35,55 @@ public class SearcherManager {
 	protected HashMap fieldShowLogs;
 	protected CacheManager fieldCacheManager;
 
-	public CacheManager getCacheManager() {
+	public CacheManager getCacheManager()
+	{
 		return fieldCacheManager;
 	}
 
-	public void setCacheManager(CacheManager inCacheManager) {
+	public void setCacheManager(CacheManager inCacheManager)
+	{
 		fieldCacheManager = inCacheManager;
 	}
 
-	public Searcher getSearcher(String inCatalogId, String inSearchtypeid) {
+	public Searcher getSearcher(String inCatalogId, String inSearchtypeid)
+	{
 		Searcher searcher = loadSearcher(inCatalogId, inSearchtypeid, true);
 		return searcher;
 	}
 
 	// A fieldName can be product or orderstatus. If there is no orderstatus
 	// searcher then we use an XML lookup for this catalog.
-	public Searcher loadSearcher(String inCatalogId, String inFieldName, boolean init) {
-		if (inCatalogId == null) {
+	public Searcher loadSearcher(String inCatalogId, String inFieldName, boolean init)
+	{
+		if (inCatalogId == null)
+		{
 			throw new OpenEditException("Catalog id is required");
 		}
-		if (inFieldName == null) {
+		if (inFieldName == null)
+		{
 			return null;
 		}
-		if (inCatalogId.endsWith("notset")) {
+		if (inCatalogId.endsWith("notset"))
+		{
 			throw new OpenEditException("Catalog id is not set for application. Add catalogid to .xconfs");
 		}
 		// look in map for existing
 		String id = inCatalogId + "|" + inFieldName;
 
 		Searcher searcher = (Searcher) getCache().get(id);
-		if (searcher == null) {
-			synchronized (this) {
+		if (searcher == null)
+		{
+			synchronized (this)
+			{
 				searcher = (Searcher) getCache().get(id);
-				if (searcher == null) {
+				if (searcher == null)
+				{
 					String finalcatalogid = resolveCatalogId(inCatalogId, inFieldName);
-					if (!finalcatalogid.equals(inCatalogId)) {
+					if (!finalcatalogid.equals(inCatalogId))
+					{
 						searcher = (Searcher) getCache().get(finalcatalogid + "|" + inFieldName);
-						if (searcher != null) {
+						if (searcher != null)
+						{
 							getCache().put(id, searcher); // make sure we store both versions since they are the same
 															// searcher
 							return searcher;
@@ -90,7 +103,8 @@ public class SearcherManager {
 
 					getCache().put(id, searcher);
 
-					if (!finalcatalogid.equals(inCatalogId)) {
+					if (!finalcatalogid.equals(inCatalogId))
+					{
 						getCache().put(finalcatalogid + "|" + inFieldName, searcher); // make sure we store both
 																						// versions since they are the
 																						// same searcher
@@ -98,16 +112,18 @@ public class SearcherManager {
 					if (id.equals("catalogsettings")) // What is this? Can it be removed?
 					{
 						Data defaultval = (Data) searcher.searchById("log_all_searches");
-						if (defaultval != null) {
+						if (defaultval != null)
+						{
 							setShowSearchLogs(inCatalogId, Boolean.parseBoolean(defaultval.get("value")));
 						}
 					}
-					if (init) {
+					if (init)
+					{
 						searcher.initialize();
 					}
-					if (log.isDebugEnabled()) {
-						log.debug("Created New Searcher: Catalog = " + searcher.getCatalogId() + "SearchType = "
-								+ searcher.getSearchType() + "Searcher = " + searcher.getClass());
+					if (log.isDebugEnabled())
+					{
+						log.debug("Created New Searcher: Catalog = " + searcher.getCatalogId() + "SearchType = " + searcher.getSearchType() + "Searcher = " + searcher.getClass());
 					}
 				}
 			}
@@ -116,17 +132,22 @@ public class SearcherManager {
 		return searcher;
 	}
 
-	protected NodeManager getNodeManager(String inFinalcatalogid) {
-		try {
+	protected NodeManager getNodeManager(String inFinalcatalogid)
+	{
+		try
+		{
 			// If this is failing you are missing the base/system/configuration folder
 			NodeManager manager = (NodeManager) getModuleManager().getBean(inFinalcatalogid, "nodeManager");
 			return manager;
-		} catch (Exception ex) {
+		}
+		catch (Exception ex)
+		{
 			throw new OpenEditException("Couldnot resolve " + inFinalcatalogid, ex);
 		}
 	}
 
-	protected synchronized Searcher loadSearcher(PropertyDetailsArchive newarchive, String inFieldName) {
+	protected synchronized Searcher loadSearcher(PropertyDetailsArchive newarchive, String inFieldName)
+	{
 		String inCatalogId = newarchive.getCatalogId();
 		Searcher searcher;
 		// Check the properites
@@ -137,43 +158,20 @@ public class SearcherManager {
 
 		/*
 		 * 
-		 * String beanName = null;
-		 * if( getModuleManager().contains(inCatalogId,inFieldName + "Searcher") )
-		 * //this might be a lookup
-		 * {
-		 * beanName = inFieldName + "Searcher";
-		 * }
-		 * else if( getModuleManager().contains(inFieldName + "Searcher"))
-		 * {
-		 * beanName = inFieldName + "Searcher";
-		 * }
+		 * String beanName = null; if( getModuleManager().contains(inCatalogId,inFieldName + "Searcher") )
+		 * //this might be a lookup { beanName = inFieldName + "Searcher"; } else if(
+		 * getModuleManager().contains(inFieldName + "Searcher")) { beanName = inFieldName + "Searcher"; }
 		 * 
-		 * if( beanName == null)
-		 * {
-		 * beanName = details.getBeanName(); //Once item is saved it always uses
-		 * dataSearcher for the type
-		 * if( beanName == null)
-		 * {
-		 * throw new OpenEditException("No Searcher found with bean name " + inFieldName
-		 * + "Searcher");
-		 * }
-		 * // if( beanName == null)
-		 * // {
-		 * // if( inFieldName.endsWith("Log"))
-		 * // {
-		 * // beanName = "dynamicLogSearcher";
-		 * // }
-		 * // else
-		 * // {
-		 * // beanName = "listSearcher";
-		 * // }
-		 * // }
-		 * }
-		 * searcher = (Searcher)getModuleManager().getBean(inCatalogId, beanName,
-		 * false);
+		 * if( beanName == null) { beanName = details.getBeanName(); //Once item is saved it always uses
+		 * dataSearcher for the type if( beanName == null) { throw new
+		 * OpenEditException("No Searcher found with bean name " + inFieldName + "Searcher"); } // if(
+		 * beanName == null) // { // if( inFieldName.endsWith("Log")) // { // beanName =
+		 * "dynamicLogSearcher"; // } // else // { // beanName = "listSearcher"; // } // } } searcher =
+		 * (Searcher)getModuleManager().getBean(inCatalogId, beanName, false);
 		 */
 
-		if (log.isDebugEnabled()) {
+		if (log.isDebugEnabled())
+		{
 			log.debug("Searcher not found creating dynamic instance ");
 		}
 		// if( inCatalogId.length() == 0 && "catalogs".equals(inFieldName))
@@ -184,14 +182,16 @@ public class SearcherManager {
 		return searcher;
 	}
 
-	public PropertyDetailsArchive getPropertyDetailsArchive(String inCatalogId) {
-		PropertyDetailsArchive newarchive = (PropertyDetailsArchive) getModuleManager().getBean(inCatalogId,
-				"propertyDetailsArchive"); // Not a singleton
+	public PropertyDetailsArchive getPropertyDetailsArchive(String inCatalogId)
+	{
+		PropertyDetailsArchive newarchive = (PropertyDetailsArchive) getModuleManager().getBean(inCatalogId, "propertyDetailsArchive"); // Not a singleton
 		return newarchive;
 	}
 
-	public Searcher getSearcher(String inCatalogId, String inExternalCatalogId, String inFieldName) {
-		if (inExternalCatalogId != null) {
+	public Searcher getSearcher(String inCatalogId, String inExternalCatalogId, String inFieldName)
+	{
+		if (inExternalCatalogId != null)
+		{
 			inCatalogId = inExternalCatalogId;
 		}
 		return getSearcher(inCatalogId, inFieldName);
@@ -203,106 +203,119 @@ public class SearcherManager {
 	 * @param inDetail
 	 * @return
 	 */
-	public Searcher getSearcher(String inCatalogId, PropertyDetail inDetail) {
+	public Searcher getSearcher(String inCatalogId, PropertyDetail inDetail)
+	{
 		// We may get passed in an external catalog and field
-		if (inDetail == null) {
+		if (inDetail == null)
+		{
 			return null;
 		}
 		String field = inDetail.getId();
-		if (inDetail.getExternalId() != null) {
+		if (inDetail.getExternalId() != null)
+		{
 			field = inDetail.getExternalId();
 		}
 		return getSearcher(inDetail.getListCatalogId(), field);
 	}
 
-	public Searcher getListSearcher(PropertyDetail inDetail) {
+	public Searcher getListSearcher(PropertyDetail inDetail)
+	{
 		// We may get passed in an external catalog and field
 		return getSearcher(inDetail.getListCatalogId(), inDetail.getListId());
 	}
 
-	public String getDataLabel(Data inData, PropertyDetail inDetail) {
-		if (inData == null || inDetail == null) {
+	public String getDataLabel(Data inData, PropertyDetail inDetail)
+	{
+		if (inData == null || inDetail == null)
+		{
 			return null;
 		}
 		Object value = inData.get(inDetail.getId());
-		if (value == null) {
+		if (value == null)
+		{
 			return null;
 		}
-		if (inDetail.isList()) {
+		if (inDetail.isList())
+		{
 			// Lookup the value
 			Data lookup = getCachedData(inDetail.getListCatalogId(), inDetail.getListId(), value.toString());
 			return lookup.getName();
-		} else {
+		}
+		else
+		{
 			return value.toString();
 		}
 
 	}
 
-	public Object getListData(PropertyDetail inDetail, String inValue) {
+	public Object getListData(PropertyDetail inDetail, String inValue)
+	{
 		return getData(inDetail.getListCatalogId(), inDetail.getListId(), inValue);
 	}
 
 	/*
-	 * public Object getValue(Searcher inSearcher, Data inParent, String inField)
-	 * {
-	 * PropertyDetail detail = inSearcher.getDetail(inField);
-	 * Object val = getValue(inParent,detail);
-	 * return val;
-	 * }
+	 * public Object getValue(Searcher inSearcher, Data inParent, String inField) { PropertyDetail
+	 * detail = inSearcher.getDetail(inField); Object val = getValue(inParent,detail); return val; }
 	 */
-	public Collection getUniqueValues(Searcher inSearcher, HitTracker inHits, String inColumn, String startsWith,
-			WebPageRequest inContext) {
-		if (inHits != null) {
+	public Collection getUniqueValues(Searcher inSearcher, HitTracker inHits, String inColumn, String startsWith, WebPageRequest inContext)
+	{
+		if (inHits != null)
+		{
 			inHits.enableBulkOperations();
 		}
 		Set results = new HashSet();
 		startsWith = startsWith.toLowerCase();
-		for (Iterator iterator = inHits.iterator(); iterator.hasNext();) {
+		for (Iterator iterator = inHits.iterator(); iterator.hasNext();)
+		{
 			Data data = (Data) iterator.next();
 			// We need a list of searchable (keyword fields)
 			Object obj = data.getValue(inColumn);
-			if (obj instanceof Collection) {
+			if (obj instanceof Collection)
+			{
 				Collection values = (Collection) obj;
-				for (Iterator iterator2 = values.iterator(); iterator2.hasNext();) {
+				for (Iterator iterator2 = values.iterator(); iterator2.hasNext();)
+				{
 					String val = (String) iterator2.next();
-					if (val.toLowerCase().startsWith(startsWith)) {
+					if (val.toLowerCase().startsWith(startsWith))
+					{
 						results.add(val);
 					}
 				}
-			} else {
+			}
+			else
+			{
 				String val = inContext.getText(obj);
-				if (val.toLowerCase().startsWith(startsWith)) {
+				if (val.toLowerCase().startsWith(startsWith))
+				{
 					results.add(val);
 				}
 
-				if (val != null) {
+				if (val != null)
+				{
 					/*
-					 * if( val.toLowerCase().startsWith(startsWith))
-					 * {
-					 * results.add( val);
-					 * }
+					 * if( val.toLowerCase().startsWith(startsWith)) { results.add( val); }
 					 */
 
 					// could break it by spaces but regex:
 					/*
-					 * Pattern pattern = Pattern.compile("(?i)\\b\\S*"+startsWith+"\\S*");
-					 * Matcher matcher = pattern.matcher(val);
+					 * Pattern pattern = Pattern.compile("(?i)\\b\\S*"+startsWith+"\\S*"); Matcher matcher =
+					 * pattern.matcher(val);
 					 * 
-					 * while (matcher.find()) {
-					 * //return matcher.group(1);
-					 * String output = matcher.group(0);
-					 * results.add(output);
-					 * }
+					 * while (matcher.find()) { //return matcher.group(1); String output = matcher.group(0);
+					 * results.add(output); }
 					 */
 					String[] valStrings = MultiValued.VALUEDELMITER.split(val);
-					for (int i = 0; i < valStrings.length; i++) {
-						if (valStrings[i].toLowerCase().startsWith(startsWith.toLowerCase())) {
+					for (int i = 0; i < valStrings.length; i++)
+					{
+						if (valStrings[i].toLowerCase().startsWith(startsWith.toLowerCase()))
+						{
 							results.add(valStrings[i]);
 						}
 					}
 				}
 			}
-			if (results.size() > 100) {
+			if (results.size() > 100)
+			{
 				break;
 			}
 		}
@@ -311,163 +324,93 @@ public class SearcherManager {
 		return sorted;
 	}
 	/*
-	 * public String getLabel(Searcher inSearcher, Data inData)
-	 * {
-	 * if(inData == null){
-	 * return null;
-	 * }
-	 * String val = null;
-	 * String mask = inSearcher.getPropertyDetails().getRender();
-	 * if( mask != null)
-	 * {
-	 * val = getValue(inSearcher.getCatalogId(),mask,inData.getProperties());
-	 * }
-	 * else
-	 * {
-	 * String name = inData.getName();
+	 * public String getLabel(Searcher inSearcher, Data inData) { if(inData == null){ return null; }
+	 * String val = null; String mask = inSearcher.getPropertyDetails().getRender(); if( mask != null) {
+	 * val = getValue(inSearcher.getCatalogId(),mask,inData.getProperties()); } else { String name =
+	 * inData.getName();
 	 * 
-	 * if(name != null)
-	 * {
-	 * val = name;
-	 * }
-	 * else
-	 * {
-	 * val = inData.getId();
-	 * }
+	 * if(name != null) { val = name; } else { val = inData.getId(); }
 	 * 
-	 * }
-	 * return val;
-	 * }
+	 * } return val; }
 	 */
 	/*
-	 * public String getLabel(PropertyDetail inDetail, Data inData, String inLocale)
-	 * {
-	 * if( inData == null || inDetail == null)
-	 * {
-	 * return null;
-	 * }
-	 * Searcher listsearcher =
-	 * getSearcher(inDetail.getListCatalogId(),inDetail.getListId() );
-	 * String mask = listsearcher.getPropertyDetails().getRender();
-	 * String val = null;
-	 * if( mask != null)
-	 * {
-	 * val = getValue(inDetail.getCatalogId(),mask,inData.getProperties());
-	 * }
-	 * else
-	 * {
-	 * String name = inData.getName(inLocale);
+	 * public String getLabel(PropertyDetail inDetail, Data inData, String inLocale) { if( inData ==
+	 * null || inDetail == null) { return null; } Searcher listsearcher =
+	 * getSearcher(inDetail.getListCatalogId(),inDetail.getListId() ); String mask =
+	 * listsearcher.getPropertyDetails().getRender(); String val = null; if( mask != null) { val =
+	 * getValue(inDetail.getCatalogId(),mask,inData.getProperties()); } else { String name =
+	 * inData.getName(inLocale);
 	 * 
-	 * if(name != null)
-	 * {
-	 * val = name;
-	 * }
-	 * else
-	 * {
-	 * val = inData.getId();
-	 * }
-	 * }
-	 * return val;
-	 * }
+	 * if(name != null) { val = name; } else { val = inData.getId(); } } return val; }
 	 */
 	/*
-	 * public String getLabel(PropertyDetail inDetail, Data inData)
-	 * {
-	 * if(inData == null){
-	 * return null;
-	 * }
-	 * String mask = inDetail.get("render");
-	 * String val = null;
-	 * if( mask != null)
-	 * {
-	 * val = getValue(inDetail.getCatalogId(),mask,inData.getProperties());
-	 * }
-	 * else
-	 * {
-	 * Searcher listsearcher =
-	 * getSearcher(inDetail.getListCatalogId(),inDetail.getListId() );
-	 * mask = listsearcher.getPropertyDetails().getRender();
-	 * if( mask != null)
-	 * {
-	 * val = getValue(inDetail.getCatalogId(),mask,inData.getProperties());
-	 * }
-	 * else
-	 * {
-	 * String name = inData.getName();
+	 * public String getLabel(PropertyDetail inDetail, Data inData) { if(inData == null){ return null; }
+	 * String mask = inDetail.get("render"); String val = null; if( mask != null) { val =
+	 * getValue(inDetail.getCatalogId(),mask,inData.getProperties()); } else { Searcher listsearcher =
+	 * getSearcher(inDetail.getListCatalogId(),inDetail.getListId() ); mask =
+	 * listsearcher.getPropertyDetails().getRender(); if( mask != null) { val =
+	 * getValue(inDetail.getCatalogId(),mask,inData.getProperties()); } else { String name =
+	 * inData.getName();
 	 * 
-	 * if(name != null)
-	 * {
-	 * val = name;
-	 * }
-	 * else
-	 * {
-	 * val = inData.getId();
-	 * }
+	 * if(name != null) { val = name; } else { val = inData.getId(); }
 	 * 
-	 * }
-	 * }
-	 * return val;
-	 * }
+	 * } } return val; }
 	 */
 
 	/*
-	 * public String getValue(String inCatalogId, String inMask, Map inValues)
-	 * {
-	 * if( inMask == null)
-	 * {
-	 * return null;
-	 * }
-	 * Replacer replacer = getReplacer(inCatalogId);
+	 * public String getValue(String inCatalogId, String inMask, Map inValues) { if( inMask == null) {
+	 * return null; } Replacer replacer = getReplacer(inCatalogId);
 	 * 
-	 * Map newvals = new HashMap();
-	 * newvals.put("formatteddate",
-	 * DateStorageUtil.getStorageUtil().getTodayForDisplay());
-	 * if(inValues != null)
-	 * {
-	 * newvals.putAll(inValues);
-	 * }
+	 * Map newvals = new HashMap(); newvals.put("formatteddate",
+	 * DateStorageUtil.getStorageUtil().getTodayForDisplay()); if(inValues != null) {
+	 * newvals.putAll(inValues); }
 	 * 
-	 * String val = replacer.replace(inMask, newvals);
-	 * if( val.startsWith("$") && val.equals(inMask) )
-	 * {
-	 * return "";
-	 * }
-	 * return val;
-	 * }
+	 * String val = replacer.replace(inMask, newvals); if( val.startsWith("$") && val.equals(inMask) ) {
+	 * return ""; } return val; }
 	 */
 
-	public Object getValue(Data inData, PropertyDetail inDetail, String inLocale) {
+	public Object getValue(Data inData, PropertyDetail inDetail, String inLocale)
+	{
 		Object value = getValue(inData, inDetail, null, inLocale);
 		return value;
 	}
 
-	public Object getValue(Data inData, PropertyDetail inDetail, Map inExtra, String inLocale) {
+	public Object getValue(Data inData, PropertyDetail inDetail, Map inExtra, String inLocale)
+	{
 		String mask = inDetail.get("rendermask");
 		Object value = getValue(inData, inDetail, mask, null, inLocale);
 		return value;
 	}
 
-	public Object getValue(Data inData, PropertyDetail inDetail, String inMask, Map inExtra, String inLocale) {
-		if (inData == null) {
+	public Object getValue(Data inData, PropertyDetail inDetail, String inMask, Map inExtra, String inLocale)
+	{
+		if (inData == null)
+		{
 			return null;
 		}
 
 		Object object = inData.getValue(inDetail.getId());
 
-		if (object != null) {
-			if (inDetail.isMultiValue() && inData instanceof MultiValued) {
+		if (object != null)
+		{
+			if (inDetail.isMultiValue() && inData instanceof MultiValued)
+			{
 				Collection vals = ((MultiValued) inData).getValues(inDetail.getId());
 				return vals;
 			}
-			if (object instanceof LanguageMap) {
+			if (object instanceof LanguageMap)
+			{
 				LanguageMap map = (LanguageMap) object;
-				if (!map.isEmpty() || inMask == null) {
+				if (!map.isEmpty() || inMask == null)
+				{
 					return map;
 				}
 			}
 		}
-		if (inMask != null) {
-			if (object == null) {
+		if (inMask != null)
+		{
+			if (object == null)
+			{
 				object = renderMask(inData, inDetail, inMask, inExtra, inLocale);
 			}
 
@@ -476,7 +419,8 @@ public class SearcherManager {
 		return object;
 	}
 
-	public Object renderMask(Data inData, PropertyDetail inDetail, String inMask, Map inExtra, String inLocale) {
+	public Object renderMask(Data inData, PropertyDetail inDetail, String inMask, Map inExtra, String inLocale)
+	{
 		String catalogId = inDetail.getListCatalogId();
 		String searchType = inDetail.getSearchType();
 
@@ -492,37 +436,37 @@ public class SearcherManager {
 		newvals.put("data", smartdata);
 		newvals.put(searchType, smartdata);
 
-		if (inData != null) {
+		if (inData != null)
+		{
 			newvals.putAll(inData.getProperties());
 		}
-		if (inExtra != null) {
+		if (inExtra != null)
+		{
 			newvals.putAll(inExtra);
 		}
 		String val = replacer.replace(inMask, newvals, inLocale);
-		if (val != null && val.startsWith("$") && val.equals(inMask)) {
+		if (val != null && val.startsWith("$") && val.equals(inMask))
+		{
 			return "";
 		}
 		return val;
 	}
 
 	/*
-	 * public Collection getValues(String inCatalogId, String inMask,Map inValues)
-	 * {
-	 * String value = getValue(inCatalogId,inMask,inValues);
-	 * if( value == null || value.isEmpty() )
-	 * {
-	 * return Collections.emptyList();
-	 * }
-	 * String[] values = MultiValued.VALUEDELMITER.split(value);
-	 * return Arrays.asList(values);
-	 * }
+	 * public Collection getValues(String inCatalogId, String inMask,Map inValues) { String value =
+	 * getValue(inCatalogId,inMask,inValues); if( value == null || value.isEmpty() ) { return
+	 * Collections.emptyList(); } String[] values = MultiValued.VALUEDELMITER.split(value); return
+	 * Arrays.asList(values); }
 	 */
-	public Replacer getReplacer(String inCatalogId) {
+	public Replacer getReplacer(String inCatalogId)
+	{
 		return (Replacer) getModuleManager().getBean(inCatalogId, "replacer");
 	}
 
-	public Data getData(String inCatalogId, String inSearchType, String inId) {
-		if (inId == null) {
+	public Data getData(String inCatalogId, String inSearchType, String inId)
+	{
+		if (inId == null)
+		{
 			return null;
 		}
 		Searcher searcher = getSearcher(inCatalogId, inSearchType);
@@ -530,27 +474,33 @@ public class SearcherManager {
 		return (Data) data;
 	}
 
-	protected CacheManager getCacheManager(String inCatalogId) {
+	protected CacheManager getCacheManager(String inCatalogId)
+	{
 		CacheManager aCacheManager = (CacheManager) getModuleManager().getBean(inCatalogId, "cacheManager", true);
 		return aCacheManager;
 	}
 
-	public Data getCachedData(String inCatalogId, String inSearchType, String inId) {
-		if (inId == null) {
+	public Data getCachedData(String inCatalogId, String inSearchType, String inId)
+	{
+		if (inId == null)
+		{
 			return null;
 		}
 		// TODO: Use a CacheManaget per catalog
 
 		Data found = (Data) getCacheManager(inCatalogId).get("data" + inSearchType, inId);
-		if (found == CacheManager.NULLDATA) {
+		if (found == CacheManager.NULLDATA)
+		{
 			return null;
 		}
-		if (found != null) {
+		if (found != null)
+		{
 			return found;
 		}
 		Searcher searcher = getSearcher(inCatalogId, inSearchType);
 		Object data = searcher.searchById(inId);
-		if (data == null) {
+		if (data == null)
+		{
 			getCacheManager(inCatalogId).put("data" + inSearchType, inId, CacheManager.NULLDATA);
 			return null;
 		}
@@ -558,15 +508,18 @@ public class SearcherManager {
 		return (Data) data;
 	}
 
-	public Data getData(PropertyDetail inDetail, String inId) {
-		if (inId == null) {
+	public Data getData(PropertyDetail inDetail, String inId)
+	{
+		if (inId == null)
+		{
 			return null;
 		}
 		Data data = getCachedData(inDetail.getListCatalogId(), inDetail.getListId(), inId);
 		return (Data) data;
 	}
 
-	public HitTracker getList(PropertyDetail inDetail) {
+	public HitTracker getList(PropertyDetail inDetail)
+	{
 		return getList(inDetail.getListCatalogId(), inDetail.getListId());
 	}
 
@@ -577,23 +530,33 @@ public class SearcherManager {
 	 * @param inFieldName
 	 * @return
 	 */
-	public HitTracker getList(String inCatalogId, String inFieldName) {
-		if (inFieldName == null) {
+	public HitTracker getList(String inCatalogId, String inFieldName)
+	{
+		if (inFieldName == null)
+		{
 			return null;
 		}
 		// If this is not my searcher type then use the manager to get the correct
 		// search
 		Searcher searcher = getSearcher(inCatalogId, inFieldName);
 		HitTracker found = (HitTracker) getCacheManager().get("sm" + inCatalogId, inFieldName);
-		if (found == null || !searcher.getIndexId().equals(found.getIndexId())) {
+		if (found == null || !searcher.getIndexId().equals(found.getIndexId()))
+		{
 			String sortfield = null;
-			if (searcher.getPropertyDetails().getDetail("ordering") != null) {
+			if (searcher.getPropertyDetails().getDetail("ordering") != null)
+			{
 				sortfield = "ordering";
-			} else if (searcher.getPropertyDetails().getDetail("numberval") != null) {
-				sortfield = "numberval";
-			} else if (searcher.getPropertyDetails().getDetail("name") != null) {
-				sortfield = "name";
 			}
+			else
+				if (searcher.getPropertyDetails().getDetail("numberval") != null)
+				{
+					sortfield = "numberval";
+				}
+				else
+					if (searcher.getPropertyDetails().getDetail("name") != null)
+					{
+						sortfield = "name";
+					}
 			found = searcher.query().all().sort(sortfield).search();
 			found.setHitsPerPage(100);
 			getCacheManager().put("sm" + inCatalogId, inFieldName, found);
@@ -601,17 +564,21 @@ public class SearcherManager {
 		return found;
 	}
 
-	public ModuleManager getModuleManager() {
+	public ModuleManager getModuleManager()
+	{
 		return fieldModuleManager;
 	}
 
-	public void setModuleManager(ModuleManager inModuleManager) {
+	public void setModuleManager(ModuleManager inModuleManager)
+	{
 		fieldModuleManager = inModuleManager;
 	}
 
-	public void clear() {
+	public void clear()
+	{
 		Map cache = new HashMap(getCache());
-		for (Iterator iterator = cache.keySet().iterator(); iterator.hasNext();) {
+		for (Iterator iterator = cache.keySet().iterator(); iterator.hasNext();)
+		{
 			String key = (String) iterator.next();
 			String[] vals = key.split("|");
 			getModuleManager().clearBean(vals[0], vals[1]);
@@ -621,30 +588,41 @@ public class SearcherManager {
 		getCacheManager().clearAll();
 	}
 
-	protected Map getCache() {
-		if (fieldCache == null) {
+	protected Map getCache()
+	{
+		if (fieldCache == null)
+		{
 			fieldCache = new HashMap();
 		}
 		return fieldCache;
 	}
 
-	public FilteredTracker makeFilteredTracker() {
+	public FilteredTracker makeFilteredTracker()
+	{
 		return new CompositeFilteredTracker();
 	}
 
-	public void removeFromCache(String inCatalogId, String inFieldName) {
+	public void removeFromCache(String inCatalogId, String inFieldName)
+	{
 		getCache().remove(inCatalogId + "|" + inFieldName);
 
 		String beanName = null;
-		if (getModuleManager().contains(inCatalogId, inFieldName + "Searcher")) {
+		if (getModuleManager().contains(inCatalogId, inFieldName + "Searcher"))
+		{
 			beanName = inFieldName + "Searcher";
-		} else {
-			if (inFieldName.endsWith("Log")) {
+		}
+		else
+		{
+			if (inFieldName.endsWith("Log"))
+			{
 				beanName = "dynamicLogSearcher";
-			} else {
+			}
+			else
+			{
 				PropertyDetails details = getPropertyDetailsArchive(inCatalogId).getPropertyDetails(inFieldName);
 				beanName = details.getBeanName();
-				if (beanName == null) {
+				if (beanName == null)
+				{
 					beanName = "dynamicSearcher";
 				}
 			}
@@ -652,12 +630,15 @@ public class SearcherManager {
 		getModuleManager().clearBean(inCatalogId, beanName);
 	}
 
-	public Collection<Searcher> listLoadedSearchers(String inCatalogId) {
+	public Collection<Searcher> listLoadedSearchers(String inCatalogId)
+	{
 		List<Searcher> loaded = new ArrayList<Searcher>();
 
-		for (Iterator iterator = getCache().values().iterator(); iterator.hasNext();) {
+		for (Iterator iterator = getCache().values().iterator(); iterator.hasNext();)
+		{
 			Searcher searcher = (Searcher) iterator.next();
-			if (searcher.getCatalogId().equals(inCatalogId)) {
+			if (searcher.getCatalogId().equals(inCatalogId))
+			{
 				loaded.add(searcher);
 			}
 		}
@@ -665,64 +646,46 @@ public class SearcherManager {
 	}
 
 	/*
-	 * public Collection getCatalogs()
-	 * {
-	 * XmlFile file = getCatalogXml();
-	 * XmlSearcher searcher = (XmlSearcher)getSearcher("", "catalogs");
-	 * searcher.setXmlFile(file);
-	 * return searcher.getAllHits();
-	 * }
-	 * protected XmlFile getCatalogXml()
-	 * {
-	 * XmlFile file = getXmlArchive().getXml("/WEB-INF/data/catalogs.xml");
-	 * if( !file.isExist() )
-	 * {
-	 * file = getXmlArchive().getXml("/WEB-INF/data/media/lists/catalogs.xml");
-	 * //legacy
-	 * }
-	 * return file;
-	 * }
-	 * public Element getCatalog(String inId)
-	 * {
-	 * XmlFile file = getCatalogXml();
-	 * Element element = file.getElementById(inId);
-	 * return element;
-	 * }
-	 * public void saveCatalog(String inId, String inName)
-	 * {
-	 * XmlFile file = getCatalogXml();
-	 * Element element = file.getElementById(inId);
-	 * if( element == null )
-	 * {
-	 * element = file.createElement();
-	 * file.add(element);
-	 * }
-	 * element.addAttribute("id", inId);
-	 * element.setText(inName);
-	 * getXmlArchive().saveXml(file, null);
-	 * }
+	 * public Collection getCatalogs() { XmlFile file = getCatalogXml(); XmlSearcher searcher =
+	 * (XmlSearcher)getSearcher("", "catalogs"); searcher.setXmlFile(file); return
+	 * searcher.getAllHits(); } protected XmlFile getCatalogXml() { XmlFile file =
+	 * getXmlArchive().getXml("/WEB-INF/data/catalogs.xml"); if( !file.isExist() ) { file =
+	 * getXmlArchive().getXml("/WEB-INF/data/media/lists/catalogs.xml"); //legacy } return file; }
+	 * public Element getCatalog(String inId) { XmlFile file = getCatalogXml(); Element element =
+	 * file.getElementById(inId); return element; } public void saveCatalog(String inId, String inName)
+	 * { XmlFile file = getCatalogXml(); Element element = file.getElementById(inId); if( element ==
+	 * null ) { element = file.createElement(); file.add(element); } element.addAttribute("id", inId);
+	 * element.setText(inName); getXmlArchive().saveXml(file, null); }
 	 */
 
-	public String resolveCatalogId(String inCatalogId, String inSearchType) {
-		if ("searchtypes".equals(inSearchType)) {
+	public String resolveCatalogId(String inCatalogId, String inSearchType)
+	{
+		if ("searchtypes".equals(inSearchType))
+		{
 			return inCatalogId;
 		}
-		if (inSearchType == null) {
+		if (inSearchType == null)
+		{
 			return inCatalogId;
 		}
 		Searcher typeSearcher = getSearcher(inCatalogId, "searchtypes");
 		if (typeSearcher.getPropertyDetails().size() == 0) // Not used in the system catalog
 		{
-			if (inSearchType.equals("user") || inSearchType.equals("group")) {
+			if (inSearchType.equals("user") || inSearchType.equals("group"))
+			{
 				return "system";
 			}
 			return inCatalogId;
 		}
 		Data catalogdata = (Data) typeSearcher.searchById(inSearchType);
-		if (catalogdata != null && catalogdata.get("catalogid") != null) {
+		if (catalogdata != null && catalogdata.get("catalogid") != null)
+		{
 			return catalogdata.get("catalogid");
-		} else {
-			if (inSearchType.equals("user") || inSearchType.equals("group")) {
+		}
+		else
+		{
+			if (inSearchType.equals("user") || inSearchType.equals("group"))
+			{
 				return "system";
 			}
 		}
@@ -730,51 +693,63 @@ public class SearcherManager {
 
 	}
 
-	public QueryBuilder query(String inCatalogId, String inSearchType) {
+	public QueryBuilder query(String inCatalogId, String inSearchType)
+	{
 		Searcher searcher = getSearcher(inCatalogId, inSearchType);
-		if (searcher == null) {
+		if (searcher == null)
+		{
 			return null;
 		}
 		return searcher.query();
 	}
 
-	public LockManager getLockManager(String inCatalogId) {
+	public LockManager getLockManager(String inCatalogId)
+	{
 		LockManager manager = (LockManager) getModuleManager().getBean(inCatalogId, "lockManager");
 		return manager;
 	}
 
-	public boolean getShowSearchLogs(String inCatalogId) {
+	public boolean getShowSearchLogs(String inCatalogId)
+	{
 		Boolean found = (Boolean) getShowLogs().get(inCatalogId);
-		if (found == null) {
+		if (found == null)
+		{
 			found = false;
 			getShowLogs().put(inCatalogId, found);
 		}
 		return found;
 	}
 
-	protected Map getShowLogs() {
-		if (fieldShowLogs == null) {
+	protected Map getShowLogs()
+	{
+		if (fieldShowLogs == null)
+		{
 			fieldShowLogs = new HashMap();
 		}
 		return fieldShowLogs;
 	}
 
-	public void setShowSearchLogs(String inCatalogId, boolean inValue) {
+	public void setShowSearchLogs(String inCatalogId, boolean inValue)
+	{
 		getShowLogs().put(inCatalogId, inValue);
 	}
 
-	public Collection reloadLists(String inCatalogid) {
+	public Collection reloadLists(String inCatalogid)
+	{
 		PropertyDetailsArchive archive = getPropertyDetailsArchive(inCatalogid);
 		Collection<String> tables = archive.listLiveTables();
 
 		List types = new ArrayList();
-		for (Iterator iterator = tables.iterator(); iterator.hasNext();) {
+		for (Iterator iterator = tables.iterator(); iterator.hasNext();)
+		{
 			String tablename = (String) iterator.next();
 			Searcher searcher = loadSearcher(inCatalogid, tablename, true);
-			if (searcher instanceof Reloadable) {
+			if (searcher instanceof Reloadable)
+			{
 				String searchtype = searcher.getSearchType();
 
-				if (searchtype != null && !searchtype.startsWith("$")) {
+				if (searchtype != null && !searchtype.startsWith("$"))
+				{
 					searcher.reIndexAll();
 
 					types.add(searcher.getSearchType());
@@ -786,14 +761,18 @@ public class SearcherManager {
 		return types;
 	}
 
-	public Collection reloadLoadedSettings(String inCatalogid) {
+	public Collection reloadLoadedSettings(String inCatalogid)
+	{
 		Collection<Searcher> tables = listLoadedSearchers(inCatalogid);
 
 		List types = new ArrayList();
-		for (Iterator iterator = tables.iterator(); iterator.hasNext();) {
+		for (Iterator iterator = tables.iterator(); iterator.hasNext();)
+		{
 			Searcher searcher = (Searcher) iterator.next();
-			if (searcher instanceof Reloadable) {
-				if (!searcher.getSearchType().contains("$searcher.getSearchType()")) {
+			if (searcher instanceof Reloadable)
+			{
+				if (!searcher.getSearchType().contains("$searcher.getSearchType()"))
+				{
 					searcher.reloadSettings();
 
 					types.add(searcher.getSearchType());
@@ -803,8 +782,10 @@ public class SearcherManager {
 		return types;
 	}
 
-	public void resetAlternative() {
-		for (Iterator iterator = getCache().keySet().iterator(); iterator.hasNext();) {
+	public void resetAlternative()
+	{
+		for (Iterator iterator = getCache().keySet().iterator(); iterator.hasNext();)
+		{
 			String key = (String) iterator.next();
 			Searcher toclear = (Searcher) getCache().get(key);
 			toclear.setAlternativeIndex(null);
@@ -812,18 +793,22 @@ public class SearcherManager {
 		}
 	}
 
-	public boolean isData(Object inVal) {
-		if (inVal instanceof Data) {
+	public boolean isData(Object inVal)
+	{
+		if (inVal instanceof Data)
+		{
 			return true;
 		}
 		return false;
 	}
 
-	public Searcher getExistingSearcher(String inCatalogId, String inSearchType) {
+	public Searcher getExistingSearcher(String inCatalogId, String inSearchType)
+	{
 		PropertyDetailsArchive archive = getPropertyDetailsArchive(inCatalogId);
 		List searchtypes = archive.getSearchTypes();
 		boolean found = searchtypes.contains(inSearchType);
-		if (found) {
+		if (found)
+		{
 			return getSearcher(inCatalogId, inSearchType);
 		}
 		return null;

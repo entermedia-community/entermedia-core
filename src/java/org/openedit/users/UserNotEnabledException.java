@@ -1,9 +1,9 @@
 package org.openedit.users;
 
-public class UserNotEnabledException extends UserManagerException {
+public class UserNotEnabledException extends UserManagerException
+{
 
-	public UserNotEnabledException() {
-	}
+	public UserNotEnabledException() {}
 
 	public UserNotEnabledException(String message) {
 		super(message);

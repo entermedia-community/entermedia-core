@@ -12,7 +12,8 @@ import org.openedit.users.User;
  * @author axis
  *
  */
-public class GroupPropertyFilter extends BaseFilter {
+public class GroupPropertyFilter extends BaseFilter
+{
 	protected String fieldPropertyName;
 
 	public GroupPropertyFilter(String inPropertyName, String inValue) {
@@ -20,33 +21,40 @@ public class GroupPropertyFilter extends BaseFilter {
 		setValue(inValue);
 	}
 
-	public String getPropertyName() {
+	public String getPropertyName()
+	{
 		return fieldPropertyName;
 	}
 
-	public void setPropertyName(String inPropertyName) {
+	public void setPropertyName(String inPropertyName)
+	{
 		fieldPropertyName = inPropertyName;
 	}
 
 	/**
 	 * @see org.openedit.util.strainer.Filter#passes(java.lang.Object)
 	 */
-	public boolean passes(Object inObj) throws FilterException, ClassCastException {
+	public boolean passes(Object inObj) throws FilterException, ClassCastException
+	{
 		WebPageRequest req = (WebPageRequest) inObj;
 
 		User data = req.getUser();
 
-		if (data == null) {
+		if (data == null)
+		{
 			return false;
 		}
 
-		if (getValue() == null) {
+		if (getValue() == null)
+		{
 			return true;
 		}
-		for (Iterator iterator = data.getGroups().iterator(); iterator.hasNext();) {
+		for (Iterator iterator = data.getGroups().iterator(); iterator.hasNext();)
+		{
 			Group group = (Group) iterator.next();
 			String value = group.get(getPropertyName());
-			if (value != null && value.equals(getValue())) {
+			if (value != null && value.equals(getValue()))
+			{
 				return true;
 			}
 		}
@@ -54,12 +62,15 @@ public class GroupPropertyFilter extends BaseFilter {
 		return false;
 	}
 
-	public String toString() {
+	public String toString()
+	{
 		return "GroupProperty" + getPropertyName() + "=" + getValue();
 	}
 
-	public boolean equals(Object inObj) {
-		if (inObj instanceof GroupPropertyFilter) {
+	public boolean equals(Object inObj)
+	{
+		if (inObj instanceof GroupPropertyFilter)
+		{
 			GroupPropertyFilter toCompare = (GroupPropertyFilter) inObj;
 			return (getPropertyName().equals(toCompare.getPropertyName())) && (getValue().equals(toCompare.getValue()));
 		}

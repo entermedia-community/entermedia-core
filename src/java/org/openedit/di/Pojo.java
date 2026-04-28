@@ -5,7 +5,8 @@ import java.util.List;
 import org.dom4j.Element;
 import org.openedit.WebServer;
 
-public class Pojo {
+public class Pojo
+{
 	// public static final Namespace lang = new Namespace("lang",
 	// "http://www.springframework.org/schema/lang");
 	// public static final QName groovy = new QName("groovy", lang);
@@ -14,34 +15,42 @@ public class Pojo {
 	Element fieldConfig;
 	Object fieldSingleton;
 
-	public Object getSingleton() {
+	public Object getSingleton()
+	{
 		return fieldSingleton;
 	}
 
-	public void setSingleton(Object inSingleton) {
+	public void setSingleton(Object inSingleton)
+	{
 		fieldSingleton = inSingleton;
 	}
 
-	public boolean isSingleton() {
-		if (fieldSingleton instanceof WebServer) {
+	public boolean isSingleton()
+	{
+		if (fieldSingleton instanceof WebServer)
+		{
 			return true;
 		}
 		String scope = fieldConfig.attributeValue("scope");
-		if (scope == null || !scope.equals("prototype")) {
+		if (scope == null || !scope.equals("prototype"))
+		{
 			return true;
 		}
 		return false;
 	}
 
-	public String getClassPath() {
+	public String getClassPath()
+	{
 		String scope = fieldConfig.attributeValue("class");
-		if (scope == null) {
+		if (scope == null)
+		{
 			scope = fieldConfig.attributeValue("script-source");
 		}
 		return scope;
 	}
 
-	public List getProperties() {
+	public List getProperties()
+	{
 		List elements = fieldConfig.elements("property");
 		// if( elements == null)
 		// {

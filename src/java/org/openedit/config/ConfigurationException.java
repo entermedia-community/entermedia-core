@@ -9,12 +9,12 @@ import org.openedit.OpenEditException;
  * @author cburkey
  *
  */
-public class ConfigurationException extends OpenEditException {
+public class ConfigurationException extends OpenEditException
+{
 
 	/**
 	 * @param inString
 	 */
-	public ConfigurationException(String inString) {
-	}
+	public ConfigurationException(String inString) {}
 
 }

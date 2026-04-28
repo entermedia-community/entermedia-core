@@ -8,25 +8,28 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
-class GZipServletResponseWrapper extends HttpServletResponseWrapper {
+class GZipServletResponseWrapper extends HttpServletResponseWrapper
+{
 
 	private GZipServletOutputStream gzipOutputStream = null;
 	private PrintWriter printWriter = null;
 
-	public GZipServletResponseWrapper(HttpServletResponse response)
-			throws IOException {
+	public GZipServletResponseWrapper(HttpServletResponse response) throws IOException {
 		super(response);
 	}
 
-	public void close() throws IOException {
+	public void close() throws IOException
+	{
 
 		// PrintWriter.close does not throw exceptions.
 		// Hence no try-catch block.
-		if (this.printWriter != null) {
+		if (this.printWriter != null)
+		{
 			this.printWriter.close();
 		}
 
-		if (this.gzipOutputStream != null) {
+		if (this.gzipOutputStream != null)
+		{
 			this.gzipOutputStream.close();
 		}
 	}
@@ -38,26 +41,35 @@ class GZipServletResponseWrapper extends HttpServletResponseWrapper {
 	 */
 
 	@Override
-	public void flushBuffer() throws IOException {
+	public void flushBuffer() throws IOException
+	{
 
 		// PrintWriter.flush() does not throw exception
-		if (this.printWriter != null) {
+		if (this.printWriter != null)
+		{
 			this.printWriter.flush();
 		}
 
 		IOException exception1 = null;
-		try {
-			if (this.gzipOutputStream != null) {
+		try
+		{
+			if (this.gzipOutputStream != null)
+			{
 				this.gzipOutputStream.flush();
 			}
-		} catch (IOException e) {
+		}
+		catch (IOException e)
+		{
 			exception1 = e;
 		}
 
 		IOException exception2 = null;
-		try {
+		try
+		{
 			super.flushBuffer();
-		} catch (IOException e) {
+		}
+		catch (IOException e)
+		{
 			exception2 = e;
 		}
 
@@ -68,35 +80,37 @@ class GZipServletResponseWrapper extends HttpServletResponseWrapper {
 	}
 
 	@Override
-	public ServletOutputStream getOutputStream() throws IOException {
-		if (this.printWriter != null) {
-			throw new IllegalStateException(
-					"PrintWriter obtained already - cannot get OutputStream");
+	public ServletOutputStream getOutputStream() throws IOException
+	{
+		if (this.printWriter != null)
+		{
+			throw new IllegalStateException("PrintWriter obtained already - cannot get OutputStream");
 		}
-		if (this.gzipOutputStream == null) {
-			this.gzipOutputStream = new GZipServletOutputStream(
-					getResponse().getOutputStream());
+		if (this.gzipOutputStream == null)
+		{
+			this.gzipOutputStream = new GZipServletOutputStream(getResponse().getOutputStream());
 		}
 		return this.gzipOutputStream;
 	}
 
 	@Override
-	public PrintWriter getWriter() throws IOException {
-		if (this.printWriter == null && this.gzipOutputStream != null) {
-			throw new IllegalStateException(
-					"OutputStream obtained already - cannot get PrintWriter");
+	public PrintWriter getWriter() throws IOException
+	{
+		if (this.printWriter == null && this.gzipOutputStream != null)
+		{
+			throw new IllegalStateException("OutputStream obtained already - cannot get PrintWriter");
 		}
-		if (this.printWriter == null) {
-			this.gzipOutputStream = new GZipServletOutputStream(
-					getResponse().getOutputStream());
-			this.printWriter = new PrintWriter(new OutputStreamWriter(
-					this.gzipOutputStream, getResponse().getCharacterEncoding()));
+		if (this.printWriter == null)
+		{
+			this.gzipOutputStream = new GZipServletOutputStream(getResponse().getOutputStream());
+			this.printWriter = new PrintWriter(new OutputStreamWriter(this.gzipOutputStream, getResponse().getCharacterEncoding()));
 		}
 		return this.printWriter;
 	}
 
 	@Override
-	public void setContentLength(int len) {
+	public void setContentLength(int len)
+	{
 		// ignore, since content length of zipped content
 		// does not match content length of unzipped content.
 	}

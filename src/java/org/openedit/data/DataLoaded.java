@@ -1,5 +1,6 @@
 package org.openedit.data;
 
-public interface DataLoaded {
+public interface DataLoaded
+{
 
 }

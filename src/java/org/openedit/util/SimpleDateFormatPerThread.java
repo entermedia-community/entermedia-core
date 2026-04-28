@@ -12,16 +12,19 @@ import java.util.Locale;
  * @author cburkey
  */
 
-public class SimpleDateFormatPerThread {
+public class SimpleDateFormatPerThread
+{
 	protected ThreadLocal<DateFormat> perThreadCache = new ThreadLocal<DateFormat>();
 	protected String fieldFormat;
 	protected Locale fieldLocale;
 
-	public String getFormat() {
+	public String getFormat()
+	{
 		return fieldFormat;
 	}
 
-	public void setFormat(String inFormat) {
+	public void setFormat(String inFormat)
+	{
 		fieldFormat = inFormat;
 	}
 
@@ -34,27 +37,35 @@ public class SimpleDateFormatPerThread {
 		setLocale(inLocale);
 	}
 
-	public Date parse(String inDate) {
+	public Date parse(String inDate)
+	{
 		DateFormat format = perThreadCache.get();
-		if (format == null) {
+		if (format == null)
+		{
 			format = new SimpleDateFormat(fieldFormat, getLocale());
 			perThreadCache.set(format);
 		}
-		try {
+		try
+		{
 			return format.parse(inDate);
-		} catch (ParseException ex) {
+		}
+		catch (ParseException ex)
+		{
 			throw new RuntimeException(ex);
 		}
 	}
 
-	public Locale getLocale() {
-		if (fieldLocale == null) {
+	public Locale getLocale()
+	{
+		if (fieldLocale == null)
+		{
 			fieldLocale = Locale.getDefault();
 		}
 		return fieldLocale;
 	}
 
-	public void setLocale(Locale locale) {
+	public void setLocale(Locale locale)
+	{
 		fieldLocale = locale;
 	}
 

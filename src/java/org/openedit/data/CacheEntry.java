@@ -2,22 +2,27 @@ package org.openedit.data;
 
 import org.openedit.hittracker.HitTracker;
 
-public class CacheEntry {
+public class CacheEntry
+{
 	String fieldIndexId;
 
-	public String getIndexId() {
+	public String getIndexId()
+	{
 		return fieldIndexId;
 	}
 
-	public void setIndexId(String inIndexId) {
+	public void setIndexId(String inIndexId)
+	{
 		fieldIndexId = inIndexId;
 	}
 
-	public HitTracker getHits() {
+	public HitTracker getHits()
+	{
 		return fieldHits;
 	}
 
-	public void setHits(HitTracker inHits) {
+	public void setHits(HitTracker inHits)
+	{
 		fieldHits = inHits;
 	}
 

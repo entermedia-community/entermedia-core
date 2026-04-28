@@ -14,10 +14,10 @@ public class AllTests
 
 	public static Test suite()
 	{
-		TestSuite suite = new TestSuite( "Test for org.openedit.servlet" );
-		//$JUnit-BEGIN$
-		suite.addTest( new TestSuite(OpenEditEngineTest.class ));
-		//$JUnit-END$
+		TestSuite suite = new TestSuite("Test for org.openedit.servlet");
+		// $JUnit-BEGIN$
+		suite.addTest(new TestSuite(OpenEditEngineTest.class));
+		// $JUnit-END$
 		return suite;
 	}
 }

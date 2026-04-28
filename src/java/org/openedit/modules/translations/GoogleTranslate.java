@@ -21,34 +21,42 @@ import org.openedit.ModuleManager;
 import org.openedit.data.SearcherManager;
 import org.openedit.util.URLUtilities;
 
-public class GoogleTranslate implements Translator {
+public class GoogleTranslate implements Translator
+{
 	private static final Log log = LogFactory.getLog(GoogleTranslate.class);
 
 	protected ModuleManager fieldModuleManager;
 
-	public ModuleManager getModuleManager() {
+	public ModuleManager getModuleManager()
+	{
 		return fieldModuleManager;
 	}
 
-	public void setModuleManager(ModuleManager inModuleManager) {
+	public void setModuleManager(ModuleManager inModuleManager)
+	{
 		fieldModuleManager = inModuleManager;
 	}
 
-	public String webTranslate(String text, String sourcelang, String inLocale) {
-		try {
-			HttpClient client = URLUtilities.createTrustingHttpClient()
-					.setUserAgent("Mozilla/5.0 (Mobile; rv:14.0) Gecko/14.0 Firefox/14.0").build();
+	public String webTranslate(String text, String sourcelang, String inLocale)
+	{
+		try
+		{
+			HttpClient client = URLUtilities.createTrustingHttpClient().setUserAgent("Mozilla/5.0 (Mobile; rv:14.0) Gecko/14.0 Firefox/14.0").build();
 			String response = webTranslate(client, text, sourcelang, inLocale);
 			return response;
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			e.printStackTrace();
 		}
 		return null;
 	}
 
-	public String webTranslate(HttpClient client, String text, String sourcelang, String inLocale) {
+	public String webTranslate(HttpClient client, String text, String sourcelang, String inLocale)
+	{
 		// text.replace("$", "_");
-		if (inLocale.equals("de")) {
+		if (inLocale.equals("de"))
+		{
 			// we found that google would not translate mixed case words
 			text = text.toLowerCase();
 		}
@@ -59,7 +67,8 @@ public class GoogleTranslate implements Translator {
 		// (Mobile; rv:14.0) Gecko/14.0 Firefox/14.0").build();
 		String translated = null;
 
-		try {
+		try
+		{
 			HttpPost httpPost = new HttpPost(googlePage);
 
 			// post.setEntity(new StringEntity(inBody.toString(), "UTF-8"));
@@ -96,7 +105,8 @@ public class GoogleTranslate implements Translator {
 			httpPost.setEntity(new UrlEncodedFormEntity(nvps, "UTF-8"));
 			HttpResponse response2 = client.execute(httpPost);
 
-			if (response2.getStatusLine().getStatusCode() != -1) {
+			if (response2.getStatusLine().getStatusCode() != -1)
+			{
 				HttpEntity entity2 = response2.getEntity();
 				// Header[] headers = response2.getHeaders("Content-Type");
 				// if (headers!=null && headers.length > 0)
@@ -122,28 +132,36 @@ public class GoogleTranslate implements Translator {
 				// entity2.getContent(), charset ));
 				JSONObject config = (JSONObject) new JSONParser().parse(returned);
 				JSONObject data = (JSONObject) config.get("data");
-				if (data != null) {
+				if (data != null)
+				{
 					Collection trans = (Collection) data.get("translations");
-					if (trans.size() > 0) {
+					if (trans.size() > 0)
+					{
 						JSONObject found = (JSONObject) trans.iterator().next();
 						translated = (String) found.get("translatedText");
 					}
-				} else {
+				}
+				else
+				{
 					log.info(config.toJSONString());
 				}
 				httpPost.releaseConnection();
 			}
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			e.printStackTrace();
 		}
 		return translated;
 	}
 
-	protected String lookUpKey() {
+	protected String lookUpKey()
+	{
 		SearcherManager searchermanager = (SearcherManager) getModuleManager().getBean("system", "searcherManager");
 		Data translatekey = searchermanager.getCachedData("system", "systemsettings", "translatekey");
 		String key = "AIzaSyDOH0U9DIhnSrhhGlvCB6jD_orOjvVG5lw";// "AIzaSyD5Hjc70IgTTbcgZK5HSbtxMu2oTzTILps";
-		if (translatekey != null && translatekey.get("value") != null && !translatekey.get("value").isEmpty()) {
+		if (translatekey != null && translatekey.get("value") != null && !translatekey.get("value").isEmpty())
+		{
 			key = translatekey.get("value");
 		}
 		return key;

@@ -9,7 +9,8 @@ import org.openedit.config.Configuration;
 import org.openedit.config.XMLConfiguration;
 import org.openedit.page.PageAction;
 
-public class ActionFilter extends BaseFilter {
+public class ActionFilter extends BaseFilter
+{
 	protected String fieldActionName;
 	protected String fieldPermissionName;
 	protected ModuleManager fieldModuleManager;
@@ -21,16 +22,19 @@ public class ActionFilter extends BaseFilter {
 		// TODO Auto-generated constructor stub
 	}
 
-	public boolean passes(Object inObj) throws FilterException {
+	public boolean passes(Object inObj) throws FilterException
+	{
 		WebPageRequest req = (WebPageRequest) inObj;
-		try {
-			if (getActionName() == null) {
+		try
+		{
+			if (getActionName() == null)
+			{
 				return true;//
 			}
 			PageAction action = new PageAction(getActionName());
 			action.setConfig(getConfig());
-			for (Iterator iterator = getProperties().keySet().iterator(); iterator
-					.hasNext();) {
+			for (Iterator iterator = getProperties().keySet().iterator(); iterator.hasNext();)
+			{
 				String key = (String) iterator.next();
 				String value = get(key);
 				req.putPageValue(key, value);
@@ -38,95 +42,118 @@ public class ActionFilter extends BaseFilter {
 			}
 			req.setCurrentAction(action);
 			Object returned = getModuleManager().execute(getActionName(), req);
-			if (returned != null) {
-				if (returned instanceof Boolean) {
+			if (returned != null)
+			{
+				if (returned instanceof Boolean)
+				{
 					return ((Boolean) returned).booleanValue();
 				}
 			}
-		} catch (OpenEditException e) {
+		}
+		catch (OpenEditException e)
+		{
 			throw new FilterException(e);
 		}
 		Boolean value = (Boolean) req.getPageValue("can" + getPermissionName());
-		if (value != null) {
+		if (value != null)
+		{
 			return value.booleanValue();
 		}
 		return false;
 
 	}
 
-	public Filter[] getFilters() {
+	public Filter[] getFilters()
+	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public String getActionName() {
+	public String getActionName()
+	{
 		return fieldActionName;
 	}
 
-	public void setActionName(String inActionName) {
+	public void setActionName(String inActionName)
+	{
 		fieldActionName = inActionName;
 	}
 
-	public ModuleManager getModuleManager() {
+	public ModuleManager getModuleManager()
+	{
 		return fieldModuleManager;
 	}
 
-	public void setModuleManager(ModuleManager inModuleManager) {
+	public void setModuleManager(ModuleManager inModuleManager)
+	{
 		fieldModuleManager = inModuleManager;
 	}
 
-	public String getPermissionName() {
+	public String getPermissionName()
+	{
 		return fieldPermissionName;
 	}
 
-	public void setPermissionName(String inPermissionName) {
+	public void setPermissionName(String inPermissionName)
+	{
 		fieldPermissionName = inPermissionName;
 	}
 
-	public void addProperty(String inKey, String inValue) {
-		if ("name".equals(inKey)) {
+	public void addProperty(String inKey, String inValue)
+	{
+		if ("name".equals(inKey))
+		{
 			setActionName(inValue);
 			return;
 		}
-		if (fieldProperties == null) {
+		if (fieldProperties == null)
+		{
 			fieldProperties = new XMLConfiguration("action");
 			fieldProperties.setAttribute("name", getActionName());
 		}
 		Configuration child = fieldProperties.getChild(inKey);
-		if (child != null) {
+		if (child != null)
+		{
 			fieldProperties.removeChild(child);
 		}
 		fieldProperties.addChild(inKey).setValue(inValue);
 	}
 
 	@Override
-	public void setProperty(String inKey, String inValue) {
+	public void setProperty(String inKey, String inValue)
+	{
 		// TODO Auto-generated method stub
 		addProperty(inKey, inValue);
 	}
 
-	public Configuration getConfig() {
+	public Configuration getConfig()
+	{
 		return fieldProperties;
 	}
 
-	public String getProperty(String inKey) {
-		if (fieldProperties == null) {
+	public String getProperty(String inKey)
+	{
+		if (fieldProperties == null)
+		{
 			return null;
 		}
 		return (String) getConfig().getChildValue(inKey);
 	}
 
-	public String get(String inType) {
+	public String get(String inType)
+	{
 		// TODO Auto-generated method stub
 		return getProperty(inType);
 	}
 
-	public void setConfiguration(Configuration inConfig) {
+	public void setConfiguration(Configuration inConfig)
+	{
 		fieldProperties = inConfig;
 
 	}
 
-	public String toString() {
+	public String toString()
+	{
 		return "Action: " + getActionName();
 	}
 

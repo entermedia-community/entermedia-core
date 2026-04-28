@@ -22,17 +22,21 @@ import org.openedit.repository.filesystem.StringItem;
  * @author cburkey
  *
  */
-public class ConfigModule extends BaseEditorModule {
+public class ConfigModule extends BaseEditorModule
+{
 	private static final Log log = LogFactory.getLog(ConfigModule.class);
 
-	public void saveProperties(WebPageRequest inReq) throws OpenEditException {
+	public void saveProperties(WebPageRequest inReq) throws OpenEditException
+	{
 		ConfigEditorSession session = readConfig(inReq);
 		PageSettings settings = session.getEditPage().getPageSettings();
 
 		// Add the user home
 		String[] fields = inReq.getRequestParameters("field");
-		if (fields != null) {
-			for (int i = 0; i < fields.length; i++) {
+		if (fields != null)
+		{
+			for (int i = 0; i < fields.length; i++)
+			{
 				String value = inReq.getRequestParameter(fields[i] + ".value");
 				settings.setProperty(fields[i], value);
 			}
@@ -40,11 +44,14 @@ public class ConfigModule extends BaseEditorModule {
 		getPageManager().saveSettings(session.getEditPage());
 	}
 
-	public ConfigEditorSession readConfig(WebPageRequest inReq) throws OpenEditException {
-		try {
+	public ConfigEditorSession readConfig(WebPageRequest inReq) throws OpenEditException
+	{
+		try
+		{
 			// The GUI needs to send us in the path to the xconf file somehow
 			String path = inReq.getRequestParameter("editPath");
-			if (path == null) {
+			if (path == null)
+			{
 				return null;
 			}
 			Page webPage = getPageManager().getPage(path);
@@ -55,19 +62,24 @@ public class ConfigModule extends BaseEditorModule {
 			XconfConfiguration config = new XconfConfiguration();
 			// find the correct xconf for this type
 			ConfigEditorSession session = (ConfigEditorSession) inReq.getPageValue("configeditsession");
-			if (session == null) {
+			if (session == null)
+			{
 				session = new ConfigEditorSession();
 			}
 			session.setEditPage(editPage);
 			PageSettings settings = editPage.getPageSettings();
 
-			if (settings.exists()) {
+			if (settings.exists())
+			{
 				config.readXML(settings.getReader());
-			} else {
+			}
+			else
+			{
 				config.setName("page");
 			}
 			String windowname = inReq.getRequestParameter("parentName");
-			if (windowname == null && session != null && session.getEditPath() == editPath) {
+			if (windowname == null && session != null && session.getEditPath() == editPath)
+			{
 				// reload the data and return
 				session.setConfig(config);
 				return session;
@@ -83,17 +95,23 @@ public class ConfigModule extends BaseEditorModule {
 			inReq.putPageValue("configeditsession", session);
 
 			Translation trans = (Translation) inReq.getPageValue("translations");
-			if (trans != null) {
-				for (Iterator iter = config.getAllProperties().iterator(); iter.hasNext();) {
+			if (trans != null)
+			{
+				for (Iterator iter = config.getAllProperties().iterator(); iter.hasNext();)
+				{
 					String id = (String) iter.next();
 					Configuration propconfig = config.getProperty(id);
-					if (propconfig != null) {
-						for (Iterator iterator = propconfig.getChildIterator("value"); iterator.hasNext();) {
+					if (propconfig != null)
+					{
+						for (Iterator iterator = propconfig.getChildIterator("value"); iterator.hasNext();)
+						{
 							Configuration val = (Configuration) iterator.next();
 							String local = val.getAttribute("locale");
-							if (local != null) {
+							if (local != null)
+							{
 								Language lang = trans.getLanguage(local);
-								if (lang == null) {
+								if (lang == null)
+								{
 									lang = new Language();
 									lang.setName(local);
 									lang.setId(local);
@@ -105,12 +123,15 @@ public class ConfigModule extends BaseEditorModule {
 				}
 			}
 			return session;
-		} catch (Throwable ex) {
+		}
+		catch (Throwable ex)
+		{
 			throw new OpenEditException(ex);
 		}
 	}
 
-	public void saveConfigChanges(WebPageRequest inReq) throws Exception {
+	public void saveConfigChanges(WebPageRequest inReq) throws Exception
+	{
 		// they already selected the Xconf from a menu
 		ConfigEditorSession session = readConfig(inReq);
 
@@ -122,14 +143,16 @@ public class ConfigModule extends BaseEditorModule {
 
 		// If there was no config there before and its still empty then dont bother
 		// saving a new config
-		if (config.isEmpty()) {
+		if (config.isEmpty())
+		{
 			// delete it
 			getPageManager().removePage(session.getEditPage()); // delete xconf
-		} else {
+		}
+		else
+		{
 
 			String xml = config.toXml(session.getEditPage().getCharacterEncoding());
-			StringItem content = new StringItem(
-					session.getEditPath(), xml, session.getEditPage().getCharacterEncoding());
+			StringItem content = new StringItem(session.getEditPath(), xml, session.getEditPage().getCharacterEncoding());
 			content.setAuthor(inReq.getUser().getUserName());
 			content.setMessage("Edited settings");
 			Page site = getPageManager().getPage(session.getEditPath());

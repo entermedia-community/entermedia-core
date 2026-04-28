@@ -14,7 +14,8 @@ import org.openedit.hittracker.SearchQuery;
 import org.openedit.profile.UserProfile;
 import org.openedit.users.User;
 
-public interface Searcher extends CatalogEnabled {
+public interface Searcher extends CatalogEnabled
+{
 
 	public String nextId();
 
@@ -46,14 +47,9 @@ public interface Searcher extends CatalogEnabled {
 	public QueryBuilder query();
 
 	/**
-	 * Use this to automatically filter a search with the .xconf that declares the
-	 * action.
-	 * Example:
-	 * <page-action name="OrderModule.getOrdersForUser">
-	 * <not>
-	 * <orderstatus>completed</orderstatus>
-	 * </not>
-	 * </page-action>
+	 * Use this to automatically filter a search with the .xconf that declares the action. Example:
+	 * <page-action name="OrderModule.getOrdersForUser"> <not> <orderstatus>completed</orderstatus>
+	 * </not> </page-action>
 	 * 
 	 * @param inReq
 	 * @param search

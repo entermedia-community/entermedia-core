@@ -3,22 +3,27 @@ package org.openedit.hittracker;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PaginatedIdHitTracker extends ListHitTracker {
+public class PaginatedIdHitTracker extends ListHitTracker
+{
 	public PaginatedIdHitTracker() {
 		fieldPage = -1;
 	}
 
 	@Override
-	public boolean hasChanged(HitTracker inTracker) {
+	public boolean hasChanged(HitTracker inTracker)
+	{
 		return false;
 	}
 
 	@Override
-	public void setPage(int inPageOneBased) {
-		if (inPageOneBased == -1) {
+	public void setPage(int inPageOneBased)
+	{
+		if (inPageOneBased == -1)
+		{
 			return;
 		}
-		if (fieldPage != inPageOneBased) {
+		if (fieldPage != inPageOneBased)
+		{
 			fieldCurrentPage = null;
 			fieldPage = inPageOneBased;
 
@@ -32,14 +37,14 @@ public class PaginatedIdHitTracker extends ListHitTracker {
 
 			String sort = getSearchQuery().getSortBy();
 
-			HitTracker assets = getSearcher().getSearcherManager().getSearcher(getSearcher().getCatalogId(), "asset")
-					.query().ids(page).hitsPerPage(inHitsPerPage).sort(sort).search();
+			HitTracker assets = getSearcher().getSearcherManager().getSearcher(getSearcher().getCatalogId(), "asset").query().ids(page).hitsPerPage(inHitsPerPage).sort(sort).search();
 			fieldCurrentPage = assets.getPageOfHits();
 
 		}
 	}
 
-	public List getPageOfHits() {
+	public List getPageOfHits()
+	{
 		setPage(1); // ?
 		return fieldCurrentPage;
 	}

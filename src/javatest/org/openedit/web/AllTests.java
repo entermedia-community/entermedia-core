@@ -13,17 +13,17 @@ public class AllTests
 {
 
 	/**
-	 *  
+	 * 
 	 *
-	 * @return  
+	 * @return
 	 */
 	public static Test suite()
 	{
 		TestSuite suite = new TestSuite("Test for org.openedit.web");
 
-		//$JUnit-BEGIN$
+		// $JUnit-BEGIN$
 		suite.addTest(new TestSuite(BrowserTest.class));
-		//$JUnit-END$
+		// $JUnit-END$
 		return suite;
 	}
 }

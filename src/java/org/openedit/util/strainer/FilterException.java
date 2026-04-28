@@ -7,7 +7,8 @@ import org.openedit.OpenEditRuntimeException;
  * 
  * @author Eric Galluzzo
  */
-public class FilterException extends OpenEditRuntimeException {
+public class FilterException extends OpenEditRuntimeException
+{
 	public FilterException() {
 		super();
 	}

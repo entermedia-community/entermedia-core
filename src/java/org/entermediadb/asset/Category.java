@@ -5,7 +5,8 @@ import java.util.List;
 
 import org.openedit.MultiValued;
 
-public interface Category extends MultiValued, Comparable {
+public interface Category extends MultiValued, Comparable
+{
 
 	String getIndexId();
 
@@ -37,8 +38,7 @@ public interface Category extends MultiValued, Comparable {
 	public List<Category> getDescendants();
 
 	/**
-	 * @param children
-	 *                 The children to set.
+	 * @param children The children to set.
 	 */
 	void setChildren(List inChildren);
 
@@ -68,13 +68,11 @@ public interface Category extends MultiValued, Comparable {
 	void setParentCategory(Category parentCatalog);
 
 	/**
-	 * Returns a list of all the ancestors of this catalog, starting at the
-	 * catalog at the given level and ending at this catalog itself.
+	 * Returns a list of all the ancestors of this catalog, starting at the catalog at the given level
+	 * and ending at this catalog itself.
 	 * 
-	 * @param inStartLevel
-	 *                     The level at which to start listing ancestors (0 is the
-	 *                     root,
-	 *                     1 is the first-level children, etc.)
+	 * @param inStartLevel The level at which to start listing ancestors (0 is the root, 1 is the
+	 *        first-level children, etc.)
 	 * 
 	 * @return The list of ancestors of this catalog
 	 */

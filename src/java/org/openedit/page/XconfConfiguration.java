@@ -23,29 +23,35 @@ import org.openedit.util.XmlUtil;
 /**
  * @author Matthew Avery, mavery@einnovation.com
  */
-public class XconfConfiguration extends XMLConfiguration {
+public class XconfConfiguration extends XMLConfiguration
+{
 
 	public XconfConfiguration() {
 
 	}
 
-	public String getViewRequirementsXml() {
+	public String getViewRequirementsXml()
+	{
 		XMLConfiguration conf = (XMLConfiguration) getViewRequirements();
-		if (conf == null) {
+		if (conf == null)
+		{
 			return null;
 		}
 		return asInnerXml("view-requirements");
 	}
 
-	public String getEditRequirementsXml() {
+	public String getEditRequirementsXml()
+	{
 		XMLConfiguration conf = (XMLConfiguration) getEditRequirements();
-		if (conf == null) {
+		if (conf == null)
+		{
 			return null;
 		}
 		return asInnerXml("edit-requirements");
 	}
 
-	private String asInnerXml(String inName) {
+	private String asInnerXml(String inName)
+	{
 		Element root = DocumentHelper.createElement(inName);
 		XMLConfiguration conf = (XMLConfiguration) getChild(inName);
 		conf.appendXml(conf, root);
@@ -53,9 +59,12 @@ public class XconfConfiguration extends XMLConfiguration {
 		OutputFormat format = OutputFormat.createPrettyPrint();
 		format.setEncoding("UTF-8");
 		XMLWriter out = new XMLWriter(text, format);
-		try {
+		try
+		{
 			out.write((Element) root.elementIterator().next());
-		} catch (IOException ex) {
+		}
+		catch (IOException ex)
+		{
 			throw new OpenEditRuntimeException(ex);
 		}
 		String xml = text.toString();
@@ -63,11 +72,13 @@ public class XconfConfiguration extends XMLConfiguration {
 
 	}
 
-	public Configuration getViewRequirements() {
+	public Configuration getViewRequirements()
+	{
 		return getChild("view-requirements");
 	}
 
-	public Configuration getEditRequirements() {
+	public Configuration getEditRequirements()
+	{
 		return getChild("edit-requirements");
 	}
 
@@ -75,44 +86,54 @@ public class XconfConfiguration extends XMLConfiguration {
 	// {
 	// return getChildValue( "contentfile" );
 	// }
-	public String getOverrideDirectory() {
+	public String getOverrideDirectory()
+	{
 		return getChildValue("overridedirectory");
 	}
 
-	public List getGenerators() {
+	public List getGenerators()
+	{
 		return getChildren("generator");
 	}
 
-	public Configuration getLayout() {
+	public Configuration getLayout()
+	{
 		return getChild("layout");
 	}
 
-	public Configuration getInnerLayout() {
+	public Configuration getInnerLayout()
+	{
 		return getChild("inner-layout");
 	}
 
-	public Configuration getProperty(String inId) {
+	public Configuration getProperty(String inId)
+	{
 		Configuration config = selectSingleNode("//property[@name='" + inId + "']");
 		return config;
 	}
 
-	public List getProperties() {
+	public List getProperties()
+	{
 		return getChildren("property");
 	}
 
-	public List getPageActions() {
+	public List getPageActions()
+	{
 		return getChildren("page-action");
 	}
 
-	public List getPathActions() {
+	public List getPathActions()
+	{
 		return getChildren("path-action");
 	}
 
-	public List getScripts() {
+	public List getScripts()
+	{
 		return getChildren("script");
 	}
 
-	public List getStyles() {
+	public List getStyles()
+	{
 		return getChildren("style");
 	}
 
@@ -124,22 +145,27 @@ public class XconfConfiguration extends XMLConfiguration {
 	protected Configuration fieldConfig;
 	protected List fieldStandardSettings;
 
-	public void setConfig(Configuration inConfig) {
+	public void setConfig(Configuration inConfig)
+	{
 		fieldConfig = inConfig;
 	}
 
-	public String get(String inKey) {
+	public String get(String inKey)
+	{
 		Configuration child = getChild(inKey);
-		if (child != null) {
+		if (child != null)
+		{
 			return child.getValue();
 		}
 		return null;
 	}
 
-	public String getGeneratorChildValue(String inChildName) {
+	public String getGeneratorChildValue(String inChildName)
+	{
 		// find this generator and get the name out
 		Configuration prop = selectSingleNode("//generator/" + inChildName);
-		if (prop != null) {
+		if (prop != null)
+		{
 			return prop.getValue();
 		}
 		return null;
@@ -153,25 +179,33 @@ public class XconfConfiguration extends XMLConfiguration {
 	// }
 	// return false;
 	// }
-	public boolean checkedText(String inName, String inText) {
-		for (Iterator iter = getChildIterator(inName); iter.hasNext();) {
+	public boolean checkedText(String inName, String inText)
+	{
+		for (Iterator iter = getChildIterator(inName); iter.hasNext();)
+		{
 			Configuration element = (Configuration) iter.next();
-			if (inText.equalsIgnoreCase(element.getValue())) {
+			if (inText.equalsIgnoreCase(element.getValue()))
+			{
 				return true;
 			}
 		}
 		return false;
 	}
 
-	public String propertyValue(String inKey) {
+	public String propertyValue(String inKey)
+	{
 		String val = null;
-		for (Iterator iter = getChildIterator("property"); iter.hasNext();) {
+		for (Iterator iter = getChildIterator("property"); iter.hasNext();)
+		{
 			Configuration element = (Configuration) iter.next();
-			if (inKey.equalsIgnoreCase(element.getAttribute("name"))) {
+			if (inKey.equalsIgnoreCase(element.getAttribute("name")))
+			{
 				val = element.getValue();
-				if (val == null) {
+				if (val == null)
+				{
 					// This is used for non languages based look ups
-					for (Iterator iterator = element.getChildIterator("value"); iterator.hasNext();) {
+					for (Iterator iterator = element.getChildIterator("value"); iterator.hasNext();)
+					{
 						Configuration valconf = (Configuration) iterator.next();
 						val = valconf.getValue();
 						break;
@@ -183,48 +217,56 @@ public class XconfConfiguration extends XMLConfiguration {
 
 	}
 
-	public boolean isTrueProperty(String inKey) {
+	public boolean isTrueProperty(String inKey)
+	{
 		String value = propertyValue(inKey);
-		if (value != null) {
+		if (value != null)
+		{
 			return value.equalsIgnoreCase("true");
 		}
 		return false;
 	}
 
-	public boolean isEmptyProperty(String inKey) {
+	public boolean isEmptyProperty(String inKey)
+	{
 		String value = propertyValue(inKey);
-		if (value != null) {
+		if (value != null)
+		{
 			return false;
 		}
 		return true;
 	}
 
-	public boolean isFalseProperty(String inKey) {
+	public boolean isFalseProperty(String inKey)
+	{
 		String value = propertyValue(inKey);
-		if (value != null) {
+		if (value != null)
+		{
 			return value.equalsIgnoreCase("false");
 		}
 		return false;
 	}
 
-	public boolean isBlankLayout() {
+	public boolean isBlankLayout()
+	{
 		Configuration layout = getChild("layout");
-		if (layout != null) {
-			if (layout.getValue() == null ||
-					layout.getValue().length() == 0 ||
-					Page.BLANK_LAYOUT.equals(layout.getValue())) {
+		if (layout != null)
+		{
+			if (layout.getValue() == null || layout.getValue().length() == 0 || Page.BLANK_LAYOUT.equals(layout.getValue()))
+			{
 				return true;
 			}
 		}
 		return false;
 	}
 
-	public boolean isBlankInnerLayout() {
+	public boolean isBlankInnerLayout()
+	{
 		Configuration layout = getChild("inner-layout");
-		if (layout != null) {
-			if (layout.getValue() == null ||
-					layout.getValue().length() == 0 ||
-					Page.BLANK_LAYOUT.equals(layout.getValue())) {
+		if (layout != null)
+		{
+			if (layout.getValue() == null || layout.getValue().length() == 0 || Page.BLANK_LAYOUT.equals(layout.getValue()))
+			{
 				return true;
 			}
 		}
@@ -236,22 +278,28 @@ public class XconfConfiguration extends XMLConfiguration {
 	 * 
 	 * @return An XML fragment
 	 */
-	public String listPageActions() {
+	public String listPageActions()
+	{
 		return outerXml("page-action");
 	}
 
-	public List getAllProperties() {
+	public List getAllProperties()
+	{
 		List props = new ArrayList();
-		for (Iterator iter = getChildIterator("property"); iter.hasNext();) {
+		for (Iterator iter = getChildIterator("property"); iter.hasNext();)
+		{
 			Configuration element = (Configuration) iter.next();
 			props.add(element.getAttribute("name"));
 		}
 		props.remove("title");
 		props.remove("keywords");
 		props.remove("description");
-		if (props.size() > 0) {
+		if (props.size() > 0)
+		{
 			props.add(0, "description");
-		} else {
+		}
+		else
+		{
 			props.add("description");
 		}
 		props.add(0, "keywords");
@@ -259,11 +307,14 @@ public class XconfConfiguration extends XMLConfiguration {
 		return props;
 	}
 
-	public List getUserProperties() {
+	public List getUserProperties()
+	{
 		List props = new ArrayList();
-		for (Iterator iter = getAllProperties().iterator(); iter.hasNext();) {
+		for (Iterator iter = getAllProperties().iterator(); iter.hasNext();)
+		{
 			String name = (String) iter.next();
-			if (!getStandardSettings().contains(name)) {
+			if (!getStandardSettings().contains(name))
+			{
 				props.add(name);
 			}
 
@@ -276,10 +327,12 @@ public class XconfConfiguration extends XMLConfiguration {
 	 * 
 	 * @param name
 	 */
-	public void removeProperty(String name) {
+	public void removeProperty(String name)
+	{
 		// TODO how do we get the attribute out of here with XPATH
 		Configuration prop = (Configuration) selectSingleNode("//property[@name='" + name + "']");
-		if (prop != null) {
+		if (prop != null)
+		{
 			prop.getParent().removeChild(prop);
 		}
 	}
@@ -290,20 +343,27 @@ public class XconfConfiguration extends XMLConfiguration {
 	 * @param name
 	 * @param value
 	 */
-	public void saveProperty(String name, String value, String inLocale) {
+	public void saveProperty(String name, String value, String inLocale)
+	{
 		// If its already here just update it. Otherwise add it
 		// if value is null remove property altogether
-		if (value == null || value.length() == 0) {
+		if (value == null || value.length() == 0)
+		{
 			removeProperty(name);
-		} else {
+		}
+		else
+		{
 			Configuration prop = (Configuration) selectSingleNode("//property[@name='" + name + "']");
-			if (inLocale != null && inLocale.length() == 0) {
+			if (inLocale != null && inLocale.length() == 0)
+			{
 				inLocale = null;
 			}
-			if (prop == null) {
+			if (prop == null)
+			{
 				prop = addChild("property");
 				prop.setAttribute("name", name);
-				if (inLocale == null) {
+				if (inLocale == null)
+				{
 					prop.setValue(value);
 					return;
 				}
@@ -311,27 +371,32 @@ public class XconfConfiguration extends XMLConfiguration {
 			boolean existing = false;
 			String defaultval = prop.getValue();
 			// clear default prop
-			if (defaultval != null) {
+			if (defaultval != null)
+			{
 				Configuration inline = prop.addChild("value");
 				inline.setValue(defaultval);
 				prop.setValue(null);
 			}
 
-			for (Iterator iter = prop.getChildIterator("value"); iter.hasNext();) {
+			for (Iterator iter = prop.getChildIterator("value"); iter.hasNext();)
+			{
 				Configuration valueconfig = (Configuration) iter.next();
 				String vlocale = valueconfig.getAttribute("locale");
-				if (inLocale == null && vlocale == null) {
+				if (inLocale == null && vlocale == null)
+				{
 					valueconfig.setValue(value);
 					existing = true;
 					break;
 				}
-				if (vlocale != null && vlocale.equals(inLocale)) {
+				if (vlocale != null && vlocale.equals(inLocale))
+				{
 					valueconfig.setValue(value);
 					existing = true;
 					break;
 				}
 			}
-			if (!existing) {
+			if (!existing)
+			{
 				// add new
 				Configuration valueconf = prop.addChild("value");
 				valueconf.setAttribute("locale", inLocale);
@@ -344,34 +409,44 @@ public class XconfConfiguration extends XMLConfiguration {
 	 * @param xpath
 	 * @return
 	 */
-	private Configuration selectSingleNode(String xpath) {
-		if (xpath == null) {
+	private Configuration selectSingleNode(String xpath)
+	{
+		if (xpath == null)
+		{
 			return null;
 		}
 		// property[@name='" + name + "']
 		// TODO: Implement this soon
-		if (xpath.indexOf('[') == -1) {
+		if (xpath.indexOf('[') == -1)
+		{
 			// generator/stylesheet
 			// then this must be a simple look up
 			String[] path = xpath.split("\\/");
 			Configuration parent = this; // TODO: go to root level
-			for (int i = 0; i < path.length; i++) {
-				if (path[i].trim().length() == 0) {
+			for (int i = 0; i < path.length; i++)
+			{
+				if (path[i].trim().length() == 0)
+				{
 					continue;
 				}
 				Configuration child = parent.getChild(path[i]);
-				if (child == null) {
+				if (child == null)
+				{
 					return parent;
 				}
 				parent = child;
 			}
-		} else {
+		}
+		else
+		{
 			String child = xpath.substring(2, xpath.indexOf('['));
 			String attrib = xpath.substring(xpath.indexOf('@') + 1, xpath.indexOf('='));
 			String value = xpath.substring(xpath.indexOf('\'') + 1, xpath.lastIndexOf('\''));
-			for (Iterator iter = getChildren(child).iterator(); iter.hasNext();) {
+			for (Iterator iter = getChildren(child).iterator(); iter.hasNext();)
+			{
 				Configuration element = (Configuration) iter.next();
-				if (value.equals(element.getAttribute(attrib))) {
+				if (value.equals(element.getAttribute(attrib)))
+				{
 					return element;
 				}
 			}
@@ -379,31 +454,44 @@ public class XconfConfiguration extends XMLConfiguration {
 		return null;
 	}
 
-	public boolean isMissing(String inConfiguration) {
+	public boolean isMissing(String inConfiguration)
+	{
 		Configuration elem = getChild(inConfiguration);
-		if (elem == null) {
+		if (elem == null)
+		{
 			return true;
-		} else {
+		}
+		else
+		{
 			return false;
 		}
 	}
 
-	public void saveConfiguration(String inName, String inText) {
+	public void saveConfiguration(String inName, String inText)
+	{
 
-		if (inText != null && inText.trim().length() == 0) {
+		if (inText != null && inText.trim().length() == 0)
+		{
 			inText = null;
 		}
 
 		Configuration prop = getChild(inName);
-		if (prop != null) {
-			if (inText != null) {
+		if (prop != null)
+		{
+			if (inText != null)
+			{
 				prop.setValue(inText);
-			} else {
+			}
+			else
+			{
 				removeChild(prop);
 			}
-		} else if (inText != null) {
-			addChild(inName).setValue(inText);
 		}
+		else
+			if (inText != null)
+			{
+				addChild(inName).setValue(inText);
+			}
 	}
 
 	/**
@@ -411,28 +499,35 @@ public class XconfConfiguration extends XMLConfiguration {
 	 * 
 	 * @param string
 	 */
-	public void removeConfigurations(String inName) {
-		for (Iterator iter = getChildren(inName).iterator(); iter.hasNext();) {
+	public void removeConfigurations(String inName)
+	{
+		for (Iterator iter = getChildren(inName).iterator(); iter.hasNext();)
+		{
 			Configuration elem = (Configuration) iter.next();
 			elem.getParent().removeChild(elem);
 		}
 	}
 
-	protected String outerXml(String inField) {
+	protected String outerXml(String inField)
+	{
 		StringWriter wri = new StringWriter();
-		for (Iterator iter = getChildIterator(inField); iter.hasNext();) {
+		for (Iterator iter = getChildIterator(inField); iter.hasNext();)
+		{
 			XMLConfiguration read = (XMLConfiguration) iter.next();
 			wri.write(read.toXml("UTF-8"));
 		}
 		return wri.toString();
 	}
 
-	protected String innerXml(String inField) {
+	protected String innerXml(String inField)
+	{
 		Configuration read = getChild(inField);
-		if (read != null) {
+		if (read != null)
+		{
 			StringWriter wri = new StringWriter();
 
-			for (Iterator iter = read.getChildren().iterator(); iter.hasNext();) {
+			for (Iterator iter = read.getChildren().iterator(); iter.hasNext();)
+			{
 				XMLConfiguration child = (XMLConfiguration) iter.next();
 				wri.write(child.toXml("UTF-8"));
 			}
@@ -441,33 +536,42 @@ public class XconfConfiguration extends XMLConfiguration {
 		return null;
 	}
 
-	public String getWritePermissions() {
+	public String getWritePermissions()
+	{
 		return innerXml(WRITE_REQ);
 	}
 
 	/*
 	 * This allows someone to reset the value in XML
 	 */
-	public void setReadPermissions(String inXML) throws OpenEditException {
+	public void setReadPermissions(String inXML) throws OpenEditException
+	{
 		resetValueWithXml(VIEW_REQ, inXML);
 	}
 
-	protected void resetValueWithXml(String inField, String inXML) throws OpenEditException {
-		try {
+	protected void resetValueWithXml(String inField, String inXML) throws OpenEditException
+	{
+		try
+		{
 			Configuration read = getChild(inField);
-			if (read != null) {
+			if (read != null)
+			{
 				removeChild(read);
 			}
 			//
-			if (inXML != null && inXML.length() > 0) {
+			if (inXML != null && inXML.length() > 0)
+			{
 				appendXml("<" + inField + ">\n" + inXML + "\n</" + inField + ">");
 			}
-		} catch (Exception ex) {
+		}
+		catch (Exception ex)
+		{
 			throw new OpenEditException(ex);
 		}
 	}
 
-	public void setAllActions(String inXML) throws OpenEditException {
+	public void setAllActions(String inXML) throws OpenEditException
+	{
 		removeConfigurations("page-action");
 		appendXml(inXML);
 	}
@@ -475,15 +579,19 @@ public class XconfConfiguration extends XMLConfiguration {
 	/**
 	 * @param inFilename
 	 */
-	public void removeScriptAction(String inFilename) {
+	public void removeScriptAction(String inFilename)
+	{
 		// make sure its not already in there
-		for (Iterator iter = getChildIterator("page-action"); iter.hasNext();) {
+		for (Iterator iter = getChildIterator("page-action"); iter.hasNext();)
+		{
 			Configuration element = (Configuration) iter.next();
-			if ("Script.run".equals(element.getAttribute("name"))) {
-				for (Iterator iterator = element.getChildIterator("property"); iterator.hasNext();) {
+			if ("Script.run".equals(element.getAttribute("name")))
+			{
+				for (Iterator iterator = element.getChildIterator("property"); iterator.hasNext();)
+				{
 					Configuration prop = (Configuration) iterator.next();
-					if ("code".equals(prop.getAttribute("name"))
-							&& inFilename.equals(prop.getValue())) {
+					if ("code".equals(prop.getAttribute("name")) && inFilename.equals(prop.getValue()))
+					{
 						removeChild(element);
 					}
 				}
@@ -492,7 +600,8 @@ public class XconfConfiguration extends XMLConfiguration {
 
 	}
 
-	public void appendScriptAction(String inCode) throws OpenEditException {
+	public void appendScriptAction(String inCode) throws OpenEditException
+	{
 		removeScriptAction(inCode);
 		Configuration top = addChild("page-action");
 		top.setAttribute("name", "Script.run");
@@ -501,26 +610,30 @@ public class XconfConfiguration extends XMLConfiguration {
 		prop.setValue(inCode);
 	}
 
-	protected void appendXml(String inXML) throws OpenEditException {
-		if (inXML != null && inXML.length() > 0) {
+	protected void appendXml(String inXML) throws OpenEditException
+	{
+		if (inXML != null && inXML.length() > 0)
+		{
 			StringReader in = new StringReader("<tmp>" + inXML + "</tmp>");
 			XMLConfiguration tmpconfig = new XMLConfiguration();
 			Element child = new XmlUtil().getXml(in, "UTF-8");
 			tmpconfig.populate(child);
-			for (Iterator iter = tmpconfig.getChildren().iterator(); iter.hasNext();) {
+			for (Iterator iter = tmpconfig.getChildren().iterator(); iter.hasNext();)
+			{
 				Configuration element = (Configuration) iter.next();
 				addChild(element);
 			}
 		}
 	}
 
-	public void setWritePermissions(String inXML) throws OpenEditException {
+	public void setWritePermissions(String inXML) throws OpenEditException
+	{
 		resetValueWithXml(WRITE_REQ, inXML);
 	}
 
-	public boolean isEmpty() {
-		return getChildren() == null
-				|| getChildren().size() == 0;
+	public boolean isEmpty()
+	{
+		return getChildren() == null || getChildren().size() == 0;
 	}
 
 	//
@@ -532,13 +645,16 @@ public class XconfConfiguration extends XMLConfiguration {
 	/**
 	 * 
 	 */
-	public void removeAllProperties() {
+	public void removeAllProperties()
+	{
 		List props = new ArrayList();
-		for (Iterator iter = getChildIterator("property"); iter.hasNext();) {
+		for (Iterator iter = getChildIterator("property"); iter.hasNext();)
+		{
 			Configuration element = (Configuration) iter.next();
 			props.add(element);
 		}
-		for (Iterator iter = props.iterator(); iter.hasNext();) {
+		for (Iterator iter = props.iterator(); iter.hasNext();)
+		{
 			Configuration element = (Configuration) iter.next();
 			removeChild(element);
 
@@ -546,8 +662,10 @@ public class XconfConfiguration extends XMLConfiguration {
 
 	}
 
-	public List getStandardSettings() {
-		if (fieldStandardSettings == null) { // TODO: Move to external config
+	public List getStandardSettings()
+	{
+		if (fieldStandardSettings == null)
+		{ // TODO: Move to external config
 			fieldStandardSettings = new ArrayList();
 			// fieldStandardSettings.add("title");
 			// fieldStandardSettings.add("keywords");
@@ -564,22 +682,26 @@ public class XconfConfiguration extends XMLConfiguration {
 		return fieldStandardSettings;
 	}
 
-	public void setStandardSettings(List inStandardSettings) {
+	public void setStandardSettings(List inStandardSettings)
+	{
 		fieldStandardSettings = inStandardSettings;
 	}
 
 	/**
 	 * @param inString
 	 */
-	public void removeElements(String inString) {
+	public void removeElements(String inString)
+	{
 		Configuration config = getChild(inString);
-		while (config != null) {
+		while (config != null)
+		{
 			removeChild(config);
 			config = getChild(inString);
 		}
 	}
 
-	public List getPageLoaders() {
+	public List getPageLoaders()
+	{
 		return getChildren("page-loader");
 	}
 

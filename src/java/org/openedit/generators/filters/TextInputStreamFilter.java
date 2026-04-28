@@ -6,7 +6,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 
-public class TextInputStreamFilter extends InputStream {
+public class TextInputStreamFilter extends InputStream
+{
 	protected BufferedReader in;
 	String lastLine = null;
 	int lastLineIndex;
@@ -26,67 +27,85 @@ public class TextInputStreamFilter extends InputStream {
 		encoding = inEncoding;
 	}
 
-	public synchronized int read() throws IOException {
-		if (in == null) {
+	public synchronized int read() throws IOException
+	{
+		if (in == null)
+		{
 			throw new IOException("Stream Closed");
 		}
 
 		byte result;
-		if (slack != null && begin < slack.length) {
+		if (slack != null && begin < slack.length)
+		{
 			result = slack[begin];
-			if (++begin == slack.length) {
+			if (++begin == slack.length)
+			{
 				slack = null;
 			}
-		} else {
+		}
+		else
+		{
 			byte[] buf = new byte[1];
-			if (read(buf, 0, 1) <= 0) {
+			if (read(buf, 0, 1) <= 0)
+			{
 				result = -1;
 			}
 			result = buf[0];
 		}
 
-		if (result < -1) {
+		if (result < -1)
+		{
 			result += 256;
 		}
 
 		return result;
 	}
 
-	public synchronized int read(byte[] b, int off, int len) throws IOException {
-		if (in == null) {
+	public synchronized int read(byte[] b, int off, int len) throws IOException
+	{
+		if (in == null)
+		{
 			throw new IOException("Stream Closed");
 		}
 
-		while (slack == null) {
+		while (slack == null)
+		{
 			char[] buf = new char[len]; // might read too much
 			int n = readFromLine(buf);
-			if (n == -1) {
+			if (n == -1)
+			{
 				return -1;
 			}
-			if (n > 0) {
+			if (n > 0)
+			{
 				slack = new String(buf, 0, n).getBytes(encoding);
 				begin = 0;
 			}
 		}
 
-		if (len > slack.length - begin) {
+		if (len > slack.length - begin)
+		{
 			len = slack.length - begin;
 		}
 
 		System.arraycopy(slack, begin, b, off, len);
 
-		if ((begin += len) >= slack.length) {
+		if ((begin += len) >= slack.length)
+		{
 			slack = null;
 		}
 
 		return len;
 	}
 
-	public int readFromLine(char[] output) throws IOException {
-		if (lastLine == null) {
+	public int readFromLine(char[] output) throws IOException
+	{
+		if (lastLine == null)
+		{
 			lastLine = in.readLine();
 			lastLineIndex = 0;
-			if (lastLine == null) {
+			if (lastLine == null)
+			{
 				return -1;
 			}
 			StringBuffer buffer = replace(lastLine);
@@ -97,14 +116,16 @@ public class TextInputStreamFilter extends InputStream {
 		int size = Math.min(output.length, lastLineLength - lastLineIndex); // half the bytes?
 		lastLine.getChars(lastLineIndex, lastLineIndex + size, output, 0);
 		lastLineIndex = lastLineIndex + size;
-		if (lastLineIndex == lastLineLength) {
+		if (lastLineIndex == lastLineLength)
+		{
 			lastLine = null; // ran out of string
 		}
 		return size;
 		// take the char[] and copy into buffer
 	}
 
-	protected StringBuffer replace(String inLastLine) {
+	protected StringBuffer replace(String inLastLine)
+	{
 
 		return null;
 	}

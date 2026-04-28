@@ -16,7 +16,8 @@ import org.openedit.page.Page;
  * @author cburkey
  *
  */
-public class GeneratorWithMimeTypeFilter extends BaseGenerator {
+public class GeneratorWithMimeTypeFilter extends BaseGenerator
+{
 
 	protected Generator fieldGenerator;
 	protected List fieldMimeTypes;
@@ -27,34 +28,43 @@ public class GeneratorWithMimeTypeFilter extends BaseGenerator {
 		setMimeTypes(types);
 	}
 
-	public void generate(WebPageRequest inContext, Page inPage, Output inOut) throws OpenEditException {
+	public void generate(WebPageRequest inContext, Page inPage, Output inOut) throws OpenEditException
+	{
 		getGenerator().generate(inContext, inPage, inOut);
 	}
 
-	public Generator getGenerator() {
+	public Generator getGenerator()
+	{
 		return fieldGenerator;
 	}
 
-	public void setGenerator(Generator inGenerator) {
+	public void setGenerator(Generator inGenerator)
+	{
 		fieldGenerator = inGenerator;
 	}
 
-	public List getMimeTypes() {
+	public List getMimeTypes()
+	{
 		return fieldMimeTypes;
 	}
 
-	public void setMimeTypes(List inMimeTypes) {
+	public void setMimeTypes(List inMimeTypes)
+	{
 		fieldMimeTypes = inMimeTypes;
 	}
 
-	public boolean canGenerate(WebPageRequest inReq) {
-		if (inReq == null) {
+	public boolean canGenerate(WebPageRequest inReq)
+	{
+		if (inReq == null)
+		{
 			return false;
 		}
 		String compareTo = inReq.getPage().getMimeType();
-		for (Iterator iter = getMimeTypes().iterator(); iter.hasNext();) {
+		for (Iterator iter = getMimeTypes().iterator(); iter.hasNext();)
+		{
 			String mtype = (String) iter.next();
-			if (mtype.equalsIgnoreCase(compareTo)) {
+			if (mtype.equalsIgnoreCase(compareTo))
+			{
 				return true;
 			}
 

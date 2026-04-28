@@ -3,7 +3,8 @@ package org.openedit.users.filesystem;
 import java.util.Collections;
 import java.util.List;
 
-public class PermissionGroup {
+public class PermissionGroup
+{
 	protected String fieldName;
 	protected List fieldPermissions;
 
@@ -15,22 +16,27 @@ public class PermissionGroup {
 		setPermissions(inPermissions);
 	}
 
-	public String getName() {
+	public String getName()
+	{
 		return fieldName;
 	}
 
-	public void setName(String inName) {
+	public void setName(String inName)
+	{
 		fieldName = inName;
 	}
 
-	public List getPermissions() {
-		if (fieldPermissions == null) {
+	public List getPermissions()
+	{
+		if (fieldPermissions == null)
+		{
 			fieldPermissions = Collections.EMPTY_LIST;
 		}
 		return fieldPermissions;
 	}
 
-	public void setPermissions(List inPermissions) {
+	public void setPermissions(List inPermissions)
+	{
 		fieldPermissions = inPermissions;
 	}
 }

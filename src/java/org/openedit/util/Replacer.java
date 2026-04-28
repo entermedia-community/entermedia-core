@@ -14,32 +14,39 @@ import org.openedit.data.DataWithSearcher;
 import org.openedit.data.SearcherManager;
 import org.openedit.modules.translations.LanguageMap;
 
-public class Replacer implements CatalogEnabled {
+public class Replacer implements CatalogEnabled
+{
 	protected SearcherManager fieldSearcherManager;
 	protected boolean fieldAlwaysReplace = true;
 	protected String fieldCatalogId;
 
-	public boolean isAlwaysReplace() {
+	public boolean isAlwaysReplace()
+	{
 		return fieldAlwaysReplace;
 	}
 
-	public void setAlwaysReplace(boolean inAlwaysReplace) {
+	public void setAlwaysReplace(boolean inAlwaysReplace)
+	{
 		fieldAlwaysReplace = inAlwaysReplace;
 	}
 
-	public SearcherManager getSearcherManager() {
+	public SearcherManager getSearcherManager()
+	{
 		return fieldSearcherManager;
 	}
 
-	public void setSearcherManager(SearcherManager inSearcherManager) {
+	public void setSearcherManager(SearcherManager inSearcherManager)
+	{
 		fieldSearcherManager = inSearcherManager;
 	}
 
-	public String getCatalogId() {
+	public String getCatalogId()
+	{
 		return fieldCatalogId;
 	}
 
-	public void setCatalogId(String inDefaultCatalogId) {
+	public void setCatalogId(String inDefaultCatalogId)
+	{
 		fieldCatalogId = inDefaultCatalogId;
 	}
 
@@ -50,44 +57,51 @@ public class Replacer implements CatalogEnabled {
 	 * @return
 	 */
 
-	public String replace(String inCode, Data inValues) {
+	public String replace(String inCode, Data inValues)
+	{
 		Map<?, ?> props = inValues.getProperties();
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("id", inValues.getId());
 		map.put("name", inValues.getName());
 		map.put("sourcepath", inValues.getSourcePath());
-		for (Iterator itr = props.keySet().iterator(); itr.hasNext();) {
+		for (Iterator itr = props.keySet().iterator(); itr.hasNext();)
+		{
 			String key = itr.next().toString();
 			map.put(key, props.get(key));
 		}
 		return replace(inCode, map);
 	}
 
-	public String replace(String inCode, Map<String, Object> inValues) {
+	public String replace(String inCode, Map<String, Object> inValues)
+	{
 
 		String done = replace(inCode, inValues, "en");
 		return done;
 	}
 
 	/**
-	 * ${localfield:listid.field} Use this format if your local field maps to a
-	 * different table
+	 * ${localfield:listid.field} Use this format if your local field maps to a different table
 	 * 
 	 * @param inCode
 	 * @param inValues
 	 * @return
 	 */
-	public String replace(String inCode, Map<String, Object> inValues, String inLocale) {
-		if (inCode == null) {
+	public String replace(String inCode, Map<String, Object> inValues, String inLocale)
+	{
+		if (inCode == null)
+		{
 			return inCode;
 		}
-		if (inValues == null) {
+		if (inValues == null)
+		{
 			return inCode;
 		}
 		int start = 0;
-		while ((start = inCode.indexOf("${", start)) != -1) {
+		while ((start = inCode.indexOf("${", start)) != -1)
+		{
 			int end = inCode.indexOf("}", start);
-			if (end == -1) {
+			if (end == -1)
+			{
 				break;
 			}
 
@@ -95,95 +109,131 @@ public class Replacer implements CatalogEnabled {
 			Object currentvalue = null;
 			ArrayList<String> values = findKeys(key, "||");
 
-			for (String mask : values) {
+			for (String mask : values)
+			{
 				String[] pairs = mask.split("\\.");
 				currentvalue = inValues.get(pairs[0]); // check for property
-				for (int i = 1; i < pairs.length; i++) {
+				for (int i = 1; i < pairs.length; i++)
+				{
 					String nextpart = pairs[i];
-					if (currentvalue instanceof Collection) {
+					if (currentvalue instanceof Collection)
+					{
 						Collection col = (Collection) currentvalue;
-						if (!col.isEmpty()) {
+						if (!col.isEmpty())
+						{
 							currentvalue = col.iterator().next();
 						}
 					}
-					if (currentvalue instanceof Date) {
+					if (currentvalue instanceof Date)
+					{
 						Date date = (Date) currentvalue;
 						String format = "yyyy-MM-dd"; // TODO: Use locale format?
-						if (pairs.length > i) {
+						if (pairs.length > i)
+						{
 							// grab the hour?
 							format = nextpart;
 						}
 
 						currentvalue = DateStorageUtil.getStorageUtil().formatDateObj(date, format);
 						break;
-					} else if (currentvalue instanceof Data) {
-						Data smartdata = (Data) currentvalue;
-						currentvalue = smartdata.getValue(nextpart);
-					} else if (currentvalue instanceof DataWithSearcher) {
-						DataWithSearcher smartdata = (DataWithSearcher) currentvalue;
-						currentvalue = smartdata.getChildValue(nextpart);
-					} else if (currentvalue instanceof String) {
 					}
-					if (currentvalue == null) {
+					else
+						if (currentvalue instanceof Data)
+						{
+							Data smartdata = (Data) currentvalue;
+							currentvalue = smartdata.getValue(nextpart);
+						}
+						else
+							if (currentvalue instanceof DataWithSearcher)
+							{
+								DataWithSearcher smartdata = (DataWithSearcher) currentvalue;
+								currentvalue = smartdata.getChildValue(nextpart);
+							}
+							else
+								if (currentvalue instanceof String)
+								{
+								}
+					if (currentvalue == null)
+					{
 						break;
 					}
 				}
-				if (currentvalue != null) {
+				if (currentvalue != null)
+				{
 					break;
 				}
 			}
 
-			if (isAlwaysReplace() && currentvalue == null) {
+			if (isAlwaysReplace() && currentvalue == null)
+			{
 				currentvalue = "";
 			}
 
-			if (currentvalue != null) {
+			if (currentvalue != null)
+			{
 				String sub = null;
 
-				if (currentvalue instanceof Date) {
+				if (currentvalue instanceof Date)
+				{
 					String format = "yyyy-MM-dd"; // TODO: Use locale format?
 					sub = DateStorageUtil.getStorageUtil().formatDateObj((Date) currentvalue, format);
-				} else if (currentvalue instanceof DataWithSearcher) {
-					DataWithSearcher data = (DataWithSearcher) currentvalue;
-					if (data.getData() != null) {
-						String text = data.getData().getName(inLocale);
-						// text = UrlU (text);
-						// $text.replaceAll("(\r\n|\n)", "<br />")
-						//
-						// String span = String.format("<span class='labelitem' data-searchtype='%str'
-						// data-id='%s'>" + text +
-						// "</span>",data.getData().getId(),data.getSearchType());
-						// sub = span;
-						sub = text;
-					}
-				} else if (currentvalue instanceof LanguageMap) {
-
-					sub = ((LanguageMap) currentvalue).getText(inLocale);
-				} else {
-					sub = currentvalue.toString();
 				}
-				if (sub != null) {
+				else
+					if (currentvalue instanceof DataWithSearcher)
+					{
+						DataWithSearcher data = (DataWithSearcher) currentvalue;
+						if (data.getData() != null)
+						{
+							String text = data.getData().getName(inLocale);
+							// text = UrlU (text);
+							// $text.replaceAll("(\r\n|\n)", "<br />")
+							//
+							// String span = String.format("<span class='labelitem' data-searchtype='%str'
+							// data-id='%s'>" + text +
+							// "</span>",data.getData().getId(),data.getSearchType());
+							// sub = span;
+							sub = text;
+						}
+					}
+					else
+						if (currentvalue instanceof LanguageMap)
+						{
+
+							sub = ((LanguageMap) currentvalue).getText(inLocale);
+						}
+						else
+						{
+							sub = currentvalue.toString();
+						}
+				if (sub != null)
+				{
 					inCode = inCode.substring(0, start) + sub + inCode.substring(end + 1);
 					start = start + sub.length();
 				}
-			} else {
+			}
+			else
+			{
 				start = end; // could not find a hit, go to the next one
 			}
 		}
 		return inCode;
 	}
 
-	protected ArrayList<String> findKeys(String Subject, String Delimiters) {
+	protected ArrayList<String> findKeys(String Subject, String Delimiters)
+	{
 		StringTokenizer tok = new StringTokenizer(Subject, Delimiters);
 		ArrayList<String> list = new ArrayList<String>(Subject.length());
-		while (tok.hasMoreTokens()) {
+		while (tok.hasMoreTokens())
+		{
 			list.add(tok.nextToken());
 		}
 		return list;
 	}
 
-	protected Data getData(String inType, String inId) {
-		if (fieldSearcherManager == null) {
+	protected Data getData(String inType, String inId)
+	{
+		if (fieldSearcherManager == null)
+		{
 			return null;
 		}
 		return getSearcherManager().getData(getCatalogId(), inType, inId);

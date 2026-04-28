@@ -1,19 +1,18 @@
 /*
  * Created on Jul 28, 2003
  *
-/*
-
-/*
-Copyright (c) 2003 eInnovation Inc. All rights reserved
-
-This library is free software; you can redistribute it and/or modify it under the terms
-of the GNU Lesser General Public License as published by the Free Software Foundation;
-either version 2.1 of the License, or (at your option) any later version.
-
-This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-See the GNU Lesser General Public License for more details.
-*/
+ * /*
+ * 
+ * /* Copyright (c) 2003 eInnovation Inc. All rights reserved
+ * 
+ * This library is free software; you can redistribute it and/or modify it under the terms of the
+ * GNU Lesser General Public License as published by the Free Software Foundation; either version
+ * 2.1 of the License, or (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ */
 package org.openedit;
 
 import java.io.OutputStream;
@@ -35,7 +34,8 @@ import org.openedit.users.User;
 /**
  * @author Matt Avery, mavery@einnovation.com
  */
-public interface WebPageRequest {
+public interface WebPageRequest
+{
 	HttpServletRequest getRequest();
 
 	HttpServletResponse getResponse();
@@ -49,11 +49,9 @@ public interface WebPageRequest {
 	HttpSession getSession();
 
 	/**
-	 * The redirect will send the browser to a new page
-	 * This looses any parameters to the original page
+	 * The redirect will send the browser to a new page This looses any parameters to the original page
 	 * 
-	 * @param inInUrl can begin with http or be a path /index.html you do not need
-	 *                $home in there
+	 * @param inInUrl can begin with http or be a path /index.html you do not need $home in there
 	 */
 	void redirect(String inUrl);
 
@@ -65,8 +63,7 @@ public interface WebPageRequest {
 	public void redirectPermanently(String inPath);
 
 	/**
-	 * This will simply render a new page instead of the page the user
-	 * was expecting
+	 * This will simply render a new page instead of the page the user was expecting
 	 * 
 	 * @param inInUrl should be a path such as /index.html
 	 */
@@ -98,9 +95,8 @@ public interface WebPageRequest {
 
 	/**
 	 * <p>
-	 * Add a protected page value to this page request. Protected values are
-	 * reserved for use by OpenEdit itself and should not be overriden in
-	 * general practice.
+	 * Add a protected page value to this page request. Protected values are reserved for use by
+	 * OpenEdit itself and should not be overriden in general practice.
 	 * </p>
 	 * 
 	 * @param inKey
@@ -170,8 +166,7 @@ public interface WebPageRequest {
 	Page getPage();
 
 	/**
-	 * Is the full path to the page you are on. This includes any arguments or
-	 * parameters
+	 * Is the full path to the page you are on. This includes any arguments or parameters
 	 * 
 	 * @return fullpath
 	 */
@@ -210,28 +205,19 @@ public interface WebPageRequest {
 	Page getContentPage();
 
 	/**
-	 * Determine whether this page can be edited by the given user. The page is
-	 * editable if:
+	 * Determine whether this page can be edited by the given user. The page is editable if:
 	 * 
 	 * <ul>
-	 * <li>
-	 * the page's repository is not read-only;
-	 * </li>
-	 * <li>
-	 * the "editable" property is not present or equal to "true"; and
-	 * </li>
-	 * <li>
-	 * the edit filter is not present or passes the given user.
-	 * </li>
+	 * <li>the page's repository is not read-only;</li>
+	 * <li>the "editable" property is not present or equal to "true"; and</li>
+	 * <li>the edit filter is not present or passes the given user.</li>
 	 * </ul>
 	 * 
 	 *
-	 * @param inUser    The user to query
+	 * @param inUser The user to query
 	 * @param inContext DOCME
 	 *
-	 * @return boolean <code>true</code> if the page is editable by the user,
-	 *         <code>false</code>
-	 *         if not
+	 * @return boolean <code>true</code> if the page is editable by the user, <code>false</code> if not
 	 *
 	 * @throws OpenEditException DOCME
 	 */

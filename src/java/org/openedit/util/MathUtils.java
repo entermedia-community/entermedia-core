@@ -11,21 +11,27 @@ import java.util.Random;
 
 import org.openedit.OpenEditException;
 
-public class MathUtils {
+public class MathUtils
+{
 
-	public BigDecimal getBigDecimal(String val) {
-		if (val == null || val.contains(".")) {
+	public BigDecimal getBigDecimal(String val)
+	{
+		if (val == null || val.contains("."))
+		{
 			return new BigDecimal(0);
 		}
 		return new BigDecimal(val);
 	}
 
-	public BigDecimal getBigDecimal(double val) {
+	public BigDecimal getBigDecimal(double val)
+	{
 		return new BigDecimal(val);
 	}
 
-	public float getPercentage(BigDecimal now, BigDecimal total) {
-		if (total.doubleValue() > 0) {
+	public float getPercentage(BigDecimal now, BigDecimal total)
+	{
+		if (total.doubleValue() > 0)
+		{
 			BigDecimal percentage = now.divide(total, 2, RoundingMode.HALF_UP);
 			return percentage.floatValue();
 		}
@@ -33,65 +39,80 @@ public class MathUtils {
 
 	}
 
-	public int getRandomValue(int inMax) {
+	public int getRandomValue(int inMax)
+	{
 		Random rand = new Random();
 		int n = rand.nextInt(inMax);
 		return n;
 	}
 
-	public double getModulus(int inNum1, int inNum2) {
+	public double getModulus(int inNum1, int inNum2)
+	{
 		Double d = (double) inNum1 % (double) inNum2;
 		return d;
 	}
 
-	public float getPercentage(int inSoFar, int inTotal) {
+	public float getPercentage(int inSoFar, int inTotal)
+	{
 		BigDecimal now = new BigDecimal(inSoFar);
 		BigDecimal total = new BigDecimal(inTotal);
 		return getPercentage(now, total);
 	}
 
-	public float getPercentage(String inSoFar, String inTotal) {
+	public float getPercentage(String inSoFar, String inTotal)
+	{
 		BigDecimal now = getBigDecimal(inSoFar);
 		BigDecimal total = getBigDecimal(inTotal);
 		return getPercentage(now, total);
 	}
 
-	public String percent(double inVal) {
+	public String percent(double inVal)
+	{
 
-		try {
+		try
+		{
 			DecimalFormat percentFormat = new DecimalFormat("0.0%");
 			percentFormat.setDecimalSeparatorAlwaysShown(false);
 			percentFormat.setMinimumFractionDigits(0);
 			percentFormat.setMaximumFractionDigits(2);
 			return percentFormat.format(inVal);
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			return null;
 		}
 	}
 
-	public String percent(String inVal) {
+	public String percent(String inVal)
+	{
 
-		try {
+		try
+		{
 			Double val = Double.parseDouble(inVal);
 			DecimalFormat percentFormat = new DecimalFormat("0.0%");
 			percentFormat.setDecimalSeparatorAlwaysShown(false);
 			percentFormat.setMinimumFractionDigits(0);
 			percentFormat.setMaximumFractionDigits(2);
 			return percentFormat.format(val);
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			return null;
 		}
 	}
 
-	public static double divide(String intop, String inbottom) {
+	public static double divide(String intop, String inbottom)
+	{
 		double d = divide(Double.parseDouble(intop), Double.parseDouble(inbottom));
 		return d;
 	}
 
-	public static double divide(double intop, double inbottom) {
+	public static double divide(double intop, double inbottom)
+	{
 		BigDecimal top = new BigDecimal(intop);
 		BigDecimal bottom = new BigDecimal(inbottom);
-		if (bottom.doubleValue() > 0) {
+		if (bottom.doubleValue() > 0)
+		{
 			BigDecimal percentage = top.divide(bottom, 5, RoundingMode.HALF_UP);
 			return percentage.doubleValue();
 		}
@@ -99,20 +120,24 @@ public class MathUtils {
 
 	}
 
-	public static double divide(double intop, int inbottom) {
+	public static double divide(double intop, int inbottom)
+	{
 		BigDecimal top = new BigDecimal(intop);
 		BigDecimal bottom = new BigDecimal(inbottom);
-		if (bottom.doubleValue() > 0) {
+		if (bottom.doubleValue() > 0)
+		{
 			BigDecimal percentage = top.divide(bottom, 5, RoundingMode.HALF_UP);
 			return percentage.doubleValue();
 		}
 		return 0;
 	}
 
-	public static double divide(int intop, int inbottom) {
+	public static double divide(int intop, int inbottom)
+	{
 		BigDecimal top = new BigDecimal(intop);
 		BigDecimal bottom = new BigDecimal(inbottom);
-		if (bottom.doubleValue() > 0) {
+		if (bottom.doubleValue() > 0)
+		{
 			BigDecimal percentage = top.divide(bottom, 5, RoundingMode.HALF_UP);
 			return percentage.doubleValue();
 		}
@@ -120,67 +145,88 @@ public class MathUtils {
 
 	}
 
-	public static String toString(double inD, int inDigits) {
+	public static String toString(double inD, int inDigits)
+	{
 		BigDecimal top = new BigDecimal(inD);
 		BigDecimal result = top.divide(new BigDecimal(1d), inDigits, RoundingMode.HALF_UP);
 		return result.toPlainString();
 	}
 
-	public static double roundDouble(double inD, int inDigits) {
+	public static double roundDouble(double inD, int inDigits)
+	{
 		BigDecimal top = new BigDecimal(inD);
 		BigDecimal result = top.divide(new BigDecimal(1d), inDigits, RoundingMode.HALF_UP);
 		return result.doubleValue();
 	}
 
-	public static String toDuration(long inDurationinMilli) {
+	public static String toDuration(long inDurationinMilli)
+	{
 		return toDuration(inDurationinMilli, false);
 	}
 
-	public static String toDuration(long inDurationinMilli, boolean alwaysshowhours) {
+	public static String toDuration(long inDurationinMilli, boolean alwaysshowhours)
+	{
 		// 00:03:03.167
 		// HOURS:MM:SS.MICROSECONDS
 		long second = (inDurationinMilli / 1000) % 60;
 		long minute = (inDurationinMilli / (1000 * 60)) % 60;
 		long hour = (inDurationinMilli / (1000 * 60 * 60));
 		String millis = String.valueOf(inDurationinMilli);
-		if (millis.length() > 3) {
+		if (millis.length() > 3)
+		{
 			millis = millis.substring(millis.length() - 3);
-		} else {
+		}
+		else
+		{
 			millis = "000";
 		}
-		if (hour > 24) {
+		if (hour > 24)
+		{
 			String time = String.format("%03d:%02d:%02d", hour, minute, second);
 			time = time + "." + millis;
 			return time;
 
-		} else if (hour > 0 || alwaysshowhours) {
-			String time = String.format("%02d:%02d:%02d", hour, minute, second);
-			time = time + "." + millis;
-			return time;
-		} else {
-			String time = String.format("%02d:%02d", minute, second);
-			time = time + "." + millis;
-			return time;
 		}
+		else
+			if (hour > 0 || alwaysshowhours)
+			{
+				String time = String.format("%02d:%02d:%02d", hour, minute, second);
+				time = time + "." + millis;
+				return time;
+			}
+			else
+			{
+				String time = String.format("%02d:%02d", minute, second);
+				time = time + "." + millis;
+				return time;
+			}
 	}
 
-	public static double parseDuration(String inSeconds) {
-		if (inSeconds == null) {
+	public static double parseDuration(String inSeconds)
+	{
+		if (inSeconds == null)
+		{
 			return 0;
 		}
-		if (inSeconds.contains("s")) {
+		if (inSeconds.contains("s"))
+		{
 			inSeconds = inSeconds.split("\\.")[0];
-		} else {
+		}
+		else
+		{
 			String[] parts = inSeconds.split(":");
-			if (parts.length == 1) {
+			if (parts.length == 1)
+			{
 				return Double.parseDouble(parts[0]);
 			}
-			if (parts.length == 2) {
+			if (parts.length == 2)
+			{
 				double totals = 60L * Double.parseDouble(parts[0]);
 				totals = totals + Double.parseDouble(parts[1]);
 				return totals;
 			}
-			if (parts.length == 3) {
+			if (parts.length == 3)
+			{
 				double totals = 60L * 60L * Double.parseDouble(parts[0]);
 				totals = totals + 60L * Double.parseDouble(parts[1]);
 				totals = totals + Double.parseDouble(parts[2]);
@@ -191,65 +237,82 @@ public class MathUtils {
 		return Double.parseDouble(inSeconds);
 	}
 
-	public static void cleanLongTypes(Map inMap) {
+	public static void cleanLongTypes(Map inMap)
+	{
 		Collection keys = new ArrayList(inMap.keySet());
-		for (Iterator iterator = keys.iterator(); iterator.hasNext();) {
+		for (Iterator iterator = keys.iterator(); iterator.hasNext();)
+		{
 			String type = (String) iterator.next();
 			Object m = inMap.get(type);
-			if (m instanceof BigDecimal) {
+			if (m instanceof BigDecimal)
+			{
 				double d = ((BigDecimal) m).doubleValue();
 				inMap.put(type, Math.round(d));
 			}
-			if (m instanceof Double) {
+			if (m instanceof Double)
+			{
 				inMap.put(type, Math.round((Double) m));
 			}
-			if (m instanceof Integer) {
+			if (m instanceof Integer)
+			{
 				inMap.put(type, ((Integer) m).longValue());
 			}
 		}
 	}
 
-	public Integer toInt(Object inObject) {
-		if (inObject == null) {
+	public Integer toInt(Object inObject)
+	{
+		if (inObject == null)
+		{
 			return null;
 		}
-		if (inObject instanceof String) {
+		if (inObject instanceof String)
+		{
 			String str = (String) inObject;
 
-			if (str.isEmpty()) {
+			if (str.isEmpty())
+			{
 				return 0;
 			}
 			return Integer.parseInt(str);
 		}
-		if (inObject instanceof Number) {
+		if (inObject instanceof Number)
+		{
 			return ((Number) inObject).intValue();
 		}
 		return (Integer) inObject;
 	}
 
-	public Double createDouble(Object inObject) {
-		if (inObject == null) {
+	public Double createDouble(Object inObject)
+	{
+		if (inObject == null)
+		{
 			return null;
 		}
-		if (inObject instanceof String) {
+		if (inObject instanceof String)
+		{
 			String str = (String) inObject;
 
-			if (str.isEmpty()) {
+			if (str.isEmpty())
+			{
 				return 0.0;
 			}
 			return Double.parseDouble((String) inObject);
 		}
-		if (inObject instanceof Number) {
+		if (inObject instanceof Number)
+		{
 			return ((Number) inObject).doubleValue();
 		}
 		return (Double) inObject;
 	}
 
-	public static int roundUp(double d) {
+	public static int roundUp(double d)
+	{
 		return (d > (int) d) ? (int) d + 1 : (int) d;
 	}
 
-	public String subtract(Object inOne, Object inTwo) {
+	public String subtract(Object inOne, Object inTwo)
+	{
 		double d1 = Double.parseDouble(inOne.toString());
 		double d2 = Double.parseDouble(inTwo.toString());
 		double sub = d1 - d2;
@@ -257,7 +320,8 @@ public class MathUtils {
 		return val;
 	}
 
-	public String addition(Object inOne, Object inTwo) {
+	public String addition(Object inOne, Object inTwo)
+	{
 		double d1 = Double.parseDouble(inOne.toString());
 		double d2 = Double.parseDouble(inTwo.toString());
 		double sub = d1 + d2;

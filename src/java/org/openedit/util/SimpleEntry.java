@@ -9,7 +9,8 @@ import java.util.Map;
  * @author cburkey
  * @date Feb 6, 2003
  */
-public class SimpleEntry implements Map.Entry {
+public class SimpleEntry implements Map.Entry
+{
 	Object key;
 	Object value;
 
@@ -23,38 +24,44 @@ public class SimpleEntry implements Map.Entry {
 		this.value = e.getValue();
 	}
 
-	public Object getKey() {
+	public Object getKey()
+	{
 		return key;
 	}
 
-	public Object getValue() {
+	public Object getValue()
+	{
 		return value;
 	}
 
-	public Object setValue(Object value) {
+	public Object setValue(Object value)
+	{
 		Object oldValue = this.value;
 		this.value = value;
 		return oldValue;
 	}
 
-	public boolean equals(Object o) {
+	public boolean equals(Object o)
+	{
 		if (!(o instanceof Map.Entry))
 			return false;
 		Map.Entry e = (Map.Entry) o;
 		return eq(key, e.getKey()) && eq(value, e.getValue());
 	}
 
-	public int hashCode() {
+	public int hashCode()
+	{
 		Object v;
-		return ((key == null) ? 0 : key.hashCode()) ^
-				((value == null) ? 0 : value.hashCode());
+		return ((key == null) ? 0 : key.hashCode()) ^ ((value == null) ? 0 : value.hashCode());
 	}
 
-	public String toString() {
+	public String toString()
+	{
 		return key + "=" + value;
 	}
 
-	private static boolean eq(Object o1, Object o2) {
+	private static boolean eq(Object o1, Object o2)
+	{
 		return (o1 == null ? o2 == null : o1.equals(o2));
 	}
 }

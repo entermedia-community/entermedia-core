@@ -65,7 +65,8 @@ import org.openedit.util.FileUtils;
  * @author Anthony Eden
  * @author Matthew Avery, mavery@einnovation.com
  */
-public class BaseMimeTypeMap implements MimeTypeMap {
+public class BaseMimeTypeMap implements MimeTypeMap
+{
 	protected String fieldDefaultMimeType;
 	protected Map fieldInternalMap;
 	protected File fieldRootDirectory;
@@ -77,27 +78,32 @@ public class BaseMimeTypeMap implements MimeTypeMap {
 	/**
 	 * @see org.openedit.page.manage.MimeTypeMap#setDefaultMimeType(java.lang.String)
 	 */
-	public void setDefaultMimeType(String inMimeType) {
+	public void setDefaultMimeType(String inMimeType)
+	{
 		fieldDefaultMimeType = inMimeType;
 	}
 
 	/**
 	 * @see org.openedit.page.manage.MimeTypeMap#getDefaultMimeType()
 	 */
-	public String getDefaultMimeType() {
+	public String getDefaultMimeType()
+	{
 		return fieldDefaultMimeType;
 	}
 
 	/**
 	 * @see org.openedit.page.manage.MimeTypeMap#getMimeType(java.lang.String)
 	 */
-	public String getMimeType(String inExtension) {
-		if (inExtension == null) {
+	public String getMimeType(String inExtension)
+	{
+		if (inExtension == null)
+		{
 			return getDefaultMimeType();
 		}
 		String mimeType = (String) get(inExtension.toLowerCase());
 
-		if (mimeType == null) {
+		if (mimeType == null)
+		{
 			mimeType = getDefaultMimeType();
 		}
 
@@ -107,17 +113,21 @@ public class BaseMimeTypeMap implements MimeTypeMap {
 	/**
 	 * @see org.openedit.page.manage.MimeTypeMap#getPathMimeType(java.lang.String)
 	 */
-	public String getPathMimeType(String path) {
+	public String getPathMimeType(String path)
+	{
 		return getMimeType(getExtension(path));
 	}
 
-	protected String getExtension(String inPath) {
+	protected String getExtension(String inPath)
+	{
 		String result = null;
 
-		if (inPath != null) {
+		if (inPath != null)
+		{
 			int index = inPath.lastIndexOf('.');
 
-			if (index > -1) {
+			if (index > -1)
+			{
 				result = inPath.substring(index + 1);
 			}
 		}
@@ -125,94 +135,119 @@ public class BaseMimeTypeMap implements MimeTypeMap {
 		return result;
 	}
 
-	public void addMappings(String mimeType, String exts) {
+	public void addMappings(String mimeType, String exts)
+	{
 		String ext;
 
-		for (StringTokenizer st = new StringTokenizer(exts, ","); st.hasMoreTokens();) {
+		for (StringTokenizer st = new StringTokenizer(exts, ","); st.hasMoreTokens();)
+		{
 			ext = st.nextToken();
 			put(ext, mimeType);
 		}
 	}
 
-	public Map getInternalMap() {
-		if (fieldInternalMap == null) {
+	public Map getInternalMap()
+	{
+		if (fieldInternalMap == null)
+		{
 			fieldInternalMap = new HashMap();
 			loadMimeTypes(fieldInternalMap);
 		}
 		return fieldInternalMap;
 	}
 
-	protected void loadMimeTypes(Map inInternalMap) {
+	protected void loadMimeTypes(Map inInternalMap)
+	{
 		// first load the internal mimetypes.properties
 		ClassLoader loader = getClass().getClassLoader();
-		if (loader == null) {
+		if (loader == null)
+		{
 			loader = ClassLoader.getSystemClassLoader();
 		}
 
 		InputStream in = loader.getResourceAsStream("mimetypes.properties");
-		if (in == null) {
+		if (in == null)
+		{
 			throw new OpenEditRuntimeException("Could not load mimetypes");
 		}
 		Properties values = new Properties();
-		try {
+		try
+		{
 			values.load(in);
 			inInternalMap.putAll(values);
-		} catch (Exception ex) {
+		}
+		catch (Exception ex)
+		{
 			throw new OpenEditRuntimeException(ex);
-		} finally {
+		}
+		finally
+		{
 			FileUtils.safeClose(in);
 		}
 		// check load up any additional ones from the WEB-INF/mimytypes.properties
 		// location
 		File props2 = new File(getRootDirectory(), "/WEB-INF/mimetypes.properties");
-		if (props2.exists()) {
+		if (props2.exists())
+		{
 			values = new Properties();
-			try {
+			try
+			{
 				in = new FileInputStream(props2);
 				values.load(in);
 				inInternalMap.putAll(values);
-			} catch (Exception ex) {
+			}
+			catch (Exception ex)
+			{
 				throw new OpenEditRuntimeException(ex);
-			} finally {
+			}
+			finally
+			{
 				FileUtils.safeClose(in);
 			}
 		}
 	}
 
-	public void setInternalMap(Map internalMap) {
+	public void setInternalMap(Map internalMap)
+	{
 		fieldInternalMap = internalMap;
 	}
 
 	/**
 	 * @see org.openedit.page.manage.MimeTypeMap#get(java.lang.Object)
 	 */
-	public Object get(Object key) {
+	public Object get(Object key)
+	{
 		return getInternalMap().get(key);
 	}
 
 	/**
-	 * @see org.openedit.page.manage.MimeTypeMap#put(java.lang.Object,
-	 *      java.lang.Object)
+	 * @see org.openedit.page.manage.MimeTypeMap#put(java.lang.Object, java.lang.Object)
 	 */
-	public Object put(Object arg0, Object arg1) {
+	public Object put(Object arg0, Object arg1)
+	{
 		return getInternalMap().put(arg0, arg1);
 	}
 
-	public File getRootDirectory() {
+	public File getRootDirectory()
+	{
 		return fieldRootDirectory;
 	}
 
-	public void setRootDirectory(File inRootDirectory) {
+	public void setRootDirectory(File inRootDirectory)
+	{
 		fieldRootDirectory = inRootDirectory;
 	}
 
 	@Override
-	public String getExtensionForMimeType(String inMimeType) {
+	public String getExtensionForMimeType(String inMimeType)
+	{
 
-		for (Iterator iterator = getInternalMap().keySet().iterator(); iterator.hasNext();) {
+		for (Iterator iterator = getInternalMap().keySet().iterator(); iterator.hasNext();)
+		{
 			String type = (String) iterator.next();
 			String value = (String) getInternalMap().get(type);
-			if (inMimeType.equals(value)) {
+			if (inMimeType.equals(value))
+			{
 				return type;
 			}
 		}

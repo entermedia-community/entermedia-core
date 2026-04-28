@@ -11,38 +11,40 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class GZipServletFilter implements Filter {
+public class GZipServletFilter implements Filter
+{
 
 	@Override
-	public void init(FilterConfig filterConfig) throws ServletException {
-	}
+	public void init(FilterConfig filterConfig) throws ServletException
+	{}
 
 	@Override
-	public void destroy() {
-	}
+	public void destroy()
+	{}
 
-	public void doFilter(ServletRequest request,
-			ServletResponse response,
-			FilterChain chain)
-			throws IOException, ServletException {
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException
+	{
 
 		HttpServletRequest httpRequest = (HttpServletRequest) request;
 		HttpServletResponse httpResponse = (HttpServletResponse) response;
 
-		if (acceptsGZipEncoding(httpRequest)) {
+		if (acceptsGZipEncoding(httpRequest))
+		{
 			httpResponse.addHeader("Content-Encoding", "gzip");
 			GZipServletResponseWrapper gzipResponse = new GZipServletResponseWrapper(httpResponse);
 			chain.doFilter(request, gzipResponse);
 			gzipResponse.close();
-		} else {
+		}
+		else
+		{
 			chain.doFilter(request, response);
 		}
 	}
 
-	private boolean acceptsGZipEncoding(HttpServletRequest httpRequest) {
+	private boolean acceptsGZipEncoding(HttpServletRequest httpRequest)
+	{
 		String acceptEncoding = httpRequest.getHeader("Accept-Encoding");
 
-		return acceptEncoding != null &&
-				acceptEncoding.indexOf("gzip") != -1;
+		return acceptEncoding != null && acceptEncoding.indexOf("gzip") != -1;
 	}
 }

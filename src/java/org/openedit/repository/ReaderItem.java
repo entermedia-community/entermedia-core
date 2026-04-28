@@ -13,7 +13,8 @@ import org.openedit.util.ReaderInputStream;
  * @author cburkey
  */
 
-public class ReaderItem extends ContentItem {
+public class ReaderItem extends ContentItem
+{
 	protected Reader fieldReader;
 	protected String fieldEncoding;
 
@@ -23,44 +24,54 @@ public class ReaderItem extends ContentItem {
 		fieldPath = inPath;
 	}
 
-	public void setLastModified(Date inDate) {
+	public void setLastModified(Date inDate)
+	{
 		// TODO Auto-generated method stub
 		super.setLastModified(inDate);
 	}
 
-	public boolean exists() {
+	public boolean exists()
+	{
 		return fieldReader != null;
 	}
 
-	public boolean isFolder() {
+	public boolean isFolder()
+	{
 		return false;
 	}
 
-	public boolean isWritable() {
+	public boolean isWritable()
+	{
 		return true;
 	}
 
-	public Reader getReader() {
+	public Reader getReader()
+	{
 		return fieldReader;
 	}
 
-	public void setReader(Reader inReader) {
+	public void setReader(Reader inReader)
+	{
 		fieldReader = inReader;
 	}
 
-	public String getEncoding() {
+	public String getEncoding()
+	{
 		return fieldEncoding;
 	}
 
-	public void setEncoding(String inEncoding) {
+	public void setEncoding(String inEncoding)
+	{
 		fieldEncoding = inEncoding;
 	}
 
-	public InputStream getInputStream() throws RepositoryException {
+	public InputStream getInputStream() throws RepositoryException
+	{
 		return new ReaderInputStream(getReader(), getEncoding());
 	}
 
-	public OutputStream getOutputStream() throws RepositoryException {
+	public OutputStream getOutputStream() throws RepositoryException
+	{
 		return null;
 	}
 }

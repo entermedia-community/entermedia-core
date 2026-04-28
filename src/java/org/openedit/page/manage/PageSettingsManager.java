@@ -25,13 +25,11 @@ import org.openedit.util.PathUtilities;
  * 
  *         Can we come up with a better name for this class.... please!?
  * 
- *         Extending PageManager is a shortcut, not a valid case for
- *         inheritance.
- *         It is possible that PageManager and MetaDataConfigurator have a
- *         common
- *         abstract superclass.
+ *         Extending PageManager is a shortcut, not a valid case for inheritance. It is possible
+ *         that PageManager and MetaDataConfigurator have a common abstract superclass.
  */
-public class PageSettingsManager {
+public class PageSettingsManager
+{
 	// public static final String DEFAULT_PATH = "_default.xconf";
 	public static final String SITE_PATH = "_site.xconf";
 	private static final Log log = LogFactory.getLog(PageSettingsManager.class);
@@ -48,9 +46,11 @@ public class PageSettingsManager {
 	protected TextLabelManager fieldTextLabelManager;
 	private static final String CACHE = PageSettingsManager.class.getName();
 
-	public PageSettings getPageSettings(String inPath) throws OpenEditException {
+	public PageSettings getPageSettings(String inPath) throws OpenEditException
+	{
 		PageSettings page = (PageSettings) getCacheManager().get(CACHE, inPath);
-		if (page != null) {
+		if (page != null)
+		{
 			if (page.isCurrent()) // This is slow but is only run in the initial creation. After that it is seldom
 									// run since pages are cached
 			{
@@ -61,21 +61,28 @@ public class PageSettingsManager {
 		return page;
 	}
 
-	protected CacheManager getCacheManager() {
+	protected CacheManager getCacheManager()
+	{
 		return fieldCacheManager;
 	}
 
-	public void setCacheManager(CacheManager inCacheManager) {
+	public void setCacheManager(CacheManager inCacheManager)
+	{
 		fieldCacheManager = inCacheManager;
 	}
 
-	public Generator getGenerator(String inName) throws OpenEditException {
+	public Generator getGenerator(String inName) throws OpenEditException
+	{
 		String id = inName;
 		Generator gen = (Generator) getGeneratorMap().get(id);
-		if (gen == null) {
-			if (getModuleManager().contains(inName)) {
+		if (gen == null)
+		{
+			if (getModuleManager().contains(inName))
+			{
 				gen = (Generator) getModuleManager().getBean(inName);
-			} else {
+			}
+			else
+			{
 				gen = new FailGenerator(inName);
 			}
 			getGeneratorMap().put(id, gen);
@@ -83,7 +90,8 @@ public class PageSettingsManager {
 		return gen;
 	}
 
-	protected PageSettings createPageSettings(String inUrlPath) throws OpenEditException {
+	protected PageSettings createPageSettings(String inUrlPath) throws OpenEditException
+	{
 		// This managager deals with xconf files only
 		String xconfPath = inUrlPath;
 		xconfPath = toXconfPath(xconfPath);
@@ -94,24 +102,30 @@ public class PageSettingsManager {
 		PageSettings settings = new PageSettings();
 		settings.setTextLabels(getTextLabelManager());
 		ContentItem content = null;
-		try {
+		try
+		{
 			content = getRepository().get(xconfPath);
 			settings.setXConf(content);
-		} catch (RepositoryException ex) {
+		}
+		catch (RepositoryException ex)
+		{
 			log.error(ex);
 			throw new OpenEditException(ex);
 		}
 		// As long as it does not end with _default.xconf nor _site.xconf ir must be a
 		// real page
-		if (!xconfPath.equals("/_site.xconf") && !xconfPath.equals("/WEB-INF/base/_site.xconf")) {
+		if (!xconfPath.equals("/_site.xconf") && !xconfPath.equals("/WEB-INF/base/_site.xconf"))
+		{
 			String path = PathUtilities.extractDirectoryPath(xconfPath); // go up a level
-			if (xconfPath.endsWith("/_site.xconf")) {
+			if (xconfPath.endsWith("/_site.xconf"))
+			{
 				path = PathUtilities.extractDirectoryPath(path); // go up a another level
 			}
 			PageSettings parent = getPageSettings(path + "/" + SITE_PATH);
 			settings.setParent(parent);
 		}
-		if (!inUrlPath.endsWith(".xconf")) {
+		if (!inUrlPath.endsWith(".xconf"))
+		{
 			String mimeType = getMimeTypeMap().getPathMimeType(inUrlPath);
 			settings.setMimeType(mimeType);
 		}
@@ -120,25 +134,34 @@ public class PageSettingsManager {
 		return settings;
 	}
 
-	public String toXconfPath(String xconfPath) {
-		if (xconfPath.endsWith(".draft.html")) {
+	public String toXconfPath(String xconfPath)
+	{
+		if (xconfPath.endsWith(".draft.html"))
+		{
 			xconfPath = xconfPath.replace(".draft.html", ".html");
 		}
 
-		if (xconfPath.endsWith(".xconf")) {
+		if (xconfPath.endsWith(".xconf"))
+		{
 			return xconfPath;
 		}
-		if (xconfPath.endsWith("/")) {
+		if (xconfPath.endsWith("/"))
+		{
 			return xconfPath + SITE_PATH;
 		}
-		if (xconfPath.indexOf(".") == -1) {
+		if (xconfPath.indexOf(".") == -1)
+		{
 			// might be a folder
-			try {
+			try
+			{
 				ContentItem item = getRepository().get(xconfPath);
-				if (item.isFolder()) {
+				if (item.isFolder())
+				{
 					return xconfPath + "/" + SITE_PATH;
 				}
-			} catch (RepositoryException ex) {
+			}
+			catch (RepositoryException ex)
+			{
 				throw new OpenEditRuntimeException(ex);
 			}
 		}
@@ -147,95 +170,118 @@ public class PageSettingsManager {
 		return xconfPath;
 	}
 
-	public MimeTypeMap getMimeTypeMap() {
+	public MimeTypeMap getMimeTypeMap()
+	{
 		return fieldMimeTypeMap;
 	}
 
-	public void setMimeTypeMap(MimeTypeMap mimeTypeMap) {
+	public void setMimeTypeMap(MimeTypeMap mimeTypeMap)
+	{
 		fieldMimeTypeMap = mimeTypeMap;
 	}
 
-	public Map getGeneratorMap() {
-		if (fieldGeneratorMap == null) {
+	public Map getGeneratorMap()
+	{
+		if (fieldGeneratorMap == null)
+		{
 			fieldGeneratorMap = new HashMap();
 		}
 		return fieldGeneratorMap;
 	}
 
-	public void setGeneratorMap(Map generators) {
+	public void setGeneratorMap(Map generators)
+	{
 		fieldGeneratorMap = generators;
 	}
 
-	public Repository getRepository() {
+	public Repository getRepository()
+	{
 		return fieldRepository;
 	}
 
-	public void setRepository(Repository inRepository) {
+	public void setRepository(Repository inRepository)
+	{
 		fieldRepository = inRepository;
 	}
 
-	protected ModuleManager getModuleManager() {
+	protected ModuleManager getModuleManager()
+	{
 		return fieldModuleManager;
 	}
 
-	public void setModuleManager(ModuleManager inPluginManager) {
+	public void setModuleManager(ModuleManager inPluginManager)
+	{
 		fieldModuleManager = inPluginManager;
 	}
 
 	/**
 	 * @param inXconf
 	 */
-	public void saveSetting(PageSettings inSetting) throws OpenEditException {
+	public void saveSetting(PageSettings inSetting) throws OpenEditException
+	{
 		ContentItem item = getPageSettingsWriter().createXConf(inSetting);
 		saveSetting(item);
 	}
 
-	public void saveSetting(ContentItem inXconf) throws OpenEditException {
-		try {
+	public void saveSetting(ContentItem inXconf) throws OpenEditException
+	{
+		try
+		{
 			getRepository().put(inXconf);
-		} catch (RepositoryException ex) {
+		}
+		catch (RepositoryException ex)
+		{
 			log.error(ex);
 			throw new OpenEditException(ex);
 		}
 		getCacheManager().remove(CACHE, inXconf.getPath()); // this also should remove the *.html version
 	}
 
-	public void clearCache() {
+	public void clearCache()
+	{
 		getCacheManager().clear(CACHE);
 	}
 
-	protected XConfToPageSettingsConverter getXconfReader() {
+	protected XConfToPageSettingsConverter getXconfReader()
+	{
 		return fieldXconfReader;
 	}
 
-	public void setXconfReader(XConfToPageSettingsConverter inConverter) {
+	public void setXconfReader(XConfToPageSettingsConverter inConverter)
+	{
 		fieldXconfReader = inConverter;
 	}
 
-	protected PageSettingsToXconfWriter getPageSettingsWriter() {
+	protected PageSettingsToXconfWriter getPageSettingsWriter()
+	{
 		return fieldPageSettingsWriter;
 	}
 
-	public void setPageSettingsWriter(PageSettingsToXconfWriter inPageSettingsWriter) {
+	public void setPageSettingsWriter(PageSettingsToXconfWriter inPageSettingsWriter)
+	{
 		fieldPageSettingsWriter = inPageSettingsWriter;
 	}
 
 	/**
 	 * @param inPath such as index.xconf
 	 */
-	public void clearCache(String inPath) {
+	public void clearCache(String inPath)
+	{
 		getCacheManager().remove(CACHE, inPath); // Is this normal?
-		if (!inPath.endsWith(".xconf")) {
+		if (!inPath.endsWith(".xconf"))
+		{
 			String path = toXconfPath(inPath);
 			getCacheManager().remove(CACHE, path);
 		}
 	}
 
-	public TextLabelManager getTextLabelManager() {
+	public TextLabelManager getTextLabelManager()
+	{
 		return fieldTextLabelManager;
 	}
 
-	public void setTextLabelManager(TextLabelManager inTextLabelManager) {
+	public void setTextLabelManager(TextLabelManager inTextLabelManager)
+	{
 		fieldTextLabelManager = inTextLabelManager;
 	}
 

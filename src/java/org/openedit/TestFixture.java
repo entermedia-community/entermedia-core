@@ -1,14 +1,14 @@
 /*
-Copyright (c) 2003 eInnovation Inc. All rights reserved
-
-This library is free software; you can redistribute it and/or modify it under the terms
-of the GNU Lesser General Public License as published by the Free Software Foundation;
-either version 2.1 of the License, or (at your option) any later version.
-
-This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-See the GNU Lesser General Public License for more details.
-*/
+ * Copyright (c) 2003 eInnovation Inc. All rights reserved
+ * 
+ * This library is free software; you can redistribute it and/or modify it under the terms of the
+ * GNU Lesser General Public License as published by the Free Software Foundation; either version
+ * 2.1 of the License, or (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ */
 
 package org.openedit;
 
@@ -33,20 +33,27 @@ import org.openedit.web.Browser;
  *
  * @author Eric Galluzzo
  */
-public class TestFixture {
+public class TestFixture
+{
 	protected String fieldPath = null;
 	protected BaseWebServer fieldWebServer;
 	protected String fieldCategoryId = "entermedia/catalogs/testcatalog";
 	protected String fieldRootPath;
 
-	public String getRootPath() {
-		if (fieldRootPath == null) {
+	public String getRootPath()
+	{
+		if (fieldRootPath == null)
+		{
 			String rootPath = System.getProperty("oe.root.path");
-			if (rootPath == null) {
+			if (rootPath == null)
+			{
 				File found = new File("resources/test");
-				if (found.exists()) {
+				if (found.exists())
+				{
 					rootPath = "resources/test";
-				} else {
+				}
+				else
+				{
 					rootPath = "webapp";
 				}
 			}
@@ -55,15 +62,18 @@ public class TestFixture {
 		return fieldRootPath;
 	}
 
-	public void setRootPath(String inRootPath) {
+	public void setRootPath(String inRootPath)
+	{
 		fieldRootPath = inRootPath;
 	}
 
-	public String getCategoryId() {
+	public String getCategoryId()
+	{
 		return fieldCategoryId;
 	}
 
-	public void setCategoryId(String inCategoryId) {
+	public void setCategoryId(String inCategoryId)
+	{
 		fieldCategoryId = inCategoryId;
 	}
 
@@ -77,18 +87,21 @@ public class TestFixture {
 	/**
 	 * @return
 	 */
-	public String getPath() {
+	public String getPath()
+	{
 		return fieldPath;
 	}
 
 	/**
 	 * @param inPath
 	 */
-	public void setPath(String inPath) {
+	public void setPath(String inPath)
+	{
 		fieldPath = inPath;
 	}
 
-	public WebPageRequest createPageRequest() throws OpenEditException {
+	public WebPageRequest createPageRequest() throws OpenEditException
+	{
 		BaseWebPageRequest context = new TestWebPageRequest();
 
 		Browser browser = new Browser("Mozilla/4.0 (compatible; MSIE 5.5; Windows NT 5.0)");
@@ -108,7 +121,8 @@ public class TestFixture {
 		// userManager.getGroupDirectory().getAbsolutePath() );
 		// System.out.println( "User directory: " +
 		// userManager.getUserDirectory().getAbsolutePath() );
-		if (admin != null) {
+		if (admin != null)
+		{
 			context.putPageValue(PageRequestKeys.USER, admin);
 			SearcherManager manager = (SearcherManager) getModuleManager().getBean("searcherManager");
 			UserProfile profile = (UserProfile) manager.getData(getCategoryId(), "userprofile", "admin");
@@ -126,12 +140,13 @@ public class TestFixture {
 		return context;
 	}
 
-	public WebPageRequest createPageRequest(String inPath)
-			throws OpenEditException {
+	public WebPageRequest createPageRequest(String inPath) throws OpenEditException
+	{
 		WebPageRequest context = (WebPageRequest) createPageRequest();
 
 		String[] parts = inPath.split("[?]");
-		if (parts.length > 1) {
+		if (parts.length > 1)
+		{
 			Map args = PathUtilities.extractArguments(parts[1]);
 			context.putAllRequestParameters(args);
 		}
@@ -145,7 +160,8 @@ public class TestFixture {
 		context.putPageValue(PageRequestKeys.USER, getUserManager().getUser("admin"));
 
 		User admin = getUserManager().getUser("admin");
-		if (admin != null) {
+		if (admin != null)
+		{
 			context.putPageValue(PageRequestKeys.USER, admin);
 			String catid = dynamicpage.get("catalogid");
 			context.putSessionValue(catid + "user", admin);
@@ -156,24 +172,30 @@ public class TestFixture {
 		return context;
 	}
 
-	public OpenEditEngine getEngine() {
+	public OpenEditEngine getEngine()
+	{
 		return getWebServer().getOpenEditEngine();
 	}
 
-	public ModuleManager getModuleManager() {
+	public ModuleManager getModuleManager()
+	{
 		return getWebServer().getModuleManager();
 	}
 
-	public PageManager getPageManager() {
+	public PageManager getPageManager()
+	{
 		return getWebServer().getPageManager();
 	}
 
-	public UserManager getUserManager() {
+	public UserManager getUserManager()
+	{
 		return getWebServer().getUserManager();
 	}
 
-	public WebServer getWebServer() {
-		if (fieldWebServer == null) {
+	public WebServer getWebServer()
+	{
+		if (fieldWebServer == null)
+		{
 			fieldWebServer = new BaseWebServer();
 
 			fieldWebServer.setRootDirectory(new File(getRootPath()).getAbsoluteFile());

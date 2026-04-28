@@ -6,21 +6,27 @@ import java.util.List;
 
 import org.openedit.users.User;
 
-public class CompositeFilteredTracker extends FilteredTracker {
+public class CompositeFilteredTracker extends FilteredTracker
+{
 	protected List fieldFilteredTrackers;
 
-	public List getFilteredTrackers() {
-		if (fieldFilteredTrackers == null) {
+	public List getFilteredTrackers()
+	{
+		if (fieldFilteredTrackers == null)
+		{
 			fieldFilteredTrackers = new ArrayList();
 		}
 		return fieldFilteredTrackers;
 	}
 
-	public void filter(String inExternalId, String inExternalValue) {
+	public void filter(String inExternalId, String inExternalValue)
+	{
 		fieldFilteredTrackers = new ArrayList();
-		if (inExternalValue != null) {
+		if (inExternalValue != null)
+		{
 			String[] externalValues = inExternalValue.split(":");
-			for (int i = 0; i < externalValues.length; i++) {
+			for (int i = 0; i < externalValues.length; i++)
+			{
 				FilteredTracker tracker = new FilteredTracker();
 				tracker.setSearcher(getSearcher());
 				tracker.setListId(getListId());
@@ -30,12 +36,15 @@ public class CompositeFilteredTracker extends FilteredTracker {
 		}
 	}
 
-	public List filteredValues() {
+	public List filteredValues()
+	{
 		List intersection = null;
-		for (Iterator iterator = getFilteredTrackers().iterator(); iterator.hasNext();) {
+		for (Iterator iterator = getFilteredTrackers().iterator(); iterator.hasNext();)
+		{
 			FilteredTracker tracker = (FilteredTracker) iterator.next();
 			List values = tracker.filteredValues();
-			if (intersection == null) {
+			if (intersection == null)
+			{
 				intersection = values;
 			}
 			intersection.retainAll(values);
@@ -43,15 +52,19 @@ public class CompositeFilteredTracker extends FilteredTracker {
 		return intersection;
 	}
 
-	public void deleteValues(List inListValues, User inUser) {
-		for (Iterator iterator = getFilteredTrackers().iterator(); iterator.hasNext();) {
+	public void deleteValues(List inListValues, User inUser)
+	{
+		for (Iterator iterator = getFilteredTrackers().iterator(); iterator.hasNext();)
+		{
 			FilteredTracker tracker = (FilteredTracker) iterator.next();
 			tracker.deleteValues(inListValues, inUser);
 		}
 	}
 
-	public void saveRows(List inListValues, User inUser) {
-		for (Iterator iterator = getFilteredTrackers().iterator(); iterator.hasNext();) {
+	public void saveRows(List inListValues, User inUser)
+	{
+		for (Iterator iterator = getFilteredTrackers().iterator(); iterator.hasNext();)
+		{
 			FilteredTracker tracker = (FilteredTracker) iterator.next();
 			tracker.saveRows(inListValues, inUser);
 		}

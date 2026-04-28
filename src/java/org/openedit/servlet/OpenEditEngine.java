@@ -25,12 +25,12 @@ import org.openedit.page.manage.PageManager;
  * @author Eric Broyles <eric.broyles@ugs.com>
  * @version $Id: OpenEditEngine.java,v 1.65 2009/10/21 21:53:04 cburkey Exp $
  */
-public interface OpenEditEngine {
+public interface OpenEditEngine
+{
 
     public static final String CONTEXT_ATTR_NAME = "OpenEditEngine";
 
-    public void render(HttpServletRequest inRequest, HttpServletResponse inResponse) throws IOException,
-            OpenEditException;
+    public void render(HttpServletRequest inRequest, HttpServletResponse inResponse) throws IOException, OpenEditException;
 
     public boolean hideFolders();
 

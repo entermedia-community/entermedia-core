@@ -1,14 +1,14 @@
 /*
-Copyright (c) 2004 eInnovation Inc. All rights reserved
-
-This library is free software; you can redistribute it and/or modify it under the terms
-of the GNU Lesser General Public License as published by the Free Software Foundation;
-either version 2.1 of the License, or (at your option) any later version.
-
-This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-See the GNU Lesser General Public License for more details.
-*/
+ * Copyright (c) 2004 eInnovation Inc. All rights reserved
+ * 
+ * This library is free software; you can redistribute it and/or modify it under the terms of the
+ * GNU Lesser General Public License as published by the Free Software Foundation; either version
+ * 2.1 of the License, or (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ */
 
 package org.openedit.users;
 
@@ -17,13 +17,13 @@ package org.openedit.users;
  *
  * @author Dennis Brown
  */
-public class Permission {
+public class Permission
+{
 	protected String fieldName;
 	protected String fieldDisplayName;
 	protected String fieldDescription;
 
-	public Permission() {
-	}
+	public Permission() {}
 
 	public Permission(String inName) {
 		fieldName = inName;
@@ -34,54 +34,70 @@ public class Permission {
 		fieldDisplayName = inDisplayName;
 	}
 
-	public String getName() {
+	public String getName()
+	{
 		return fieldName;
 	}
 
-	public String getDisplayName() {
+	public String getDisplayName()
+	{
 		return fieldDisplayName;
 	}
 
-	public void setName(String inName) {
+	public void setName(String inName)
+	{
 		fieldName = inName;
 	}
 
-	public void setDisplayName(String inDisplayName) {
+	public void setDisplayName(String inDisplayName)
+	{
 		fieldDisplayName = inDisplayName;
 	}
 
 	/**
 	 * Two <code>Permission</code>s are equal if their names are equal.
 	 */
-	public boolean equals(Object o) {
-		if (o instanceof Permission) {
+	public boolean equals(Object o)
+	{
+		if (o instanceof Permission)
+		{
 			Permission p = (Permission) o;
-			if (fieldName != null) {
+			if (fieldName != null)
+			{
 				return fieldName.equals(p.fieldName);
-			} else {
+			}
+			else
+			{
 				return (p.fieldName == null);
 			}
-		} else {
+		}
+		else
+		{
 			return false;
 		}
 	}
 
-	public String getDescription() {
-		if (fieldDescription == null) {
+	public String getDescription()
+	{
+		if (fieldDescription == null)
+		{
 			fieldDescription = "No description available";
 		}
 		return fieldDescription.replace("\n", " ");
 	}
 
-	public void setDescription(String description) {
+	public void setDescription(String description)
+	{
 		fieldDescription = description;
 	}
 
-	public int hashCode() {
+	public int hashCode()
+	{
 		return (fieldName != null) ? fieldName.hashCode() : 0;
 	}
 
-	public String toString() {
+	public String toString()
+	{
 		return fieldName;
 	}
 }

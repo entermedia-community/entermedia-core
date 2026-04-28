@@ -1,14 +1,14 @@
 /*
-Copyright (c) 2003 eInnovation Inc. All rights reserved
-
-This library is free software; you can redistribute it and/or modify it under the terms
-of the GNU Lesser General Public License as published by the Free Software Foundation;
-either version 2.1 of the License, or (at your option) any later version.
-
-This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-See the GNU Lesser General Public License for more details.
-*/
+ * Copyright (c) 2003 eInnovation Inc. All rights reserved
+ * 
+ * This library is free software; you can redistribute it and/or modify it under the terms of the
+ * GNU Lesser General Public License as published by the Free Software Foundation; either version
+ * 2.1 of the License, or (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ */
 
 package org.openedit.util.strainer;
 
@@ -21,7 +21,8 @@ import org.openedit.util.Replacer;
  *
  * @author Eric Galluzzo
  */
-public class UserFilter extends BaseFilter {
+public class UserFilter extends BaseFilter
+{
 
 	/**
 	 * Construct a filter that passes all users.
@@ -46,7 +47,8 @@ public class UserFilter extends BaseFilter {
 	 *
 	 * @param username The username to set
 	 */
-	public void setUsername(String username) {
+	public void setUsername(String username)
+	{
 		setValue(username);
 	}
 
@@ -55,25 +57,31 @@ public class UserFilter extends BaseFilter {
 	 *
 	 * @return String
 	 */
-	public String getUsername() {
+	public String getUsername()
+	{
 		return fieldValue;
 	}
 
 	/**
 	 * @see org.openedit.util.strainer.Filter#passes(java.lang.Object)
 	 */
-	public boolean passes(Object inObj) throws FilterException, ClassCastException {
+	public boolean passes(Object inObj) throws FilterException, ClassCastException
+	{
 		WebPageRequest req = (WebPageRequest) inObj;
 
 		User user = req.getUser();
 
-		if (user != null) {
-			if ((getUsername() == null) || user.getUserName().equalsIgnoreCase(getUsername())) {
+		if (user != null)
+		{
+			if ((getUsername() == null) || user.getUserName().equalsIgnoreCase(getUsername()))
+			{
 				return true;
 			}
-			if (getUsername().startsWith("${")) {
+			if (getUsername().startsWith("${"))
+			{
 				String username = new Replacer().replace(getUsername(), req.getPageMap());
-				if (user.getUserName().equalsIgnoreCase(username)) {
+				if (user.getUserName().equalsIgnoreCase(username))
+				{
 					return true;
 				}
 			}
@@ -81,15 +89,19 @@ public class UserFilter extends BaseFilter {
 		return false;
 	}
 
-	public String toString() {
-		if (getUsername() == null) {
+	public String toString()
+	{
+		if (getUsername() == null)
+		{
 			return "User";
 		}
 		return "User=" + getUsername();
 	}
 
-	public boolean equals(Object inObj) {
-		if (inObj instanceof UserFilter) {
+	public boolean equals(Object inObj)
+	{
+		if (inObj instanceof UserFilter)
+		{
 			UserFilter toCompare = (UserFilter) inObj;
 			return getUsername().equals(toCompare.getUsername());
 		}

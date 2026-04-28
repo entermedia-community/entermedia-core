@@ -1,14 +1,14 @@
 /*
-Copyright (c) 2003 eInnovation Inc. All rights reserved
-
-This library is free software; you can redistribute it and/or modify it under the terms
-of the GNU Lesser General Public License as published by the Free Software Foundation;
-either version 2.1 of the License, or (at your option) any later version.
-
-This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-See the GNU Lesser General Public License for more details.
-*/
+ * Copyright (c) 2003 eInnovation Inc. All rights reserved
+ * 
+ * This library is free software; you can redistribute it and/or modify it under the terms of the
+ * GNU Lesser General Public License as published by the Free Software Foundation; either version
+ * 2.1 of the License, or (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ */
 
 /*--
 
@@ -67,21 +67,22 @@ import java.util.Map;
  *
  * @author Anthony Eden
  */
-public class PageProperty {
+public class PageProperty
+{
 	private Map values;
 	private String name;
 	protected String fieldPath;
 
 	/**
-	 * Construct a page property with the given name. The name must be a non-null
-	 * value.
+	 * Construct a page property with the given name. The name must be a non-null value.
 	 *
 	 * @param name The name of the page property
 	 *
 	 * @throws IllegalArgumentException DOCME
 	 */
 	public PageProperty(String name) {
-		if (name == null) {
+		if (name == null)
+		{
 			throw new IllegalArgumentException("Property name cannot be null");
 		}
 
@@ -94,29 +95,34 @@ public class PageProperty {
 	 *
 	 * @return The property name
 	 */
-	public String getName() {
+	public String getName()
+	{
 		return name;
 	}
 
 	/**
 	 * Set the property value for the given Locale.
 	 *
-	 * @param value  The value
+	 * @param value The value
 	 * @param locale The Locale
 	 */
-	public void setValue(String value, Locale locale) {
+	public void setValue(String value, Locale locale)
+	{
 		StringBuffer localeString = new StringBuffer();
-		if (locale != null) {
+		if (locale != null)
+		{
 			String language = locale.getLanguage();
 			String country = locale.getCountry();
 			String variant = locale.getVariant();
 
 			localeString.append(language);
-			if (country != null) {
+			if (country != null)
+			{
 				localeString.append("_");
 				localeString.append(country);
 			}
-			if (variant != null) {
+			if (variant != null)
+			{
 				localeString.append("_");
 				localeString.append(variant);
 			}
@@ -125,15 +131,16 @@ public class PageProperty {
 	}
 
 	/**
-	 * Set the property value for the given locale String. The locale String should
-	 * be in the form
+	 * Set the property value for the given locale String. The locale String should be in the form
 	 * language_country_variant as described in the Locale.toString() method.
 	 *
-	 * @param value  The value
+	 * @param value The value
 	 * @param locale The locale String
 	 */
-	public void setValue(String value, String locale) {
-		if (locale == null) {
+	public void setValue(String value, String locale)
+	{
+		if (locale == null)
+		{
 			locale = "";
 		}
 
@@ -145,14 +152,14 @@ public class PageProperty {
 	 *
 	 * @return The property value using the default Locale
 	 */
-	public String getValue() {
+	public String getValue()
+	{
 		return getValue(Locale.getDefault());
 	}
 
 	/**
-	 * Get the value for the given locale. This method will try to find the most
-	 * suitable locale
-	 * by searching the property values in the following manner:
+	 * Get the value for the given locale. This method will try to find the most suitable locale by
+	 * searching the property values in the following manner:
 	 * 
 	 * <p>
 	 * result of locale.toString() language + "_" + country + "_" + variant<br>
@@ -166,8 +173,10 @@ public class PageProperty {
 	 *
 	 * @return The value or null
 	 */
-	public String getValue(Locale locale) {
-		if (locale == null) {
+	public String getValue(Locale locale)
+	{
+		if (locale == null)
+		{
 			locale = Locale.getDefault();
 		}
 		String language = locale.getLanguage();
@@ -176,8 +185,10 @@ public class PageProperty {
 		return getValue(language, country, variant);
 	}
 
-	public String getValue(String inLocale) {
-		if (inLocale == null) {
+	public String getValue(String inLocale)
+	{
+		if (inLocale == null)
+		{
 			inLocale = Locale.getDefault().toString();
 		}
 
@@ -186,14 +197,20 @@ public class PageProperty {
 		String variant = "";
 
 		int first = inLocale.indexOf('_');
-		if (first == -1) {
+		if (first == -1)
+		{
 			lang = inLocale;
-		} else {
+		}
+		else
+		{
 			lang = inLocale.substring(0, first);
 			int second = inLocale.indexOf(first, '_');
-			if (second == -1) {
+			if (second == -1)
+			{
 				country = inLocale.substring(first + 1);
-			} else {
+			}
+			else
+			{
 				country = inLocale.substring(first, second);
 				variant = inLocale.substring(second + 1);
 			}
@@ -201,42 +218,47 @@ public class PageProperty {
 		return getValue(lang, country, variant);
 	}
 
-	public String getValue(String language, String country, String variant) {
-		if ("default".equals(language)) {
+	public String getValue(String language, String country, String variant)
+	{
+		if ("default".equals(language))
+		{
 			language = "";
 		}
 		String value = null;
 
 		/*
-		 * //this check might be a duplicate of the next one below. TODO: Remove it?
-		 * value = (String) values.get(locale.toString());
+		 * //this check might be a duplicate of the next one below. TODO: Remove it? value = (String)
+		 * values.get(locale.toString());
 		 * 
-		 * if (value != null)
-		 * {
-		 * return value;
-		 * }
+		 * if (value != null) { return value; }
 		 */
 		// Go from Specific to generatic
-		if (variant != null) {
+		if (variant != null)
+		{
 			value = (String) values.get(language + "_" + country + "_" + variant);
 
-			if (value != null) {
+			if (value != null)
+			{
 				return value;
 			}
 		}
 
-		if (country != null) {
+		if (country != null)
+		{
 			value = (String) values.get(language + "_" + country);
 
-			if (value != null) {
+			if (value != null)
+			{
 				return value;
 			}
 		}
 
-		if (language != null) {
+		if (language != null)
+		{
 			value = (String) values.get(language);
 
-			if (value != null) {
+			if (value != null)
+			{
 				return value;
 			}
 		}
@@ -249,36 +271,43 @@ public class PageProperty {
 	 *
 	 * @return A map of locale String/value pairs
 	 */
-	public Map getValues() {
+	public Map getValues()
+	{
 		return values;
 	}
 
-	public String toString() {
+	public String toString()
+	{
 		return getValue();
 	}
 
 	/**
 	 * @return Returns the path.
 	 */
-	public String getPath() {
+	public String getPath()
+	{
 		return fieldPath;
 	}
 
 	/**
 	 * @param inPath The path to set.
 	 */
-	public void setPath(String inPath) {
+	public void setPath(String inPath)
+	{
 		fieldPath = inPath;
 	}
 
-	public void setValue(String inString) {
+	public void setValue(String inString)
+	{
 		setValue(inString, (String) null);
 
 	}
 
-	public boolean hasEntryForLocale(String locale) {
+	public boolean hasEntryForLocale(String locale)
+	{
 
-		if (locale == null) {
+		if (locale == null)
+		{
 			locale = "";
 		}
 		String language = null;
@@ -286,39 +315,52 @@ public class PageProperty {
 		String variant = null;
 
 		String[] splits = locale.split("_");
-		if (splits.length == 1) {
+		if (splits.length == 1)
+		{
 			language = splits[0];
-		} else if (splits.length == 2) {
-			language = splits[0];
-			country = splits[1];
-		} else if (splits.length == 3) {
-			language = splits[0];
-			country = splits[1];
-			variant = splits[2];
 		}
+		else
+			if (splits.length == 2)
+			{
+				language = splits[0];
+				country = splits[1];
+			}
+			else
+				if (splits.length == 3)
+				{
+					language = splits[0];
+					country = splits[1];
+					variant = splits[2];
+				}
 
 		String value = null;
 
-		if (variant != null) {
+		if (variant != null)
+		{
 			value = (String) values.get(language + "_" + country + "_" + variant);
 
-			if (value != null) {
+			if (value != null)
+			{
 				return true;
 			}
 		}
 
-		if (country != null) {
+		if (country != null)
+		{
 			value = (String) values.get(language + "_" + country);
 
-			if (value != null) {
+			if (value != null)
+			{
 				return true;
 			}
 		}
 
-		if (language != null) {
+		if (language != null)
+		{
 			value = (String) values.get(language);
 
-			if (value != null) {
+			if (value != null)
+			{
 				return true;
 			}
 		}

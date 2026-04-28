@@ -7,55 +7,72 @@ package org.openedit.util;
  * @author sxakil
  *
  */
-public class CSSUtils {
-    public static int[] hexToRgb(String hex) {
+public class CSSUtils
+{
+    public static int[] hexToRgb(String hex)
+    {
         hex = hex.replace("#", "");
         int r = Integer.parseInt(hex.substring(0, 2), 16);
         int g = Integer.parseInt(hex.substring(2, 4), 16);
         int b = Integer.parseInt(hex.substring(4, 6), 16);
-        return new int[] { r, g, b };
+        return new int[] {r, g, b};
     }
 
-    public static String rgbToHex(int r, int g, int b) {
+    public static String rgbToHex(int r, int g, int b)
+    {
         return String.format("#%02X%02X%02X", r, g, b);
     }
 
-    public static float[] rgbToHsl(int r, int g, int b) {
+    public static float[] rgbToHsl(int r, int g, int b)
+    {
         float rf = r / 255f, gf = g / 255f, bf = b / 255f;
         float max = Math.max(rf, Math.max(gf, bf));
         float min = Math.min(rf, Math.min(gf, bf));
         float h = 0, s, l = (max + min) / 2;
 
-        if (max == min) {
+        if (max == min)
+        {
             h = s = 0; // achromatic
-        } else {
+        }
+        else
+        {
             float d = max - min;
             s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
 
-            if (max == rf) {
+            if (max == rf)
+            {
                 h = (gf - bf) / d + (gf < bf ? 6 : 0);
-            } else if (max == gf) {
-                h = (bf - rf) / d + 2;
-            } else {
-                h = (rf - gf) / d + 4;
             }
+            else
+                if (max == gf)
+                {
+                    h = (bf - rf) / d + 2;
+                }
+                else
+                {
+                    h = (rf - gf) / d + 4;
+                }
 
             h /= 6;
         }
 
-        return new float[] { h * 360, s * 100, l * 100 };
+        return new float[] {h * 360, s * 100, l * 100};
     }
 
-    public static int[] hslToRgb(float h, float s, float l) {
+    public static int[] hslToRgb(float h, float s, float l)
+    {
         h /= 360;
         s /= 100;
         l /= 100;
 
         float r, g, b;
 
-        if (s == 0) {
+        if (s == 0)
+        {
             r = g = b = l; // achromatic
-        } else {
+        }
+        else
+        {
             float q = l < 0.5 ? l * (1 + s) : l + s - l * s;
             float p = 2 * l - q;
             r = hueToRgb(p, q, h + 1f / 3f);
@@ -63,14 +80,11 @@ public class CSSUtils {
             b = hueToRgb(p, q, h - 1f / 3f);
         }
 
-        return new int[] {
-                Math.round(r * 255),
-                Math.round(g * 255),
-                Math.round(b * 255)
-        };
+        return new int[] {Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)};
     }
 
-    private static float hueToRgb(float p, float q, float t) {
+    private static float hueToRgb(float p, float q, float t)
+    {
         if (t < 0)
             t += 1;
         if (t > 1)
@@ -84,19 +98,23 @@ public class CSSUtils {
         return p;
     }
 
-    public static String lightenColor(String hex, float percent) {
+    public static String lightenColor(String hex, float percent)
+    {
         return adjustLightness(hex, percent);
     }
 
-    public static String darkenColor(String hex, float percent) {
+    public static String darkenColor(String hex, float percent)
+    {
         return adjustLightness(hex, -percent);
     }
 
-    private static String adjustLightness(String hex, float percent) {
+    private static String adjustLightness(String hex, float percent)
+    {
         int[] rgb = hexToRgb(hex);
         float[] hsl = rgbToHsl(rgb[0], rgb[1], rgb[2]);
 
-        if (hsl[2] + percent > 100 || hsl[2] + percent < 0) {
+        if (hsl[2] + percent > 100 || hsl[2] + percent < 0)
+        {
             percent *= -1;
         }
 
@@ -106,34 +124,40 @@ public class CSSUtils {
         return rgbToHex(adjustedRgb[0], adjustedRgb[1], adjustedRgb[2]);
     }
 
-    private static float clamp(float value, float min, float max) {
+    private static float clamp(float value, float min, float max)
+    {
         return Math.max(min, Math.min(max, value));
     }
 
-    public static String normalizeHex(String hex) {
+    public static String normalizeHex(String hex)
+    {
         if (hex == null)
             return null;
 
         hex = hex.trim().replace("#", "");
 
         // Expand 3-digit hex to 6-digit
-        if (hex.length() == 3) {
-            hex = "" + hex.charAt(0) + hex.charAt(0)
-                    + hex.charAt(1) + hex.charAt(1)
-                    + hex.charAt(2) + hex.charAt(2);
+        if (hex.length() == 3)
+        {
+            hex = "" + hex.charAt(0) + hex.charAt(0) + hex.charAt(1) + hex.charAt(1) + hex.charAt(2) + hex.charAt(2);
         }
 
         // Validate 6-digit hex
-        if (hex.matches("^[0-9a-fA-F]{6}$")) {
+        if (hex.matches("^[0-9a-fA-F]{6}$"))
+        {
             return "#" + hex.toUpperCase();
-        } else {
+        }
+        else
+        {
             return null; // Invalid
         }
     }
 
-    public static double getLuminance(int[] rgb) {
-        double[] srgb = { 0, 0, 0 };
-        for (int i = 0; i < rgb.length; i++) {
+    public static double getLuminance(int[] rgb)
+    {
+        double[] srgb = {0, 0, 0};
+        for (int i = 0; i < rgb.length; i++)
+        {
 
             float c = rgb[i] / 255;
             srgb[i] = c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
@@ -142,27 +166,32 @@ public class CSSUtils {
 
     }
 
-    public static String makeGradient(String color1, String angle) {
+    public static String makeGradient(String color1, String angle)
+    {
         String color2 = lightenColor(color1, 15);
         String gradient = "linear-gradient(" + angle + "deg, " + color1 + " 40%, " + color2 + " 100%)";
         return gradient;
     }
 
-    public static String makeGradient(String color1) {
+    public static String makeGradient(String color1)
+    {
         return makeGradient(color1, "45");
     }
 
-    public static String makeGradientHover(String color1, String angle) {
+    public static String makeGradientHover(String color1, String angle)
+    {
         String color2 = lightenColor(color1, 15);
         String gradient = "linear-gradient(" + angle + "deg, " + color1 + " 50%, " + color2 + " 100%)";
         return gradient;
     }
 
-    public static String makeGradientHover(String color1) {
+    public static String makeGradientHover(String color1)
+    {
         return makeGradientHover(color1, "45");
     }
 
-    public static String makeContrast(String hex) {
+    public static String makeContrast(String hex)
+    {
         // hex = normalizeHex(hex);
         // if (hex == null) return null;
         //
@@ -190,7 +219,8 @@ public class CSSUtils {
 
     }
 
-    public static String makeHover(String hex) {
+    public static String makeHover(String hex)
+    {
         hex = normalizeHex(hex);
         if (hex == null)
             return null;

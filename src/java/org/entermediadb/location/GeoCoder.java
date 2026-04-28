@@ -21,7 +21,8 @@ import org.openedit.OpenEditException;
 import org.openedit.util.FileUtils;
 import org.openedit.util.OutputFiller;
 
-public class GeoCoder {
+public class GeoCoder
+{
 	private static final Log log = LogFactory.getLog(GeoCoder.class);
 	protected String fieldGoogleKey;
 	protected String fieldCatalogId;
@@ -32,44 +33,55 @@ public class GeoCoder {
 
 	// Hits for this search
 
-	public ModuleManager getModuleManager() {
+	public ModuleManager getModuleManager()
+	{
 		return fieldModuleManager;
 	}
 
-	public void setModuleManager(ModuleManager inModuleManager) {
+	public void setModuleManager(ModuleManager inModuleManager)
+	{
 		fieldModuleManager = inModuleManager;
 	}
 
-	public String getCatalogId() {
+	public String getCatalogId()
+	{
 		return fieldCatalogId;
 	}
 
-	public void setCatalogId(String inCatalogId) {
+	public void setCatalogId(String inCatalogId)
+	{
 		fieldCatalogId = inCatalogId;
 	}
 
-	public String getGoogleKey() {
+	public String getGoogleKey()
+	{
 		return fieldGoogleKey;
 	}
 
-	public void setGoogleKey(String inGoogleKey) {
+	public void setGoogleKey(String inGoogleKey)
+	{
 		fieldGoogleKey = inGoogleKey;
 	}
 
-	public Position findFirstPosition(String lookupString) {
+	public Position findFirstPosition(String lookupString)
+	{
 		Collection<Position> all = getPositions(lookupString);
-		if (!all.isEmpty()) {
+		if (!all.isEmpty())
+		{
 			return all.iterator().next();
 		}
 		log.error("No positions found for " + lookupString);
 		return null;
 	}
 
-	public List getPositions(String lookupString) {
+	public List getPositions(String lookupString)
+	{
 		ArrayList l = new ArrayList();
 		String responseString = null;
-		try {
-			if (lookupString == null) {
+		try
+		{
+			if (lookupString == null)
+			{
 				return null;
 			}
 			lookupString = URLEncoder.encode(lookupString, "UTF-8");
@@ -86,22 +98,27 @@ public class GeoCoder {
 			// https://www.googleapis.com/geolocation/v1/geolocate?key=YOUR_API_KEY
 
 			String url = "https://maps.googleapis.com/maps/api/geocode/xml?address=" + lookupString + "&sensor=false";
-			if (getGoogleKey() != null) {
+			if (getGoogleKey() != null)
+			{
 				url = url + "&key=" + getGoogleKey();
 			}
 
 			responseString = downloadToString(url);
 
 			Element root1 = null;
-			try {
+			try
+			{
 				Document document = DocumentHelper.parseText(responseString);
 				root1 = document.getRootElement();
-			} catch (DocumentException e) {
+			}
+			catch (DocumentException e)
+			{
 				throw new OpenEditException(e);
 
 			}
 			Element result = root1.element("result");
-			if (result == null) {
+			if (result == null)
+			{
 				return l;
 			}
 
@@ -124,7 +141,9 @@ public class GeoCoder {
 
 			l.add(p);
 
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			log.error("Could not search", e);
 			log.error(responseString);
 		}
@@ -132,14 +151,15 @@ public class GeoCoder {
 		// List positions = parseGoogleResponse(responseString);
 	}
 
-	public String downloadToString(String inUrl) {
+	public String downloadToString(String inUrl)
+	{
 		StringWriter out = null;
 		InputStream in = null;
-		try {
+		try
+		{
 			URL url = new URL(inUrl);
 			URLConnection con = url.openConnection();
-			con.setRequestProperty("User-Agent",
-					"Mozilla/5.0 (Windows; U; Windows NT 6.1; en-GB;     rv:1.9.2.13) Gecko/20101203 Firefox/3.6.13 (.NET CLR 3.5.30729)");
+			con.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-GB;     rv:1.9.2.13) Gecko/20101203 Firefox/3.6.13 (.NET CLR 3.5.30729)");
 
 			con.setUseCaches(false);
 			con.connect();
@@ -152,9 +172,13 @@ public class GeoCoder {
 			// *** fill output stream
 			new OutputFiller().fill(new InputStreamReader(in), out);
 			return out.toString();
-		} catch (Exception ex) {
+		}
+		catch (Exception ex)
+		{
 			throw new OpenEditException(ex);
-		} finally {
+		}
+		finally
+		{
 			// *** close output stream
 			FileUtils.safeClose(out);
 			// *** close input stream

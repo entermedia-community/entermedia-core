@@ -23,42 +23,53 @@ import org.openedit.util.SimpleDateFormatPerThread;
  * @author cburkey
  *
  */
-public abstract class BaseGenerator implements Generator, Cloneable {
+public abstract class BaseGenerator implements Generator, Cloneable
+{
 	protected String fieldName;
 	private OutputFiller fieldOutputFiller;
 
 	private static Log log = LogFactory.getLog(BaseGenerator.class);
 
-	protected OutputFiller getOutputFiller() {
-		if (fieldOutputFiller == null) {
+	protected OutputFiller getOutputFiller()
+	{
+		if (fieldOutputFiller == null)
+		{
 			fieldOutputFiller = new OutputFiller();
 		}
 		return fieldOutputFiller;
 	}
 
-	public String getName() {
+	public String getName()
+	{
 		return fieldName;
 	}
 
-	public void setName(String inName) {
+	public void setName(String inName)
+	{
 		fieldName = inName;
 	}
 
 	// TODO: Should this check for exists? What about isBinary?
-	public boolean canGenerate(WebPageRequest inReq) {
+	public boolean canGenerate(WebPageRequest inReq)
+	{
 		return !inReq.getPage().isBinary();
 	}
 
-	public Object clone() {
-		try {
+	public Object clone()
+	{
+		try
+		{
 			return super.clone();
-		} catch (CloneNotSupportedException ex) {
+		}
+		catch (CloneNotSupportedException ex)
+		{
 			// silent, will never happen
 			return null;
 		}
 	}
 
-	public boolean hasGenerator(Generator inChild) {
+	public boolean hasGenerator(Generator inChild)
+	{
 		return inChild == this;
 	}
 
@@ -112,23 +123,26 @@ public abstract class BaseGenerator implements Generator, Cloneable {
 	// }
 	// }
 
-	protected boolean ignoreError(Throwable inWrapped) {
-		if (inWrapped == null) {
+	protected boolean ignoreError(Throwable inWrapped)
+	{
+		if (inWrapped == null)
+		{
 			return false;
 		}
-		if (inWrapped instanceof EOFException) {
+		if (inWrapped instanceof EOFException)
+		{
 			return true;
 		}
-		if (inWrapped instanceof java.net.SocketTimeoutException) {
+		if (inWrapped instanceof java.net.SocketTimeoutException)
+		{
 			return true;
 		}
-		if ("Closed".equals(inWrapped.getMessage())) {
+		if ("Closed".equals(inWrapped.getMessage()))
+		{
 			return true;
 		}
 		String message = inWrapped.toString() + inWrapped.getMessage();
-		if (message.indexOf("Broken pipe") > -1 ||
-				message.indexOf("socket write error") > -1 ||
-				message.indexOf("Connection reset") > -1) // tomcat
+		if (message.indexOf("Broken pipe") > -1 || message.indexOf("socket write error") > -1 || message.indexOf("Connection reset") > -1) // tomcat
 		{
 			return true;
 		}
@@ -137,8 +151,10 @@ public abstract class BaseGenerator implements Generator, Cloneable {
 
 	protected SimpleDateFormatPerThread fieldLastModFormat;
 
-	public SimpleDateFormatPerThread getLastModFormat() {
-		if (fieldLastModFormat == null) {
+	public SimpleDateFormatPerThread getLastModFormat()
+	{
+		if (fieldLastModFormat == null)
+		{
 			// Tue, 05 Jan 2010 14:20:51 GMT -- just english
 			fieldLastModFormat = new SimpleDateFormatPerThread("EEE, dd MMM yyyy HH:mm:ss z", Locale.US);
 			// log.info( fieldLastModFormat.format(new Date()) );
@@ -146,33 +162,41 @@ public abstract class BaseGenerator implements Generator, Cloneable {
 		return fieldLastModFormat;
 	}
 
-	protected boolean checkCache(WebPageRequest inContext, Long lastmodified, HttpServletRequest req,
-			HttpServletResponse res) {
-		if (req != null) {
+	protected boolean checkCache(WebPageRequest inContext, Long lastmodified, HttpServletRequest req, HttpServletResponse res)
+	{
+		if (req != null)
+		{
 			String match = req.getHeader("If-None-Match");
-			if (match != null) {
+			if (match != null)
+			{
 				String lasmodified = String.valueOf(lastmodified);
-				if (lasmodified.equals(match)) {
+				if (lasmodified.equals(match))
+				{
 					res.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
 					return true;
 				}
 			}
 
 			String since = req.getHeader("If-Modified-Since");
-			if (since != null && since.endsWith("GMT")) {
+			if (since != null && since.endsWith("GMT"))
+			{
 				// 304 Not Modified
-				try {
+				try
+				{
 					Date old = getLastModFormat().parse(since);
 
 					long oldtime = old.getTime() / 1000;
 					long currenttime = lastmodified / 1000;
 
-					if (currenttime == oldtime) {
+					if (currenttime == oldtime)
+					{
 						// log.info("if since" + since);
 						res.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
 						return true;
 					}
-				} catch (Exception ex) {
+				}
+				catch (Exception ex)
+				{
 					log.error(since);
 				}
 			}
@@ -182,7 +206,8 @@ public abstract class BaseGenerator implements Generator, Cloneable {
 		return false;
 	}
 
-	protected void setHeaders(HttpServletResponse res, Long lastmodified) {
+	protected void setHeaders(HttpServletResponse res, Long lastmodified)
+	{
 		res.setHeader("ETag", lastmodified.toString());
 		res.setHeader("Cache-Control", "max-age=0; must-revalidate");
 		// res.setDateHeader("Last-Modified", lastmodified);

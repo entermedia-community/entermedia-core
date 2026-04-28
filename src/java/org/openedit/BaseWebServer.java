@@ -40,11 +40,10 @@ import groovy.util.GroovyScriptEngine;
 
 /**
  * <p>
- * This class contains the core parts of an OpenEdit website. You should not use
- * this object if you only need one part of it. This class is responsible for
- * loading the Spring beans as defined in the openedit.xml and any applicable
- * plugin.xml or pluginoverrides.xml files for extending functionality from
- * the core of OpenEdit.
+ * This class contains the core parts of an OpenEdit website. You should not use this object if you
+ * only need one part of it. This class is responsible for loading the Spring beans as defined in
+ * the openedit.xml and any applicable plugin.xml or pluginoverrides.xml files for extending
+ * functionality from the core of OpenEdit.
  * </p>
  * <p>
  * This implementation uses a simple Spring BeanFactory to manage the beans.
@@ -54,7 +53,8 @@ import groovy.util.GroovyScriptEngine;
  * @author cburkey
  *
  */
-public class BaseWebServer implements WebServer {
+public class BaseWebServer implements WebServer
+{
 	private static final Log log = LogFactory.getLog(WebServer.class);
 	protected BeanLoader fieldBeanLoader;
 	protected File fieldRootDirectory;
@@ -63,11 +63,13 @@ public class BaseWebServer implements WebServer {
 	protected Date fieldLastMountsReloaded;
 	protected ServletContext fieldServletContext;
 
-	public Date getLastMountsReloaded() {
+	public Date getLastMountsReloaded()
+	{
 		return fieldLastMountsReloaded;
 	}
 
-	public void setLastMountsReloaded(Date inLastMountsReloaded) {
+	public void setLastMountsReloaded(Date inLastMountsReloaded)
+	{
 		fieldLastMountsReloaded = inLastMountsReloaded;
 	}
 
@@ -77,16 +79,20 @@ public class BaseWebServer implements WebServer {
 		log.info("Web Server created");
 	}
 
-	public String getNodeId() {
+	public String getNodeId()
+	{
 		return fieldNodeId;
 	}
 
-	public void setNodeId(String inNodeId) {
+	public void setNodeId(String inNodeId)
+	{
 		fieldNodeId = inNodeId;
 	}
 
-	public BeanLoader getBeanLoader() {
-		if (fieldBeanLoader == null) {
+	public BeanLoader getBeanLoader()
+	{
+		if (fieldBeanLoader == null)
+		{
 			fieldBeanLoader = new BeanLoader();
 			fieldBeanLoader.setWebServer(this);
 		}
@@ -119,19 +125,24 @@ public class BaseWebServer implements WebServer {
 		return fieldBeanLoader;
 	}
 
-	public synchronized void initialize() {
-		if (getRootDirectory() == null) {
+	public synchronized void initialize()
+	{
+		if (getRootDirectory() == null)
+		{
 			String path = System.getProperty("oe.root.path");
-			if (path != null) {
+			if (path != null)
+			{
 				setRootDirectory(new File(path).getAbsoluteFile());
 			}
 		}
-		if (getRootDirectory() == null) {
+		if (getRootDirectory() == null)
+		{
 			throw new IllegalStateException("Root directory is not defined");
 		}
 		// TODO: Look for duplicate openedit jars and try to delete them
 
-		try {
+		try
+		{
 			// http://www.digizenstudio.com/blog/2007/01/14/programmatically-build-a-spring-application-context/
 			// BeanDefinitionBuilder bdb1 =
 			// BeanDefinitionBuilder.rootBeanDefinition("org.springframework.scripting.support.ScriptFactoryPostProcessor").setLazyInit(false);
@@ -141,8 +152,7 @@ public class BaseWebServer implements WebServer {
 			ScriptPathLoader pathloader = new ScriptPathLoader();
 			pathloader.setRoot(getRootDirectory());
 			List classpathfolders = pathloader.findPaths();
-			GroovyScriptEngine engine = new GroovyScriptEngine(
-					(String[]) classpathfolders.toArray(new String[classpathfolders.size()]));
+			GroovyScriptEngine engine = new GroovyScriptEngine((String[]) classpathfolders.toArray(new String[classpathfolders.size()]));
 
 			GroovyClassLoader loader = engine.getGroovyClassLoader();
 			getBeanLoader().setClassloader(loader);
@@ -151,7 +161,8 @@ public class BaseWebServer implements WebServer {
 			getBeanLoader().registerSingleton("root", getRootDirectory());
 
 			List sorted = getAllPlugIns();
-			for (Iterator iter = sorted.iterator(); iter.hasNext();) {
+			for (Iterator iter = sorted.iterator(); iter.hasNext();)
+			{
 				PlugIn plugin = (PlugIn) iter.next();
 				getBeanLoader().load(plugin.getPluginXml(), plugin.getPluginXml().getPath());
 			}
@@ -163,14 +174,17 @@ public class BaseWebServer implements WebServer {
 
 			File overrideFile = new File(getRootDirectory(), "/WEB-INF/pluginoverrides10.xml"); // TODO: Use a directory
 																								// of files
-			if (overrideFile.exists()) {
+			if (overrideFile.exists())
+			{
 				getBeanLoader().load(overrideFile.toURL(), overrideFile.getAbsolutePath());
 			}
 
 			// Loop over the src folders
 			log.info("loaded " + getBeanLoader().getLoadedBeans().size() + " beans");
 
-		} catch (Throwable ex) {
+		}
+		catch (Throwable ex)
+		{
 			log.error("Could not start server: ", ex);
 			throw new OpenEditRuntimeException(ex);
 		}
@@ -192,10 +206,14 @@ public class BaseWebServer implements WebServer {
 
 		Thread sh = new Thread(new Runnable() // This is in case the JVM is shut down
 		{
-			public void run() {
-				try {
+			public void run()
+			{
+				try
+				{
 					getOpenEditEngine().shutdown();
-				} catch (Throwable ex) {
+				}
+				catch (Throwable ex)
+				{
 					ex.printStackTrace();
 				}
 			}
@@ -209,40 +227,52 @@ public class BaseWebServer implements WebServer {
 
 	}
 
-	public void finalizeStartup() {
+	public void finalizeStartup()
+	{
 		reloadMounts();
-		try {
+		try
+		{
 			Page page = getPageManager().getPage("/WEB-INF/startup.html");
 			BaseWebPageRequest request = new BaseWebPageRequest();
 			request.setContentPage(page);
 			request.setPage(page);
 			log.info("Adding ServletContext");
 			request.putPageValue("servletcontext", getServletContext());
-			if (page.getPageSettings().exists()) {
+			if (page.getPageSettings().exists())
+			{
 				getOpenEditEngine().executePathActions(request);
 			}
-			if (getModuleManager().contains("MediaAdminModule")) {
+			if (getModuleManager().contains("MediaAdminModule"))
+			{
 				getModuleManager().execute("MediaAdminModule.initCatalogs", request);
 			}
 
-		} catch (Throwable ex) {
+		}
+		catch (Throwable ex)
+		{
 			log.error("Could not initiallize cleanly ", ex);
 		}
 	}
 
-	public PlugIn getPlugin(String inId) {
-		for (Iterator iterator = getAllPlugIns().iterator(); iterator.hasNext();) {
+	public PlugIn getPlugin(String inId)
+	{
+		for (Iterator iterator = getAllPlugIns().iterator(); iterator.hasNext();)
+		{
 			PlugIn plugin = (PlugIn) iterator.next();
-			if (plugin.getId() != null && plugin.getId().equals(inId)) {
+			if (plugin.getId() != null && plugin.getId().equals(inId))
+			{
 				return plugin;
 			}
 		}
 		return null;
 	}
 
-	public List getAllPlugIns() {
-		if (fieldAllPlugIns == null) {
-			try {
+	public List getAllPlugIns()
+	{
+		if (fieldAllPlugIns == null)
+		{
+			try
+			{
 				ClassLoader loader = ClassLoader.getSystemClassLoader(); // getClass().getClassLoader();
 				// if( loader == null)
 				// {
@@ -255,7 +285,8 @@ public class BaseWebServer implements WebServer {
 				Map allplugins = new HashMap();
 				Map depends = loadDepends();
 
-				while (pluginDefs.hasMoreElements()) {
+				while (pluginDefs.hasMoreElements())
+				{
 					URL url = (URL) pluginDefs.nextElement();
 					PlugIn plugin = new PlugIn();
 					plugin.setPluginXml(url);
@@ -267,7 +298,8 @@ public class BaseWebServer implements WebServer {
 
 					Element depend = (Element) depends.get(pluginpath);
 
-					if (depend != null) {
+					if (depend != null)
+					{
 						String projectname = depend.attributeValue("projectname");
 						plugin.setId(projectname);
 						fieldAllPlugIns.add(plugin);
@@ -280,11 +312,15 @@ public class BaseWebServer implements WebServer {
 				// Now look in all the base folder
 				File folders = new File(getRootDirectory(), "/WEB-INF/base/");
 				File[] children = folders.listFiles();
-				if (children != null) {
-					for (int i = 0; i < children.length; i++) {
-						if (children[i].isDirectory()) {
+				if (children != null)
+				{
+					for (int i = 0; i < children.length; i++)
+					{
+						if (children[i].isDirectory())
+						{
 							File script = new File(children[i], "/src/plugin.xml");
-							if (script.exists()) {
+							if (script.exists())
+							{
 								PlugIn plugin = createPlugIn(script);
 								allplugins.put(plugin.getId(), plugin);
 							}
@@ -292,12 +328,15 @@ public class BaseWebServer implements WebServer {
 					}
 				}
 				fieldAllPlugIns.addAll(allplugins.values());
-				for (Iterator iterator = fieldAllPlugIns.iterator(); iterator.hasNext();) {
+				for (Iterator iterator = fieldAllPlugIns.iterator(); iterator.hasNext();)
+				{
 					PlugIn plugin = (PlugIn) iterator.next();
 					reloadDependants(plugin);
 				}
 				fieldAllPlugIns = sortPlugins(fieldAllPlugIns);
-			} catch (IOException ex) {
+			}
+			catch (IOException ex)
+			{
 				throw new OpenEditException(ex);
 			}
 
@@ -305,22 +344,28 @@ public class BaseWebServer implements WebServer {
 		return fieldAllPlugIns;
 	}
 
-	protected List sortPlugins(List inAllPlugIns) {
+	protected List sortPlugins(List inAllPlugIns)
+	{
 		ArrayList finallist = new ArrayList();
 
-		while (finallist.size() != inAllPlugIns.size()) {
+		while (finallist.size() != inAllPlugIns.size())
+		{
 
-			for (Iterator iterator = inAllPlugIns.iterator(); iterator.hasNext();) {
+			for (Iterator iterator = inAllPlugIns.iterator(); iterator.hasNext();)
+			{
 				PlugIn plugin = (PlugIn) iterator.next();
-				if (finallist.contains(plugin)) {
+				if (finallist.contains(plugin))
+				{
 					continue;
 				}
-				if (plugin.getDependantPlugins().size() == 0) {
+				if (plugin.getDependantPlugins().size() == 0)
+				{
 					finallist.add(plugin);
 					continue;
 				}
 				PlugIn dependson = (PlugIn) plugin.getDependantPlugins().get(0);
-				if (finallist.contains(dependson)) {
+				if (finallist.contains(dependson))
+				{
 					int location = finallist.indexOf(dependson);
 					// insert after.
 					finallist.add(location + 1, plugin);
@@ -331,11 +376,15 @@ public class BaseWebServer implements WebServer {
 
 	}
 
-	protected PlugIn createPlugIn(File inScript) {
+	protected PlugIn createPlugIn(File inScript)
+	{
 		PlugIn plugin = new PlugIn();
-		try {
+		try
+		{
 			plugin.setPluginXml(inScript.toURL());
-		} catch (MalformedURLException e) {
+		}
+		catch (MalformedURLException e)
+		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -346,42 +395,54 @@ public class BaseWebServer implements WebServer {
 		return plugin;
 	}
 
-	protected void reloadDependants(PlugIn inPlugin) {
+	protected void reloadDependants(PlugIn inPlugin)
+	{
 
-		try {
+		try
+		{
 			InputStream in = inPlugin.getPluginXml().openStream();
 			Element root = xml.getXml(in, "UTF-8");
 			String dependson = root.attributeValue("depends");
 
-			if (dependson != null) {
+			if (dependson != null)
+			{
 
 				PlugIn parent = getPlugin(dependson);
-				if (parent != null) {
+				if (parent != null)
+				{
 					inPlugin.addDependant(parent);
 				}
 
 			}
-		} catch (IOException e) {
+		}
+		catch (IOException e)
+		{
 			throw new OpenEditException(e);
 		}
 
 	}
 
-	private void populateDependants(Map inPlugins, Map inDepends) {
-		for (Iterator iterator = inPlugins.values().iterator(); iterator.hasNext();) {
+	private void populateDependants(Map inPlugins, Map inDepends)
+	{
+		for (Iterator iterator = inPlugins.values().iterator(); iterator.hasNext();)
+		{
 			PlugIn plugin = (PlugIn) iterator.next();
 			Element root = (Element) inDepends.get(plugin.getPlugInPath());
-			if (root == null) {
+			if (root == null)
+			{
 				continue; // no dependancy
 			}
-			for (Iterator iter = root.elementIterator("depend"); iter.hasNext();) {
+			for (Iterator iter = root.elementIterator("depend"); iter.hasNext();)
+			{
 				Element child = (Element) iter.next();
 				String name = child.getTextTrim();
-				if (name.equals("entermedia")) {
+				if (name.equals("entermedia"))
+				{
 					continue; // Not needed since it is core
 				}
 				PlugIn plug = (PlugIn) inPlugins.get(name);
-				if (plug == null) {
+				if (plug == null)
+				{
 					log.error("Missing dependency:" + name);
 				}
 				plugin.addDependsOn(plug);
@@ -396,9 +457,11 @@ public class BaseWebServer implements WebServer {
 	 * @return
 	 * @throws IOException
 	 */
-	protected Map loadDepends() throws IOException {
+	protected Map loadDepends() throws IOException
+	{
 		ClassLoader loader = getClass().getClassLoader();
-		if (loader == null) {
+		if (loader == null)
+		{
 			loader = ClassLoader.getSystemClassLoader();
 		}
 
@@ -408,7 +471,8 @@ public class BaseWebServer implements WebServer {
 		Map dependslist = new HashMap();
 
 		// First load any and all depends that are configured
-		while (depends.hasMoreElements()) {
+		while (depends.hasMoreElements())
+		{
 			URL dependurl = (URL) depends.nextElement();
 			// PlugIn plugin = (PlugIn)depends.nextElement();
 			String pluginpath = dependurl.getPath();
@@ -551,38 +615,45 @@ public class BaseWebServer implements WebServer {
 	/**
 	 * @see org.openedit.WebServer#getPageManager()
 	 */
-	public PageManager getPageManager() {
+	public PageManager getPageManager()
+	{
 		return (PageManager) getBeanLoader().getBean("pageManager");
 	}
 
 	/**
 	 * @see org.openedit.WebServer#getUserManager()
 	 */
-	public UserManager getUserManager() {
+	public UserManager getUserManager()
+	{
 		return (UserManager) getBeanLoader().getBean("userManager");
 	}
 
 	/**
 	 * @see org.openedit.WebServer#getModuleManager()
 	 */
-	public ModuleManager getModuleManager() {
+	public ModuleManager getModuleManager()
+	{
 		return (ModuleManager) getBeanLoader().getBean("moduleManager");
 	}
 
 	/**
 	 * @see org.openedit.WebServer#getOpenEditEngine()
 	 */
-	public OpenEditEngine getOpenEditEngine() {
+	public OpenEditEngine getOpenEditEngine()
+	{
 		return (OpenEditEngine) getBeanLoader().getBean("OpenEditEngine");
 	}
 
 	/**
 	 * @see org.openedit.WebServer#getRootDirectory()
 	 */
-	public File getRootDirectory() {
-		if (fieldRootDirectory == null) {
+	public File getRootDirectory()
+	{
+		if (fieldRootDirectory == null)
+		{
 			String path = System.getProperty("oe.root.path");
-			if (path != null) {
+			if (path != null)
+			{
 				log.info("Using System default since to path set " + path);
 				fieldRootDirectory = new File(path).getAbsoluteFile();
 			}
@@ -590,69 +661,89 @@ public class BaseWebServer implements WebServer {
 		return fieldRootDirectory;
 	}
 
-	public void setRootDirectory(File inRoot) {
-		if (inRoot != null) {
-			try {
+	public void setRootDirectory(File inRoot)
+	{
+		if (inRoot != null)
+		{
+			try
+			{
 				inRoot = inRoot.getCanonicalFile();
-			} catch (IOException ex) {
+			}
+			catch (IOException ex)
+			{
 				throw new IllegalArgumentException("Could not convert " + inRoot, ex);
 			}
 		}
 		fieldRootDirectory = inRoot;
 	}
 
-	public void checkMounts() {
+	public void checkMounts()
+	{
 		Page mounts = getPageManager().getPage("/WEB-INF/data/oemounts.xml", true);
 		Date lastmod = mounts.getLastModified();
 
-		if (getLastMountsReloaded() != null && lastmod.after(getLastMountsReloaded())) {
+		if (getLastMountsReloaded() != null && lastmod.after(getLastMountsReloaded()))
+		{
 			reloadMounts();
 		}
 	}
 
-	public void reloadMounts() {
+	public void reloadMounts()
+	{
 
 		Page mounts = getPageManager().getPage("/WEB-INF/data/oemounts.xml", true);
-		if (!mounts.exists()) {
+		if (!mounts.exists())
+		{
 			mounts = getPageManager().getPage("/WEB-INF/oemounts.xml", true);
 		}
 		getPageManager().getRepository().getRepositories().clear();
-		if (mounts.exists()) {
+		if (mounts.exists())
+		{
 			Element root = new XmlUtil().getXml(mounts.getInputStream(), "UTF-8");
 			List children = root.elements("mount");
-			for (Iterator iterator = children.iterator(); iterator.hasNext();) {
+			for (Iterator iterator = children.iterator(); iterator.hasNext();)
+			{
 				Element child = (Element) iterator.next();
 
 				String repositorytype = child.attributeValue("repositorytype");
-				if (repositorytype == null) {
+				if (repositorytype == null)
+				{
 					// For legacy support. New UI uses type drop down
 					String isset = child.attributeValue("useversioncontrol");
 
-					if (isset == null || Boolean.parseBoolean(isset)) {
+					if (isset == null || Boolean.parseBoolean(isset))
+					{
 						repositorytype = "fileRepository";// version repo is gone
 					}
 				}
-				if (repositorytype == null) {
+				if (repositorytype == null)
+				{
 					repositorytype = "fileRepository";
 				}
 				Repository config = (Repository) getModuleManager().getBean(repositorytype);
 				config.setRepositoryType(repositorytype);
 				String path = child.attributeValue("path");
-				if (path == null) {
+				if (path == null)
+				{
 					path = "/";
 				}
 				String filter = child.attributeValue("filter");
-				if (filter != null) {
-					if (filter.endsWith("*")) {
+				if (filter != null)
+				{
+					if (filter.endsWith("*"))
+					{
 						// legacy support /* -> /
 						path = filter;
-					} else {
+					}
+					else
+					{
 						log.error("Invalid: " + filter + " Remove filter entries from /WEB-INF/oemounts.xml");
 						config.setMatchesPostFix(filter);
 					}
 				}
 				path = path.replace("*", "");
-				if (path.length() > 1 && path.endsWith("/")) {
+				if (path.length() > 1 && path.endsWith("/"))
+				{
 					path = path.substring(0, path.length() - 1);
 				}
 
@@ -661,7 +752,8 @@ public class BaseWebServer implements WebServer {
 				config.setMatchesPostFix(child.attributeValue("matchpostfix")); // *.PDF
 
 				config.setFilterIn(child.attributeValue("filterin")); // *.PDF
-				if (config.getFilterIn() == null) {
+				if (config.getFilterIn() == null)
+				{
 					config.setFilterIn(child.attributeValue("importextensions"));
 				}
 
@@ -670,21 +762,24 @@ public class BaseWebServer implements WebServer {
 				String externalpath = child.attributeValue("externalpath");
 
 				// This is used when no external path is passed in
-				if (externalpath == null) {
+				if (externalpath == null)
+				{
 					String rootpath = getCleanRootPath(config.getPath());
 					config.setExternalPath(rootpath);
 
-				} else {
-					if (externalpath.startsWith(".")) {
-						externalpath = PathUtilities.resolveRelativePath(externalpath,
-								getRootDirectory().getPath() + "/WEB-INF/");
+				}
+				else
+				{
+					if (externalpath.startsWith("."))
+					{
+						externalpath = PathUtilities.resolveRelativePath(externalpath, getRootDirectory().getPath() + "/WEB-INF/");
 					}
 					config.setExternalPath(externalpath);
 				}
 
 				List properties = child.elements("property");
-				for (Iterator iterator2 = properties.iterator(); iterator2
-						.hasNext();) {
+				for (Iterator iterator2 = properties.iterator(); iterator2.hasNext();)
+				{
 					Element property = (Element) iterator2.next();
 					String propName = property.attributeValue("name");
 					String value = property.getText();
@@ -698,23 +793,22 @@ public class BaseWebServer implements WebServer {
 				new File(getRootDirectory(), config.getPath()).mkdirs();
 
 			}
-		} else {
+		}
+		else
+		{
 			// Defaults
 			/*
-			 * Repository repos = new XmlVersionRepository();
-			 * repos.setPath("/WEB-INF/data");
+			 * Repository repos = new XmlVersionRepository(); repos.setPath("/WEB-INF/data");
 			 * repos.setRepositoryType("versionRepository");
 			 * repos.setExternalPath(getCleanRootPath(repos.getPath()));
 			 * getPageManager().getRepository().addRepository(repos);
 			 * 
-			 * repos = new FileRepository();
-			 * repos.setPath("/WEB-INF");
+			 * repos = new FileRepository(); repos.setPath("/WEB-INF");
 			 * repos.setRepositoryType("fileRepository");
 			 * repos.setExternalPath(getCleanRootPath(repos.getPath()));
 			 * getPageManager().getRepository().addRepository(repos);
 			 * 
-			 * repos = new XmlVersionRepository();
-			 * repos.setPath("/");
+			 * repos = new XmlVersionRepository(); repos.setPath("/");
 			 * repos.setRepositoryType("fileRepository");
 			 * repos.setExternalPath(getCleanRootPath(repos.getPath()));
 			 * getPageManager().getRepository().addRepository(repos);
@@ -726,20 +820,25 @@ public class BaseWebServer implements WebServer {
 		setLastMountsReloaded(new Date());
 	}
 
-	protected String getCleanRootPath(String append) {
+	protected String getCleanRootPath(String append)
+	{
 		String root = getRootDirectory().getAbsolutePath().replace('\\', '/');
-		if (root.endsWith("/")) {
+		if (root.endsWith("/"))
+		{
 			root = root.substring(0, root.length() - 1);
 		}
-		if (append != null && append.length() > 0) {
+		if (append != null && append.length() > 0)
+		{
 			root = root + append;
 		}
 		return root;
 	}
 
-	public void saveMounts(List mounts) {
+	public void saveMounts(List mounts)
+	{
 		Element root = DocumentHelper.createDocument().addElement("mounts");
-		for (Iterator iterator = mounts.iterator(); iterator.hasNext();) {
+		for (Iterator iterator = mounts.iterator(); iterator.hasNext();)
+		{
 			Repository existing = (Repository) iterator.next();
 			Element child = root.addElement("mount");
 			child.addAttribute("path", existing.getPath());
@@ -749,7 +848,8 @@ public class BaseWebServer implements WebServer {
 			child.addAttribute("matchpostfix", existing.getMatchesPostFix()); // *.PDF
 
 			String external = existing.getExternalPath();
-			if (external != null) {
+			if (external != null)
+			{
 				String path = getCleanRootPath(existing.getPath());
 				if (!path.equals(external)) // does not save any redundant data
 				{
@@ -758,8 +858,10 @@ public class BaseWebServer implements WebServer {
 			}
 			child.addAttribute("repositorytype", existing.getRepositoryType());
 			Map properties = existing.getProperties();
-			if (properties != null) {
-				for (Iterator iterator2 = properties.keySet().iterator(); iterator2.hasNext();) {
+			if (properties != null)
+			{
+				for (Iterator iterator2 = properties.keySet().iterator(); iterator2.hasNext();)
+				{
 					String name = (String) iterator2.next();
 					String value = (String) properties.get(name);
 					Element prop = child.addElement("property");
@@ -777,11 +879,13 @@ public class BaseWebServer implements WebServer {
 		reloadMounts();
 	}
 
-	public ServletContext getServletContext() {
+	public ServletContext getServletContext()
+	{
 		return fieldServletContext;
 	}
 
-	public void setServletContext(ServletContext inServletContext) {
+	public void setServletContext(ServletContext inServletContext)
+	{
 		fieldServletContext = inServletContext;
 	}
 

@@ -1,14 +1,14 @@
 /*
-Copyright (c) 2003 eInnovation Inc. All rights reserved
-
-This library is free software; you can redistribute it and/or modify it under the terms
-of the GNU Lesser General Public License as published by the Free Software Foundation;
-either version 2.1 of the License, or (at your option) any later version.
-
-This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-See the GNU Lesser General Public License for more details.
-*/
+ * Copyright (c) 2003 eInnovation Inc. All rights reserved
+ * 
+ * This library is free software; you can redistribute it and/or modify it under the terms of the
+ * GNU Lesser General Public License as published by the Free Software Foundation; either version
+ * 2.1 of the License, or (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ */
 
 /*
  * Created on May 8, 2003
@@ -19,7 +19,6 @@ package org.openedit.page.finder;
 import org.openedit.BaseTestCase;
 import org.openedit.OpenEditException;
 import org.openedit.WebPageRequest;
-
 
 /**
  * DOCUMENT ME!
@@ -34,8 +33,7 @@ public class InfiniteLoopTest extends BaseTestCase
 	 *
 	 * @param arg0
 	 */
-	public InfiniteLoopTest(String arg0)
-	{
+	public InfiniteLoopTest(String arg0) {
 		super(arg0);
 	}
 
@@ -86,9 +84,9 @@ public class InfiniteLoopTest extends BaseTestCase
 	protected void loadPage(String path) throws Exception, OpenEditException, Throwable
 	{
 		WebPageRequest context = getFixture().createPageRequest(path);
-		
+
 		getFixture().getEngine().beginRender(context);
 		String pageContents = context.getWriter().toString();
-		assertTrue(pageContents.length() < 100000); //since its infinite it would be blank or a short error
+		assertTrue(pageContents.length() < 100000); // since its infinite it would be blank or a short error
 	}
 }

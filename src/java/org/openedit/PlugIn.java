@@ -9,25 +9,30 @@ import java.util.Set;
 
 import org.openedit.page.Page;
 
-public class PlugIn implements Comparable {
+public class PlugIn implements Comparable
+{
 	protected List fieldApplications;
 	protected String fieldPlugInPath;
 	protected URL fieldPluginXml;
 	protected boolean fieldInstalled;
 
-	public boolean isInstalled() {
+	public boolean isInstalled()
+	{
 		return fieldInstalled;
 	}
 
-	public void setInstalled(boolean inInstalled) {
+	public void setInstalled(boolean inInstalled)
+	{
 		fieldInstalled = inInstalled;
 	}
 
-	public URL getPluginXml() {
+	public URL getPluginXml()
+	{
 		return fieldPluginXml;
 	}
 
-	public void setPluginXml(URL inPluginXml) {
+	public void setPluginXml(URL inPluginXml)
+	{
 		fieldPluginXml = inPluginXml;
 	}
 
@@ -43,8 +48,10 @@ public class PlugIn implements Comparable {
 	protected String fieldLongDescription;
 	protected List fieldDependantPlugins;
 
-	public List getDependantPlugins() {
-		if (fieldDependantPlugins == null) {
+	public List getDependantPlugins()
+	{
+		if (fieldDependantPlugins == null)
+		{
 			fieldDependantPlugins = new ArrayList();
 
 		}
@@ -52,201 +59,254 @@ public class PlugIn implements Comparable {
 		return fieldDependantPlugins;
 	}
 
-	public void setDependantPlugins(List dependantPlugins) {
+	public void setDependantPlugins(List dependantPlugins)
+	{
 		fieldDependantPlugins = dependantPlugins;
 	}
 
-	public void setDependsOn(List dependsOn) {
+	public void setDependsOn(List dependsOn)
+	{
 		fieldDependsOn = dependsOn;
 	}
 
 	protected String fieldVendorLink;
 
-	public List getApplications() {
-		if (fieldApplications == null) {
+	public List getApplications()
+	{
+		if (fieldApplications == null)
+		{
 			fieldApplications = new ArrayList();
 		}
 		return fieldApplications;
 	}
 
-	public void setApplications(List inApplications) {
+	public void setApplications(List inApplications)
+	{
 		fieldApplications = inApplications;
 	}
 
-	public String getPlugInPath() {
+	public String getPlugInPath()
+	{
 		return fieldPlugInPath;
 	}
 
-	public void setPlugInPath(String inPlugInPath) {
+	public void setPlugInPath(String inPlugInPath)
+	{
 		fieldPlugInPath = inPlugInPath;
 	}
 
-	public List getDependsOn() {
-		if (fieldDependsOn == null) {
+	public List getDependsOn()
+	{
+		if (fieldDependsOn == null)
+		{
 			fieldDependsOn = new ArrayList();
 		}
 		return fieldDependsOn;
 	}
 
-	public void addDependsOn(PlugIn inProject) {
-		if (inProject != null && !getDependsOn().contains(inProject)) {
+	public void addDependsOn(PlugIn inProject)
+	{
+		if (inProject != null && !getDependsOn().contains(inProject))
+		{
 			getDependsOn().add(inProject);
 			inProject.addDependant(this);
 		}
 
 	}
 
-	public String getId() {
+	public String getId()
+	{
 		return fieldId;
 	}
 
-	public void setId(String inId) {
+	public void setId(String inId)
+	{
 		fieldId = inId;
 	}
 
-	public Set getAllDepends() {
+	public Set getAllDepends()
+	{
 		Set deps = new HashSet();
 		deps.addAll(getDependsOn());
 
-		for (Iterator iterator = getDependsOn().iterator(); iterator.hasNext();) {
+		for (Iterator iterator = getDependsOn().iterator(); iterator.hasNext();)
+		{
 			PlugIn depend = (PlugIn) iterator.next();
 			deps.addAll(depend.getAllDepends());
 		}
 		return deps;
 	}
 
-	public boolean equals(PlugIn inPlugIn) {
+	public boolean equals(PlugIn inPlugIn)
+	{
 		return getId().equals(inPlugIn.getId());
 	}
 
-	public boolean dependsOn(String inId) {
-		for (Iterator iterator = getDependsOn().iterator(); iterator.hasNext();) {
+	public boolean dependsOn(String inId)
+	{
+		for (Iterator iterator = getDependsOn().iterator(); iterator.hasNext();)
+		{
 			PlugIn depend = (PlugIn) iterator.next();
-			if (depend.getId().equals(inId) || depend.dependsOn(inId)) {
+			if (depend.getId().equals(inId) || depend.dependsOn(inId))
+			{
 				return true;
 			}
 		}
 		return false;
 	}
 
-	public void addApplication(Page inApp) {
+	public void addApplication(Page inApp)
+	{
 		getApplications().add(inApp);
 	}
 
-	public Page getBasePath() {
+	public Page getBasePath()
+	{
 		return fieldBasePath;
 	}
 
-	public void setBasePath(Page inBasePath) {
+	public void setBasePath(Page inBasePath)
+	{
 		fieldBasePath = inBasePath;
 	}
 
-	public String showThumb() {
-		if (null == getBasePath()) {
+	public String showThumb()
+	{
+		if (null == getBasePath())
+		{
 			return "/openedit/images/toolbar/plugin.gif";
-		} else {
+		}
+		else
+		{
 			String folder = getBasePath().getName();
 			return "/" + folder + "/.oepluginthumb.gif";
 		}
 	}
 
-	public String getTitle() {
+	public String getTitle()
+	{
 		return getTitle(null);
 	}
 
-	public String getTitle(String inLocale) {
-		if (fieldTitle != null) {
+	public String getTitle(String inLocale)
+	{
+		if (fieldTitle != null)
+		{
 			return fieldTitle;
 		}
 		String prop = null;
-		if (getBasePath() != null) {
+		if (getBasePath() != null)
+		{
 			prop = getBasePath().getProperty("oeplugintitle", inLocale);
 		}
-		if (prop == null) {
+		if (prop == null)
+		{
 			prop = getId();
 		}
 		return prop;
 	}
 
-	public void setTitle(String inTitle) {
+	public void setTitle(String inTitle)
+	{
 		fieldTitle = inTitle;
 	}
 
-	public String getVersion() {
+	public String getVersion()
+	{
 		return fieldVersion;
 	}
 
-	public void setVersion(String inVersion) {
+	public void setVersion(String inVersion)
+	{
 		fieldVersion = inVersion;
 	}
 
-	public String getBeanName() {
+	public String getBeanName()
+	{
 		String prop = null;
-		if (getBasePath() != null) {
+		if (getBasePath() != null)
+		{
 			prop = getBasePath().getProperty("oepluginbean");
 		}
 		return prop;
 	}
 
-	public String getAvailableVersion() {
+	public String getAvailableVersion()
+	{
 		return fieldAvailableVersion;
 	}
 
-	public void setAvailableVersion(String inAvailableVersion) {
+	public void setAvailableVersion(String inAvailableVersion)
+	{
 		fieldAvailableVersion = inAvailableVersion;
 	}
 
-	public String getInstallScript() {
+	public String getInstallScript()
+	{
 		return fieldInstallScript;
 	}
 
-	public void setInstallScript(String inUpgradePath) {
+	public void setInstallScript(String inUpgradePath)
+	{
 		fieldInstallScript = inUpgradePath;
 	}
 
-	public String getAvailableVersionNotes() {
+	public String getAvailableVersionNotes()
+	{
 		return fieldAvailableVersionNotes;
 	}
 
-	public void setAvailableVersionNotes(String inAvailableVersionNotes) {
-		if (inAvailableVersionNotes != null && inAvailableVersionNotes.length() == 0) {
+	public void setAvailableVersionNotes(String inAvailableVersionNotes)
+	{
+		if (inAvailableVersionNotes != null && inAvailableVersionNotes.length() == 0)
+		{
 			fieldAvailableVersionNotes = null;
-		} else {
+		}
+		else
+		{
 			fieldAvailableVersionNotes = inAvailableVersionNotes;
 		}
 	}
 
-	public String getVendorLink() {
+	public String getVendorLink()
+	{
 		return fieldVendorLink;
 	}
 
-	public void setVendorLink(String inVendorLink) {
+	public void setVendorLink(String inVendorLink)
+	{
 		fieldVendorLink = inVendorLink;
 	}
 
-	public String getLongDescription() {
+	public String getLongDescription()
+	{
 		return fieldLongDescription;
 	}
 
-	public void setLongDescription(String inLongDescription) {
+	public void setLongDescription(String inLongDescription)
+	{
 		fieldLongDescription = inLongDescription;
 	}
 
-	public int compareTo(Object inO) {
+	public int compareTo(Object inO)
+	{
 		PlugIn in = (PlugIn) inO;
 		String title = getTitle();
 		String otitle = in.getTitle();
-		if (title != null && otitle != null) {
+		if (title != null && otitle != null)
+		{
 			return title.toLowerCase().compareTo(otitle.toLowerCase());
 		}
 		return 0;
 	}
 
-	public String toString() {
+	public String toString()
+	{
 		return getId();
 	}
 
-	public void addDependant(PlugIn edit) {
+	public void addDependant(PlugIn edit)
+	{
 		getDependantPlugins().add(edit);
 
 	}

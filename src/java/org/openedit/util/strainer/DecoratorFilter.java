@@ -1,12 +1,12 @@
 package org.openedit.util.strainer;
 
 /**
- * This interface represents a filter which delegates to exactly one other
- * filter.
+ * This interface represents a filter which delegates to exactly one other filter.
  *
  * @author Eric Galluzzo
  */
-public interface DecoratorFilter extends Filter {
+public interface DecoratorFilter extends Filter
+{
 	/**
 	 * Retrieve this filter's sub-filter.
 	 * 

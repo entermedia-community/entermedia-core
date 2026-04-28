@@ -4,9 +4,11 @@ import org.openedit.users.Authenticator;
 import org.openedit.users.User;
 import org.openedit.users.UserManagerException;
 
-public abstract class BaseAuthenticator implements Authenticator {
+public abstract class BaseAuthenticator implements Authenticator
+{
 
-	public boolean authenticate(String inCatalogId, User inUser, String inPassword) throws UserManagerException {
+	public boolean authenticate(String inCatalogId, User inUser, String inPassword) throws UserManagerException
+	{
 		AuthenticationRequest areq = new AuthenticationRequest();
 		areq.setUser(inUser);
 		areq.setCatalogId(inCatalogId);

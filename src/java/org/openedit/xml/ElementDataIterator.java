@@ -3,7 +3,8 @@ package org.openedit.xml;
 import java.util.Iterator;
 import java.util.List;
 
-public class ElementDataIterator implements Iterator {
+public class ElementDataIterator implements Iterator
+{
 	protected List fieldHits;
 	protected int hitCount = 0;
 	protected int startOffset = 0;
@@ -12,34 +13,41 @@ public class ElementDataIterator implements Iterator {
 		setHits(inHits);
 	}
 
-	public ElementDataIterator() {
-	}
+	public ElementDataIterator() {}
 
-	public void setStartOffset(int inStart) {
+	public void setStartOffset(int inStart)
+	{
 		startOffset = inStart;
 	}
 
-	public void setHits(List inHits) {
+	public void setHits(List inHits)
+	{
 		fieldHits = inHits;
 	}
 
-	public List getHits() {
+	public List getHits()
+	{
 		return fieldHits;
 	}
 
-	public boolean hasNext() {
-		if (hitCount < getHits().size()) {
+	public boolean hasNext()
+	{
+		if (hitCount < getHits().size())
+		{
 			return true;
-		} else {
+		}
+		else
+		{
 			return false;
 		}
 	}
 
-	public Object next() {
+	public Object next()
+	{
 		return new ElementData(getHits().get(startOffset + hitCount++));
 	}
 
-	public void remove() {
-	}
+	public void remove()
+	{}
 
 }

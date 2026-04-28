@@ -1,5 +1,6 @@
 package org.openedit.data;
 
-public interface NonExportable {
+public interface NonExportable
+{
 
 }

@@ -39,7 +39,8 @@ import org.openedit.util.strainer.FilterReader;
  * @author cburkey
  *
  */
-public class XConfToPageSettingsConverter {
+public class XConfToPageSettingsConverter
+{
 	private static final Log log = LogFactory.getLog(XConfToPageSettingsConverter.class);
 	protected PageSettingsManager fieldPageSettingsManager;
 	protected FilterReader fieldFilterReader;
@@ -47,13 +48,16 @@ public class XConfToPageSettingsConverter {
 	protected XmlUtil fieldXmlUtil = new XmlUtil();
 	protected OutputFiller fieldOutputFiller = new OutputFiller();
 
-	protected List loadActions(PageSettings inSettings, List inPageActionList) throws OpenEditException {
-		if (inPageActionList.size() == 0) {
+	protected List loadActions(PageSettings inSettings, List inPageActionList) throws OpenEditException
+	{
+		if (inPageActionList.size() == 0)
+		{
 			return null;
 		}
 		List pageActions = new ArrayList(inPageActionList.size());
 		Iterator pageActionElements = inPageActionList.iterator();
-		while (pageActionElements.hasNext()) {
+		while (pageActionElements.hasNext())
+		{
 			Configuration pageActionElement = (Configuration) pageActionElements.next();
 			PageAction currentPageAction = createAction(inSettings, pageActionElement);
 
@@ -62,13 +66,16 @@ public class XConfToPageSettingsConverter {
 		return pageActions;
 	}
 
-	protected List loadScripts(PageSettings inSettings, List inScripts) throws OpenEditException {
-		if (inScripts.size() == 0) {
+	protected List loadScripts(PageSettings inSettings, List inScripts) throws OpenEditException
+	{
+		if (inScripts.size() == 0)
+		{
 			return null;
 		}
 		List pageActions = new ArrayList(inScripts.size());
 		Iterator pageActionElements = inScripts.iterator();
-		while (pageActionElements.hasNext()) {
+		while (pageActionElements.hasNext())
+		{
 			Configuration pageActionElement = (Configuration) pageActionElements.next();
 			Script script = createScript(inSettings, pageActionElement);
 
@@ -77,13 +84,16 @@ public class XConfToPageSettingsConverter {
 		return pageActions;
 	}
 
-	protected List loadStyles(PageSettings inSettings, List inStyles) throws OpenEditException {
-		if (inStyles.size() == 0) {
+	protected List loadStyles(PageSettings inSettings, List inStyles) throws OpenEditException
+	{
+		if (inStyles.size() == 0)
+		{
 			return null;
 		}
 		List pageActions = new ArrayList(inStyles.size());
 		Iterator pageActionElements = inStyles.iterator();
-		while (pageActionElements.hasNext()) {
+		while (pageActionElements.hasNext())
+		{
 			Configuration pageActionElement = (Configuration) pageActionElements.next();
 			Style script = createStyle(inSettings, pageActionElement);
 			pageActions.add(script);
@@ -91,7 +101,8 @@ public class XConfToPageSettingsConverter {
 		return pageActions;
 	}
 
-	protected Script createScript(PageSettings inSettings, Configuration inConfigElement) {
+	protected Script createScript(PageSettings inSettings, Configuration inConfigElement)
+	{
 		String cancel = inConfigElement.get("cancel");
 		// if(cancel != null && cancel.equals("true") )
 		// {
@@ -106,12 +117,15 @@ public class XConfToPageSettingsConverter {
 		script.setExternal(Boolean.parseBoolean(external));
 		script.setPath(inSettings.getPath());
 		List extras = inConfigElement.getChildren("property");
-		if (extras != null) {
-			for (Iterator iterator = extras.iterator(); iterator.hasNext();) {
+		if (extras != null)
+		{
+			for (Iterator iterator = extras.iterator(); iterator.hasNext();)
+			{
 				Configuration child = (Configuration) iterator.next();
 				String key = child.getAttribute("name");
 				String val = child.getValue();
-				if (key != null && val != null) {
+				if (key != null && val != null)
+				{
 					script.setProperty(key, val);
 				}
 			}
@@ -119,7 +133,8 @@ public class XConfToPageSettingsConverter {
 		return script;
 	}
 
-	protected Style createStyle(PageSettings inSettings, Configuration inConfigElement) {
+	protected Style createStyle(PageSettings inSettings, Configuration inConfigElement)
+	{
 		Style style = new Style();
 		style.setId(inConfigElement.get("id"));
 		style.setHref(inConfigElement.get("href"));
@@ -129,7 +144,8 @@ public class XConfToPageSettingsConverter {
 		return style;
 	}
 
-	private PageAction createAction(PageSettings inSettings, Configuration inPageActionElement) {
+	private PageAction createAction(PageSettings inSettings, Configuration inPageActionElement)
+	{
 		String actionName = inPageActionElement.getAttribute("name");
 		PageAction currentPageAction = new PageAction(actionName);
 		currentPageAction.setPath(inSettings.getXConf().getPath());
@@ -138,20 +154,25 @@ public class XConfToPageSettingsConverter {
 		return currentPageAction;
 	}
 
-	protected void loadAlternateContentFile(PageSettings inPageConfig, String inAlternatePath) {
-		if (inAlternatePath != null) {
+	protected void loadAlternateContentFile(PageSettings inPageConfig, String inAlternatePath)
+	{
+		if (inAlternatePath != null)
+		{
 			String path = PathUtilities.resolveRelativePath(inAlternatePath, inPageConfig.getPath());
 			inPageConfig.setAlternateContentPath(path);
 		}
 	}
 
-	protected void loadGenerators(PageSettings inPageConfig, Configuration inParentConfig) throws OpenEditException {
-		if (inParentConfig == null) {
+	protected void loadGenerators(PageSettings inPageConfig, Configuration inParentConfig) throws OpenEditException
+	{
+		if (inParentConfig == null)
+		{
 			return;
 		}
 		List allGens = new ArrayList(2);
 		List root = inParentConfig.getChildren("generator"); // these are top level generators
-		for (Iterator iter = root.iterator(); iter.hasNext();) {
+		for (Iterator iter = root.iterator(); iter.hasNext();)
+		{
 			Configuration rootconfig = (Configuration) iter.next();
 			Generator generator = createGenerator(rootconfig);
 			allGens.add(generator);
@@ -159,14 +180,17 @@ public class XConfToPageSettingsConverter {
 		inPageConfig.setGenerators(allGens);
 	}
 
-	protected Generator createGenerator(Configuration inRootconfig) throws OpenEditException {
+	protected Generator createGenerator(Configuration inRootconfig) throws OpenEditException
+	{
 		String name = inRootconfig.getAttribute("name");
 		Generator generator = null;
-		if (name.equals("composite")) {
+		if (name.equals("composite"))
+		{
 			// now add any children to a list
 			List children = inRootconfig.getChildren("generator");
 			List all = new ArrayList(children.size());
-			for (Iterator iter = children.iterator(); iter.hasNext();) {
+			for (Iterator iter = children.iterator(); iter.hasNext();)
+			{
 				Configuration config = (Configuration) iter.next();
 				Generator child = createGenerator(config);
 				all.add(child);
@@ -174,37 +198,46 @@ public class XConfToPageSettingsConverter {
 			CompositeGenerator composite = new CompositeGenerator();
 			composite.setGenerators(all);
 			generator = composite;
-		} else {
+		}
+		else
+		{
 			generator = getPageSettingsManager().getGenerator(name);
 		}
 		generator = addFilter(inRootconfig, generator);
 		return generator;
 	}
 
-	protected Generator addFilter(Configuration config, Generator generator) {
+	protected Generator addFilter(Configuration config, Generator generator)
+	{
 		String types = config.getAttribute("mimetypes");
-		if (types != null) {
+		if (types != null)
+		{
 			generator = new GeneratorWithMimeTypeFilter(generator, types);
 		}
 		String accepts = config.getAttribute("accepts");
-		if (accepts != null) {
+		if (accepts != null)
+		{
 			generator = new GeneratorWithAcceptFilter(generator, accepts);
 		}
 		return generator;
 	}
 
-	protected void loadLayout(PageSettings inPageConfig, Configuration inLayoutConfig) throws OpenEditException {
-		if (inLayoutConfig == null) {
+	protected void loadLayout(PageSettings inPageConfig, Configuration inLayoutConfig) throws OpenEditException
+	{
+		if (inLayoutConfig == null)
+		{
 			return;
 		}
 
 		String layoutPath = inLayoutConfig.getValue();
-		if (layoutPath == null) {
+		if (layoutPath == null)
+		{
 			inPageConfig.setLayout(Page.BLANK_LAYOUT);
 			return;
 		}
 		layoutPath = PathUtilities.resolveRelativePath(layoutPath, inPageConfig.getPath());
-		if (layoutPath.equals(inPageConfig.getPath())) {
+		if (layoutPath.equals(inPageConfig.getPath()))
+		{
 			// dont set layout to self
 			inPageConfig.setLayout(null);
 			return;
@@ -212,19 +245,22 @@ public class XConfToPageSettingsConverter {
 		inPageConfig.setLayout(layoutPath);
 	}
 
-	protected void loadInnerLayout(PageSettings inPageConfig, Configuration inInnerLayoutConfig)
-			throws OpenEditException {
-		if (inInnerLayoutConfig == null) {
+	protected void loadInnerLayout(PageSettings inPageConfig, Configuration inInnerLayoutConfig) throws OpenEditException
+	{
+		if (inInnerLayoutConfig == null)
+		{
 			return;
 		}
 
 		String innerLayoutPath = inInnerLayoutConfig.getValue();
-		if (innerLayoutPath == null) {
+		if (innerLayoutPath == null)
+		{
 			inPageConfig.setInnerLayout(Page.BLANK_LAYOUT);
 			return;
 		}
 		innerLayoutPath = PathUtilities.resolveRelativePath(innerLayoutPath, inPageConfig.getPath());
-		if (innerLayoutPath.equals(inPageConfig.getPath())) {
+		if (innerLayoutPath.equals(inPageConfig.getPath()))
+		{
 			// dont set layout to self
 			inPageConfig.setInnerLayout(Page.BLANK_LAYOUT);
 			return;
@@ -232,11 +268,12 @@ public class XConfToPageSettingsConverter {
 		inPageConfig.setInnerLayout(innerLayoutPath);
 	}
 
-	protected void loadPermissionFilters(PageSettings inPageConfig, XconfConfiguration inConfig)
-			throws OpenEditException {
+	protected void loadPermissionFilters(PageSettings inPageConfig, XconfConfiguration inConfig) throws OpenEditException
+	{
 		List permissions = new ArrayList();
 		Filter viewf = getFilterReader().readFilterCollection(inConfig.getViewRequirements(), "view");
-		if (viewf != null) {
+		if (viewf != null)
+		{
 			Permission per = new Permission();
 			per.setName("view");
 			per.setRootFilter(viewf);
@@ -244,14 +281,16 @@ public class XConfToPageSettingsConverter {
 			permissions.add(per);
 		}
 		Filter edit = getFilterReader().readFilterCollection(inConfig.getEditRequirements(), "edit");
-		if (edit != null) {
+		if (edit != null)
+		{
 			Permission per = new Permission();
 			per.setName("edit");
 			per.setRootFilter(edit);
 			per.setPath(inPageConfig.getPath());
 			permissions.add(per);
 		}
-		for (Iterator iterator = inConfig.getChildIterator("permission"); iterator.hasNext();) {
+		for (Iterator iterator = inConfig.getChildIterator("permission"); iterator.hasNext();)
+		{
 			Configuration top = (Configuration) iterator.next();
 			String name = top.getAttribute("name");
 			Filter root = getFilterReader().readFilterCollection(top, name);
@@ -262,26 +301,31 @@ public class XConfToPageSettingsConverter {
 			per.setPath(inPageConfig.getPath());
 			permissions.add(per);
 		}
-		if (permissions.size() > 0) {
+		if (permissions.size() > 0)
+		{
 			inPageConfig.setPermissions(permissions);
 		}
 	}
 
-	protected Map loadProperties(List inPropertyList) {
+	protected Map loadProperties(List inPropertyList)
+	{
 		Map properties = new HashMap(inPropertyList.size());
 		Iterator propertyElements = inPropertyList.iterator();
-		while (propertyElements.hasNext()) {
+		while (propertyElements.hasNext())
+		{
 			Configuration propertyElement = (Configuration) propertyElements.next();
 			String name = propertyElement.getAttribute("name");
 			PageProperty property = new PageProperty(name);
 			boolean hasvalue = false;
-			for (Iterator iter = propertyElement.getChildIterator("value"); iter.hasNext();) {
+			for (Iterator iter = propertyElement.getChildIterator("value"); iter.hasNext();)
+			{
 				hasvalue = true;
 				Configuration val = (Configuration) iter.next();
 				String locale = val.getAttribute("locale");
 				property.setValue(val.getValue(), locale); // TODO: Should I pass "" if its the default locale already?
 			}
-			if (!hasvalue) {
+			if (!hasvalue)
+			{
 				String value = propertyElement.getValue();
 				// if( value == null)
 				// {
@@ -295,11 +339,13 @@ public class XConfToPageSettingsConverter {
 		return properties;
 	}
 
-	public PageSettingsManager getPageSettingsManager() {
+	public PageSettingsManager getPageSettingsManager()
+	{
 		return fieldPageSettingsManager;
 	}
 
-	public void setPageSettingsManager(PageSettingsManager inPageSettingsManager) {
+	public void setPageSettingsManager(PageSettingsManager inPageSettingsManager)
+	{
 		fieldPageSettingsManager = inPageSettingsManager;
 	}
 
@@ -307,29 +353,36 @@ public class XConfToPageSettingsConverter {
 	 * @param inPageSettings
 	 * @param inUrlPath
 	 */
-	public void configure(PageSettings inPageSettings, String inUrlPath) throws OpenEditException {
+	public void configure(PageSettings inPageSettings, String inUrlPath) throws OpenEditException
+	{
 		boolean contentexists = getPageSettingsManager().getRepository().doesExist(inUrlPath);
 		boolean fileexists = inPageSettings.exists();
-		if (!fileexists) {
+		if (!fileexists)
+		{
 			loadFallBackDirectory(inPageSettings, inUrlPath, contentexists);
 			// loadOverrideDirectory( inPageSettings, inUrlPath );
 			loadAlternativeContent(inPageSettings, inUrlPath, contentexists);
 			//
 			String mime = inPageSettings.getPropertyValue("mimetype", null);
-			if (mime != null) {
+			if (mime != null)
+			{
 				inPageSettings.setMimeType(mime);
 			}
 			return;
 		}
-		if (log.isDebugEnabled()) {
+		if (log.isDebugEnabled())
+		{
 			log.info("Configure: " + inPageSettings.getPath());
 		}
 		XconfConfiguration config = new XconfConfiguration();
 
 		Element root = null;
-		try {
+		try
+		{
 			root = fieldXmlUtil.getXml(inPageSettings.getReader(), inPageSettings.getPageCharacterEncoding());
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			log.error("Could not read: " + inUrlPath);
 			throw new OpenEditException(e + "path: " + inPageSettings.getPath(), e, inUrlPath);
 		}
@@ -375,19 +428,23 @@ public class XConfToPageSettingsConverter {
 		}
 
 		String mime = inPageSettings.getPropertyValue("mimetype", null);
-		if (mime != null) {
+		if (mime != null)
+		{
 			inPageSettings.setMimeType(mime);
 		}
 
 	}
 
-	protected List<PageLoaderConfig> loadPageLoaders(PageSettings inPageSettings, List inPageLoaders) {
-		if (inPageLoaders.size() == 0) {
+	protected List<PageLoaderConfig> loadPageLoaders(PageSettings inPageSettings, List inPageLoaders)
+	{
+		if (inPageLoaders.size() == 0)
+		{
 			return null;
 		}
 		List pageActions = new ArrayList(inPageLoaders.size());
 		Iterator loaderElements = inPageLoaders.iterator();
-		while (loaderElements.hasNext()) {
+		while (loaderElements.hasNext())
+		{
 			Configuration pageActionElement = (Configuration) loaderElements.next();
 			PageLoaderConfig config = new PageLoaderConfig();
 			config.setXmlConfig(pageActionElement);
@@ -397,8 +454,8 @@ public class XConfToPageSettingsConverter {
 
 	}
 
-	protected void loadAlternativeContent(PageSettings inPageSettings, String inUrlPath, boolean inContentexists)
-			throws RepositoryException {
+	protected void loadAlternativeContent(PageSettings inPageSettings, String inUrlPath, boolean inContentexists) throws RepositoryException
+	{
 		inPageSettings.setOriginalyExistedContentPath(inContentexists);
 		// Find the alternative content path if found someplace else
 		// String fallback =
@@ -409,21 +466,26 @@ public class XConfToPageSettingsConverter {
 		// inPageSettings.getPath());
 		// inPageSettings.setAlternateContentPath(fallback);
 		// }
-		if (!inContentexists) {
+		if (!inContentexists)
+		{
 			// Look for some content to use
 			PageSettings settings = inPageSettings.getFallback();
 			boolean isfolder = false;
-			if (settings != null && settings.getPath().endsWith("/_site.xconf") && !inUrlPath.endsWith("_site.xconf")) {
+			if (settings != null && settings.getPath().endsWith("/_site.xconf") && !inUrlPath.endsWith("_site.xconf"))
+			{
 				isfolder = true;
 			}
-			while (settings != null) {
+			while (settings != null)
+			{
 				String alternativepath = settings.getPath();
 				alternativepath = PathUtilities.extractDirectoryPath(alternativepath);
-				if (!isfolder) {
+				if (!isfolder)
+				{
 					alternativepath += "/" + PathUtilities.extractFileName(inUrlPath);
 				}
 				boolean fallbackcontentexists = getPageSettingsManager().getRepository().doesExist(alternativepath);
-				if (fallbackcontentexists) {
+				if (fallbackcontentexists)
+				{
 					inPageSettings.setAlternateContentPath(alternativepath);
 					break;
 				}
@@ -437,8 +499,8 @@ public class XConfToPageSettingsConverter {
 	 * @param inPageSettings
 	 * @param inUrlPath
 	 */
-	protected void loadFallBackDirectory(PageSettings inPageSettings, String inUrlPath, boolean contentexists)
-			throws OpenEditException {
+	protected void loadFallBackDirectory(PageSettings inPageSettings, String inUrlPath, boolean contentexists) throws OpenEditException
+	{
 
 		// if( inUrlPath.isEmpty() || inUrlPath.equals("/_site.xconf") )
 		// {
@@ -453,7 +515,8 @@ public class XConfToPageSettingsConverter {
 		PageProperty fallBackDir = inPageSettings.getProperty("fallbackdirectory");
 
 		String alternativepath = null;
-		if (fallBackDir != null && fallBackDir.getValue() != null) {
+		if (fallBackDir != null && fallBackDir.getValue() != null)
+		{
 			String fallbacksetpath = fallBackDir.getPath();
 			fallBackValue = fallBackDir.getValue();
 			// 1. First is looks in mattcatalog. But there we want to use another fallback
@@ -462,18 +525,22 @@ public class XConfToPageSettingsConverter {
 			fallBackValue = inPageSettings.replaceProperty(fallBackValue);
 			fallBackValue = inPageSettings.getParent().replaceProperty(fallBackValue);
 
-			if (fallBackValue.equals("/")) {
+			if (fallBackValue.equals("/"))
+			{
 				fallBackValue = "";
 			}
-			if (fallBackValue.endsWith("/")) {
+			if (fallBackValue.endsWith("/"))
+			{
 				throw new OpenEditException("Fall back setting must not end in slash for " + inUrlPath);
 			}
-			if (fallBackValue.equals("NO_FALLBACK")) {
+			if (fallBackValue.equals("NO_FALLBACK"))
+			{
 				return;
 			}
 
 			// Lets support relative paths ../A -> ../B
-			if (fallBackValue.contains("..")) {
+			if (fallBackValue.contains(".."))
+			{
 				// Need to make sure we add back in the extra stuff
 				String fbthisdir = PathUtilities.extractDirectoryPath(fallbacksetpath); // what level the path was
 																						// defined
@@ -481,45 +548,57 @@ public class XConfToPageSettingsConverter {
 
 				// Need to add on any extra subdirectories or file parts
 				String filepart = inUrlPath.substring(fbthisdir.length(), inUrlPath.length()); // Just want the end part
-				if (!filepart.endsWith(".xconf")) {
+				if (!filepart.endsWith(".xconf"))
+				{
 					filepart = PathUtilities.extractPagePath(filepart) + ".xconf"; // Take off the index.html... Use
 																					// index.xconf?
 				}
 				alternativepath = newfallBackValue + filepart; // end part might be a file name or _site.xconf
-			} else {
+			}
+			else
+			{
 				String thisdir = PathUtilities.extractDirectoryPath(fallbacksetpath); // what level the path was defined
 				String filepart = inUrlPath.substring(thisdir.length(), inUrlPath.length());
 				alternativepath = fallBackValue + filepart; // end part might be a file name or _site.xconf
-				if (alternativepath.equals(inUrlPath)) {
+				if (alternativepath.equals(inUrlPath))
+				{
 					// Now sure why this happens
 					log.debug(inUrlPath + " Cannot specify self as fallback directory");
 					return;
 				}
 			}
-		} else {
+		}
+		else
+		{
 			// Only default the site.xconf May get infinite loops
 			// if( inUrlPath.equals("/_site.xconf") || inUrlPath.startsWith("/system/") ||
 			// inUrlPath.startsWith("/openedit/") )
-			if (inUrlPath.startsWith("/WEB-INF/base")) {
+			if (inUrlPath.startsWith("/WEB-INF/base"))
+			{
 				// No fallback found.
 				return;
-			} else {
+			}
+			else
+			{
 				alternativepath = "/WEB-INF/base" + inUrlPath;
 			}
 		}
 
-		if (alternativepath != null) {
+		if (alternativepath != null)
+		{
 			// log.info("loading fallback for " + inUrlPath + " with " + alternativepath);
 			PageSettings otherxconf = getPageSettingsManager().getPageSettings(alternativepath);
 			inPageSettings.setFallBack(otherxconf);
 		}
 	}
 
-	public FilterReader getFilterReader() {
+	public FilterReader getFilterReader()
+	{
 		return fieldFilterReader;
 	}
 
-	public void setFilterReader(FilterReader inFilterReader) {
+	public void setFilterReader(FilterReader inFilterReader)
+	{
 		fieldFilterReader = inFilterReader;
 	}
 }

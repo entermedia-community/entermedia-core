@@ -4,7 +4,8 @@ import java.util.Collection;
 
 import org.openedit.CatalogEnabled;
 
-public interface LockManager extends CatalogEnabled {
+public interface LockManager extends CatalogEnabled
+{
 
 	public abstract Lock lock(String inPath, String inOwnerId);
 

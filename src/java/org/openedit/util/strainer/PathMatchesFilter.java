@@ -2,7 +2,8 @@ package org.openedit.util.strainer;
 
 import org.openedit.util.PathUtilities;
 
-public class PathMatchesFilter extends BaseFilter {
+public class PathMatchesFilter extends BaseFilter
+{
 
 	public PathMatchesFilter() {
 		// TODO Auto-generated constructor stub
@@ -12,12 +13,14 @@ public class PathMatchesFilter extends BaseFilter {
 		setValue(inValue);
 	}
 
-	public boolean passes(Object inObj) throws FilterException, ClassCastException {
+	public boolean passes(Object inObj) throws FilterException, ClassCastException
+	{
 		boolean matches = PathUtilities.match(inObj.toString(), getValue());
 		return matches;
 	}
 
-	public String toString() {
+	public String toString()
+	{
 		return "Path=" + getValue();
 	}
 

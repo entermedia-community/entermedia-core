@@ -10,7 +10,8 @@ import org.openedit.users.User;
 import org.openedit.users.UserManagerException;
 import org.openedit.util.StringEncryption;
 
-public class FileSystemAuthenticator extends BaseAuthenticator {
+public class FileSystemAuthenticator extends BaseAuthenticator
+{
 	private static final Log log = LogFactory.getLog(FileSystemAuthenticator.class);
 
 	protected StringEncryption fieldEncryption;
@@ -31,78 +32,103 @@ public class FileSystemAuthenticator extends BaseAuthenticator {
 	// they match, the password is correct. Otherwise, the password is incorrect.
 	//
 
-	public boolean authenticate(AuthenticationRequest inAReq) throws UserManagerException {
+	public boolean authenticate(AuthenticationRequest inAReq) throws UserManagerException
+	{
 		String inPassword = inAReq.getPassword();
-		if (inPassword == null) {
+		if (inPassword == null)
+		{
 			return false;
 		}
 		String password = inAReq.getUser().getPassword();
-		if (password != null) {
+		if (password != null)
+		{
 
 			// Decrypt their stored password
-			if (inPassword != null && password.startsWith("DES:")) {
-				if (inPassword.startsWith("DES:")) {
+			if (inPassword != null && password.startsWith("DES:"))
+			{
+				if (inPassword.startsWith("DES:"))
+				{
 					boolean ok = inPassword.equals(password); // there are both encrypted so just compare
-					if (!ok) {
+					if (!ok)
+					{
 						// log.info("Encrypted passwords did not match. Should be:" + password + " was:"
 						// + inPassword);
 						log.info("Could not log in " + inAReq.getUserName() + ", bad DES password");
-					} else {
+					}
+					else
+					{
 						return true;
 					}
-				} else {
+				}
+				else
+				{
 					String decryptedString = decrypt(password);
-					if (decryptedString != null && decryptedString.equals(inPassword)) {
+					if (decryptedString != null && decryptedString.equals(inPassword))
+					{
 						return true;
 					}
 				}
 			}
 
-			if (password.equals(inPassword)) {
-				return true;
-			} else if (inPassword != null && inPassword.contains(StringEncryption.TIMESTAMP)) // This is required
+			if (password.equals(inPassword))
 			{
-				// Maybe its an entermediakey with a timestamp
-				// String entermediakey = inReq.getUser().getId() + "md542" + passenc;
-				// String tsenc = encoder.encrypt(String.valueOf(new Date().getTime()));
-				// check the timestamp first
-				if (getStringEncryption().verifyEnterMediaKey(inAReq.getUser(), password, inPassword)) {
-					return true;
-				}
+				return true;
 			}
+			else
+				if (inPassword != null && inPassword.contains(StringEncryption.TIMESTAMP)) // This is required
+				{
+					// Maybe its an entermediakey with a timestamp
+					// String entermediakey = inReq.getUser().getId() + "md542" + passenc;
+					// String tsenc = encoder.encrypt(String.valueOf(new Date().getTime()));
+					// check the timestamp first
+					if (getStringEncryption().verifyEnterMediaKey(inAReq.getUser(), password, inPassword))
+					{
+						return true;
+					}
+				}
 		}
 		log.info("Could not log in " + inAReq.getUserName() + ", bad password");
 		return false;
 	}
 
-	protected String decrypt(String inPassword) throws UserManagerException {
+	protected String decrypt(String inPassword) throws UserManagerException
+	{
 		// long encryptionKey = 7939805759879765L; //TODO: Move this to properties file
 		// encryptionKey++;
-		try {
+		try
+		{
 			return getStringEncryption().decrypt(inPassword);
-		} catch (Exception ex) {
+		}
+		catch (Exception ex)
+		{
 			throw new UserManagerException(ex);
 		}
 	}
 
-	public String encrypt(String inPassword) throws UserManagerException {
-		try {
+	public String encrypt(String inPassword) throws UserManagerException
+	{
+		try
+		{
 			// long encryptionKey = 7939805759879765L; encryptionKey++;
 			// StringEncryption encrypter = new StringEncryption(
 			// StringEncryption.DES_ENCRYPTION_SCHEME, encryptionKey + "42" + encryptionKey
 			// );
 			String decryptedString = getStringEncryption().encrypt(inPassword);
 			return decryptedString;
-		} catch (OpenEditException ex) {
+		}
+		catch (OpenEditException ex)
+		{
 			throw new UserManagerException(ex);
 		}
 	}
 
-	public StringEncryption getStringEncryption() {
+	public StringEncryption getStringEncryption()
+	{
 		return fieldEncryption;
 	}
 
-	public void setStringEncryption(StringEncryption inEncryption) {
+	public void setStringEncryption(StringEncryption inEncryption)
+	{
 		fieldEncryption = inEncryption;
 	}
 

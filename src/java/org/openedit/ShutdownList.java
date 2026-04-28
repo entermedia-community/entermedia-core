@@ -3,6 +3,7 @@
  */
 package org.openedit;
 
-public interface ShutdownList {
+public interface ShutdownList
+{
 	public void addForShutdown(Shutdownable inToShutdown);
 }

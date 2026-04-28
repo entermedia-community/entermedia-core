@@ -8,14 +8,14 @@ package org.openedit.util.strainer;
  * 
  * @author Eric Galluzzo
  */
-public class NotFilter extends BaseFilter implements DecoratorFilter {
+public class NotFilter extends BaseFilter implements DecoratorFilter
+{
 	protected Filter fieldFilter = null;
 
 	/**
 	 * This constructor should only be used for JavaBean-style creation.
 	 */
-	public NotFilter() {
-	}
+	public NotFilter() {}
 
 	/**
 	 * Create a filter that inverts the given sub-filter.
@@ -31,7 +31,8 @@ public class NotFilter extends BaseFilter implements DecoratorFilter {
 	 * 
 	 * @return This filter's sub-filter
 	 */
-	public Filter getFilter() {
+	public Filter getFilter()
+	{
 		return fieldFilter;
 	}
 
@@ -40,7 +41,8 @@ public class NotFilter extends BaseFilter implements DecoratorFilter {
 	 * 
 	 * @see org.openedit.util.strainer.Filter#getFilters()
 	 */
-	public Filter[] getFilters() {
+	public Filter[] getFilters()
+	{
 		Filter[] array = new Filter[1];
 		array[0] = fieldFilter;
 		return array;
@@ -51,7 +53,8 @@ public class NotFilter extends BaseFilter implements DecoratorFilter {
 	 * 
 	 * @param newFilter The new filter
 	 */
-	public void setFilter(Filter newFilter) {
+	public void setFilter(Filter newFilter)
+	{
 		fieldFilter = newFilter;
 	}
 
@@ -60,26 +63,26 @@ public class NotFilter extends BaseFilter implements DecoratorFilter {
 	 * 
 	 * @param newFilter The new filter
 	 */
-	public void addFilter(Filter newFilter) {
+	public void addFilter(Filter newFilter)
+	{
 		fieldFilter = newFilter;
 	}
 
 	/**
-	 * Determine whether the given object passes this filter by returning the
-	 * opposite of its sub-filter.
+	 * Determine whether the given object passes this filter by returning the opposite of its
+	 * sub-filter.
 	 *
 	 * @param inObj The object to check
 	 *
-	 * @return <code>true</code> if the object passes, <code>false</code>
-	 *         otherwise.
+	 * @return <code>true</code> if the object passes, <code>false</code> otherwise.
 	 *
-	 * @exception FilterException
-	 *                               If some error occurs while filtering
-	 * @exception ClassCastException
-	 *                               If the given object is not of the expected type
+	 * @exception FilterException If some error occurs while filtering
+	 * @exception ClassCastException If the given object is not of the expected type
 	 */
-	public boolean passes(Object inObj) throws FilterException, ClassCastException {
-		if (fieldFilter == null) {
+	public boolean passes(Object inObj) throws FilterException, ClassCastException
+	{
+		if (fieldFilter == null)
+		{
 			return false;
 		}
 		return !fieldFilter.passes(inObj);
@@ -88,8 +91,7 @@ public class NotFilter extends BaseFilter implements DecoratorFilter {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.openedit.util.strainer.Filter#accept(org.openedit.util.strainer.
-	 * FilterVisitor)
+	 * @see org.openedit.util.strainer.Filter#accept(org.openedit.util.strainer. FilterVisitor)
 	 */
 
 	/*
@@ -97,11 +99,13 @@ public class NotFilter extends BaseFilter implements DecoratorFilter {
 	 * 
 	 * @see java.lang.Object#toString()
 	 */
-	public String toString() {
+	public String toString()
+	{
 		StringBuffer buf = new StringBuffer();
 
 		buf.append("Not (");
-		if (getFilter() != null) {
+		if (getFilter() != null)
+		{
 			buf.append(getFilter().toString());
 		}
 		buf.append(")");

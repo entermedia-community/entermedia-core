@@ -17,7 +17,8 @@ import org.openedit.util.ReaderInputStream;
 /**
  * @author Matthew Avery, mavery@einnovation.com
  */
-public class StringItem extends ContentItem {
+public class StringItem extends ContentItem
+{
 	protected String fieldContent;
 	protected String fieldOutputEncoding;
 	protected boolean fieldWritable = true;
@@ -25,7 +26,8 @@ public class StringItem extends ContentItem {
 
 	public StringItem(String inPath, String inContent, String inEncoding) {
 		// fieldLastModified = new Date();
-		if (inContent == null) {
+		if (inContent == null)
+		{
 			inContent = "";
 		}
 		fieldContent = inContent;
@@ -37,56 +39,68 @@ public class StringItem extends ContentItem {
 	/**
 	 * 
 	 */
-	public StringItem() {
-	}
+	public StringItem() {}
 
-	public InputStream getInputStream() throws RepositoryException {
-		if (getOutputEncoding() == null) {
+	public InputStream getInputStream() throws RepositoryException
+	{
+		if (getOutputEncoding() == null)
+		{
 			log.error("Encoding not defined");
 			return new ByteArrayInputStream(getContent().getBytes());
 		}
-		try {
+		try
+		{
 			// BufferedReader reader = new BufferedReader ( new InputStreamReader ( in ) );
 			return new ReaderInputStream(new StringReader(getContent()), getOutputEncoding());
-		} catch (Exception ex) {
+		}
+		catch (Exception ex)
+		{
 			log.error(ex);
 			throw new RepositoryException(ex);
 		}
 	}
 
-	public boolean exists() {
+	public boolean exists()
+	{
 		return getContent() != null;
 	}
 
-	public boolean isFolder() {
+	public boolean isFolder()
+	{
 		return false;
 	}
 
 	/**
 	 * We use the StringItem to make changes and save them back again
 	 */
-	public boolean isWritable() {
+	public boolean isWritable()
+	{
 		return fieldWritable;
 	}
 
-	public String getContent() {
+	public String getContent()
+	{
 		return fieldContent;
 	}
 
-	public void setContent(String content) {
+	public void setContent(String content)
+	{
 		fieldContent = content;
 		setLastModified(new Date());
 	}
 
-	protected void setWritable(boolean inWritable) {
+	protected void setWritable(boolean inWritable)
+	{
 		fieldWritable = inWritable;
 	}
 
-	public String getOutputEncoding() {
+	public String getOutputEncoding()
+	{
 		return fieldOutputEncoding;
 	}
 
-	public void setOutputEncoding(String inOutputEncoding) {
+	public void setOutputEncoding(String inOutputEncoding)
+	{
 		fieldOutputEncoding = inOutputEncoding;
 	}
 }

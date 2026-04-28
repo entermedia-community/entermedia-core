@@ -29,7 +29,8 @@ import org.openedit.OpenEditException;
  * @author shanti
  *
  */
-public class HttpRequestBuilder {
+public class HttpRequestBuilder
+{
 	MultipartEntityBuilder builder = MultipartEntityBuilder.create();
 
 	Charset UTF8 = Charset.forName("UTF-8");
@@ -38,21 +39,21 @@ public class HttpRequestBuilder {
 
 	protected HttpClient fieldHttpClient;
 
-	public HttpClient getSharedClient() {
-		if (fieldHttpClient == null) {
-			RequestConfig globalConfig = RequestConfig.custom()
-					.setCookieSpec(CookieSpecs.DEFAULT)
-					.build();
-			fieldHttpClient = HttpClients.custom()
-					.setDefaultRequestConfig(globalConfig)
-					.build();
+	public HttpClient getSharedClient()
+	{
+		if (fieldHttpClient == null)
+		{
+			RequestConfig globalConfig = RequestConfig.custom().setCookieSpec(CookieSpecs.DEFAULT).build();
+			fieldHttpClient = HttpClients.custom().setDefaultRequestConfig(globalConfig).build();
 		}
 
 		return fieldHttpClient;
 	}
 
-	public void addPart(String inKey, String inValue, String inType) {
-		if (inValue == null) {
+	public void addPart(String inKey, String inValue, String inType)
+	{
+		if (inValue == null)
+		{
 			return;
 		}
 		ContentType type = ContentType.create(inType, UTF8);
@@ -60,31 +61,38 @@ public class HttpRequestBuilder {
 		builder.addPart(inKey, new StringBody(inValue, type));
 	}
 
-	public void addPart(String inKey, String inValue) {
-		if (inValue == null) {
+	public void addPart(String inKey, String inValue)
+	{
+		if (inValue == null)
+		{
 			return;
 		}
 		builder.addPart(inKey, new StringBody(inValue, contentType));
 	}
 
-	public void addPart(String inKey, File file) {
+	public void addPart(String inKey, File file)
+	{
 		addPart(inKey, file, file.getName());
 	}
 
-	public void addPart(String inKey, File file, String inName) {
+	public void addPart(String inKey, File file, String inName)
+	{
 		FileBody fileBody = new FileBody(file, octectType, inName);
 		builder.addPart(inKey, fileBody);
 	}
 
-	public HttpEntity build() {
+	public HttpEntity build()
+	{
 		return builder.build();
 	}
 
-	public HttpEntity build(Map<String, String> inMap) {
+	public HttpEntity build(Map<String, String> inMap)
+	{
 
 		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 
-		for (Iterator iterator = inMap.keySet().iterator(); iterator.hasNext();) {
+		for (Iterator iterator = inMap.keySet().iterator(); iterator.hasNext();)
+		{
 			String key = (String) iterator.next();
 			String val = inMap.get(key);
 			nameValuePairs.add(new BasicNameValuePair(key, val));
@@ -94,46 +102,55 @@ public class HttpRequestBuilder {
 
 	}
 
-	public HttpResponse post(String inUrl, Map<String, String> inParams) {
-		try {
-			RequestConfig globalConfig = RequestConfig.custom()
-					.setCookieSpec(CookieSpecs.DEFAULT)
-					.build();
-			HttpClient client = HttpClients.custom()
-					.setDefaultRequestConfig(globalConfig)
-					.build();
+	public HttpResponse post(String inUrl, Map<String, String> inParams)
+	{
+		try
+		{
+			RequestConfig globalConfig = RequestConfig.custom().setCookieSpec(CookieSpecs.DEFAULT).build();
+			HttpClient client = HttpClients.custom().setDefaultRequestConfig(globalConfig).build();
 
 			HttpPost method = new HttpPost(inUrl);
 
 			method.setEntity(build(inParams));
 			HttpResponse response2 = client.execute(method);
 			return response2;
-		} catch (Exception ex) {
+		}
+		catch (Exception ex)
+		{
 			throw new OpenEditException(ex);
 		}
 	}
 
-	public void reset() {
+	public void reset()
+	{
 		fieldHttpClient = null;
 	}
 
-	public HttpResponse sharedPost(String path, Map<String, String> inParams) {
-		try {
+	public HttpResponse sharedPost(String path, Map<String, String> inParams)
+	{
+		try
+		{
 			HttpPost method = new HttpPost(path);
 			method.setEntity(build(inParams));
 			HttpResponse response2 = getSharedClient().execute(method);
 			return response2;
-		} catch (Exception ex) {
+		}
+		catch (Exception ex)
+		{
 			throw new OpenEditException(ex);
 		}
 	}
 
-	public HttpResponse sharedConnection(String inUrl) {
-		try {
+	public HttpResponse sharedConnection(String inUrl)
+	{
+		try
+		{
 			HttpGet method = new HttpGet(inUrl);
 			HttpResponse response2 = getSharedClient().execute(method);
 			return response2;
-		} catch (Exception ex) {
+		}
+		catch (Exception ex)
+		{
 			throw new OpenEditException(ex);
 		}
 	}

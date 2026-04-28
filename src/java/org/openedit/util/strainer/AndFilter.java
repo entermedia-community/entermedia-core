@@ -8,13 +8,13 @@ package org.openedit.util.strainer;
  * 
  * @author Eric Galluzzo
  */
-public class AndFilter extends BaseFilter implements CompositeFilter {
+public class AndFilter extends BaseFilter implements CompositeFilter
+{
 
 	/**
 	 * This constructor should only be used for JavaBean-style creation.
 	 */
-	public AndFilter() {
-	}
+	public AndFilter() {}
 
 	/**
 	 * Create a filter that ANDs together all the given sub-filters.
@@ -32,11 +32,11 @@ public class AndFilter extends BaseFilter implements CompositeFilter {
 	 * @param inFilter2 The second sub-filter
 	 */
 	public AndFilter(Filter inFilter1, Filter inFilter2) {
-		fieldFilters = new Filter[] { inFilter1, inFilter2 };
+		fieldFilters = new Filter[] {inFilter1, inFilter2};
 	}
 
 	public AndFilter(Filter inFilter1) {
-		fieldFilters = new Filter[] { inFilter1 };
+		fieldFilters = new Filter[] {inFilter1};
 	}
 
 	/**
@@ -44,7 +44,8 @@ public class AndFilter extends BaseFilter implements CompositeFilter {
 	 *
 	 * @return This filter's sub-filters
 	 */
-	public Filter[] getFilters() {
+	public Filter[] getFilters()
+	{
 		return fieldFilters;
 	}
 
@@ -53,25 +54,29 @@ public class AndFilter extends BaseFilter implements CompositeFilter {
 	 * 
 	 * @param newFilters The new sub-filters
 	 */
-	public void setFilters(Filter[] newFilters) {
+	public void setFilters(Filter[] newFilters)
+	{
 		fieldFilters = newFilters;
 	}
 
 	/**
-	 * Determine whether the given object passes this filter by ANDing together
-	 * all the sub-filters.
+	 * Determine whether the given object passes this filter by ANDing together all the sub-filters.
 	 *
 	 * @param inObj The object to check
 	 *
-	 * @return <code>true</code> if the object passes all of the sub-filters,
-	 *         <code>false</code> otherwise.
+	 * @return <code>true</code> if the object passes all of the sub-filters, <code>false</code>
+	 *         otherwise.
 	 */
-	public boolean passes(Object inObj) throws FilterException {
-		if (fieldFilters == null) {
+	public boolean passes(Object inObj) throws FilterException
+	{
+		if (fieldFilters == null)
+		{
 			return true;
 		}
-		for (int i = 0; i < fieldFilters.length; i++) {
-			if (!fieldFilters[i].passes(inObj)) {
+		for (int i = 0; i < fieldFilters.length; i++)
+		{
+			if (!fieldFilters[i].passes(inObj))
+			{
 				return false;
 			}
 		}
@@ -82,8 +87,7 @@ public class AndFilter extends BaseFilter implements CompositeFilter {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.openedit.util.strainer.Filter#accept(org.openedit.util.strainer.
-	 * FilterVisitor)
+	 * @see org.openedit.util.strainer.Filter#accept(org.openedit.util.strainer. FilterVisitor)
 	 */
 	// public void accept(FilterVisitor inFilterVisitor) throws FilterException
 	// {
@@ -98,11 +102,14 @@ public class AndFilter extends BaseFilter implements CompositeFilter {
 	 * 
 	 * @see java.lang.Object#toString()
 	 */
-	public String toString() {
+	public String toString()
+	{
 		StringBuffer buffer = new StringBuffer();
 		Filter[] filters = getFilters();
-		for (int i = 0; i < filters.length; i++) {
-			if (i > 0) {
+		for (int i = 0; i < filters.length; i++)
+		{
+			if (i > 0)
+			{
 				buffer.append(" and ");
 			}
 			buffer.append("(");

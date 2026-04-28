@@ -9,7 +9,8 @@ import org.openedit.OpenEditException;
 import org.openedit.util.EmStringUtils;
 import org.openedit.util.PathUtilities;
 
-public abstract class BaseRepository implements Repository {
+public abstract class BaseRepository implements Repository
+{
 	protected boolean fieldLoadOnStartup;
 	protected String fieldPath; // This is saved
 	protected String fieldExternalPath; // this is saved
@@ -21,38 +22,50 @@ public abstract class BaseRepository implements Repository {
 	protected String[] fieldFilterInList;
 	protected Map fieldProperties;
 
-	public Map getProperties() {
-		if (fieldProperties == null) {
+	public Map getProperties()
+	{
+		if (fieldProperties == null)
+		{
 			fieldProperties = new HashMap();
 		}
 		return fieldProperties;
 	}
 
-	public void setProperty(String inPropName, String inValue) {
-		if (inValue == null) {
+	public void setProperty(String inPropName, String inValue)
+	{
+		if (inValue == null)
+		{
 			getProperties().remove(inPropName);
-		} else {
+		}
+		else
+		{
 			getProperties().put(inPropName, inValue);
 		}
 	}
 
-	public String getProperty(String inPropName) {
+	public String getProperty(String inPropName)
+	{
 		return (String) getProperties().get(inPropName);
 	}
 
-	public String getMatchesPostFix() {
+	public String getMatchesPostFix()
+	{
 		return fieldMatchesPostFix;
 	}
 
-	public void setMatchesPostFix(String inMatchesPostFix) {
+	public void setMatchesPostFix(String inMatchesPostFix)
+	{
 		fieldMatchesPostFix = inMatchesPostFix;
 	}
 
-	public String getAbsolutePath(String inOePath) {
-		if (getPath() != null && !getPath().equals("/")) {
+	public String getAbsolutePath(String inOePath)
+	{
+		if (getPath() != null && !getPath().equals("/"))
+		{
 			// strip off the extra path stuff
 			inOePath = inOePath.substring(getPath().length());
-			if (inOePath.length() == 0) {
+			if (inOePath.length() == 0)
+			{
 				inOePath = "/";
 			}
 		}
@@ -63,34 +76,40 @@ public abstract class BaseRepository implements Repository {
 
 	}
 
-	protected String[] getFilterInList() {
+	protected String[] getFilterInList()
+	{
 		return fieldFilterInList;
 	}
 
-	protected void setFilterInList(String[] inFilterInList) {
+	protected void setFilterInList(String[] inFilterInList)
+	{
 		fieldFilterInList = inFilterInList;
 	}
 
-	protected String[] getFilterOutList() {
+	protected String[] getFilterOutList()
+	{
 		return fieldFilterOutList;
 	}
 
-	protected void setFilterOutList(String[] inFilterOutList) {
+	protected void setFilterOutList(String[] inFilterOutList)
+	{
 		fieldFilterOutList = inFilterOutList;
 	}
 
 	protected String[] fieldFilterOutList;
 
-	public BaseRepository() {
-	}
+	public BaseRepository() {}
 
-	public String getFilterIn() {
+	public String getFilterIn()
+	{
 		return fieldFilterIn;
 	}
 
-	public void setFilterIn(String inFilterIn) {
+	public void setFilterIn(String inFilterIn)
+	{
 		fieldFilterIn = inFilterIn;
-		if (fieldFilterIn != null) {
+		if (fieldFilterIn != null)
+		{
 			// fieldFilterIn = fieldFilterIn.toLowerCase();
 			// setFilterInList( EmStringUtils.split(inFilterIn).toArray() );
 			Collection supported = EmStringUtils.split(inFilterIn);
@@ -110,11 +129,13 @@ public abstract class BaseRepository implements Repository {
 		}
 	}
 
-	public String getRepositoryType() {
+	public String getRepositoryType()
+	{
 		return fieldRepositoryType;
 	}
 
-	public void setRepositoryType(String repositoryType) {
+	public void setRepositoryType(String repositoryType)
+	{
 		fieldRepositoryType = repositoryType;
 	}
 
@@ -122,11 +143,13 @@ public abstract class BaseRepository implements Repository {
 		setPath(inPath);
 	}
 
-	public boolean isLoadOnStartup() {
+	public boolean isLoadOnStartup()
+	{
 		return fieldLoadOnStartup;
 	}
 
-	public void setLoadOnStartup(boolean inLoadOnStartup) {
+	public void setLoadOnStartup(boolean inLoadOnStartup)
+	{
 		fieldLoadOnStartup = inLoadOnStartup;
 	}
 
@@ -135,13 +158,16 @@ public abstract class BaseRepository implements Repository {
 	 * 
 	 * @return
 	 */
-	public String getFilterOut() {
+	public String getFilterOut()
+	{
 		return fieldFilterOut;
 	}
 
-	public void setFilterOut(String inMatchesPath) {
+	public void setFilterOut(String inMatchesPath)
+	{
 		fieldFilterOut = inMatchesPath;
-		if (fieldFilterOut != null) {
+		if (fieldFilterOut != null)
+		{
 			fieldFilterOut = fieldFilterOut.toLowerCase();
 			Collection supported = EmStringUtils.split(fieldFilterOut);
 			// String[] supported = fieldFilterOut.split("\\s+"); // \s includes \n among
@@ -155,12 +181,15 @@ public abstract class BaseRepository implements Repository {
 	 * 
 	 * @return
 	 */
-	public String getExternalPath() {
+	public String getExternalPath()
+	{
 		return fieldExternalPath;
 	}
 
-	public void setExternalPath(String inExternalPath) {
-		if (inExternalPath != null && inExternalPath.endsWith("/")) {
+	public void setExternalPath(String inExternalPath)
+	{
+		if (inExternalPath != null && inExternalPath.endsWith("/"))
+		{
 			inExternalPath = inExternalPath.substring(0, inExternalPath.length() - 1);
 		}
 		fieldExternalPath = inExternalPath;
@@ -171,14 +200,17 @@ public abstract class BaseRepository implements Repository {
 	 * 
 	 * @return
 	 */
-	public String getPath() {
-		if (fieldPath == null) {
+	public String getPath()
+	{
+		if (fieldPath == null)
+		{
 			return "/";
 		}
 		return fieldPath;
 	}
 
-	public void setPath(String inPath) {
+	public void setPath(String inPath)
+	{
 		fieldPath = inPath;
 	}
 
@@ -191,38 +223,47 @@ public abstract class BaseRepository implements Repository {
 	// {
 	// fieldUseVersionControl = inUseVersionControl;
 	// }
-	protected boolean matchExact(String inPath) {
+	protected boolean matchExact(String inPath)
+	{
 		return (getPath().equals(inPath));
 	}
 
-	protected boolean pathMatches(String inPath) {
+	protected boolean pathMatches(String inPath)
+	{
 		String beginning = getPath();
-		if (!beginning.endsWith("/")) {
+		if (!beginning.endsWith("/"))
+		{
 			beginning = beginning + "/"; // Add a slash, because partially matching the directory name
 			// is both bad behavior and a security threat
 		}
-		if (fieldMatchesPostFix != null) {
+		if (fieldMatchesPostFix != null)
+		{
 			return PathUtilities.match(inPath, beginning + getMatchesPostFix());
 		}
 		return inPath.startsWith(beginning);
 	}
 
-	protected String substring(String inPrefix, String inPostFix) {
+	protected String substring(String inPrefix, String inPostFix)
+	{
 		int index = getPath().indexOf(inPrefix);
-		if (index == -1) {
+		if (index == -1)
+		{
 			return null;
 		}
 		int postIndex = getPath().indexOf(inPostFix);
-		if (postIndex == -1) {
+		if (postIndex == -1)
+		{
 			return null;
 		}
 		String sub = getPath().substring(index + inPrefix.length(), postIndex);
 		return sub;
 	}
 
-	protected String substring(String inPrefix) {
+	protected String substring(String inPrefix)
+	{
 		int index = getPath().indexOf(inPrefix);
-		if (index == -1) {
+		if (index == -1)
+		{
 			return null;
 		}
 		String sub = getPath().substring(index + inPrefix.length());
@@ -230,13 +271,14 @@ public abstract class BaseRepository implements Repository {
 	}
 
 	/**
-	 * We will see if this is the right config for a certain path
-	 * Since the list is sorted we should get the most specific first
+	 * We will see if this is the right config for a certain path Since the list is sorted we should get
+	 * the most specific first
 	 * 
 	 * @param inPath
 	 * @return
 	 */
-	public boolean matches(String inPath) {
+	public boolean matches(String inPath)
+	{
 		if (matchExact(inPath) || pathMatches(inPath))
 		// either the paths match exactly,
 		// or the repository path(ending in a slash) is a subfolder of the target path
@@ -246,15 +288,20 @@ public abstract class BaseRepository implements Repository {
 		return false;
 	}
 
-	public String getId() {
+	public String getId()
+	{
 		return getPath() + getFilterOut();
 	}
 
-	protected boolean isExcluded(String inPath) {
-		if (getFilterOut() != null) {
+	protected boolean isExcluded(String inPath)
+	{
+		if (getFilterOut() != null)
+		{
 			// inPath = inPath.toLowerCase();
-			for (String out : getFilterOutList()) {
-				if (PathUtilities.match(inPath, out)) {
+			for (String out : getFilterOutList())
+			{
+				if (PathUtilities.match(inPath, out))
+				{
 					return true;
 				}
 			}

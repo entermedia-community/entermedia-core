@@ -12,40 +12,46 @@ import java.io.OutputStream;
  * @author cburkey
  *
  */
-public class InputStreamItem extends ContentItem {
+public class InputStreamItem extends ContentItem
+{
 	protected InputStream fieldInputStream;
 
-	public InputStreamItem() {
-	}
+	public InputStreamItem() {}
 
 	/*
 	 * (non-javadoc)
 	 * 
 	 * @see com.einnovation.repository.filesystem.FileItem#getInputStream()
 	 */
-	public InputStream getInputStream() throws RepositoryException {
+	public InputStream getInputStream() throws RepositoryException
+	{
 		return fieldInputStream;
 	}
 
-	public void setInputStream(InputStream inStream) {
+	public void setInputStream(InputStream inStream)
+	{
 		fieldInputStream = inStream;
 	}
 
-	public boolean exists() {
+	public boolean exists()
+	{
 		return fieldInputStream != null;
 	}
 
-	public boolean isFolder() {
+	public boolean isFolder()
+	{
 		// TODO Auto-generated method stub
 		return false;
 	}
 
-	public boolean isWritable() {
+	public boolean isWritable()
+	{
 		// TODO Auto-generated method stub
 		return false;
 	}
 
-	public OutputStream getOutputStream() throws RepositoryException {
+	public OutputStream getOutputStream() throws RepositoryException
+	{
 		return null;
 	}
 

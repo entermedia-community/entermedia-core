@@ -1,14 +1,14 @@
 /*
-Copyright (c) 2003 eInnovation Inc. All rights reserved
-
-This library is free software; you can redistribute it and/or modify it under the terms
-of the GNU Lesser General Public License as published by the Free Software Foundation;
-either version 2.1 of the License, or (at your option) any later version.
-
-This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-See the GNU Lesser General Public License for more details.
-*/
+ * Copyright (c) 2003 eInnovation Inc. All rights reserved
+ * 
+ * This library is free software; you can redistribute it and/or modify it under the terms of the
+ * GNU Lesser General Public License as published by the Free Software Foundation; either version
+ * 2.1 of the License, or (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ */
 
 package org.openedit.util.strainer;
 
@@ -23,7 +23,8 @@ import org.openedit.users.User;
  *
  * @author Eric Galluzzo
  */
-public class GroupFilter extends BaseFilter {
+public class GroupFilter extends BaseFilter
+{
 
 	/**
 	 * Construct a filter that passes all users.
@@ -35,8 +36,7 @@ public class GroupFilter extends BaseFilter {
 	}
 
 	/**
-	 * Construct a filter that only passes users that are part of the group with the
-	 * given name.
+	 * Construct a filter that only passes users that are part of the group with the given name.
 	 *
 	 * @param inGroupName The group name to check for
 	 */
@@ -49,7 +49,8 @@ public class GroupFilter extends BaseFilter {
 	 *
 	 * @param groupName The group name to set
 	 */
-	public void setGroupId(String groupId) {
+	public void setGroupId(String groupId)
+	{
 		setValue(groupId);
 	}
 
@@ -58,30 +59,36 @@ public class GroupFilter extends BaseFilter {
 	 *
 	 * @return String
 	 */
-	public String getGroupId() {
+	public String getGroupId()
+	{
 		return fieldValue;
 	}
 
 	/**
 	 * @see org.openedit.util.strainer.Filter#passes(java.lang.Object)
 	 */
-	public boolean passes(Object inObj) throws FilterException, ClassCastException {
+	public boolean passes(Object inObj) throws FilterException, ClassCastException
+	{
 		WebPageRequest req = (WebPageRequest) inObj;
 
 		User user = req.getUser();
 
-		if (user == null) {
+		if (user == null)
+		{
 			return false;
 		}
 
-		if (getGroupId() == null) {
+		if (getGroupId() == null)
+		{
 			return true;
 		}
 
-		for (Iterator iter = user.getGroups().iterator(); iter.hasNext();) {
+		for (Iterator iter = user.getGroups().iterator(); iter.hasNext();)
+		{
 			Group group = (Group) iter.next();
 
-			if (group.getId().equalsIgnoreCase(getGroupId())) {
+			if (group.getId().equalsIgnoreCase(getGroupId()))
+			{
 				return true;
 			}
 		}
@@ -89,12 +96,15 @@ public class GroupFilter extends BaseFilter {
 		return false;
 	}
 
-	public String toString() {
+	public String toString()
+	{
 		return "Group= " + getGroupId();
 	}
 
-	public boolean equals(Object inObj) {
-		if (inObj instanceof GroupFilter) {
+	public boolean equals(Object inObj)
+	{
+		if (inObj instanceof GroupFilter)
+		{
 			GroupFilter toCompare = (GroupFilter) inObj;
 			return getGroupId().equals(toCompare.getGroupId());
 		}

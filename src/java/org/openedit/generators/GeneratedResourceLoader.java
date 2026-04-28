@@ -18,19 +18,22 @@ import org.openedit.servlet.OpenEditEngine;
 import org.openedit.util.ReaderInputStream;
 
 /**
- * We need to clean the paths all the time except when actually returning. Yes
- * This needs to adjust the inputstream as it is passed out
+ * We need to clean the paths all the time except when actually returning. Yes This needs to adjust
+ * the inputstream as it is passed out
  * 
  * @author cburkey
  *
  */
 
-public class GeneratedResourceLoader extends ResourceLoader {
+public class GeneratedResourceLoader extends ResourceLoader
+{
 	protected PageManager fieldPageManager;
 	protected ModuleManager fieldModuleManager;
 
-	public ModuleManager getModuleManager() {
-		if (fieldModuleManager == null) {
+	public ModuleManager getModuleManager()
+	{
+		if (fieldModuleManager == null)
+		{
 			OpenEditEngine engine = (OpenEditEngine) rsvc.getApplicationAttribute("openEditEngine");
 
 			fieldModuleManager = engine.getModuleManager();
@@ -39,14 +42,16 @@ public class GeneratedResourceLoader extends ResourceLoader {
 		return fieldModuleManager;
 	}
 
-	public void setModuleManager(ModuleManager inModuleManager) {
+	public void setModuleManager(ModuleManager inModuleManager)
+	{
 		fieldModuleManager = inModuleManager;
 	}
 
 	/**
 	 * @see org.apache.velocity.runtime.resource.loader.ResourceLoader#init(org.apache.commons.collections.ExtendedProperties)
 	 */
-	public void init(ExtendedProperties configuration) {
+	public void init(ExtendedProperties configuration)
+	{
 		// if (log.isTraceEnabled())
 		{
 			// log.trace("FileResourceLoader : initialization starting.");
@@ -58,25 +63,25 @@ public class GeneratedResourceLoader extends ResourceLoader {
 	 * 
 	 * @override
 	 * 
-	 * @param templateName
-	 *                     name of template to get
+	 * @param templateName name of template to get
 	 * @return InputStream containing the template
-	 * @throws ResourceNotFoundException
-	 *                                   if template not found in the file template
-	 *                                   path.
+	 * @throws ResourceNotFoundException if template not found in the file template path.
 	 */
-	public InputStream getResourceStream(String templateName) throws ResourceNotFoundException {
+	public InputStream getResourceStream(String templateName) throws ResourceNotFoundException
+	{
 		// ok we need to know what filters are being used
 		int index = templateName.indexOf("?filter="); // need the locale and filter type ?filter=translate&locale=en
 		String path = templateName;
-		if (index == -1) {
+		if (index == -1)
+		{
 			Page page = getPageManager().getPage(path);
 			return page.getInputStream();
 		}
 		path = templateName.substring(0, index);
 		Page page = getPageManager().getPage(path);
 		int amp = templateName.indexOf("&", index);
-		if (amp == -1) {
+		if (amp == -1)
+		{
 			amp = templateName.length();
 		}
 		String filter = templateName.substring(index + "?filter=".length(), amp);
@@ -102,25 +107,30 @@ public class GeneratedResourceLoader extends ResourceLoader {
 	 * 
 	 * @since 1.6
 	 */
-	public boolean resourceExists(String name) {
-		if (name == null) {
+	public boolean resourceExists(String name)
+	{
+		if (name == null)
+		{
 			return false;
 		}
 		name = clean(name);
 		return getPageManager().getRepository().doesExist(name);
 	}
 
-	public String clean(String inPath) {
+	public String clean(String inPath)
+	{
 		int index = inPath.indexOf("?filter="); // need the locale and filter type ?filter=translate&locale=en
 		String template = inPath;
-		if (index != -1) {
+		if (index != -1)
+		{
 			template = template.substring(0, index);
 		}
 
 		return template;
 	}
 
-	public boolean isSourceModified(Resource resource) {
+	public boolean isSourceModified(Resource resource)
+	{
 		String path = resource.getName();
 		path = clean(path);
 		Page page = getPageManager().getPage(path);
@@ -132,15 +142,18 @@ public class GeneratedResourceLoader extends ResourceLoader {
 	/**
 	 * @see org.apache.velocity.runtime.resource.loader.ResourceLoader#getLastModified(org.apache.velocity.runtime.resource.Resource)
 	 */
-	public long getLastModified(Resource resource) {
+	public long getLastModified(Resource resource)
+	{
 		String path = resource.getName();
 		path = clean(path);
 		Page page = getPageManager().getPage(path);
 		return page.lastModified();
 	}
 
-	public PageManager getPageManager() {
-		if (fieldPageManager == null) {
+	public PageManager getPageManager()
+	{
+		if (fieldPageManager == null)
+		{
 			OpenEditEngine engine = (OpenEditEngine) rsvc.getApplicationAttribute("openEditEngine");
 
 			fieldPageManager = engine.getPageManager();
@@ -149,24 +162,30 @@ public class GeneratedResourceLoader extends ResourceLoader {
 		return fieldPageManager;
 	}
 
-	public void setPageManager(PageManager inPageManager) {
+	public void setPageManager(PageManager inPageManager)
+	{
 		fieldPageManager = inPageManager;
 	}
 
 	@Override
-	public Reader getResourceReader(String name, String encoding) throws ResourceNotFoundException {
+	public Reader getResourceReader(String name, String encoding) throws ResourceNotFoundException
+	{
 		// TODO Auto-generated method stub
 		InputStream stream = getResourceStream(name);
-		try {
+		try
+		{
 			return buildReader(stream, encoding);
-		} catch (IOException e) {
+		}
+		catch (IOException e)
+		{
 			// TODO Auto-generated catch block
 			throw new OpenEditException(e);
 		}
 	}
 
 	@Override
-	public void init(ExtProperties inArg0) {
+	public void init(ExtProperties inArg0)
+	{
 		// TODO Auto-generated method stub
 
 	}
