@@ -1835,7 +1835,7 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 			public String toQuery()
 			{
 				// String date = DateTools.dateToString(inDate, Resolution.SECOND);
-				String fin = getDetail().getId() + ":[" + inDate.getTime() + " TO 99999999999999]";
+				String fin = getDetail().getId() + ":[" + inDate	 + " TO 99999999999999]";
 				return fin;
 			}
 		};
@@ -1871,17 +1871,16 @@ public class SearchQuery extends BaseData implements Cloneable, Serializable, Co
 	public Term addBefore(PropertyDetail inField, final Date inDate)
 	{
 		final String valueof = DateStorageUtil.getStorageUtil().formatForStorage(inDate);
-
 		Term term = new Term() {
 			public String toQuery()
 			{
-				String fin = getDetail().getId() + ":[00000000000000 TO " + valueof + "]";
+				String fin = getDetail().getId() + ":[00000000000000 TO " + inDate + "]";
 				return fin;
 			}
 		};
 		term.setOperation("beforedate");
 		term.setDetail(inField);
-
+		term.addValue("beforeDate", inDate);
 		term.setValue(valueof);
 
 		getTerms().add(term);
