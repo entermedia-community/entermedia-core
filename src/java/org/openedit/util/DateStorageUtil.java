@@ -181,7 +181,13 @@ public class DateStorageUtil
 		}
 		return -1;
 	}
-
+	public DateFormat getCompactUTCFormat()
+	{
+	    return getDateFormat(
+	        "yyyyMMdd'T'HHmmss'Z'",
+	        TimeZone.getTimeZone("UTC")
+	    );
+	}
 	public Date parseFromStorage(String inStoredDate)
 	{
 		if (inStoredDate == null)
